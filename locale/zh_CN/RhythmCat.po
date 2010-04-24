@@ -1,0 +1,145 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-03-12 00:35+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: UTF-8\n"
+
+#: gui.c:131
+msgid "A music player based on GTK+ 2.0 & Gstreamer 0.10"
+msgstr ""
+
+#: gui.c:803 gui.c:805
+msgid "Track"
+msgstr "曲目"
+
+#: gui.c:1058
+msgid "Music Information"
+msgstr "音乐信息"
+
+#: gui.c:1061 gui_setting.c:53
+msgid "General"
+msgstr "General"
+
+#: gui.c:1062
+msgid "Metadata"
+msgstr "Metadata"
+
+#: gui.c:1063
+msgid "Format: "
+msgstr "格式: "
+
+#: gui.c:1065
+msgid "Bitrate: "
+msgstr "比特率: "
+
+#: gui.c:1067
+msgid "Title"
+msgstr "标题"
+
+#: gui.c:1069
+msgid "Artist"
+msgstr "艺术家"
+
+#: gui.c:1071
+msgid "Location"
+msgstr "位置"
+
+#: gui.c:1073
+msgid "Album"
+msgstr "专辑"
+
+#: gui.c:1075
+msgid "Comment"
+msgstr "注释"
+
+#: gui.c:1077
+msgid "Track Number"
+msgstr "轨道号"
+
+#: gui.c:1130
+msgid "Unknown"
+msgstr "未知"
+
+#: gui_menu.c:26
+msgid "_About RhythmCat Music Player..."
+msgstr "关于 RhythmCat 音乐播放器(_A)..."
+
+#: gui_menu.c:29
+msgid "_Open audio files..."
+msgstr "打开文件(_O)"
+
+#: gui_menu.c:31
+msgid "Open a _location..."
+msgstr "打开位置(_L)"
+
+#: gui_menu.c:34
+msgid "Settings..."
+msgstr "设置"
+
+#: gui_menu.c:37
+msgid "E_xit the player"
+msgstr "退出播放器(_X)"
+
+#: gui_menu.c:54
+msgid "_New list..."
+msgstr "新建列表(_N)"
+
+#: gui_menu.c:56
+msgid "_Add list from file..."
+msgstr "从文件添加列表(_A)"
+
+#: gui_menu.c:58
+msgid "_Rename list..."
+msgstr "重命名列表(_R)"
+
+#: gui_menu.c:60
+msgid "_Delete selected list"
+msgstr "删除选中的列表(_D)"
+
+#: gui_menu.c:62
+msgid "_Save selected list to file..."
+msgstr "保存选中的列表到文件(_S)..."
+
+#: gui_menu.c:64
+msgid "Save _all lists to file..."
+msgstr "保存所有列表到文件(_A)"
+
+#: gui_menu.c:80
+msgid "_Information of this music"
+msgstr "音乐信息(_I)"
+
+#: gui_menu.c:83
+msgid "_Add music..."
+msgstr "添加音乐(_A)"
+
+#: gui_menu.c:85
+msgid "_Delete selected"
+msgstr "删除选中项(_D)"
+
+#: gui_menu.c:87
+msgid "_Clean this list"
+msgstr "清空列表(_C)"
+
+#: gui_setting.c:21
+msgid "Settings"
+msgstr "设置"
+
+#: gui_setting.c:55
+msgid "Appearence"
+msgstr "外观"
+
+#: playlist.c:151
+msgid "[Default]"
+msgstr "[默认]"
