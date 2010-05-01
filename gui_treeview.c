@@ -191,7 +191,8 @@ void gui_insert_play_list_view(GtkWidget *list, const gchar *stockid, gint index
     gint time_sec = seclength % 60;
     gchar time_str[64];
     g_snprintf(time_str,60,"%02d:%02d",time_min,time_sec);
-    store = GTK_LIST_STORE(gtk_tree_view_get_model(GTK_TREE_VIEW(list)));
+    store = GTK_LIST_STORE(gtk_tree_view_get_model(GTK_TREE_VIEW(
+        play_list_tree_view)));
     gtk_list_store_insert(store, &iter,pl_index-1);
     gtk_list_store_set(store, &iter, 0, stockid, 1 ,index, 2, title, 3, artist,
         4, time_str, -1);

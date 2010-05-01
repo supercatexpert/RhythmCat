@@ -168,18 +168,17 @@ void lrc_set_new_text(const gchar *text)
     guint linenum = 0;
     if(lrc_line_data!=NULL) lrc_clean_text_data();
     if(lrc_text_data!=NULL) g_free(lrc_text_data);
-    new_text = g_strdup(text);
-    length = strlen(new_text);
+    length = strlen(text);
+    new_text = g_malloc0(length * sizeof(gchar));
     for(i=0;i<length;i++)
     {
-        chr = lrc_text_data[i];
+        chr = text[i];
         if(chr!='\r')
         {
             new_text[j] = chr;
             j++;
         }
     }
-    g_free(lrc_text_data);
     lrc_text_data = new_text;
     text_data = lrc_text_data;
     text_data_array = g_strsplit(text_data, "\n", 0);
@@ -195,6 +194,15 @@ void lrc_set_new_text(const gchar *text)
 
 gboolean lrc_save_lyric(const gchar *filename)
 {
+    gchar *new_filename = NULL;
+    if(g_str_has_suffix(filename, ".LRC") || 
+        g_str_has_suffix(filename, ".lrc"))
+        new_filename = g_strdup(filename);
+    else
+        new_filename = g_strdup_printf("%s.LRC", filename);
+    g_file_set_contents(new_filename, lrc_text_data, strlen(lrc_text_data),
+        NULL);
+    g_free(new_filename);
     return TRUE;
 }
 

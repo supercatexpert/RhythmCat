@@ -14,7 +14,7 @@ Operating System: Debian Lenny/5.0.4 for AMD64
 Compiler: gcc 4.3
 Programming Language: C
 Dependent Libraries: GTK+-2.0 Gstreamer-0.10 Gstreamer-plugins-base-0.10
-                     Gstreamer-plugins-good-0.10
+                     Gstreamer-plugins-good-0.10 libgtksourceview2.0-0
 Developing stage:
 
 Alpha / Work in process.
@@ -37,7 +37,7 @@ depends. In Debian/Ubuntu, you can run the commands below to help you install
 the packages that the compiling needed:
 
 sudo apt-get install build-essential gnome-devel libgstreamer0.10-dev \
- libgstreamer-plugins-base0.10-dev
+ libgstreamer-plugins-base0.10-dev libgtksourceview2.0-dev  
 
 Then you can try to compile it (under i386/AMD64 architecture):
 
@@ -86,7 +86,7 @@ http://www.gnu.org/licenses/gpl.txt
 令来安装编译过程所需要的包：
 
 sudo apt-get install build-essential gnome-devel libgstreamer0.10-dev \
- libgstreamer-plugins-base0.10-dev
+ libgstreamer-plugins-base0.10-dev libgtksourceview2.0-dev 
 
 然后您可以开始编译 (在 i386/AMD64 平台下):
 

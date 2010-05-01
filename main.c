@@ -21,6 +21,7 @@ void rc_initial(int *argc, char **argv[])
     srand((unsigned)time(0));
     g_mkdir_with_parents(rc_set_dir, 0700);
     set_initial_setting();
+    if(!g_thread_supported()) g_thread_init(NULL);
     gtk_init(argc, argv);
     gst_init(argc, argv);
     create_main_window();
@@ -29,6 +30,9 @@ void rc_initial(int *argc, char **argv[])
     gui_play_list_view_reflush_index(NULL, 0);
     setting = get_setting();
     core_set_eq_effect(setting->eq_array);
+
+
+    //plist_load_playlist("/home/supercat/1.M3U", 0);
 }
 
 gchar *rc_get_program_name()

@@ -7,8 +7,11 @@
 
 #include <gdk/gdkkeysyms.h>
 
+GtkWidget *ls_menu_item[4];
+GtkWidget *pl_menu_item[9];
+
 GtkWidget *main_menu_items[5], *main_menus[5];
-GtkWidget *file_menu_items[8];
+GtkWidget *file_menu_items[9];
 GtkWidget *edit_menu_items[8];
 GtkWidget *view_menu_items[12];
 GtkWidget *ctrl_menu_items[12];

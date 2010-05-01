@@ -5,7 +5,7 @@ SRCS=core.c lyric.c gui.c playlist.c tag_id3.c settings.c main.c
 
 OBJS=${SRCS:.c=.o}
 
-LIBS=glib-2.0 gtk+-2.0 gstreamer-0.10 gstreamer-interfaces-0.10
+LIBS=glib-2.0 gtk+-2.0 gtksourceview-2.0 gstreamer-0.10 gstreamer-interfaces-0.10
 
 # -O2
 

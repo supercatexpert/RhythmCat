@@ -31,6 +31,7 @@
  */
 
 CORE *rc_core;
+int auto_play_next_list = TRUE;
 
 /* Functions */
 void create_core();

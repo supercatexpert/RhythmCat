@@ -15,6 +15,8 @@ void set_initial_setting()
     rc_setting->random_mode = 0;
     rc_setting->tag_ex_encoding = g_strdup("GBK");
     rc_setting->lrc_ex_encoding = g_strdup("GBK");
+    rc_setting->lrc_font = g_strdup("Wenquanyi Zenhei Mono 10");
+    rc_setting->lrc_line_ds = 0;
     for(count=0;count<10;count++)
         rc_setting->eq_array[count] = 0.0;
     set_load_system_setting();

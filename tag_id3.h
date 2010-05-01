@@ -8,6 +8,7 @@
 #include <glib/gprintf.h>
 
 gchar *extra_encoding = NULL;
+gboolean skip_id3_reading = FALSE;
 
 gchar **tag_get_id3(gchar *);
 

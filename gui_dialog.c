@@ -165,6 +165,15 @@ void gui_show_open_dialog(GtkWidget *widget, gpointer data)
 }
 
 /*
+ * Close the music info dialog.
+ */
+
+static void gui_close_music_info(GtkWidget *widget, gpointer data)
+{
+    gtk_widget_destroy(GTK_WIDGET(data));
+}
+
+/*
  * Show the music info dialog.
  */
 
@@ -180,8 +189,13 @@ void gui_show_music_info(GtkWidget *widget, gpointer data)
     MusicData *md = NULL;
     gboolean window_exist = FALSE;
     gchar *filepath = NULL;
+    gint64 length = 0L;
+    guint size = 0; 
+    struct stat buf;
     static gchar bitrate_str[64];
     static gchar tracknum_str[24];
+    static gchar length_str[32];
+    static gchar size_str[32];
     static GtkWidget *info_window = NULL;
     static GtkWidget *title_label, *title_entry;
     static GtkWidget *artist_label, *artist_entry;
@@ -191,11 +205,16 @@ void gui_show_music_info(GtkWidget *widget, gpointer data)
     static GtkWidget *bitrate_label, *bitrate_entry;
     static GtkWidget *uri_label, *uri_entry;
     static GtkWidget *format_label, *format_entry;
-    //static GtkWidget *confirm_button, *cancel_button;
-    //static GtkWidget *reflesh_button;
+    static GtkWidget *length_label, *length_entry;
+    static GtkWidget *size_label, *size_entry;
+    static GtkWidget *confirm_button, *cancel_button;
+    static GtkWidget *reflesh_button;
+    static GtkWidget *button_hbox;
     static GtkWidget *vbox1, *vbox2, *vbox3;
-    //static GtkWidget *hbox1;
-    static GtkWidget *frame1, *frame2;
+    static GtkWidget *format_hbox, *bitrate_hbox, *length_hbox, *size_hbox;
+    static GtkWidget *location_hbox;
+    static GtkWidget *metadata_table;
+    static GtkWidget *generic_frame, *metadata_frame;
     if(info_window!=NULL && GTK_IS_WIDGET(info_window))
         window_exist = GTK_WIDGET_REALIZED(info_window);
     else window_exist = FALSE;
@@ -235,36 +254,57 @@ void gui_show_music_info(GtkWidget *widget, gpointer data)
         gtk_window_set_title(GTK_WINDOW(info_window),_("Music Information"));
         gtk_window_set_transient_for(GTK_WINDOW(info_window),
             GTK_WINDOW(main_window));
-        frame1 = gtk_frame_new(_("General"));
-        frame2 = gtk_frame_new(_("Metadata"));
+        gtk_window_set_position(GTK_WINDOW(info_window),
+            GTK_WIN_POS_CENTER_ON_PARENT);
+        gtk_widget_set_size_request(info_window, 400, -1);
+        gtk_window_set_policy(GTK_WINDOW(info_window), FALSE, FALSE, TRUE);
+        gtk_window_set_resizable(GTK_WINDOW(info_window), FALSE);
+        gtk_container_set_border_width(GTK_CONTAINER(info_window), 4);
+        generic_frame = gtk_frame_new(_("General"));
+        metadata_frame = gtk_frame_new(_("Metadata"));
+        gtk_container_set_border_width(GTK_CONTAINER(generic_frame), 2);
+        gtk_container_set_border_width(GTK_CONTAINER(metadata_frame), 2);
+        metadata_table = gtk_table_new(2, 5, FALSE);
+        confirm_button = gtk_button_new_from_stock(GTK_STOCK_SAVE);
+        cancel_button = gtk_button_new_from_stock(GTK_STOCK_CANCEL);
+        reflesh_button = gtk_button_new_from_stock(GTK_STOCK_REFRESH);
+        gtk_widget_set_sensitive(confirm_button, FALSE);
         format_label = gtk_label_new(_("Format: "));
         format_entry = gtk_label_new("");
         bitrate_label = gtk_label_new(_("Bitrate: "));
         bitrate_entry = gtk_label_new("");
-        title_label = gtk_label_new(_("Title"));
+        length_label = gtk_label_new(_("Length: "));
+        length_entry = gtk_label_new("");
+        size_label = gtk_label_new(_("Size:   "));
+        size_entry = gtk_label_new("");
+        title_label = gtk_label_new(_("Title: "));
         title_entry = gtk_entry_new();
-        artist_label = gtk_label_new(_("Artist"));
+        artist_label = gtk_label_new(_("Artist: "));
         artist_entry = gtk_entry_new();
-        uri_label = gtk_label_new(_("Location"));
+        uri_label = gtk_label_new(_("Location: "));
         uri_entry = gtk_entry_new();
-        album_label = gtk_label_new(_("Album"));
+        album_label = gtk_label_new(_("Album: "));
         album_entry = gtk_entry_new();
-        comment_label = gtk_label_new(_("Comment"));
+        comment_label = gtk_label_new(_("Comment: "));
         comment_entry = gtk_entry_new();
-        tracknum_label = gtk_label_new(_("Track Number"));
+        tracknum_label = gtk_label_new(_("Track Number: "));
         tracknum_entry = gtk_entry_new();
         gtk_label_set_ellipsize(GTK_LABEL(format_entry), PANGO_ELLIPSIZE_END);
         gtk_label_set_ellipsize(GTK_LABEL(bitrate_entry), PANGO_ELLIPSIZE_END);
-        gtk_misc_set_alignment(GTK_MISC(format_label), 0.0, 0.0);
-        gtk_misc_set_alignment(GTK_MISC(format_entry), 0.0, 0.0);
-        gtk_misc_set_alignment(GTK_MISC(bitrate_label), 0.0, 0.0);
-        gtk_misc_set_alignment(GTK_MISC(bitrate_entry), 0.0, 0.0);
-        gtk_misc_set_alignment(GTK_MISC(title_label), 0.0, 0.0);
-        gtk_misc_set_alignment(GTK_MISC(artist_label), 0.0, 0.0);
-        gtk_misc_set_alignment(GTK_MISC(album_label), 0.0, 0.0);
-        gtk_misc_set_alignment(GTK_MISC(comment_label), 0.0, 0.0);
-        gtk_misc_set_alignment(GTK_MISC(tracknum_label), 0.0, 0.0);
-        gtk_misc_set_alignment(GTK_MISC(uri_label), 0.0, 0.0);
+        gtk_misc_set_alignment(GTK_MISC(format_label), 0.0, 0.5);
+        gtk_misc_set_alignment(GTK_MISC(format_entry), 0.0, 0.5);
+        gtk_misc_set_alignment(GTK_MISC(bitrate_label), 0.0, 0.5);
+        gtk_misc_set_alignment(GTK_MISC(bitrate_entry), 0.0, 0.5);
+        gtk_misc_set_alignment(GTK_MISC(length_label), 0.0, 0.5);
+        gtk_misc_set_alignment(GTK_MISC(length_entry), 0.0, 0.5);
+        gtk_misc_set_alignment(GTK_MISC(size_label), 0.0, 0.5);
+        gtk_misc_set_alignment(GTK_MISC(size_entry), 0.0, 0.5);
+        gtk_misc_set_alignment(GTK_MISC(title_label), 0.0, 0.5);
+        gtk_misc_set_alignment(GTK_MISC(artist_label), 0.0, 0.5);
+        gtk_misc_set_alignment(GTK_MISC(album_label), 0.0, 0.5);
+        gtk_misc_set_alignment(GTK_MISC(comment_label), 0.0, 0.5);
+        gtk_misc_set_alignment(GTK_MISC(tracknum_label), 0.0, 0.5);
+        gtk_misc_set_alignment(GTK_MISC(uri_label), 0.0, 0.5);
         gtk_entry_set_editable(GTK_ENTRY(title_entry), FALSE);
         gtk_entry_set_editable(GTK_ENTRY(artist_entry), FALSE);
         gtk_entry_set_editable(GTK_ENTRY(album_entry), FALSE);
@@ -274,27 +314,75 @@ void gui_show_music_info(GtkWidget *widget, gpointer data)
         vbox1 = gtk_vbox_new(FALSE, 1);
         vbox2 = gtk_vbox_new(FALSE, 1);
         vbox3 = gtk_vbox_new(FALSE, 1);
-        gtk_box_pack_start(GTK_BOX(vbox2), format_label, FALSE, FALSE, 0);
-        gtk_box_pack_start(GTK_BOX(vbox2), format_entry, FALSE, FALSE, 0);
-        gtk_box_pack_start(GTK_BOX(vbox2), bitrate_label, FALSE, FALSE, 0);
-        gtk_box_pack_start(GTK_BOX(vbox2), bitrate_entry, FALSE, FALSE, 0);
-        gtk_box_pack_start(GTK_BOX(vbox1), frame1, FALSE, FALSE, 0);
-        gtk_box_pack_start(GTK_BOX(vbox3), title_label, FALSE, FALSE, 0);
-        gtk_box_pack_start(GTK_BOX(vbox3), title_entry, FALSE, FALSE, 0);
-        gtk_box_pack_start(GTK_BOX(vbox3), artist_label, FALSE, FALSE, 0);
-        gtk_box_pack_start(GTK_BOX(vbox3), artist_entry, FALSE, FALSE, 0);
-        gtk_box_pack_start(GTK_BOX(vbox3), album_label, FALSE, FALSE, 0);
-        gtk_box_pack_start(GTK_BOX(vbox3), album_entry, FALSE, FALSE, 0);
-        gtk_box_pack_start(GTK_BOX(vbox3), comment_label, FALSE, FALSE, 0);
-        gtk_box_pack_start(GTK_BOX(vbox3), comment_entry, FALSE, FALSE, 0);
-        gtk_box_pack_start(GTK_BOX(vbox3), tracknum_label, FALSE, FALSE, 0);
-        gtk_box_pack_start(GTK_BOX(vbox3), tracknum_entry, FALSE, FALSE, 0);
-        gtk_box_pack_start(GTK_BOX(vbox3), uri_label, FALSE, FALSE, 0);
-        gtk_box_pack_start(GTK_BOX(vbox3), uri_entry, FALSE, FALSE, 0);
-        gtk_box_pack_start(GTK_BOX(vbox1), frame2, FALSE, FALSE, 0);
-        gtk_container_add(GTK_CONTAINER(frame1), vbox2);
-        gtk_container_add(GTK_CONTAINER(frame2), vbox3);
+        location_hbox = gtk_hbox_new(FALSE, 5);
+        format_hbox = gtk_hbox_new(FALSE, 5);
+        bitrate_hbox = gtk_hbox_new(FALSE, 5);
+        length_hbox = gtk_hbox_new(FALSE, 5);
+        size_hbox = gtk_hbox_new(FALSE, 5);
+        button_hbox = gtk_hbutton_box_new();
+        gtk_button_box_set_layout(GTK_BUTTON_BOX(button_hbox),
+            GTK_BUTTONBOX_END);
+        gtk_box_pack_start(GTK_BOX(location_hbox), uri_label, FALSE, 
+            FALSE, 0);
+        gtk_box_pack_start(GTK_BOX(location_hbox), uri_entry, TRUE, 
+            TRUE, 0);
+        gtk_box_pack_start(GTK_BOX(format_hbox), format_label, FALSE, 
+            FALSE, 0);
+        gtk_box_pack_start(GTK_BOX(format_hbox), format_entry, TRUE, 
+            TRUE, 0);
+        gtk_box_pack_start(GTK_BOX(vbox2), format_hbox, FALSE, FALSE, 0);
+        gtk_box_pack_start(GTK_BOX(bitrate_hbox), bitrate_label, FALSE, 
+            FALSE, 0);
+        gtk_box_pack_start(GTK_BOX(bitrate_hbox), bitrate_entry, TRUE, 
+            TRUE, 0);
+        gtk_box_pack_start(GTK_BOX(vbox2), bitrate_hbox, FALSE, FALSE, 0);
+        gtk_box_pack_start(GTK_BOX(length_hbox), length_label, FALSE, 
+            FALSE, 0);
+        gtk_box_pack_start(GTK_BOX(length_hbox), length_entry, TRUE, 
+            TRUE, 0);
+        gtk_box_pack_start(GTK_BOX(vbox2), length_hbox, FALSE, FALSE, 0);
+        gtk_box_pack_start(GTK_BOX(size_hbox), size_label, FALSE, 
+            FALSE, 0);
+        gtk_box_pack_start(GTK_BOX(size_hbox), size_entry, TRUE, 
+            TRUE, 0);
+        gtk_box_pack_start(GTK_BOX(vbox2), size_hbox, FALSE, FALSE, 0);
+        gtk_table_attach(GTK_TABLE(metadata_table), title_label, 0, 1, 0, 1, 
+            GTK_FILL, 0, 0, 0);
+        gtk_table_attach(GTK_TABLE(metadata_table), title_entry, 1, 2, 0, 1,
+            GTK_FILL|GTK_EXPAND|GTK_SHRINK, 0, 0, 0);
+        gtk_table_attach(GTK_TABLE(metadata_table), artist_label, 0, 1, 1, 2, 
+            GTK_FILL, 0, 0, 0);
+        gtk_table_attach(GTK_TABLE(metadata_table), artist_entry, 1, 2, 1, 2,
+            GTK_FILL|GTK_EXPAND|GTK_SHRINK, 0, 0, 0);
+        gtk_table_attach(GTK_TABLE(metadata_table), album_label, 0, 1, 2, 3, 
+            GTK_FILL, 0, 0, 0);
+        gtk_table_attach(GTK_TABLE(metadata_table), album_entry, 1, 2, 2, 3,
+            GTK_FILL|GTK_EXPAND|GTK_SHRINK, 0, 0, 0);
+        gtk_table_attach(GTK_TABLE(metadata_table), tracknum_label, 0, 1, 3, 4, 
+            GTK_FILL, 0, 0, 0);
+        gtk_table_attach(GTK_TABLE(metadata_table), tracknum_entry, 1, 2, 3, 4,
+            GTK_FILL|GTK_EXPAND|GTK_SHRINK, 0, 0, 0);
+        gtk_table_attach(GTK_TABLE(metadata_table), comment_label, 0, 1, 4, 5, 
+            GTK_FILL, 0, 0, 0);
+        gtk_table_attach(GTK_TABLE(metadata_table), comment_entry, 1, 2, 4, 5,
+            GTK_FILL|GTK_EXPAND|GTK_SHRINK, 0, 0, 0);
+        gtk_box_pack_end(GTK_BOX(button_hbox), reflesh_button, FALSE,
+            FALSE, 0);
+        gtk_box_pack_end(GTK_BOX(button_hbox), confirm_button, FALSE,
+            FALSE, 0);
+        gtk_box_pack_end(GTK_BOX(button_hbox), cancel_button, FALSE,
+            FALSE, 0);
+        gtk_container_add(GTK_CONTAINER(metadata_frame), metadata_table);
+        gtk_box_pack_start(GTK_BOX(vbox1), location_hbox, FALSE, FALSE, 0);
+        gtk_box_pack_start(GTK_BOX(vbox1), generic_frame, TRUE, TRUE, 0);
+        gtk_box_pack_start(GTK_BOX(vbox1), metadata_frame, TRUE, TRUE, 0);
+        gtk_box_pack_start(GTK_BOX(vbox1), button_hbox, FALSE, FALSE, 0);
+        gtk_container_add(GTK_CONTAINER(generic_frame), vbox2);
         gtk_container_add(GTK_CONTAINER(info_window), vbox1);
+        g_signal_connect(G_OBJECT(reflesh_button), "clicked",
+            G_CALLBACK(gui_show_music_info), NULL);
+        g_signal_connect(G_OBJECT(cancel_button), "clicked",
+            G_CALLBACK(gui_close_music_info), info_window);
         gtk_widget_show_all(info_window);
     }
     else
@@ -309,6 +397,9 @@ void gui_show_music_info(GtkWidget *widget, gpointer data)
         g_snprintf(tracknum_str, 20, "%d", mmd->tracknum);
     else
         g_snprintf(tracknum_str, 20, " ");
+    length = mmd->length/100;
+    g_snprintf(length_str, 30, "%02d:%02d", (gint)length/60, (gint)length%60);
+    gtk_label_set_text(GTK_LABEL(length_entry), length_str);
     gtk_label_set_text(GTK_LABEL(bitrate_entry), bitrate_str);
     gtk_entry_set_text(GTK_ENTRY(tracknum_entry), tracknum_str);
     if(mmd->file_type!=NULL)
@@ -336,6 +427,18 @@ void gui_show_music_info(GtkWidget *widget, gpointer data)
     if(filepath!=NULL)
     {
         gtk_entry_set_text(GTK_ENTRY(uri_entry), filepath);
+        if(g_stat(filepath, &buf)==0)
+        {
+            size = buf.st_size;
+            if(size<1024)
+                g_snprintf(size_str, 30, "%d B", size);
+            else if(size>=1024 && size<1024*1024)
+                g_snprintf(size_str, 30, "%.3f KiB", (gdouble)size/1024);
+            else if(size>=1024*1024)
+                g_snprintf(size_str, 30, "%.3f MiB", (gdouble)size/1024/1024);
+            gtk_label_set_text(GTK_LABEL(size_entry), size_str);
+        }
+        
         g_free(filepath);
     }
     else
@@ -389,3 +492,132 @@ void gui_open_music_directory(GtkWidget *widget, gpointer data)
     }
     gtk_widget_destroy(file_chooser);
 }
+
+/*
+ * Export the selected playlist.
+ */
+
+void gui_save_playlist_dialog(GtkWidget *widget, gpointer data)
+{
+    CORE *gcore = get_core();
+    GtkWidget *file_chooser;
+    GtkFileFilter *file_filter1;
+    gint result = 0;
+    gchar *file_name = NULL;
+    file_filter1 = gtk_file_filter_new();
+    gtk_file_filter_set_name(file_filter1,
+        _("M3U Playlist(*.M3U, *.m3u)"));
+    gtk_file_filter_add_pattern(file_filter1, "*.M3U");
+    gtk_file_filter_add_pattern(file_filter1, "*.m3u");
+    file_chooser = gtk_file_chooser_dialog_new(_("Save the playlist..."),
+        GTK_WINDOW(main_window),GTK_FILE_CHOOSER_ACTION_SAVE,
+        GTK_STOCK_SAVE,GTK_RESPONSE_ACCEPT,GTK_STOCK_CANCEL,
+        GTK_RESPONSE_CANCEL,NULL);
+    gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(file_chooser),
+        rc_get_home_dir());
+    gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(file_chooser), file_filter1);
+    gtk_file_chooser_set_do_overwrite_confirmation(
+        GTK_FILE_CHOOSER(file_chooser), TRUE);
+    result = gtk_dialog_run(GTK_DIALOG(file_chooser));
+    switch(result)
+    {
+        case GTK_RESPONSE_ACCEPT:
+            file_name = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(
+                file_chooser));
+            plist_save_playlist(file_name, gcore->list_index_selected);
+            g_free(file_name);
+            break;
+        case GTK_RESPONSE_CANCEL:
+            break;
+        default: break;
+    }
+    gtk_widget_destroy(file_chooser);
+}
+
+/*
+ * Export the selected playlist.
+ */
+
+void gui_load_playlist_dialog(GtkWidget *widget, gpointer data)
+{
+    CORE *gcore = get_core();
+    GtkWidget *file_chooser;
+    GtkFileFilter *file_filter1;
+    gint result = 0;
+    gchar *file_name = NULL;
+    file_filter1 = gtk_file_filter_new();
+    gtk_file_filter_set_name(file_filter1,
+        _("M3U Playlist(*.M3U, *.m3u)"));
+    gtk_file_filter_add_pattern(file_filter1, "*.M3U");
+    gtk_file_filter_add_pattern(file_filter1, "*.m3u");
+    file_chooser = gtk_file_chooser_dialog_new(_("Load the playlist..."),
+        GTK_WINDOW(main_window),GTK_FILE_CHOOSER_ACTION_OPEN,
+        GTK_STOCK_OPEN,GTK_RESPONSE_ACCEPT,GTK_STOCK_CANCEL,
+        GTK_RESPONSE_CANCEL,NULL);
+    gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(file_chooser),
+        rc_get_home_dir());
+    gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(file_chooser), file_filter1);
+    result = gtk_dialog_run(GTK_DIALOG(file_chooser));
+    switch(result)
+    {
+        case GTK_RESPONSE_ACCEPT:
+            file_name = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(
+                file_chooser));
+            plist_load_playlist(file_name, gcore->list_index_selected);
+            g_free(file_name);
+            break;
+        case GTK_RESPONSE_CANCEL:
+            break;
+        default: break;
+    }
+    gtk_widget_destroy(file_chooser);
+}
+
+/*
+ * Export all playlists dialog.
+ */
+
+void gui_save_all_playlists_dialog(GtkWidget *widget, gpointer data)
+{
+    GtkWidget *file_chooser;
+    gint result = 0;
+    gint i;
+    gint length = 0;
+    gchar *directory_uri = NULL;
+    gchar *directory_name = NULL;
+    gchar *list_name = NULL;
+    gchar *file_name = NULL;
+    file_chooser = gtk_file_chooser_dialog_new(
+        _("Select the directory you want to store the playlists..."),
+        GTK_WINDOW(main_window),GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
+        GTK_STOCK_SAVE,GTK_RESPONSE_ACCEPT,GTK_STOCK_CANCEL,
+        GTK_RESPONSE_CANCEL,NULL);
+    gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(file_chooser),
+        rc_get_home_dir());
+    result = gtk_dialog_run(GTK_DIALOG(file_chooser));
+    switch(result)
+    {
+        case GTK_RESPONSE_ACCEPT:
+            directory_uri = gtk_file_chooser_get_uri(GTK_FILE_CHOOSER(
+                file_chooser));
+            directory_name = g_filename_from_uri(directory_uri, NULL, NULL);
+            length = plist_get_list_length();
+            for(i=0;i<length;i++)
+            {
+                list_name = plist_get_list_name(i);
+                list_name = g_strdelimit(list_name, "/\\*?|\"<>", ' ');
+                file_name = g_strdup_printf("%s%c%s.M3U", directory_name,
+                    G_DIR_SEPARATOR, list_name);
+                plist_save_playlist(file_name, i);
+                g_free(file_name);
+            }
+            if(directory_name!=NULL) g_free(directory_name);        
+            if(directory_uri!=NULL) g_free(directory_uri);
+            break;
+        case GTK_RESPONSE_CANCEL:
+            break;
+        default: break;
+    }
+    gtk_widget_destroy(file_chooser);
+}
+

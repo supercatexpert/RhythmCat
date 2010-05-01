@@ -6,9 +6,6 @@
 void gui_menu_initial_menus()
 {
     int count = 0;
-    GtkWidget *ls_menu_item[5];
-    GtkWidget *pl_menu_item[5];
-
     /* List right click popup menu. */
     list_tview_pmenu = gtk_menu_new();
     ls_menu_item[0] = gtk_image_menu_item_new_with_mnemonic(
@@ -16,31 +13,29 @@ void gui_menu_initial_menus()
     gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(ls_menu_item[0]),
         gtk_image_new_from_stock(GTK_STOCK_NEW, GTK_ICON_SIZE_MENU));
     ls_menu_item[1] = gtk_image_menu_item_new_with_mnemonic(
-        _("_Add Playlist from file"));
-    gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(ls_menu_item[1]),
-        gtk_image_new_from_stock(GTK_STOCK_ADD, GTK_ICON_SIZE_MENU));
-    ls_menu_item[2] = gtk_image_menu_item_new_with_mnemonic(
         _("_Rename Playlist"));
-    gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(ls_menu_item[2]),
+    gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(ls_menu_item[1]),
         gtk_image_new_from_stock(GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU)); 
-    ls_menu_item[3] = gtk_image_menu_item_new_with_mnemonic(
+    ls_menu_item[2] = gtk_image_menu_item_new_with_mnemonic(
         _("_Delete Playlist"));
-    gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(ls_menu_item[3]),
+    gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(ls_menu_item[2]),
         gtk_image_new_from_stock(GTK_STOCK_REMOVE, GTK_ICON_SIZE_MENU)); 
-    ls_menu_item[4] = gtk_image_menu_item_new_with_mnemonic(
+    ls_menu_item[3] = gtk_image_menu_item_new_with_mnemonic(
         _("_Export Playlist"));
-    gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(ls_menu_item[4]),
+    gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(ls_menu_item[3]),
         gtk_image_new_from_stock(GTK_STOCK_SAVE, GTK_ICON_SIZE_MENU)); 
-    for(count=0;count<5;count++)
+    for(count=0;count<4;count++)
         gtk_menu_shell_append(GTK_MENU_SHELL(list_tview_pmenu),
             ls_menu_item[count]);
     gtk_widget_show_all(list_tview_pmenu);
     g_signal_connect(G_OBJECT(ls_menu_item[0]),"activate",
         G_CALLBACK(gui_list_tree_view_new_list),NULL);
-    g_signal_connect(G_OBJECT(ls_menu_item[2]),"activate",
+    g_signal_connect(G_OBJECT(ls_menu_item[1]),"activate",
         G_CALLBACK(gui_list_tree_view_rename_list),NULL);
-    g_signal_connect(G_OBJECT(ls_menu_item[3]),"activate",
+    g_signal_connect(G_OBJECT(ls_menu_item[2]),"activate",
         G_CALLBACK(gui_list_tree_view_delete_list),NULL);
+    g_signal_connect(G_OBJECT(ls_menu_item[3]),"activate",
+        G_CALLBACK(gui_save_playlist_dialog),NULL);
     /* Play list right click popup menu. */
     plist_tview_pmenu = gtk_menu_new();
     pl_menu_item[0] = gtk_image_menu_item_new_with_mnemonic(
@@ -49,18 +44,28 @@ void gui_menu_initial_menus()
         gtk_image_new_from_stock(GTK_STOCK_INFO, GTK_ICON_SIZE_MENU));
     pl_menu_item[1] = gtk_separator_menu_item_new();
     pl_menu_item[2] = gtk_image_menu_item_new_with_mnemonic(
-        _("_Append music..."));
+        _("Import Music _Files"));
     gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(pl_menu_item[2]),
         gtk_image_new_from_stock(GTK_STOCK_ADD, GTK_ICON_SIZE_MENU));
     pl_menu_item[3] = gtk_image_menu_item_new_with_mnemonic(
-        _("_Remove from list"));
+        _("Import _List"));
     gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(pl_menu_item[3]),
+        gtk_image_new_from_stock(GTK_STOCK_FILE, GTK_ICON_SIZE_MENU));
+    pl_menu_item[4] = gtk_separator_menu_item_new();
+    pl_menu_item[5] = gtk_image_menu_item_new_with_mnemonic(
+        _("Select _All"));
+    gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(pl_menu_item[5]),
+        gtk_image_new_from_stock(GTK_STOCK_SELECT_ALL, GTK_ICON_SIZE_MENU));
+    pl_menu_item[6] = gtk_image_menu_item_new_with_mnemonic(
+        _("_Remove from List"));
+    gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(pl_menu_item[6]),
         gtk_image_new_from_stock(GTK_STOCK_REMOVE, GTK_ICON_SIZE_MENU));
-    pl_menu_item[4] = gtk_image_menu_item_new_with_mnemonic(
-        _("_Clean this list"));
-    gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(pl_menu_item[4]),
-        gtk_image_new_from_stock(GTK_STOCK_CLEAR, GTK_ICON_SIZE_MENU));
-    for(count=0;count<=4;count++)
+    pl_menu_item[7] = gtk_separator_menu_item_new();
+    pl_menu_item[8] = gtk_image_menu_item_new_with_mnemonic(
+        _("Re_flesh Music"));
+    gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(pl_menu_item[8]),
+        gtk_image_new_from_stock(GTK_STOCK_REFRESH, GTK_ICON_SIZE_MENU));
+    for(count=0;count<9;count++)
         gtk_menu_shell_append(GTK_MENU_SHELL(plist_tview_pmenu), 
             pl_menu_item[count]);
     gtk_widget_show_all(plist_tview_pmenu);
@@ -69,7 +74,13 @@ void gui_menu_initial_menus()
     g_signal_connect(G_OBJECT(pl_menu_item[2]),"activate",
         G_CALLBACK(gui_show_open_dialog),NULL);
     g_signal_connect(G_OBJECT(pl_menu_item[3]),"activate",
+        G_CALLBACK(gui_load_playlist_dialog),NULL);
+    g_signal_connect(G_OBJECT(pl_menu_item[5]),"activate",
+        G_CALLBACK(gui_play_list_select_all),NULL);
+    g_signal_connect(G_OBJECT(pl_menu_item[6]),"activate",
         G_CALLBACK(gui_play_list_delete_lists),NULL);
+    g_signal_connect(G_OBJECT(pl_menu_item[8]),"activate",
+        G_CALLBACK(gui_reflesh_music_info),NULL);
     gui_menu_create_main_menus();
 }
 
@@ -79,7 +90,6 @@ void gui_menu_create_main_menus()
     int i = 0;
     main_menu_bar = gtk_menu_bar_new();
     accel_group = gtk_accel_group_new();
-    gtk_window_add_accel_group(GTK_WINDOW(main_window), accel_group);
     /* Main menu items */
     main_menu_items[0] = gtk_menu_item_new_with_mnemonic(_("_File"));
     main_menu_items[1] = gtk_menu_item_new_with_mnemonic(_("_Edit"));
@@ -102,22 +112,25 @@ void gui_menu_create_main_menus()
     gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(file_menu_items[2]),
         gtk_image_new_from_stock(GTK_STOCK_OPEN, GTK_ICON_SIZE_MENU));
     file_menu_items[3] = gtk_image_menu_item_new_with_mnemonic(
-        _("_Import Folder"));
+        _("Import _Playlist"));
     gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(file_menu_items[3]),
-        gtk_image_new_from_stock(GTK_STOCK_DIRECTORY, GTK_ICON_SIZE_MENU));
-
+        gtk_image_new_from_stock(GTK_STOCK_FILE, GTK_ICON_SIZE_MENU));
     file_menu_items[4] = gtk_image_menu_item_new_with_mnemonic(
-        _("_Export Playlist"));
+        _("Import _Folder"));
     gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(file_menu_items[4]),
-        gtk_image_new_from_stock(GTK_STOCK_SAVE, GTK_ICON_SIZE_MENU));
+        gtk_image_new_from_stock(GTK_STOCK_DIRECTORY, GTK_ICON_SIZE_MENU));
     file_menu_items[5] = gtk_image_menu_item_new_with_mnemonic(
-        _("Export _All Playlists"));
+        _("_Export Playlist"));
     gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(file_menu_items[5]),
+        gtk_image_new_from_stock(GTK_STOCK_SAVE, GTK_ICON_SIZE_MENU));
+    file_menu_items[6] = gtk_image_menu_item_new_with_mnemonic(
+        _("Export _All Playlists"));
+    gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(file_menu_items[6]),
         gtk_image_new_from_stock(GTK_STOCK_SAVE_AS, GTK_ICON_SIZE_MENU));
-    file_menu_items[6] = gtk_separator_menu_item_new();
-    file_menu_items[7] = gtk_image_menu_item_new_from_stock(GTK_STOCK_QUIT,
+    file_menu_items[7] = gtk_separator_menu_item_new();
+    file_menu_items[8] = gtk_image_menu_item_new_from_stock(GTK_STOCK_QUIT,
         NULL);
-    gtk_widget_add_accelerator(file_menu_items[7], "activate", accel_group,
+    gtk_widget_add_accelerator(file_menu_items[8], "activate", accel_group,
         GDK_q, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
     /* Edit menu items */
     edit_menu_items[0] = gtk_menu_item_new_with_mnemonic(
@@ -130,13 +143,11 @@ void gui_menu_create_main_menus()
     gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(edit_menu_items[2]),
         gtk_image_new_from_stock(GTK_STOCK_REMOVE, GTK_ICON_SIZE_MENU));
     gtk_widget_add_accelerator(edit_menu_items[2], "activate", accel_group,
-        GDK_Delete, 0, GTK_ACCEL_VISIBLE);
+        GDK_Delete, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
     edit_menu_items[3] = gtk_image_menu_item_new_with_mnemonic(
         _("Select _All"));
     gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(edit_menu_items[3]),
         gtk_image_new_from_stock(GTK_STOCK_SELECT_ALL, GTK_ICON_SIZE_MENU));
-    gtk_widget_add_accelerator(edit_menu_items[3], "activate", accel_group,
-        GDK_a, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
     edit_menu_items[4] = gtk_image_menu_item_new_with_mnemonic(
         _("Re_flesh Music"));
     gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(edit_menu_items[4]),
@@ -214,7 +225,7 @@ void gui_menu_create_main_menus()
     gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(ctrl_menu_items[0]),
         gtk_image_new_from_stock(GTK_STOCK_MEDIA_PLAY, GTK_ICON_SIZE_MENU));
     gtk_widget_add_accelerator(ctrl_menu_items[0], "activate", accel_group,
-        GDK_space, 0, GTK_ACCEL_VISIBLE);
+        GDK_Return, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
     ctrl_menu_items[1] = gtk_image_menu_item_new_with_mnemonic(
         _("_Stop"));
     gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(ctrl_menu_items[1]),
@@ -305,7 +316,8 @@ void gui_menu_create_main_menus()
         gtk_menu_item_set_submenu(GTK_MENU_ITEM(main_menu_items[i]),
             main_menus[i]);
     }
-    for(i=0;i<8;i++)
+    gtk_window_add_accel_group(GTK_WINDOW(main_window), accel_group);
+    for(i=0;i<9;i++)
     {
         gtk_menu_shell_append(GTK_MENU_SHELL(main_menus[0]),
             file_menu_items[i]);
@@ -335,8 +347,14 @@ void gui_menu_create_main_menus()
     g_signal_connect(G_OBJECT(file_menu_items[2]),"activate",
         G_CALLBACK(gui_show_open_dialog),GINT_TO_POINTER(1));
     g_signal_connect(G_OBJECT(file_menu_items[3]),"activate",
+        G_CALLBACK(gui_load_playlist_dialog),NULL);
+    g_signal_connect(G_OBJECT(file_menu_items[4]),"activate",
         G_CALLBACK(gui_open_music_directory),NULL);
-    g_signal_connect(G_OBJECT(file_menu_items[7]),"activate",
+    g_signal_connect(G_OBJECT(file_menu_items[5]),"activate",
+        G_CALLBACK(gui_save_playlist_dialog),NULL);
+    g_signal_connect(G_OBJECT(file_menu_items[6]),"activate",
+        G_CALLBACK(gui_save_all_playlists_dialog),NULL);
+    g_signal_connect(G_OBJECT(file_menu_items[8]),"activate",
         G_CALLBACK(quit_player),NULL);
     g_signal_connect(G_OBJECT(edit_menu_items[2]),"activate",
         G_CALLBACK(gui_play_list_delete_lists),NULL);
@@ -374,7 +392,6 @@ void gui_menu_create_main_menus()
         G_CALLBACK(gui_press_vol_down_menu),NULL);
     g_signal_connect(G_OBJECT(help_menu_items[0]),"activate",
         G_CALLBACK(about_player),NULL);
-
     g_signal_connect(G_OBJECT(repeat_menu_items[0]),"toggled",
         G_CALLBACK(gui_press_repeat_menu),GINT_TO_POINTER(0));
     g_signal_connect(G_OBJECT(repeat_menu_items[2]),"toggled",

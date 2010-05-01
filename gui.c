@@ -368,11 +368,8 @@ gboolean create_main_window()
     gui_see_scale_disable(NULL,NULL);
 
     /* Disable unusable menus */
-    gtk_widget_set_sensitive(file_menu_items[4], FALSE);
-    gtk_widget_set_sensitive(file_menu_items[5], FALSE);
     gtk_widget_set_sensitive(edit_menu_items[2], FALSE);
     gtk_widget_set_sensitive(edit_menu_items[6], FALSE);
-    gtk_widget_set_sensitive(edit_menu_items[7], FALSE);
     gtk_widget_set_sensitive(view_menu_items[7], FALSE);
     gtk_widget_set_sensitive(view_menu_items[9], FALSE);
     gtk_widget_set_sensitive(view_menu_items[11], FALSE);
@@ -734,18 +731,6 @@ gboolean gui_list_file_popup_menu(GtkWidget *widget, GdkEventButton *event,
 }
 
 /*
- * Popup the menu of main window.
- */
-
-gboolean gui_main_window_popup_menu(GtkWidget *widget, GdkEventButton *event,
-    gpointer data)
-{
-    gtk_menu_popup(GTK_MENU(mw_menu),NULL,NULL,NULL,NULL,3,
-        gtk_get_current_event_time());
-    return FALSE;
-}
-
-/*
  * Process the event of play list when the button released.
  */
 
@@ -771,8 +756,11 @@ gboolean gui_play_list_button_release_event(GtkWidget *widget,
         }
     }
     if(event->button==3)
-    gtk_menu_popup(GTK_MENU(plist_tview_pmenu),NULL,NULL,NULL,NULL,3,
-        gtk_get_current_event_time());
+    {
+
+        gtk_menu_popup(GTK_MENU(plist_tview_pmenu),NULL,NULL,NULL,NULL,3,
+            gtk_get_current_event_time());
+    }
     return FALSE;
 }
 
@@ -1008,10 +996,12 @@ void gui_set_play_list_menu(GtkTreeView *widget, gpointer data)
     if(value>0)
     {
         gtk_widget_set_sensitive(edit_menu_items[2], TRUE);
+        gtk_widget_set_sensitive(pl_menu_item[6], TRUE);
     }
     else
     {
         gtk_widget_set_sensitive(edit_menu_items[2], FALSE);
+        gtk_widget_set_sensitive(pl_menu_item[6], FALSE);
     }
 }
 

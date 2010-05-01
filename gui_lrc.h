@@ -6,8 +6,11 @@
 #define LRC_GUI
 
 /* Variables */
-GtkWidget *lrc_window, *lrc_scene, *lrc_vbox1, *lrc_vbox2, *lrc_text, *lrc_scrolled;
+GtkWidget *lrc_window, *lrc_scene, *lrc_vbox1, *lrc_vbox2;
+GtkWidget *lrc_text, *lrc_scrolled;
 GtkWidget *lrc_notebook;
+GtkWidget *lrc_toolbar;
+GtkToolItem *lrc_tool_buttons[15];
 GtkTextBuffer *lrc_buffer;
 GtkTextIter lrc_iter;
 guint64 lrc_line_length = 0L;
@@ -23,6 +26,7 @@ double text_color[4] = {1.0, 1.0, 1.0, 1.0};
 double text_hilight[4] = {0.359375, 0.65234375, 0.83984375, 1.0};
 gboolean lyric_flag = FALSE;
 gboolean lyric_new_flag = TRUE;
+gboolean lyric_edit_flag = FALSE;
 cairo_surface_t *bg_image = NULL;
 
 /* Functions */
@@ -34,6 +38,24 @@ gboolean gui_lrc_update(GtkWidget *, gpointer);
 void gui_lrc_enable();
 void gui_lrc_disable();
 void gui_edit_lyric(GtkMenuItem *, gpointer);
+void gui_lrc_new_toolbar();
+void gui_lrc_edit_add_tag(GtkWidget *, gpointer);
+void gui_lrc_edit_replace_tag(GtkWidget *, gpointer);
+void gui_lrc_edit_delete_tag(GtkWidget *, gpointer);
+void gui_lrc_edit_cut_selection(GtkWidget *, gpointer);
+void gui_lrc_edit_copy_selection(GtkWidget *, gpointer);
+void gui_lrc_edit_paste_selection(GtkWidget *, gpointer);
+void gui_lrc_edit_delete_selection(GtkWidget *, gpointer);
+void gui_lrc_edit_mark_set(GtkTextBuffer *, GtkTextIter *, GtkTextMark *,
+    gpointer);
+void gui_lrc_edit_undo_selection(GtkWidget *, gpointer);
+void gui_lrc_edit_redo_selection(GtkWidget *, gpointer);
+void gui_lrc_edit_changed(GtkTextBuffer *, gpointer);
+void gui_lrc_edit_undo(GtkWidget *, gpointer);
+void gui_lrc_edit_redo(GtkWidget *, gpointer);
+void gui_lrc_edit_return(GtkWidget *, gpointer);
+void gui_lrc_edit_load(GtkWidget *, gpointer);
+void gui_lrc_edit_save(GtkWidget *, gpointer);
 
 #endif
 

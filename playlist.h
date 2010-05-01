@@ -56,6 +56,8 @@ void plist_plist_move(int, int *, int, int);
 void plist_plist_move2(int, int*, int, int);
 void plist_delete_music2(int, int*, int);
 void plist_reflesh_info(int);
+void plist_save_playlist(gchar *, int);
+void plist_load_playlist(gchar *, int);
 
 /* Extern Functions */
 extern CORE *get_core();
@@ -65,6 +67,8 @@ extern int core_stop();
 extern void gui_play_list_view_rebuild(int);
 extern void gui_play_list_view_set_state(GtkWidget *, gint, gchar *);
 extern void gui_list_view_set_state(GtkWidget *, gint, gchar *);
+extern void gui_insert_play_list_view(GtkWidget *, const gchar *, gint, 
+    const gchar *, const gchar *, gint64, gint);
 extern void gui_insert_list_file_view(GtkWidget *, const gchar *, const gchar *,
     gint);
 extern void gui_set_music_info_label(gchar *, gchar *, gchar *);

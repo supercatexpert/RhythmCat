@@ -316,6 +316,11 @@ void plist_load_metadata(gchar *uri, MusicMetaData *mmd, int *errorno)
             tag_id3 = tag_get_id3(path);
             if(tag_id3!=NULL)
             {
+                if(tag_id3[3]!=NULL)
+                {
+                    if(mmd->comment!=NULL) g_free(mmd->comment);
+                    mmd->comment = tag_id3[3];
+                }
                 if(tag_id3[2]!=NULL)
                 {
                     if(mmd->title!=NULL) g_free(mmd->title);
@@ -1007,4 +1012,115 @@ void plist_reflesh_info(int index)
     }
     gui_play_list_view_rebuild(index);
 }
+
+/*
+ * Save the playlist.
+ */
+
+void plist_save_playlist(gchar *s_filename, int index)
+{
+    if(index<0 || index>=plist_get_list_length()) return;
+    if(s_filename==NULL || *s_filename=='\0') return;
+    gchar *filename;
+    gchar *uri;
+    gchar *music_filename;
+    MusicData *md;
+    FILE *fp;
+    int length = 0;
+    int i = 0;
+    if(g_str_has_suffix(s_filename, ".M3U") || 
+        g_str_has_suffix(s_filename, ".m3u"))
+        filename = g_strdup(s_filename);
+    else
+        filename = g_strdup_printf("%s.M3U", s_filename);
+    fp = fopen(filename, "wb");
+    g_free(filename);
+    if(fp==NULL) return;
+    fprintf(fp, "#EXTM3U\n");
+    length = plist_get_plist_length(index); 
+    for(i=1;i<=length;i++)
+    {
+        plist_get_music_data(index, i, &md);
+        uri = md->uri;
+        music_filename = g_filename_from_uri(uri,NULL,NULL);
+        if(*(md->artist)=='\0')
+            fprintf(fp, "#EXTINF:%ld,%s\n%s\n", md->length/100,
+                md->title, music_filename);
+        else
+            fprintf(fp, "#EXTINF:%ld,%s - %s\n%s\n", md->length/100,
+                md->artist, md->title, music_filename);
+        g_free(music_filename);
+    }
+    fclose(fp);
+}
+
+/*
+ * Load the playlist.
+ */
+
+void plist_load_playlist(gchar *s_filename, int index)
+{
+    if(index<0 || index>=plist_get_list_length()) return;
+    if(s_filename==NULL || *s_filename=='\0') return;
+    MusicData *md = NULL;
+    gchar *contents = NULL;
+    gchar *file_list = NULL;
+    gchar *file_data = NULL;
+    gchar **file_array = NULL;
+    gchar *line = NULL;
+    gchar *uri = NULL;
+    gchar *temp_name = NULL;
+    gchar *path = NULL;
+    gsize s_length = 0;
+    guint length = 0;
+    guint i = 0;
+    guint linenum = 0;
+    gint pos = 0;
+    if(!g_file_get_contents(s_filename, &contents, &s_length, NULL))
+        return;
+    path = g_path_get_dirname(s_filename);
+    file_list = g_malloc0(s_length * sizeof(gchar));
+    for(i=0;i<s_length;i++)
+    {
+        if(contents[i]!='\r')
+        {
+            file_list[length] = contents[i];
+            length++;
+        }
+    }
+    g_free(contents);
+    file_data = file_list;
+    file_array = g_strsplit(file_data, "\n", 0);
+    while(file_array[linenum]!=NULL)
+    {
+        line = file_array[linenum];
+        if(!g_str_has_prefix(line, "#") && *line!='\n' && *line!='\0')
+        {
+            if(!g_path_is_absolute(line))
+            {
+                temp_name = g_strdup_printf("%s%c%s", path, G_DIR_SEPARATOR,
+                    line);
+                line = temp_name;
+            }
+            uri = g_filename_to_uri(line, NULL, NULL);
+            if(uri!=NULL)
+            {
+                plist_insert_music(uri,index,-1);
+                pos = plist_get_plist_length(index);
+                plist_get_music_data(index, pos, &md);
+                gui_insert_play_list_view(NULL, NULL, pos,
+                    md->title, md->artist, md->length, pos);
+                g_free(uri);
+            }
+        }
+        linenum++;
+    }
+    g_strfreev(file_array);
+
+    g_free(path);
+    g_free(file_list);
+}
+
+
+
 

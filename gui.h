@@ -12,6 +12,7 @@
 #include <gdk/gdk.h>
 #include <gtk/gtk.h>
 #include <gst/gst.h>
+#include <gtksourceview/gtksourceview.h>
 #include <png.h>
 #include <glib/gi18n.h>
 #include "global.h"
@@ -82,7 +83,6 @@ gboolean gui_see_scale_enable(GtkWidget *,gpointer);
 gboolean gui_seek_scale_button_pressed(GtkWidget *, GdkEventButton *, gpointer);
 gboolean gui_seek_scale_button_released(GtkWidget *, GdkEventButton *, gpointer);
 void gui_seek_scale_value_changed(GtkRange *, gpointer);
-gboolean gui_main_window_popup_menu(GtkWidget *, GdkEventButton *, gpointer);
 gboolean gui_play_list_popup_menu(GtkWidget *, GdkEventButton *, gpointer);
 gboolean gui_list_file_popup_menu(GtkWidget *, GdkEventButton *, gpointer);
 gboolean gui_play_list_button_release_event(GtkWidget *,
@@ -124,6 +124,8 @@ extern void plist_plist_move(int, int *, int, int);
 extern void plist_plist_move2(int, int*, int, int);
 extern void plist_delete_music2(int, int*, int);
 extern void plist_reflesh_info(int);
+extern void plist_save_playlist(gchar *, int);
+extern void plist_load_playlist(gchar *, int);
 extern CORE *get_core();
 extern void delete_core();
 extern int core_play();
@@ -140,6 +142,9 @@ extern int core_set_volume(double);
 extern void core_set_eq_effect(gdouble *);
 extern const GList *lrc_get_lyric_data();
 extern const gchar *lrc_get_text_data();
+extern gboolean lrc_open_lyric_from_file(const gchar *);
+extern void lrc_set_new_text(const gchar *);
+extern gboolean lrc_save_lyric(const gchar *);
 extern gchar *rc_get_program_name();
 extern gchar *rc_get_build_num();
 extern gchar *rc_get_ver_num();

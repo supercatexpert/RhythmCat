@@ -5,8 +5,6 @@
 
 #include "core.h"
 
-int auto_play_next_list = TRUE;
-
 /*
  * Gstreamer bus call (Used to receive tag, EOS, and so on.)
  */
@@ -101,7 +99,7 @@ void create_core()
     rc_core->play=play;
     rc_core->bus=bus;
     rc_core->eos=FALSE;
-    rc_core->core_state=0;
+    rc_core->core_state=CORE_STOPPED;
     rc_core->repeat=setting->repeat_mode;
     rc_core->random=setting->random_mode;
     rc_core->eq_plugin=audio_equalizer;
@@ -178,7 +176,7 @@ int core_play()
     }
     flag = gst_element_set_state(gcore->play,GST_STATE_PLAYING);
     if(!flag) return FALSE;
-    gcore->core_state = 1;
+    gcore->core_state = CORE_PLAYING;
     gui_see_scale_enable(NULL,NULL);
     gui_set_play_button_state(TRUE);
     gui_set_state_statusbar(CORE_PLAYING);
@@ -195,7 +193,7 @@ int core_pause()
     int flag = TRUE;
     flag = gst_element_set_state(gcore->play,GST_STATE_PAUSED);
     if(!flag) return FALSE;
-    gcore->core_state = 2;
+    gcore->core_state = CORE_PAUSED;
     gui_set_play_button_state(FALSE);
     gui_set_state_statusbar(CORE_PAUSED);
     return TRUE;
@@ -211,7 +209,7 @@ int core_stop()
     int flag = TRUE;
     flag = gst_element_set_state(gcore->play,GST_STATE_READY);
     if(!flag) return FALSE;
-    gcore->core_state = 0;
+    gcore->core_state = CORE_STOPPED;
     gui_see_scale_disable(NULL,NULL);
     gui_set_play_button_state(FALSE);
     gui_list_view_set_state(NULL, gcore->list_index, 
