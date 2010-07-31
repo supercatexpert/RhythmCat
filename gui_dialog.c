@@ -3,10 +3,19 @@
  * Build the Dialogs in the player. 
  */
 
+#include "gui_dialog.h"
+
+/* Variables */
+static gchar *support_format[]={"*.FLAC","*.flac","*.OGG","*.ogg","*.MP3",
+    "*.mp3", "*.WMA","*.wma","*.WAV","*.wav","*.OGA","*.oga","*.OGM","*.ogm",
+    "*.APE","*.ape","*.AAC","*.aac","*.AC3","*.ac3",NULL};
+GtkWidget *metadata_entry[9];
+
 static void gui_open_music_dir_recu(const gchar *dir_name, gint depth)
 {
     if(depth<=0) return;
-    CORE *gcore = get_core();
+    GuiData *rc_ui = get_gui();
+    CoreData *gcore = get_core();
     MusicData *md = NULL;
     gchar *full_file_name = NULL;
     GDir *dir = g_dir_open(dir_name, 0, NULL);
@@ -45,7 +54,7 @@ static void gui_open_music_dir_recu(const gchar *dir_name, gint depth)
             plist_insert_music(uri,gcore->list_index_selected,-1);
             index = plist_get_plist_length(gcore->list_index_selected);
             plist_get_music_data(gcore->list_index_selected, index, &md);
-            gui_insert_play_list_view(play_list_tree_view, NULL, index,
+            gui_insert_play_list_view(rc_ui->play_list_tree_view, NULL, index,
                 md->title, md->artist, md->length, index);
             g_free(uri);
         }
@@ -92,7 +101,8 @@ void gui_show_open_dialog(GtkWidget *widget, gpointer data)
 {
     gboolean open_and_play = FALSE;
     if(data!=NULL && GPOINTER_TO_INT(data)==1) open_and_play = TRUE;
-    CORE *gcore = get_core();
+    CoreData *gcore = get_core();
+    GuiData *rc_ui = get_gui();
     GtkWidget *file_chooser;
     GtkFileFilter *file_filter1;
     gint result = 0;
@@ -117,7 +127,7 @@ void gui_show_open_dialog(GtkWidget *widget, gpointer data)
     else
         dialog_title = _("Select the music you want to append...");
     file_chooser = gtk_file_chooser_dialog_new(dialog_title,
-        GTK_WINDOW(main_window),GTK_FILE_CHOOSER_ACTION_OPEN,
+        GTK_WINDOW(rc_ui->main_window),GTK_FILE_CHOOSER_ACTION_OPEN,
         GTK_STOCK_OPEN,GTK_RESPONSE_ACCEPT,GTK_STOCK_CANCEL,
         GTK_RESPONSE_CANCEL,NULL);
     gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(file_chooser),
@@ -145,8 +155,8 @@ void gui_show_open_dialog(GtkWidget *widget, gpointer data)
                     index = plist_get_plist_length(gcore->list_index_selected);
                 plist_get_music_data(gcore->list_index_selected,
                     index, &md);
-                gui_insert_play_list_view(play_list_tree_view, NULL, index,
-                    md->title, md->artist, md->length, index);
+                gui_insert_play_list_view(rc_ui->play_list_tree_view, NULL, 
+                    index, md->title, md->artist, md->length, index);
                 if(open_and_play) index++;
                 g_free(uri);
             }
@@ -179,7 +189,8 @@ static void gui_close_music_info(GtkWidget *widget, gpointer data)
 
 void gui_show_music_info(GtkWidget *widget, gpointer data)
 {
-    CORE *gcore = get_core();
+    CoreData *gcore = get_core();
+    GuiData *rc_ui = get_gui();
     static GList *path_list = NULL;
     gint *indices = NULL;
     gint index = 0;
@@ -215,8 +226,9 @@ void gui_show_music_info(GtkWidget *widget, gpointer data)
     static GtkWidget *location_hbox;
     static GtkWidget *metadata_table;
     static GtkWidget *generic_frame, *metadata_frame;
-    if(info_window!=NULL && GTK_IS_WIDGET(info_window))
-        window_exist = GTK_WIDGET_REALIZED(info_window);
+    if(info_window!=NULL && GTK_IS_WIDGET(info_window) &&
+        GTK_WIDGET_REALIZED(info_window))
+        window_exist = GTK_WIDGET_VISIBLE(info_window);
     else window_exist = FALSE;
     if(path_list!=NULL)
     {
@@ -224,8 +236,8 @@ void gui_show_music_info(GtkWidget *widget, gpointer data)
         g_list_free(path_list);
         path_list = NULL;
     }
-    path_list = gtk_tree_selection_get_selected_rows(play_list_selection,
-        NULL);
+    path_list = gtk_tree_selection_get_selected_rows(
+        rc_ui->play_list_selection, NULL);
     if(path_list==NULL) return;
     path = g_list_nth_data(path_list, 0);
     if(path==NULL)
@@ -253,7 +265,7 @@ void gui_show_music_info(GtkWidget *widget, gpointer data)
         info_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
         gtk_window_set_title(GTK_WINDOW(info_window),_("Music Information"));
         gtk_window_set_transient_for(GTK_WINDOW(info_window),
-            GTK_WINDOW(main_window));
+            GTK_WINDOW(rc_ui->main_window));
         gtk_window_set_position(GTK_WINDOW(info_window),
             GTK_WIN_POS_CENTER_ON_PARENT);
         gtk_widget_set_size_request(info_window, 400, -1);
@@ -268,7 +280,6 @@ void gui_show_music_info(GtkWidget *widget, gpointer data)
         confirm_button = gtk_button_new_from_stock(GTK_STOCK_SAVE);
         cancel_button = gtk_button_new_from_stock(GTK_STOCK_CANCEL);
         reflesh_button = gtk_button_new_from_stock(GTK_STOCK_REFRESH);
-        gtk_widget_set_sensitive(confirm_button, FALSE);
         format_label = gtk_label_new(_("Format: "));
         format_entry = gtk_label_new("");
         bitrate_label = gtk_label_new(_("Bitrate: "));
@@ -383,6 +394,8 @@ void gui_show_music_info(GtkWidget *widget, gpointer data)
             G_CALLBACK(gui_show_music_info), NULL);
         g_signal_connect(G_OBJECT(cancel_button), "clicked",
             G_CALLBACK(gui_close_music_info), info_window);
+        g_signal_connect(G_OBJECT(confirm_button), "clicked",
+            G_CALLBACK(gui_change_music_info), NULL);
         gtk_widget_show_all(info_window);
     }
     else
@@ -403,9 +416,39 @@ void gui_show_music_info(GtkWidget *widget, gpointer data)
     gtk_label_set_text(GTK_LABEL(bitrate_entry), bitrate_str);
     gtk_entry_set_text(GTK_ENTRY(tracknum_entry), tracknum_str);
     if(mmd->file_type!=NULL)
+    {
+        if(strstr(mmd->file_type, "MP3")!=NULL ||
+            strstr(mmd->file_type, "FLAC")!=NULL ||
+            strstr(mmd->file_type, "Vorbis")!=NULL)
+        {
+            gtk_widget_set_sensitive(confirm_button, TRUE);
+            gtk_entry_set_editable(GTK_ENTRY(title_entry), TRUE);
+            gtk_entry_set_editable(GTK_ENTRY(artist_entry), TRUE);
+            gtk_entry_set_editable(GTK_ENTRY(album_entry), TRUE);
+            gtk_entry_set_editable(GTK_ENTRY(comment_entry), TRUE);
+            gtk_entry_set_editable(GTK_ENTRY(tracknum_entry), TRUE);
+        }
+        else
+        {
+            gtk_widget_set_sensitive(confirm_button, FALSE);
+            gtk_entry_set_editable(GTK_ENTRY(title_entry), FALSE);
+            gtk_entry_set_editable(GTK_ENTRY(artist_entry), FALSE);
+            gtk_entry_set_editable(GTK_ENTRY(album_entry), FALSE);
+            gtk_entry_set_editable(GTK_ENTRY(comment_entry), FALSE);
+            gtk_entry_set_editable(GTK_ENTRY(tracknum_entry), FALSE);
+        }
         gtk_label_set_text(GTK_LABEL(format_entry), mmd->file_type);
+    }
     else
+    {
         gtk_label_set_text(GTK_LABEL(format_entry), "");
+        gtk_widget_set_sensitive(confirm_button, FALSE);
+        gtk_entry_set_editable(GTK_ENTRY(title_entry), FALSE);
+        gtk_entry_set_editable(GTK_ENTRY(artist_entry), FALSE);
+        gtk_entry_set_editable(GTK_ENTRY(album_entry), FALSE);
+        gtk_entry_set_editable(GTK_ENTRY(comment_entry), FALSE);
+        gtk_entry_set_editable(GTK_ENTRY(tracknum_entry), FALSE);
+    }
     if(mmd->title!=NULL)
         gtk_entry_set_text(GTK_ENTRY(title_entry), mmd->title);
     else
@@ -450,12 +493,21 @@ void gui_show_music_info(GtkWidget *widget, gpointer data)
         g_list_free(path_list);
         path_list = NULL;
     }
+    metadata_entry[0] = title_entry;
+    metadata_entry[1] = artist_entry;
+    metadata_entry[2] = album_entry;
+    metadata_entry[3] = tracknum_entry;
+    metadata_entry[4] = comment_entry;
+    metadata_entry[5] = uri_entry;
+    metadata_entry[6] = format_entry;
+    metadata_entry[7] = confirm_button;
+    metadata_entry[8] = info_window;
     if(mmd->title!=NULL) g_free(mmd->title);
     if(mmd->artist!=NULL) g_free(mmd->artist);
     if(mmd->file_type!=NULL) g_free(mmd->file_type);
     if(mmd->album!=NULL) g_free(mmd->album);
     if(mmd->comment!=NULL) g_free(mmd->comment);
-    if(mmd!=NULL) g_free(mmd);   
+    if(mmd!=NULL) g_free(mmd);
 }
 
 /*
@@ -465,12 +517,13 @@ void gui_show_music_info(GtkWidget *widget, gpointer data)
 void gui_open_music_directory(GtkWidget *widget, gpointer data)
 {
     GtkWidget *file_chooser;
+    GuiData *rc_ui = get_gui();
     gint result = 0;
     gchar *directory_uri = NULL;
     gchar *directory_name = NULL;
     file_chooser = gtk_file_chooser_dialog_new(
         _("Select the directory you want to import..."),
-        GTK_WINDOW(main_window),GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
+        GTK_WINDOW(rc_ui->main_window),GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
         GTK_STOCK_OPEN,GTK_RESPONSE_ACCEPT,GTK_STOCK_CANCEL,
         GTK_RESPONSE_CANCEL,NULL);
     gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(file_chooser),
@@ -499,7 +552,8 @@ void gui_open_music_directory(GtkWidget *widget, gpointer data)
 
 void gui_save_playlist_dialog(GtkWidget *widget, gpointer data)
 {
-    CORE *gcore = get_core();
+    CoreData *gcore = get_core();
+    GuiData *rc_ui = get_gui();
     GtkWidget *file_chooser;
     GtkFileFilter *file_filter1;
     gint result = 0;
@@ -510,7 +564,7 @@ void gui_save_playlist_dialog(GtkWidget *widget, gpointer data)
     gtk_file_filter_add_pattern(file_filter1, "*.M3U");
     gtk_file_filter_add_pattern(file_filter1, "*.m3u");
     file_chooser = gtk_file_chooser_dialog_new(_("Save the playlist..."),
-        GTK_WINDOW(main_window),GTK_FILE_CHOOSER_ACTION_SAVE,
+        GTK_WINDOW(rc_ui->main_window),GTK_FILE_CHOOSER_ACTION_SAVE,
         GTK_STOCK_SAVE,GTK_RESPONSE_ACCEPT,GTK_STOCK_CANCEL,
         GTK_RESPONSE_CANCEL,NULL);
     gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(file_chooser),
@@ -540,7 +594,8 @@ void gui_save_playlist_dialog(GtkWidget *widget, gpointer data)
 
 void gui_load_playlist_dialog(GtkWidget *widget, gpointer data)
 {
-    CORE *gcore = get_core();
+    CoreData *gcore = get_core();
+    GuiData *rc_ui = get_gui();
     GtkWidget *file_chooser;
     GtkFileFilter *file_filter1;
     gint result = 0;
@@ -551,9 +606,9 @@ void gui_load_playlist_dialog(GtkWidget *widget, gpointer data)
     gtk_file_filter_add_pattern(file_filter1, "*.M3U");
     gtk_file_filter_add_pattern(file_filter1, "*.m3u");
     file_chooser = gtk_file_chooser_dialog_new(_("Load the playlist..."),
-        GTK_WINDOW(main_window),GTK_FILE_CHOOSER_ACTION_OPEN,
-        GTK_STOCK_OPEN,GTK_RESPONSE_ACCEPT,GTK_STOCK_CANCEL,
-        GTK_RESPONSE_CANCEL,NULL);
+        GTK_WINDOW(rc_ui->main_window), GTK_FILE_CHOOSER_ACTION_OPEN,
+        GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT, GTK_STOCK_CANCEL,
+        GTK_RESPONSE_CANCEL, NULL);
     gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(file_chooser),
         rc_get_home_dir());
     gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(file_chooser), file_filter1);
@@ -580,6 +635,7 @@ void gui_load_playlist_dialog(GtkWidget *widget, gpointer data)
 void gui_save_all_playlists_dialog(GtkWidget *widget, gpointer data)
 {
     GtkWidget *file_chooser;
+    GuiData *rc_ui = get_gui();
     gint result = 0;
     gint i;
     gint length = 0;
@@ -589,9 +645,9 @@ void gui_save_all_playlists_dialog(GtkWidget *widget, gpointer data)
     gchar *file_name = NULL;
     file_chooser = gtk_file_chooser_dialog_new(
         _("Select the directory you want to store the playlists..."),
-        GTK_WINDOW(main_window),GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
-        GTK_STOCK_SAVE,GTK_RESPONSE_ACCEPT,GTK_STOCK_CANCEL,
-        GTK_RESPONSE_CANCEL,NULL);
+        GTK_WINDOW(rc_ui->main_window), GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
+        GTK_STOCK_SAVE,GTK_RESPONSE_ACCEPT, GTK_STOCK_CANCEL,
+        GTK_RESPONSE_CANCEL, NULL);
     gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(file_chooser),
         rc_get_home_dir());
     result = gtk_dialog_run(GTK_DIALOG(file_chooser));
@@ -620,4 +676,34 @@ void gui_save_all_playlists_dialog(GtkWidget *widget, gpointer data)
     }
     gtk_widget_destroy(file_chooser);
 }
+
+void gui_change_music_info(GtkWidget *widget, gpointer data)
+{
+    MusicMetaData mmd;
+    gboolean flag = FALSE;
+    const gchar *path = gtk_entry_get_text(GTK_ENTRY(metadata_entry[5]));
+    const gchar *type = gtk_label_get_text(GTK_LABEL(metadata_entry[6]));
+    mmd.title = (gchar *)gtk_entry_get_text(GTK_ENTRY(metadata_entry[0]));
+    mmd.artist = (gchar *)gtk_entry_get_text(GTK_ENTRY(metadata_entry[1]));
+    mmd.album = (gchar *)gtk_entry_get_text(GTK_ENTRY(metadata_entry[2]));
+    sscanf(gtk_entry_get_text(GTK_ENTRY(metadata_entry[3])), "%d",
+        &mmd.tracknum);
+    mmd.comment = (gchar *)gtk_entry_get_text(GTK_ENTRY(metadata_entry[4]));
+    gtk_widget_set_sensitive(metadata_entry[7], FALSE);
+    flag = tools_change_tag(path, type, &mmd);
+}
+
+void gui_music_info_tagged()
+{
+    gdk_threads_enter();
+    GtkWidget *msg_dialog;
+    gtk_widget_set_sensitive(metadata_entry[7], TRUE);
+    msg_dialog = gtk_message_dialog_new(GTK_WINDOW(metadata_entry[8]),
+        GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_INFO, GTK_BUTTONS_OK,
+        _("Change the tag successfully!"));
+    gtk_dialog_run(GTK_DIALOG(msg_dialog));
+    gtk_widget_destroy(msg_dialog);
+    gdk_threads_leave();
+}
+
 

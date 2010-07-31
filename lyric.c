@@ -5,10 +5,17 @@
 
 #include "lyric.h"
 
+/* Variables */
+static GList *lrc_line_data = NULL;
+static gchar *lrc_text_data = NULL;
+static guint64 lrc_num_of_targets = 0;
+static gchar *ex_encoding = NULL;
+
 gboolean lrc_open_lyric_from_file(const gchar *filename)
 {
     gboolean flag = TRUE;
     gsize length = 0;
+    gsize new_length = 0;
     gsize size1 = 0, size2 = 0;
     gint i = 0, j = 0;
     gchar chr;
@@ -21,8 +28,38 @@ gboolean lrc_open_lyric_from_file(const gchar *filename)
     if(lrc_line_data!=NULL) lrc_clean_text_data();
     if(lrc_text_data!=NULL) g_free(lrc_text_data);
     flag = g_file_get_contents(filename, &lrc_text_data, &length, NULL);
-    if(!flag) return FALSE;
-    ex_encoding = rc_setting->tag_ex_encoding;
+    if(!flag)
+    {
+        lrc_text_data = NULL;
+        return FALSE;
+    }
+    if(length<=0)
+    {
+        g_free(lrc_text_data);
+        lrc_text_data = NULL;
+        return FALSE;
+    }
+    ex_encoding = rc_setting->lrc_ex_encoding;
+    if(!g_utf8_validate(lrc_text_data,-1,NULL))
+    {
+        new_text = g_convert(lrc_text_data, length, "UTF-8",
+            ex_encoding, &size1, &size2, NULL);
+        if(new_text==NULL)
+        {
+            g_free(lrc_text_data);
+            lrc_text_data = NULL;
+            return FALSE;
+        }
+        g_free(lrc_text_data);
+        lrc_text_data = new_text;
+        length = strlen(lrc_text_data);
+    }
+    if(length<=0)
+    {
+        if(lrc_text_data!=NULL) g_free(lrc_text_data);
+        lrc_text_data = NULL;
+        return FALSE;
+    }
     new_text = g_malloc0(length * sizeof(gchar));
     for(i=0;i<length;i++)
     {
@@ -30,19 +67,12 @@ gboolean lrc_open_lyric_from_file(const gchar *filename)
         if(chr!='\r')
         {
             new_text[j] = chr;
+            new_length++;
             j++;
         }
     }
     g_free(lrc_text_data);
     lrc_text_data = new_text;
-    if(!g_utf8_validate(lrc_text_data,-1,NULL))
-    {
-        new_text = g_convert(lrc_text_data, -1, "UTF-8",
-            ex_encoding, &size1, &size2, NULL);
-        g_free(lrc_text_data);
-        lrc_text_data = new_text;
-    }
-    if(!flag) return FALSE;
     text_data = lrc_text_data;
     text_data_array = g_strsplit(text_data, "\n", 0);
     while(text_data_array[linenum]!=NULL)

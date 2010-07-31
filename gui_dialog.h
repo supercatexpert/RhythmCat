@@ -5,12 +5,14 @@
 #ifndef HAVE_GUI_DIALOG_H
 #define HAVE_GUI_DIALOG_H
 
-#define MAX_DIR_DEPTH 5
+#include <stdlib.h>
+#include <glib.h>
+#include <glib/gprintf.h>
+#include <gtk/gtk.h>
+#include "gui.h"
+#include "core.h"
 
-/* Variables */
-gchar *support_format[]={"*.FLAC","*.flac","*.OGG","*.ogg","*.MP3","*.mp3",
-    "*.WMA","*.wma","*.WAV","*.wav","*.OGA","*.oga","*.OGM","*.ogm",
-    "*.APE","*.ape","*.AAC","*.aac","*.AC3","*.ac3",NULL};
+#define MAX_DIR_DEPTH 5
 
 /* Functions */
 void about_player();
@@ -20,5 +22,8 @@ void gui_open_music_directory(GtkWidget *, gpointer);
 void gui_save_playlist_dialog(GtkWidget *, gpointer);
 void gui_load_playlist_dialog(GtkWidget *, gpointer);
 void gui_save_all_playlists_dialog(GtkWidget *, gpointer);
+void gui_change_music_info(GtkWidget *, gpointer);
+void gui_music_info_tagged();
 
 #endif
+

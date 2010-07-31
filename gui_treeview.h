@@ -5,9 +5,10 @@
 #ifndef HAVE_GUI_TREEVIEW_H
 #define HAVE_GUI_TREEVIEW_H
 
-/* Variables */
-GtkCellRenderer *renderer_text[5];
-GtkCellRenderer *renderer_pixbuf[2];
+#include <glib.h>
+#include <glib/gprintf.h>
+#include <gtk/gtk.h>
+#include "gui.h"
 
 /* Functions */
 void gui_tree_view_build();
@@ -18,7 +19,7 @@ void gui_insert_list_file_view(GtkWidget *, const gchar *, const gchar *,
 void gui_insert_play_list_view(GtkWidget *, const gchar *, gint, const gchar *,
     const gchar *, gint64, gint);
 void gui_play_list_view_reflush_index(GtkWidget *, int);
-void gui_list_view_row_selected(GtkTreeView *, gpointer data);
+void gui_list_view_row_selected(GtkTreeView *, gpointer);
 void gui_plist_view_row_activated(GtkTreeView *, GtkTreePath *, 
     GtkTreeViewColumn *, gpointer);
 void gui_play_list_view_set_state(GtkWidget *, gint, gchar *);

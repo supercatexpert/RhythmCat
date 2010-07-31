@@ -2,35 +2,51 @@
  * GUI Lyric Show Declaration
  */
 
-#ifndef LRC_GUI
-#define LRC_GUI
+#ifndef GUI_LRC_H
+#define GUI_LRC_H
 
-/* Variables */
-GtkWidget *lrc_window, *lrc_scene, *lrc_vbox1, *lrc_vbox2;
-GtkWidget *lrc_text, *lrc_scrolled;
-GtkWidget *lrc_notebook;
-GtkWidget *lrc_toolbar;
-GtkToolItem *lrc_tool_buttons[15];
-GtkTextBuffer *lrc_buffer;
-GtkTextIter lrc_iter;
-guint64 lrc_line_length = 0L;
-gint64 lrc_line_num = -1L;
-gint64 lrc_time_delay = 0L;
-const GList *lyric_data = NULL;
-const GList *lyric_line = NULL;
-const gchar *lyric_text = NULL;
-gchar *lyric_font = "Wenquanyi Zenhei Mono 10";
-guint lyric_line_ds = 0;
-double background[4] = {0.23046875, 0.3359375, 0.44921875, 1.0};
-double text_color[4] = {1.0, 1.0, 1.0, 1.0};
-double text_hilight[4] = {0.359375, 0.65234375, 0.83984375, 1.0};
-gboolean lyric_flag = FALSE;
-gboolean lyric_new_flag = TRUE;
-gboolean lyric_edit_flag = FALSE;
-cairo_surface_t *bg_image = NULL;
+#include <stdlib.h>
+#include <glib.h>
+#include <glib/gprintf.h>
+#include <gdk/gdk.h>
+#include <gtk/gtk.h>
+#include <gtksourceview/gtksourceview.h>
+#include <gtksourceview/gtksourcelanguagemanager.h>
+#include "gui.h"
+
+/* Custom struct type to store the GUI Lyric data. */
+
+typedef struct _GuiLrcData
+{
+    GtkWidget *lrc_scene;
+    GtkWidget *lrc_text;
+    GtkWidget *lrc_notebook;
+    GtkWidget *lrc_toolbar;
+    GtkToolItem *lrc_tool_buttons[15];
+    GtkSourceBuffer *lrc_buffer;
+    GtkTextIter lrc_iter;
+    guint64 lrc_line_length;
+    gint64 lrc_line_num;
+    gint64 lrc_time_delay;
+    const GList *lyric_data;
+    const GList *lyric_line;
+    const gchar *lyric_text;
+    gchar *lyric_font;
+    guint lyric_line_ds;
+    double background[4];
+    double text_color[4];
+    double text_hilight[4];
+    gboolean lyric_flag;
+    gboolean lyric_new_flag;
+    gboolean lyric_edit_flag;
+    cairo_surface_t *bg_image;
+    gchar *bg_image_file;
+    gint bg_image_style;
+}GuiLrcData;
 
 /* Functions */
 void gui_lrc_new_scene();
+GuiLrcData *get_gui_lrc();
 void gui_lrc_draw_bg();				
 gboolean gui_lrc_show(GtkWidget *, gpointer);
 gboolean gui_lrc_expose(GtkWidget *, gpointer);

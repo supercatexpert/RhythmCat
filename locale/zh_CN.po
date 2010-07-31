@@ -1,0 +1,584 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-05-12 08:33+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: gui.c:197
+msgid "Vol: "
+msgstr ""
+
+#: gui.c:202
+msgid "Playlists"
+msgstr ""
+
+#: gui.c:203
+msgid "Lyrics"
+msgstr ""
+
+#: gui.c:204
+msgid "Not Playing"
+msgstr ""
+
+#: gui.c:205 gui_menu.c:271
+msgid "_Repeat"
+msgstr ""
+
+#: gui.c:206
+msgid "_Shuffle"
+msgstr ""
+
+#: gui.c:211 gui.c:1019
+msgid "Stopped"
+msgstr ""
+
+#: gui.c:686 gui.c:688
+msgid "Track"
+msgstr ""
+
+#: gui.c:813
+#, c-format
+msgid "%s Lossless"
+msgstr ""
+
+#: gui.c:815
+#, c-format
+msgid "%s %d kbps"
+msgstr ""
+
+#: gui.c:1017
+msgid "Playing"
+msgstr ""
+
+#: gui.c:1018
+msgid "Paused"
+msgstr ""
+
+#: gui.c:1034
+#, c-format
+msgid "Track %d"
+msgstr ""
+
+#: gui_dialog.c:78
+msgid "A music player based on GTK+ 2.0 & Gstreamer 0.10"
+msgstr ""
+
+#: gui_dialog.c:108
+msgid "All supported music files(*.FLAC;*.OGG;*.MP3;*.WAV;*.WMA..."
+msgstr ""
+
+#: gui_dialog.c:116
+msgid "Select the music you want to play..."
+msgstr ""
+
+#: gui_dialog.c:118
+msgid "Select the music you want to append..."
+msgstr ""
+
+#: gui_dialog.c:254
+msgid "Music Information"
+msgstr ""
+
+#: gui_dialog.c:263 gui_setting.c:91
+msgid "General"
+msgstr ""
+
+#: gui_dialog.c:264
+msgid "Metadata"
+msgstr ""
+
+#: gui_dialog.c:272
+msgid "Format: "
+msgstr ""
+
+#: gui_dialog.c:274
+msgid "Bitrate: "
+msgstr ""
+
+#: gui_dialog.c:276
+msgid "Length: "
+msgstr ""
+
+#: gui_dialog.c:278
+msgid "Size:   "
+msgstr ""
+
+#: gui_dialog.c:280
+msgid "Title: "
+msgstr ""
+
+#: gui_dialog.c:282
+msgid "Artist: "
+msgstr ""
+
+#: gui_dialog.c:284
+msgid "Location: "
+msgstr ""
+
+#: gui_dialog.c:286
+msgid "Album: "
+msgstr ""
+
+#: gui_dialog.c:288
+msgid "Comment: "
+msgstr ""
+
+#: gui_dialog.c:290
+msgid "Track Number: "
+msgstr ""
+
+#: gui_dialog.c:395
+msgid "Unknown"
+msgstr ""
+
+#: gui_dialog.c:472
+msgid "Select the directory you want to import..."
+msgstr ""
+
+#: gui_dialog.c:509 gui_dialog.c:550
+msgid "M3U Playlist(*.M3U, *.m3u)"
+msgstr ""
+
+#: gui_dialog.c:512
+msgid "Save the playlist..."
+msgstr ""
+
+#: gui_dialog.c:553
+msgid "Load the playlist..."
+msgstr ""
+
+#: gui_dialog.c:591
+msgid "Select the directory you want to store the playlists..."
+msgstr ""
+
+#: gui_eq.c:29 gui_eq.c:64
+msgid "Disabled"
+msgstr ""
+
+#: gui_eq.c:30
+msgid "Pop"
+msgstr ""
+
+#: gui_eq.c:31
+msgid "Rock"
+msgstr ""
+
+#: gui_eq.c:32
+msgid "Metal"
+msgstr ""
+
+#: gui_eq.c:33
+msgid "Dance"
+msgstr ""
+
+#: gui_eq.c:34
+msgid "Electronic"
+msgstr ""
+
+#: gui_eq.c:35
+msgid "Jazz"
+msgstr ""
+
+#: gui_eq.c:36
+msgid "Classical"
+msgstr ""
+
+#: gui_eq.c:37
+msgid "Blues"
+msgstr ""
+
+#: gui_eq.c:38
+msgid "Vocal"
+msgstr ""
+
+#: gui_eq.c:39 gui_eq.c:65
+msgid "Custom"
+msgstr ""
+
+#: gui_eq.c:92
+msgid "Equalizer"
+msgstr ""
+
+#: gui_eq.c:267 gui_eq.c:328
+msgid "EQ Setting File(*.EQF, *.eqf)"
+msgstr ""
+
+#: gui_eq.c:270
+msgid "Load Equalizer Setting..."
+msgstr ""
+
+#: gui_eq.c:331
+msgid "Save Equalizer Setting..."
+msgstr ""
+
+#: gui_lrc.c:259
+msgid "Do you want to save lyric file?"
+msgstr ""
+
+#: gui_lrc.c:287
+msgid "Return to Lyric Show Mode"
+msgstr ""
+
+#: gui_lrc.c:291
+msgid "Load Lyric"
+msgstr ""
+
+#: gui_lrc.c:294
+msgid "Save Lyric"
+msgstr ""
+
+#: gui_lrc.c:298
+msgid "Add Time Tag"
+msgstr ""
+
+#: gui_lrc.c:301
+msgid "Replace Time Tag"
+msgstr ""
+
+#: gui_lrc.c:304
+msgid "Remove Time Tag"
+msgstr ""
+
+#: gui_lrc.c:500 gui_lrc.c:545
+msgid "Lyric File(*.LRC, *.lrc)"
+msgstr ""
+
+#: gui_lrc.c:503
+msgid "Load lyric..."
+msgstr ""
+
+#: gui_lrc.c:548
+msgid "Save lyric..."
+msgstr ""
+
+#: gui_menu.c:12 gui_menu.c:102
+msgid "_New Playlist"
+msgstr ""
+
+#: gui_menu.c:16
+msgid "_Rename Playlist"
+msgstr ""
+
+#: gui_menu.c:20
+msgid "_Delete Playlist"
+msgstr ""
+
+#: gui_menu.c:24 gui_menu.c:123
+msgid "_Export Playlist"
+msgstr ""
+
+#: gui_menu.c:42 gui_menu.c:168
+msgid "_Track Information"
+msgstr ""
+
+#: gui_menu.c:47
+msgid "Import Music _Files"
+msgstr ""
+
+#: gui_menu.c:51
+msgid "Import _List"
+msgstr ""
+
+#: gui_menu.c:56 gui_menu.c:148
+msgid "Select _All"
+msgstr ""
+
+#: gui_menu.c:60
+msgid "_Remove from List"
+msgstr ""
+
+#: gui_menu.c:65 gui_menu.c:152
+msgid "Re_flesh Music"
+msgstr ""
+
+#: gui_menu.c:94
+msgid "_File"
+msgstr ""
+
+#: gui_menu.c:95
+msgid "_Edit"
+msgstr ""
+
+#: gui_menu.c:96
+msgid "_View"
+msgstr ""
+
+#: gui_menu.c:97
+msgid "_Control"
+msgstr ""
+
+#: gui_menu.c:98
+msgid "_Help"
+msgstr ""
+
+#: gui_menu.c:109
+msgid "_Open Music"
+msgstr ""
+
+#: gui_menu.c:115
+msgid "Import _Playlist"
+msgstr ""
+
+#: gui_menu.c:119
+msgid "Import _Folder"
+msgstr ""
+
+#: gui_menu.c:127
+msgid "Export _All Playlists"
+msgstr ""
+
+#: gui_menu.c:137
+msgid "Play_list"
+msgstr ""
+
+#: gui_menu.c:142
+msgid "_Remove"
+msgstr ""
+
+#: gui_menu.c:159
+msgid "Plu_gins"
+msgstr ""
+
+#: gui_menu.c:163
+msgid "_Preferences"
+msgstr ""
+
+#: gui_menu.c:175
+msgid "_Playlists"
+msgstr ""
+
+#: gui_menu.c:179
+msgid "_Lyrics"
+msgstr ""
+
+#: gui_menu.c:183
+msgid "_Edit Lyrics"
+msgstr ""
+
+#: gui_menu.c:185
+msgid "_Equalizer"
+msgstr ""
+
+#: gui_menu.c:190
+msgid "OS_D Lyric Show"
+msgstr ""
+
+#: gui_menu.c:194
+msgid "_Audio Tools"
+msgstr ""
+
+#: gui_menu.c:199
+msgid "_Crop Music"
+msgstr ""
+
+#: gui_menu.c:203
+msgid "_Merge Music"
+msgstr ""
+
+#: gui_menu.c:207
+msgid "_Format Convert"
+msgstr ""
+
+#: gui_menu.c:214
+msgid "_Karaoke Mode"
+msgstr ""
+
+#: gui_menu.c:217
+msgid "_Mini Mode"
+msgstr ""
+
+#: gui_menu.c:224
+msgid "_Play/Pause"
+msgstr ""
+
+#: gui_menu.c:230
+msgid "_Stop"
+msgstr ""
+
+#: gui_menu.c:234
+msgid "Pre_vious"
+msgstr ""
+
+#: gui_menu.c:241
+msgid "_Next"
+msgstr ""
+
+#: gui_menu.c:247
+msgid "_Backward"
+msgstr ""
+
+#: gui_menu.c:254
+msgid "_Forward"
+msgstr ""
+
+#: gui_menu.c:262
+msgid "_Increase Volume"
+msgstr ""
+
+#: gui_menu.c:266
+msgid "_Decrease Volume"
+msgstr ""
+
+#: gui_menu.c:276
+msgid "_No Repeat"
+msgstr ""
+
+#: gui_menu.c:280
+msgid "Single _Music Repeat"
+msgstr ""
+
+#: gui_menu.c:283
+msgid "Single _Playlist Repeat"
+msgstr ""
+
+#: gui_menu.c:286
+msgid "_All Playlists Repeat"
+msgstr ""
+
+#: gui_menu.c:291
+msgid "Sh_uffle"
+msgstr ""
+
+#: gui_menu.c:296
+msgid "_No Random"
+msgstr ""
+
+#: gui_menu.c:300
+msgid "_Single Playlist Random"
+msgstr ""
+
+#: gui_menu.c:303
+msgid "_All Playlists Random"
+msgstr ""
+
+#: gui_setting.c:31
+msgid "Settings"
+msgstr ""
+
+#: gui_setting.c:93
+msgid "Appearance"
+msgstr ""
+
+#: gui_setting.c:95
+msgid "Playback"
+msgstr ""
+
+#: gui_setting.c:97
+msgid "Playlist"
+msgstr ""
+
+#: gui_setting.c:99
+msgid "Lryic show"
+msgstr ""
+
+#: gui_setting.c:176
+msgid "<b>General</b>"
+msgstr ""
+
+#: gui_setting.c:193
+msgid "<b>Theme</b>"
+msgstr ""
+
+#: gui_setting.c:210
+msgid "<b>Playback</b>"
+msgstr ""
+
+#: gui_setting.c:215
+msgid "Auto play on startup"
+msgstr ""
+
+#: gui_setting.c:217
+msgid "Advance to the next playlist"
+msgstr ""
+
+#: gui_setting.c:240
+msgid "<b>Metadata</b>"
+msgstr ""
+
+#: gui_setting.c:244
+msgid "ID3 Tag fallback character encodings: "
+msgstr ""
+
+#: gui_setting.c:273
+msgid "<b>Lyric Show</b>"
+msgstr ""
+
+#: gui_setting.c:279
+msgid "PNG File(*.PNG, *.png)"
+msgstr ""
+
+#: gui_setting.c:285
+msgid "Fallback character encodings: "
+msgstr ""
+
+#: gui_setting.c:286
+msgid "Font: "
+msgstr ""
+
+#: gui_setting.c:287
+msgid "Line spacing: "
+msgstr ""
+
+#: gui_setting.c:288
+msgid "Background Image: "
+msgstr ""
+
+#: gui_setting.c:289
+msgid "Background Color: "
+msgstr ""
+
+#: gui_setting.c:290
+msgid "Frontground Color: "
+msgstr ""
+
+#: gui_setting.c:291
+msgid "Highlight Color: "
+msgstr ""
+
+#: gui_setting.c:302
+msgid "Please select a image file"
+msgstr ""
+
+#: gui_treeview.c:61
+msgid "Title"
+msgstr ""
+
+#: gui_treeview.c:63
+msgid "Artist"
+msgstr ""
+
+#: gui_treeview.c:65
+msgid "Length"
+msgstr ""
+
+#: gui_treeview.c:407
+msgid "Name the new list"
+msgstr ""
+
+#: gui_treeview.c:434 gui_treeview.c:510
+msgid "You must input a valid string!"
+msgstr ""
+
+#: gui_treeview.c:476
+msgid "Input the new name here: "
+msgstr ""
+
+#: gui_treeview.c:482
+msgid "Rename the playlist"
+msgstr ""
+
+#: playlist.c:155
+msgid "Default Playlist"
+msgstr ""

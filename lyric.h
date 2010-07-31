@@ -10,12 +10,14 @@
 #include <string.h>
 #include <glib.h>
 #include "global.h"
+#include "settings.h"
 
-/* Variables */
-GList *lrc_line_data = NULL;
-gchar *lrc_text_data = NULL;
-guint64 lrc_num_of_targets = 0;
-gchar *ex_encoding = NULL;
+/* Custom struct type to store the data of lyrics. */
+typedef struct _LrcData
+{
+    guint64 time;
+    gchar *text;
+}LrcData;
 
 /* Functions */
 gboolean lrc_open_lyric_from_file(const gchar *);
@@ -28,9 +30,6 @@ const GList *lrc_get_lyric_data();
 const gchar *lrc_get_text_data();
 void lrc_set_new_text(const gchar *);
 gboolean lrc_save_lyric(const gchar *);
-
-/* Extern Functions */
-extern RCSetting *get_setting();
 
 #endif
 

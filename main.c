@@ -4,9 +4,20 @@
 
 #include "main.h"
 
+gchar *rc_set_dir = NULL;
+const gchar *rc_app_dir = NULL;
+const gchar *rc_home_dir = NULL;
+gchar rc_program_name[] = "RhythmCat Music Player";
+gchar rc_build_num[] = "build 100731";
+gchar rc_ver_num[] = "0.1.0";
+gboolean rc_is_stable = FALSE;
+const gchar const *rc_authors[] = {"SuperCat","Mr. Zhu",NULL};
+const gchar const *rc_documenters[] = {"SuperCat","Ms. Mi",NULL};
+const gchar const *rc_artists[] = {"SuperCat","Ms. Mi",NULL};
+
 void rc_initial(int *argc, char **argv[])
 {
-    RCSetting *setting;
+    int i = 0;
     g_set_application_name("RhythmCat");
     const gchar *homedir = g_getenv("HOME");
     gchar *appfilepath = NULL;
@@ -20,19 +31,31 @@ void rc_initial(int *argc, char **argv[])
     rc_app_dir = g_path_get_dirname(appfilepath);
     srand((unsigned)time(0));
     g_mkdir_with_parents(rc_set_dir, 0700);
+    for(i=1;i<*argc;i++)
+    {
+        if(strcmp((*argv)[i], "--debug")==0)
+        {
+            rc_debug_set_mode(1);
+        }
+    }
+    rc_debug_print("\n***** RhythmCat DEBUG Messages *****\n");  
+    rc_debug_print("DEBUG MODE Enabled!\n"); 
+    rc_debug_print("Got home directory at: %s\n", rc_home_dir);
+    rc_debug_print("Got application directory at: %s\n", rc_app_dir);
+    rc_debug_print("Starting RhythmCat, version: %s\n", rc_ver_num);
+    if(!rc_is_stable) rc_debug_print("This program is under testing, report "
+        "bugs to me if you find any.\n");
     set_initial_setting();
     if(!g_thread_supported()) g_thread_init(NULL);
+    gdk_threads_init();
     gtk_init(argc, argv);
     gst_init(argc, argv);
     create_main_window();
     create_core();
     plist_initial_playlist();
+    kara_initial();
     gui_play_list_view_reflush_index(NULL, 0);
-    setting = get_setting();
-    core_set_eq_effect(setting->eq_array);
-
-
-    //plist_load_playlist("/home/supercat/1.M3U", 0);
+    //plugin_load("plugins/test.so");
 }
 
 gchar *rc_get_program_name()
@@ -85,7 +108,7 @@ const gchar *rc_get_home_dir()
     return rc_home_dir;
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char *argv[], char *envp[])
 {
     rc_initial(&argc, &argv);
     gtk_main();

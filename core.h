@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <malloc.h>
 #include <glib.h>
 #include <gst/gst.h>
@@ -14,66 +15,63 @@
 #include <time.h>
 #include <glib/gi18n.h>
 #include "global.h"
+#include "gui.h"
+#include "playlist.h"
+#include "settings.h"
+#include "debug.h"
 
 #define PACKAGE "RhythmCat"
 #define GETTEXT_PACKAGE "RhythmCat"
 #define LOCALEDIR "locale"
 
-/* Variables */
-/*
- * CORE->core_state: 0: Stop
- *                   1: Play
- *                   2: Pause 
- * CORE->repeat: 0: Not repeat
- *               1: Single song repeat
- *               2: Single list repeat
- *               3: All lists repeat
- */
-
-CORE *rc_core;
-int auto_play_next_list = TRUE;
+/* Custom struct type to store the core. */
+typedef struct _CoreData
+{
+    GstElement *play;
+    GstElement *audio_sink;
+    GstElement *eq_plugin;
+    GstElement *vol_plugin;
+    GstBuffer *frame;
+    GstBus *bus;
+    gdouble volume;
+    gdouble eq[10];
+    gint repeat;
+    gint random;
+    gint eos;
+    gint list_index;
+    gint list_index_selected;
+    gint music_index;
+    CoreState core_state;
+    guint bitrate;
+    guint ver_major;
+    guint ver_minor;
+    guint ver_micro;
+    guint ver_nano;
+}CoreData;
 
 /* Functions */
 void create_core();
-CORE *get_core();
-int core_get_selected_list();
+CoreData *get_core();
+gint core_get_selected_list();
 void delete_core();
-void core_set_uri(char *);
-int core_play();
-int core_play_next(int);
-int core_play_prev(int);
-int core_pause();
-int core_stop();
-int core_set_volume(double);
-int core_set_play_position(gint64);
-int core_set_play_position_by_persent(double);
+void core_set_uri(gchar *);
+gboolean core_play();
+gboolean core_play_next(gint);
+gboolean core_play_prev(gint);
+gboolean core_pause();
+gboolean core_stop();
+gboolean core_set_volume(gdouble);
+gboolean core_set_play_position(gint64);
+gboolean core_set_play_position_by_persent(gdouble);
 gint64 core_get_play_position();
 gint64 core_get_music_length();
-double core_get_volume();
-int core_get_random_number(int);
-int core_autoplay_next();
-int core_set_play_mode(int);
-void core_set_repeat_mode(int);
+gdouble core_get_volume();
+gint core_get_random_number(gint);
+gboolean core_autoplay_next();
+void core_set_repeat_mode(gint);
 void core_set_eq_effect(gdouble *);
 CoreState core_get_play_state();
-
-/* Extern Fuctions */
-extern int gui_see_scale_disable(GtkWidget *,gpointer);
-extern int gui_see_scale_enable(GtkWidget *,gpointer);
-extern void gui_set_bitrate_label(gchar *, guint);
-extern int gui_see_scale_disable(GtkWidget *,gpointer);
-extern void gui_set_play_button_state(gboolean);
-extern void gui_select_list_view(int);
-extern void gui_set_volume(gdouble);
-extern void gui_set_player_state();
-extern void gui_set_music_info_label(gchar *, gchar *, gchar *);
-extern void gui_set_state_statusbar(CoreState);
-extern void gui_play_list_view_set_state(GtkWidget *, gint, gchar *);
-extern void gui_list_view_set_state(GtkWidget *, gint, gchar *);
-extern int plist_get_plist_length(int);
-extern int plist_get_list_length();
-extern int plist_play_by_index(int, int);
-extern RCSetting *get_setting();
+gboolean core_set_play_seek(gint64, gint64);
 
 #endif
 

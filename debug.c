@@ -3,29 +3,31 @@
  * The code below is used to debug this program.
  */
 
-#include "declaration.h"
+#include "debug.h"
+
+int debug_flag = DEBUG_MODE;
 
 /* Set this flag to TRUE to enable debug mode. */
-int debug_flag = FALSE;
 
-int debug_get_flag()
+int rc_debug_get_flag()
 {
     return debug_flag;
 }
 
-void debug_printmes(const gchar *message)
+void rc_debug_set_mode(int mode)
 {
-    if(!debug_flag) return;
-    g_printf("%s\n",message);
+    debug_flag = mode;
 }
 
-void debug_printerr(const gchar *message, int errorno)
+gint rc_debug_print(const gchar *format, ...)
 {
-
-    if(!debug_flag) return;
-    if(errorno==0) return;
-    g_printf("%s\n",message);
-    g_printf("The error code is: %d\n",errorno);
+    gint result;
+    va_list arg_ptr;
+    if(!debug_flag) return -1;
+    va_start(arg_ptr, format);
+    result = g_vprintf(format, arg_ptr);
+    return result;
 }
+
 
 

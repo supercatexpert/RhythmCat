@@ -4,13 +4,10 @@
  */
 
 #include "gui.h"
-#include "gui_menu.c"
-#include "gui_treeview.c"
-#include "gui_style.c"
-#include "gui_setting.c"
-#include "gui_lrc.c"
-#include "gui_eq.c"
-#include "gui_dialog.c"
+
+/* Variables */
+static GuiData rc_gui;
+GuiMenu *ui_menu;
 
 /*
  * Reflush the information label.
@@ -28,17 +25,17 @@ static int gui_reflush_time_info(gpointer data)
     pos_sec = (pos%6000)/100;
     len_min = len/6000;
     len_sec = (len%6000)/100;
-    if(can_update_seek_scale)
+    if(rc_gui.update_seek_scale_flag)
     {
-        g_snprintf(time_info_str,120,"%02d:%02d/%02d:%02d",
+        g_snprintf(rc_gui.time_info_str,120,"%02d:%02d/%02d:%02d",
             pos_min, pos_sec, len_min, len_sec);
-        gtk_label_set_text(GTK_LABEL(time_label),time_info_str);
+        gtk_label_set_text(GTK_LABEL(rc_gui.time_label),rc_gui.time_info_str);
     }
-    if(len!=0 && can_update_seek_scale &&
-        GTK_WIDGET_SENSITIVE(time_scroll_bar)) 
+    if(len!=0 && rc_gui.update_seek_scale_flag &&
+        GTK_WIDGET_SENSITIVE(rc_gui.time_scroll_bar)) 
     {    
         persent = (double)pos / len;
-        gtk_range_set_value(GTK_RANGE(time_scroll_bar),persent*100);
+        gtk_range_set_value(GTK_RANGE(rc_gui.time_scroll_bar),persent*100);
     }
     return TRUE;
 }
@@ -61,15 +58,15 @@ static void gui_play_list_block_selection(GtkWidget *widget, gboolean block,
     int x, int y)
 {
     static const gboolean which[] = {FALSE,TRUE};
-    gtk_tree_selection_set_select_function(play_list_selection,
+    gtk_tree_selection_set_select_function(rc_gui.play_list_selection,
         gui_play_list_multidrag_selection_block, (gboolean *)&which[!!block],
         NULL);
-    int *where = g_object_get_data(G_OBJECT(play_list_tree_view),
+    int *where = g_object_get_data(G_OBJECT(rc_gui.play_list_tree_view),
         "multidrag-where");
     if(where==NULL)
     {
         where = g_malloc(2*sizeof(int));
-        g_object_set_data_full(G_OBJECT(play_list_tree_view),
+        g_object_set_data_full(G_OBJECT(rc_gui.play_list_tree_view),
             "multidrag-where", where, g_free);
     }
     where[0] = x;
@@ -77,12 +74,12 @@ static void gui_play_list_block_selection(GtkWidget *widget, gboolean block,
 }
 
 /*
- * Get the GtkWidget pointer of the main window.
+ * Get the GuiData.
  */
 
-GtkWidget *gui_get_main_window()
+GuiData *get_gui()
 {
-    return main_window;
+    return &rc_gui;
 }
 
 /*
@@ -92,6 +89,7 @@ GtkWidget *gui_get_main_window()
 void quit_player(GtkWidget *w, gpointer data)
 {
     plist_save_playlist_setting();
+    set_save_setting();
     delete_core();
     plist_uninit_playlist();
     gtk_main_quit();
@@ -111,13 +109,22 @@ gboolean create_main_window()
     textdomain(GETTEXT_PACKAGE);
     GdkGeometry main_window_hints;
     GtkObject *position_adjustment, *volume_adjustment;
+    GtkWidget *main_vbox, *player_vbox;
     GtkWidget *list_file_scr_window, *play_list_scr_window;
     GtkWidget *hbox1, *vbox1, *hbox2, *hbox3, *hbox4;
     GtkWidget *control_button_hbox;
     GtkWidget *playlists_label, *lyric_label;
+    GtkWidget *playlist_frame;
     GtkWidget *empty_label;
     GtkWidget *vol_label, *vol_min_label, *vol_plus_label;
     GtkWidget *vol_hbox;
+    GtkWidget *status_hbox;
+    GtkWidget *hsep1, *list_hpaned;
+    GtkWidget *control_buttons_hbox;
+    GtkWidget *control_hbox, *info_label_hbox;
+    GtkWidget *playlist_vbox, *playlist_ctrl_hbox;
+    GtkWidget *main_hpaned;
+    GtkWidget *album_frame;
     PangoAttrList *title_attr_list, *artist_attr_list, *album_attr_list;
     PangoAttribute *title_attr[2], *artist_attr[2], *album_attr[2];
     PangoAttrList *time_attr_list;
@@ -125,17 +132,24 @@ gboolean create_main_window()
     gchar *window_title = NULL;
     gchar *cover_image_file = NULL;
     int i = 0;
+    bzero(&rc_gui, sizeof(GuiData));
+    rc_gui.main_window_width = 600;
+    rc_gui.main_window_height = 400;
+    rc_gui.no_cover_image = NULL;
+    rc_gui.update_seek_scale_flag = TRUE;
+    rc_debug_print("Loading main window...\n"); 
     cover_image_file = g_strdup_printf("%s%cimages%cNoCover.PNG",
         rc_get_app_dir(), G_DIR_SEPARATOR, G_DIR_SEPARATOR);
-    no_cover_image = gdk_pixbuf_new_from_file(cover_image_file, NULL);
+    rc_gui.no_cover_image = gdk_pixbuf_new_from_file(cover_image_file, NULL);
     g_free(cover_image_file);
-    main_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    gui_style_reflush();
+    rc_gui.main_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     main_vbox = gtk_vbox_new(FALSE, 0);
-    lyric_vbox = gtk_vbox_new(FALSE, 0);
+    rc_gui.lyric_vbox = gtk_vbox_new(FALSE, 0);
     status_hbox = gtk_hbox_new(FALSE, 0);
     player_vbox = gtk_vbox_new(FALSE, 4);
     playlist_vbox = gtk_vbox_new(FALSE, 0);
-    sub_notebook = gtk_notebook_new();
+    rc_gui.sub_notebook = gtk_notebook_new();
     hbox1 = gtk_hbox_new(FALSE, 8);
     vbox1 = gtk_vbox_new(FALSE, 2);
     hbox2 = gtk_hbox_new(FALSE, 8);
@@ -144,30 +158,35 @@ gboolean create_main_window()
     vol_hbox = gtk_hbox_new(FALSE, 2);
     control_button_hbox = gtk_hbox_new(FALSE, 1);
     playlist_ctrl_hbox = gtk_hbox_new(TRUE, 1);
-    music_info_status = gtk_statusbar_new();
-    track_num_status = gtk_statusbar_new();
-    player_state_status = gtk_statusbar_new();
-    gtk_widget_set_size_request(track_num_status, 90, -1);
-    gtk_widget_set_size_request(player_state_status, 90, -1);
-    gtk_statusbar_set_has_resize_grip(GTK_STATUSBAR(music_info_status), FALSE);
-    gtk_statusbar_set_has_resize_grip(GTK_STATUSBAR(track_num_status), FALSE);
-    gtk_statusbar_set_has_resize_grip(GTK_STATUSBAR(player_state_status), FALSE);
+    rc_gui.music_info_status = gtk_statusbar_new();
+    rc_gui.track_num_status = gtk_statusbar_new();
+    rc_gui.player_state_status = gtk_statusbar_new();
+    gtk_widget_set_size_request(rc_gui.track_num_status, 90, -1);
+    gtk_widget_set_size_request(rc_gui.player_state_status, 90, -1);
+    gtk_statusbar_set_has_resize_grip(GTK_STATUSBAR(
+        rc_gui.music_info_status), FALSE);
+    gtk_statusbar_set_has_resize_grip(GTK_STATUSBAR(
+        rc_gui.track_num_status), FALSE);
+    gtk_statusbar_set_has_resize_grip(GTK_STATUSBAR(
+        rc_gui.player_state_status), FALSE);
     if(rc_get_stable())
-        gtk_window_set_title(GTK_WINDOW(main_window), rc_get_program_name());
+        gtk_window_set_title(GTK_WINDOW(rc_gui.main_window),
+            rc_get_program_name());
     else
     {
         window_title = g_strdup_printf("%s %s", rc_get_program_name(),
             rc_get_build_num());
-        gtk_window_set_title(GTK_WINDOW(main_window), window_title);
+        gtk_window_set_title(GTK_WINDOW(rc_gui.main_window), window_title);
         g_free(window_title);
     }
-    gtk_window_set_position(GTK_WINDOW(main_window), GTK_WIN_POS_CENTER);
+    gtk_window_set_position(GTK_WINDOW(rc_gui.main_window),
+        GTK_WIN_POS_CENTER);
     main_window_hints.min_width = 600;
     main_window_hints.min_height = 400;
-    gtk_window_set_geometry_hints(GTK_WINDOW(main_window), 
-        GTK_WIDGET(main_window), &main_window_hints, GDK_HINT_MIN_SIZE);
-    gtk_widget_set_size_request(main_window,main_window_width,
-        main_window_height);
+    gtk_window_set_geometry_hints(GTK_WINDOW(rc_gui.main_window), 
+        GTK_WIDGET(rc_gui.main_window), &main_window_hints, GDK_HINT_MIN_SIZE);
+    gtk_widget_set_size_request(rc_gui.main_window, rc_gui.main_window_width,
+        rc_gui.main_window_height);
     title_attr_list = pango_attr_list_new();
     artist_attr_list = pango_attr_list_new();
     album_attr_list = pango_attr_list_new();
@@ -188,8 +207,8 @@ gboolean create_main_window()
     pango_attr_list_insert(album_attr_list, album_attr[1]);
     pango_attr_list_insert(time_attr_list, time_attr[0]);
     pango_attr_list_insert(time_attr_list, time_attr[1]);
-    album_image = gtk_image_new_from_pixbuf(no_cover_image);
-    album_eventbox = gtk_event_box_new();
+    rc_gui.album_image = gtk_image_new_from_pixbuf(rc_gui.no_cover_image);
+    rc_gui.album_eventbox = gtk_event_box_new();
     album_frame = gtk_frame_new(NULL);
     playlist_frame = gtk_frame_new(NULL);
     empty_label = gtk_label_new(" ");
@@ -200,45 +219,47 @@ gboolean create_main_window()
     gtk_misc_set_alignment(GTK_MISC(vol_plus_label), 0.0, 0.5);
     playlists_label = gtk_label_new(_("Playlists"));
     lyric_label = gtk_label_new(_("Lyrics"));
-    title_label = gtk_label_new(_("Not Playing"));
-    repeat_checkbutton = gtk_check_button_new_with_mnemonic(_("_Repeat"));
-    random_checkbutton = gtk_check_button_new_with_mnemonic(_("_Shuffle"));
-    gtk_misc_set_alignment(GTK_MISC(title_label), 0.0, 0.5);
-    gtk_label_set_ellipsize(GTK_LABEL(title_label), PANGO_ELLIPSIZE_END);
-    gtk_label_set_attributes(GTK_LABEL(title_label), title_attr_list);
+    rc_gui.title_label = gtk_label_new(_("Not Playing"));
+    rc_gui.repeat_checkbutton = gtk_check_button_new_with_mnemonic(
+        _("_Repeat"));
+    rc_gui.random_checkbutton = gtk_check_button_new_with_mnemonic(
+        _("_Shuffle"));
+    gtk_misc_set_alignment(GTK_MISC(rc_gui.title_label), 0.0, 0.5);
+    gtk_label_set_ellipsize(GTK_LABEL(rc_gui.title_label), PANGO_ELLIPSIZE_END);
+    gtk_label_set_attributes(GTK_LABEL(rc_gui.title_label), title_attr_list);
     pango_attr_list_unref(title_attr_list);
-    artist_label = gtk_label_new(_("Stopped"));
-    gtk_misc_set_alignment(GTK_MISC(artist_label), 0.0, 0.5);
-    gtk_label_set_ellipsize(GTK_LABEL(artist_label), PANGO_ELLIPSIZE_END);
-    gtk_label_set_attributes(GTK_LABEL(artist_label), artist_attr_list);
+    rc_gui.artist_label = gtk_label_new(_("Stopped"));
+    gtk_misc_set_alignment(GTK_MISC(rc_gui.artist_label), 0.0, 0.5);
+    gtk_label_set_ellipsize(GTK_LABEL(rc_gui.artist_label), PANGO_ELLIPSIZE_END);
+    gtk_label_set_attributes(GTK_LABEL(rc_gui.artist_label), artist_attr_list);
     pango_attr_list_unref(artist_attr_list);
-    album_label = gtk_label_new("");
-    gtk_misc_set_alignment(GTK_MISC(album_label), 0.0, 0.5);
-    gtk_label_set_ellipsize(GTK_LABEL(album_label), PANGO_ELLIPSIZE_END);
-    gtk_label_set_attributes(GTK_LABEL(album_label), album_attr_list);
+    rc_gui.album_label = gtk_label_new("");
+    gtk_misc_set_alignment(GTK_MISC(rc_gui.album_label), 0.0, 0.5);
+    gtk_label_set_ellipsize(GTK_LABEL(rc_gui.album_label), PANGO_ELLIPSIZE_END);
+    gtk_label_set_attributes(GTK_LABEL(rc_gui.album_label), album_attr_list);
     pango_attr_list_unref(album_attr_list);
-    track_label = gtk_label_new("");
+    rc_gui.track_label = gtk_label_new("");
     gui_set_track_info_label(0);
-    time_label = gtk_label_new("00:00/00:00");
-    gtk_misc_set_alignment(GTK_MISC(time_label), 1.0, 0.5);
-    gtk_label_set_attributes(GTK_LABEL(time_label), time_attr_list);
+    rc_gui.time_label = gtk_label_new("00:00/00:00");
+    gtk_misc_set_alignment(GTK_MISC(rc_gui.time_label), 1.0, 0.5);
+    gtk_label_set_attributes(GTK_LABEL(rc_gui.time_label), time_attr_list);
     pango_attr_list_unref(time_attr_list);
-    gtk_widget_set_size_request(album_image, 102, 94);
-    control_images[0] = gtk_image_new_from_stock(GTK_STOCK_MEDIA_PREVIOUS,
+    gtk_widget_set_size_request(rc_gui.album_image, 102, 94);
+    rc_gui.control_images[0] = gtk_image_new_from_stock(
+        GTK_STOCK_MEDIA_PREVIOUS, GTK_ICON_SIZE_BUTTON);
+    rc_gui.control_images[1] = gtk_image_new_from_stock(GTK_STOCK_MEDIA_PLAY,
         GTK_ICON_SIZE_BUTTON);
-    control_images[1] = gtk_image_new_from_stock(GTK_STOCK_MEDIA_PLAY,
+    rc_gui.control_images[2] = gtk_image_new_from_stock(GTK_STOCK_MEDIA_STOP,
         GTK_ICON_SIZE_BUTTON);
-    control_images[2] = gtk_image_new_from_stock(GTK_STOCK_MEDIA_STOP,
-        GTK_ICON_SIZE_BUTTON);
-    control_images[3] = gtk_image_new_from_stock(GTK_STOCK_MEDIA_NEXT,
+    rc_gui.control_images[3] = gtk_image_new_from_stock(GTK_STOCK_MEDIA_NEXT,
         GTK_ICON_SIZE_BUTTON);
     for(i=0;i<4;i++)
     {
-        control_buttons[i] = gtk_button_new(); 
-        gtk_container_add(GTK_CONTAINER(control_buttons[i]),
-            control_images[i]);
+        rc_gui.control_buttons[i] = gtk_button_new(); 
+        gtk_container_add(GTK_CONTAINER(rc_gui.control_buttons[i]),
+            rc_gui.control_images[i]);
     }
-    gtk_label_set_justify(GTK_LABEL(time_label),GTK_JUSTIFY_RIGHT);
+    gtk_label_set_justify(GTK_LABEL(rc_gui.time_label),GTK_JUSTIFY_RIGHT);
     hsep1 = gtk_hseparator_new();
     main_hpaned = gtk_hpaned_new();
     gtk_container_set_border_width(GTK_CONTAINER(main_hpaned), 4);
@@ -251,55 +272,63 @@ gboolean create_main_window()
     gui_tree_view_build();
     position_adjustment = gtk_adjustment_new(0.0,0.0,105.0,1.0,2.0,5.0);
     volume_adjustment = gtk_adjustment_new(100.0,0.0,104.0,1.0,2.0,4.0);
-    time_scroll_bar = gtk_hscale_new(GTK_ADJUSTMENT(position_adjustment));
-    gtk_scale_set_draw_value(GTK_SCALE(time_scroll_bar),FALSE);
-    volume_scroll_bar = gtk_hscale_new(GTK_ADJUSTMENT(volume_adjustment));
-    gtk_scale_set_draw_value(GTK_SCALE(volume_scroll_bar),FALSE);
-    gtk_widget_set_size_request(volume_scroll_bar, 100, -1);
+    rc_gui.time_scroll_bar = gtk_hscale_new(GTK_ADJUSTMENT(
+        position_adjustment));
+    gtk_scale_set_draw_value(GTK_SCALE(rc_gui.time_scroll_bar),FALSE);
+    rc_gui.volume_scroll_bar = gtk_hscale_new(GTK_ADJUSTMENT(
+        volume_adjustment));
+    gtk_scale_set_draw_value(GTK_SCALE(rc_gui.volume_scroll_bar),FALSE);
+    gtk_widget_set_size_request(rc_gui.volume_scroll_bar, 100, -1);
     control_buttons_hbox = gtk_hbox_new(FALSE, 0);
     control_hbox = gtk_hbox_new(FALSE,1);
     info_label_hbox = gtk_hbox_new(FALSE,20);
     list_hpaned = gtk_hpaned_new();
     gtk_paned_set_position(GTK_PANED(list_hpaned),70);
     gtk_container_add(GTK_CONTAINER(list_file_scr_window), 
-        list_file_tree_view);
+        rc_gui.list_file_tree_view);
     gtk_container_add(GTK_CONTAINER(play_list_scr_window),
-        play_list_tree_view);
-    g_object_set(time_scroll_bar,"can-focus",FALSE, NULL);
-    g_object_set(volume_scroll_bar,"can-focus",FALSE, NULL);
+        rc_gui.play_list_tree_view);
+    g_object_set(rc_gui.time_scroll_bar,"can-focus",FALSE, NULL);
+    g_object_set(rc_gui.volume_scroll_bar,"can-focus",FALSE, NULL);
     gui_list_file_tree_view_set_drag();
     gui_play_list_tree_view_set_drag();
     gui_menu_initial_menus();
     gui_lrc_new_scene();
+    gui_desklrc_init();
+    ui_menu = get_menu();
     for(i=0;i<4;i++)
-        gtk_box_pack_start(GTK_BOX(control_button_hbox), control_buttons[i],
-            FALSE, FALSE, 0);
-    gtk_notebook_append_page(GTK_NOTEBOOK(sub_notebook), list_file_scr_window,
-        playlists_label);
-    gtk_notebook_append_page(GTK_NOTEBOOK(sub_notebook), lyric_vbox,
-        lyric_label);
+        gtk_box_pack_start(GTK_BOX(control_button_hbox), 
+            rc_gui.control_buttons[i], FALSE, FALSE, 0);
+    gtk_notebook_append_page(GTK_NOTEBOOK(rc_gui.sub_notebook), 
+        list_file_scr_window, playlists_label);
+    gtk_notebook_append_page(GTK_NOTEBOOK(rc_gui.sub_notebook),
+        rc_gui.lyric_vbox, lyric_label);
     gtk_container_add(GTK_CONTAINER(playlist_frame), play_list_scr_window);
-    gtk_box_pack_start(GTK_BOX(status_hbox), music_info_status,
+    gtk_box_pack_start(GTK_BOX(status_hbox), rc_gui.music_info_status,
         TRUE, TRUE, 0);
-    gtk_box_pack_start(GTK_BOX(status_hbox), track_num_status,
+    gtk_box_pack_start(GTK_BOX(status_hbox), rc_gui.track_num_status,
         FALSE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(status_hbox), player_state_status,
+    gtk_box_pack_start(GTK_BOX(status_hbox), rc_gui.player_state_status,
         FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(vol_hbox), vol_label, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(vol_hbox), vol_min_label, FALSE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(vol_hbox), volume_scroll_bar, FALSE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(vol_hbox), rc_gui.volume_scroll_bar, FALSE,
+        TRUE, 0);
     gtk_box_pack_start(GTK_BOX(vol_hbox), vol_plus_label, FALSE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(vbox1), title_label, FALSE, TRUE, 0);
-    gtk_box_pack_start(GTK_BOX(vbox1), artist_label, FALSE, TRUE, 0);
-    gtk_box_pack_start(GTK_BOX(vbox1), album_label, FALSE, TRUE, 0);
-    gtk_box_pack_start(GTK_BOX(vbox1), time_label, FALSE, TRUE, 8);
+    gtk_box_pack_start(GTK_BOX(vbox1), rc_gui.title_label, FALSE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(vbox1), rc_gui.artist_label, FALSE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(vbox1), rc_gui.album_label, FALSE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(vbox1), rc_gui.time_label, FALSE, TRUE, 8);
     gtk_box_pack_start(GTK_BOX(hbox1), album_frame, FALSE, FALSE, 0);
-    gtk_container_add(GTK_CONTAINER(album_frame), album_eventbox);
-    gtk_container_add(GTK_CONTAINER(album_eventbox), album_image);
+    gtk_container_add(GTK_CONTAINER(album_frame), rc_gui.album_eventbox);
+    gtk_container_add(GTK_CONTAINER(rc_gui.album_eventbox),
+        rc_gui.album_image);
     gtk_box_pack_start(GTK_BOX(hbox2), control_button_hbox, FALSE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(hbox2), time_scroll_bar, TRUE, TRUE, 0);
-    gtk_box_pack_start(GTK_BOX(hbox3), repeat_checkbutton, FALSE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(hbox3), random_checkbutton, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(hbox2), rc_gui.time_scroll_bar, TRUE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(hbox3), rc_gui.repeat_checkbutton, FALSE,
+        FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(hbox3), rc_gui.random_checkbutton, FALSE,
+        FALSE, 0);
     gtk_box_pack_start(GTK_BOX(hbox3), empty_label, TRUE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(hbox3), vol_hbox, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(hbox1), vbox1, TRUE, TRUE, 0);
@@ -308,75 +337,75 @@ gboolean create_main_window()
     gtk_box_pack_start(GTK_BOX(player_vbox), hbox3, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(player_vbox), playlist_frame, TRUE, TRUE, 0);
     gtk_paned_pack1(GTK_PANED(main_hpaned), player_vbox, TRUE, FALSE);
-    gtk_paned_pack2(GTK_PANED(main_hpaned), sub_notebook, TRUE, TRUE);
+    gtk_paned_pack2(GTK_PANED(main_hpaned), rc_gui.sub_notebook, TRUE, TRUE);
     gtk_widget_set_size_request(player_vbox, 400, -1);
-    gtk_box_pack_start(GTK_BOX(main_vbox), main_menu_bar, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(main_vbox), rc_gui.main_menu_bar, FALSE,
+        FALSE, 0);
     gtk_box_pack_start(GTK_BOX(main_vbox), main_hpaned, TRUE, TRUE, 0);
     gtk_box_pack_end(GTK_BOX(main_vbox), status_hbox, FALSE, TRUE, 0);
-    gtk_container_add(GTK_CONTAINER(main_window), main_vbox);
-    g_signal_connect(G_OBJECT(time_scroll_bar),"button-press-event",
-        G_CALLBACK(gui_seek_scale_button_pressed),NULL);
-    g_signal_connect(G_OBJECT(time_scroll_bar),"button-release-event",
-        G_CALLBACK(gui_seek_scale_button_released),NULL);
-    g_signal_connect(G_OBJECT(time_scroll_bar),"value-changed",
-        G_CALLBACK(gui_seek_scale_value_changed),NULL);
-    g_signal_connect(G_OBJECT(volume_scroll_bar),"value-changed",
-        G_CALLBACK(gui_adjust_volume),volume_adjustment);
-    g_signal_connect(G_OBJECT(list_file_tree_view),"cursor-changed",
-        G_CALLBACK(gui_list_view_row_selected),NULL);
-    g_signal_connect(G_OBJECT(play_list_tree_view),"row-activated",
-        G_CALLBACK(gui_plist_view_row_activated),NULL);
-    g_signal_connect(G_OBJECT(play_list_selection),"changed",
-        G_CALLBACK(gui_set_play_list_menu),NULL);
-    g_signal_connect(G_OBJECT(play_list_tree_view),"button-press-event",
-        G_CALLBACK(gui_play_list_popup_menu),NULL);
-    g_signal_connect(G_OBJECT(play_list_tree_view),"button-release-event",
-        G_CALLBACK(gui_play_list_button_release_event),NULL);
-    g_signal_connect(G_OBJECT(list_file_tree_view),"button-release-event",
-        G_CALLBACK(gui_list_file_popup_menu),NULL);
-    g_signal_connect(G_OBJECT(play_list_tree_view), "drag_data_received",
-        G_CALLBACK(gui_play_list_dnd_data_received), NULL);
-    g_signal_connect(G_OBJECT(play_list_tree_view), "drag-data-get",
+    gtk_container_add(GTK_CONTAINER(rc_gui.main_window), main_vbox);
+    g_signal_connect(G_OBJECT(rc_gui.time_scroll_bar),"button-press-event",
+        G_CALLBACK(gui_seek_scale_button_pressed), NULL);
+    g_signal_connect(G_OBJECT(rc_gui.time_scroll_bar),"button-release-event",
+        G_CALLBACK(gui_seek_scale_button_released), NULL);
+    g_signal_connect(G_OBJECT(rc_gui.time_scroll_bar),"value-changed",
+        G_CALLBACK(gui_seek_scale_value_changed), NULL);
+    g_signal_connect(G_OBJECT(rc_gui.volume_scroll_bar),"value-changed",
+        G_CALLBACK(gui_adjust_volume), volume_adjustment);
+    g_signal_connect(G_OBJECT(rc_gui.list_file_tree_view),"cursor-changed",
+        G_CALLBACK(gui_list_view_row_selected), NULL);
+    g_signal_connect(G_OBJECT(rc_gui.play_list_tree_view),"row-activated",
+        G_CALLBACK(gui_plist_view_row_activated), NULL);
+    g_signal_connect(G_OBJECT(rc_gui.play_list_selection),"changed",
+        G_CALLBACK(gui_set_play_list_menu), NULL);
+    g_signal_connect(G_OBJECT(rc_gui.play_list_tree_view),"button-press-event",
+        G_CALLBACK(gui_play_list_popup_menu), NULL);
+    g_signal_connect(G_OBJECT(rc_gui.play_list_tree_view),
+       "button-release-event", G_CALLBACK(gui_play_list_button_release_event),
+       NULL);
+    g_signal_connect(G_OBJECT(rc_gui.list_file_tree_view),
+        "button-release-event", G_CALLBACK(gui_list_file_popup_menu), NULL);
+    g_signal_connect(G_OBJECT(rc_gui.play_list_tree_view),
+        "drag_data_received", G_CALLBACK(gui_play_list_dnd_data_received),
+        NULL);
+    g_signal_connect(G_OBJECT(rc_gui.play_list_tree_view), "drag-data-get",
         G_CALLBACK(gui_play_list_dnd_data_get), NULL);
-    g_signal_connect(G_OBJECT(play_list_tree_view), "drag-motion",
+    g_signal_connect(G_OBJECT(rc_gui.play_list_tree_view), "drag-motion",
         G_CALLBACK(gui_play_list_dnd_motion), NULL);
-    g_signal_connect(G_OBJECT(list_file_tree_view), "drag-data-received",
-        G_CALLBACK(gui_list_file_dnd_data_received), NULL);
-    g_signal_connect(G_OBJECT(list_file_tree_view), "drag-data-get",
+    g_signal_connect(G_OBJECT(rc_gui.list_file_tree_view), 
+        "drag-data-received", G_CALLBACK(gui_list_file_dnd_data_received),
+        NULL);
+    g_signal_connect(G_OBJECT(rc_gui.list_file_tree_view), "drag-data-get",
         G_CALLBACK(gui_list_file_dnd_data_get), NULL);
-    g_signal_connect(G_OBJECT(control_buttons[0]), "clicked",
+    g_signal_connect(G_OBJECT(rc_gui.control_buttons[0]), "clicked",
         G_CALLBACK(gui_press_prev_button), NULL);
-    g_signal_connect(G_OBJECT(control_buttons[1]), "clicked",
+    g_signal_connect(G_OBJECT(rc_gui.control_buttons[1]), "clicked",
         G_CALLBACK(gui_press_play_button), NULL);
-    g_signal_connect(G_OBJECT(control_buttons[2]), "clicked",
+    g_signal_connect(G_OBJECT(rc_gui.control_buttons[2]), "clicked",
         G_CALLBACK(gui_press_stop_button), NULL);
-    g_signal_connect(G_OBJECT(control_buttons[3]), "clicked",
+    g_signal_connect(G_OBJECT(rc_gui.control_buttons[3]), "clicked",
         G_CALLBACK(gui_press_next_button), NULL);
-    g_signal_connect(G_OBJECT(repeat_checkbutton), "toggled",
+    g_signal_connect(G_OBJECT(rc_gui.repeat_checkbutton), "toggled",
         G_CALLBACK(gui_press_repeat_button), NULL);
-    g_signal_connect(G_OBJECT(random_checkbutton), "toggled",
+    g_signal_connect(G_OBJECT(rc_gui.random_checkbutton), "toggled",
         G_CALLBACK(gui_press_random_button), NULL);
 
     /* More Signals Here! */
-    g_signal_connect(G_OBJECT(main_window),"destroy",
+    g_signal_connect(G_OBJECT(rc_gui.main_window),"destroy",
         G_CALLBACK(quit_player),NULL);
-    time_info_reflush_timeout = g_timeout_add(500,
+    rc_gui.time_info_reflush_timeout = g_timeout_add(500,
         (GSourceFunc)(gui_reflush_time_info),NULL);
-    time_info_str[0] = '\0';
-    track_info_str[0] = '\0';
-    gtk_widget_show_all(main_window);
+    bzero(rc_gui.time_info_str, sizeof(rc_gui.time_info_str));
+    bzero(rc_gui.track_info_str, sizeof(rc_gui.track_info_str));
+    gtk_widget_show_all(rc_gui.main_window);
     gui_see_scale_disable(NULL,NULL);
 
     /* Disable unusable menus */
-    gtk_widget_set_sensitive(edit_menu_items[2], FALSE);
-    gtk_widget_set_sensitive(edit_menu_items[6], FALSE);
-    gtk_widget_set_sensitive(view_menu_items[7], FALSE);
-    gtk_widget_set_sensitive(view_menu_items[9], FALSE);
-    gtk_widget_set_sensitive(view_menu_items[11], FALSE);
-    gtk_widget_set_sensitive(tool_menu_items[0], FALSE);
-    gtk_widget_set_sensitive(tool_menu_items[1], FALSE);
-    gtk_widget_set_sensitive(tool_menu_items[2], FALSE);
-    gtk_widget_set_sensitive(view_menu_items[7], FALSE);
+    gtk_widget_set_sensitive(ui_menu->edit_menu_items[2], FALSE);
+    gtk_widget_set_sensitive(ui_menu->edit_menu_items[6], FALSE);
+    gtk_widget_set_sensitive(ui_menu->view_menu_items[9], FALSE);
+    gtk_widget_set_sensitive(ui_menu->view_menu_items[11], FALSE);
+    rc_debug_print("Main window is successfully loaded!\n"); 
     return FALSE;
 }
 
@@ -386,13 +415,15 @@ gboolean create_main_window()
 
 gboolean gui_press_prev_button(GtkButton *button, gpointer data)
 {
-    CORE *gcore = get_core();
+    CoreData *gcore = get_core();
     if(gcore->music_index>1)
         core_play_prev(FALSE);
     else
     {
         core_stop();
         core_play();
+        gui_play_list_view_set_state(NULL, gcore->music_index,
+            GTK_STOCK_MEDIA_PLAY);
     }
     return FALSE;
 }
@@ -404,7 +435,7 @@ gboolean gui_press_prev_button(GtkButton *button, gpointer data)
 gboolean gui_press_play_button(GtkButton *button, gpointer data)
 {
     gboolean flag = TRUE;
-    CORE *gcore = get_core();
+    CoreData *gcore = get_core();
     if(core_get_play_state()==CORE_PLAYING)
     {
         flag = core_pause();
@@ -445,13 +476,15 @@ gboolean gui_press_stop_button(GtkButton *button, gpointer data)
 
 gboolean gui_press_next_button(GtkButton *button, gpointer data)
 {
-    CORE *gcore = get_core();
+    CoreData *gcore = get_core();
     if(gcore->music_index<plist_get_plist_length(gcore->list_index))
         core_play_next(FALSE);
     else
     {
         core_stop();
         core_play();
+        gui_play_list_view_set_state(NULL, gcore->music_index,
+            GTK_STOCK_MEDIA_PLAY);
     }
     return FALSE;
 }
@@ -464,19 +497,19 @@ void gui_set_play_button_state(gboolean state)
 {
     if(state)
     {
-        gtk_image_set_from_stock(GTK_IMAGE(control_images[1]),
+        gtk_image_set_from_stock(GTK_IMAGE(rc_gui.control_images[1]),
             GTK_STOCK_MEDIA_PAUSE, GTK_ICON_SIZE_BUTTON);
         gtk_image_set_from_stock(GTK_IMAGE(gtk_image_menu_item_get_image(
-            GTK_IMAGE_MENU_ITEM(ctrl_menu_items[0]))), GTK_STOCK_MEDIA_PAUSE,
-            GTK_ICON_SIZE_MENU);
+            GTK_IMAGE_MENU_ITEM(ui_menu->ctrl_menu_items[0]))), 
+            GTK_STOCK_MEDIA_PAUSE, GTK_ICON_SIZE_MENU);
     }
     else
     {
-        gtk_image_set_from_stock(GTK_IMAGE(control_images[1]),
+        gtk_image_set_from_stock(GTK_IMAGE(rc_gui.control_images[1]),
             GTK_STOCK_MEDIA_PLAY, GTK_ICON_SIZE_BUTTON);
         gtk_image_set_from_stock(GTK_IMAGE(gtk_image_menu_item_get_image(
-            GTK_IMAGE_MENU_ITEM(ctrl_menu_items[0]))), GTK_STOCK_MEDIA_PLAY,
-            GTK_ICON_SIZE_MENU);
+            GTK_IMAGE_MENU_ITEM(ui_menu->ctrl_menu_items[0]))), 
+            GTK_STOCK_MEDIA_PLAY, GTK_ICON_SIZE_MENU);
     }
 }
 
@@ -486,34 +519,35 @@ void gui_set_play_button_state(gboolean state)
 
 gboolean gui_press_repeat_button(GtkToggleButton *widget, gpointer data)
 {
-    CORE *gcore = get_core();
+    CoreData *gcore = get_core();
     static gint dstate = 1;
     if(gcore->repeat!=0) dstate = gcore->repeat;
     gboolean flag = TRUE;
-    flag = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(repeat_checkbutton));
+    flag = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
+        rc_gui.repeat_checkbutton));
     if(flag)
     {
         gcore->repeat = dstate;
         if(!gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
-            repeat_checkbutton)))
-            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(repeat_checkbutton),
-                TRUE);
+            rc_gui.repeat_checkbutton)))
+            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(
+                rc_gui.repeat_checkbutton), TRUE);
         if(!gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(
-            repeat_menu_items[dstate+1])))
+            ui_menu->repeat_menu_items[dstate+1])))
             gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(
-                repeat_menu_items[dstate+1]), TRUE);
+                ui_menu->repeat_menu_items[dstate+1]), TRUE);
     }
     else
     {
         gcore->repeat = 0;
         if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
-            repeat_checkbutton)))
-            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(repeat_checkbutton),
-                FALSE);
+            rc_gui.repeat_checkbutton)))
+            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(
+                rc_gui.repeat_checkbutton), FALSE);
         if(!gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(
-            repeat_menu_items[0])))
+            ui_menu->repeat_menu_items[0])))
             gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(
-                repeat_menu_items[0]), TRUE);
+                ui_menu->repeat_menu_items[0]), TRUE);
     }
     return FALSE;
 }
@@ -524,34 +558,35 @@ gboolean gui_press_repeat_button(GtkToggleButton *widget, gpointer data)
 
 gboolean gui_press_random_button(GtkToggleButton *widget, gpointer data)
 {
-    CORE *gcore = get_core();
+    CoreData *gcore = get_core();
     static gint dstate = 1;
     if(gcore->random!=0) dstate = gcore->random;
     gboolean flag = TRUE;
-    flag = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(random_checkbutton));
+    flag = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
+        rc_gui.random_checkbutton));
     if(flag)
     {
         gcore->random = dstate;
         if(!gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
-            random_checkbutton)))
-            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(random_checkbutton),
-                TRUE);
+            rc_gui.random_checkbutton)))
+            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(
+                rc_gui.random_checkbutton), TRUE);
         if(!gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(
-            random_menu_items[dstate+1])))
+            ui_menu->random_menu_items[dstate+1])))
             gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(
-                random_menu_items[dstate+1]), TRUE);
+                ui_menu->random_menu_items[dstate+1]), TRUE);
     }
     else
     {
         gcore->random = 0;
         if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
-            random_checkbutton)))
-            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(random_checkbutton),
-                FALSE);
+            rc_gui.random_checkbutton)))
+            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(
+                rc_gui.random_checkbutton),FALSE);
         if(!gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(
-            random_menu_items[0])))
+            ui_menu->random_menu_items[0])))
             gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(
-                random_menu_items[0]), TRUE);
+                ui_menu->random_menu_items[0]), TRUE);
     }
     return FALSE;
 }
@@ -562,7 +597,7 @@ gboolean gui_press_random_button(GtkToggleButton *widget, gpointer data)
 
 gboolean gui_adjust_play_position(GtkWidget *widget, gpointer data)
 {
-    double persent = gtk_range_get_value(GTK_RANGE(time_scroll_bar));
+    double persent = gtk_range_get_value(GTK_RANGE(rc_gui.time_scroll_bar));
     core_set_play_position_by_persent(persent);
     return FALSE;
 }
@@ -574,15 +609,15 @@ gboolean gui_adjust_play_position(GtkWidget *widget, gpointer data)
 void gui_set_music_info_label(gchar *title, gchar *artist, gchar *album)
 {
     gchar title_info[512];
-    gtk_label_set_text(GTK_LABEL(title_label), title);
-    gtk_label_set_text(GTK_LABEL(artist_label), artist);
-    gtk_label_set_text(GTK_LABEL(album_label), album);
+    gtk_label_set_text(GTK_LABEL(rc_gui.title_label), title);
+    gtk_label_set_text(GTK_LABEL(rc_gui.artist_label), artist);
+    gtk_label_set_text(GTK_LABEL(rc_gui.album_label), album);
     if(rc_get_stable())
         g_snprintf(title_info, 500, "%s - %s", rc_get_program_name(), title);
     else
         g_snprintf(title_info, 500, "%s %s - %s", rc_get_program_name(), 
             rc_get_build_num(), title);
-    gtk_window_set_title(GTK_WINDOW(main_window), title_info);
+    gtk_window_set_title(GTK_WINDOW(rc_gui.main_window), title_info);
 }
 
 /*
@@ -593,13 +628,13 @@ gboolean gui_adjust_volume(GtkWidget *widget, gpointer data)
 {
     double persent = gtk_adjustment_get_value(GTK_ADJUSTMENT(data));
     if(100.0 - persent <= 10e-3)
-        gtk_widget_set_sensitive(ctrl_menu_items[7], FALSE);
+        gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[7], FALSE);
     else
-        gtk_widget_set_sensitive(ctrl_menu_items[7], TRUE);
+        gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[7], TRUE);
     if(persent <= 10e-3)
-        gtk_widget_set_sensitive(ctrl_menu_items[8], FALSE);
+        gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[8], FALSE);
     else
-        gtk_widget_set_sensitive(ctrl_menu_items[8], TRUE);
+        gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[8], TRUE);
     core_set_volume(persent);
     return FALSE;
 }
@@ -612,7 +647,7 @@ gboolean gui_seek_scale_button_pressed(GtkWidget *widget, GdkEventButton *event,
     gpointer data)
 {
     if(event->button==3) return TRUE;
-    can_update_seek_scale = FALSE;
+    rc_gui.update_seek_scale_flag = FALSE;
     return FALSE;
 }
 
@@ -623,7 +658,7 @@ gboolean gui_seek_scale_button_pressed(GtkWidget *widget, GdkEventButton *event,
 gboolean gui_seek_scale_button_released(GtkWidget *widget, GdkEventButton *event,
     gpointer data)
 {
-    can_update_seek_scale = TRUE;
+    rc_gui.update_seek_scale_flag = TRUE;
     gui_adjust_play_position(NULL,NULL);
     return FALSE;
 }
@@ -634,18 +669,19 @@ gboolean gui_seek_scale_button_released(GtkWidget *widget, GdkEventButton *event
 
 void gui_seek_scale_value_changed(GtkRange *range, gpointer data)
 {
-    if(!can_update_seek_scale)
+    if(!rc_gui.update_seek_scale_flag)
     {
-        double persent = gtk_range_get_value(GTK_RANGE(time_scroll_bar));
+        double persent = gtk_range_get_value(GTK_RANGE(
+            rc_gui.time_scroll_bar));
         gint64 len = core_get_music_length();
         gint64 pos = len * persent / 100;
         int pos_min = pos/6000;
         int pos_sec = (pos%6000)/100;
         int len_min = len/6000;
         int len_sec = (len%6000)/100;
-        g_snprintf(time_info_str,120,"%02d:%02d/%02d:%02d",
+        g_snprintf(rc_gui.time_info_str,120,"%02d:%02d/%02d:%02d",
             pos_min, pos_sec, len_min, len_sec);
-        gtk_label_set_text(GTK_LABEL(time_label),time_info_str);
+        gtk_label_set_text(GTK_LABEL(rc_gui.time_label),rc_gui.time_info_str);
     }
 }
 
@@ -655,10 +691,10 @@ void gui_seek_scale_value_changed(GtkRange *range, gpointer data)
 
 gboolean gui_see_scale_disable(GtkWidget *widget,gpointer data)
 {
-    gtk_range_set_value(GTK_RANGE(time_scroll_bar),0);
-    gtk_widget_set_sensitive(time_scroll_bar, FALSE);
-    gtk_widget_set_sensitive(ctrl_menu_items[4], FALSE);
-    gtk_widget_set_sensitive(ctrl_menu_items[5], FALSE);
+    gtk_range_set_value(GTK_RANGE(rc_gui.time_scroll_bar),0);
+    gtk_widget_set_sensitive(rc_gui.time_scroll_bar, FALSE);
+    gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[4], FALSE);
+    gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[5], FALSE);
     return FALSE;
 }
 
@@ -668,9 +704,9 @@ gboolean gui_see_scale_disable(GtkWidget *widget,gpointer data)
 
 gboolean gui_see_scale_enable(GtkWidget *widget, gpointer data)
 {
-    gtk_widget_set_sensitive(time_scroll_bar, TRUE);
-    gtk_widget_set_sensitive(ctrl_menu_items[4], TRUE);
-    gtk_widget_set_sensitive(ctrl_menu_items[5], TRUE);
+    gtk_widget_set_sensitive(rc_gui.time_scroll_bar, TRUE);
+    gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[4], TRUE);
+    gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[5], TRUE);
     return TRUE;
 }
 
@@ -682,10 +718,10 @@ gboolean gui_see_scale_enable(GtkWidget *widget, gpointer data)
 void gui_set_track_info_label(int index)
 {
     if(index<=0)
-        g_snprintf(track_info_str,60,"%s --", _("Track"));
+        g_snprintf(rc_gui.track_info_str,60,"%s --", _("Track"));
     else
-        g_snprintf(track_info_str,60,"%s %02d", _("Track"), index);
-    gtk_label_set_text(GTK_LABEL(track_label),track_info_str);
+        g_snprintf(rc_gui.track_info_str,60,"%s %02d", _("Track"), index);
+    gtk_label_set_text(GTK_LABEL(rc_gui.track_label),rc_gui.track_info_str);
 }
 
 /*
@@ -701,18 +737,19 @@ gboolean gui_play_list_popup_menu(GtkWidget *widget, GdkEventButton *event,
     if(event->button==1)
     {
         if(event->state & GDK_MODIFIER_MASK) return FALSE;
-        if(!gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(play_list_tree_view),
+        if(!gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(rc_gui.play_list_tree_view),
             event->x, event->y, &path, NULL, NULL, NULL))
             return FALSE;
-        if(gtk_tree_selection_path_is_selected(play_list_selection, path))
+        if(gtk_tree_selection_path_is_selected(rc_gui.play_list_selection,
+            path))
         {
-            gui_play_list_block_selection(play_list_tree_view, FALSE, 
+            gui_play_list_block_selection(rc_gui.play_list_tree_view, FALSE, 
                 event->x, event->y);
         }
         if(path!=NULL) gtk_tree_path_free(path);
         return FALSE;
     }
-    if(gtk_tree_selection_count_selected_rows(play_list_selection)>1)
+    if(gtk_tree_selection_count_selected_rows(rc_gui.play_list_selection)>1)
         return TRUE;
     else return FALSE;
 }
@@ -725,8 +762,8 @@ gboolean gui_list_file_popup_menu(GtkWidget *widget, GdkEventButton *event,
     gpointer data)
 {
     if(event->button!=3) return FALSE;
-    gtk_menu_popup(GTK_MENU(list_tview_pmenu),NULL,NULL,NULL,NULL,3,
-        gtk_get_current_event_time());
+    gtk_menu_popup(GTK_MENU(ui_menu->list_tview_pmenu), NULL, NULL, NULL,
+        NULL, 3, gtk_get_current_event_time());
     return FALSE;
 }
 
@@ -737,7 +774,7 @@ gboolean gui_list_file_popup_menu(GtkWidget *widget, GdkEventButton *event,
 gboolean gui_play_list_button_release_event(GtkWidget *widget,
     GdkEventButton *event, gpointer data)
 {
-    int *where = g_object_get_data(G_OBJECT(play_list_tree_view),
+    int *where = g_object_get_data(G_OBJECT(rc_gui.play_list_tree_view),
         "multidrag-where");
     if(where && where[0] != -1)
     {
@@ -748,9 +785,9 @@ gboolean gui_play_list_button_release_event(GtkWidget *widget,
             GtkTreePath *path = NULL;
             GtkTreeViewColumn *col;
             if(gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(
-                play_list_tree_view), event->x, event->y, &path, &col,
+                rc_gui.play_list_tree_view), event->x, event->y, &path, &col,
 		NULL, NULL))
- 	        gtk_tree_view_set_cursor(GTK_TREE_VIEW(play_list_tree_view),
+ 	        gtk_tree_view_set_cursor(GTK_TREE_VIEW(rc_gui.play_list_tree_view),
                     path, col, FALSE);
             if(path) gtk_tree_path_free(path);
         }
@@ -758,8 +795,8 @@ gboolean gui_play_list_button_release_event(GtkWidget *widget,
     if(event->button==3)
     {
 
-        gtk_menu_popup(GTK_MENU(plist_tview_pmenu),NULL,NULL,NULL,NULL,3,
-            gtk_get_current_event_time());
+        gtk_menu_popup(GTK_MENU(ui_menu->plist_tview_pmenu), NULL, NULL, NULL,
+            NULL,3, gtk_get_current_event_time());
     }
     return FALSE;
 }
@@ -812,10 +849,11 @@ void gui_set_bitrate_label(gchar *format, guint bitrate)
         g_snprintf(text, 30, _("%s Lossless"), short_format); 
     else
         g_snprintf(text, 30, _("%s %d kbps"), short_format, bitrate); 
-    context_id = gtk_statusbar_get_context_id(GTK_STATUSBAR(music_info_status),
-        "Music-Info");
-    gtk_statusbar_pop(GTK_STATUSBAR(music_info_status), context_id);
-    gtk_statusbar_push(GTK_STATUSBAR(music_info_status), context_id, text);
+    context_id = gtk_statusbar_get_context_id(GTK_STATUSBAR(
+        rc_gui.music_info_status), "Music-Info");
+    gtk_statusbar_pop(GTK_STATUSBAR(rc_gui.music_info_status), context_id);
+    gtk_statusbar_push(GTK_STATUSBAR(rc_gui.music_info_status), context_id,
+        text);
 }
 
 /*
@@ -834,15 +872,15 @@ void gui_set_plist_status(gchar *format, gint index1, gint index2)
 
 void gui_set_volume(gdouble volume)
 {
-    gtk_range_set_value(GTK_RANGE(volume_scroll_bar), volume);
+    gtk_range_set_value(GTK_RANGE(rc_gui.volume_scroll_bar), volume);
     if(100.0 - volume <= 10e-3)
-        gtk_widget_set_sensitive(ctrl_menu_items[7], FALSE);
+        gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[7], FALSE);
     else
-        gtk_widget_set_sensitive(ctrl_menu_items[7], TRUE);
+        gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[7], TRUE);
     if(volume <= 10e-3)
-        gtk_widget_set_sensitive(ctrl_menu_items[8], FALSE);
+        gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[8], FALSE);
     else
-        gtk_widget_set_sensitive(ctrl_menu_items[8], TRUE);
+        gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[8], TRUE);
 }
 
 /*
@@ -851,20 +889,20 @@ void gui_set_volume(gdouble volume)
 
 void gui_set_player_state()
 {
-    CORE *gcore = get_core();
+    CoreData *gcore = get_core();
     if(gcore->repeat>0)
     {
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(repeat_checkbutton),
-            TRUE);
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(
+            rc_gui.repeat_checkbutton), TRUE);
         gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(
-            repeat_menu_items[gcore->repeat+1]), TRUE);
+            ui_menu->repeat_menu_items[gcore->repeat+1]), TRUE);
     }
     if(gcore->random>0)
     {
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(random_checkbutton),
-            TRUE);
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(
+            rc_gui.random_checkbutton), TRUE);
         gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(
-            random_menu_items[gcore->random+1]), TRUE);
+            ui_menu->random_menu_items[gcore->random+1]), TRUE);
     }
 }
 
@@ -874,23 +912,23 @@ void gui_set_player_state()
 
 gboolean gui_press_repeat_menu(GtkCheckMenuItem *widget, gpointer data)
 {
-    CORE *gcore = get_core();
+    CoreData *gcore = get_core();
     gint state = GPOINTER_TO_INT(data);
     if(!gtk_check_menu_item_get_active(widget)) return FALSE;
     gcore->repeat = state;
     if(state>0)
     {
         if(!gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
-            repeat_checkbutton)))
-            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(repeat_checkbutton),
-                TRUE);
+            rc_gui.repeat_checkbutton)))
+            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(
+                rc_gui.repeat_checkbutton), TRUE);
     }
     else
     {
         if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
-            repeat_checkbutton)));
-            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(repeat_checkbutton),
-                FALSE);
+            rc_gui.repeat_checkbutton)));
+            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(
+                rc_gui.repeat_checkbutton), FALSE);
     }
     return FALSE;
 }
@@ -901,23 +939,23 @@ gboolean gui_press_repeat_menu(GtkCheckMenuItem *widget, gpointer data)
 
 gboolean gui_press_random_menu(GtkCheckMenuItem *widget, gpointer data)
 {
-    CORE *gcore = get_core();
+    CoreData *gcore = get_core();
     gint state = GPOINTER_TO_INT(data);
     if(!gtk_check_menu_item_get_active(widget)) return FALSE;
     gcore->random = state;
     if(state>0)
     {
         if(!gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
-            random_checkbutton)))
-            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(random_checkbutton),
-                TRUE);
+            rc_gui.random_checkbutton)))
+            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(
+                rc_gui.random_checkbutton), TRUE);
     }
     else
     {
         if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
-            random_checkbutton)));
-            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(random_checkbutton),
-                FALSE);
+            rc_gui.random_checkbutton)));
+            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(
+                rc_gui.random_checkbutton), FALSE);
     }
     return FALSE;
 }
@@ -928,10 +966,10 @@ gboolean gui_press_random_menu(GtkCheckMenuItem *widget, gpointer data)
 
 gboolean gui_press_vol_up_menu(GtkMenuItem *widget, gpointer data)
 {
-    gdouble value = gtk_range_get_value(GTK_RANGE(volume_scroll_bar));
+    gdouble value = gtk_range_get_value(GTK_RANGE(rc_gui.volume_scroll_bar));
     value+=5;
     if(value>100.0) value = 100.0;
-    gtk_range_set_value(GTK_RANGE(volume_scroll_bar), value); 
+    gtk_range_set_value(GTK_RANGE(rc_gui.volume_scroll_bar), value); 
     return FALSE;
 }
 
@@ -941,10 +979,10 @@ gboolean gui_press_vol_up_menu(GtkMenuItem *widget, gpointer data)
 
 gboolean gui_press_vol_down_menu(GtkMenuItem *widget, gpointer data)
 {
-    gdouble value = gtk_range_get_value(GTK_RANGE(volume_scroll_bar));
+    gdouble value = gtk_range_get_value(GTK_RANGE(rc_gui.volume_scroll_bar));
     value-=5;
     if(value<0.0) value = 0.0;
-    gtk_range_set_value(GTK_RANGE(volume_scroll_bar), value); 
+    gtk_range_set_value(GTK_RANGE(rc_gui.volume_scroll_bar), value); 
     return FALSE;
 }
 
@@ -975,33 +1013,26 @@ gboolean gui_press_forward_menu(GtkMenuItem *widget, gpointer data)
 }
 
 /*
- * Set the cover image.
- */
-
-void gui_set_cover_image(GdkPixbuf *pixbuf)
-{
-    if(pixbuf!=NULL)
-        gtk_image_set_from_pixbuf(GTK_IMAGE(album_image), pixbuf);
-    else
-        gtk_image_set_from_pixbuf(GTK_IMAGE(album_image), no_cover_image);   
-}
-
-/*
  * Set the state of menu items which related to the playlist.
  */
 
 void gui_set_play_list_menu(GtkTreeView *widget, gpointer data)
 {
-    gint value = gtk_tree_selection_count_selected_rows(play_list_selection);
+    gint value = gtk_tree_selection_count_selected_rows(
+        rc_gui.play_list_selection);
     if(value>0)
     {
-        gtk_widget_set_sensitive(edit_menu_items[2], TRUE);
-        gtk_widget_set_sensitive(pl_menu_item[6], TRUE);
+        gtk_widget_set_sensitive(ui_menu->edit_menu_items[2], TRUE);
+        gtk_widget_set_sensitive(ui_menu->pl_menu_item[6], TRUE);
+        gtk_widget_set_sensitive(ui_menu->pl_menu_item[8], TRUE);
+        gtk_widget_set_sensitive(ui_menu->view_menu_items[8], TRUE);
     }
     else
     {
-        gtk_widget_set_sensitive(edit_menu_items[2], FALSE);
-        gtk_widget_set_sensitive(pl_menu_item[6], FALSE);
+        gtk_widget_set_sensitive(ui_menu->edit_menu_items[2], FALSE);
+        gtk_widget_set_sensitive(ui_menu->pl_menu_item[6], FALSE);
+        gtk_widget_set_sensitive(ui_menu->pl_menu_item[8], FALSE);
+        gtk_widget_set_sensitive(ui_menu->view_menu_items[8], FALSE);
     }
 }
 
@@ -1016,10 +1047,11 @@ void gui_set_state_statusbar(CoreState state)
     if(state==CORE_PLAYING) text = _("Playing");
     else if(state==CORE_PAUSED) text = _("Paused");
     else text = _("Stopped");
-    context_id = gtk_statusbar_get_context_id(GTK_STATUSBAR(player_state_status),
-        "State-Info");
-    gtk_statusbar_pop(GTK_STATUSBAR(player_state_status), context_id);
-    gtk_statusbar_push(GTK_STATUSBAR(player_state_status), context_id, text);
+    context_id = gtk_statusbar_get_context_id(GTK_STATUSBAR(
+        rc_gui.player_state_status), "State-Info");
+    gtk_statusbar_pop(GTK_STATUSBAR(rc_gui.player_state_status), context_id);
+    gtk_statusbar_push(GTK_STATUSBAR(rc_gui.player_state_status), context_id,
+        text);
 }
 
 /*
@@ -1031,10 +1063,11 @@ void gui_set_tracknum_statusbar(gint number)
     guint context_id = 0;
     gchar text[64];
     g_snprintf(text, 60, _("Track %d"), number);
-    context_id = gtk_statusbar_get_context_id(GTK_STATUSBAR(track_num_status),
-        "Track-Number");
-    gtk_statusbar_pop(GTK_STATUSBAR(track_num_status), context_id);
-    gtk_statusbar_push(GTK_STATUSBAR(track_num_status), context_id, text);
+    context_id = gtk_statusbar_get_context_id(GTK_STATUSBAR(
+        rc_gui.track_num_status), "Track-Number");
+    gtk_statusbar_pop(GTK_STATUSBAR(rc_gui.track_num_status), context_id);
+    gtk_statusbar_push(GTK_STATUSBAR(rc_gui.track_num_status), context_id,
+        text);
 }
 
 /*
@@ -1043,7 +1076,7 @@ void gui_set_tracknum_statusbar(gint number)
 
 gboolean gui_show_playlist_page(GtkMenuItem *widget, gpointer data)
 {
-    gtk_notebook_set_current_page(GTK_NOTEBOOK(sub_notebook), 0);
+    gtk_notebook_set_current_page(GTK_NOTEBOOK(rc_gui.sub_notebook), 0);
     return FALSE;
 }
 
@@ -1053,7 +1086,7 @@ gboolean gui_show_playlist_page(GtkMenuItem *widget, gpointer data)
 
 gboolean gui_show_lyric_page(GtkMenuItem *widget, gpointer data)
 {
-    gtk_notebook_set_current_page(GTK_NOTEBOOK(sub_notebook), 1);
+    gtk_notebook_set_current_page(GTK_NOTEBOOK(rc_gui.sub_notebook), 1);
     return FALSE;
 }
 
@@ -1075,14 +1108,52 @@ void gui_reflesh_music_info(GtkMenuItem *widget, gpointer data)
 {
     static gboolean running = FALSE;
     if(running) return;
-    CORE *gcore = get_core();
-    gtk_widget_set_sensitive(edit_menu_items[4], FALSE);
+    CoreData *gcore = get_core();
+    gtk_widget_set_sensitive(ui_menu->edit_menu_items[4], FALSE);
     running = TRUE;
     plist_reflesh_info(gcore->list_index_selected);
-    gtk_widget_set_sensitive(edit_menu_items[4], TRUE);
+    gtk_widget_set_sensitive(ui_menu->edit_menu_items[4], TRUE);
     running = FALSE;
 }
 
+/*
+ * Set the image of cover.
+ */
 
-
+gboolean gui_set_cover_image(gchar *filename)
+{
+    GdkPixbuf *album_src_pixbuf = NULL;
+    GdkPixbuf *album_new_pixbuf = NULL;
+    if(filename==NULL)
+    {
+        gtk_image_set_from_pixbuf(GTK_IMAGE(rc_gui.album_image),
+            rc_gui.no_cover_image);
+        return FALSE;
+    }
+    if(!g_file_test(filename, G_FILE_TEST_EXISTS))
+    {
+        gtk_image_set_from_pixbuf(GTK_IMAGE(rc_gui.album_image),
+            rc_gui.no_cover_image);
+        return FALSE;
+    }
+    album_src_pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
+    if(album_src_pixbuf==NULL)
+    {
+        gtk_image_set_from_pixbuf(GTK_IMAGE(rc_gui.album_image),
+            rc_gui.no_cover_image);
+        return FALSE;
+    }
+    album_new_pixbuf = gdk_pixbuf_scale_simple(album_src_pixbuf, 102, 98,
+        GDK_INTERP_HYPER);
+    if(album_new_pixbuf==NULL)
+    {
+        g_object_unref(album_new_pixbuf);
+        gtk_image_set_from_pixbuf(GTK_IMAGE(rc_gui.album_image),
+            rc_gui.no_cover_image);
+        return FALSE;
+    }
+    gtk_image_set_from_pixbuf(GTK_IMAGE(rc_gui.album_image), album_new_pixbuf);
+    g_object_unref(album_new_pixbuf);
+    return TRUE;
+}
 

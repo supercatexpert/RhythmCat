@@ -5,6 +5,18 @@
 
 #include "playlist.h"
 
+/* Variables */
+GList *list_head = NULL;
+gchar music_title[512];
+gchar music_artist[512];
+gchar music_info[1024];
+GstElement *mmd_play;
+GstElement *fakesink_v, *fakesink_a;
+char play_list_setting_file[]="playlist.dat";
+char *default_list_name = "[Default]";
+char *non_utf8_charsets[]={"GB18030","BIG5","SHIFT-JIS","UTF-16",
+    "UCS-4","ISO-8859-1"};
+
 static gboolean plist_metadata_bus_handler(GstBus *bus, GstMessage *message,
     MusicMetaData *mmd)
 {
@@ -147,7 +159,12 @@ static void plist_metadata_event_loop(MusicMetaData *mmd, GstElement *element,
 
 gboolean plist_initial_playlist()
 {
-    CORE *gcore = get_core();
+    static gboolean init = FALSE;
+    if(init) return FALSE;
+    init = TRUE;
+    rc_debug_print("Loading playlists...\n");
+    CoreData *gcore = get_core();
+    RCSetting *rc_setting = get_setting();
     default_list_name = _("Default Playlist");
     gcore->list_index = -1;
     gcore->list_index_selected = -1;
@@ -164,13 +181,19 @@ gboolean plist_initial_playlist()
         gui_select_plist_view(1);
         gcore->list_index = 0;
         gcore->music_index = 1;
+        if(rc_setting->auto_play)
+        {
+            plist_play_by_index(0, 1);
+            core_play();
+        }
     }
+    rc_debug_print("Playlists are successfully loaded!\n");
     return TRUE;
 }
 
 void plist_uninit_playlist()
 {
-    int list_count = 0;
+    gint list_count = 0;
     for(list_count=plist_get_list_length()-1;list_count>=0;list_count--)
     {
         plist_remove_list(list_count);
@@ -178,7 +201,7 @@ void plist_uninit_playlist()
     gst_object_unref(mmd_play);
 }
 
-int plist_insert_music(gchar *uri, int list_index, int music_index)
+gboolean plist_insert_music(gchar *uri, gint list_index, gint music_index)
 {
     gchar *uri_d;
     int errorno = 0;
@@ -187,6 +210,7 @@ int plist_insert_music(gchar *uri, int list_index, int music_index)
     gchar *nullartist;
     gchar *filename;
     gchar *fpathname;
+    CoreData *gcore = get_core();
     if(music_index < -1 || uri==NULL) return FALSE;
     uri_d = g_strdup(uri);
     nullartist = g_malloc0(2);
@@ -252,11 +276,13 @@ int plist_insert_music(gchar *uri, int list_index, int music_index)
     list = (PlayList *)g_list_nth_data(list_head,list_index);
     pl = list->pl;
     pl = g_list_insert(pl,md,music_index);
-    if(errorno!=0) return FALSE;
+    if(gcore->list_index==list_index && gcore->music_index>=music_index
+        && music_index>0)
+        gcore->music_index++;
     return TRUE;
 }
 
-void plist_load_metadata(gchar *uri, MusicMetaData *mmd, int *errorno)
+void plist_load_metadata(gchar *uri, MusicMetaData *mmd, gint *errorno)
 {
     if(mmd_play==NULL)
     {
@@ -313,9 +339,12 @@ void plist_load_metadata(gchar *uri, MusicMetaData *mmd, int *errorno)
     {
         if(g_str_has_suffix(path, ".MP3") || g_str_has_suffix(path, ".mp3"))
         {
+            rc_debug_print("This audio file is an MP3 file. "
+                "Search ID3 tag.\n");
             tag_id3 = tag_get_id3(path);
             if(tag_id3!=NULL)
             {
+                rc_debug_print("Found ID3 tag.\n");
                 if(tag_id3[3]!=NULL)
                 {
                     if(mmd->comment!=NULL) g_free(mmd->comment);
@@ -343,7 +372,7 @@ void plist_load_metadata(gchar *uri, MusicMetaData *mmd, int *errorno)
     *errorno = 0;
 }
 
-int plist_get_music_data(int list_index, int music_index,
+gboolean plist_get_music_data(gint list_index, gint music_index,
     MusicData **md)
 {
     GList *pl;
@@ -360,19 +389,25 @@ int plist_get_music_data(int list_index, int music_index,
     return TRUE;
 }
 
-int plist_play_by_index(int list_index, int music_index)
+gboolean plist_play_by_index(gint list_index, gint music_index)
 {
-    CORE *gcore = get_core();
-    int flag = TRUE;
-    int errorno = 0;
+    CoreData *gcore = get_core();
+    gboolean flag = TRUE;
+    gint errorno = 0;
     guint bitrate = 0;
     gchar *file_type = NULL;
     gchar *music_album = NULL;
     gchar *music_path = NULL;
+    gchar *music_dir = NULL;
     gchar *dot_pointer = NULL;
     gchar *lyric_basename = NULL;
     gchar *lyric_filename[2] = {NULL, NULL};
+    gchar *cover_filename = NULL;
+    gchar *image_ext_name[] = {"JPG", "jpg", "JPEG", "jpeg", "PNG",
+        "png", "BMP", "bmp", NULL};
     gboolean lyric_flag = FALSE;
+    gboolean cover_flag = FALSE;
+    gint i = 0;
     MusicMetaData *mmd_new;
     MusicData *md_old;
     flag = plist_get_music_data(list_index,music_index,&md_old);
@@ -438,6 +473,7 @@ int plist_play_by_index(int list_index, int music_index)
         g_snprintf(music_info,1024,"%s",music_title);
     gui_set_bitrate_label(file_type, bitrate);
     core_set_uri(md_old->uri);
+    rc_debug_print("Play music file: %s\n", md_old->uri);
     gui_set_music_info_label(music_title, music_artist, music_album);
     gui_set_track_info_label(music_index);
     gcore->list_index = list_index;
@@ -453,11 +489,11 @@ int plist_play_by_index(int list_index, int music_index)
         GTK_STOCK_MEDIA_PLAY);
     gui_set_tracknum_statusbar(music_index);
     if(file_type!=NULL) g_free(file_type);
-    if(music_album!=NULL) g_free(music_album);
     /* Try to find lyric file */
     music_path = g_filename_from_uri(md_old->uri, NULL, NULL);
     if(music_path!=NULL)
     {
+        music_dir = g_path_get_dirname(music_path);
         dot_pointer = strrchr(music_path, '.');
         if(dot_pointer!=NULL)
             lyric_basename = g_strndup(music_path, 
@@ -465,6 +501,73 @@ int plist_play_by_index(int list_index, int music_index)
         else lyric_basename = g_strdup(music_path);
         g_free(music_path);
     }
+    while(image_ext_name[i]!=NULL && lyric_basename!=NULL)
+    {
+        cover_filename = g_strdup_printf("%s.%s", lyric_basename,
+            image_ext_name[i]);
+        if(gui_set_cover_image(cover_filename))
+        {
+            cover_flag = TRUE;
+            g_free(cover_filename);
+            break;
+        }
+        g_free(cover_filename);
+        i++;
+    }
+    if(!cover_flag && music_dir!=NULL && music_title!=NULL)
+    {
+        i = 0;
+        while(image_ext_name[i]!=NULL)
+        {
+            cover_filename = g_strdup_printf("%s%c%s.%s", music_dir,
+                G_DIR_SEPARATOR, music_title, image_ext_name[i]);
+            if(gui_set_cover_image(cover_filename))
+            {
+                cover_flag = TRUE;
+                g_free(cover_filename);
+                break;
+            }
+            g_free(cover_filename);
+            i++;
+        }
+    }
+    if(!cover_flag && music_dir!=NULL && music_album!=NULL)
+    {
+        i = 0;
+        while(image_ext_name[i]!=NULL)
+        {
+            cover_filename = g_strdup_printf("%s%c%s.%s", music_dir,
+                G_DIR_SEPARATOR, music_album, image_ext_name[i]);
+            if(gui_set_cover_image(cover_filename))
+            {
+                cover_flag = TRUE;
+                g_free(cover_filename);
+                break;
+            }
+            g_free(cover_filename);
+            i++;
+        }
+    }
+    if(!cover_flag && music_dir!=NULL && music_artist!=NULL)
+    {
+        i = 0;
+        while(image_ext_name[i]!=NULL)
+        {
+            cover_filename = g_strdup_printf("%s%c%s.%s", music_dir,
+                G_DIR_SEPARATOR, music_artist, image_ext_name[i]);
+            if(gui_set_cover_image(cover_filename))
+            {
+                cover_flag = TRUE;
+                g_free(cover_filename);
+                break;
+            }
+            g_free(cover_filename);
+            i++;
+        }
+    }
+    g_free(music_dir);
+    if(music_album!=NULL) g_free(music_album);
+    if(!cover_flag) gui_set_cover_image(NULL);
     if(lyric_basename!=NULL)
     {
         lyric_filename[0] = g_strdup_printf("%s.LRC", lyric_basename);
@@ -484,10 +587,12 @@ int plist_play_by_index(int list_index, int music_index)
     }
     if(lyric_flag)
     {
+        rc_debug_print("Found lyric file, enable the lyric show.\n");
         gui_lrc_enable();
     }
     else
     {
+        rc_debug_print("Not found lyric file, disable the lyric show.\n");
         gui_lrc_disable();
     }
     if(lyric_filename[0]!=NULL) g_free(lyric_filename[0]);
@@ -495,7 +600,7 @@ int plist_play_by_index(int list_index, int music_index)
     return flag;
 }
 
-int plist_insert_list(gchar *listname, int index)
+gboolean plist_insert_list(gchar *listname, gint index)
 {
     if(list_head==NULL) index = 0;
     GList *list;
@@ -512,14 +617,14 @@ int plist_insert_list(gchar *listname, int index)
     return TRUE;
 }
 
-gchar *plist_get_list_name(int index)
+gchar *plist_get_list_name(gint index)
 {
     PlayList *list;
     list = (PlayList *)g_list_nth_data(list_head,index);
     return list->listName;
 }
 
-void plist_set_list_name(int index, gchar *name)
+void plist_set_list_name(gint index, gchar *name)
 {
     if(name==NULL) return;
     PlayList *list;
@@ -529,14 +634,14 @@ void plist_set_list_name(int index, gchar *name)
     list->listName = g_utf8_strncpy(list->listName,name,120);
 }
 
-int plist_get_list_length()
+gint plist_get_list_length()
 {
     return g_list_length(list_head);
 }
 
-int plist_get_plist_length(int index)
+gint plist_get_plist_length(gint index)
 {
-    int length = 0;
+    gint length = 0;
     GList *pl;
     PlayList *list;
     list = (PlayList *)g_list_nth_data(list_head,index);
@@ -548,7 +653,7 @@ int plist_get_plist_length(int index)
     return length;
 }
 
-int plist_remove_list(int index)
+gboolean plist_remove_list(gint index)
 {
     if(plist_get_list_length()<=0) return FALSE;
     PlayList *list;
@@ -568,9 +673,9 @@ int plist_remove_list(int index)
     return TRUE;
 }
 
-int plist_remove_music(int list_index, int music_index)
+gboolean plist_remove_music(gint list_index, gint music_index)
 {
-    CORE *gcore = get_core();
+    CoreData *gcore = get_core();
     int list_length = 0;
     list_length = g_list_length(list_head);
     if(list_index >= list_length || list_index < 0)
@@ -604,25 +709,25 @@ int plist_remove_music(int list_index, int music_index)
     return TRUE;
 }
 
-int plist_load_playlist_setting()
+gboolean plist_load_playlist_setting()
 {
     gchar *rc_set_dir = rc_get_set_dir();
     MusicData *md = NULL;
     PlayList *list = NULL;
     GList *pl;
     gsize s_length;
-    char bytechr = 0;
-    char *file_data = NULL;
-    char *line=NULL, *buf=NULL;
-    int linenum = 0;
-    int listnum = -1;
-    int listflag = FALSE;
-    int existlist = FALSE;
-    int linecount = 0;
-    unsigned long file_pointer = 0L;
-    unsigned long line_length = 0L;
-    unsigned long file_length = 0L;
-    int fname_length = 0;
+    gchar bytechr = 0;
+    gchar *file_data = NULL;
+    gchar *line = NULL, *buf = NULL;
+    gint linenum = 0;
+    gint listnum = -1;
+    gint listflag = FALSE;
+    gint existlist = FALSE;
+    gint linecount = 0;
+    gulong file_pointer = 0L;
+    gulong line_length = 0L;
+    gulong file_length = 0L;
+    gint fname_length = 0;
     fname_length = strlen(rc_set_dir) + strlen(play_list_setting_file) + 16;
     gchar *plist_set_file_full_path = g_malloc0(fname_length);
     g_sprintf(plist_set_file_full_path,"%s/%s",rc_set_dir,
@@ -730,17 +835,17 @@ int plist_load_playlist_setting()
  * Save the playlist settings.
  */
 
-int plist_save_playlist_setting()
+gboolean plist_save_playlist_setting()
 {
     gchar *rc_set_dir = rc_get_set_dir();
     FILE *fp;
     PlayList *list;
     MusicData *md;
-    unsigned long list_length = plist_get_list_length();
-    unsigned long list_count = 0;
-    int plist_length = 0;
-    int plist_count = 0;
-    int fname_length = 0;
+    gulong list_length = plist_get_list_length();
+    gulong list_count = 0;
+    gint plist_length = 0;
+    gint plist_count = 0;
+    gint fname_length = 0;
     if(list_length<1) return FALSE;
     fname_length = strlen(rc_set_dir) + strlen(play_list_setting_file) + 16;
     gchar *plist_set_file_full_path = g_malloc0(fname_length);
@@ -772,12 +877,12 @@ int plist_save_playlist_setting()
  * Move the playlist.
  */
 
-void plist_list_move(int from_index, int to_index)
+void plist_list_move(gint from_index, gint to_index)
 {
-    CORE *gcore = NULL;
+    CoreData *gcore = NULL;
     PlayList *pl, *pl_playing = NULL;
     GList *list, *to_list;
-    int list_playing = -1, list_selected = -1;
+    gint list_playing = -1, list_selected = -1;
     gcore = get_core();
     gboolean same_flag = FALSE;
     pl = g_list_nth_data(list_head, from_index);
@@ -807,13 +912,13 @@ void plist_list_move(int from_index, int to_index)
  * Move the items in the playlist.
  */
 
-void plist_plist_move(int list_index, int *from_indices, int f_length,
-    int to_index)
+void plist_plist_move(gint list_index, gint *from_indices, gint f_length,
+    gint to_index)
 {
     if(to_index<1) return;
     int count = 0;
     MusicData *md = NULL;
-    CORE *gcore = NULL;
+    CoreData *gcore = NULL;
     PlayList *pl = NULL;
     GList **list_array = NULL;
     GList *list = NULL, *to_list = NULL;
@@ -874,13 +979,13 @@ void plist_build_default_list()
  * Move item(s) in the playlist to another playlist.
  */
 
-void plist_plist_move2(int list_index, int *from_indices, int f_length,
-    int to_list_index)
+void plist_plist_move2(gint list_index, gint *from_indices, gint f_length,
+    gint to_list_index)
 {
     if(to_list_index<0 || to_list_index>=plist_get_list_length()) return;
     int count = 0;
     MusicData *md = NULL;
-    CORE *gcore = get_core();
+    CoreData *gcore = get_core();
     PlayList *pl = NULL, *to_pl = NULL;
     MusicData *playing_item = NULL;
     GList **list_array = NULL;
@@ -918,10 +1023,10 @@ void plist_plist_move2(int list_index, int *from_indices, int f_length,
  * Delete item(s) in the playlist.
  */
 
-void plist_delete_music2(int list_index, int *indices, int f_length)
+void plist_delete_music2(gint list_index, gint *indices, gint f_length)
 {
     if(indices==NULL) return;
-    CORE *gcore = get_core();
+    CoreData *gcore = get_core();
     gint count = 0;
     GList **list_array = NULL;
     PlayList *pl = NULL;
@@ -955,13 +1060,13 @@ void plist_delete_music2(int list_index, int *indices, int f_length)
  * Reflesh the playlist.
  */
 
-void plist_reflesh_info(int index)
+void plist_reflesh_info(gint index)
 {
     if(index<0 || index>=plist_get_list_length()) return;
     gboolean flag = TRUE;
-    int errorno = 0;
-    int i = 0;
-    int length = 0;
+    gint errorno = 0;
+    gint i = 0;
+    gint length = 0;
     MusicMetaData *mmd_new;
     MusicData *md_old;
     length = plist_get_plist_length(index);
@@ -1017,7 +1122,7 @@ void plist_reflesh_info(int index)
  * Save the playlist.
  */
 
-void plist_save_playlist(gchar *s_filename, int index)
+void plist_save_playlist(gchar *s_filename, gint index)
 {
     if(index<0 || index>=plist_get_list_length()) return;
     if(s_filename==NULL || *s_filename=='\0') return;
@@ -1026,8 +1131,8 @@ void plist_save_playlist(gchar *s_filename, int index)
     gchar *music_filename;
     MusicData *md;
     FILE *fp;
-    int length = 0;
-    int i = 0;
+    gint length = 0;
+    gint i = 0;
     if(g_str_has_suffix(s_filename, ".M3U") || 
         g_str_has_suffix(s_filename, ".m3u"))
         filename = g_strdup(s_filename);
@@ -1058,7 +1163,7 @@ void plist_save_playlist(gchar *s_filename, int index)
  * Load the playlist.
  */
 
-void plist_load_playlist(gchar *s_filename, int index)
+void plist_load_playlist(gchar *s_filename, gint index)
 {
     if(index<0 || index>=plist_get_list_length()) return;
     if(s_filename==NULL || *s_filename=='\0') return;

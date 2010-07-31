@@ -5,6 +5,9 @@
 
 #include "tag_id3.h"
 
+gchar *extra_encoding = NULL;
+gboolean skip_id3_reading = FALSE;
+
 /* 
  * Get ID3v1 Tag.
  */
@@ -236,13 +239,13 @@ gchar **tag_get_id3(gchar *filename)
     skip_id3_reading = FALSE;
     if(filename==NULL || *filename==0)
     {
-        g_printf("Get tag: Invaild filename.\n");
+        rc_debug_print("Get tag: Invaild filename.\n");
         return NULL;
     }
     file=fopen(filename, "rb");
     if(file==NULL)
     {
-        g_printf("Get tag: Can't open file %s\n", filename);
+        rc_debug_print("Get tag: Can't open file %s\n", filename);
         return NULL;
     }
     /* Get ID3v2 tag, if it returns NULL, then try to get ID3v1 tag. */
