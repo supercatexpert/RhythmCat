@@ -6,28 +6,32 @@
 #include "playlist.h"
 
 /* Variables */
-GList *list_head = NULL;
-gchar music_title[512];
-gchar music_artist[512];
-gchar music_info[1024];
-GstElement *mmd_play;
-GstElement *fakesink_v, *fakesink_a;
-char play_list_setting_file[]="playlist.dat";
-char *default_list_name = "[Default]";
-char *non_utf8_charsets[]={"GB18030","BIG5","SHIFT-JIS","UTF-16",
-    "UCS-4","ISO-8859-1"};
+static GList *list_head = NULL;
+static gchar music_title[512];
+static gchar music_artist[512];
+static gchar music_info[1024];
+static gchar play_list_setting_file[]="playlist.dat";
+static gchar *default_list_name = "[Default]";
+static GstElement *mmd_pipeline;
+static GstElement *urisrc;
+static GstElement *decodebin;
+static GstElement *fakesink;
+static gboolean mmd_audio_flag;
+static gboolean mmd_video_flag;
+static gboolean mmd_non_audio_flag;
+
 
 static gboolean plist_metadata_bus_handler(GstBus *bus, GstMessage *message,
     MusicMetaData *mmd)
 {
-    char *tag_title=NULL;
-    char *tag_artist=NULL;
-    char *tag_filetype=NULL;
-    char *tag_album=NULL;
-    char *tag_comment=NULL;
+    gchar *tag_title = NULL;
+    gchar *tag_artist = NULL;
+    gchar *tag_filetype = NULL;
+    gchar *tag_album = NULL;
+    gchar *tag_comment = NULL;
     guint bitrates = 0;
     guint tracknum = 0;
-    if (mmd==NULL) return FALSE;
+    if(mmd==NULL) return FALSE;
     if(mmd->uri==NULL) return FALSE;
     switch(GST_MESSAGE_TYPE(message)) 
     {
@@ -44,89 +48,49 @@ static gboolean plist_metadata_bus_handler(GstBus *bus, GstMessage *message,
         case GST_MESSAGE_TAG:
         {
             GstTagList *tags;
-            gst_message_parse_tag(message,&tags);
+            gst_message_parse_tag(message, &tags);
             if(gst_tag_list_get_string(tags,GST_TAG_AUDIO_CODEC,&tag_filetype))
             {
-                if(tag_filetype!=NULL)
-                {
-                    if(mmd->file_type!=NULL)
-                    {
-                        g_free(mmd->file_type);
-                        mmd->file_type = NULL;
-                    }
-                    mmd->file_type=tag_filetype;
-                }
-                else g_free(tag_filetype);
+                g_utf8_strncpy(mmd->file_type, tag_filetype, 64);
+                g_free(tag_filetype);
             }
-            if(gst_tag_list_get_string(tags,GST_TAG_TITLE,&tag_title))
+            if(gst_tag_list_get_string(tags, GST_TAG_TITLE, &tag_title))
             {
-                if(g_utf8_validate(tag_title,-1,NULL))
-                {
-                    if(mmd->title!=NULL)
-                    {
-                        g_free(mmd->title);
-                        mmd->title = NULL;
-                    }
-                    mmd->title = g_malloc0(512);
-                    mmd->title = g_utf8_strncpy(mmd->title,tag_title,128);
-                }
+                g_utf8_strncpy(mmd->title, tag_title, 128);
                 g_free(tag_title);
       	    }
-            if(gst_tag_list_get_string(tags,GST_TAG_ARTIST,&tag_artist))
+            if(gst_tag_list_get_string(tags, GST_TAG_ARTIST, &tag_artist))
             {
-                if(g_utf8_validate(tag_artist,-1,NULL))
-                {
-                    if(mmd->artist!=NULL)
-                    {
-                        g_free(mmd->artist);
-                        mmd->artist = NULL;
-                    }
-                    mmd->artist = g_malloc0(512);
-                    mmd->artist = g_utf8_strncpy(mmd->artist,tag_artist,120);
-                }
+                g_utf8_strncpy(mmd->artist, tag_artist, 128);
                 g_free(tag_artist);
             }
-            if(gst_tag_list_get_string(tags,GST_TAG_ALBUM,&tag_album))
+            if(gst_tag_list_get_string(tags, GST_TAG_ALBUM, &tag_album))
             {
-                if(g_utf8_validate(tag_album,-1,NULL))
-                {
-                    if(mmd->album!=NULL)
-                    {
-                        g_free(mmd->album);
-                        mmd->album = NULL;
-                    }
-                    mmd->album = g_malloc0(512);
-                    mmd->album = g_utf8_strncpy(mmd->album,tag_album,120);
-                }
+                g_utf8_strncpy(mmd->album,tag_album,128);
                 g_free(tag_album);
             }
-            if(gst_tag_list_get_string(tags,GST_TAG_COMMENT,&tag_comment))
+            if(gst_tag_list_get_string(tags, GST_TAG_COMMENT, &tag_comment))
             {
-                if(g_utf8_validate(tag_comment,-1,NULL))
-                {
-                    if(mmd->comment!=NULL)
-                    {
-                        g_free(mmd->comment);
-                        mmd->comment = NULL;
-                    }
-                    mmd->comment = g_malloc0(512);
-                    mmd->comment = g_utf8_strncpy(mmd->comment,tag_comment,120);
-                }
+                g_utf8_strncpy(mmd->comment, tag_comment, 128);
                 g_free(tag_comment);
             }
-            if(gst_tag_list_get_uint(tags,GST_TAG_BITRATE,&bitrates))
-            {
+            if(gst_tag_list_get_uint(tags, GST_TAG_BITRATE, &bitrates))
                 if(bitrates>0) mmd->bitrate = bitrates;
-            }
-            if(gst_tag_list_get_uint(tags,GST_TAG_TRACK_NUMBER,&tracknum))
-            {
+            if(gst_tag_list_get_uint(tags, GST_TAG_TRACK_NUMBER, &tracknum))
                 mmd->tracknum = tracknum;
-            }
             gst_tag_list_free(tags);
             return TRUE;
             break;
 	}
-	case GST_MESSAGE_ELEMENT: break;
+	case GST_MESSAGE_ELEMENT:
+        {
+            if(gst_is_missing_plugin_message(message))
+            {
+                rc_debug_print("ERROR: Missing plugin to open the "
+                    "media file!\n");
+            }
+            break;
+        }
 	default: break;
     }
     return FALSE;
@@ -139,14 +103,14 @@ static void plist_metadata_event_loop(MusicMetaData *mmd, GstElement *element,
     GstMessage *message;
     gboolean done = FALSE;
     bus = gst_element_get_bus(element);
-    g_return_if_fail(bus != NULL);
-    while (!done && !mmd->eos)
+    g_return_if_fail(bus!=NULL);
+    while(!done && !mmd->eos)
     {
         if(block)
             message = gst_bus_timed_pop(bus, GST_CLOCK_TIME_NONE);
         else
             message = gst_bus_timed_pop(bus, 0);
-        if(message == NULL)
+        if(message==NULL)
         {
             gst_object_unref(bus);
             return;
@@ -171,11 +135,6 @@ gboolean plist_initial_playlist()
     plist_load_playlist_setting();
     if(plist_get_list_length()<1) plist_build_default_list();
     gui_select_list_view(0);
-    fakesink_v=gst_element_factory_make("fakesink","fakesink_v");
-    fakesink_a=gst_element_factory_make("fakesink","fakesink_a");
-    mmd_play=gst_element_factory_make("playbin","play");
-    g_object_set(G_OBJECT(mmd_play), "audio-sink", fakesink_a, NULL);
-    g_object_set(G_OBJECT(mmd_play), "video-sink", fakesink_v, NULL);
     if(plist_get_plist_length(0)>=1)
     {
         gui_select_plist_view(1);
@@ -198,121 +157,154 @@ void plist_uninit_playlist()
     {
         plist_remove_list(list_count);
     }
-    gst_object_unref(mmd_play);
 }
 
-gboolean plist_insert_music(gchar *uri, gint list_index, gint music_index)
+gboolean plist_insert_music(const gchar *uri, gint list_index,
+    gint music_index)
 {
-    gchar *uri_d;
-    int errorno = 0;
-    GList *pl;
-    PlayList *list;
-    gchar *nullartist;
-    gchar *filename;
-    gchar *fpathname;
-    CoreData *gcore = get_core();
     if(music_index < -1 || uri==NULL) return FALSE;
+    gchar *uri_d;
+    gint errorno = 0;
+    GList *pl;
+    PlayList *list = NULL;
+    gchar *filename = NULL;
+    gchar *fpathname = NULL;
+    CoreData *gcore = get_core();
+    MusicMetaData mmd;
+    MusicData *md;
     uri_d = g_strdup(uri);
-    nullartist = g_malloc0(2);
-    MusicData *md = (MusicData *)g_malloc0(sizeof(MusicData));
-    fpathname = g_filename_from_uri(uri_d,NULL,NULL);
-    if(fpathname==NULL)
-    {
-        g_free(md);
-        g_free(nullartist);
-        return FALSE;
-    }
-    filename = g_filename_display_basename(fpathname);
-    g_free(fpathname);
-    md->title = filename;
-    md->artist = nullartist;
-    MusicMetaData *mmd = (MusicMetaData *)g_malloc0(sizeof(MusicMetaData));
-    mmd->title = NULL;
-    mmd->artist= NULL;
-    mmd->file_type = NULL;
-    mmd->album = NULL;
-    mmd->comment = NULL;
-    plist_load_metadata(uri_d, mmd, &errorno);
+    bzero(&mmd, sizeof(MusicMetaData));
+    md = (MusicData *)g_malloc0(sizeof(MusicData));
+    plist_load_metadata(uri_d, &mmd, &errorno);
     if(errorno!=0)
     {
-        if(mmd->title!=NULL)
-            g_free(mmd->title);
-        if(mmd->artist!=NULL)
-            g_free(mmd->artist);
-        if(uri_d!=NULL)
-            g_free(uri_d);
-        if(mmd->file_type!=NULL)
-            g_free(mmd->file_type);
-        if(mmd->album!=NULL)
-            g_free(mmd->album);
-        if(mmd->comment!=NULL)
-            g_free(mmd->comment);
-        if(mmd!=NULL)
-            g_free(mmd);
+        g_free(uri_d);
         return FALSE;
     }
-    if(mmd!=NULL)
+    if(mmd.title[0]!='\0')
+        md->title = g_strdup(mmd.title);
+    else
     {
-        if(mmd->title!=NULL)
+        fpathname = g_filename_from_uri(uri_d, NULL, NULL);
+        if(fpathname!=NULL)
         {
-            g_free(md->title);
-            md->title = mmd->title;
+            filename = g_filename_display_basename(fpathname);
+            g_free(fpathname);
         }
-        if(mmd->artist!=NULL)
+        if(filename!=NULL)
         {
-            g_free(md->artist);
-            md->artist = mmd->artist;
+            md->title = g_strdup(filename);
+            g_free(filename);
         }
-        if(mmd->file_type!=NULL)
-            g_free(mmd->file_type);
-        if(mmd->album!=NULL)
-            g_free(mmd->album);
-        if(mmd->comment!=NULL)
-            g_free(mmd->comment);
-        md->length = mmd->length;
-        g_free(mmd);
+        else
+            md->title = g_strdup(_("Unknown title"));
     }
+    md->artist = g_strdup(mmd.artist);
+    md->length = mmd.length;
     md->uri = uri_d;
-    list = (PlayList *)g_list_nth_data(list_head,list_index);
+    list = (PlayList *)g_list_nth_data(list_head, list_index);
     pl = list->pl;
-    pl = g_list_insert(pl,md,music_index);
+    pl = g_list_insert(pl, md, music_index);
     if(gcore->list_index==list_index && gcore->music_index>=music_index
         && music_index>0)
         gcore->music_index++;
     return TRUE;
 }
 
+static void plist_metadata_gst_new_decoded_pad_cb(GstElement *decodebin, 
+    GstPad *pad, gboolean last, gpointer data)
+{
+    GstCaps *caps;
+    GstStructure *structure;
+    const gchar *mimetype;
+    gboolean cancel = FALSE;
+    GstPad *sink_pad;
+    caps = gst_pad_get_caps(pad);
+    /* we get "ANY" caps for text/plain files etc. */
+    if(gst_caps_is_empty(caps) || gst_caps_is_any(caps))
+    {
+        rc_debug_print("Decoded pad with no caps or any caps."
+            "This file is boring.\n");
+        cancel = TRUE;
+        mmd_non_audio_flag = TRUE;
+    }
+    else
+    {
+        sink_pad = gst_element_get_static_pad(fakesink, "sink");
+        gst_pad_link(pad, sink_pad);
+        gst_object_unref(sink_pad);
+        /* Is this pad audio? */
+        structure = gst_caps_get_structure (caps, 0);
+        mimetype = gst_structure_get_name (structure);
+        if(g_str_has_prefix(mimetype, "audio/x-raw"))
+        {
+            rc_debug_print("Got decoded audio pad of type %s\n", mimetype);
+            mmd_audio_flag = TRUE;
+        }
+        else if(g_str_has_prefix(mimetype, "video/"))
+        {
+            rc_debug_print("Got decoded video pad of type %s\n", mimetype);
+            mmd_video_flag = TRUE;
+        }
+        else
+        {
+            rc_debug_print("Got decoded pad of non-audio type %s\n", mimetype);
+            mmd_non_audio_flag = TRUE;
+        }
+    }
+    gst_caps_unref (caps);
+    /* If this is non-audio, cancel the operation.
+     * This seems to cause some deadlocks with video files, so only do it
+     * when we get no/any caps.
+     */
+    if(cancel) gst_element_set_state(mmd_pipeline, GST_STATE_NULL);
+}
+
 void plist_load_metadata(gchar *uri, MusicMetaData *mmd, gint *errorno)
 {
-    if(mmd_play==NULL)
-    {
-       *errorno = 1;
-        return;
-    }
     gchar *path = NULL;
     gchar **tag_id3 = NULL;
-    int changeTimeout = 0;
-    gint64 dura=0;
+    gint changeTimeout = 0;
+    gint64 dura = 0;
     GstStateChangeReturn state_ret;
     GstMessage *msg;
+    GstFormat fmt = GST_FORMAT_TIME;
+    GstBus *bus;
+    if(uri==NULL)
+    {
+        *errorno = 1;
+        return;
+    }
     mmd->uri = uri;
     mmd->eos = FALSE;
     mmd->bitrate = 0;
     mmd->tracknum = 0;
     mmd->length = 0L;
-    GstFormat fmt = GST_FORMAT_TIME;
-    GstBus *bus;
-    path = g_filename_from_uri(uri, NULL, NULL);
-    bus=gst_pipeline_get_bus(GST_PIPELINE(mmd_play));
-    g_object_set(G_OBJECT(mmd_play),"uri",uri,NULL);
-    gst_element_set_state(mmd_play,GST_STATE_NULL);
-    state_ret = gst_element_set_state(mmd_play,GST_STATE_PAUSED);
-    if(!gst_element_set_state(mmd_play,GST_STATE_PAUSED))
+    mmd_pipeline = NULL;
+    urisrc = gst_element_make_from_uri(GST_URI_SRC, mmd->uri, "urisrc");
+    if(urisrc==NULL)
     {
-        *errorno = 2;
+        rc_debug_print("ERROR: Cannot load urisrc from URI!\n");
+        *errorno = 1;
         return;
     }
-    while (state_ret == GST_STATE_CHANGE_ASYNC && !mmd->eos &&
+    mmd_pipeline = gst_pipeline_new("mmd_pipeline");
+    decodebin = gst_element_factory_make("decodebin", NULL);
+    fakesink = gst_element_factory_make("fakesink", NULL);
+    gst_bin_add_many(GST_BIN(mmd_pipeline), urisrc, decodebin, fakesink, NULL);
+    g_signal_connect_object(decodebin, "new-decoded-pad",
+        G_CALLBACK(plist_metadata_gst_new_decoded_pad_cb), NULL, 0);
+    gst_element_link(urisrc, decodebin);
+    bus = gst_pipeline_get_bus(GST_PIPELINE(mmd_pipeline));
+    gst_element_set_state(mmd_pipeline, GST_STATE_NULL);
+    state_ret = gst_element_set_state(mmd_pipeline,GST_STATE_PAUSED);
+    if(!state_ret)
+    {
+        *errorno = 2;
+        if(mmd_pipeline!=NULL) gst_object_unref(GST_OBJECT(mmd_pipeline));
+        return;
+    }
+    while(state_ret==GST_STATE_CHANGE_ASYNC && !mmd->eos &&
         changeTimeout < 5) 
     {
         msg = gst_bus_timed_pop(bus, 1 * GST_SECOND);
@@ -323,18 +315,19 @@ void plist_load_metadata(gchar *uri, MusicMetaData *mmd, gint *errorno)
 	    changeTimeout = 0;
 	}
         else changeTimeout++;
-        state_ret = gst_element_get_state(mmd_play, NULL, NULL, 0);
+        state_ret = gst_element_get_state(mmd_pipeline, NULL, NULL, 0);
     }
     gst_object_unref(bus);
-    plist_metadata_event_loop(mmd,mmd_play,FALSE);
-    if(state_ret != GST_STATE_CHANGE_SUCCESS)
+    plist_metadata_event_loop(mmd,mmd_pipeline,FALSE);
+    if(state_ret!=GST_STATE_CHANGE_SUCCESS)
     {
-        gst_element_set_state(mmd_play,GST_STATE_NULL);
+        gst_element_set_state(mmd_pipeline,GST_STATE_NULL);
         return;
     }
-    gst_element_query_duration(mmd_play,&fmt,&dura);
-    mmd->length = dura/10000000;
-    state_ret = gst_element_set_state(mmd_play,GST_STATE_NULL);
+    gst_element_query_duration(mmd_pipeline, &fmt, &dura);
+    mmd->length = dura / 10000000;
+    state_ret = gst_element_set_state(mmd_pipeline, GST_STATE_NULL);
+    path = g_filename_from_uri(uri, NULL, NULL);
     if(path!=NULL)
     {
         if(g_str_has_suffix(path, ".MP3") || g_str_has_suffix(path, ".mp3"))
@@ -347,28 +340,30 @@ void plist_load_metadata(gchar *uri, MusicMetaData *mmd, gint *errorno)
                 rc_debug_print("Found ID3 tag.\n");
                 if(tag_id3[3]!=NULL)
                 {
-                    if(mmd->comment!=NULL) g_free(mmd->comment);
-                    mmd->comment = tag_id3[3];
+                    g_utf8_strncpy(mmd->comment, tag_id3[3], 128);
+                    g_free(tag_id3[3]);
                 }
                 if(tag_id3[2]!=NULL)
                 {
-                    if(mmd->title!=NULL) g_free(mmd->title);
-                    mmd->title = tag_id3[2];
+                    g_utf8_strncpy(mmd->title, tag_id3[2], 128);
+                    g_free(tag_id3[2]);
                 }
                 if(tag_id3[0]!=NULL)
                 {
-                    if(mmd->artist!=NULL) g_free(mmd->artist);
-                    mmd->artist = tag_id3[0];
+                    g_utf8_strncpy(mmd->artist, tag_id3[0], 128);
+                    g_free(tag_id3[0]);
                 }
                 if(tag_id3[1]!=NULL)
                 {
-                    if(mmd->album!=NULL) g_free(mmd->album);
-                    mmd->album = tag_id3[1];
+                    g_utf8_strncpy(mmd->album, tag_id3[1], 128);
+                    g_free(tag_id3[1]);
                 }
             }
         }
         g_free(path);
     }
+    if(mmd_pipeline!=NULL) gst_object_unref(GST_OBJECT(mmd_pipeline));
+    mmd_pipeline = NULL;
     *errorno = 0;
 }
 
@@ -405,59 +400,48 @@ gboolean plist_play_by_index(gint list_index, gint music_index)
     gchar *cover_filename = NULL;
     gchar *image_ext_name[] = {"JPG", "jpg", "JPEG", "jpeg", "PNG",
         "png", "BMP", "bmp", NULL};
+    gchar *fpathname = NULL;
+    gchar *music_basename = NULL;
     gboolean lyric_flag = FALSE;
     gboolean cover_flag = FALSE;
     gint i = 0;
-    MusicMetaData *mmd_new;
+    MusicMetaData mmd_new;
     MusicData *md_old;
     flag = plist_get_music_data(list_index,music_index,&md_old);
     if(flag==FALSE) return FALSE;
     if(md_old==NULL) return FALSE;
-    mmd_new = g_malloc0(sizeof(MusicMetaData));
-    mmd_new->title = NULL;
-    mmd_new->artist = NULL;
-    mmd_new->file_type = NULL;
-    mmd_new->comment = NULL;
-    mmd_new->album = NULL;
-    plist_load_metadata(md_old->uri, mmd_new, &errorno);
+    bzero(&mmd_new, sizeof(MusicMetaData));
+    plist_load_metadata(md_old->uri, &mmd_new, &errorno);
     if(errorno!=0)
     {
-        g_printf("Error!\n");
-        if(mmd_new->title!=NULL)
-            g_free(mmd_new->title);
-        if(mmd_new->artist!=NULL)
-            g_free(mmd_new->artist);
-        if(mmd_new->file_type!=NULL)
-            g_free(mmd_new->file_type);
-        if(mmd_new->album!=NULL)
-            g_free(mmd_new->album);
-        if(mmd_new->comment!=NULL)
-            g_free(mmd_new->comment);
-        if(mmd_new!=NULL)
-            g_free(mmd_new);
+        rc_debug_print("ERROR: Cannot read metadata!\n");
         return FALSE;
     }
-    md_old->length = mmd_new->length;
-    if(mmd_new->title!=NULL)
+    md_old->length = mmd_new.length;
+    g_free(md_old->title);
+    if(mmd_new.title[0]!='\0')
+        md_old->title = g_strdup(mmd_new.title);
+    else
     {
-        g_free(md_old->title);
-        md_old->title = mmd_new->title;
+        fpathname = g_filename_from_uri(md_old->uri, NULL, NULL);
+        if(fpathname!=NULL)
+        {
+            music_basename = g_filename_display_basename(fpathname);
+            g_free(fpathname);
+        }
+        if(music_basename!=NULL)
+        {
+            md_old->title = g_strdup(music_basename);
+            g_free(music_basename);
+        }
+        else
+            md_old->title = g_strdup(_("Unknown title"));
     }
-    if(mmd_new->artist!=NULL)
-    {
-        g_free(md_old->artist);
-        md_old->artist = mmd_new->artist;
-    }
-    if(mmd_new->file_type!=NULL)
-    {
-        file_type = mmd_new->file_type;
-    }
-    if(mmd_new->album!=NULL)
-        music_album = mmd_new->album;
-    if(mmd_new->comment!=NULL)
-        g_free(mmd_new->comment);
-    bitrate = mmd_new->bitrate;
-    g_free(mmd_new);
+    g_free(md_old->artist);
+    md_old->artist = g_strdup(mmd_new.artist);
+    file_type = g_strdup(mmd_new.file_type);
+    music_album = g_strdup(mmd_new.album);
+    bitrate = mmd_new.bitrate;
     if(gcore->list_index==gcore->list_index_selected)
         gui_play_list_view_set_state(NULL, gcore->music_index,
             NULL);
@@ -600,7 +584,7 @@ gboolean plist_play_by_index(gint list_index, gint music_index)
     return flag;
 }
 
-gboolean plist_insert_list(gchar *listname, gint index)
+gboolean plist_insert_list(const gchar *listname, gint index)
 {
     if(list_head==NULL) index = 0;
     GList *list;
@@ -624,14 +608,20 @@ gchar *plist_get_list_name(gint index)
     return list->listName;
 }
 
-void plist_set_list_name(gint index, gchar *name)
+void plist_set_list_name(gint index, const gchar *name)
 {
     if(name==NULL) return;
     PlayList *list;
     list = (PlayList *)g_list_nth_data(list_head,index);
+    if(g_strcmp0(name, list->listName)==0)
+    {
+        rc_debug_print("The list name is the same, there's no need to "
+            "rename.\n");
+        return;
+    }
     if(list->listName!=NULL) g_free(list->listName);
     list->listName = (gchar *)g_malloc0(512);
-    list->listName = g_utf8_strncpy(list->listName,name,120);
+    list->listName = g_utf8_strncpy(list->listName, name, 120);
 }
 
 gint plist_get_list_length()
@@ -676,7 +666,8 @@ gboolean plist_remove_list(gint index)
 gboolean plist_remove_music(gint list_index, gint music_index)
 {
     CoreData *gcore = get_core();
-    int list_length = 0;
+    gint list_length = 0;
+    gint plist_length = 0;
     list_length = g_list_length(list_head);
     if(list_index >= list_length || list_index < 0)
     {
@@ -688,7 +679,6 @@ gboolean plist_remove_music(gint list_index, gint music_index)
     MusicData *md;
     list = (PlayList *)g_list_nth_data(list_head,list_index);
     pl = list->pl;
-    int plist_length = 0;
     plist_length = g_list_length(pl);
     if(music_index >= plist_length || music_index <= 0)
     {
@@ -711,7 +701,7 @@ gboolean plist_remove_music(gint list_index, gint music_index)
 
 gboolean plist_load_playlist_setting()
 {
-    gchar *rc_set_dir = rc_get_set_dir();
+    const gchar *rc_set_dir = rc_get_set_dir();
     MusicData *md = NULL;
     PlayList *list = NULL;
     GList *pl;
@@ -837,7 +827,7 @@ gboolean plist_load_playlist_setting()
 
 gboolean plist_save_playlist_setting()
 {
-    gchar *rc_set_dir = rc_get_set_dir();
+    const gchar *rc_set_dir = rc_get_set_dir();
     FILE *fp;
     PlayList *list;
     MusicData *md;
@@ -912,7 +902,7 @@ void plist_list_move(gint from_index, gint to_index)
  * Move the items in the playlist.
  */
 
-void plist_plist_move(gint list_index, gint *from_indices, gint f_length,
+void plist_plist_move(gint list_index, const gint *from_indices, gint f_length,
     gint to_index)
 {
     if(to_index<1) return;
@@ -979,8 +969,8 @@ void plist_build_default_list()
  * Move item(s) in the playlist to another playlist.
  */
 
-void plist_plist_move2(gint list_index, gint *from_indices, gint f_length,
-    gint to_list_index)
+void plist_plist_move2(gint list_index, const gint *from_indices,
+    gint f_length, gint to_list_index)
 {
     if(to_list_index<0 || to_list_index>=plist_get_list_length()) return;
     int count = 0;
@@ -1023,7 +1013,7 @@ void plist_plist_move2(gint list_index, gint *from_indices, gint f_length,
  * Delete item(s) in the playlist.
  */
 
-void plist_delete_music2(gint list_index, gint *indices, gint f_length)
+void plist_delete_music2(gint list_index, const gint *indices, gint f_length)
 {
     if(indices==NULL) return;
     CoreData *gcore = get_core();
@@ -1063,57 +1053,51 @@ void plist_delete_music2(gint list_index, gint *indices, gint f_length)
 void plist_reflesh_info(gint index)
 {
     if(index<0 || index>=plist_get_list_length()) return;
-    gboolean flag = TRUE;
     gint errorno = 0;
     gint i = 0;
-    gint length = 0;
-    MusicMetaData *mmd_new;
+    MusicMetaData mmd_new;
     MusicData *md_old;
-    length = plist_get_plist_length(index);
-    for(i=1;i<=length;i++)
+    GList *pl;
+    GList *pl_foreach;
+    PlayList *list;
+    gchar *fpathname = NULL;
+    gchar *music_basename = NULL;
+    list = (PlayList *)g_list_nth_data(list_head, index);
+    if(list==NULL) return;
+    pl = list->pl;
+    if(pl==NULL) return;
+    pl_foreach = g_list_next(pl);
+    while(pl_foreach!=NULL)
     {
-        flag = plist_get_music_data(index, i, &md_old);
-        if(!flag) continue;
-        mmd_new = g_malloc0(sizeof(MusicMetaData));
-        mmd_new->title = NULL;
-        mmd_new->artist = NULL;
-        mmd_new->file_type = NULL;
-        mmd_new->comment = NULL;
-        mmd_new->album = NULL;
-        plist_load_metadata(md_old->uri, mmd_new, &errorno);
-        if(errorno!=0)
+        md_old = (MusicData *)pl_foreach->data;
+        bzero(&mmd_new, sizeof(MusicMetaData));
+        plist_load_metadata(md_old->uri, &mmd_new, &errorno);
+        if(errorno!=0) continue;
+        g_free(md_old->title);
+        if(mmd_new.title[0]!='\0')
+            md_old->title = g_strdup(mmd_new.title);
+        else
         {
-            if(mmd_new->title!=NULL)
-                g_free(mmd_new->title);
-            if(mmd_new->artist!=NULL)
-                g_free(mmd_new->artist);
-            if(mmd_new->file_type!=NULL)
-                g_free(mmd_new->file_type);
-            if(mmd_new->album!=NULL)
-                g_free(mmd_new->album);
-            if(mmd_new->comment!=NULL)
-                g_free(mmd_new->comment);
-            if(mmd_new!=NULL)
-                g_free(mmd_new);
-            continue;
+            fpathname = g_filename_from_uri(md_old->uri, NULL, NULL);
+            if(fpathname!=NULL)
+            {
+                music_basename = g_filename_display_basename(fpathname);
+                g_free(fpathname);
+            }
+            if(music_basename!=NULL)
+            {
+                md_old->title = g_strdup(music_basename);
+                g_free(music_basename);
+            }
+            else
+                md_old->title = g_strdup(_("Unknown title"));
+            music_basename = NULL;
         }
-        if(mmd_new->title!=NULL)
-        {
-            g_free(md_old->title);
-            md_old->title = mmd_new->title;
-        }
-        if(mmd_new->artist!=NULL)
-        {
-            g_free(md_old->artist);
-            md_old->artist = mmd_new->artist;
-        }
-        md_old->length = mmd_new->length;
-        if(mmd_new->album!=NULL)
-            g_free(mmd_new->album);
-        if(mmd_new->comment!=NULL)
-            g_free(mmd_new->comment);
-        if(mmd_new->file_type!=NULL)
-            g_free(mmd_new->file_type);
+        g_free(md_old->artist);
+        md_old->artist = g_strdup(mmd_new.artist);
+        md_old->length = mmd_new.length;
+        pl_foreach = g_list_next(pl_foreach);
+        i++;
     }
     gui_play_list_view_rebuild(index);
 }
@@ -1122,7 +1106,7 @@ void plist_reflesh_info(gint index)
  * Save the playlist.
  */
 
-void plist_save_playlist(gchar *s_filename, gint index)
+void plist_save_playlist(const gchar *s_filename, gint index)
 {
     if(index<0 || index>=plist_get_list_length()) return;
     if(s_filename==NULL || *s_filename=='\0') return;
@@ -1163,7 +1147,7 @@ void plist_save_playlist(gchar *s_filename, gint index)
  * Load the playlist.
  */
 
-void plist_load_playlist(gchar *s_filename, gint index)
+void plist_load_playlist(const gchar *s_filename, gint index)
 {
     if(index<0 || index>=plist_get_list_length()) return;
     if(s_filename==NULL || *s_filename=='\0') return;

@@ -1,28 +1,52 @@
 /*
  * GUI Lyric Show (Desktop Lyric Part)
  * Build the desktop lyric show of the player. 
+ *
+ * gui_lrc_desk.c
+ * This file is part of <RhythmCat>
+ *
+ * Copyright (C) 2010 - SuperCat, license: GPL v3
+ *
+ * <RhythmCat> is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * <RhythmCat> is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with <RhythmCat>; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, 
+ * Boston, MA  02110-1301  USA
  */
 
 #include "gui_lrc_desk.h"
 
-GuiLrcData *rc_gui_lrc;
-GuiMenu *ui_menu;
-GtkWidget *desklrc_window;
-gint desklrc_width = 1000;
-gint desklrc_height = 100;
-gint desklrc_pos_x = 200;
-gint desklrc_pos_y = 700;
-gint desklrc_time = 0;
-gint time_temp = 0;
-gboolean desklrc_flag = TRUE;
-gboolean seekflag = FALSE;
-gint lyrics_desktop_x = 0;
-gint lyrics_desktop_y = 0;
-gboolean lyrics_drag = FALSE;
-gboolean lyrics_notify = FALSE;
-cairo_surface_t *image_desktop = NULL;
-gboolean desklrc_composited;
-gchar *desklrc_font = "Sans Regular 25";
+static GuiLrcData *rc_gui_lrc;
+static GuiMenu *ui_menu;
+static GtkWidget *desklrc_window;
+static gint desklrc_width = 1000;
+static gint desklrc_height = -1;
+static gint desklrc_pos_x = 200;
+static gint desklrc_pos_y = 700;
+static gint desklrc_move_x = 0;
+static gint desklrc_move_y = 0;
+static gint desklrc_time = 0;
+static gint time_temp = 0;
+static gboolean desklrc_flag = TRUE;
+static gboolean seekflag = FALSE;
+static gboolean lyrics_drag = FALSE;
+static gboolean lyrics_notify = FALSE;
+static gboolean desklrc_composited;
+static gchar *desklrc_font = NULL;
+static gboolean desklrc_movable = FALSE;
+static gdouble desklrc_fg_color1[3] = {1.0, 0.3, 0.3};
+static gdouble desklrc_fg_color2[3] = {1.0, 1.0, 0.0};
+static gdouble desklrc_bg_color1[3] = {0.3, 1.0, 1.0};
+static gdouble desklrc_bg_color2[3] = {0.0, 0.0, 1.0};
 
 gboolean gui_desklrc_init()
 {
@@ -30,6 +54,26 @@ gboolean gui_desklrc_init()
     GdkColormap *colormap;
     rc_gui_lrc = get_gui_lrc();
     ui_menu = get_menu();
+    gint font_height;
+    gint i;
+    RCSetting *rc_setting = get_setting();
+    PangoFontDescription *font_desc;
+    gui_desklrc_set_font(rc_setting->osd_lyric_font);
+    for(i=0;i<3;i++)
+    {
+        desklrc_bg_color1[i] = rc_setting->osd_lyric_bg_color1[i];
+        desklrc_bg_color2[i] = rc_setting->osd_lyric_bg_color2[i];
+        desklrc_fg_color1[i] = rc_setting->osd_lyric_fg_color1[i];
+        desklrc_fg_color2[i] = rc_setting->osd_lyric_fg_color2[i];
+    }
+    desklrc_width = rc_setting->osd_lryic_width;
+    desklrc_pos_x = rc_setting->osd_lyric_pos[0];
+    desklrc_pos_y = rc_setting->osd_lyric_pos[1];
+    desklrc_movable = rc_setting->osd_lyric_movable;
+    font_desc = pango_font_description_from_string(desklrc_font);
+    font_height = pango_font_description_get_size(font_desc) / PANGO_SCALE;
+    pango_font_description_free(font_desc);
+    desklrc_height = 2 * font_height;
     desklrc_window = gtk_window_new(GTK_WINDOW_POPUP);;
     gtk_widget_set_app_paintable(desklrc_window, TRUE);
     gtk_window_set_type_hint(GTK_WINDOW(desklrc_window),
@@ -48,28 +92,30 @@ gboolean gui_desklrc_init()
     }
     else
         rc_debug_print("WARNING: Transparent is NOT supported!\n");
+    gtk_widget_add_events(desklrc_window,
+        GDK_LEAVE_NOTIFY_MASK | GDK_BUTTON_PRESS_MASK |
+        GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK |
+        GDK_POINTER_MOTION_HINT_MASK);
     gtk_widget_realize(desklrc_window);
     desklrc_composited = gtk_widget_is_composited(desklrc_window);
     g_signal_connect(G_OBJECT(desklrc_window), "composited-changed",
         G_CALLBACK(gui_desklrc_get_composited), NULL);
     g_signal_connect(G_OBJECT(desklrc_window), "expose-event" ,
         G_CALLBACK(gui_desklrc_expose_handler), NULL) ;
-
-/*
     g_signal_connect(G_OBJECT(desklrc_window), "button-press-event" ,
 	G_CALLBACK(gui_desklrc_drag), NULL);
     g_signal_connect(G_OBJECT(desklrc_window), "motion-notify-event",
         G_CALLBACK(gui_desklrc_drag), NULL);
     g_signal_connect(G_OBJECT(desklrc_window), "button-release-event",
         G_CALLBACK(gui_desklrc_drag), NULL);
-    g_signal_connect (G_OBJECT(desklrc_window), "enter-notify-event",
+    g_signal_connect(G_OBJECT(desklrc_window), "enter-notify-event",
         G_CALLBACK(gui_desklrc_drag), NULL);
-    g_signal_connect (G_OBJECT(desklrc_window), "leave-notify-event",
+    g_signal_connect(G_OBJECT(desklrc_window), "leave-notify-event",
         G_CALLBACK(gui_desklrc_drag), NULL); 
-*/   
     g_timeout_add(100, (GSourceFunc)gui_desklrc_update, NULL);
     gtk_widget_show(desklrc_window);
-    gui_desklrc_enable(FALSE);
+    gui_desklrc_enable(rc_setting->osd_lyric_flag);
+    gui_desklrc_set_movable(desklrc_movable);
     return TRUE;
 }
 
@@ -104,41 +150,48 @@ gboolean gui_desklrc_draw(GtkWidget *widget, GdkEventExpose *event, gpointer dat
     cairo_t *cr;
     PangoLayout *layout;
     PangoFontDescription *desc;
-    desklrc_win = desklrc_window->window;
-    gdk_drawable_get_size(GDK_DRAWABLE(desklrc_win), &width, &height);
-    pixmap = gdk_pixmap_new(GDK_DRAWABLE(desklrc_win), width, height, 1);
-    cr = gdk_cairo_create(pixmap);
     const GList *lyric_foreach = NULL;
-    layout = pango_cairo_create_layout(cr);
     gint64 i = 0L;
     LrcData *lrc_data;
     gchar *text;
-    lyric_foreach = rc_gui_lrc->lyric_data;
-    while(lyric_foreach!=NULL)
+    desklrc_win = desklrc_window->window;
+    gdk_drawable_get_size(GDK_DRAWABLE(desklrc_win), &width, &height);
+    if(!lyrics_notify)
     {
-        if(i==rc_gui_lrc->lrc_line_num)
+        pixmap = gdk_pixmap_new(NULL, width, height, 1);
+        cr = gdk_cairo_create(pixmap);
+        layout = pango_cairo_create_layout(cr);
+        lyric_foreach = rc_gui_lrc->lyric_data;
+        while(lyric_foreach!=NULL)
         {
-            lrc_data = lyric_foreach->data;
-            text = lrc_data->text;
-            pango_layout_set_text (layout, text, -1);
+            if(i==rc_gui_lrc->lrc_line_num)
+            {
+                lrc_data = lyric_foreach->data;
+                text = lrc_data->text;
+                pango_layout_set_text (layout, text, -1);
+            }
+            lyric_foreach = g_list_next(lyric_foreach);
+            i++;
         }
-        lyric_foreach = g_list_next(lyric_foreach);
-        i++;
+        desc = pango_font_description_from_string(desklrc_font);
+        pango_layout_set_font_description(layout, desc);
+        pango_font_description_free(desc);
+        cairo_save(cr);
+        cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
+        cairo_set_source_rgba(cr, 1.0, 1.0, 1.0, 0.0);
+        cairo_paint(cr);
+        cairo_restore (cr);
+        cairo_move_to(cr, 5, 4);
+        pango_cairo_show_layout(cr, layout);
+        cairo_destroy(cr);
+        g_object_unref(layout);
+        gdk_window_shape_combine_mask(desklrc_win, pixmap, 0, 0);
+        g_object_unref(pixmap);
     }
-    desc = pango_font_description_from_string(desklrc_font);
-    pango_layout_set_font_description(layout, desc);
-    pango_font_description_free(desc);
-    cairo_save (cr);
-    cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
-    cairo_set_source_rgba(cr, 1.0, 1.0, 1.0, 0.0);
-    cairo_paint(cr);
-    cairo_restore (cr);
-    cairo_move_to(cr, 5, 4);
-    pango_cairo_show_layout(cr, layout);
-    gdk_window_shape_combine_mask(desklrc_win, pixmap, 0, 0);
-    cairo_destroy(cr);
-    g_object_unref(layout);
-    g_object_unref(pixmap);
+    else
+    {
+        gdk_window_shape_combine_mask(desklrc_win, NULL, 0, 0);
+    }
     return TRUE;
 }
 
@@ -162,13 +215,12 @@ gboolean gui_desklrc_show(GtkWidget *widget, GdkEventExpose *event,
     gint y = 0;
     gint lrc_height;
     gint lh = -1;
-    gdouble r,g,b;
     cr = gdk_cairo_create(desklrc_window->window);
     gdk_drawable_get_size(desklrc_window->window, &width, &height);
     y = height;
     if(lyrics_notify)
     {
-        cairo_set_source_rgba(cr,0,0,0,0.3);
+        cairo_set_source_rgba(cr,0.0, 0.0, 0.0, 0.3);
         cairo_move_to(cr, 0 + 5, 0);
         cairo_line_to(cr, 0 + width - 5, 0);
         cairo_move_to(cr, 0 + width, 0 + 5);
@@ -182,7 +234,7 @@ gboolean gui_desklrc_show(GtkWidget *widget, GdkEventExpose *event,
         cairo_arc(cr, 0 + width - 5, 0 + height - 5, 5, 0, M_PI / 2);
         cairo_arc(cr, 0 + 5, 0 + height - 5, 5, M_PI / 2, M_PI);
         cairo_fill(cr);
-    }
+    }   
     while(lyric_foreach!=NULL || seekflag)
     {
         if(lyric_foreach->data==NULL) return FALSE;
@@ -192,15 +244,14 @@ gboolean gui_desklrc_show(GtkWidget *widget, GdkEventExpose *event,
         {
             lrc_data = lyric_foreach->data;
             text = lrc_data->text;
-            cairo_set_source_rgba(cr,0,0,0,1);
             font_desc = pango_font_description_from_string(desklrc_font);
             lh = pango_font_description_get_size(font_desc) / PANGO_SCALE;
             cairo_move_to(cr, 5, (5*lh)/30);
             layout = pango_cairo_create_layout(cr);
-            pango_layout_set_text (layout, 
+            pango_layout_set_text(layout, 
                 ((LrcData*)(lyric_foreach->data))->text, -1); 
             desc = pango_font_description_from_string(desklrc_font);
-            pango_layout_set_font_description (layout, desc);
+            pango_layout_set_font_description(layout, desc);
             pango_font_description_free(font_desc);
             pango_font_description_free(desc);
             pango_layout_get_size(layout,&width,&lrc_height);
@@ -218,24 +269,24 @@ gboolean gui_desklrc_show(GtkWidget *widget, GdkEventExpose *event,
             time_temp = core_get_play_position() -
                 ((LrcData*)(lyric_foreach->data))->time;
             x = (gint)(((gdouble)time_temp / desklrc_time) * width);
-
-            pat = cairo_pattern_create_linear(0, 0, width / 10, height);
-            sscanf("0.3:1.0:1.0","%lf:%lf:%lf",&r,&g,&b);
-            cairo_pattern_add_color_stop_rgba(pat, 0.1, r, g, b, 1.0);
-            sscanf("0.0:0.0:1.0","%lf:%lf:%lf",&r,&g,&b);
-            cairo_pattern_add_color_stop_rgba(pat, 0.5, r, g, b, 1.0);
+            pat = cairo_pattern_create_linear(0, 0, 10, 5*lh);
+            cairo_pattern_add_color_stop_rgba(pat, 0.1, desklrc_bg_color1[0],
+                desklrc_bg_color1[1], desklrc_bg_color1[2], 1.0);
+            cairo_pattern_add_color_stop_rgba(pat, 0.5, desklrc_bg_color2[0],
+                desklrc_bg_color2[1], desklrc_bg_color2[2], 1.0);
+            cairo_pattern_add_color_stop_rgba(pat, 0.9, desklrc_bg_color1[0],
+                desklrc_bg_color1[1], desklrc_bg_color1[2], 1.0);
             cairo_set_source(cr, pat);
             cairo_rectangle(cr, 0, 0, width, height);
             cairo_fill(cr);
             cairo_pattern_destroy(pat);
-
             pat = cairo_pattern_create_linear(0, 0, 10.0, 5*lh);
-            sscanf("1.0:0.3:0.3","%lf:%lf:%lf",&r,&g,&b);
-            cairo_pattern_add_color_stop_rgb(pat, 0.1, r, g, b);
-            sscanf("1.0:1.0:0.0","%lf:%lf:%lf",&r,&g,&b);
-            cairo_pattern_add_color_stop_rgb(pat, 0.5, r, g, b);
-            sscanf("1.0:0.3:0.3","%lf:%lf:%lf",&r,&g,&b);
-            cairo_pattern_add_color_stop_rgb(pat, 0.9, r, g, b);
+            cairo_pattern_add_color_stop_rgba(pat, 0.1, desklrc_fg_color1[0],
+                desklrc_fg_color1[1], desklrc_fg_color1[2], 1.0);
+            cairo_pattern_add_color_stop_rgba(pat, 0.5, desklrc_fg_color2[0],
+                desklrc_fg_color2[1], desklrc_fg_color2[2], 1.0);
+            cairo_pattern_add_color_stop_rgba(pat, 0.9, desklrc_fg_color1[0],
+                desklrc_fg_color1[1], desklrc_fg_color1[2], 1.0);
             cairo_set_source(cr, pat);
             cairo_rectangle(cr, 0, 0, x, y);
             cairo_fill(cr);
@@ -244,71 +295,72 @@ gboolean gui_desklrc_show(GtkWidget *widget, GdkEventExpose *event,
         }
         lyric_foreach = g_list_next(lyric_foreach);
         i++;
-    }    
+    }
     return TRUE;
 }		
 
-/*
-
-gboolean gui_desklrc_drag( GtkWidget * widget, GdkEvent *event, gpointer data)
+gboolean gui_desklrc_drag(GtkWidget *widget, GdkEvent *event, gpointer data)
 {
-    GdkCursor *cursor;
-    if (event->button.button == 1)
-    {   printf("bbb\n");
-		switch(event->type)
-		{
-			case GDK_BUTTON_PRESS:
-				lyrics_desktop_x = event->button.x;
-				lyrics_desktop_y = event->button.y;
-				lyrics_drag=TRUE;
-
-\
-				cursor = gdk_cursor_new(GDK_HAND1);
-				gdk_window_set_cursor(widget->window,cursor);
-				gdk_cursor_destroy(cursor);
-				break;
-        		case GDK_BUTTON_RELEASE:
-        			lyrics_drag=FALSE;
-
-
-				cursor = gdk_cursor_new(GDK_ARROW);
-				gdk_window_set_cursor(widget->window,cursor);
-				gdk_cursor_destroy(cursor);
-				
-				break;
-			case GDK_MOTION_NOTIFY:
-				if(lyrics_drag)
-				{
-
-					int x, y;
-					GtkWidget *window = widget;
-					gtk_window_get_position(GTK_WINDOW(window), &x, &y); 
-					gtk_window_move((GtkWindow *) window,
-							x + event->button.x - lyrics_desktop_x,
-							y + event->button.y - lyrics_desktop_y);
-				}	
-			default:
-				break;
-		}
-	}
-	switch(event->type)
-	{
-		case GDK_ENTER_NOTIFY:
-        		lyrics_notify=TRUE;
-			break;
-		case GDK_LEAVE_NOTIFY:
-
-			if(!lyrics_drag)
-        			lyrics_notify=FALSE;
-			break;
-		default:
-			break;
-	}
-    printf("test\n");
-    return TRUE;
+    if(!desklrc_movable) return FALSE;
+    GdkCursor *cursor = NULL;
+    gint x, y;
+    if(event->button.button==1)
+    {
+        switch(event->type)
+        {
+            case GDK_BUTTON_PRESS:
+            {
+                desklrc_move_x = event->button.x;
+                desklrc_move_y = event->button.y;
+                lyrics_drag = TRUE;
+                cursor = gdk_cursor_new(GDK_HAND1);
+                gdk_window_set_cursor(widget->window, cursor);
+                gdk_cursor_destroy(cursor);
+                break;
+            }
+            case GDK_BUTTON_RELEASE:
+            {
+                lyrics_drag = FALSE;
+                cursor = gdk_cursor_new(GDK_ARROW);
+                gdk_window_set_cursor(widget->window, cursor);
+                gdk_cursor_destroy(cursor);
+                break;
+            }
+            case GDK_MOTION_NOTIFY:
+            {
+                if(lyrics_drag)
+                {
+                    gtk_window_get_position(GTK_WINDOW(widget), &x, &y);
+                    gtk_window_move(GTK_WINDOW(widget), x + event->button.x 
+                        - desklrc_move_x, y + event->button.y -
+                        desklrc_move_y);
+                    gtk_window_get_position(GTK_WINDOW(widget), &desklrc_pos_x,
+                        &desklrc_pos_y);
+                }
+            }	
+            default:
+                break;
+        }
+    }
+    switch(event->type)
+    {
+        case GDK_ENTER_NOTIFY:
+        {
+            lyrics_notify = TRUE;
+            break;
+        }
+        case GDK_LEAVE_NOTIFY:
+        {
+            if(!lyrics_drag)
+                lyrics_notify = FALSE;
+            break;
+        }
+        default:
+            break;
+    }
+    return FALSE;
 }
 
-*/
 
 gboolean gui_desklrc_expose_handler(GtkWidget * widget, GdkEventExpose * event, gpointer data)
 {
@@ -316,7 +368,7 @@ gboolean gui_desklrc_expose_handler(GtkWidget * widget, GdkEventExpose * event, 
     gint width, height;
     cr = gdk_cairo_create(desklrc_window->window);
     gdk_drawable_get_size(desklrc_window->window, &width, &height);
-    cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 0.0);
+    cairo_set_source_rgba(cr, 1.0, 1.0, 1.0, 0.0);
     cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
     cairo_paint(cr);
     cairo_destroy(cr);
@@ -364,4 +416,64 @@ void gui_desklrc_press_checkbox(GtkWidget *widget, gpointer data)
         gui_desklrc_enable(FALSE);
 }
 
-			
+void gui_desklrc_get_pos(gint *x, gint *y)
+{
+    *x = desklrc_pos_x;
+    *y = desklrc_pos_y;
+}
+
+void gui_desklrc_set_movable(gboolean movable)
+{
+    GdkRegion *region;
+    desklrc_movable = movable;
+    if(movable)
+    {
+        gdk_window_input_shape_combine_mask(desklrc_window->window, NULL,
+            0, 0);
+    }
+    else
+    {
+        region = gdk_region_new();
+        gdk_window_input_shape_combine_region(desklrc_window->window, region,
+            0, 0);
+        gdk_region_destroy (region);
+    }
+}
+
+
+void gui_desklrc_set_font(const gchar *font_name)
+{
+    if(font_name==NULL) return;
+    PangoFontDescription *font_desc;
+    gint font_height = 0;
+    if(desklrc_font!=NULL) g_free(desklrc_font);
+    desklrc_font = g_strdup(font_name);
+    font_desc = pango_font_description_from_string(desklrc_font);
+    font_height = pango_font_description_get_size(font_desc) / PANGO_SCALE;
+    pango_font_description_free(font_desc);
+    desklrc_height = 2 * font_height;
+    if(!GTK_IS_WIDGET(desklrc_window)) return;
+    gtk_window_resize(GTK_WINDOW(desklrc_window), desklrc_width,
+        desklrc_height);
+}
+
+void gui_desklrc_set_color(const gdouble *fg1, const gdouble *fg2, 
+    const gdouble *bg1, const gdouble *bg2)
+{
+    gint i;
+    for(i=0;i<3;i++)
+    {
+        desklrc_bg_color1[i] = bg1[i];
+        desklrc_bg_color2[i] = bg2[i];
+        desklrc_fg_color1[i] = fg1[i];
+        desklrc_fg_color2[i] = fg2[i];
+    }
+}
+
+void gui_desklrc_set_pos(gint x, gint y)
+{
+    desklrc_pos_x = x;
+    desklrc_pos_y = y;
+    gtk_window_move(GTK_WINDOW(desklrc_window), x, y);
+}
+

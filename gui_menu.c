@@ -1,6 +1,26 @@
 /*
  * Menu
  * Build the menus in the player.
+ *
+ * gui_menu.c
+ * This file is part of <RhythmCat>
+ *
+ * Copyright (C) 2010 - SuperCat, license: GPL v3
+ *
+ * <RhythmCat> is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * <RhythmCat> is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with <RhythmCat>; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, 
+ * Boston, MA  02110-1301  USA
  */
 
 #include "gui_menu.h"
@@ -398,6 +418,8 @@ void gui_menu_create_main_menus()
         G_CALLBACK(gui_desklrc_press_checkbox),NULL);
     g_signal_connect(G_OBJECT(rc_menu.view_menu_items[8]),"activate",
         G_CALLBACK(gui_tools_convert_create),NULL);
+    g_signal_connect(G_OBJECT(rc_menu.view_menu_items[9]),"activate",
+        G_CALLBACK(gui_kara_new_window),NULL);
     g_signal_connect(G_OBJECT(rc_menu.ctrl_menu_items[0]),"activate",
         G_CALLBACK(gui_press_play_button),NULL);
     g_signal_connect(G_OBJECT(rc_menu.ctrl_menu_items[1]),"activate",
@@ -435,10 +457,5 @@ void gui_menu_create_main_menus()
 GuiMenu *get_menu()
 {
     return &rc_menu;
-}
-
-void gui_menu_test_item()
-{
-    g_printf("You clicked a item in the menu!\n");
 }
 

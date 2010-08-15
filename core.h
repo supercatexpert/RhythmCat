@@ -1,5 +1,25 @@
 /*
  * CORE Declaration
+ *
+ * core.h
+ * This file is part of <RhythmCat>
+ *
+ * Copyright (C) 2010 - SuperCat, license: GPL v3
+ *
+ * <RhythmCat> is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * <RhythmCat> is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with <RhythmCat>; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, 
+ * Boston, MA  02110-1301  USA
  */
 
 #ifndef HAVE_CORE_H
@@ -42,7 +62,6 @@ typedef struct _CoreData
     gint list_index_selected;
     gint music_index;
     CoreState core_state;
-    guint bitrate;
     guint ver_major;
     guint ver_minor;
     guint ver_micro;
@@ -55,6 +74,7 @@ CoreData *get_core();
 gint core_get_selected_list();
 void delete_core();
 void core_set_uri(gchar *);
+gchar *core_get_uri();
 gboolean core_play();
 gboolean core_play_next(gint);
 gboolean core_play_prev(gint);

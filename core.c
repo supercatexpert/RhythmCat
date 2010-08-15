@@ -1,6 +1,26 @@
 /*
  * Core
  * Use Gstreamer as backend to play audio files.
+ *
+ * core.c
+ * This file is part of <RhythmCat>
+ *
+ * Copyright (C) 2010 - SuperCat, license: GPL v3
+ *
+ * <RhythmCat> is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * <RhythmCat> is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with <RhythmCat>; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, 
+ * Boston, MA  02110-1301  USA
  */
 
 #include "core.h"
@@ -29,7 +49,6 @@ static gdouble magnitude[30];
 
 static gboolean core_bus_call(GstBus *bus,GstMessage *msg, gpointer data)
 {
-    guint bitrate = 0;
     const GstStructure *gstru = NULL;
     const gchar *name = NULL;
     const GValue *magnitudes;
@@ -57,11 +76,6 @@ static gboolean core_bus_call(GstBus *bus,GstMessage *msg, gpointer data)
         }
         case GST_MESSAGE_TAG:
         {
-            GstTagList *tags;
-            gst_message_parse_tag(msg,&tags);
-            gst_tag_list_get_uint(tags,GST_TAG_BITRATE,&bitrate);
-            if(bitrate>0) rc_core.bitrate = bitrate;
-            gst_tag_list_free(tags);
             break;
         }
         case GST_MESSAGE_BUFFERING:
@@ -218,21 +232,31 @@ gint core_get_selected_list()
 
 void core_set_uri(gchar *uri)
 {
-    CoreData *gcore;
-    gcore = get_core();
     gui_see_scale_disable(NULL,NULL);
-    g_object_set(G_OBJECT(rc_core.play),"uri",uri,NULL);
+    g_object_set(G_OBJECT(rc_core.play), "uri", uri, NULL);
 }
 
 /*
- * Play the uri which set beforce. The player will start to play.
+ * Get the uri which gstreamer opened. (Free after usage!)
+ */
+
+gchar *core_get_uri()
+{
+    gchar *uri;
+    g_object_get(G_OBJECT(rc_core.play), "uri", &uri, NULL);
+    g_printf("URI: %s\n", uri);
+    return uri;
+}
+
+/*
+ * Play the core which set beforce. The player will start to play.
  */
 
 gboolean core_play()
 {
     GstState state;
     gst_element_get_state(rc_core.play,&state,NULL,GST_CLOCK_TIME_NONE);
-    int flag = TRUE;
+    gboolean flag = TRUE;
     if(state!=GST_STATE_PAUSED && state!=GST_STATE_PLAYING &&
         state!=GST_STATE_READY && state!=GST_STATE_NULL)
     {
@@ -249,7 +273,7 @@ gboolean core_play()
 }
 
 /*
- * Set the uri to pause state. So playing will be paused.
+ * Set the core to pause state. So playing will be paused.
  */
 
 gboolean core_pause()
@@ -264,7 +288,7 @@ gboolean core_pause()
 }
 
 /*
- * Set the uri to stop state. So playing will be stopped
+ * Set the core to stop state. So playing will be stopped
  */
 
 gboolean core_stop()
@@ -346,13 +370,10 @@ gint64 core_get_play_position()
 {
     gint64 position = 0;
     gint64 pos;
-    char *uri;
     GstFormat fmt = GST_FORMAT_TIME;
-    g_object_get(G_OBJECT(rc_core.play),"uri",&uri,NULL);
-    if(!uri) return -1;
     if(gst_element_query_position(rc_core.play,&fmt,&pos))
     {
-        position=pos/10000000; //(Format: 00:00.00)
+        position=pos/10000000; /* (Unit: 10msec) */
         if(position<0) position=0;
     }
     return position;
@@ -366,10 +387,7 @@ gint64 core_get_music_length()
 {
     gint64 length = 0;
     gint64 dura;
-    gchar *uri;
     GstFormat fmt = GST_FORMAT_TIME;
-    g_object_get(G_OBJECT(rc_core.play),"uri",&uri,NULL);
-    if(!uri) return -1;
     if(gst_element_query_duration(rc_core.play,&fmt,&dura))
     {
         length=dura/10000000;  //(Format: 00:00.00)

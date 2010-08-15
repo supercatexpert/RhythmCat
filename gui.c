@@ -1,24 +1,44 @@
 /*
  * GUI
- * Build the main window of the player. 
+ * Show the main window of the player. 
+ *
+ * gui.c
+ * This file is part of <RhythmCat>
+ *
+ * Copyright (C) 2010 - SuperCat, license: GPL v3
+ *
+ * <RhythmCat> is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * <RhythmCat> is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with <RhythmCat>; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, 
+ * Boston, MA  02110-1301  USA
  */
 
 #include "gui.h"
 
 /* Variables */
 static GuiData rc_gui;
-GuiMenu *ui_menu;
+static GuiMenu *ui_menu;
 
 /*
  * Reflush the information label.
  */
 
-static int gui_reflush_time_info(gpointer data)
+static gboolean gui_reflush_time_info(gpointer data)
 {
     gint64 pos = 0, len = 0;
-    int pos_min = 0, pos_sec = 0;
-    int len_min = 0, len_sec = 0;
-    double persent = 0.0;
+    gint pos_min = 0, pos_sec = 0;
+    gint len_min = 0, len_sec = 0;
+    gdouble persent = 0.0;
     pos = core_get_play_position();
     len = core_get_music_length();
     pos_min = pos/6000;
@@ -27,15 +47,15 @@ static int gui_reflush_time_info(gpointer data)
     len_sec = (len%6000)/100;
     if(rc_gui.update_seek_scale_flag)
     {
-        g_snprintf(rc_gui.time_info_str,120,"%02d:%02d/%02d:%02d",
+        g_snprintf(rc_gui.time_info_str, 120, "%02d:%02d/%02d:%02d",
             pos_min, pos_sec, len_min, len_sec);
         gtk_label_set_text(GTK_LABEL(rc_gui.time_label),rc_gui.time_info_str);
     }
     if(len!=0 && rc_gui.update_seek_scale_flag &&
         GTK_WIDGET_SENSITIVE(rc_gui.time_scroll_bar)) 
     {    
-        persent = (double)pos / len;
-        gtk_range_set_value(GTK_RANGE(rc_gui.time_scroll_bar),persent*100);
+        persent = (gdouble)pos / len;
+        gtk_range_set_value(GTK_RANGE(rc_gui.time_scroll_bar), persent*100);
     }
     return TRUE;
 }
@@ -61,11 +81,11 @@ static void gui_play_list_block_selection(GtkWidget *widget, gboolean block,
     gtk_tree_selection_set_select_function(rc_gui.play_list_selection,
         gui_play_list_multidrag_selection_block, (gboolean *)&which[!!block],
         NULL);
-    int *where = g_object_get_data(G_OBJECT(rc_gui.play_list_tree_view),
+    gint *where = g_object_get_data(G_OBJECT(rc_gui.play_list_tree_view),
         "multidrag-where");
     if(where==NULL)
     {
-        where = g_malloc(2*sizeof(int));
+        where = g_malloc(2*sizeof(gint));
         g_object_set_data_full(G_OBJECT(rc_gui.play_list_tree_view),
             "multidrag-where", where, g_free);
     }
@@ -361,8 +381,8 @@ gboolean create_main_window()
     g_signal_connect(G_OBJECT(rc_gui.play_list_tree_view),"button-press-event",
         G_CALLBACK(gui_play_list_popup_menu), NULL);
     g_signal_connect(G_OBJECT(rc_gui.play_list_tree_view),
-       "button-release-event", G_CALLBACK(gui_play_list_button_release_event),
-       NULL);
+        "button-release-event", G_CALLBACK(gui_play_list_button_release_event),
+        NULL);
     g_signal_connect(G_OBJECT(rc_gui.list_file_tree_view),
         "button-release-event", G_CALLBACK(gui_list_file_popup_menu), NULL);
     g_signal_connect(G_OBJECT(rc_gui.play_list_tree_view),
@@ -403,7 +423,6 @@ gboolean create_main_window()
     /* Disable unusable menus */
     gtk_widget_set_sensitive(ui_menu->edit_menu_items[2], FALSE);
     gtk_widget_set_sensitive(ui_menu->edit_menu_items[6], FALSE);
-    gtk_widget_set_sensitive(ui_menu->view_menu_items[9], FALSE);
     gtk_widget_set_sensitive(ui_menu->view_menu_items[11], FALSE);
     rc_debug_print("Main window is successfully loaded!\n"); 
     return FALSE;
@@ -643,8 +662,8 @@ gboolean gui_adjust_volume(GtkWidget *widget, gpointer data)
  * Detect if the scale bar is pressed by the mouse.
  */
 
-gboolean gui_seek_scale_button_pressed(GtkWidget *widget, GdkEventButton *event,
-    gpointer data)
+gboolean gui_seek_scale_button_pressed(GtkWidget *widget, 
+    GdkEventButton *event, gpointer data)
 {
     if(event->button==3) return TRUE;
     rc_gui.update_seek_scale_flag = FALSE;
@@ -655,8 +674,8 @@ gboolean gui_seek_scale_button_pressed(GtkWidget *widget, GdkEventButton *event,
  * Detect if the scale bar is released.
  */
 
-gboolean gui_seek_scale_button_released(GtkWidget *widget, GdkEventButton *event,
-    gpointer data)
+gboolean gui_seek_scale_button_released(GtkWidget *widget, 
+    GdkEventButton *event, gpointer data)
 {
     rc_gui.update_seek_scale_flag = TRUE;
     gui_adjust_play_position(NULL,NULL);
@@ -737,8 +756,9 @@ gboolean gui_play_list_popup_menu(GtkWidget *widget, GdkEventButton *event,
     if(event->button==1)
     {
         if(event->state & GDK_MODIFIER_MASK) return FALSE;
-        if(!gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(rc_gui.play_list_tree_view),
-            event->x, event->y, &path, NULL, NULL, NULL))
+        if(!gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(
+            rc_gui.play_list_tree_view), event->x, event->y, &path, NULL,
+            NULL, NULL))
             return FALSE;
         if(gtk_tree_selection_path_is_selected(rc_gui.play_list_selection,
             path))
@@ -774,7 +794,7 @@ gboolean gui_list_file_popup_menu(GtkWidget *widget, GdkEventButton *event,
 gboolean gui_play_list_button_release_event(GtkWidget *widget,
     GdkEventButton *event, gpointer data)
 {
-    int *where = g_object_get_data(G_OBJECT(rc_gui.play_list_tree_view),
+    gint *where = g_object_get_data(G_OBJECT(rc_gui.play_list_tree_view),
         "multidrag-where");
     if(where && where[0] != -1)
     {
@@ -787,8 +807,8 @@ gboolean gui_play_list_button_release_event(GtkWidget *widget,
             if(gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(
                 rc_gui.play_list_tree_view), event->x, event->y, &path, &col,
 		NULL, NULL))
- 	        gtk_tree_view_set_cursor(GTK_TREE_VIEW(rc_gui.play_list_tree_view),
-                    path, col, FALSE);
+ 	        gtk_tree_view_set_cursor(GTK_TREE_VIEW(
+                    rc_gui.play_list_tree_view), path, col, FALSE);
             if(path) gtk_tree_path_free(path);
         }
     }
@@ -1023,6 +1043,8 @@ void gui_set_play_list_menu(GtkTreeView *widget, gpointer data)
     if(value>0)
     {
         gtk_widget_set_sensitive(ui_menu->edit_menu_items[2], TRUE);
+        gtk_widget_set_sensitive(ui_menu->view_menu_items[0], TRUE);
+        gtk_widget_set_sensitive(ui_menu->pl_menu_item[0], TRUE);
         gtk_widget_set_sensitive(ui_menu->pl_menu_item[6], TRUE);
         gtk_widget_set_sensitive(ui_menu->pl_menu_item[8], TRUE);
         gtk_widget_set_sensitive(ui_menu->view_menu_items[8], TRUE);
@@ -1030,6 +1052,8 @@ void gui_set_play_list_menu(GtkTreeView *widget, gpointer data)
     else
     {
         gtk_widget_set_sensitive(ui_menu->edit_menu_items[2], FALSE);
+        gtk_widget_set_sensitive(ui_menu->view_menu_items[0], FALSE);
+        gtk_widget_set_sensitive(ui_menu->pl_menu_item[0], FALSE);
         gtk_widget_set_sensitive(ui_menu->pl_menu_item[6], FALSE);
         gtk_widget_set_sensitive(ui_menu->pl_menu_item[8], FALSE);
         gtk_widget_set_sensitive(ui_menu->view_menu_items[8], FALSE);
@@ -1145,6 +1169,7 @@ gboolean gui_set_cover_image(gchar *filename)
     }
     album_new_pixbuf = gdk_pixbuf_scale_simple(album_src_pixbuf, 102, 98,
         GDK_INTERP_HYPER);
+    g_object_unref(album_src_pixbuf);
     if(album_new_pixbuf==NULL)
     {
         g_object_unref(album_new_pixbuf);

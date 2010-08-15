@@ -1,6 +1,26 @@
 /*
  * Audio Tools (Core part)
  * Use Gstreamer to convert music.
+ *
+ * tools.c
+ * This file is part of <RhythmCat>
+ *
+ * Copyright (C) 2010 - SuperCat, license: GPL v3
+ *
+ * <RhythmCat> is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * <RhythmCat> is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with <RhythmCat>; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, 
+ * Boston, MA  02110-1301  USA
  */
 
 #include "tools.h"
@@ -16,7 +36,7 @@ gchar *convert_type;
 gchar *tag_src_path = NULL;
 gchar **convert_merge_uri_list = NULL;
 
-static gint tools_convert_call(GstBus *bus, GstMessage *msg, gpointer data)
+static gboolean tools_convert_call(GstBus *bus, GstMessage *msg, gpointer data)
 {
     switch(GST_MESSAGE_TYPE(msg))
     {
@@ -34,18 +54,16 @@ static gint tools_convert_call(GstBus *bus, GstMessage *msg, gpointer data)
         default:
             break;
     }
-    return GST_BUS_ASYNC;
+    return TRUE;
 }
 
 gboolean tools_convert_start(const gchar *type, const gchar *src_file, 
-    const gchar *dst_file, const gint bitrate, const gdouble quality,
-    const gint rate, const gint channel, const gint64 start_time, 
-    const gint64 end_time, const MusicMetaData *mmd)
+    const gchar *dst_file, gint bitrate, gdouble quality, gint rate, 
+    gint channel, gint64 start_time, gint64 end_time, const MusicMetaData *mmd)
 {
     gchar *src_uri = g_filename_to_uri(src_file, NULL, NULL);
     if(src_uri==NULL) return FALSE;
     if(convert_work_flag==1) return FALSE;
-    MusicMetaData mmd_new;
     GstElement *file_sink;
     GstElement *audio_convert;
     GstElement *audio_resample;
@@ -98,21 +116,13 @@ gboolean tools_convert_start(const gchar *type, const gchar *src_file,
         if(convert_mux==NULL) return FALSE;
         if(mmd!=NULL && convert_tagger!=NULL)
         {
-            if(mmd->title!=NULL) mmd_new.title = mmd->title;
-            else mmd_new.title = "";
-            if(mmd->artist!=NULL) mmd_new.artist = mmd->artist;
-            else mmd_new.artist = "";
-            if(mmd->album!=NULL) mmd_new.album = mmd->album;
-            else mmd_new.album = "";
-            if(mmd->comment!=NULL) mmd_new.comment = mmd->comment;
-            else mmd_new.comment = "";
             gst_tag_setter_add_tags(GST_TAG_SETTER(convert_tagger),
-                GST_TAG_MERGE_REPLACE_ALL, GST_TAG_TITLE, mmd_new.title,
-                GST_TAG_ARTIST, mmd_new.artist,
+                GST_TAG_MERGE_REPLACE_ALL, GST_TAG_TITLE, mmd->title,
+                GST_TAG_ARTIST, mmd->artist,
                 GST_TAG_TRACK_NUMBER, mmd->tracknum,
-                GST_TAG_TRACK_COUNT, 0, GST_TAG_ALBUM, mmd_new.album,
+                GST_TAG_TRACK_COUNT, 0, GST_TAG_ALBUM, mmd->album,
                 GST_TAG_ENCODER, "RhythmCat", GST_TAG_ENCODER_VERSION, 0,
-                GST_TAG_COMMENT, mmd_new.comment, GST_TAG_CODEC, "Vorbis",
+                GST_TAG_COMMENT, mmd->comment, GST_TAG_CODEC, "Vorbis",
                 NULL);
         }
         if(bitrate>0)
@@ -148,21 +158,13 @@ gboolean tools_convert_start(const gchar *type, const gchar *src_file,
         convert_tagger = gst_element_factory_make("flactag", "flac_tag");
         if(mmd!=NULL && convert_tagger!=NULL)
         {
-            if(mmd->title!=NULL) mmd_new.title = mmd->title;
-            else mmd_new.title = "";
-            if(mmd->artist!=NULL) mmd_new.artist = mmd->artist;
-            else mmd_new.artist = "";
-            if(mmd->album!=NULL) mmd_new.album = mmd->album;
-            else mmd_new.album = "";
-            if(mmd->comment!=NULL) mmd_new.comment = mmd->comment;
-            else mmd_new.comment = "";
             gst_tag_setter_add_tags(GST_TAG_SETTER(convert_tagger),
-                GST_TAG_MERGE_REPLACE_ALL, GST_TAG_TITLE, mmd_new.title,
-                GST_TAG_ARTIST, mmd_new.artist,
+                GST_TAG_MERGE_REPLACE_ALL, GST_TAG_TITLE, mmd->title,
+                GST_TAG_ARTIST, mmd->artist,
                 GST_TAG_TRACK_NUMBER, mmd->tracknum,
-                GST_TAG_TRACK_COUNT, 0, GST_TAG_ALBUM, mmd_new.album,
+                GST_TAG_TRACK_COUNT, 0, GST_TAG_ALBUM, mmd->album,
                 GST_TAG_ENCODER, "RhythmCat", GST_TAG_ENCODER_VERSION, 0,
-                GST_TAG_COMMENT, mmd_new.comment, GST_TAG_CODEC, "flac",
+                GST_TAG_COMMENT, mmd->comment, GST_TAG_CODEC, "flac",
                 NULL);
         }
         g_object_set(G_OBJECT(convert_encoder), "quality", (gint)quality,
@@ -218,21 +220,13 @@ gboolean tools_convert_start(const gchar *type, const gchar *src_file,
         }
         if(mmd!=NULL)
         {
-            if(mmd->title!=NULL) mmd_new.title = mmd->title;
-            else mmd_new.title = "";
-            if(mmd->artist!=NULL) mmd_new.artist = mmd->artist;
-            else mmd_new.artist = "";
-            if(mmd->album!=NULL) mmd_new.album = mmd->album;
-            else mmd_new.album = "";
-            if(mmd->comment!=NULL) mmd_new.comment = mmd->comment;
-            else mmd_new.comment = "";
             gst_tag_setter_add_tags(GST_TAG_SETTER(convert_mux),
-                GST_TAG_MERGE_REPLACE_ALL, GST_TAG_TITLE, mmd_new.title,
-                GST_TAG_ARTIST, mmd_new.artist,
+                GST_TAG_MERGE_REPLACE_ALL, GST_TAG_TITLE, mmd->title,
+                GST_TAG_ARTIST, mmd->artist,
                 GST_TAG_TRACK_NUMBER, mmd->tracknum,
-                GST_TAG_TRACK_COUNT, 0, GST_TAG_ALBUM, mmd_new.album,
+                GST_TAG_TRACK_COUNT, 0, GST_TAG_ALBUM, mmd->album,
                 GST_TAG_ENCODER, "RhythmCat", GST_TAG_ENCODER_VERSION, 0,
-                GST_TAG_COMMENT, mmd_new.comment, GST_TAG_CODEC, "MP3",
+                GST_TAG_COMMENT, mmd->comment, GST_TAG_CODEC, "MP3",
                 NULL);
         }
         gst_bin_add_many(GST_BIN(convert_pipeline), audio_convert, 
@@ -282,7 +276,6 @@ gboolean tools_convert_start(const gchar *type, const gchar *src_file,
     gst_element_set_state(convert_play_bin, GST_STATE_PLAYING);
     gst_element_get_state(convert_play_bin, &convert_state, NULL, 
         GST_MSECOND * 300);
-
     if(convert_state==GST_STATE_PLAYING)
     {
         if(start_time!=-1 && end_time!=-1 && start_time<end_time)
@@ -507,7 +500,7 @@ gboolean tools_change_tag(const gchar *path, const gchar *type,
     return TRUE;
 }
 
-gboolean tools_convert_merge_wave(gchar **src_files, const gint num,
+gboolean tools_convert_merge_wave(gchar **src_files, gint num,
     const gchar *dst_file)
 {
     pid_t pid;

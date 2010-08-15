@@ -1,6 +1,26 @@
 /*
  * GUI Tools
  * Audio Tools (Format Convert, Cut, Merge) GUI Part.
+ *
+ * gui_tools.c
+ * This file is part of <RhythmCat>
+ *
+ * Copyright (C) 2010 - SuperCat, license: GPL v3
+ *
+ * <RhythmCat> is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * <RhythmCat> is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with <RhythmCat>; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, 
+ * Boston, MA  02110-1301  USA
  */
 
 #include "gui_tools.h"
@@ -574,13 +594,11 @@ static gpointer gui_tools_convert_timer(gpointer data)
     gboolean skip_flag = FALSE;
     gboolean conv_flag = FALSE;
     gboolean loop_flag = TRUE;
-    gboolean mmd_flag = FALSE;
     gboolean merge_flag = FALSE;
     gboolean merge_complete = FALSE;
     gint result = 0;
     gint errorno = 0;
     MusicMetaData mmd;
-    MusicMetaData *mmd_ptr;
     GtkTextIter text_iter;
     while(loop_flag)
     {
@@ -691,25 +709,17 @@ static gpointer gui_tools_convert_timer(gpointer data)
                 g_free(window_title);
                 gdk_threads_leave();
                 bzero(&mmd, sizeof(MusicMetaData));
-                mmd_flag = FALSE;
                 src_uri = g_filename_to_uri(src_file_name, NULL, NULL);
                 if(src_uri!=NULL)
                 {
                     plist_load_metadata(src_uri, &mmd, &errorno);
-                    if(mmd.title!=NULL || mmd.artist!=NULL ||
-                        mmd.file_type!=NULL || mmd.album!=NULL ||
-                        mmd.comment!=NULL)
-                        mmd_flag = TRUE;
-                    g_free(src_uri);
                     mmd.uri = NULL;
                 }
-                if(mmd_flag) mmd_ptr = &mmd;
-                else mmd_ptr = NULL;
                 if(!gui_convert.merge_mode && !gui_convert.crop_mode)
                 {
                     conv_flag = tools_convert_start(dst_encode_type, 
                         src_file_name, dst_file_name, gui_conv_stat.bitrate,
-                        gui_conv_stat.quality, -1, -1, -1, -1, mmd_ptr);
+                        gui_conv_stat.quality, -1, -1, -1, -1, &mmd);
                 }
                 else if(!gui_convert.merge_mode && gui_convert.crop_mode)
                 {
@@ -717,7 +727,7 @@ static gpointer gui_tools_convert_timer(gpointer data)
                         src_file_name, dst_file_name, gui_conv_stat.bitrate,
                         gui_conv_stat.quality, -1, -1,
                         gui_conv_stat.start_time, gui_conv_stat.end_time,
-                        mmd_ptr);
+                        &mmd);
                 }
                 else
                 {
@@ -728,11 +738,6 @@ static gpointer gui_tools_convert_timer(gpointer data)
                         gui_conv_stat.quality, 44100, 2, -1, -1,  NULL);
                     g_free(merge_file_name);
                 }
-                if(mmd.title!=NULL) g_free(mmd.title);
-                if(mmd.artist!=NULL) g_free(mmd.artist);
-                if(mmd.file_type!=NULL) g_free(mmd.file_type);
-                if(mmd.album!=NULL) g_free(mmd.album);
-                if(mmd.comment!=NULL) g_free(mmd.comment);
                 if(!conv_flag)
                 {
                     rc_debug_print("ERROR: Cannot convert file: [%s]\n",
@@ -887,11 +892,6 @@ void gui_tools_convert_start(GtkWidget *widget, gpointer data)
         bzero(&mmd, sizeof(MusicMetaData));
         src_uri = g_filename_to_uri(gui_convert.src_list[0], NULL, NULL);
         plist_load_metadata(src_uri, &mmd, &errorno);
-        if(mmd.title!=NULL) g_free(mmd.title);
-        if(mmd.artist!=NULL) g_free(mmd.artist);
-        if(mmd.file_type!=NULL) g_free(mmd.file_type);
-        if(mmd.album!=NULL) g_free(mmd.album);
-        if(mmd.comment!=NULL) g_free(mmd.comment);
         gui_conv_stat.start_time = gtk_spin_button_get_value_as_int(
            GTK_SPIN_BUTTON(gui_convert.spinbutton[2]))*60*GST_SECOND + (gint64)
            (gtk_spin_button_get_value(GTK_SPIN_BUTTON(

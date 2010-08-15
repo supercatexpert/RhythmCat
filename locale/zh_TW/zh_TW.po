@@ -1,0 +1,884 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: RhythmCat 0.3.0\n"
+"Report-Msgid-Bugs-To: supercatexpert@gmail.com\n"
+"POT-Creation-Date: 2010-08-15 20:20+0800\n"
+"PO-Revision-Date: 2010-08-15 20:20+0800\n"
+"Last-Translator: SuperCat <supercatexpert@gmail.com>\n"
+"Language-Team: SuperCat <supercatexpert@gmail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: UTF-8\n"
+
+#: gui.c:235
+msgid "Vol: "
+msgstr "音量: "
+
+#: gui.c:240
+msgid "Playlists"
+msgstr "播放列表"
+
+#: gui.c:241
+msgid "Lyrics"
+msgstr "歌詞"
+
+#: gui.c:242
+msgid "Not Playing"
+msgstr "已停止"
+
+#: gui.c:244 gui_menu.c:306
+msgid "_Repeat"
+msgstr "重複(_R)"
+
+#: gui.c:246
+msgid "_Shuffle"
+msgstr "隨機(_S)"
+
+#: gui.c:251 gui.c:1073
+msgid "Stopped"
+msgstr "已停止"
+
+#: gui.c:740 gui.c:742
+msgid "Track"
+msgstr "曲目"
+
+#: gui.c:869
+#, c-format
+msgid "%s Lossless"
+msgstr "%s 無損音質"
+
+#: gui.c:871
+#, c-format
+msgid "%s %d kbps"
+msgstr "%s %d 千比特/秒"
+
+#: gui.c:1071
+msgid "Playing"
+msgstr "正在播放"
+
+#: gui.c:1072
+msgid "Paused"
+msgstr "已暫停"
+
+#: gui.c:1089
+#, c-format
+msgid "Track %d"
+msgstr "曲目 %d"
+
+#: gui_dialog.c:107
+msgid "A music player based on GTK+ 2.0 & Gstreamer 0.10"
+msgstr "一個基於 GTK+ 2.0 和 Gstreamer 0.10的音樂播放器"
+
+#: gui_dialog.c:138
+msgid "All supported music files(*.FLAC;*.OGG;*.MP3;*.WAV;*.WMA...)"
+msgstr "支持的音樂檔格式(*.FLAC;*.OGG;*.MP3;*.WAV;*.WMA..."
+
+#: gui_dialog.c:146
+msgid "Select the music you want to play..."
+msgstr "選擇想要播放的音樂檔"
+
+#: gui_dialog.c:148
+msgid "Select the music you want to append..."
+msgstr "選擇想要添加的音樂檔"
+
+#: gui_dialog.c:281
+msgid "Music Information"
+msgstr "音樂資訊"
+
+#: gui_dialog.c:290 gui_setting.c:146
+msgid "General"
+msgstr "常規"
+
+#: gui_dialog.c:291
+msgid "Metadata"
+msgstr "元數據"
+
+#: gui_dialog.c:298
+msgid "Format: "
+msgstr "格式: "
+
+#: gui_dialog.c:300 gui_tools.c:342
+msgid "Bitrate: "
+msgstr "比特率: "
+
+#: gui_dialog.c:302
+msgid "Length: "
+msgstr "長度: "
+
+#: gui_dialog.c:304
+msgid "Size:   "
+msgstr "大小:   "
+
+#: gui_dialog.c:306
+msgid "Title: "
+msgstr "標題: "
+
+#: gui_dialog.c:308
+msgid "Artist: "
+msgstr "藝術家: "
+
+#: gui_dialog.c:310
+msgid "Location: "
+msgstr "位置: "
+
+#: gui_dialog.c:312
+msgid "Album: "
+msgstr "專輯: "
+
+#: gui_dialog.c:314
+msgid "Comment: "
+msgstr "備註"
+
+#: gui_dialog.c:316
+msgid "Track Number: "
+msgstr "曲目號: "
+
+#: gui_dialog.c:423
+msgid "Unknown"
+msgstr "未知"
+
+#: gui_dialog.c:522
+msgid "Select the directory you want to import..."
+msgstr "選擇需要導入的目錄"
+
+#: gui_dialog.c:560 gui_dialog.c:602
+msgid "M3U Playlist(*.M3U, *.m3u)"
+msgstr "M3U 播放列表(*.M3U, *.m3u)"
+
+#: gui_dialog.c:563
+msgid "Save the playlist..."
+msgstr "保存播放列表..."
+
+#: gui_dialog.c:605
+msgid "Load the playlist..."
+msgstr "載入播放列表..."
+
+#: gui_dialog.c:644
+msgid "Select the directory you want to store the playlists..."
+msgstr "選擇保存播放列表的目錄"
+
+#: gui_dialog.c:704
+msgid "Change the tag successfully!"
+msgstr "成功修改標籤!"
+
+#: gui_eq.c:59 gui_eq.c:95
+msgid "Disabled"
+msgstr "禁用"
+
+#: gui_eq.c:60
+msgid "Pop"
+msgstr "流行"
+
+#: gui_eq.c:61
+msgid "Rock"
+msgstr "搖滾"
+
+#: gui_eq.c:62
+msgid "Metal"
+msgstr "金屬"
+
+#: gui_eq.c:63
+msgid "Dance"
+msgstr "舞曲"
+
+#: gui_eq.c:64
+msgid "Electronic"
+msgstr "電子樂"
+
+#: gui_eq.c:65
+msgid "Jazz"
+msgstr "爵士"
+
+#: gui_eq.c:66
+msgid "Classical"
+msgstr "古典"
+
+#: gui_eq.c:67
+msgid "Blues"
+msgstr "布魯斯"
+
+#: gui_eq.c:68
+msgid "Vocal"
+msgstr "語音"
+
+#: gui_eq.c:69 gui_eq.c:96
+msgid "Custom"
+msgstr "自定義"
+
+#: gui_eq.c:123
+msgid "Equalizer"
+msgstr "均衡器"
+
+#: gui_eq.c:298 gui_eq.c:359
+msgid "EQ Setting File(*.EQF, *.eqf)"
+msgstr "均衡器檔(*.EQF, *.eqf)"
+
+#: gui_eq.c:301
+msgid "Load Equalizer Setting..."
+msgstr "載入均衡器設定..."
+
+#: gui_eq.c:362
+msgid "Save Equalizer Setting..."
+msgstr "保存均衡器設定..."
+
+#: gui_kara.c:110 gui_kara.c:324
+msgid "Free Lossless Audio Codec (*.FLAC)"
+msgstr "無損音頻壓縮編碼 (*.FLAC)"
+
+#: gui_kara.c:116 gui_kara.c:330
+msgid "Ogg Vorbis (*.OGG)"
+msgstr "Ogg Vorbis (*.OGG)"
+
+#: gui_kara.c:119
+msgid "Select the filename of the voice file"
+msgstr "選擇語音檔的檔案名"
+
+#: gui_kara.c:187
+#, c-format
+msgid ""
+"Recording will start in <b><span foreground=\"red\">%d</span></b> seconds"
+msgstr ""
+"錄音將在 <b><span foreground=\"red\">%d</span></b> 秒後開始"
+
+#: gui_kara.c:201 gui_kara.c:239 gui_kara.c:415
+msgid "Ready"
+msgstr "就緒"
+
+#: gui_kara.c:209
+msgid "Recording..."
+msgstr "錄音中..."
+
+#: gui_kara.c:280
+msgid "Mix Completed"
+msgstr "混音完成"
+
+#: gui_kara.c:333
+msgid "Select the filename of the mix music file"
+msgstr "選擇混音檔的檔案名"
+
+#: gui_kara.c:400
+msgid "Karaoke Mode"
+msgstr "卡拉OK模式"
+
+#: gui_kara.c:414 gui_kara.c:432
+msgid "_Use Lossless Format"
+msgstr "使用無損格式(_U)"
+
+#: gui_kara.c:426
+msgid "_Recoder"
+msgstr "答錄機(_R)"
+
+#: gui_kara.c:427
+msgid "_Mixer"
+msgstr "混音器(_M)"
+
+#: gui_kara.c:436
+msgid "_Start"
+msgstr "開始(_S)"
+
+#: gui_kara.c:440
+msgid "Mic Level:"
+msgstr "麥克風電平: "
+
+#: gui_kara.c:441
+msgid "Mic Volume:"
+msgstr "麥克風音量:"
+
+#: gui_kara.c:442
+msgid "Output File:"
+msgstr "輸出檔:"
+
+#: gui_kara.c:446
+msgid "<b>Voice File:</b>"
+msgstr "<b>語音檔:</b>"
+
+#: gui_kara.c:447
+msgid "<b>Music File:</b>"
+msgstr "<b>音樂檔:</b>"
+
+#: gui_kara.c:448
+msgid "<b>Output File:</b>"
+msgstr "<b>輸出檔:</b>"
+
+#: gui_lrc.c:382
+msgid "Do you want to save lyric file?"
+msgstr "要保存歌詞檔嗎?"
+
+#: gui_lrc.c:412
+msgid "Return to Lyric Show Mode"
+msgstr "回到歌詞秀模式"
+
+#: gui_lrc.c:417
+msgid "Load Lyric"
+msgstr "載入歌詞"
+
+#: gui_lrc.c:421
+msgid "Save Lyric"
+msgstr "保存歌詞"
+
+#: gui_lrc.c:426
+msgid "Add Time Tag"
+msgstr "添加時間標籤"
+
+#: gui_lrc.c:430
+msgid "Replace Time Tag"
+msgstr "替換時間標籤"
+
+#: gui_lrc.c:434
+msgid "Remove Time Tag"
+msgstr "刪除時間標籤"
+
+#: gui_lrc.c:655 gui_lrc.c:700
+msgid "Lyric File(*.LRC, *.lrc)"
+msgstr "歌詞檔(*.LRC, *.lrc)"
+
+#: gui_lrc.c:658
+msgid "Load lyric..."
+msgstr "載入歌詞..."
+
+#: gui_lrc.c:703
+msgid "Save lyric..."
+msgstr "保存歌詞..."
+
+#: gui_menu.c:39 gui_menu.c:135
+msgid "_New Playlist"
+msgstr "新建播放列表(_N)"
+
+#: gui_menu.c:43
+msgid "_Rename Playlist"
+msgstr "重命名播放列表(_R)"
+
+#: gui_menu.c:47
+msgid "_Delete Playlist"
+msgstr "刪除播放列表(_D)"
+
+#: gui_menu.c:51 gui_menu.c:160
+msgid "_Export Playlist"
+msgstr "導出播放列表(_E)"
+
+#: gui_menu.c:69 gui_menu.c:212
+msgid "_Track Information"
+msgstr "曲目資訊(_T)"
+
+#: gui_menu.c:74
+msgid "Import Music _Files"
+msgstr "導入音樂檔(_F)"
+
+#: gui_menu.c:78
+msgid "Import _List"
+msgstr "從播放列表導入(_L)"
+
+#: gui_menu.c:83 gui_menu.c:188
+msgid "Select _All"
+msgstr "全選(_A)"
+
+#: gui_menu.c:87
+msgid "_Remove from List"
+msgstr "從列表中刪除(_R)"
+
+#: gui_menu.c:92 gui_menu.c:193
+msgid "Re_flesh Music"
+msgstr "刷新音樂資訊(_F)"
+
+#: gui_menu.c:96 gui_menu.c:239
+msgid "_Convert Audio"
+msgstr "音頻轉換(_C)"
+
+#: gui_menu.c:127
+msgid "_File"
+msgstr "檔(_F)"
+
+#: gui_menu.c:128
+msgid "_Edit"
+msgstr "編輯(_E)"
+
+#: gui_menu.c:129
+msgid "_View"
+msgstr "檢視(_V)"
+
+#: gui_menu.c:130
+msgid "_Control"
+msgstr "控制(_C)"
+
+#: gui_menu.c:131
+msgid "_Help"
+msgstr "幫助(_H)"
+
+#: gui_menu.c:143
+msgid "_Open Music"
+msgstr "打開音樂檔(_O)"
+
+#: gui_menu.c:150
+msgid "Import _Playlist"
+msgstr "從播放列表導入(_P)"
+
+#: gui_menu.c:155
+msgid "Import _Folder"
+msgstr "導入檔夾(_F)"
+
+#: gui_menu.c:165
+msgid "Export _All Playlists"
+msgstr "導出所有播放列表(_A)"
+
+#: gui_menu.c:176
+msgid "Play_list"
+msgstr "播放列表(_L)"
+
+#: gui_menu.c:181
+msgid "_Remove"
+msgstr "刪除(_R)"
+
+#: gui_menu.c:201
+msgid "Plu_gins"
+msgstr "插件(_G)"
+
+#: gui_menu.c:206
+msgid "_Preferences"
+msgstr "偏好設定(_P)"
+
+#: gui_menu.c:220
+msgid "_Playlists"
+msgstr "播放列表(_P)"
+
+#: gui_menu.c:224
+msgid "_Lyrics"
+msgstr "歌詞顯示(_L)"
+
+#: gui_menu.c:228
+msgid "_Edit Lyrics"
+msgstr "歌詞編輯(_E)"
+
+#: gui_menu.c:230
+msgid "_Equalizer"
+msgstr "均衡器(_E)"
+
+#: gui_menu.c:235
+msgid "OS_D Lyric Show"
+msgstr "桌面歌詞(_D)"
+
+#: gui_menu.c:244
+msgid "_Karaoke Mode"
+msgstr "卡拉OK模式(_K)"
+
+#: gui_menu.c:247
+msgid "_Mini Mode"
+msgstr "迷你模式(_M)"
+
+#: gui_menu.c:256
+msgid "_Play/Pause"
+msgstr "播放/暫停(_P)"
+
+#: gui_menu.c:263
+msgid "_Stop"
+msgstr "停止(_S)"
+
+#: gui_menu.c:268
+msgid "Pre_vious"
+msgstr "上一曲(_V)"
+
+#: gui_menu.c:275
+msgid "_Next"
+msgstr "下一曲(_N)"
+
+#: gui_menu.c:282
+msgid "_Backward"
+msgstr "快退(_B)"
+
+#: gui_menu.c:289
+msgid "_Forward"
+msgstr "快進(_F)"
+
+#: gui_menu.c:297
+msgid "_Increase Volume"
+msgstr "增加音量(_I)"
+
+#: gui_menu.c:301
+msgid "_Decrease Volume"
+msgstr "降低音量(_D)"
+
+#: gui_menu.c:311
+msgid "_No Repeat"
+msgstr "不重複(_N)"
+
+#: gui_menu.c:316
+msgid "Single _Music Repeat"
+msgstr "單曲重複(_M)"
+
+#: gui_menu.c:320
+msgid "Single _Playlist Repeat"
+msgstr "當前列表重複(_P)"
+
+#: gui_menu.c:324
+msgid "_All Playlists Repeat"
+msgstr "所有列表重複(_A)"
+
+#: gui_menu.c:329
+msgid "Sh_uffle"
+msgstr "隨機播放(_U)"
+
+#: gui_menu.c:334
+msgid "_No Random"
+msgstr "不隨機(_N)"
+
+#: gui_menu.c:339
+msgid "_Single Playlist Random"
+msgstr "當前列表隨機(_S)"
+
+#: gui_menu.c:343
+msgid "_All Playlists Random"
+msgstr "所有列表隨機(_A)"
+
+#: gui_setting.c:85
+msgid "Settings"
+msgstr "設置"
+
+#: gui_setting.c:148
+msgid "Appearance"
+msgstr "外觀"
+
+#: gui_setting.c:150
+msgid "Playback"
+msgstr "回放"
+
+#: gui_setting.c:152
+msgid "Playlist"
+msgstr "播放列表"
+
+#: gui_setting.c:154
+msgid "Lryic Show"
+msgstr "歌詞秀"
+
+#: gui_setting.c:156
+msgid "OSD Lyric Show"
+msgstr "桌面歌詞"
+
+#: gui_setting.c:280
+msgid "<b>General</b>"
+msgstr "<b>常規</b>"
+
+#: gui_setting.c:299
+msgid "<b>Theme</b>"
+msgstr "<b>主題</b>"
+
+#: gui_setting.c:304
+msgid "Use _System GTK2+ RC Theme"
+msgstr "使用系統 GTK＋2 RC 主題"
+
+#: gui_setting.c:307
+msgid "Use _Custom GTK2+ RC Theme"
+msgstr "使用自定義 GTK＋2 RC 主題"
+
+#: gui_setting.c:309
+msgid "Please select a GTK2+ RC File"
+msgstr "請選擇一個 GTK2＋ RC 主題檔"
+
+#: gui_setting.c:313
+msgid "GTK2+ RC File (gtkrc)"
+msgstr "GTK2＋ RC 主題檔 (gtkrc)"
+
+#: gui_setting.c:338
+msgid "<b>Playback</b>"
+msgstr "<b>回放</b>"
+
+#: gui_setting.c:343
+msgid "Auto play on startup"
+msgstr "啟動播放器時自動開始播放"
+
+#: gui_setting.c:345
+msgid "Advance to the next playlist"
+msgstr "自動播放下一個播放列表"
+
+#: gui_setting.c:368
+msgid "<b>Metadata</b>"
+msgstr "<b>元數據</b>"
+
+#: gui_setting.c:372
+msgid "ID3 Tag fallback character encodings: "
+msgstr "ID3 標籤備選編碼: "
+
+#: gui_setting.c:398
+msgid "<b>Lyric Show</b>"
+msgstr "<b>歌詞秀</b>"
+
+#: gui_setting.c:404
+msgid "PNG File(*.PNG, *.png)"
+msgstr "PNG 檔 (*.PNG, *.png)"
+
+#: gui_setting.c:410
+msgid "Fallback character encodings: "
+msgstr "備選編碼: "
+
+#: gui_setting.c:411 gui_setting.c:494
+msgid "Font: "
+msgstr "字體: "
+
+#: gui_setting.c:412
+msgid "Line spacing: "
+msgstr "行間距: "
+
+#: gui_setting.c:413
+msgid "Background Image: "
+msgstr "背景圖片: "
+
+#: gui_setting.c:414
+msgid "Background Color: "
+msgstr "背景色: "
+
+#: gui_setting.c:415
+msgid "Frontground Color: "
+msgstr "前景色: "
+
+#: gui_setting.c:416 gui_setting.c:498
+msgid "Highlight Color: "
+msgstr "加亮色: "
+
+#: gui_setting.c:427
+msgid "Please select a image file"
+msgstr "請選擇一個圖片檔"
+
+#: gui_setting.c:485
+msgid "<b>OSD Lyric Show</b>"
+msgstr "桌面歌詞"
+
+#: gui_setting.c:495
+msgid "Lyric Window Width: "
+msgstr "歌詞窗口長度: "
+
+#: gui_setting.c:496
+msgid "Lyric Position: "
+msgstr "歌詞顯示位置: "
+
+#: gui_setting.c:497
+msgid "Lyric Color: "
+msgstr "歌詞顏色: "
+
+#: gui_setting.c:501 gui_setting.c:503
+msgid "Color 1"
+msgstr "顏色1"
+
+#: gui_setting.c:502 gui_setting.c:504
+msgid "Color 2"
+msgstr "顏色2"
+
+#: gui_setting.c:508
+msgid "Movable Lyric Window"
+msgstr "可移動歌詞窗口"
+
+#: gui_tools.c:262
+msgid "Converter Setup"
+msgstr "轉換器設置"
+
+#: gui_tools.c:271
+msgid "Filename"
+msgstr "檔案名"
+
+#: gui_tools.c:274
+msgid "Select the output directory"
+msgstr "選擇輸出目錄"
+
+#: gui_tools.c:331
+msgid "<b>Output Format</b>"
+msgstr "<b>輸出格式</b>"
+
+#: gui_tools.c:333
+msgid "<b>Output Path</b>"
+msgstr "<b>輸出路徑</b>"
+
+#: gui_tools.c:335
+msgid "<b>Output Mode</b>"
+msgstr "<b>輸出模式</b>"
+
+#: gui_tools.c:337
+msgid "Convert Mode"
+msgstr "轉換模式"
+
+#: gui_tools.c:339
+msgid "When file already exists"
+msgstr "當目標檔存在"
+
+#: gui_tools.c:341
+msgid "Filename Preview"
+msgstr "檔案名預覽"
+
+#: gui_tools.c:343
+msgid "Quality: "
+msgstr "品質: "
+
+#: gui_tools.c:344
+msgid "kbps"
+msgstr "千比特/秒"
+
+#: gui_tools.c:345
+msgid "From: "
+msgstr "從: "
+
+#: gui_tools.c:346
+msgid "  To: "
+msgstr "  到: "
+
+#: gui_tools.c:347 gui_tools.c:349
+msgid "m"
+msgstr "分"
+
+#: gui_tools.c:348 gui_tools.c:350
+msgid "s"
+msgstr "秒"
+
+#: gui_tools.c:352
+msgid "_CBR/ABR"
+msgstr "恒定比特率/平均比特率(_C)"
+
+#: gui_tools.c:355
+msgid "_VBR/Compress Level"
+msgstr "可變比特率/壓縮等級(_V)"
+
+#: gui_tools.c:357
+msgid "_Source file directory"
+msgstr "原始檔案目錄(_S)"
+
+#: gui_tools.c:360
+msgid "S_pecify directory"
+msgstr "指定目錄"
+
+#: gui_tools.c:362
+msgid "Convert each file to an _individual file"
+msgstr "轉換每個檔到單獨的檔"
+
+#: gui_tools.c:365
+msgid "_Merge all files into one output file"
+msgstr "混合輸出檔"
+
+#: gui_tools.c:368
+msgid "Crop a _part from the source file"
+msgstr "截取原始檔案中的一部分"
+
+#: gui_tools.c:370
+msgid "_Ask"
+msgstr "詢問(_A)"
+
+#: gui_tools.c:373
+msgid "S_kip"
+msgstr "跳過(_K)"
+
+#: gui_tools.c:376
+msgid "_Overwrite"
+msgstr "覆蓋(_O)"
+
+#: gui_tools.c:562
+#, c-format
+msgid "File \"%s\" already exists. Overwrite?"
+msgstr "檔 \"%s\" 已經存在， 是否覆蓋?"
+
+#: gui_tools.c:564
+msgid "Overwrite"
+msgstr "覆蓋"
+
+#: gui_tools.c:565
+msgid "Overwrite All"
+msgstr "全部覆蓋"
+
+#: gui_tools.c:566
+msgid "Skip"
+msgstr "跳過"
+
+#: gui_tools.c:567
+msgid "Skip All"
+msgstr "全部跳過"
+
+#: gui_tools.c:568
+msgid "Cancel"
+msgstr "取消"
+
+#: gui_tools.c:570
+msgid "File already exists."
+msgstr "檔已經存在"
+
+#: gui_tools.c:697
+#, c-format
+msgid "(%d of %d) - Start converting from file: %s\n"
+msgstr "%d / %d) - 開始轉換檔: %s\n"
+
+#: gui_tools.c:705
+#, c-format
+msgid "Converting - %d/%d..."
+msgstr "轉換中 - %d/%d..."
+
+#: gui_tools.c:747
+#, c-format
+msgid "(%d of %d) - ERROR: Cannot convert from file: %s\n"
+msgstr "(%d / %d) - 錯誤: 無法轉換檔: %s\n"
+
+#: gui_tools.c:765
+#, c-format
+msgid "(%d of %d) - File already exists, skipped converting file from: %s\n"
+msgstr "(%d / %d) - 檔已經存在，跳過轉換檔: %s\n"
+
+#: gui_tools.c:797
+msgid "Merging all files..."
+msgstr "正在混合所有檔..."
+
+#: gui_tools.c:798
+msgid "Merging files..."
+msgstr "正在混合檔..."
+
+#: gui_tools.c:803
+msgid "Merging all files\n"
+msgstr "正在混合所有檔\n"
+
+#: gui_tools.c:849 gui_tools.c:863
+msgid "All convert missions completed"
+msgstr "轉換任務全部完成"
+
+#: gui_tools.c:909
+msgid "The time range should be in the length of the audio file!"
+msgstr "時間範圍必須在音樂檔的長度內"
+
+#: gui_tools.c:964
+msgid "Converting..."
+msgstr "轉換中..."
+
+#: gui_tools.c:977
+msgid "Source"
+msgstr "源"
+
+#: gui_tools.c:978
+msgid "Destination"
+msgstr "目標"
+
+#: gui_tools.c:1015
+msgid "Do you want to stop the convertion?"
+msgstr "確實要停止轉換嗎?"
+
+#: gui_treeview.c:91
+msgid "Title"
+msgstr "標題"
+
+#: gui_treeview.c:93
+msgid "Artist"
+msgstr "藝術家"
+
+#: gui_treeview.c:95
+msgid "Length"
+msgstr "長度"
+
+#: gui_treeview.c:453
+msgid "Name the new list"
+msgstr "命名新的列表"
+
+#: gui_treeview.c:480
+msgid "You must input a valid string!"
+msgstr "你輸入了一個非法的字串!"
+
+#: playlist.c:132
+msgid "Default Playlist"
+msgstr "默認列表"
+
+#: playlist.c:200 playlist.c:438 playlist.c:1093
+msgid "Unknown title"
+msgstr "未知標題"

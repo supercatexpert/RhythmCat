@@ -1,6 +1,26 @@
 /*
  * GUI Dialog
  * Build the Dialogs in the player. 
+ *
+ * gui_dialog.c
+ * This file is part of <RhythmCat>
+ *
+ * Copyright (C) 2010 - SuperCat, license: GPL v3
+ *
+ * <RhythmCat> is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * <RhythmCat> is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with <RhythmCat>; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, 
+ * Boston, MA  02110-1301  USA
  */
 
 #include "gui_dialog.h"
@@ -115,7 +135,7 @@ void gui_show_open_dialog(GtkWidget *widget, gpointer data)
     gchar *dialog_title = NULL;
     file_filter1 = gtk_file_filter_new();
     gtk_file_filter_set_name(file_filter1,
-        _("All supported music files(*.FLAC;*.OGG;*.MP3;*.WAV;*.WMA..."));
+        _("All supported music files(*.FLAC;*.OGG;*.MP3;*.WAV;*.WMA...)"));
     while(support_format[count]!=NULL)
     {
         gtk_file_filter_add_pattern(file_filter1, support_format[count]);
@@ -196,7 +216,7 @@ void gui_show_music_info(GtkWidget *widget, gpointer data)
     gint index = 0;
     gint errorno = 0;
     GtkTreePath *path = NULL;
-    MusicMetaData *mmd = NULL;
+    MusicMetaData mmd;
     MusicData *md = NULL;
     gboolean window_exist = FALSE;
     gchar *filepath = NULL;
@@ -252,14 +272,9 @@ void gui_show_music_info(GtkWidget *widget, gpointer data)
     }
     indices = gtk_tree_path_get_indices(path);
     index = indices[0] + 1;
-    mmd = g_malloc(sizeof(MusicMetaData));
+    bzero(&mmd, sizeof(MusicMetaData));
     plist_get_music_data(gcore->list_index_selected, index, &md);
-    mmd->title = NULL;
-    mmd->artist = NULL;
-    mmd->file_type = NULL;
-    mmd->comment = NULL;
-    mmd->album = NULL;
-    plist_load_metadata(md->uri, mmd, &errorno);
+    plist_load_metadata(md->uri, &mmd, &errorno);
     if(!window_exist)
     {
         info_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
@@ -402,24 +417,24 @@ void gui_show_music_info(GtkWidget *widget, gpointer data)
     {
         ;
     }
-    if(mmd->bitrate>0)
-        g_snprintf(bitrate_str, 60, "%d kbps", mmd->bitrate/1000);
+    if(mmd.bitrate>0)
+        g_snprintf(bitrate_str, 60, "%d kbps", mmd.bitrate/1000);
     else
         g_snprintf(bitrate_str, 60, "(%s)", _("Unknown"));
-    if(mmd->tracknum>=0)
-        g_snprintf(tracknum_str, 20, "%d", mmd->tracknum);
+    if(mmd.tracknum>=0)
+        g_snprintf(tracknum_str, 20, "%d", mmd.tracknum);
     else
         g_snprintf(tracknum_str, 20, " ");
-    length = mmd->length/100;
+    length = mmd.length/100;
     g_snprintf(length_str, 30, "%02d:%02d", (gint)length/60, (gint)length%60);
     gtk_label_set_text(GTK_LABEL(length_entry), length_str);
     gtk_label_set_text(GTK_LABEL(bitrate_entry), bitrate_str);
     gtk_entry_set_text(GTK_ENTRY(tracknum_entry), tracknum_str);
-    if(mmd->file_type!=NULL)
+    if(mmd.file_type!=NULL)
     {
-        if(strstr(mmd->file_type, "MP3")!=NULL ||
-            strstr(mmd->file_type, "FLAC")!=NULL ||
-            strstr(mmd->file_type, "Vorbis")!=NULL)
+        if(strstr(mmd.file_type, "MP3")!=NULL ||
+            strstr(mmd.file_type, "FLAC")!=NULL ||
+            strstr(mmd.file_type, "Vorbis")!=NULL)
         {
             gtk_widget_set_sensitive(confirm_button, TRUE);
             gtk_entry_set_editable(GTK_ENTRY(title_entry), TRUE);
@@ -437,7 +452,7 @@ void gui_show_music_info(GtkWidget *widget, gpointer data)
             gtk_entry_set_editable(GTK_ENTRY(comment_entry), FALSE);
             gtk_entry_set_editable(GTK_ENTRY(tracknum_entry), FALSE);
         }
-        gtk_label_set_text(GTK_LABEL(format_entry), mmd->file_type);
+        gtk_label_set_text(GTK_LABEL(format_entry), mmd.file_type);
     }
     else
     {
@@ -449,24 +464,12 @@ void gui_show_music_info(GtkWidget *widget, gpointer data)
         gtk_entry_set_editable(GTK_ENTRY(comment_entry), FALSE);
         gtk_entry_set_editable(GTK_ENTRY(tracknum_entry), FALSE);
     }
-    if(mmd->title!=NULL)
-        gtk_entry_set_text(GTK_ENTRY(title_entry), mmd->title);
-    else
-        gtk_entry_set_text(GTK_ENTRY(title_entry), "");
-    if(mmd->artist!=NULL)
-        gtk_entry_set_text(GTK_ENTRY(artist_entry), mmd->artist);
-    else
-        gtk_entry_set_text(GTK_ENTRY(artist_entry), "");
-    if(mmd->album!=NULL)
-        gtk_entry_set_text(GTK_ENTRY(album_entry), mmd->album);
-    else
-        gtk_entry_set_text(GTK_ENTRY(album_entry), "");
-    if(mmd->comment!=NULL)
-        gtk_entry_set_text(GTK_ENTRY(comment_entry), mmd->comment);
-    else
-        gtk_entry_set_text(GTK_ENTRY(comment_entry), "");
-    if(mmd->uri!=NULL)
-        filepath = g_filename_from_uri(mmd->uri, NULL, NULL);
+    gtk_entry_set_text(GTK_ENTRY(title_entry), mmd.title);
+    gtk_entry_set_text(GTK_ENTRY(artist_entry), mmd.artist);
+    gtk_entry_set_text(GTK_ENTRY(album_entry), mmd.album);
+    gtk_entry_set_text(GTK_ENTRY(comment_entry), mmd.comment);
+    if(mmd.uri!=NULL)
+        filepath = g_filename_from_uri(mmd.uri, NULL, NULL);
     if(filepath!=NULL)
     {
         gtk_entry_set_text(GTK_ENTRY(uri_entry), filepath);
@@ -502,12 +505,6 @@ void gui_show_music_info(GtkWidget *widget, gpointer data)
     metadata_entry[6] = format_entry;
     metadata_entry[7] = confirm_button;
     metadata_entry[8] = info_window;
-    if(mmd->title!=NULL) g_free(mmd->title);
-    if(mmd->artist!=NULL) g_free(mmd->artist);
-    if(mmd->file_type!=NULL) g_free(mmd->file_type);
-    if(mmd->album!=NULL) g_free(mmd->album);
-    if(mmd->comment!=NULL) g_free(mmd->comment);
-    if(mmd!=NULL) g_free(mmd);
 }
 
 /*
@@ -683,12 +680,16 @@ void gui_change_music_info(GtkWidget *widget, gpointer data)
     gboolean flag = FALSE;
     const gchar *path = gtk_entry_get_text(GTK_ENTRY(metadata_entry[5]));
     const gchar *type = gtk_label_get_text(GTK_LABEL(metadata_entry[6]));
-    mmd.title = (gchar *)gtk_entry_get_text(GTK_ENTRY(metadata_entry[0]));
-    mmd.artist = (gchar *)gtk_entry_get_text(GTK_ENTRY(metadata_entry[1]));
-    mmd.album = (gchar *)gtk_entry_get_text(GTK_ENTRY(metadata_entry[2]));
+    g_utf8_strncpy(mmd.title, 
+        gtk_entry_get_text(GTK_ENTRY(metadata_entry[0])), 128);
+    g_utf8_strncpy(mmd.artist, 
+        gtk_entry_get_text(GTK_ENTRY(metadata_entry[1])), 128);
+    g_utf8_strncpy(mmd.album, 
+        gtk_entry_get_text(GTK_ENTRY(metadata_entry[2])), 128);
+    g_utf8_strncpy(mmd.comment, 
+        gtk_entry_get_text(GTK_ENTRY(metadata_entry[4])), 128);
     sscanf(gtk_entry_get_text(GTK_ENTRY(metadata_entry[3])), "%d",
         &mmd.tracknum);
-    mmd.comment = (gchar *)gtk_entry_get_text(GTK_ENTRY(metadata_entry[4]));
     gtk_widget_set_sensitive(metadata_entry[7], FALSE);
     flag = tools_change_tag(path, type, &mmd);
 }

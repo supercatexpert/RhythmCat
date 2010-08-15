@@ -1,6 +1,28 @@
 /*
  * Tag (ID3) Read Part
  * Read (ID3) Tag from music file.
+ *
+ * tag_id3.c
+ * This file is part of <RhythmCat>
+ *
+ * Copyright (C) 2010 - SuperCat, license: GPL v3
+ * This segment of codes (modified) is got from the QuePlayer, whose 
+ * author is windwhinny, e-mail: windwhinny@gmail.com.
+ *
+ * <RhythmCat> is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * <RhythmCat> is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with <RhythmCat>; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, 
+ * Boston, MA  02110-1301  USA
  */
 
 #include "tag_id3.h"
@@ -83,7 +105,11 @@ static char **tag_get_id3v2(FILE *file)
     tag[2] = NULL;
     tag[3] = NULL;
     a = g_malloc(10);
-    fread(a, 10, 1, file);
+    if(!fread(a, 10, 1, file))
+    {
+        g_free(a);
+        return NULL;
+    }
     /* Judge if it is an ID3v2 tag. */
     if(*a=='I' && *(a+1)=='D' && *(a+2)=='3')
     {
@@ -103,14 +129,20 @@ static char **tag_get_id3v2(FILE *file)
         a = g_malloc(i);
         if(!fread(a,i,1,file))
         {
+            g_free(a);
             return NULL;
-        };
+        }
         c = a;
         /* If it is an ID3v2.4 tag, skip reading. */
-        if(version==4) skip_id3_reading = TRUE;
-        /* If it is an ID3v2.3 tag. */
-        if(version==3)
+        if(version==4)
         {
+            rc_debug_print("ID3 tag: Found ID3v2.4 tag!\n");
+            skip_id3_reading = TRUE;
+        }
+        /* If it is an ID3v2.3 tag. */
+        else if(version==3)
+        {
+            rc_debug_print("ID3 tag: Found ID3v2.3 tag!\n");
             /* Read each tag in the loop. */
             for(;c!=a+header_size;)
             {
@@ -158,11 +190,12 @@ static char **tag_get_id3v2(FILE *file)
                     tag[tag_type-1] = NULL;
                 else
                 {
-                    tag[tag_type-1]=g_convert(d, -1, "UTF-8", extra_encoding,
+                    tag[tag_type-1] = g_convert(d, -1, "UTF-8", extra_encoding,
                         &r, &w, NULL);
                 }
                 g_free(d);
             }
+            g_free(a);
             if(tag[0]==NULL && tag[1]==NULL && tag[2]==NULL && tag[3]==NULL) 
                 return NULL;
             return tag;
@@ -170,6 +203,7 @@ static char **tag_get_id3v2(FILE *file)
         /* If it is an ID3v2.2 tag. */
         else if(version==2)
         {
+            rc_debug_print("ID3 tag: Found ID3v2.2 tag!\n");
             /* Read each tag in the loop. */
             for(;c!=a+header_size;)
             {
@@ -218,6 +252,7 @@ static char **tag_get_id3v2(FILE *file)
                 }
                 g_free(d);
             }
+            g_free(a);
             if(tag[0]==NULL && tag[1]==NULL && tag[2]==NULL && tag[3]==NULL) 
                 return NULL;
             return tag;
@@ -249,7 +284,7 @@ gchar **tag_get_id3(gchar *filename)
         return NULL;
     }
     /* Get ID3v2 tag, if it returns NULL, then try to get ID3v1 tag. */
-    tag=tag_get_id3v2(file);
+    tag = tag_get_id3v2(file);
     if(tag==NULL && !skip_id3_reading)
     {
         rewind(file);

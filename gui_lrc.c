@@ -1,6 +1,26 @@
 /*
  * GUI Lyric Show
  * Build the lyric show of the player. 
+ *
+ * gui_lrc.c
+ * This file is part of <RhythmCat>
+ *
+ * Copyright (C) 2010 - SuperCat, license: GPL v3
+ *
+ * <RhythmCat> is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * <RhythmCat> is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with <RhythmCat>; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, 
+ * Boston, MA  02110-1301  USA
  */
 
 #include "gui_lrc.h"
@@ -96,7 +116,6 @@ GuiLrcData *get_gui_lrc()
 
 void gui_lrc_draw_bg()
 {
-    /* RCSetting *rc_setting = get_setting(); */
     cairo_t *cr;
     if(rc_glrc.bg_image_file!=NULL && rc_glrc.bg_image==NULL)
         cairo_surface_destroy(rc_glrc.bg_image);
@@ -114,7 +133,6 @@ void gui_lrc_draw_bg()
     cr = gdk_cairo_create(rc_glrc.lrc_scene->window);
     if(rc_glrc.bg_image!=NULL)
     {
-        /* cairo_scale(cr, 0.1, 0.1); */
         cairo_set_source_surface(cr, rc_glrc.bg_image, 0, 0);
     }
     else
@@ -129,7 +147,7 @@ void gui_lrc_draw_bg()
 
 gboolean gui_lrc_show(GtkWidget *widget, gpointer data)
 {   
-    static int visible = TRUE;
+    static gboolean visible = TRUE;
     const GList *list_foreach = rc_glrc.lyric_data;
     static RCSetting *rc_setting = NULL;
     if(rc_setting==NULL) rc_setting = get_setting();
@@ -139,10 +157,10 @@ gboolean gui_lrc_show(GtkWidget *widget, gpointer data)
     gint width, height;
     gchar *text;
     LrcData *lrc_data;
-    double lrc_height, lrc_width;
-    int t_height, t_width;
-    double lrc_x, lrc_y;
-    double lrc_y_plus = 0.0;
+    gdouble lrc_height, lrc_width;
+    gint t_height, t_width;
+    gdouble lrc_x, lrc_y;
+    gdouble lrc_y_plus = 0.0;
     static cairo_t *lrc_cr;
     guint64 time_plus = 0;
     guint64 time_passed = 0;
@@ -175,7 +193,7 @@ gboolean gui_lrc_show(GtkWidget *widget, gpointer data)
     pango_layout_set_font_description(layout, desc);
     pango_font_description_free(desc);
     pango_layout_get_size(layout, &t_width, &t_height);
-    lrc_height = (double)t_height / PANGO_SCALE;
+    lrc_height = (gdouble)t_height / PANGO_SCALE;
     cairo_set_operator(lrc_cr, CAIRO_OPERATOR_SOURCE);
     cairo_set_source_rgba(lrc_cr, rc_glrc.text_color[0], 
         rc_glrc.text_color[1], rc_glrc.text_color[2], rc_glrc.text_color[3]);
@@ -217,7 +235,7 @@ gboolean gui_lrc_show(GtkWidget *widget, gpointer data)
         text = lrc_data->text;
         pango_layout_set_text(layout, text, -1);
         pango_layout_get_size(layout, &t_width, &t_height);
-        lrc_width = (double)t_width / PANGO_SCALE;
+        lrc_width = (gdouble)t_width / PANGO_SCALE;
         lrc_x = width/2 - lrc_width/2;
         lrc_y = height/2 + (lrc_height+rc_glrc.lyric_line_ds) * 
             (gint64)(i - rc_glrc.lrc_line_num);
@@ -520,8 +538,13 @@ void gui_lrc_edit_delete_tag(GtkWidget *widget, gpointer data)
     gtk_text_iter_forward_to_line_end(&iter_end);
     line_text = gtk_text_iter_get_text(&iter_start, &iter_end);
     start_pos = strstr(line_text, "[");
-    end_pos = strstr(line_text, "]");
-    if(start_pos!=NULL && end_pos!=NULL)
+    if(start_pos==NULL)
+    {
+        g_free(line_text);
+        return;
+    }
+    end_pos = strstr(start_pos, "]");
+    if(start_pos!=NULL && end_pos!=NULL && start_pos<end_pos)
     {
         start_index = (gint)(start_pos - line_text);
         end_index = (gint)(end_pos - line_text) + 1;
@@ -531,7 +554,7 @@ void gui_lrc_edit_delete_tag(GtkWidget *widget, gpointer data)
         g_free(line_text);
         return;
     }
-    if(start_index<0 || end_index<=0)
+    if(start_index<0 || end_index<=0 || start_index >= end_index)
     {
         g_free(line_text);
         return;

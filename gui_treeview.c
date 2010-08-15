@@ -1,14 +1,39 @@
 /*
  * GUI Treeview
  * Build the Treeviews in the player. 
+ *
+ * gui_treeview.c
+ * This file is part of <RhythmCat>
+ *
+ * Copyright (C) 2010 - SuperCat, license: GPL v3
+ *
+ * <RhythmCat> is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * <RhythmCat> is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with <RhythmCat>; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, 
+ * Boston, MA  02110-1301  USA
  */
 
 #include "gui_treeview.h"
 
 /* Variables */
-GuiData *rc_ui;
-GtkCellRenderer *renderer_text[5];
-GtkCellRenderer *renderer_pixbuf[2];
+static GuiData *rc_ui;
+static GtkCellRenderer *renderer_text[5];
+static GtkCellRenderer *renderer_pixbuf[2];
+static GtkTreeViewColumn *list_file_column;
+static GtkTreeViewColumn *play_list_index_column;
+static GtkTreeViewColumn *play_list_title_column;
+static GtkTreeViewColumn *play_list_artist_column;
+static GtkTreeViewColumn *play_list_time_column;
 
 /*
  * Initial the tree view in the main window.
@@ -18,11 +43,6 @@ void gui_tree_view_build()
 {
     rc_ui = get_gui();
     GtkListStore *list_file_tree_store, *play_list_tree_store;
-    GtkTreeViewColumn *list_file_column;
-    GtkTreeViewColumn *play_list_index_column;
-    GtkTreeViewColumn *play_list_title_column;
-    GtkTreeViewColumn *play_list_artist_column;
-    GtkTreeViewColumn *play_list_time_column;
     gint count = 0;
     play_list_tree_store = gtk_list_store_new(5, G_TYPE_STRING, G_TYPE_INT,
         G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
@@ -75,20 +95,20 @@ void gui_tree_view_build()
         _("Length"), renderer_text[4], "text", 4, NULL);
     gtk_tree_view_column_set_title(list_file_column, "Playlist");
     gtk_tree_view_column_pack_start(list_file_column,renderer_pixbuf[0],FALSE);
-    gtk_tree_view_column_pack_start(list_file_column,renderer_text[0],FALSE);
+    gtk_tree_view_column_pack_start(list_file_column,renderer_text[0], FALSE);
     gtk_tree_view_column_add_attribute(list_file_column,renderer_pixbuf[0],
         "stock-id", 0);
     gtk_tree_view_column_add_attribute(list_file_column,renderer_text[0],
         "text", 1);
     gtk_tree_view_append_column(GTK_TREE_VIEW(rc_ui->list_file_tree_view),
         list_file_column);
-    gtk_tree_view_column_set_expand(play_list_title_column,TRUE);
-    gtk_tree_view_column_set_expand(play_list_artist_column,TRUE);
+    gtk_tree_view_column_set_expand(play_list_title_column, TRUE);
+    gtk_tree_view_column_set_expand(play_list_artist_column, TRUE);
     gtk_tree_view_column_set_sizing(play_list_time_column,
         GTK_TREE_VIEW_COLUMN_FIXED);
-    gtk_tree_view_column_set_fixed_width(play_list_index_column ,50);
-    gtk_tree_view_column_set_min_width(play_list_index_column, 50);
-    gtk_tree_view_column_set_max_width(play_list_index_column, 50);
+    gtk_tree_view_column_set_fixed_width(play_list_index_column ,60);
+    gtk_tree_view_column_set_min_width(play_list_index_column, 60);
+    gtk_tree_view_column_set_max_width(play_list_index_column, 60);
     gtk_tree_view_column_set_fixed_width(play_list_time_column, 55);
     gtk_tree_view_column_set_alignment(play_list_time_column, 1.0);
     gtk_tree_view_append_column(GTK_TREE_VIEW(rc_ui->play_list_tree_view),
@@ -113,6 +133,12 @@ void gui_tree_view_build()
         FALSE);
     gtk_tree_view_set_reorderable(GTK_TREE_VIEW(rc_ui->list_file_tree_view),
         FALSE);
+    gtk_tree_view_set_rules_hint(GTK_TREE_VIEW(rc_ui->play_list_tree_view),
+        TRUE);
+    gtk_tree_view_set_rules_hint(GTK_TREE_VIEW(rc_ui->list_file_tree_view),
+        TRUE);
+    g_signal_connect(G_OBJECT(renderer_text[0]), "edited",
+        G_CALLBACK(gui_list_file_edited), NULL);
 }
 
 /*
@@ -122,6 +148,7 @@ void gui_tree_view_build()
 void gui_list_file_view_rebuild()
 {
     CoreData *gcore = get_core();
+    CoreState core_state = core_get_play_state();
     GtkListStore *store;
     int length = 0;
     int count = 0;
@@ -130,7 +157,8 @@ void gui_list_file_view_rebuild()
     gtk_list_store_clear(store);
     for(count=0;count<length;count++)
     {
-        if(gcore->list_index==count && gcore->list_index>=0)
+        if(gcore->list_index==count && gcore->list_index>=0 &&
+            (core_state==CORE_PLAYING || core_state==CORE_PAUSED))
             gui_insert_list_file_view(rc_ui->list_file_tree_view,
                 GTK_STOCK_MEDIA_PLAY, plist_get_list_name(count), count);
         else
@@ -285,7 +313,8 @@ void gui_plist_view_row_activated(GtkTreeView *list, GtkTreePath *path,
  * Set the color of the music title in the playlist.
  */
 
-void gui_play_list_view_set_state(GtkWidget *list, gint index, gchar *state)
+void gui_play_list_view_set_state(GtkWidget *list, gint index,
+    const gchar *state)
 {
     GtkListStore *store;
     GtkTreeIter iter;
@@ -306,7 +335,8 @@ void gui_play_list_view_set_state(GtkWidget *list, gint index, gchar *state)
  * Set the color of the item in the list.
  */
 
-void gui_list_view_set_state(GtkWidget *list, gint list_index, gchar *state)
+void gui_list_view_set_state(GtkWidget *list, gint list_index,
+    const gchar *state)
 {
     GtkListStore *store;
     GtkTreeIter iter;
@@ -327,7 +357,7 @@ void gui_list_view_set_state(GtkWidget *list, gint list_index, gchar *state)
  * Set the name of the item in the list.
  */
 
-void gui_list_view_set_name(GtkWidget *list, gint list_index, gchar *name)
+void gui_list_view_set_name(GtkWidget *list, gint list_index, const gchar *name)
 {
     GtkListStore *store;
     GtkTreeIter iter;
@@ -465,83 +495,6 @@ void gui_list_tree_view_new_list(GtkWidget *widget, gpointer data)
 }
 
 /*
- * Rename an existing list with the name which the user inputs.
- */
-
-void gui_list_tree_view_rename_list(GtkWidget *widget, gpointer data)
-{
-    GtkTreeIter iter;
-    int index = 0;
-    GtkWidget *name_dialog;
-    GtkWidget *name_label, *name_entry;
-    GtkWidget *name_check_msgdialog;
-    GtkWidget *hbox;
-    const gchar *name_str;
-    gint result = 0;
-    const gchar *default_name;
-    gboolean vaild_name = FALSE;
-    if(rc_ui->list_file_selection==NULL) return;
-    if(gtk_tree_selection_get_selected(rc_ui->list_file_selection,NULL,&iter))
-    {
-        index = gui_list_file_get_index(&iter);
-        if(index==-1) return;
-    }
-    else return;
-    default_name = plist_get_list_name(index);
-    hbox = gtk_hbox_new(FALSE,1);
-    name_label = gtk_label_new(_("Input the new name here: "));
-    name_entry = gtk_entry_new_with_max_length(120);
-    gtk_entry_set_text(GTK_ENTRY(name_entry),default_name);
-    gtk_editable_set_editable(GTK_EDITABLE(name_entry),TRUE);
-    gtk_box_pack_start(GTK_BOX(hbox), name_label, FALSE, TRUE, 0);
-    gtk_box_pack_start(GTK_BOX(hbox), name_entry, TRUE, TRUE, 0);
-    name_dialog = gtk_dialog_new_with_buttons(_("Rename the playlist"),
-        GTK_WINDOW(rc_ui->main_window),GTK_DIALOG_DESTROY_WITH_PARENT,
-        GTK_STOCK_OK,GTK_RESPONSE_ACCEPT,GTK_STOCK_CANCEL,
-        GTK_RESPONSE_CANCEL,NULL);
-    gtk_window_set_resizable(GTK_WINDOW(name_dialog), FALSE); 
-    gtk_container_add(GTK_CONTAINER(GTK_DIALOG(name_dialog)->vbox), hbox);
-    gtk_widget_show(name_label);
-    gtk_widget_show(name_entry);
-    gtk_widget_show(hbox);
-    while(!vaild_name)
-    {
-        result = gtk_dialog_run(GTK_DIALOG(name_dialog));
-        switch(result)
-        {
-            case GTK_RESPONSE_ACCEPT:
-                name_str = gtk_entry_get_text(GTK_ENTRY(name_entry));
-                if(name_str[0]!='\0')
-                {
-                    vaild_name = TRUE;
-                    plist_set_list_name(index, (gchar *)name_str);
-                    gui_list_view_set_name(rc_ui->list_file_tree_view, index,
-                        (gchar *)name_str);
-                }
-                else
-                {
-                    name_check_msgdialog = gtk_message_dialog_new(GTK_WINDOW(
-                        name_dialog),GTK_DIALOG_DESTROY_WITH_PARENT,
-                        GTK_MESSAGE_ERROR,GTK_BUTTONS_OK,
-                        _("You must input a valid string!"));
-                    gtk_dialog_run(GTK_DIALOG(name_check_msgdialog));
-                    gtk_widget_destroy(name_check_msgdialog);
-                }
-                break;
-            case GTK_RESPONSE_CANCEL:
-                vaild_name = TRUE;
-                break;
-            case GTK_RESPONSE_DELETE_EVENT:
-                vaild_name = TRUE;
-                break;
-            default: break;
-        }
-    }
-    gtk_widget_destroy(name_dialog);
-
-}
-
-/*
  * Delete the playlist which the user selected.
  */
 
@@ -639,7 +592,7 @@ void gui_play_list_tree_view_set_drag()
  */
 
 void gui_play_list_dnd_data_received(GtkWidget *widget,
-    GdkDragContext *context, int x, int y, GtkSelectionData *seldata,
+    GdkDragContext *context, gint x, gint y, GtkSelectionData *seldata,
     guint info, guint time, gpointer data)
 {
     CoreData *gcore = get_core();
@@ -775,7 +728,7 @@ void gui_play_list_dnd_motion(GtkWidget *widget, GdkDragContext *context,
  */
 
 void gui_list_file_dnd_data_received(GtkWidget *widget,
-    GdkDragContext *context, int x, int y, GtkSelectionData *seldata,
+    GdkDragContext *context, gint x, gint y, GtkSelectionData *seldata,
     guint info, guint time, gpointer data)
 {
     gint source = -1;
@@ -904,5 +857,50 @@ void gui_play_list_delete_lists(GtkWidget *widget, gpointer data)
 void gui_play_list_select_all(GtkWidget *widget, gpointer data)
 {
     gtk_tree_selection_select_all(rc_ui->play_list_selection);
+}
+
+/*
+ * Rename an existing list.
+ */
+
+void gui_list_file_edited(GtkCellRendererText *renderer, gchar *path_str,
+    gchar *new_text, gpointer data)
+{
+    GtkTreeIter iter;
+    gint index = 0;
+    gchar new_name[512];
+    if(!gtk_tree_model_get_iter_from_string(rc_ui->list_file_tree_model,
+        &iter, path_str))
+        return;
+    index = gui_list_file_get_index(&iter);
+    if(index<0) return;
+    if(*new_text==0) return;
+    bzero(new_name, 512 * sizeof(gchar));
+    g_utf8_strncpy(new_name, new_text, 120);
+    plist_set_list_name(index, new_name);
+    gui_list_view_set_name(rc_ui->list_file_tree_view, index, new_name);
+}
+
+/*
+ * Start to rename an existing list.
+ */
+
+void gui_list_tree_view_rename_list(GtkWidget *widget, gpointer data)
+{
+    GtkTreeIter iter;
+    GtkTreePath *path;
+    if(gtk_tree_selection_get_selected(rc_ui->list_file_selection,NULL,&iter))
+    {
+        path = gtk_tree_model_get_path(rc_ui->list_file_tree_model, &iter);
+        if(path==NULL) return;
+    }
+    else return;
+    g_object_set(G_OBJECT(renderer_text[0]), "editable", TRUE, "editable-set",
+        TRUE, NULL);
+    gtk_tree_view_set_cursor(GTK_TREE_VIEW(rc_ui->list_file_tree_view), path,
+        list_file_column, TRUE);
+    g_object_set(G_OBJECT(renderer_text[0]), "editable", FALSE, "editable-set",
+        FALSE, NULL);
+    gtk_tree_path_free(path);
 }
 

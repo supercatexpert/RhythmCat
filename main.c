@@ -1,19 +1,40 @@
 /*
  *  Main
+ *
+ *
+ * main.c
+ * This file is part of <RhythmCat>
+ *
+ * Copyright (C) 2010 - SuperCat, license: GPL v3
+ *
+ * <RhythmCat> is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * <RhythmCat> is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with <RhythmCat>; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, 
+ * Boston, MA  02110-1301  USA
  */
 
 #include "main.h"
 
-gchar *rc_set_dir = NULL;
-const gchar *rc_app_dir = NULL;
-const gchar *rc_home_dir = NULL;
-gchar rc_program_name[] = "RhythmCat Music Player";
-gchar rc_build_num[] = "build 100731";
-gchar rc_ver_num[] = "0.1.0";
-gboolean rc_is_stable = FALSE;
-const gchar const *rc_authors[] = {"SuperCat","Mr. Zhu",NULL};
-const gchar const *rc_documenters[] = {"SuperCat","Ms. Mi",NULL};
-const gchar const *rc_artists[] = {"SuperCat","Ms. Mi",NULL};
+static gchar *rc_set_dir = NULL;
+static const gchar *rc_app_dir = NULL;
+static const gchar *rc_home_dir = NULL;
+static const gchar rc_program_name[] = "RhythmCat Music Player";
+static const gchar rc_build_num[] = "build 100815, alpha 1";
+static const gchar rc_ver_num[] = "0.5.0";
+static const gboolean rc_is_stable = FALSE;
+static const gchar const *rc_authors[] = {"SuperCat","Mr. Zhu",NULL};
+static const gchar const *rc_documenters[] = {"SuperCat","Ms. Mi",NULL};
+static const gchar const *rc_artists[] = {"SuperCat","Ms. Mi",NULL};
 
 void rc_initial(int *argc, char **argv[])
 {
@@ -27,7 +48,12 @@ void rc_initial(int *argc, char **argv[])
     int dname_len = strlen(homedir);
     rc_set_dir = g_malloc0(dname_len+16);
     g_sprintf(rc_set_dir,"%s%c.RhythmCat", homedir, G_DIR_SEPARATOR);
-    appfilepath = realpath((*argv[0]), full_path); 
+    appfilepath = realpath((*argv[0]), full_path);
+    if(appfilepath==NULL)
+    {
+        readlink("/proc/self/exe", full_path, PATH_MAX);
+        appfilepath = full_path;
+    }
     rc_app_dir = g_path_get_dirname(appfilepath);
     srand((unsigned)time(0));
     g_mkdir_with_parents(rc_set_dir, 0700);
@@ -53,44 +79,42 @@ void rc_initial(int *argc, char **argv[])
     create_main_window();
     create_core();
     plist_initial_playlist();
-    kara_initial();
     gui_play_list_view_reflush_index(NULL, 0);
-    //plugin_load("plugins/test.so");
 }
 
-gchar *rc_get_program_name()
+const gchar *rc_get_program_name()
 {
     return rc_program_name;
 }
 
-gchar *rc_get_set_dir()
+const gchar *rc_get_set_dir()
 {
     return rc_set_dir;
 }
 
-gchar *rc_get_build_num()
+const gchar *rc_get_build_num()
 {
     return rc_build_num;
 }
 
-gchar *rc_get_ver_num()
+const gchar *rc_get_ver_num()
 {
     return rc_ver_num;
 }
 
-gchar **rc_get_authors()
+const gchar *const *rc_get_authors()
 {
-    return (gchar **)rc_authors;
+    return rc_authors;
 }
 
-gchar **rc_get_documenters()
+const gchar *const *rc_get_documenters()
 {
-    return (gchar **)rc_documenters;
+    return rc_documenters;
 }
 
-gchar **rc_get_artists()
+const gchar *const *rc_get_artists()
 {
-    return (gchar **)rc_artists;
+    return rc_artists;
 }
 
 gboolean rc_get_stable()
@@ -115,16 +139,4 @@ int main(int argc, char *argv[], char *envp[])
     g_free(rc_set_dir);
     return 0;
 }
-
-/* 
- * Testing code below:
- */
-/*
-    char *utf8;
-    char sj[]={0x93,0xFA,0x96,0x7B,0x8C,0xEA,0x83,0x65,0x83,0x58,0x83,0x67,'\0'};
-    gsize bytes_read,bytes_written;
-    utf8 = g_convert(sj, -1, "UTF-8", "GB18030", &bytes_read, &bytes_written, NULL);
-    printf("%s\n",utf8);
-    g_free(utf8);
-*/
 

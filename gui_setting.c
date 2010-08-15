@@ -1,35 +1,60 @@
 /*
  * GUI Setting Dialog
  * Build the setting window of the player. 
+ *
+ * gui_setting.c
+ * This file is part of <RhythmCat>
+ *
+ * Copyright (C) 2010 - SuperCat, license: GPL v3
+ *
+ * <RhythmCat> is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * <RhythmCat> is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with <RhythmCat>; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, 
+ * Boston, MA  02110-1301  USA
  */
 
 #include "gui_setting.h"
 
 /* Variables */
-RCSetting *rc_setting;
-GuiData *rc_ui;
-GtkWidget *setting_window;
-GtkWidget *setting_treeview;
-GtkWidget *setting_notebook;
-GtkWidget *setting_nb_pages[5];
-GtkWidget *setting_ok_button;
-GtkWidget *setting_apply_button;
-GtkWidget *setting_cancel_button;
-
-GtkWidget *setting_at_ply_checkbox;
-GtkWidget *setting_ad_nxt_checkbox;
-GtkWidget *setting_pl_enc_entry;
-GtkWidget *setting_lr_enc_entry;
-GtkWidget *setting_ln_spc_spin;
-GtkWidget *setting_lr_fon_button;
-GtkWidget *setting_lr_bgi_button;
-GtkWidget *setting_lr_bgc_button;
-GtkWidget *setting_lr_fgc_button;
-GtkWidget *setting_lr_hic_button;
-
-GtkTreeModel *setting_tree_model;
-
-gboolean setting_changed = FALSE;
+static RCSetting *rc_setting;
+static GuiData *rc_ui;
+static GtkWidget *setting_window;
+static GtkWidget *setting_treeview;
+static GtkWidget *setting_notebook;
+static GtkWidget *setting_nb_pages[6];
+static GtkWidget *setting_ok_button;
+static GtkWidget *setting_apply_button;
+static GtkWidget *setting_cancel_button;
+static GtkWidget *setting_at_ply_checkbox;
+static GtkWidget *setting_ad_nxt_checkbox;
+static GtkWidget *setting_pl_enc_entry;
+static GtkWidget *setting_lr_enc_entry;
+static GtkWidget *setting_ln_spc_spin;
+static GtkWidget *setting_lr_fon_button;
+static GtkWidget *setting_lr_bgi_button;
+static GtkWidget *setting_lr_bgc_button;
+static GtkWidget *setting_lr_fgc_button;
+static GtkWidget *setting_lr_hic_button;
+static GtkWidget *setting_ap_grf_button;
+static GtkWidget *setting_ap_grf_radio[2];
+static GtkWidget *setting_dl_fon_button;
+static GtkWidget *setting_dl_mov_checkbox;
+static GtkWidget *setting_dl_cl1_button[2];
+static GtkWidget *setting_dl_cl2_button[2];
+static GtkWidget *setting_dl_wid_spin;
+static GtkWidget *setting_dl_pos_spin[2];
+static GtkTreeModel *setting_tree_model;
+static gboolean setting_changed = FALSE;
 
 /*
  * Create Setting Window.
@@ -64,7 +89,7 @@ void gui_create_setting_window(GtkWidget *widget, gpointer data)
     setting_cancel_button = gtk_button_new_from_stock(GTK_STOCK_CANCEL);
     setting_apply_button = gtk_button_new_from_stock(GTK_STOCK_APPLY);
     setting_ok_button = gtk_button_new_from_stock(GTK_STOCK_OK);
-    for(i=0;i<5;i++)
+    for(i=0;i<6;i++)
     {
         setting_nb_pages[i] = gtk_vbox_new(FALSE, 2);
         gtk_notebook_append_page(GTK_NOTEBOOK(setting_notebook),
@@ -75,6 +100,7 @@ void gui_create_setting_window(GtkWidget *widget, gpointer data)
     gui_create_setting_playback();
     gui_create_setting_playlist();
     gui_create_setting_lyric();
+    gui_create_setting_desklrc();
     setting_changed = FALSE;
     gtk_box_pack_start(GTK_BOX(hbox1), setting_treeview, FALSE, FALSE, 3);
     gtk_box_pack_start(GTK_BOX(hbox1), setting_notebook, TRUE, TRUE, 3);
@@ -125,7 +151,9 @@ void gui_create_setting_treeview()
     gtk_list_store_append(setting_tree_store, &iter);
     gtk_list_store_set(setting_tree_store, &iter, 1,  _("Playlist"), -1);
     gtk_list_store_append(setting_tree_store, &iter);
-    gtk_list_store_set(setting_tree_store, &iter, 1,  _("Lryic show"), -1);
+    gtk_list_store_set(setting_tree_store, &iter, 1,  _("Lryic Show"), -1);
+    gtk_list_store_append(setting_tree_store, &iter);
+    gtk_list_store_set(setting_tree_store, &iter, 1,  _("OSD Lyric Show"), -1);
 }
 
 void gui_close_setting_window(GtkButton *widget, gpointer data)
@@ -161,6 +189,8 @@ void gui_setting_apply(GtkButton *widget, gpointer data)
         setting_at_ply_checkbox));
     rc_setting->auto_next = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
         setting_ad_nxt_checkbox));
+    rc_setting->osd_lyric_movable = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
+        setting_dl_mov_checkbox));
     g_free(rc_setting->tag_ex_encoding);
     rc_setting->tag_ex_encoding = g_strdup(gtk_entry_get_text(GTK_ENTRY(
         setting_pl_enc_entry)));
@@ -170,24 +200,69 @@ void gui_setting_apply(GtkButton *widget, gpointer data)
     g_free(rc_setting->lrc_font);
     rc_setting->lrc_font = g_strdup(gtk_font_button_get_font_name(
         GTK_FONT_BUTTON(setting_lr_fon_button)));
+    g_free(rc_setting->osd_lyric_font);
+    rc_setting->osd_lyric_font = g_strdup(gtk_font_button_get_font_name(
+        GTK_FONT_BUTTON(setting_dl_fon_button)));
+    if(rc_setting->skin_rc_file!=NULL) g_free(rc_setting->skin_rc_file);
+    if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
+        setting_ap_grf_radio[1])))
+    {
+        rc_setting->skin_rc_file = gtk_file_chooser_get_filename(
+            GTK_FILE_CHOOSER(setting_ap_grf_button));
+    }
+    else
+        rc_setting->skin_rc_file = NULL;
     rc_setting->lrc_line_ds = gtk_spin_button_get_value_as_int(
         GTK_SPIN_BUTTON(setting_ln_spc_spin));
+    rc_setting->osd_lryic_width = gtk_spin_button_get_value_as_int(
+        GTK_SPIN_BUTTON(setting_dl_wid_spin));
+    rc_setting->osd_lyric_pos[0] = gtk_spin_button_get_value_as_int(
+        GTK_SPIN_BUTTON(setting_dl_pos_spin[0]));
+    rc_setting-> osd_lyric_pos[1] = gtk_spin_button_get_value_as_int(
+        GTK_SPIN_BUTTON(setting_dl_pos_spin[1]));
     gtk_color_button_get_color(GTK_COLOR_BUTTON(setting_lr_bgc_button),
         &color);
-    rc_setting->lrc_bg_color[0] = (gdouble)(color.red/256)/256;
-    rc_setting->lrc_bg_color[1] = (gdouble)(color.green/256)/256;
-    rc_setting->lrc_bg_color[2] = (gdouble)(color.blue/256)/256;
+    rc_setting->lrc_bg_color[0] = (gdouble)color.red/65535;
+    rc_setting->lrc_bg_color[1] = (gdouble)color.green/65535;
+    rc_setting->lrc_bg_color[2] = (gdouble)color.blue/65535;
     gtk_color_button_get_color(GTK_COLOR_BUTTON(setting_lr_fgc_button),
         &color);
-    rc_setting->lrc_fg_color[0] = (gdouble)(color.red/256)/256;
-    rc_setting->lrc_fg_color[1] = (gdouble)(color.green/256)/256;
-    rc_setting->lrc_fg_color[2] = (gdouble)(color.blue/256)/256;
+    rc_setting->lrc_fg_color[0] = (gdouble)color.red/65535;
+    rc_setting->lrc_fg_color[1] = (gdouble)color.green/65535;
+    rc_setting->lrc_fg_color[2] = (gdouble)color.blue/65535;
     gtk_color_button_get_color(GTK_COLOR_BUTTON(setting_lr_hic_button),
         &color);
-    rc_setting->lrc_hi_color[0] = (gdouble)(color.red/256)/256;
-    rc_setting->lrc_hi_color[1] = (gdouble)(color.green/256)/256;
-    rc_setting->lrc_hi_color[2] = (gdouble)(color.blue/256)/256;
+    rc_setting->lrc_hi_color[0] = (gdouble)color.red/65535;
+    rc_setting->lrc_hi_color[1] = (gdouble)color.green/65535;
+    rc_setting->lrc_hi_color[2] = (gdouble)color.blue/65535;
+    gtk_color_button_get_color(GTK_COLOR_BUTTON(setting_dl_cl1_button[0]),
+        &color);
+    rc_setting->osd_lyric_bg_color1[0] = (gdouble)color.red/65535;
+    rc_setting->osd_lyric_bg_color1[1] = (gdouble)color.green/65535;
+    rc_setting->osd_lyric_bg_color1[2] = (gdouble)color.blue/65535;
+    gtk_color_button_get_color(GTK_COLOR_BUTTON(setting_dl_cl1_button[1]),
+        &color);
+    rc_setting->osd_lyric_bg_color2[0] = (gdouble)color.red/65535;
+    rc_setting->osd_lyric_bg_color2[1] = (gdouble)color.green/65535;
+    rc_setting->osd_lyric_bg_color2[2] = (gdouble)color.blue/65535;
+    gtk_color_button_get_color(GTK_COLOR_BUTTON(setting_dl_cl2_button[0]),
+        &color);
+    rc_setting->osd_lyric_fg_color1[0] = (gdouble)color.red/65535;
+    rc_setting->osd_lyric_fg_color1[1] = (gdouble)color.green/65535;
+    rc_setting->osd_lyric_fg_color1[2] = (gdouble)color.blue/65535;
+    gtk_color_button_get_color(GTK_COLOR_BUTTON(setting_dl_cl2_button[1]),
+        &color);
+    rc_setting->osd_lyric_fg_color2[0] = (gdouble)color.red/65535;
+    rc_setting->osd_lyric_fg_color2[1] = (gdouble)color.green/65535;
+    rc_setting->osd_lyric_fg_color2[2] = (gdouble)color.blue/65535;
     gui_lrc_expose(NULL, NULL);
+    gui_desklrc_set_font(rc_setting->osd_lyric_font);
+    gui_desklrc_set_color(rc_setting->osd_lyric_fg_color1,
+        rc_setting->osd_lyric_fg_color2, rc_setting->osd_lyric_bg_color1,
+        rc_setting->osd_lyric_bg_color2);
+    gui_desklrc_set_movable(rc_setting->osd_lyric_movable);
+    gui_desklrc_set_pos(rc_setting->osd_lyric_pos[0],
+        rc_setting->osd_lyric_pos[1]);
 }
 
 void gui_setting_confirm(GtkButton *widget, gpointer data)
@@ -207,7 +282,6 @@ void gui_create_setting_general()
     gtk_frame_set_label_widget(GTK_FRAME(general_frame), general_label);
     gtk_frame_set_shadow_type(GTK_FRAME(general_frame), GTK_SHADOW_NONE);
     vbox1 = gtk_vbox_new(FALSE, 2);
-
     gtk_container_add(GTK_CONTAINER(general_frame), vbox1);
     gtk_box_pack_start(GTK_BOX(setting_nb_pages[0]), general_frame,
         TRUE, TRUE, 0);
@@ -218,13 +292,38 @@ void gui_create_setting_appearance()
     GtkWidget *theme_label;
     GtkWidget *theme_frame;
     GtkWidget *vbox1;
+    GtkWidget *hbox1;
+    GtkFileFilter *filter = gtk_file_filter_new();
+    gtk_file_filter_add_pattern(filter, "gtkrc");
     theme_label = gtk_label_new("");
     gtk_label_set_markup(GTK_LABEL(theme_label), _("<b>Theme</b>"));
     theme_frame = gtk_frame_new(NULL);
     gtk_frame_set_label_widget(GTK_FRAME(theme_frame), theme_label);
     gtk_frame_set_shadow_type(GTK_FRAME(theme_frame), GTK_SHADOW_NONE);
+    setting_ap_grf_radio[0] = gtk_radio_button_new_with_mnemonic(NULL,
+        _("Use _System GTK2+ RC Theme"));
+    setting_ap_grf_radio[1] = gtk_radio_button_new_with_mnemonic_from_widget(
+        GTK_RADIO_BUTTON(setting_ap_grf_radio[0]),
+        _("Use _Custom GTK2+ RC Theme"));
+    setting_ap_grf_button = gtk_file_chooser_button_new(
+        _("Please select a GTK2+ RC File"), GTK_FILE_CHOOSER_ACTION_OPEN);
+    if(rc_setting->skin_rc_file!=NULL)
+        gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(
+            setting_ap_grf_button), rc_setting->skin_rc_file);
+    gtk_file_filter_set_name(filter, _("GTK2+ RC File (gtkrc)"));
+    gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(setting_ap_grf_button),
+        filter);
+    if(rc_setting->skin_rc_file!=NULL)
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(
+            setting_ap_grf_radio[1]), TRUE);
     vbox1 = gtk_vbox_new(FALSE, 2);
-
+    hbox1 = gtk_hbox_new(FALSE, 2);
+    gtk_box_pack_start(GTK_BOX(hbox1), setting_ap_grf_radio[1], FALSE,
+        FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(hbox1), setting_ap_grf_button, TRUE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(vbox1), setting_ap_grf_radio[0], FALSE,
+        FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(vbox1), hbox1, FALSE, FALSE, 0);
     gtk_container_add(GTK_CONTAINER(theme_frame), vbox1);
     gtk_box_pack_start(GTK_BOX(setting_nb_pages[1]), theme_frame,
         TRUE, TRUE, 0);
@@ -276,12 +375,9 @@ void gui_create_setting_playlist()
         rc_setting->tag_ex_encoding);
     vbox1 = gtk_vbox_new(FALSE, 2);
     hbox1 = gtk_hbox_new(FALSE, 2);
-
-
     gtk_box_pack_start(GTK_BOX(hbox1), label1, FALSE, FALSE, 10);
     gtk_box_pack_start(GTK_BOX(hbox1), setting_pl_enc_entry, TRUE, TRUE, 0);
     gtk_box_pack_start(GTK_BOX(vbox1), hbox1, FALSE, FALSE, 0);
-
     gtk_container_add(GTK_CONTAINER(metadata_frame), vbox1);
     gtk_box_pack_start(GTK_BOX(setting_nb_pages[3]), metadata_frame,
         TRUE, TRUE, 0);
@@ -337,24 +433,23 @@ void gui_create_setting_lyric()
     gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(setting_lr_bgi_button),
         file_filter1);
     g_snprintf(color_str, 8, "#%02X%02X%02X", 
-        (gint)(rc_setting->lrc_bg_color[0] * 256),
-        (gint)(rc_setting->lrc_bg_color[1] * 256),
-        (gint)(rc_setting->lrc_bg_color[2] * 256));
+        (gint)(rc_setting->lrc_bg_color[0] * 0xFF),
+        (gint)(rc_setting->lrc_bg_color[1] * 0xFF),
+        (gint)(rc_setting->lrc_bg_color[2] * 0xFF));
     gdk_color_parse(color_str, &color);
     setting_lr_bgc_button = gtk_color_button_new_with_color(&color);
     g_snprintf(color_str, 8, "#%02X%02X%02X", 
-        (gint)(rc_setting->lrc_fg_color[0] * 256),
-        (gint)(rc_setting->lrc_fg_color[1] * 256),
-        (gint)(rc_setting->lrc_fg_color[2] * 256));
+        (gint)(rc_setting->lrc_fg_color[0] * 0xFF),
+        (gint)(rc_setting->lrc_fg_color[1] * 0xFF),
+        (gint)(rc_setting->lrc_fg_color[2] * 0xFF));
     gdk_color_parse(color_str, &color);
     setting_lr_fgc_button = gtk_color_button_new_with_color(&color);
     g_snprintf(color_str, 8, "#%02X%02X%02X", 
-        (gint)(rc_setting->lrc_hi_color[0] * 256),
-        (gint)(rc_setting->lrc_hi_color[1] * 256),
-        (gint)(rc_setting->lrc_hi_color[2] * 256));
+        (gint)(rc_setting->lrc_hi_color[0] * 0xFF),
+        (gint)(rc_setting->lrc_hi_color[1] * 0xFF),
+        (gint)(rc_setting->lrc_hi_color[2] * 0xFF));
     gdk_color_parse(color_str, &color);
     setting_lr_hic_button = gtk_color_button_new_with_color(&color);
-
     gtk_box_pack_start(GTK_BOX(hbox[0]), label[0], FALSE, FALSE, 10);
     gtk_box_pack_start(GTK_BOX(hbox[0]), setting_lr_enc_entry, TRUE, TRUE, 0);
     gtk_box_pack_start(GTK_BOX(hbox[1]), label[1], FALSE, FALSE, 10);
@@ -369,15 +464,123 @@ void gui_create_setting_lyric()
     gtk_box_pack_end(GTK_BOX(hbox[5]), setting_lr_fgc_button, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(hbox[6]), label[6], FALSE, FALSE, 10);
     gtk_box_pack_end(GTK_BOX(hbox[6]), setting_lr_hic_button, FALSE, FALSE, 0);
-
-
-
     for(i=0;i<7;i++)
         gtk_box_pack_start(GTK_BOX(vbox1), hbox[i], FALSE, FALSE, 0);
     gtk_container_add(GTK_CONTAINER(lyric_frame), vbox1);
     gtk_box_pack_start(GTK_BOX(setting_nb_pages[4]), lyric_frame,
         TRUE, TRUE, 0);
 }
+
+void gui_create_setting_desklrc()
+{
+    GtkWidget *desklrc_label;
+    GtkWidget *desklrc_frame;
+    GtkWidget *vbox1;
+    GtkWidget *label[11];
+    GtkWidget *hbox[6];
+    GdkColor color;
+    gint i = 0;
+    gchar color_str[8];
+    desklrc_label = gtk_label_new("");
+    gtk_label_set_markup(GTK_LABEL(desklrc_label), _("<b>OSD Lyric Show</b>"));
+    desklrc_frame = gtk_frame_new(NULL);
+    gtk_frame_set_label_widget(GTK_FRAME(desklrc_frame), desklrc_label);
+    gtk_frame_set_shadow_type(GTK_FRAME(desklrc_frame), GTK_SHADOW_NONE);
+    vbox1 = gtk_vbox_new(FALSE, 2);
+    for(i=0;i<6;i++)
+    {
+        hbox[i] = gtk_hbox_new(FALSE, 2);
+    }
+    label[0] = gtk_label_new(_("Font: "));
+    label[1] = gtk_label_new(_("Lyric Window Width: "));
+    label[2] = gtk_label_new(_("Lyric Position: "));
+    label[3] = gtk_label_new(_("Lyric Color: "));
+    label[4] = gtk_label_new(_("Highlight Color: "));
+    label[5] = gtk_label_new("X");
+    label[6] = gtk_label_new("Y");
+    label[7] = gtk_label_new(_("Color 1"));
+    label[8] = gtk_label_new(_("Color 2"));
+    label[9] = gtk_label_new(_("Color 1"));
+    label[10] = gtk_label_new(_("Color 2"));
+    setting_dl_fon_button = gtk_font_button_new_with_font(
+        rc_setting->osd_lyric_font);
+    setting_dl_mov_checkbox = gtk_check_button_new_with_label(
+        _("Movable Lyric Window"));
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(setting_dl_mov_checkbox),
+        rc_setting->osd_lyric_movable);
+    g_snprintf(color_str, 8, "#%02X%02X%02X", 
+        (gint)(rc_setting->osd_lyric_bg_color1[0] * 0xFF),
+        (gint)(rc_setting->osd_lyric_bg_color1[1] * 0xFF),
+        (gint)(rc_setting->osd_lyric_bg_color1[2] * 0xFF));
+    gdk_color_parse(color_str, &color);
+    setting_dl_cl1_button[0] = gtk_color_button_new_with_color(&color);
+    g_snprintf(color_str, 8, "#%02X%02X%02X", 
+        (gint)(rc_setting->osd_lyric_bg_color2[0] * 0xFF),
+        (gint)(rc_setting->osd_lyric_bg_color2[1] * 0xFF),
+        (gint)(rc_setting->osd_lyric_bg_color2[2] * 0xFF));
+    gdk_color_parse(color_str, &color);
+    setting_dl_cl1_button[1] = gtk_color_button_new_with_color(&color);
+    g_snprintf(color_str, 8, "#%02X%02X%02X", 
+        (gint)(rc_setting->osd_lyric_fg_color1[0] * 0xFF),
+        (gint)(rc_setting->osd_lyric_fg_color1[1] * 0xFF),
+        (gint)(rc_setting->osd_lyric_fg_color1[2] * 0xFF));
+    gdk_color_parse(color_str, &color);
+    setting_dl_cl2_button[0] = gtk_color_button_new_with_color(&color);
+    g_snprintf(color_str, 8, "#%02X%02X%02X", 
+        (gint)(rc_setting->osd_lyric_fg_color2[0] * 0xFF),
+        (gint)(rc_setting->osd_lyric_fg_color2[1] * 0xFF),
+        (gint)(rc_setting->osd_lyric_fg_color2[2] * 0xFF));
+    gdk_color_parse(color_str, &color);
+    setting_dl_cl2_button[1] = gtk_color_button_new_with_color(&color);
+    setting_dl_wid_spin = gtk_spin_button_new_with_range(0, 99999, 1);
+    gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(setting_dl_wid_spin), FALSE);
+    gtk_spin_button_set_value(GTK_SPIN_BUTTON(setting_dl_wid_spin),
+        rc_setting->osd_lryic_width);
+    setting_dl_pos_spin[0] = gtk_spin_button_new_with_range(0, 99999, 1);
+    gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(setting_dl_pos_spin[0]),
+        FALSE);
+    gtk_spin_button_set_value(GTK_SPIN_BUTTON(setting_dl_pos_spin[0]),
+        rc_setting->osd_lyric_pos[0]);
+    setting_dl_pos_spin[1] = gtk_spin_button_new_with_range(0, 99999, 1);
+    gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(setting_dl_pos_spin[1]),
+        FALSE);
+    gtk_spin_button_set_value(GTK_SPIN_BUTTON(setting_dl_pos_spin[1]),
+        rc_setting->osd_lyric_pos[1]);
+    gtk_box_pack_start(GTK_BOX(hbox[0]), label[0], FALSE, FALSE, 10);
+    gtk_box_pack_start(GTK_BOX(hbox[0]), setting_dl_fon_button, TRUE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(hbox[1]), setting_dl_mov_checkbox, TRUE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(hbox[2]), label[1], FALSE, FALSE, 10);
+    gtk_box_pack_end(GTK_BOX(hbox[2]), setting_dl_wid_spin, FALSE,
+        FALSE, 10);
+    gtk_box_pack_start(GTK_BOX(hbox[3]), label[2], FALSE, FALSE, 10);
+    gtk_box_pack_end(GTK_BOX(hbox[3]), setting_dl_pos_spin[1], FALSE,
+        FALSE, 10);
+    gtk_box_pack_end(GTK_BOX(hbox[3]), label[6], FALSE, FALSE, 0);
+    gtk_box_pack_end(GTK_BOX(hbox[3]), setting_dl_pos_spin[0], FALSE,
+        FALSE, 10);
+    gtk_box_pack_end(GTK_BOX(hbox[3]), label[5], FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(hbox[4]), label[3], FALSE, FALSE, 10);
+    gtk_box_pack_end(GTK_BOX(hbox[4]), setting_dl_cl1_button[1], FALSE,
+        FALSE, 0);
+    gtk_box_pack_end(GTK_BOX(hbox[4]), label[8], FALSE, FALSE, 0);
+    gtk_box_pack_end(GTK_BOX(hbox[4]), setting_dl_cl1_button[0], FALSE,
+        FALSE, 10);
+    gtk_box_pack_end(GTK_BOX(hbox[4]), label[7], FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(hbox[5]), label[4], FALSE, FALSE, 10);
+    gtk_box_pack_end(GTK_BOX(hbox[5]), setting_dl_cl2_button[1], FALSE,
+        FALSE, 10);
+    gtk_box_pack_end(GTK_BOX(hbox[5]), label[10], FALSE, FALSE, 0);
+    gtk_box_pack_end(GTK_BOX(hbox[5]), setting_dl_cl2_button[0], FALSE,
+        FALSE, 10);
+    gtk_box_pack_end(GTK_BOX(hbox[5]), label[9], FALSE, FALSE, 0);
+    for(i=0;i<6;i++)
+        gtk_box_pack_start(GTK_BOX(vbox1), hbox[i], FALSE, FALSE, 0);
+    gtk_container_add(GTK_CONTAINER(desklrc_frame), vbox1);
+    gtk_box_pack_start(GTK_BOX(setting_nb_pages[5]), desklrc_frame,
+        TRUE, TRUE, 0);
+
+}
+
 
 
 
