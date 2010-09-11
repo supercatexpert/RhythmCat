@@ -75,7 +75,7 @@ static gboolean gui_play_list_multidrag_selection_block(GtkTreeSelection *s,
  */
 
 static void gui_play_list_block_selection(GtkWidget *widget, gboolean block,
-    int x, int y)
+    gint x, gint y)
 {
     static const gboolean which[] = {FALSE,TRUE};
     gtk_tree_selection_set_select_function(rc_gui.play_list_selection,
@@ -116,6 +116,26 @@ void quit_player(GtkWidget *w, gpointer data)
 }
 
 /*
+ * The state change event of the main window.
+ */
+
+static gboolean gui_window_state_changed(GtkWidget *widget,
+    GdkEventWindowState *event, gpointer data)
+{
+    RCSetting *setting = get_setting();
+    if(!setting->min_to_tray) return FALSE;
+    if(event->changed_mask==GDK_WINDOW_STATE_ICONIFIED && 
+        (event->new_window_state==GDK_WINDOW_STATE_ICONIFIED ||
+        event->new_window_state==(GDK_WINDOW_STATE_ICONIFIED |
+        GDK_WINDOW_STATE_MAXIMIZED)))
+    {
+        gtk_window_set_skip_taskbar_hint(GTK_WINDOW(rc_gui.main_window), TRUE);
+        gtk_widget_hide(rc_gui.main_window);
+    }
+    return FALSE;
+}
+
+/*
  * Build the main window of the player
  */
 
@@ -145,13 +165,16 @@ gboolean create_main_window()
     GtkWidget *playlist_vbox, *playlist_ctrl_hbox;
     GtkWidget *main_hpaned;
     GtkWidget *album_frame;
+    GtkStatusIcon *tray_icon;
     PangoAttrList *title_attr_list, *artist_attr_list, *album_attr_list;
     PangoAttribute *title_attr[2], *artist_attr[2], *album_attr[2];
     PangoAttrList *time_attr_list;
     PangoAttribute *time_attr[2];
     gchar *window_title = NULL;
     gchar *cover_image_file = NULL;
-    int i = 0;
+    gchar *tray_image_file = NULL;
+    gchar *logo_image_file = NULL;
+    gint i = 0;
     bzero(&rc_gui, sizeof(GuiData));
     rc_gui.main_window_width = 600;
     rc_gui.main_window_height = 400;
@@ -162,6 +185,14 @@ gboolean create_main_window()
         rc_get_app_dir(), G_DIR_SEPARATOR, G_DIR_SEPARATOR);
     rc_gui.no_cover_image = gdk_pixbuf_new_from_file(cover_image_file, NULL);
     g_free(cover_image_file);
+    tray_image_file = g_strdup_printf("%s%cimages%cICON.PNG",
+        rc_get_app_dir(), G_DIR_SEPARATOR, G_DIR_SEPARATOR);
+    logo_image_file = g_strdup_printf("%s%cimages%cRhythmCat.PNG",
+        rc_get_app_dir(), G_DIR_SEPARATOR, G_DIR_SEPARATOR);
+    rc_gui.logo_image = gdk_pixbuf_new_from_file(logo_image_file, NULL);
+    g_free(logo_image_file);
+    tray_icon = gtk_status_icon_new_from_file(tray_image_file);
+    gtk_status_icon_set_tooltip(tray_icon, _("RhythmCat Music Player"));
     gui_style_reflush();
     rc_gui.main_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     main_vbox = gtk_vbox_new(FALSE, 0);
@@ -199,6 +230,9 @@ gboolean create_main_window()
         gtk_window_set_title(GTK_WINDOW(rc_gui.main_window), window_title);
         g_free(window_title);
     }
+    gtk_window_set_icon_from_file(GTK_WINDOW(rc_gui.main_window),
+        tray_image_file, NULL);
+    g_free(tray_image_file);
     gtk_window_set_position(GTK_WINDOW(rc_gui.main_window),
         GTK_WIN_POS_CENTER);
     main_window_hints.min_width = 600;
@@ -259,7 +293,7 @@ gboolean create_main_window()
     gtk_label_set_attributes(GTK_LABEL(rc_gui.album_label), album_attr_list);
     pango_attr_list_unref(album_attr_list);
     rc_gui.track_label = gtk_label_new("");
-    gui_set_track_info_label(0);
+    gui_set_tracknum_statusbar(0);
     rc_gui.time_label = gtk_label_new("00:00/00:00");
     gtk_misc_set_alignment(GTK_MISC(rc_gui.time_label), 1.0, 0.5);
     gtk_label_set_attributes(GTK_LABEL(rc_gui.time_label), time_attr_list);
@@ -409,6 +443,13 @@ gboolean create_main_window()
         G_CALLBACK(gui_press_repeat_button), NULL);
     g_signal_connect(G_OBJECT(rc_gui.random_checkbutton), "toggled",
         G_CALLBACK(gui_press_random_button), NULL);
+    g_signal_connect(GTK_STATUS_ICON(tray_icon), "activate", 
+        G_CALLBACK(gui_show_hide_window), NULL);
+    //g_signal_connect(GTK_STATUS_ICON(tray_icon), "popup-menu",
+    //    G_CALLBACK(gui_tray_icon_popup), NULL);
+    g_signal_connect(G_OBJECT(rc_gui.main_window), "window-state-event",
+        G_CALLBACK(gui_window_state_changed),NULL);
+
 
     /* More Signals Here! */
     g_signal_connect(G_OBJECT(rc_gui.main_window),"destroy",
@@ -435,7 +476,7 @@ gboolean create_main_window()
 gboolean gui_press_prev_button(GtkButton *button, gpointer data)
 {
     CoreData *gcore = get_core();
-    if(gcore->music_index>1)
+    if(gcore->music_index>0)
         core_play_prev(FALSE);
     else
     {
@@ -459,11 +500,6 @@ gboolean gui_press_play_button(GtkButton *button, gpointer data)
     {
         flag = core_pause();
         if(!flag) return FALSE;
-        if(gcore->list_index == gcore->list_index_selected)
-        {
-            gui_play_list_view_set_state(NULL, gcore->music_index, 
-                GTK_STOCK_MEDIA_PAUSE); 
-        }
     }
     else
     {
@@ -471,11 +507,6 @@ gboolean gui_press_play_button(GtkButton *button, gpointer data)
             flag = plist_play_by_index(gcore->list_index, gcore->music_index);
         flag = core_play();
         if(!flag) return FALSE;
-        if(gcore->list_index == gcore->list_index_selected)
-        {
-            gui_play_list_view_set_state(NULL, gcore->music_index, 
-                GTK_STOCK_MEDIA_PLAY); 
-        }
     }
     return FALSE;
 }
@@ -496,7 +527,7 @@ gboolean gui_press_stop_button(GtkButton *button, gpointer data)
 gboolean gui_press_next_button(GtkButton *button, gpointer data)
 {
     CoreData *gcore = get_core();
-    if(gcore->music_index<plist_get_plist_length(gcore->list_index))
+    if(gcore->music_index<plist_get_plist_length(gcore->list_index)-1)
         core_play_next(FALSE);
     else
     {
@@ -729,20 +760,6 @@ gboolean gui_see_scale_enable(GtkWidget *widget, gpointer data)
     return TRUE;
 }
 
-
-/*
- * Set the text in the track information label.
- */
-
-void gui_set_track_info_label(int index)
-{
-    if(index<=0)
-        g_snprintf(rc_gui.track_info_str,60,"%s --", _("Track"));
-    else
-        g_snprintf(rc_gui.track_info_str,60,"%s %02d", _("Track"), index);
-    gtk_label_set_text(GTK_LABEL(rc_gui.track_label),rc_gui.track_info_str);
-}
-
 /*
  * Popup the menu of playlist.
  */
@@ -755,7 +772,7 @@ gboolean gui_play_list_popup_menu(GtkWidget *widget, GdkEventButton *event,
     if(event->button!=3 && event->button!=1) return FALSE;
     if(event->button==1)
     {
-        if(event->state & GDK_MODIFIER_MASK) return FALSE;
+        if(event->state & (GDK_SHIFT_MASK|GDK_CONTROL_MASK)) return FALSE;
         if(!gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(
             rc_gui.play_list_tree_view), event->x, event->y, &path, NULL,
             NULL, NULL))
@@ -910,6 +927,7 @@ void gui_set_volume(gdouble volume)
 void gui_set_player_state()
 {
     CoreData *gcore = get_core();
+    RCSetting *setting = get_setting();
     if(gcore->repeat>0)
     {
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(
@@ -924,6 +942,8 @@ void gui_set_player_state()
         gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(
             ui_menu->random_menu_items[gcore->random+1]), TRUE);
     }
+    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(
+        ui_menu->view_menu_items[7]), setting->osd_lyric_flag);
 }
 
 /*
@@ -1086,7 +1106,7 @@ void gui_set_tracknum_statusbar(gint number)
 {
     guint context_id = 0;
     gchar text[64];
-    g_snprintf(text, 60, _("Track %d"), number);
+    g_snprintf(text, 60, _("Track %d"), number+1);
     context_id = gtk_statusbar_get_context_id(GTK_STATUSBAR(
         rc_gui.track_num_status), "Track-Number");
     gtk_statusbar_pop(GTK_STATUSBAR(rc_gui.track_num_status), context_id);
@@ -1180,5 +1200,26 @@ gboolean gui_set_cover_image(gchar *filename)
     gtk_image_set_from_pixbuf(GTK_IMAGE(rc_gui.album_image), album_new_pixbuf);
     g_object_unref(album_new_pixbuf);
     return TRUE;
+}
+
+/*
+ * Show/Hide the Main Window.
+ */
+
+void gui_show_hide_window(GtkWidget *widget, gpointer data)
+{
+    RCSetting *setting = get_setting();
+    if(!setting->min_to_tray) return;
+	if(gtk_widget_get_visible(rc_gui.main_window)==TRUE)
+	{
+		gtk_widget_hide(GTK_WIDGET(rc_gui.main_window));
+	}
+	else
+    {
+        gtk_window_set_skip_taskbar_hint(GTK_WINDOW(rc_gui.main_window),
+            FALSE);
+		gtk_widget_show(GTK_WIDGET(rc_gui.main_window));
+        gtk_window_deiconify(GTK_WINDOW(rc_gui.main_window));
+    }
 }
 

@@ -147,8 +147,12 @@ static char **tag_get_id3v2(FILE *file)
             for(;c!=a+header_size;)
             {
                 if(tag[0]!=NULL && tag[1]!=NULL && tag[2]!=NULL && 
-                    tag[3]!=NULL) return tag;
-                strcpy(b,c);
+                    tag[3]!=NULL)
+                {
+                    g_free(a);
+                    return tag;
+                }
+                strncpy(b, c, 5);
                 b[4] = 0;
                 tag_type = 0;
                 size[0] = *(c+4);
@@ -175,7 +179,6 @@ static char **tag_get_id3v2(FILE *file)
                 }
                 c+=10;
                 d = g_malloc(i);
-                if(d==NULL) return NULL;
                 for(j=0;i!=0;i--)
                 {
                     if(*c!=0)
@@ -208,12 +211,19 @@ static char **tag_get_id3v2(FILE *file)
             for(;c!=a+header_size;)
             {
                 if(tag[0]!=NULL && tag[1]!=NULL && tag[2]!=NULL && 
-                    tag[3]!=NULL) return tag;
-                strcpy(b,c);
+                    tag[3]!=NULL)
+                {
+                    g_free(a);
+                    return tag;
+                }
+                strncpy(b, c, 4);
                 b[3] = 0;
                 size[0] = *(c+3);
                 size[1] = *(c+4);
                 size[2] = *(c+5);
+                if(size[0]<0) size[0]+=256;
+                if(size[1]<0) size[1]+=256;
+                if(size[2]<0) size[2]+=256;
                 i = size[0]*0x10000 + size[1]*0x100 + size[2];
                 if(i<0) i+=256;
                 if((c+i)>(a+header_size)) break;
@@ -230,7 +240,6 @@ static char **tag_get_id3v2(FILE *file)
                 }
                 c+=6;
                 d = g_malloc(i);
-                if(d==NULL) return NULL;
                 for(j=0;i!=0;i--)
                 {
                     if(*c==0)

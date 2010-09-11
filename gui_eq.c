@@ -120,7 +120,8 @@ void gui_create_equalizer()
     gtk_window_set_transient_for(GTK_WINDOW(eq_window),
         GTK_WINDOW(rc_ui->main_window));
     gtk_window_set_destroy_with_parent(GTK_WINDOW(eq_window), TRUE);
-    gtk_window_set_title(GTK_WINDOW(eq_window),_("Equalizer"));    gtk_window_set_policy(GTK_WINDOW(eq_window), FALSE, FALSE, TRUE);
+    gtk_window_set_title(GTK_WINDOW(eq_window),_("Equalizer"));
+    gtk_window_set_policy(GTK_WINDOW(eq_window), FALSE, FALSE, TRUE);
     gtk_window_set_resizable(GTK_WINDOW(eq_window), FALSE);
     gtk_window_set_position(GTK_WINDOW(eq_window),
         GTK_WIN_POS_CENTER_ON_PARENT);
@@ -314,7 +315,7 @@ void gui_equalizer_load_setting(GtkButton *button, gpointer data)
             fp = fopen(file_name, "r");
             if(fp!=NULL)
             {
-                fread(eq_file_data, 299, 1, fp);
+                if(fread(eq_file_data, 299, 1, fp)<=0) break;
                 if(strncmp(eq_file_data, "Winamp EQ library file", 22)==0)
                 {
                     for(i=0;i<10;i++)

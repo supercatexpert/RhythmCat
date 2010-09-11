@@ -52,6 +52,8 @@ typedef struct _MusicMetaData
     gchar comment[512];
     gchar file_type[256];
     gboolean cue_flag;
+    gboolean audio_flag;
+    gboolean video_flag;
 }MusicMetaData;
 
 /* Custom enum type to store the core state. */

@@ -86,13 +86,13 @@ typedef struct _GuiData
     gboolean update_seek_scale_flag;
     guint time_info_reflush_timeout;
     GdkPixbuf *no_cover_image;
+    GdkPixbuf *logo_image;
 }GuiData;
 
 /* Functions */
 GuiData *get_gui();
 void quit_player(GtkWidget *, gpointer);
 void gui_set_music_info_label(gchar *, gchar *, gchar *);
-void gui_set_track_info_label(int);
 gboolean create_main_window();
 gboolean gui_press_prev_button(GtkButton *, gpointer);
 gboolean gui_press_play_button(GtkButton *, gpointer);
@@ -129,6 +129,7 @@ gboolean gui_show_lyric_page(GtkMenuItem *, gpointer);
 gboolean gui_show_eq_window(GtkMenuItem *, gpointer);
 void gui_reflesh_music_info(GtkMenuItem *, gpointer);
 gboolean gui_set_cover_image(gchar *);
+void gui_show_hide_window(GtkWidget *, gpointer);
 
 #endif
 

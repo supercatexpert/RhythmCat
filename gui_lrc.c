@@ -263,11 +263,11 @@ gboolean gui_lrc_show(GtkWidget *widget, gpointer data)
 
 gboolean gui_lrc_expose(GtkWidget *widget, gpointer data)
 {
+    if(!GTK_WIDGET_DRAWABLE(rc_glrc.lrc_scene)) return FALSE;
     gint i;
     static RCSetting *rc_setting = NULL;
     rc_setting = get_setting();
     for(i=0;i<3;i++) rc_glrc.background[i] = rc_setting->lrc_bg_color[i];
-    if(!GTK_WIDGET_DRAWABLE(rc_glrc.lrc_scene)) return FALSE;
     gui_lrc_draw_bg();
     if(rc_glrc.lyric_flag) gui_lrc_show(widget, data);
     return FALSE;
@@ -305,6 +305,7 @@ gboolean gui_lrc_update(GtkWidget *widget, gpointer data)
         list_foreach = g_list_next(list_foreach);
         count++;
     }
+    if(!GTK_WIDGET_DRAWABLE(rc_glrc.lrc_scene)) return TRUE;
     if(rc_glrc.lyric_flag) gtk_widget_queue_draw(rc_glrc.lrc_scene);
     return TRUE;   
 }

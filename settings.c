@@ -35,6 +35,7 @@ void set_initial_setting()
     rc_setting.volume = 1.0;
     rc_setting.auto_play = FALSE;
     rc_setting.auto_next = TRUE;
+    rc_setting.min_to_tray = FALSE;
     rc_setting.osd_lyric_flag = FALSE;
     rc_setting.osd_lyric_movable = TRUE;
     rc_setting.osd_lryic_width = 1000;
@@ -146,6 +147,11 @@ void set_load_setting(gchar *filename)
     value_bool = g_key_file_get_boolean(sys_keyfile, "Player",
         "AutoNext", &error);
     if(error==NULL) rc_setting.auto_next = value_bool;
+    g_clear_error(&error);
+    value_bool = FALSE;
+    value_bool = g_key_file_get_boolean(sys_keyfile, "Player",
+        "MinToTray", &error);
+    if(error==NULL) rc_setting.min_to_tray = value_bool;
     g_clear_error(&error);
     value_bool = FALSE;
     value_bool = g_key_file_get_boolean(sys_keyfile, "Player",
@@ -371,6 +377,8 @@ void set_save_setting()
         "AutoPlay", rc_setting.auto_play);
     g_key_file_set_boolean(sys_keyfile, "Player",
         "AutoNext", rc_setting.auto_next);
+    g_key_file_set_boolean(sys_keyfile, "Player",
+        "MinToTray", rc_setting.min_to_tray);
     g_key_file_set_boolean(sys_keyfile, "Player",
         "OSDLRCEnable", rc_setting.osd_lyric_flag);
     g_key_file_set_boolean(sys_keyfile, "Player",

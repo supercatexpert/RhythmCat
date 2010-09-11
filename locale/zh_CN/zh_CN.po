@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: RhythmCat 0.3.0\n"
 "Report-Msgid-Bugs-To: supercatexpert@gmail.com\n"
 "POT-Creation-Date: 2010-08-15 20:20+0800\n"
-"PO-Revision-Date: 2010-08-15 20:20+0800\n"
+"PO-Revision-Date: 2010-08-26 15:06+0800\n"
 "Last-Translator: SuperCat <supercatexpert@gmail.com>\n"
 "Language-Team: SuperCat <supercatexpert@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -243,8 +243,7 @@ msgstr "选择语音文件的文件名"
 #, c-format
 msgid ""
 "Recording will start in <b><span foreground=\"red\">%d</span></b> seconds"
-msgstr ""
-"录音将在 <b><span foreground=\"red\">%d</span></b> 秒后开始"
+msgstr "录音将在 <b><span foreground=\"red\">%d</span></b> 秒后开始"
 
 #: gui_kara.c:201 gui_kara.c:239 gui_kara.c:415
 msgid "Ready"
@@ -644,7 +643,7 @@ msgstr "请选择一个图片文件"
 
 #: gui_setting.c:485
 msgid "<b>OSD Lyric Show</b>"
-msgstr "桌面歌词"
+msgstr "<b>桌面歌词</b>"
 
 #: gui_setting.c:495
 msgid "Lyric Window Width: "

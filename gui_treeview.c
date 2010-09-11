@@ -42,57 +42,44 @@ static GtkTreeViewColumn *play_list_time_column;
 void gui_tree_view_build()
 {
     rc_ui = get_gui();
-    GtkListStore *list_file_tree_store, *play_list_tree_store;
+    GtkListStore *list_file_tree_store;
     gint count = 0;
-    play_list_tree_store = gtk_list_store_new(5, G_TYPE_STRING, G_TYPE_INT,
-        G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
-    list_file_tree_store = gtk_list_store_new(2,G_TYPE_STRING,G_TYPE_STRING);
-    rc_ui->play_list_tree_model = GTK_TREE_MODEL(play_list_tree_store);
+    list_file_tree_store = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_STRING);
+    rc_ui->play_list_tree_model = NULL;
     rc_ui->list_file_tree_model = GTK_TREE_MODEL(list_file_tree_store);
     rc_ui->list_file_tree_view = gtk_tree_view_new_with_model(
         rc_ui->list_file_tree_model);
-    rc_ui->play_list_tree_view = gtk_tree_view_new_with_model(
-        rc_ui->play_list_tree_model);
+    rc_ui->play_list_tree_view = gtk_tree_view_new();
     gtk_tree_view_columns_autosize(GTK_TREE_VIEW(rc_ui->list_file_tree_view));
     gtk_tree_view_columns_autosize(GTK_TREE_VIEW(rc_ui->play_list_tree_view));
     for(count=0;count<5;count++)
         renderer_text[count] = gtk_cell_renderer_text_new();
     for(count=0;count<2;count++)
         renderer_pixbuf[count] = gtk_cell_renderer_pixbuf_new();
-    g_object_set(G_OBJECT(renderer_text[1]), "width-chars", 5, NULL);
     gtk_cell_renderer_set_fixed_size(renderer_text[1], 34, -1);
     gtk_cell_renderer_set_fixed_size(renderer_text[4], 55, -1);
-    g_object_set(G_OBJECT(renderer_text[1]), "xalign", 1.0, NULL);
-    g_object_set(G_OBJECT(renderer_text[1]), "align-set", TRUE, NULL);
-    g_object_set(G_OBJECT(renderer_text[1]), "alignment", PANGO_ALIGN_RIGHT,
+    g_object_set(G_OBJECT(renderer_text[1]), "ellipsize", PANGO_ELLIPSIZE_END,
         NULL);
-    g_object_set(G_OBJECT(renderer_text[2]), "ellipsize", PANGO_ELLIPSIZE_END,
-        NULL);
-    g_object_set(G_OBJECT(renderer_text[3]),"ellipsize",PANGO_ELLIPSIZE_END,
+    g_object_set(G_OBJECT(renderer_text[1]),"ellipsize-set",TRUE,NULL);
+    g_object_set(G_OBJECT(renderer_text[2]),"ellipsize",PANGO_ELLIPSIZE_END,
         NULL);
     g_object_set(G_OBJECT(renderer_text[2]),"ellipsize-set",TRUE,NULL);
+    g_object_set(G_OBJECT(renderer_text[3]),"ellipsize",PANGO_ELLIPSIZE_END,
+        NULL);
     g_object_set(G_OBJECT(renderer_text[3]),"ellipsize-set",TRUE,NULL);
     g_object_set(G_OBJECT(renderer_text[4]), "xalign", 1.0, NULL);
     g_object_set(G_OBJECT(renderer_text[4]),"width-chars",5,NULL);
     gtk_cell_renderer_set_fixed_size(renderer_pixbuf[0], 16, -1);
     gtk_cell_renderer_set_fixed_size(renderer_pixbuf[1], 16, -1);
     list_file_column = gtk_tree_view_column_new();
-    play_list_index_column = gtk_tree_view_column_new();
-    gtk_tree_view_column_pack_start(play_list_index_column, renderer_pixbuf[1],
-        FALSE);
-    gtk_tree_view_column_pack_start(play_list_index_column, renderer_text[1],
-        FALSE);
-    gtk_tree_view_column_add_attribute(play_list_index_column,
-        renderer_pixbuf[1], "stock-id", 0);
-    gtk_tree_view_column_add_attribute(play_list_index_column,
-        renderer_text[1], "text", 1);
-    gtk_tree_view_column_set_title(play_list_index_column, "#");
+    play_list_index_column = gtk_tree_view_column_new_with_attributes(
+        "#", renderer_pixbuf[1], "stock-id", 1, NULL);
     play_list_title_column = gtk_tree_view_column_new_with_attributes(
         _("Title"), renderer_text[2], "text", 2, NULL);
     play_list_artist_column = gtk_tree_view_column_new_with_attributes(
         _("Artist"), renderer_text[3], "text", 3, NULL);
     play_list_time_column = gtk_tree_view_column_new_with_attributes(
-        _("Length"), renderer_text[4], "text", 4, NULL);
+        _("Length"), renderer_text[4], "text", 5, NULL);
     gtk_tree_view_column_set_title(list_file_column, "Playlist");
     gtk_tree_view_column_pack_start(list_file_column,renderer_pixbuf[0],FALSE);
     gtk_tree_view_column_pack_start(list_file_column,renderer_text[0], FALSE);
@@ -106,9 +93,9 @@ void gui_tree_view_build()
     gtk_tree_view_column_set_expand(play_list_artist_column, TRUE);
     gtk_tree_view_column_set_sizing(play_list_time_column,
         GTK_TREE_VIEW_COLUMN_FIXED);
-    gtk_tree_view_column_set_fixed_width(play_list_index_column ,60);
-    gtk_tree_view_column_set_min_width(play_list_index_column, 60);
-    gtk_tree_view_column_set_max_width(play_list_index_column, 60);
+    gtk_tree_view_column_set_fixed_width(play_list_index_column ,30);
+    gtk_tree_view_column_set_min_width(play_list_index_column, 30);
+    gtk_tree_view_column_set_max_width(play_list_index_column, 30);
     gtk_tree_view_column_set_fixed_width(play_list_time_column, 55);
     gtk_tree_view_column_set_alignment(play_list_time_column, 1.0);
     gtk_tree_view_append_column(GTK_TREE_VIEW(rc_ui->play_list_tree_view),
@@ -168,44 +155,6 @@ void gui_list_file_view_rebuild()
 }
 
 /*
- * Rebuild the play list in the list view.
- */
-
-void gui_play_list_view_rebuild(int list_index)
-{
-    CoreData *gcore = get_core();
-    GtkListStore *store;
-    int length = 0;
-    int count = 0;
-    MusicData *md;
-    length = plist_get_plist_length(list_index);
-    store = GTK_LIST_STORE(rc_ui->play_list_tree_model);
-    gtk_list_store_clear(store);
-    for(count=1;count<=length;count++)
-    {
-        plist_get_music_data(list_index, count, &md);
-        if(gcore->list_index==gcore->list_index_selected && 
-            count==gcore->music_index)
-        {
-            if(core_get_play_state()==CORE_PLAYING)
-                gui_insert_play_list_view(rc_ui->play_list_tree_view, 
-                    GTK_STOCK_MEDIA_PLAY, count, md->title, md->artist, 
-                    md->length, count);
-            else if(core_get_play_state()==CORE_PAUSED)
-                gui_insert_play_list_view(rc_ui->play_list_tree_view, 
-                    GTK_STOCK_MEDIA_PAUSE, count, md->title, md->artist, 
-                    md->length, count);
-            else
-                gui_insert_play_list_view(rc_ui->play_list_tree_view, NULL, 
-                    count, md->title, md->artist, md->length, count);
-        }
-        else
-            gui_insert_play_list_view(rc_ui->play_list_tree_view, NULL, count,
-                md->title, md->artist, md->length, count);
-    }
-}
-
-/*
  * Insert one playlist to the list of the playlist.
  */
 
@@ -217,57 +166,6 @@ void gui_insert_list_file_view(GtkWidget *list, const gchar *stockid,
     store = GTK_LIST_STORE(rc_ui->list_file_tree_model);
     gtk_list_store_insert(store, &iter, index);
     gtk_list_store_set(store, &iter, 0, stockid, 1, name, -1);
-}
-
-/*
- * Insert the music to the playlist.
- */
-
-void gui_insert_play_list_view(GtkWidget *list, const gchar *stockid, gint index, 
-    const gchar *title, const gchar *artist, gint64 timelength, gint pl_index)
-{ 
-    GtkListStore *store;
-    GtkTreeIter iter;
-    gint64 seclength = timelength/100;
-    gint time_min = seclength / 60;
-    gint time_sec = seclength % 60;
-    gchar time_str[64];
-    g_snprintf(time_str,60,"%02d:%02d",time_min,time_sec);
-    store = GTK_LIST_STORE(gtk_tree_view_get_model(GTK_TREE_VIEW(
-        rc_ui->play_list_tree_view)));
-    gtk_list_store_insert(store, &iter,pl_index-1);
-    gtk_list_store_set(store, &iter, 0, stockid, 1 ,index, 2, title, 3, artist,
-        4, time_str, -1);
-}
-
-/*
- * Reflush the index in the playlist.
- */
-
-void gui_play_list_view_reflush_index(GtkWidget *list, int oldindex)
-{
-    GtkListStore *store;
-    GtkTreeIter iter;
-    int flag = TRUE;
-    int count = 0;
-    int newindex = oldindex + 1;
-    oldindex--;
-    if(!gtk_tree_model_get_iter_first(rc_ui->play_list_tree_model, &iter))
-        return;
-    for(count=0;count<=oldindex-1;count++)
-    {
-        if(!gtk_tree_model_iter_next(rc_ui->play_list_tree_model,&iter))
-            break;
-    }
-    store = GTK_LIST_STORE(rc_ui->play_list_tree_model);
-    count = newindex;
-    do
-    {
-        gtk_list_store_set(store, &iter, 1, count, -1);
-        count++;
-        flag = gtk_tree_model_iter_next(rc_ui->play_list_tree_model,&iter);
-    }
-    while(flag);
 }
 
 /*
@@ -287,7 +185,14 @@ void gui_list_view_row_selected(GtkTreeView *list, gpointer data)
     else return;
     if(gcore->list_index_selected == index) return;
     gcore->list_index_selected = index;
-    gui_play_list_view_rebuild(index);
+    
+    rc_ui->play_list_tree_model = GTK_TREE_MODEL(plist_get_list_store(index));
+    gtk_tree_view_set_model(GTK_TREE_VIEW(rc_ui->play_list_tree_view),
+        rc_ui->play_list_tree_model);
+    rc_ui->play_list_selection = gtk_tree_view_get_selection(
+        GTK_TREE_VIEW(rc_ui->play_list_tree_view)); 
+
+    //gui_play_list_view_rebuild(index);
 }
 
 /*
@@ -299,12 +204,12 @@ void gui_plist_view_row_activated(GtkTreeView *list, GtkTreePath *path,
 {
     CoreData *gcore = get_core();
     gint *indices = NULL;
-    int music_index = 1;
-    int list_index = gcore->list_index_selected;
+    gint music_index = 0;
+    gint list_index = gcore->list_index_selected;
     if(path==NULL) return;
     indices = gtk_tree_path_get_indices(path);
     if(indices==NULL) return;
-    music_index = indices[0]+1;
+    music_index = indices[0];
     plist_play_by_index(list_index, music_index);
     core_play();
 }
@@ -319,8 +224,7 @@ void gui_play_list_view_set_state(GtkWidget *list, gint index,
     GtkListStore *store;
     GtkTreeIter iter;
     GtkTreePath *path;
-    index--;
-    path = gtk_tree_path_new_from_indices(index,-1);
+    path = gtk_tree_path_new_from_indices(index, -1);
     if(!gtk_tree_model_get_iter(rc_ui->play_list_tree_model,&iter,path))
     {
         gtk_tree_path_free(path);
@@ -328,7 +232,7 @@ void gui_play_list_view_set_state(GtkWidget *list, gint index,
     }
     gtk_tree_path_free(path);
     store = GTK_LIST_STORE(rc_ui->play_list_tree_model);
-    gtk_list_store_set(store, &iter, 0, state, -1);
+    gtk_list_store_set(store, &iter, 1, state, -1);
 }
 
 /*
@@ -395,7 +299,6 @@ void gui_select_list_view(gint list_index)
 void gui_select_plist_view(gint list_index)
 {
     GtkTreePath *path;
-    list_index -= 1;
     if(list_index<0) return;
     path = gtk_tree_path_new_from_indices(list_index, -1);
     gtk_tree_view_set_cursor(GTK_TREE_VIEW(rc_ui->play_list_tree_view), path, 
@@ -404,94 +307,31 @@ void gui_select_plist_view(gint list_index)
 }
 
 /*
- * Reflush the play list tree view.
- */
-
-void gui_play_list_view_reflush_info(GtkWidget *list, gint index, 
-    const gchar *title, const gchar *artist, guint64 timeinfo)
-{
-    GtkListStore *store;
-    GtkTreeIter iter;
-    GtkTreePath *path;
-    gint64 seclength = timeinfo/100;
-    int time_min = seclength / 60;
-    int time_sec = seclength % 60;
-    char time_str[64];
-    g_snprintf(time_str,60,"%02d:%02d",time_min,time_sec);
-    index--;
-    path = gtk_tree_path_new_from_indices(index,-1);
-    if(!gtk_tree_model_get_iter(rc_ui->play_list_tree_model,&iter,path))
-    {
-        gtk_tree_path_free(path);
-        return;
-    }
-    gtk_tree_path_free(path);
-    store = GTK_LIST_STORE(rc_ui->play_list_tree_model);
-    gtk_list_store_set(store, &iter, 2, title, 3, artist, 4, time_str, -1);
-}
-
-/*
  * Create a new list with the name which the user inputs.
  */
 
 void gui_list_tree_view_new_list(GtkWidget *widget, gpointer data)
 {
-    GtkWidget *name_dialog;
-    GtkWidget *name_label, *name_entry;
-    GtkWidget *name_check_msgdialog;
-    GtkWidget *hbox;
-    const gchar *name_str;
-    gint result = 0;
-    gboolean vaild_name = FALSE;
-    hbox = gtk_hbox_new(FALSE,1);
-    name_label = gtk_label_new("Input a new name here: ");
-    name_entry = gtk_entry_new_with_max_length(120);
-    gtk_entry_set_text(GTK_ENTRY(name_entry),"Playlist");
-    gtk_editable_set_editable(GTK_EDITABLE(name_entry),TRUE);
-    gtk_box_pack_start(GTK_BOX(hbox), name_label, FALSE, TRUE, 0);
-    gtk_box_pack_start(GTK_BOX(hbox), name_entry, TRUE, TRUE, 0);
-    name_dialog = gtk_dialog_new_with_buttons(_("Name the new list"),
-        GTK_WINDOW(rc_ui->main_window),GTK_DIALOG_DESTROY_WITH_PARENT,
-        GTK_STOCK_NEW,GTK_RESPONSE_ACCEPT,GTK_STOCK_CANCEL,
-        GTK_RESPONSE_CANCEL,NULL);
-    gtk_window_set_resizable(GTK_WINDOW(name_dialog), FALSE);
-    gtk_container_add(GTK_CONTAINER(GTK_DIALOG(name_dialog)->vbox), hbox);
-    gtk_widget_show(name_label);
-    gtk_widget_show(name_entry);
-    gtk_widget_show(hbox);
-    while(!vaild_name)
+    static gint count = 1;
+    GtkTreeIter iter;
+    gint length = 0;
+    gint index;
+    gchar new_name[64];
+    CoreData *gcore = get_core();
+    snprintf(new_name, 63, _("Playlist %d"), count);
+    count++;
+    length = plist_get_list_length();
+    if(gtk_tree_selection_get_selected(rc_ui->list_file_selection,NULL,&iter))
     {
-        result = gtk_dialog_run(GTK_DIALOG(name_dialog));
-        switch(result)
-        {
-            case GTK_RESPONSE_ACCEPT:
-                name_str = gtk_entry_get_text(GTK_ENTRY(name_entry));
-                if(name_str[0]!='\0')
-                {
-                    vaild_name = TRUE;
-                    plist_insert_list((gchar *)name_str, 
-                        plist_get_list_length());
-                }
-                else
-                {
-                    name_check_msgdialog = gtk_message_dialog_new(GTK_WINDOW(
-                        name_dialog),GTK_DIALOG_DESTROY_WITH_PARENT,
-                        GTK_MESSAGE_ERROR,GTK_BUTTONS_OK,
-                        _("You must input a valid string!"));
-                    gtk_dialog_run(GTK_DIALOG(name_check_msgdialog));
-                    gtk_widget_destroy(name_check_msgdialog);
-                }
-                break;
-            case GTK_RESPONSE_CANCEL:
-                vaild_name = TRUE;
-                break;
-            case GTK_RESPONSE_DELETE_EVENT:
-                vaild_name = TRUE;
-                break;
-            default: break;
-        }
+        index = gui_list_file_get_index(&iter);
+        if(index==-1) index = length;
     }
-    gtk_widget_destroy(name_dialog);
+    else index = length;
+    if(index>length) index = length;
+    gcore->list_index_selected = index+1;
+    plist_insert_list(new_name, index);
+    gui_select_list_view(index);
+    gui_list_tree_view_rename_list(widget, data);
 }
 
 /*
@@ -517,7 +357,7 @@ void gui_list_tree_view_delete_list(GtkWidget *widget, gpointer data)
     gcore = get_core();
     if(gcore->list_index==index)
     {
-        plist_play_by_index(0, 1);
+        plist_play_by_index(0, 0);
     }
 }
 
@@ -525,10 +365,10 @@ void gui_list_tree_view_delete_list(GtkWidget *widget, gpointer data)
  * Get the index number by the iter of list_file_tree_model. 
  */
 
-int gui_list_file_get_index(GtkTreeIter *iter)
+gint gui_list_file_get_index(GtkTreeIter *iter)
 {
-    int *indices = NULL;
-    int index = 0;
+    gint *indices = NULL;
+    gint index = 0;
     GtkTreePath *path = NULL;
     path = gtk_tree_model_get_path(rc_ui->list_file_tree_model, iter);
     indices = gtk_tree_path_get_indices(path);
@@ -587,6 +427,13 @@ void gui_play_list_tree_view_set_drag()
         4, GDK_ACTION_COPY|GDK_ACTION_MOVE|GDK_ACTION_LINK);
 }
 
+static gint gui_play_list_comp_func(const gint a, const gint b, gpointer data)
+{
+    if(a<b) return -1;
+    else if(a==b) return 0;
+    else return 1;
+}
+
 /*
  * Receive the data of the DnD of the play list.
  */
@@ -597,42 +444,102 @@ void gui_play_list_dnd_data_received(GtkWidget *widget,
 {
     CoreData *gcore = get_core();
     guint length = 0;
+    gint i, j, k;
+    gint *reorder_array = NULL;
     gint *indices = NULL;
     gint *index = NULL;
     gint target = 0;
+    GList *path_list_foreach = NULL;
     GtkTreeViewDropPosition pos;
     GtkTreePath *path_start = NULL;
     GtkTreePath *path_drop = NULL;
+    gint list_length = 0;
+    gboolean insert_flag = FALSE;
     gtk_tree_view_get_dest_row_at_pos(GTK_TREE_VIEW(
         rc_ui->play_list_tree_view), x,y, &path_drop, &pos);
-    if(path_drop)
+    if(path_drop!=NULL)
     {
         index = gtk_tree_path_get_indices(path_drop);
-        target = index[0] + 1;
+        target = index[0];
         gtk_tree_path_free(path_drop);
     }
-    else target = plist_get_plist_length(gcore->list_index_selected)+1;
+    else target = -2;
     switch(info)
     {
         case 1: 
         {
             GList *path_list = NULL;
-            int count = 0;
-	    memcpy(&path_list, seldata->data, sizeof(path_list));
+            gint count = 0;
+	        memcpy(&path_list, seldata->data, sizeof(path_list));
             if(path_list==NULL) break;
             length = g_list_length(path_list);
             indices = g_malloc(length*sizeof(gint));
-            for(count=0;count<length;count++)
+            for(path_list_foreach=path_list;path_list_foreach!=NULL;
+                path_list_foreach=g_list_next(path_list_foreach))
             {
-                path_start = g_list_nth_data(path_list, count);
+                path_start = path_list_foreach->data;
                 index = gtk_tree_path_get_indices(path_start);
-                indices[count] = index[0] + 1;
+                indices[count] = index[0];
+                count++;
             }
+            g_qsort_with_data(indices, length, sizeof(gint),
+                (GCompareDataFunc)gui_play_list_comp_func, NULL);
             if(pos==GTK_TREE_VIEW_DROP_AFTER ||
                 pos==GTK_TREE_VIEW_DROP_INTO_OR_AFTER) target++;
-            plist_plist_move(gcore->list_index_selected, indices, length,
-                target);
-            gui_play_list_view_rebuild(gcore->list_index_selected);
+            list_length = gtk_tree_model_iter_n_children(
+                rc_ui->play_list_tree_model, NULL);
+            if(target<0) target = list_length;
+            reorder_array = g_malloc0(list_length * sizeof(gint));
+            i = 0;
+            j = 0;
+            count = 0;
+            while(i<list_length)
+            {
+                if((j>=length || count!=indices[j]) && count!=target)
+                {
+                    reorder_array[i] = count;
+                    count++;
+                    i++;
+                }
+                else if(count==target && !insert_flag)
+                {
+                    for(k=0;k<length;k++)
+                    {
+                        if(target==indices[k])
+                        {
+                            target++;
+                            count++;
+                        }
+                        reorder_array[i] = indices[k];
+                        i++;
+                    }
+                    reorder_array[i] = target;
+                    i++;
+                    count++;
+                    insert_flag = TRUE;
+                }
+                else if(j<length && count==indices[j])
+                {
+                    count++;             
+                    j++;
+                }
+                else break;
+            }
+            if(gcore->list_index_selected==gcore->list_index)
+            {
+                for(i=0;i<list_length;i++)
+                {
+                    if(reorder_array[i]==gcore->music_index)
+                    {
+                        gcore->music_index = i;
+                        gui_set_tracknum_statusbar(i);
+                        break;
+                    }
+                }
+            }
+            gtk_list_store_reorder(GTK_LIST_STORE(rc_ui->play_list_tree_model),
+                reorder_array);
+            g_free(reorder_array);
             g_free(indices);
             break;
         }
@@ -646,6 +553,11 @@ void gui_play_list_dnd_data_received(GtkWidget *widget,
             if(seldata->data!=NULL)
                 uris = (gchar *)seldata->data;
             else break;
+            if(pos==GTK_TREE_VIEW_DROP_AFTER ||
+                pos==GTK_TREE_VIEW_DROP_INTO_OR_AFTER) target++;
+            list_length = gtk_tree_model_iter_n_children(
+                rc_ui->play_list_tree_model, NULL);
+            if(target<0) target = list_length;
             uri_array = g_uri_list_extract_uris(uris);
             while(uri_array[count]!=NULL)
             {
@@ -656,7 +568,6 @@ void gui_play_list_dnd_data_received(GtkWidget *widget,
                 count++;
             }
             g_strfreev(uri_array);
-            gui_play_list_view_rebuild(gcore->list_index_selected);
             break;
         }
         case 7:
@@ -734,6 +645,8 @@ void gui_list_file_dnd_data_received(GtkWidget *widget,
     gint source = -1;
     gint target = 0;
     gint *index = NULL;
+    gint i = 0;
+    gint length = 0;
     GtkTreeViewDropPosition pos;
     GtkTreePath *path_drop = NULL;
     gtk_tree_view_get_dest_row_at_pos(GTK_TREE_VIEW(
@@ -763,26 +676,19 @@ void gui_list_file_dnd_data_received(GtkWidget *widget,
             CoreData *gcore = get_core();
             if(target==gcore->list_index_selected) break;
             GList *path_list = NULL;
-            int count = 0;
-            guint length = 0;
-            gint *indices = NULL;
-            gint *index = NULL;
-            GtkTreePath *path_start = NULL;
+            GList *list_foreach = NULL;
+            GtkTreePath **path_array;
 	    memcpy(&path_list, seldata->data, sizeof(path_list));
             if(path_list==NULL) break;
             length = g_list_length(path_list);
-            indices = g_malloc(length*sizeof(gint));
-            for(count=0;count<length;count++)
+            path_array = g_malloc(length*sizeof(GtkTreePath *));
+            for(list_foreach=path_list, i=0;list_foreach!=NULL;
+                list_foreach=g_list_next(list_foreach), i++)
             {
-                path_start = g_list_nth_data(path_list, count);
-                index = gtk_tree_path_get_indices(path_start);
-                indices[count] = index[0] + 1;
+                path_array[i] = list_foreach->data;
             }
-            plist_plist_move2(gcore->list_index_selected, indices, length,
+            plist_plist_move2(gcore->list_index_selected, path_array, length,
                 target);
-            gui_play_list_view_rebuild(gcore->list_index_selected);
-            gui_list_file_view_rebuild();
-            g_free(indices);
             break;
         }
         default: break;
@@ -815,13 +721,9 @@ void gui_list_file_dnd_data_get(GtkWidget *widget, GdkDragContext *context,
 
 void gui_play_list_delete_lists(GtkWidget *widget, gpointer data)
 {
-    CoreData *gcore = get_core();
     static GList *path_list = NULL;
-    GtkTreePath *path = NULL;
-    guint length = 0;
-    gint *indices = NULL;
-    gint *index = NULL;
-    gint count = 0;
+    GList *list_foreach;
+    GtkTreeIter iter;
     if(path_list!=NULL)
     {
         g_list_foreach(path_list, (GFunc)gtk_tree_path_free, NULL);
@@ -831,23 +733,22 @@ void gui_play_list_delete_lists(GtkWidget *widget, gpointer data)
     path_list = gtk_tree_selection_get_selected_rows(
         rc_ui->play_list_selection, NULL);
     if(path_list==NULL) return;
-    length = g_list_length(path_list);
-    indices = g_malloc(length*sizeof(gint));
-    for(count=0;count<length;count++)
+    path_list = g_list_sort(path_list, (GCompareFunc)gtk_tree_path_compare);
+    for(list_foreach=g_list_last(path_list);list_foreach!=NULL;
+        list_foreach=g_list_previous(list_foreach))
     {
-        path = g_list_nth_data(path_list, count);
-        index = gtk_tree_path_get_indices(path);
-        indices[count] = index[0] + 1;
+        gtk_tree_model_get_iter(rc_ui->play_list_tree_model, &iter,
+            list_foreach->data);
+        gtk_list_store_remove(GTK_LIST_STORE(rc_ui->play_list_tree_model),
+            &iter);
+
     }
-    plist_delete_music2(gcore->list_index_selected, indices, length);
-    gui_play_list_view_rebuild(gcore->list_index_selected);
     if(path_list!=NULL)
     {
         g_list_foreach(path_list, (GFunc)gtk_tree_path_free, NULL);
         g_list_free(path_list);
         path_list = NULL;
     }
-    g_free(indices);
 }
 
 /*

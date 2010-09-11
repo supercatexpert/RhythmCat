@@ -29,12 +29,12 @@ static gchar *rc_set_dir = NULL;
 static const gchar *rc_app_dir = NULL;
 static const gchar *rc_home_dir = NULL;
 static const gchar rc_program_name[] = "RhythmCat Music Player";
-static const gchar rc_build_num[] = "build 100815, alpha 1";
-static const gchar rc_ver_num[] = "0.5.0";
+static const gchar rc_build_num[] = "build 100909, alpha 3";
+static const gchar rc_ver_num[] = "0.5.5";
 static const gboolean rc_is_stable = FALSE;
 static const gchar const *rc_authors[] = {"SuperCat","Mr. Zhu",NULL};
 static const gchar const *rc_documenters[] = {"SuperCat","Ms. Mi",NULL};
-static const gchar const *rc_artists[] = {"SuperCat","Ms. Mi",NULL};
+static const gchar const *rc_artists[] = {"SuperCat","Ms. Mi","GC-Boy",NULL};
 
 void rc_initial(int *argc, char **argv[])
 {
@@ -51,7 +51,10 @@ void rc_initial(int *argc, char **argv[])
     appfilepath = realpath((*argv[0]), full_path);
     if(appfilepath==NULL)
     {
-        readlink("/proc/self/exe", full_path, PATH_MAX);
+        if(readlink("/proc/self/exe", full_path, PATH_MAX)!=0)
+        {
+            snprintf(full_path, PATH_MAX, "/usr/share/RhythmCat");
+        }
         appfilepath = full_path;
     }
     rc_app_dir = g_path_get_dirname(appfilepath);
@@ -79,7 +82,7 @@ void rc_initial(int *argc, char **argv[])
     create_main_window();
     create_core();
     plist_initial_playlist();
-    gui_play_list_view_reflush_index(NULL, 0);
+    
 }
 
 const gchar *rc_get_program_name()

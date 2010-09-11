@@ -229,8 +229,9 @@ void gui_tools_convert_create(GtkWidget *widget, gpointer data)
         init = TRUE;
     }
     GList *path_list = NULL;
+    GList *list_foreach = NULL;
     gint path_length = 0;
-    gint *indices = NULL;
+    GtkTreeIter iter;
     GtkTreePath *path = NULL;
     if(gui_convert.convert_window!=NULL &&
         GTK_IS_WIDGET(gui_convert.convert_window) &&
@@ -238,7 +239,6 @@ void gui_tools_convert_create(GtkWidget *widget, gpointer data)
         GTK_WIDGET_VISIBLE(gui_convert.convert_window))
         return;
     GuiData *rc_ui = get_gui();
-    CoreData *gcore = get_core();
     path_list = gtk_tree_selection_get_selected_rows(
         rc_ui->play_list_selection, NULL);
     if(path_list==NULL) return;
@@ -248,11 +248,11 @@ void gui_tools_convert_create(GtkWidget *widget, gpointer data)
     GtkWidget *vbox[8];
     GtkWidget *button_hbox;
     GtkWidget *scrolled_window;
-    MusicData *md;
     gchar *path_name = NULL;
     gchar *file_name = NULL;
     gchar *base_name = NULL;
     gchar *ext_name = NULL;
+    gchar *uri = NULL;
     gint i = 0;
     gint file_count = 0;
     gui_convert.convert_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
@@ -497,18 +497,20 @@ void gui_tools_convert_create(GtkWidget *widget, gpointer data)
     }
     gui_convert.src_num = 0;
     path_length = g_list_length(path_list);
-    indices = g_malloc(path_length * sizeof(gint));
     gui_convert.file_list = g_malloc0((path_length+1) * sizeof(gchar *));
     gui_convert.src_list = g_malloc0((path_length+1) * sizeof(gchar *));
-    for(i=0;i<path_length;i++)
+    for(list_foreach=path_list;list_foreach!=NULL;
+        list_foreach=g_list_next(list_foreach))
     {
-        path = g_list_nth_data(path_list, i);
-        indices = gtk_tree_path_get_indices(path);
-        if(plist_get_music_data(gcore->list_index_selected, indices[0] + 1,
-            &md))
+        path = list_foreach->data;
+        gtk_tree_model_get_iter(rc_ui->play_list_tree_model, &iter, path);
+        if(gtk_tree_model_get_iter(rc_ui->play_list_tree_model, &iter, path))
         {
-            path_name = g_filename_from_uri(md->uri, NULL, NULL);
+            gtk_tree_model_get(rc_ui->play_list_tree_model, &iter, 0, &uri,
+                -1);
+            path_name = g_filename_from_uri(uri, NULL, NULL);
             file_name = NULL;
+            g_free(uri);
             if(path_name!=NULL)
             {
                 gui_convert.src_list[gui_convert.src_num++] =

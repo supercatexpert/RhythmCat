@@ -43,6 +43,7 @@ typedef struct _RCSetting
     gboolean auto_next;
     gboolean osd_lyric_flag;
     gboolean osd_lyric_movable;
+    gboolean min_to_tray;
     gint repeat_mode;
     gint random_mode;
     gint lrc_bg_image_style;

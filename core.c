@@ -407,7 +407,7 @@ gboolean core_play_next(gint open_next_list)
     gint music_index = rc_core.music_index;
     flag = core_stop();
     if(!flag) return FALSE;
-    if(music_index>=plist_get_plist_length(list_index))
+    if(music_index>=plist_get_plist_length(list_index)-1)
     {
         if(open_next_list==FALSE) return FALSE;
         if(list_index>=plist_get_list_length()-1) return FALSE;
@@ -420,7 +420,7 @@ gboolean core_play_next(gint open_next_list)
                 list_index++;
                 if(list_index>=plist_get_list_length()) break;
             }
-            music_index = 0;
+            music_index = -1;
         }
     }
     flag = plist_play_by_index(list_index,music_index+1);
@@ -441,7 +441,7 @@ gboolean core_play_prev(gint open_prev_list)
     gint music_index = rc_core.music_index;
     flag = core_stop();
     if(!flag) return FALSE;
-    if(music_index<=1)
+    if(music_index<=0)
     {
         if(open_prev_list==FALSE) return FALSE;
         if(list_index<=0) return FALSE;
@@ -453,11 +453,9 @@ gboolean core_play_prev(gint open_prev_list)
                 list_index--;
                 if(list_index<=0) break;
             }
-            music_index = plist_get_plist_length(list_index)+1;
+            music_index = plist_get_plist_length(list_index);
         }
     }
-    flag = core_set_play_position(0);
-    if(!flag) return FALSE;
     flag = plist_play_by_index(list_index,music_index-1);
     if(!flag) return FALSE;
     flag = core_play();

@@ -34,13 +34,12 @@ GtkWidget *metadata_entry[9];
 static void gui_open_music_dir_recu(const gchar *dir_name, gint depth)
 {
     if(depth<=0) return;
-    GuiData *rc_ui = get_gui();
     CoreData *gcore = get_core();
-    MusicData *md = NULL;
     gchar *full_file_name = NULL;
     GDir *dir = g_dir_open(dir_name, 0, NULL);
     if(dir==NULL) return;
     const gchar *file_name = NULL;
+    gint count = 0;
     gchar *uri = NULL;
     gint i = 0;
     gint index = 0;
@@ -71,14 +70,12 @@ static void gui_open_music_dir_recu(const gchar *dir_name, gint depth)
         if(music_file_flag)
         {
             uri = g_filename_to_uri(full_file_name, NULL, NULL);
-            plist_insert_music(uri,gcore->list_index_selected,-1);
+            plist_insert_music(uri, gcore->list_index_selected, -1);
+            count++;
             index = plist_get_plist_length(gcore->list_index_selected);
-            plist_get_music_data(gcore->list_index_selected, index, &md);
-            gui_insert_play_list_view(rc_ui->play_list_tree_view, NULL, index,
-                md->title, md->artist, md->length, index);
             g_free(uri);
+            rc_debug_print("Inserted %d file(s)!\n", count);
         }
-        i = 0;
         g_free(full_file_name);
     }
     while(file_name!=NULL); 
@@ -92,6 +89,11 @@ static void gui_open_music_dir_recu(const gchar *dir_name, gint depth)
 void about_player()
 {
     GtkWidget *about_dialog;
+    gchar *about_logo_file = NULL;
+    GdkPixbuf *about_logo_image;
+    about_logo_file = g_strdup_printf("%s%cimages%cAbout.PNG",
+        rc_get_app_dir(), G_DIR_SEPARATOR, G_DIR_SEPARATOR);
+    about_logo_image = gdk_pixbuf_new_from_file(about_logo_file, NULL);
     about_dialog = gtk_about_dialog_new();
     gtk_about_dialog_set_authors(GTK_ABOUT_DIALOG(about_dialog),
         (const gchar **)rc_get_authors());
@@ -103,6 +105,8 @@ void about_player()
         rc_get_program_name());
     gtk_about_dialog_set_version(GTK_ABOUT_DIALOG(about_dialog),
         rc_get_ver_num());
+    gtk_about_dialog_set_logo(GTK_ABOUT_DIALOG(about_dialog),
+        about_logo_image);
     gtk_about_dialog_set_comments(GTK_ABOUT_DIALOG(about_dialog),
         _("A music player based on GTK+ 2.0 & Gstreamer 0.10"));
     gtk_about_dialog_set_license(GTK_ABOUT_DIALOG(about_dialog),
@@ -128,7 +132,6 @@ void gui_show_open_dialog(GtkWidget *widget, gpointer data)
     gint result = 0;
     gint count = 0;
     int index = 0;
-    MusicData *md = NULL;
     GSList *filelist = NULL;
     gint flist_length = 0;
     gchar *uri = NULL;
@@ -155,7 +158,7 @@ void gui_show_open_dialog(GtkWidget *widget, gpointer data)
     gtk_file_chooser_set_select_multiple(GTK_FILE_CHOOSER(file_chooser),TRUE);
     gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(file_chooser), file_filter1);
     result = gtk_dialog_run(GTK_DIALOG(file_chooser));
-    if(open_and_play) index = 1;
+    if(open_and_play) index = 0;
     switch(result)
     {
         case GTK_RESPONSE_ACCEPT:
@@ -173,17 +176,12 @@ void gui_show_open_dialog(GtkWidget *widget, gpointer data)
                     plist_insert_music(uri,gcore->list_index_selected,-1);
                 if(!open_and_play)
                     index = plist_get_plist_length(gcore->list_index_selected);
-                plist_get_music_data(gcore->list_index_selected,
-                    index, &md);
-                gui_insert_play_list_view(rc_ui->play_list_tree_view, NULL, 
-                    index, md->title, md->artist, md->length, index);
-                if(open_and_play) index++;
                 g_free(uri);
             }
             g_slist_free(filelist);
             if(open_and_play)
             {
-                plist_play_by_index(gcore->list_index_selected, 1);
+                plist_play_by_index(gcore->list_index_selected, 0);
                 core_play();
             }
             break;
@@ -209,15 +207,13 @@ static void gui_close_music_info(GtkWidget *widget, gpointer data)
 
 void gui_show_music_info(GtkWidget *widget, gpointer data)
 {
-    CoreData *gcore = get_core();
     GuiData *rc_ui = get_gui();
     static GList *path_list = NULL;
-    gint *indices = NULL;
-    gint index = 0;
+    gchar *list_uri;
     gint errorno = 0;
     GtkTreePath *path = NULL;
+    GtkTreeIter iter;
     MusicMetaData mmd;
-    MusicData *md = NULL;
     gboolean window_exist = FALSE;
     gchar *filepath = NULL;
     gint64 length = 0L;
@@ -270,11 +266,10 @@ void gui_show_music_info(GtkWidget *widget, gpointer data)
         }
         return;
     }
-    indices = gtk_tree_path_get_indices(path);
-    index = indices[0] + 1;
     bzero(&mmd, sizeof(MusicMetaData));
-    plist_get_music_data(gcore->list_index_selected, index, &md);
-    plist_load_metadata(md->uri, &mmd, &errorno);
+    gtk_tree_model_get_iter(rc_ui->play_list_tree_model, &iter, path);
+    gtk_tree_model_get(rc_ui->play_list_tree_model, &iter, 0, &list_uri, -1);
+    plist_load_metadata(list_uri, &mmd, &errorno);
     if(!window_exist)
     {
         info_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
@@ -489,7 +484,7 @@ void gui_show_music_info(GtkWidget *widget, gpointer data)
     }
     else
         gtk_entry_set_text(GTK_ENTRY(uri_entry), "");
-
+    g_free(list_uri);
     if(path_list!=NULL)
     {
         g_list_foreach(path_list, (GFunc)gtk_tree_path_free, NULL);
