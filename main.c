@@ -24,25 +24,37 @@
  */
 
 #include "main.h"
+#include "shell_glue.h"
 
 static gchar *rc_set_dir = NULL;
 static const gchar *rc_app_dir = NULL;
 static const gchar *rc_home_dir = NULL;
 static const gchar rc_program_name[] = "RhythmCat Music Player";
-static const gchar rc_build_num[] = "build 100909, alpha 3";
-static const gchar rc_ver_num[] = "0.5.5";
+static const gchar rc_build_num[] = "build 100918, alpha 3";
+static const gchar rc_ver_num[] = "0.5.8";
 static const gboolean rc_is_stable = FALSE;
+static const gchar rc_dbus_name[] = "org.supercat.RhythmCat";
+static const gchar rc_dbus_path_player[] = "/org/supercat/RhythmCat/Player";
+static const gchar rc_dbus_interface_player[] =
+    "org.supercat.RhythmCat.Player";
+static const gchar rc_dbus_path_shell[] = "/org/supercat/RhythmCat/Shell";
+static const gchar rc_dbus_interface_shell[] =
+    "org.supercat.RhythmCat.Shell";
 static const gchar const *rc_authors[] = {"SuperCat","Mr. Zhu",NULL};
 static const gchar const *rc_documenters[] = {"SuperCat","Ms. Mi",NULL};
 static const gchar const *rc_artists[] = {"SuperCat","Ms. Mi","GC-Boy",NULL};
+static gboolean debug_flag = FALSE;
+static char **remaining_args = NULL;
+static GObject *rc_shell_info = NULL;
 
 void rc_initial(int *argc, char **argv[])
 {
-    int i = 0;
     g_set_application_name("RhythmCat");
     const gchar *homedir = g_getenv("HOME");
     gchar *appfilepath = NULL;
     char full_path[PATH_MAX];
+    GOptionContext *context;
+    GError *error = NULL;
     if(homedir==NULL) homedir = g_get_home_dir();
     rc_home_dir = homedir;
     int dname_len = strlen(homedir);
@@ -60,13 +72,30 @@ void rc_initial(int *argc, char **argv[])
     rc_app_dir = g_path_get_dirname(appfilepath);
     srand((unsigned)time(0));
     g_mkdir_with_parents(rc_set_dir, 0700);
-    for(i=1;i<*argc;i++)
+    /* Arguments/Options process. */
+    static const GOptionEntry options[] =
     {
-        if(strcmp((*argv)[i], "--debug")==0)
-        {
-            rc_debug_set_mode(1);
-        }
+        {"debug", 'd', 0, G_OPTION_ARG_NONE, &debug_flag,
+            N_("Enable debug mode"), NULL},
+        {G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_STRING_ARRAY, &remaining_args,
+            NULL, N_("[URI...]")},
+        {NULL}
+    };
+    context = g_option_context_new(NULL);
+    g_option_context_add_main_entries(context, options, GETTEXT_PACKAGE);
+    if(g_option_context_parse(context, argc, argv, &error)==FALSE)
+    {
+        g_printf(_("%s\nRun '%s --help' to see a full list of available "
+            "command line options.\n"), error->message, (*argv)[0]);
+        g_error_free(error);
+        g_option_context_free (context);
+        exit(1);
     }
+    g_option_context_free(context);
+    if(debug_flag) rc_debug_set_mode(1);
+
+
+
     rc_debug_print("\n***** RhythmCat DEBUG Messages *****\n");  
     rc_debug_print("DEBUG MODE Enabled!\n"); 
     rc_debug_print("Got home directory at: %s\n", rc_home_dir);
@@ -77,12 +106,15 @@ void rc_initial(int *argc, char **argv[])
     set_initial_setting();
     if(!g_thread_supported()) g_thread_init(NULL);
     gdk_threads_init();
+    g_type_init();
+    dbus_g_thread_init();
     gtk_init(argc, argv);
     gst_init(argc, argv);
+    rc_dbus_init(remaining_args);
     create_main_window();
     create_core();
     plist_initial_playlist();
-    
+    plist_load_argument(remaining_args);
 }
 
 const gchar *rc_get_program_name()
@@ -133,6 +165,106 @@ const gchar *rc_get_app_dir()
 const gchar *rc_get_home_dir()
 {
     return rc_home_dir;
+}
+
+gboolean rc_dbus_init(gchar **remaining_args)
+{
+    DBusGConnection *session_bus;
+    DBusGProxy *bus_proxy;
+    DBusGProxy *shell_proxy;
+    GError *error = NULL;
+    guint request_name_reply;
+    gint flags = 0;
+    gint i = 0;
+    gboolean activated = FALSE;
+    session_bus = dbus_g_bus_get(DBUS_BUS_SESSION, &error);
+    if(session_bus==NULL)
+    {
+        g_printerr("CRITIAL: Failed to open connection to bus: %s\n",
+            error->message);
+        g_error_free(error);
+        return FALSE;
+    }
+    bus_proxy = dbus_g_proxy_new_for_name(session_bus, DBUS_SERVICE_DBUS,
+        DBUS_PATH_DBUS, DBUS_INTERFACE_DBUS);
+    if(!dbus_g_proxy_call(bus_proxy, "RequestName", &error, G_TYPE_STRING,
+        rc_dbus_name, G_TYPE_UINT, flags, G_TYPE_INVALID, G_TYPE_UINT,
+        &request_name_reply, G_TYPE_INVALID))
+    {
+        g_warning("Failed to invoke RequestName: %s", error->message);
+        g_error_free(error);
+    }
+    g_object_unref(bus_proxy);
+    if(request_name_reply == DBUS_REQUEST_NAME_REPLY_PRIMARY_OWNER
+        || request_name_reply == DBUS_REQUEST_NAME_REPLY_ALREADY_OWNER)
+        activated = FALSE;
+    else if (request_name_reply == DBUS_REQUEST_NAME_REPLY_EXISTS
+        || request_name_reply == DBUS_REQUEST_NAME_REPLY_IN_QUEUE)
+        activated = TRUE;
+    else
+    {
+        g_warning("Got unhandled reply %u from RequestName",
+            request_name_reply);
+        activated = FALSE;
+    }
+    if(!activated)
+    {
+        rc_debug_print("Running in the first instance.\n");
+        shell_proxy = dbus_g_proxy_new_for_name(session_bus,
+            rc_dbus_name, rc_dbus_path_shell, rc_dbus_interface_shell);
+        if(shell_proxy==NULL)
+        {
+            g_warning("Couldn't create proxy for RhythmCat Shell: %s",
+                error->message);
+            g_error_free(error);
+        }
+        else
+        {
+            dbus_g_object_type_install_info(RC_SHELL_TYPE,
+                &dbus_glib_rc_shell_object_info);
+            /* Regist RC-Shell to dbus. */
+            rc_shell_info = g_object_new(RC_SHELL_TYPE, NULL);
+            dbus_g_connection_register_g_object(session_bus, 
+                rc_dbus_path_shell, G_OBJECT(rc_shell_info));
+        }
+        g_object_unref(shell_proxy);
+
+    }
+    else if(session_bus!=NULL)
+    {
+        g_warning("Another instance is already running! The program will send"
+            " the arguments to the first instance, then kill itself.\n");
+        /* Send arguments to the first instance below. */
+        shell_proxy = dbus_g_proxy_new_for_name_owner(session_bus,
+            rc_dbus_name, rc_dbus_path_shell, rc_dbus_interface_shell, &error);
+        if(shell_proxy==NULL)
+        {
+            g_warning("Couldn't create proxy for RhythmCat Shell: %s",
+                error->message);
+            g_error_free(error);
+        }
+        else
+        {
+            //load_uri_args ((const char **) remaining_args, (GFunc) dbus_load_uri, shell_proxy);
+            for(i=0;remaining_args[i]!=NULL;i++)
+            {
+                dbus_g_proxy_call(shell_proxy, "LoadURI", &error, 
+                    G_TYPE_STRING, remaining_args[i], G_TYPE_INVALID, 
+                    G_TYPE_INVALID);
+            }
+            g_object_unref(G_OBJECT(shell_proxy));
+        }
+
+
+
+
+
+        /* Selfdestruct */
+        exit(0);
+    }
+    return TRUE;
+
+
 }
 
 int main(int argc, char *argv[], char *envp[])

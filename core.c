@@ -63,6 +63,11 @@ static gboolean core_bus_call(GstBus *bus,GstMessage *msg, gpointer data)
             core_autoplay_next();
             break;
         }
+        case GST_MESSAGE_SEGMENT_DONE:
+        {
+            rc_debug_print("CORE: Segment done!\n");
+            break;
+        }
         case GST_MESSAGE_ERROR:
         {
             gchar *debug;
@@ -505,12 +510,12 @@ gboolean core_autoplay_next()
             {
                 if(plist_get_plist_length(rc_core.list_index)>=1)
                 {
-                    if(rc_core.music_index==plist_get_plist_length(
+                    if(rc_core.music_index+1==plist_get_plist_length(
                         rc_core.list_index))
                     {
                         flag = core_stop();
                         if(!flag) return FALSE;
-                        flag = plist_play_by_index(rc_core.list_index,1);
+                        flag = plist_play_by_index(rc_core.list_index,0);
                         if(!flag) return FALSE;
                         flag = core_play();
                         if(!flag) return FALSE;
@@ -531,9 +536,9 @@ gboolean core_autoplay_next()
                 }
                 plist_length = plist_get_plist_length(list_length);
                 if(rc_core.list_index==list_length 
-                    && rc_core.music_index==plist_length)
+                    && rc_core.music_index+1==plist_length)
                 {
-                    flag = plist_play_by_index(0,1);
+                    flag = plist_play_by_index(0,0);
                     if(!flag) return FALSE;
                     flag = core_play();
                     if(!flag) return FALSE;
@@ -572,11 +577,11 @@ gboolean core_autoplay_next()
                 for(count=0;count<list_length;count++)
                     total_length+=plist_get_plist_length(count);
                 if(total_length<1) return FALSE;
-                total_index = core_get_random_number(total_length) + 1;
+                total_index = core_get_random_number(total_length);
                 for(count=0;count<list_length;count++)
                 {
                     plist_length = plist_get_plist_length(count);
-                    if(total_index>plist_length)
+                    if(total_index>=plist_length)
                     {
                         total_index -= plist_length;
                     }

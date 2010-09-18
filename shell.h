@@ -1,7 +1,7 @@
 /*
- * Main Declaration
+ * Shell Declaration
  *
- * main.h
+ * shell.h
  * This file is part of <RhythmCat>
  *
  * Copyright (C) 2010 - SuperCat, license: GPL v3
@@ -22,8 +22,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef HAVE_MAIN_H
-#define HAVE_MAIN_H
+#ifndef HAVE_SHELL_H
+#define HAVE_SHELL_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -34,28 +34,28 @@
 #include <gst/gst.h>
 #include <dbus/dbus.h>
 #include <dbus/dbus-glib.h>
-#include "global.h"
-#include "core.h"
-#include "gui.h"
-#include "playlist.h"
-#include "settings.h"
-#include "shell.h"
-#include "karaoke.h"
-#include "plugin.h"
 #include "debug.h"
+#include "playlist.h"
 
-void rc_initial(int *, char **[]);
-const gchar *rc_get_program_name();
-const gchar *rc_get_set_dir();
-const gchar *rc_get_build_num();
-const gchar *rc_get_ver_num();
-const gchar *const *rc_get_authors();
-const gchar *const *rc_get_documenters();
-const gchar *const *rc_get_artists();
-gboolean rc_get_stable();
-const gchar *rc_get_app_dir();
-const gchar *rc_get_home_dir();
-gboolean rc_dbus_init(gchar **);
+typedef struct RCShell
+{
+    GObject parent;
+}RCShell;
+
+typedef struct RCShellClass
+{
+    GObjectClass parent;
+}RCShellClass;
+
+typedef enum
+{
+    RC_SHELL_LOAD_URI,
+}RCShellEnum;
+
+#define RC_SHELL_TYPE (rc_shell_get_type())
+
+GType rc_shell_get_type(void);
+void shell_load_uri(RCShell *, const gchar *, GError **);
 
 #endif
 

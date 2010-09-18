@@ -423,9 +423,9 @@ void gui_desklrc_enable(gboolean flag)
             gtk_widget_unrealize(desklrc_window);
             gtk_widget_realize(desklrc_window);
         }
+        gtk_widget_show(desklrc_window);
         if(!GTK_WIDGET_MAPPED(desklrc_window))
             gtk_widget_map(desklrc_window);
-        gtk_widget_show(desklrc_window);
         gtk_window_move(GTK_WINDOW(desklrc_window), 
             rc_setting->osd_lyric_pos[0], rc_setting->osd_lyric_pos[1]);
     }

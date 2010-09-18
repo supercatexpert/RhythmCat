@@ -247,7 +247,7 @@ void set_load_setting(gchar *filename)
             &value_color[2]);
         for(count=0;count<3;count++)
             rc_setting.lrc_bg_color[count] =
-                (gdouble)value_color[count] / 256;
+                (gdouble)value_color[count] / 0xFF;
         g_free(value_str);
     }
     value_str = NULL;
@@ -259,7 +259,7 @@ void set_load_setting(gchar *filename)
             &value_color[2]);
         for(count=0;count<3;count++)
             rc_setting.lrc_fg_color[count] =
-                (gdouble)value_color[count] / 256;
+                (gdouble)value_color[count] / 0xFF;
         g_free(value_str);
     }
     value_str = NULL;
@@ -271,7 +271,7 @@ void set_load_setting(gchar *filename)
             &value_color[2]);
         for(count=0;count<3;count++)
             rc_setting.lrc_hi_color[count] =
-                (gdouble)value_color[count] / 256;
+                (gdouble)value_color[count] / 0xFF;
         g_free(value_str);
     }
     value_str = NULL;
@@ -292,7 +292,7 @@ void set_load_setting(gchar *filename)
             &value_color[2]);
         for(count=0;count<3;count++)
             rc_setting.osd_lyric_fg_color1[count] =
-                (gdouble)value_color[count] / 256;
+                (gdouble)value_color[count] / 0xFF;
         g_free(value_str);
     }
     value_str = NULL;
@@ -304,7 +304,7 @@ void set_load_setting(gchar *filename)
             &value_color[2]);
         for(count=0;count<3;count++)
             rc_setting.osd_lyric_fg_color2[count] =
-                (gdouble)value_color[count] / 256;
+                (gdouble)value_color[count] / 0xFF;
         g_free(value_str);
     }
     value_str = NULL;
@@ -316,7 +316,7 @@ void set_load_setting(gchar *filename)
             &value_color[2]);
         for(count=0;count<3;count++)
             rc_setting.osd_lyric_bg_color1[count] =
-                (gdouble)value_color[count] / 256;
+                (gdouble)value_color[count] / 0xFF;
         g_free(value_str);
     }
     value_str = NULL;
@@ -328,7 +328,7 @@ void set_load_setting(gchar *filename)
             &value_color[2]);
         for(count=0;count<3;count++)
             rc_setting.osd_lyric_bg_color2[count] =
-                (gdouble)value_color[count] / 256;
+                (gdouble)value_color[count] / 0xFF;
         g_free(value_str);
     }
     value_str = NULL;

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<node name="/org/supercat/RhythmCat/Shell">
+
+  <interface name="org.supercat.RhythmCat.Shell">
+    <annotation name="org.freedesktop.DBus.GLib.CSymbol" value="shell"/>
+    <method name="LoadURI">
+      <!-- This is optional, and in this case is redunundant -->
+      <annotation name="org.freedesktop.DBus.GLib.CSymbol" value="shell_load_uri"/>
+      <arg type="s"/>
+    </method>
+  </interface>
+</node>
+

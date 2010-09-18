@@ -30,15 +30,9 @@
 #define GETTEXT_PACKAGE "RhythmCat"
 #define LOCALEDIR "locale"
 
-/* Custom struct type to store the list of playlist. */
-typedef struct _PlayList
-{
-    gchar list_name[512];
-    GtkListStore *pl_store;
-}PlayList;
-
 /*
- * ListStore: 0:URI, 1:State, 2:Title, 3: Artist, 4: Album, 5: Length.
+ * ListStore1: 0:State, 1:Name, 2: ListStore2(gpointer).
+ * ListStore2: 0:URI, 1:State, 2:Title, 3: Artist, 4: Album, 5: Length.
  */
 
 /* Functions */
@@ -55,13 +49,16 @@ void plist_load_metadata(gchar *, MusicMetaData *, gint *);
 gboolean plist_play_by_index(gint, gint);
 gboolean plist_load_playlist_setting();
 gboolean plist_save_playlist_setting();
-void plist_list_move(gint, gint);
 void plist_build_default_list();
 void plist_plist_move2(gint, GtkTreePath **, gint, gint);
 void plist_reflesh_info(gint);
 void plist_save_playlist(const gchar *, gint);
 void plist_load_playlist(const gchar *, gint);
 GtkListStore *plist_get_list_store(gint);
+GtkListStore *plist_get_list_head();
+void plist_load_argument(char *[]);
+void plist_load_uri_from_remote(const gchar *);
+
 
 #endif
 

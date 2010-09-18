@@ -34,6 +34,7 @@
 
 /* Functions */
 void gui_tree_view_build();
+void gui_list_tree_reset_list_store();
 void gui_list_file_view_rebuild();
 void gui_insert_list_file_view(GtkWidget *, const gchar *, const gchar *,
     gint);

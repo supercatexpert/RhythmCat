@@ -3,12 +3,14 @@ PROG_NAME=RhythmCat
 INCS=
 SRCS=core.c lyric.c gui.c gui_setting.c gui_treeview.c gui_style.c gui_eq.c \
     gui_dialog.c gui_tools.c gui_menu.c gui_lrc.c gui_lrc_desk.c gui_kara.c \
-    playlist.c karaoke.c tools.c debug.c tag_id3.c settings.c plugin.c main.c
+    playlist.c karaoke.c tools.c debug.c tag_id3.c settings.c plugin.c \
+    shell.c main.c
 
 OBJS=${SRCS:.c=.o}
 
 LIBS=glib-2.0 gtk+-2.0 gtksourceview-2.0 gstreamer-0.10 gthread-2.0 \
-    gmodule-2.0 gstreamer-base-0.10 gstreamer-plugins-base-0.10
+    gmodule-2.0 gstreamer-base-0.10 gstreamer-plugins-base-0.10 \
+    dbus-glib-1 gio-2.0
 
 PREFIX=/usr/local
 

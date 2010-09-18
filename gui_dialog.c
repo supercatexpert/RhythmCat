@@ -42,7 +42,6 @@ static void gui_open_music_dir_recu(const gchar *dir_name, gint depth)
     gint count = 0;
     gchar *uri = NULL;
     gint i = 0;
-    gint index = 0;
     gboolean music_file_flag = FALSE;
     do
     {
@@ -58,6 +57,7 @@ static void gui_open_music_dir_recu(const gchar *dir_name, gint depth)
             continue;
         }
         music_file_flag = FALSE;
+        i = 0;
         while(support_format[i]!=NULL)
         {
             if(g_str_has_suffix(full_file_name, support_format[i]+1))
@@ -72,7 +72,6 @@ static void gui_open_music_dir_recu(const gchar *dir_name, gint depth)
             uri = g_filename_to_uri(full_file_name, NULL, NULL);
             plist_insert_music(uri, gcore->list_index_selected, -1);
             count++;
-            index = plist_get_plist_length(gcore->list_index_selected);
             g_free(uri);
             rc_debug_print("Inserted %d file(s)!\n", count);
         }
@@ -165,7 +164,7 @@ void gui_show_open_dialog(GtkWidget *widget, gpointer data)
             if(open_and_play)
                 core_stop();
             filelist = gtk_file_chooser_get_uris(
-               GTK_FILE_CHOOSER(file_chooser));
+                GTK_FILE_CHOOSER(file_chooser));
             flist_length = g_slist_length(filelist);
             for(count=0;count<=flist_length-1;count++)
             {
