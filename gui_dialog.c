@@ -28,7 +28,7 @@
 /* Variables */
 static gchar *support_format[]={"*.FLAC","*.flac","*.OGG","*.ogg","*.MP3",
     "*.mp3", "*.WMA","*.wma","*.WAV","*.wav","*.OGA","*.oga","*.OGM","*.ogm",
-    "*.APE","*.ape","*.AAC","*.aac","*.AC3","*.ac3",NULL};
+    "*.APE","*.ape","*.AAC","*.aac","*.AC3","*.ac3","*.CUE","*.cue",NULL};
 GtkWidget *metadata_entry[9];
 
 static void gui_open_music_dir_recu(const gchar *dir_name, gint depth)
@@ -41,7 +41,6 @@ static void gui_open_music_dir_recu(const gchar *dir_name, gint depth)
     const gchar *file_name = NULL;
     gint count = 0;
     gchar *uri = NULL;
-    gint i = 0;
     gboolean music_file_flag = FALSE;
     do
     {
@@ -56,17 +55,7 @@ static void gui_open_music_dir_recu(const gchar *dir_name, gint depth)
             g_free(full_file_name);
             continue;
         }
-        music_file_flag = FALSE;
-        i = 0;
-        while(support_format[i]!=NULL)
-        {
-            if(g_str_has_suffix(full_file_name, support_format[i]+1))
-            {
-                music_file_flag = TRUE;
-                break;
-            }
-            i++;
-        }
+		music_file_flag = rc_is_mfile_supported(full_file_name);
         if(music_file_flag)
         {
             uri = g_filename_to_uri(full_file_name, NULL, NULL);
@@ -124,6 +113,7 @@ void gui_show_open_dialog(GtkWidget *widget, gpointer data)
 {
     gboolean open_and_play = FALSE;
     if(data!=NULL && GPOINTER_TO_INT(data)==1) open_and_play = TRUE;
+    const gchar *const *support_format_glub = NULL;
     CoreData *gcore = get_core();
     GuiData *rc_ui = get_gui();
     GtkWidget *file_chooser;
@@ -138,10 +128,10 @@ void gui_show_open_dialog(GtkWidget *widget, gpointer data)
     file_filter1 = gtk_file_filter_new();
     gtk_file_filter_set_name(file_filter1,
         _("All supported music files(*.FLAC;*.OGG;*.MP3;*.WAV;*.WMA...)"));
-    while(support_format[count]!=NULL)
+    support_format_glub = rc_get_mfile_support_glob();
+    for(count=0;support_format_glub[count]!=NULL;count++)
     {
-        gtk_file_filter_add_pattern(file_filter1, support_format[count]);
-        count++;
+        gtk_file_filter_add_pattern(file_filter1, support_format_glub[count]);
     }
     count = 0;
     if(open_and_play)

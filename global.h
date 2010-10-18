@@ -42,6 +42,7 @@ typedef struct _MusicMetaData
     gint64 cue_start_time;
     gint64 cue_end_time;
     gchar *uri;
+    gchar *emb_cue_data;
     guint tracknum;
     guint bitrate;
     gint cue_track_num;

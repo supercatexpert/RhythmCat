@@ -32,7 +32,8 @@
 
 /*
  * ListStore1: 0:State, 1:Name, 2: ListStore2(gpointer).
- * ListStore2: 0:URI, 1:State, 2:Title, 3: Artist, 4: Album, 5: Length.
+ * ListStore2: 0:URI, 1:State, 2:Title, 3: Artist, 4: Album, 5: Length, 
+ *     6: Trackno(gint).
  */
 
 /* Functions */
@@ -58,7 +59,8 @@ GtkListStore *plist_get_list_store(gint);
 GtkListStore *plist_get_list_head();
 void plist_load_argument(char *[]);
 void plist_load_uri_from_remote(const gchar *);
-
+GSList *plist_read_cue_file(gchar *);
+GSList *plist_read_emb_cue_sheet(MusicMetaData *);
 
 #endif
 

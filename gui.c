@@ -148,28 +148,29 @@ gboolean create_main_window()
     bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
     textdomain(GETTEXT_PACKAGE);
     GdkGeometry main_window_hints;
-    GtkObject *position_adjustment, *volume_adjustment;
+    GtkObject *position_adjustment;
     GtkWidget *main_vbox, *player_vbox;
     GtkWidget *list_file_scr_window, *play_list_scr_window;
     GtkWidget *hbox1, *vbox1, *hbox2, *hbox3, *hbox4;
     GtkWidget *control_button_hbox;
     GtkWidget *playlists_label, *lyric_label;
+    GtkWidget *cur_list_label, *pls_label;
     GtkWidget *playlist_frame;
     GtkWidget *empty_label;
     GtkWidget *vol_label, *vol_min_label, *vol_plus_label;
     GtkWidget *vol_hbox;
-    GtkWidget *status_hbox;
     GtkWidget *hsep1, *list_hpaned;
     GtkWidget *control_buttons_hbox;
     GtkWidget *control_hbox, *info_label_hbox;
     GtkWidget *playlist_vbox, *playlist_ctrl_hbox;
     GtkWidget *main_hpaned;
     GtkWidget *album_frame;
+    GdkPixbuf *no_cover_image;
     GtkStatusIcon *tray_icon;
     PangoAttrList *title_attr_list, *artist_attr_list, *album_attr_list;
     PangoAttribute *title_attr[2], *artist_attr[2], *album_attr[2];
-    PangoAttrList *time_attr_list;
-    PangoAttribute *time_attr[2];
+    PangoAttrList *time_attr_list, *info_attr_list;
+    PangoAttribute *time_attr[2], *info_attr[2];
     gchar *window_title = NULL;
     gchar *cover_image_file = NULL;
     gchar *tray_image_file = NULL;
@@ -183,7 +184,13 @@ gboolean create_main_window()
     rc_debug_print("Loading main window...\n"); 
     cover_image_file = g_strdup_printf("%s%cimages%cNoCover.PNG",
         rc_get_app_dir(), G_DIR_SEPARATOR, G_DIR_SEPARATOR);
-    rc_gui.no_cover_image = gdk_pixbuf_new_from_file(cover_image_file, NULL);
+    no_cover_image = gdk_pixbuf_new_from_file(cover_image_file, NULL);
+    if(no_cover_image!=NULL)
+    {
+        rc_gui.no_cover_image = gdk_pixbuf_scale_simple(no_cover_image, 84, 80,
+            GDK_INTERP_HYPER);
+        g_object_unref(no_cover_image);
+    }
     g_free(cover_image_file);
     tray_image_file = g_strdup_printf("%s%cimages%cICON.PNG",
         rc_get_app_dir(), G_DIR_SEPARATOR, G_DIR_SEPARATOR);
@@ -193,14 +200,14 @@ gboolean create_main_window()
     g_free(logo_image_file);
     tray_icon = gtk_status_icon_new_from_file(tray_image_file);
     gtk_status_icon_set_tooltip(tray_icon, _("RhythmCat Music Player"));
-    gui_style_reflush();
     rc_gui.main_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     main_vbox = gtk_vbox_new(FALSE, 0);
     rc_gui.lyric_vbox = gtk_vbox_new(FALSE, 0);
-    status_hbox = gtk_hbox_new(FALSE, 0);
     player_vbox = gtk_vbox_new(FALSE, 4);
     playlist_vbox = gtk_vbox_new(FALSE, 0);
     rc_gui.sub_notebook = gtk_notebook_new();
+    rc_gui.plist_notebook = gtk_notebook_new();
+    g_object_set(G_OBJECT(rc_gui.plist_notebook), "homogeneous", TRUE, NULL);
     hbox1 = gtk_hbox_new(FALSE, 8);
     vbox1 = gtk_vbox_new(FALSE, 2);
     hbox2 = gtk_hbox_new(FALSE, 8);
@@ -209,17 +216,6 @@ gboolean create_main_window()
     vol_hbox = gtk_hbox_new(FALSE, 2);
     control_button_hbox = gtk_hbox_new(FALSE, 1);
     playlist_ctrl_hbox = gtk_hbox_new(TRUE, 1);
-    rc_gui.music_info_status = gtk_statusbar_new();
-    rc_gui.track_num_status = gtk_statusbar_new();
-    rc_gui.player_state_status = gtk_statusbar_new();
-    gtk_widget_set_size_request(rc_gui.track_num_status, 90, -1);
-    gtk_widget_set_size_request(rc_gui.player_state_status, 90, -1);
-    gtk_statusbar_set_has_resize_grip(GTK_STATUSBAR(
-        rc_gui.music_info_status), FALSE);
-    gtk_statusbar_set_has_resize_grip(GTK_STATUSBAR(
-        rc_gui.track_num_status), FALSE);
-    gtk_statusbar_set_has_resize_grip(GTK_STATUSBAR(
-        rc_gui.player_state_status), FALSE);
     if(rc_get_stable())
         gtk_window_set_title(GTK_WINDOW(rc_gui.main_window),
             rc_get_program_name());
@@ -245,6 +241,7 @@ gboolean create_main_window()
     artist_attr_list = pango_attr_list_new();
     album_attr_list = pango_attr_list_new();
     time_attr_list = pango_attr_list_new();
+    info_attr_list = pango_attr_list_new();
     title_attr[0] = pango_attr_size_new(12 * PANGO_SCALE);
     title_attr[1] = pango_attr_weight_new(PANGO_WEIGHT_BOLD);
     artist_attr[0] = pango_attr_size_new(10 * PANGO_SCALE);
@@ -253,6 +250,8 @@ gboolean create_main_window()
     album_attr[1] = pango_attr_style_new(PANGO_STYLE_ITALIC);
     time_attr[0] = pango_attr_size_new(10 * PANGO_SCALE);
     time_attr[1] = pango_attr_weight_new(PANGO_WEIGHT_NORMAL);
+    info_attr[0] = pango_attr_size_new(9 * PANGO_SCALE);
+    info_attr[1] = pango_attr_weight_new(PANGO_WEIGHT_NORMAL);
     pango_attr_list_insert(title_attr_list, title_attr[0]);
     pango_attr_list_insert(title_attr_list, title_attr[1]);
     pango_attr_list_insert(artist_attr_list, artist_attr[0]);
@@ -261,6 +260,8 @@ gboolean create_main_window()
     pango_attr_list_insert(album_attr_list, album_attr[1]);
     pango_attr_list_insert(time_attr_list, time_attr[0]);
     pango_attr_list_insert(time_attr_list, time_attr[1]);
+    pango_attr_list_insert(info_attr_list, info_attr[0]);
+    pango_attr_list_insert(info_attr_list, info_attr[1]);
     rc_gui.album_image = gtk_image_new_from_pixbuf(rc_gui.no_cover_image);
     rc_gui.album_eventbox = gtk_event_box_new();
     album_frame = gtk_frame_new(NULL);
@@ -273,11 +274,9 @@ gboolean create_main_window()
     gtk_misc_set_alignment(GTK_MISC(vol_plus_label), 0.0, 0.5);
     playlists_label = gtk_label_new(_("Playlists"));
     lyric_label = gtk_label_new(_("Lyrics"));
+    cur_list_label = gtk_label_new(_("Current Playlist"));
+    pls_label = gtk_label_new(_("Playlists"));
     rc_gui.title_label = gtk_label_new(_("Not Playing"));
-    rc_gui.repeat_checkbutton = gtk_check_button_new_with_mnemonic(
-        _("_Repeat"));
-    rc_gui.random_checkbutton = gtk_check_button_new_with_mnemonic(
-        _("_Shuffle"));
     gtk_misc_set_alignment(GTK_MISC(rc_gui.title_label), 0.0, 0.5);
     gtk_label_set_ellipsize(GTK_LABEL(rc_gui.title_label), PANGO_ELLIPSIZE_END);
     gtk_label_set_attributes(GTK_LABEL(rc_gui.title_label), title_attr_list);
@@ -292,13 +291,18 @@ gboolean create_main_window()
     gtk_label_set_ellipsize(GTK_LABEL(rc_gui.album_label), PANGO_ELLIPSIZE_END);
     gtk_label_set_attributes(GTK_LABEL(rc_gui.album_label), album_attr_list);
     pango_attr_list_unref(album_attr_list);
-    rc_gui.track_label = gtk_label_new("");
-    gui_set_tracknum_statusbar(0);
+    rc_gui.info_label = gtk_label_new("");
+    gtk_misc_set_alignment(GTK_MISC(rc_gui.info_label), 0.0, 0.5);
+    gtk_label_set_ellipsize(GTK_LABEL(rc_gui.info_label), PANGO_ELLIPSIZE_END);
+    gtk_label_set_attributes(GTK_LABEL(rc_gui.info_label), info_attr_list);
+    pango_attr_list_unref(info_attr_list);
     rc_gui.time_label = gtk_label_new("00:00/00:00");
     gtk_misc_set_alignment(GTK_MISC(rc_gui.time_label), 1.0, 0.5);
     gtk_label_set_attributes(GTK_LABEL(rc_gui.time_label), time_attr_list);
     pango_attr_list_unref(time_attr_list);
-    gtk_widget_set_size_request(rc_gui.album_image, 102, 94);
+    gtk_widget_set_size_request(rc_gui.album_image, 84, 80);
+    rc_gui.volume_button = gtk_volume_button_new();
+    gtk_button_set_relief(GTK_BUTTON(rc_gui.volume_button), GTK_RELIEF_NONE);
     rc_gui.control_images[0] = gtk_image_new_from_stock(
         GTK_STOCK_MEDIA_PREVIOUS, GTK_ICON_SIZE_BUTTON);
     rc_gui.control_images[1] = gtk_image_new_from_stock(GTK_STOCK_MEDIA_PLAY,
@@ -309,7 +313,9 @@ gboolean create_main_window()
         GTK_ICON_SIZE_BUTTON);
     for(i=0;i<4;i++)
     {
-        rc_gui.control_buttons[i] = gtk_button_new(); 
+        rc_gui.control_buttons[i] = gtk_button_new();
+        gtk_button_set_relief(GTK_BUTTON(rc_gui.control_buttons[i]),
+            GTK_RELIEF_NONE);
         gtk_container_add(GTK_CONTAINER(rc_gui.control_buttons[i]),
             rc_gui.control_images[i]);
     }
@@ -325,14 +331,9 @@ gboolean create_main_window()
         GTK_POLICY_NEVER,GTK_POLICY_AUTOMATIC);
     gui_tree_view_build();
     position_adjustment = gtk_adjustment_new(0.0,0.0,105.0,1.0,2.0,5.0);
-    volume_adjustment = gtk_adjustment_new(100.0,0.0,104.0,1.0,2.0,4.0);
     rc_gui.time_scroll_bar = gtk_hscale_new(GTK_ADJUSTMENT(
         position_adjustment));
     gtk_scale_set_draw_value(GTK_SCALE(rc_gui.time_scroll_bar),FALSE);
-    rc_gui.volume_scroll_bar = gtk_hscale_new(GTK_ADJUSTMENT(
-        volume_adjustment));
-    gtk_scale_set_draw_value(GTK_SCALE(rc_gui.volume_scroll_bar),FALSE);
-    gtk_widget_set_size_request(rc_gui.volume_scroll_bar, 100, -1);
     control_buttons_hbox = gtk_hbox_new(FALSE, 0);
     control_hbox = gtk_hbox_new(FALSE,1);
     info_label_hbox = gtk_hbox_new(FALSE,20);
@@ -343,7 +344,7 @@ gboolean create_main_window()
     gtk_container_add(GTK_CONTAINER(play_list_scr_window),
         rc_gui.play_list_tree_view);
     g_object_set(rc_gui.time_scroll_bar,"can-focus",FALSE, NULL);
-    g_object_set(rc_gui.volume_scroll_bar,"can-focus",FALSE, NULL);
+    g_object_set(rc_gui.volume_button,"can-focus",FALSE, NULL);
     gui_list_file_tree_view_set_drag();
     gui_play_list_tree_view_set_drag();
     gui_menu_initial_menus();
@@ -353,50 +354,37 @@ gboolean create_main_window()
     for(i=0;i<4;i++)
         gtk_box_pack_start(GTK_BOX(control_button_hbox), 
             rc_gui.control_buttons[i], FALSE, FALSE, 0);
-    gtk_notebook_append_page(GTK_NOTEBOOK(rc_gui.sub_notebook), 
-        list_file_scr_window, playlists_label);
     gtk_notebook_append_page(GTK_NOTEBOOK(rc_gui.sub_notebook),
         rc_gui.lyric_vbox, lyric_label);
-    gtk_container_add(GTK_CONTAINER(playlist_frame), play_list_scr_window);
-    gtk_box_pack_start(GTK_BOX(status_hbox), rc_gui.music_info_status,
-        TRUE, TRUE, 0);
-    gtk_box_pack_start(GTK_BOX(status_hbox), rc_gui.track_num_status,
-        FALSE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(status_hbox), rc_gui.player_state_status,
-        FALSE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(vol_hbox), vol_label, FALSE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(vol_hbox), vol_min_label, FALSE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(vol_hbox), rc_gui.volume_scroll_bar, FALSE,
-        TRUE, 0);
-    gtk_box_pack_start(GTK_BOX(vol_hbox), vol_plus_label, FALSE, FALSE, 0);
+    gtk_notebook_append_page(GTK_NOTEBOOK(rc_gui.plist_notebook),
+        play_list_scr_window, cur_list_label);
+    gtk_notebook_append_page(GTK_NOTEBOOK(rc_gui.plist_notebook),
+        list_file_scr_window, pls_label);
     gtk_box_pack_start(GTK_BOX(vbox1), rc_gui.title_label, FALSE, TRUE, 0);
     gtk_box_pack_start(GTK_BOX(vbox1), rc_gui.artist_label, FALSE, TRUE, 0);
     gtk_box_pack_start(GTK_BOX(vbox1), rc_gui.album_label, FALSE, TRUE, 0);
-    gtk_box_pack_start(GTK_BOX(vbox1), rc_gui.time_label, FALSE, TRUE, 8);
+    gtk_box_pack_start(GTK_BOX(vbox1), rc_gui.info_label, FALSE, TRUE, 0);
     gtk_box_pack_start(GTK_BOX(hbox1), album_frame, FALSE, FALSE, 0);
     gtk_container_add(GTK_CONTAINER(album_frame), rc_gui.album_eventbox);
     gtk_container_add(GTK_CONTAINER(rc_gui.album_eventbox),
         rc_gui.album_image);
     gtk_box_pack_start(GTK_BOX(hbox2), control_button_hbox, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(hbox2), rc_gui.time_scroll_bar, TRUE, TRUE, 0);
-    gtk_box_pack_start(GTK_BOX(hbox3), rc_gui.repeat_checkbutton, FALSE,
-        FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(hbox3), rc_gui.random_checkbutton, FALSE,
-        FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(hbox3), empty_label, TRUE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(hbox3), vol_hbox, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(hbox2), rc_gui.time_label, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(hbox2), rc_gui.volume_button, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(hbox1), vbox1, TRUE, TRUE, 0);
     gtk_box_pack_start(GTK_BOX(player_vbox), hbox1, FALSE, TRUE, 0);
     gtk_box_pack_start(GTK_BOX(player_vbox), hbox2, FALSE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(player_vbox), hbox3, FALSE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(player_vbox), playlist_frame, TRUE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(player_vbox), rc_gui.plist_notebook, TRUE, TRUE,
+        0);
     gtk_paned_pack1(GTK_PANED(main_hpaned), player_vbox, TRUE, FALSE);
+    gtk_container_child_set(GTK_CONTAINER(main_hpaned), player_vbox, "resize",
+        FALSE, "shrink", FALSE, NULL);
     gtk_paned_pack2(GTK_PANED(main_hpaned), rc_gui.sub_notebook, TRUE, TRUE);
-    gtk_widget_set_size_request(player_vbox, 400, -1);
+    gtk_widget_set_size_request(player_vbox, 360, -1);
     gtk_box_pack_start(GTK_BOX(main_vbox), rc_gui.main_menu_bar, FALSE,
         FALSE, 0);
     gtk_box_pack_start(GTK_BOX(main_vbox), main_hpaned, TRUE, TRUE, 0);
-    gtk_box_pack_end(GTK_BOX(main_vbox), status_hbox, FALSE, TRUE, 0);
     gtk_container_add(GTK_CONTAINER(rc_gui.main_window), main_vbox);
     g_signal_connect(G_OBJECT(rc_gui.time_scroll_bar),"button-press-event",
         G_CALLBACK(gui_seek_scale_button_pressed), NULL);
@@ -404,8 +392,8 @@ gboolean create_main_window()
         G_CALLBACK(gui_seek_scale_button_released), NULL);
     g_signal_connect(G_OBJECT(rc_gui.time_scroll_bar),"value-changed",
         G_CALLBACK(gui_seek_scale_value_changed), NULL);
-    g_signal_connect(G_OBJECT(rc_gui.volume_scroll_bar),"value-changed",
-        G_CALLBACK(gui_adjust_volume), volume_adjustment);
+    g_signal_connect(G_OBJECT(rc_gui.volume_button),"value-changed",
+        G_CALLBACK(gui_adjust_volume), NULL);
     g_signal_connect(G_OBJECT(rc_gui.list_file_tree_view),"cursor-changed",
         G_CALLBACK(gui_list_view_row_selected), NULL);
     g_signal_connect(G_OBJECT(rc_gui.play_list_tree_view),"row-activated",
@@ -439,17 +427,12 @@ gboolean create_main_window()
         G_CALLBACK(gui_press_stop_button), NULL);
     g_signal_connect(G_OBJECT(rc_gui.control_buttons[3]), "clicked",
         G_CALLBACK(gui_press_next_button), NULL);
-    g_signal_connect(G_OBJECT(rc_gui.repeat_checkbutton), "toggled",
-        G_CALLBACK(gui_press_repeat_button), NULL);
-    g_signal_connect(G_OBJECT(rc_gui.random_checkbutton), "toggled",
-        G_CALLBACK(gui_press_random_button), NULL);
     g_signal_connect(GTK_STATUS_ICON(tray_icon), "activate", 
         G_CALLBACK(gui_show_hide_window), NULL);
-    //g_signal_connect(GTK_STATUS_ICON(tray_icon), "popup-menu",
-    //    G_CALLBACK(gui_tray_icon_popup), NULL);
+    g_signal_connect(GTK_STATUS_ICON(tray_icon), "popup-menu",
+        G_CALLBACK(gui_tray_icon_popup), NULL);
     g_signal_connect(G_OBJECT(rc_gui.main_window), "window-state-event",
         G_CALLBACK(gui_window_state_changed),NULL);
-
 
     /* More Signals Here! */
     g_signal_connect(G_OBJECT(rc_gui.main_window),"destroy",
@@ -458,6 +441,8 @@ gboolean create_main_window()
         (GSourceFunc)(gui_reflush_time_info),NULL);
     bzero(rc_gui.time_info_str, sizeof(rc_gui.time_info_str));
     bzero(rc_gui.track_info_str, sizeof(rc_gui.track_info_str));
+
+    gui_style_reflush();
     gtk_widget_show_all(rc_gui.main_window);
     gui_see_scale_disable(NULL,NULL);
 
@@ -564,84 +549,6 @@ void gui_set_play_button_state(gboolean state)
 }
 
 /*
- * Press repeat button.
- */
-
-gboolean gui_press_repeat_button(GtkToggleButton *widget, gpointer data)
-{
-    CoreData *gcore = get_core();
-    static gint dstate = 1;
-    if(gcore->repeat!=0) dstate = gcore->repeat;
-    gboolean flag = TRUE;
-    flag = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
-        rc_gui.repeat_checkbutton));
-    if(flag)
-    {
-        gcore->repeat = dstate;
-        if(!gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
-            rc_gui.repeat_checkbutton)))
-            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(
-                rc_gui.repeat_checkbutton), TRUE);
-        if(!gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(
-            ui_menu->repeat_menu_items[dstate+1])))
-            gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(
-                ui_menu->repeat_menu_items[dstate+1]), TRUE);
-    }
-    else
-    {
-        gcore->repeat = 0;
-        if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
-            rc_gui.repeat_checkbutton)))
-            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(
-                rc_gui.repeat_checkbutton), FALSE);
-        if(!gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(
-            ui_menu->repeat_menu_items[0])))
-            gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(
-                ui_menu->repeat_menu_items[0]), TRUE);
-    }
-    return FALSE;
-}
-
-/*
- * Press random button.
- */
-
-gboolean gui_press_random_button(GtkToggleButton *widget, gpointer data)
-{
-    CoreData *gcore = get_core();
-    static gint dstate = 1;
-    if(gcore->random!=0) dstate = gcore->random;
-    gboolean flag = TRUE;
-    flag = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
-        rc_gui.random_checkbutton));
-    if(flag)
-    {
-        gcore->random = dstate;
-        if(!gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
-            rc_gui.random_checkbutton)))
-            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(
-                rc_gui.random_checkbutton), TRUE);
-        if(!gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(
-            ui_menu->random_menu_items[dstate+1])))
-            gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(
-                ui_menu->random_menu_items[dstate+1]), TRUE);
-    }
-    else
-    {
-        gcore->random = 0;
-        if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
-            rc_gui.random_checkbutton)))
-            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(
-                rc_gui.random_checkbutton),FALSE);
-        if(!gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(
-            ui_menu->random_menu_items[0])))
-            gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(
-                ui_menu->random_menu_items[0]), TRUE);
-    }
-    return FALSE;
-}
-
-/*
  * Adjust the playing position by the dragging of the bar.
  */
 
@@ -656,12 +563,51 @@ gboolean gui_adjust_play_position(GtkWidget *widget, gpointer data)
  * Set the text in the information label.
  */
 
-void gui_set_music_info_label(gchar *title, gchar *artist, gchar *album)
+void gui_set_music_info_label(gchar *title, gchar *artist, gchar *album, 
+    gchar *format, guint bitrate)
 {
     gchar title_info[512];
+    gchar music_info[64];
+    static gchar *l_format[]={"FLAC","PCM","Monkey's Audio",NULL};
+    static gchar *n_format[]={"Vorbis","MP3","WMA",NULL};
+    gint i = 0;
+    gchar *short_format;
+    gboolean is_lossless = FALSE;
+    gint type = -1;
+    bitrate /= 1000;
+    if(format==NULL) format="Unknown";
+    for(i=0;l_format[i]!=NULL;i++)
+    {
+        if(strstr(format, l_format[i])!=NULL)
+        {
+            is_lossless = TRUE;
+            type = i;
+            break;
+        }
+    }
+    if(type!=-1) short_format = l_format[type];
+    else short_format = "Unknown";
+    if(!is_lossless)
+    {
+        for(i=0;n_format[i]!=NULL;i++)
+        {
+            if(strstr(format, n_format[i])!=NULL)
+            {
+                type = i;
+                break;
+            } 
+        }
+        if(type!=-1) short_format = n_format[type];
+        else short_format = "Unknown";
+    }
+    if(is_lossless)
+        g_snprintf(music_info, 30, _("%s Lossless"), short_format); 
+    else
+        g_snprintf(music_info, 30, _("%s %d kbps"), short_format, bitrate); 
     gtk_label_set_text(GTK_LABEL(rc_gui.title_label), title);
     gtk_label_set_text(GTK_LABEL(rc_gui.artist_label), artist);
     gtk_label_set_text(GTK_LABEL(rc_gui.album_label), album);
+    gtk_label_set_text(GTK_LABEL(rc_gui.info_label), music_info);
     if(rc_get_stable())
         g_snprintf(title_info, 500, "%s - %s", rc_get_program_name(), title);
     else
@@ -674,9 +620,9 @@ void gui_set_music_info_label(gchar *title, gchar *artist, gchar *album)
  * Adjust the volume of the player.
  */
 
-gboolean gui_adjust_volume(GtkWidget *widget, gpointer data)
+gboolean gui_adjust_volume(GtkScaleButton *widget, gdouble vol, gpointer data)
 {
-    double persent = gtk_adjustment_get_value(GTK_ADJUSTMENT(data));
+    double persent = vol * 100;
     if(100.0 - persent <= 10e-3)
         gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[7], FALSE);
     else
@@ -823,8 +769,8 @@ gboolean gui_play_list_button_release_event(GtkWidget *widget,
             GtkTreeViewColumn *col;
             if(gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(
                 rc_gui.play_list_tree_view), event->x, event->y, &path, &col,
-		NULL, NULL))
- 	        gtk_tree_view_set_cursor(GTK_TREE_VIEW(
+        NULL, NULL))
+             gtk_tree_view_set_cursor(GTK_TREE_VIEW(
                     rc_gui.play_list_tree_view), path, col, FALSE);
             if(path) gtk_tree_path_free(path);
         }
@@ -839,78 +785,14 @@ gboolean gui_play_list_button_release_event(GtkWidget *widget,
 }
 
 /*
- * Show bitrate information in the bitrate status bar.
- */
-
-void gui_set_bitrate_label(gchar *format, guint bitrate)
-{
-    static gchar *l_format[]={"FLAC","PCM","Monkey's Audio",NULL};
-    static gchar *n_format[]={"Vorbis","MP3","WMA",NULL};
-    guint context_id = 0;
-    gint count = 0;
-    gchar text[32];
-    gchar *short_format;
-    gboolean is_lossless = FALSE;
-    gint type = -1;
-    bitrate /= 1000;
-    if(format==NULL) format="Unknown";
-    while(l_format[count]!=NULL)
-    {
-        if(strstr(format, l_format[count])!=NULL)
-        {
-            is_lossless = TRUE;
-
-            type = count;
-            break;
-        }
-        count++;
-    }
-    if(type!=-1) short_format = l_format[type];
-    else short_format = "Unknown";
-    if(!is_lossless)
-    {
-        count = 0;
-        while(n_format[count]!=NULL)
-        {
-            if(strstr(format, n_format[count])!=NULL)
-            {
-                type = count;
-                break;
-            } 
-            count++;
-        }
-        if(type!=-1) short_format = n_format[type];
-        else short_format = "Unknown";
-    }
-    if(is_lossless)
-        g_snprintf(text, 30, _("%s Lossless"), short_format); 
-    else
-        g_snprintf(text, 30, _("%s %d kbps"), short_format, bitrate); 
-    context_id = gtk_statusbar_get_context_id(GTK_STATUSBAR(
-        rc_gui.music_info_status), "Music-Info");
-    gtk_statusbar_pop(GTK_STATUSBAR(rc_gui.music_info_status), context_id);
-    gtk_statusbar_push(GTK_STATUSBAR(rc_gui.music_info_status), context_id,
-        text);
-}
-
-/*
- * Show playlist information in the playlist status bar.
- */
-
-void gui_set_plist_status(gchar *format, gint index1, gint index2)
-{
-    //gchar text[128];
-    
-}
-
-/*
  * Set the volume bar value.
  */
 
 void gui_set_volume(gdouble volume)
 {
-    gtk_range_set_value(GTK_RANGE(rc_gui.volume_scroll_bar), volume);
-    if(100.0 - volume <= 10e-3)
+    volume /= 100;
+    gtk_scale_button_set_value(GTK_SCALE_BUTTON(rc_gui.volume_button), volume);
+    if(1.0 - volume <= 10e-3)
         gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[7], FALSE);
     else
         gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[7], TRUE);
@@ -930,15 +812,11 @@ void gui_set_player_state()
     RCSetting *setting = get_setting();
     if(gcore->repeat>0)
     {
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(
-            rc_gui.repeat_checkbutton), TRUE);
         gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(
             ui_menu->repeat_menu_items[gcore->repeat+1]), TRUE);
     }
     if(gcore->random>0)
     {
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(
-            rc_gui.random_checkbutton), TRUE);
         gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(
             ui_menu->random_menu_items[gcore->random+1]), TRUE);
     }
@@ -956,20 +834,6 @@ gboolean gui_press_repeat_menu(GtkCheckMenuItem *widget, gpointer data)
     gint state = GPOINTER_TO_INT(data);
     if(!gtk_check_menu_item_get_active(widget)) return FALSE;
     gcore->repeat = state;
-    if(state>0)
-    {
-        if(!gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
-            rc_gui.repeat_checkbutton)))
-            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(
-                rc_gui.repeat_checkbutton), TRUE);
-    }
-    else
-    {
-        if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
-            rc_gui.repeat_checkbutton)));
-            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(
-                rc_gui.repeat_checkbutton), FALSE);
-    }
     return FALSE;
 }
 
@@ -983,20 +847,6 @@ gboolean gui_press_random_menu(GtkCheckMenuItem *widget, gpointer data)
     gint state = GPOINTER_TO_INT(data);
     if(!gtk_check_menu_item_get_active(widget)) return FALSE;
     gcore->random = state;
-    if(state>0)
-    {
-        if(!gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
-            rc_gui.random_checkbutton)))
-            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(
-                rc_gui.random_checkbutton), TRUE);
-    }
-    else
-    {
-        if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
-            rc_gui.random_checkbutton)));
-            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(
-                rc_gui.random_checkbutton), FALSE);
-    }
     return FALSE;
 }
 
@@ -1006,10 +856,12 @@ gboolean gui_press_random_menu(GtkCheckMenuItem *widget, gpointer data)
 
 gboolean gui_press_vol_up_menu(GtkMenuItem *widget, gpointer data)
 {
-    gdouble value = gtk_range_get_value(GTK_RANGE(rc_gui.volume_scroll_bar));
-    value+=5;
-    if(value>100.0) value = 100.0;
-    gtk_range_set_value(GTK_RANGE(rc_gui.volume_scroll_bar), value); 
+    gdouble value = gtk_scale_button_get_value(GTK_SCALE_BUTTON(
+        rc_gui.volume_button));
+    value+=0.05;
+    if(value>1.0) value = 1.0;
+    gtk_scale_button_set_value(GTK_SCALE_BUTTON(rc_gui.volume_button),
+        value);
     return FALSE;
 }
 
@@ -1019,10 +871,12 @@ gboolean gui_press_vol_up_menu(GtkMenuItem *widget, gpointer data)
 
 gboolean gui_press_vol_down_menu(GtkMenuItem *widget, gpointer data)
 {
-    gdouble value = gtk_range_get_value(GTK_RANGE(rc_gui.volume_scroll_bar));
-    value-=5;
+    gdouble value = gtk_scale_button_get_value(GTK_SCALE_BUTTON(
+        rc_gui.volume_button));
+    value-=0.05;
     if(value<0.0) value = 0.0;
-    gtk_range_set_value(GTK_RANGE(rc_gui.volume_scroll_bar), value); 
+    gtk_scale_button_set_value(GTK_SCALE_BUTTON(rc_gui.volume_button),
+        value);
     return FALSE;
 }
 
@@ -1078,40 +932,6 @@ void gui_set_play_list_menu(GtkTreeView *widget, gpointer data)
         gtk_widget_set_sensitive(ui_menu->pl_menu_item[8], FALSE);
         gtk_widget_set_sensitive(ui_menu->view_menu_items[8], FALSE);
     }
-}
-
-/*
- * Set the state status bar.
- */
-
-void gui_set_state_statusbar(CoreState state)
-{
-    guint context_id = 0;
-    gchar *text = NULL;
-    if(state==CORE_PLAYING) text = _("Playing");
-    else if(state==CORE_PAUSED) text = _("Paused");
-    else text = _("Stopped");
-    context_id = gtk_statusbar_get_context_id(GTK_STATUSBAR(
-        rc_gui.player_state_status), "State-Info");
-    gtk_statusbar_pop(GTK_STATUSBAR(rc_gui.player_state_status), context_id);
-    gtk_statusbar_push(GTK_STATUSBAR(rc_gui.player_state_status), context_id,
-        text);
-}
-
-/*
- * Set the track number status bar.
- */
-
-void gui_set_tracknum_statusbar(gint number)
-{
-    guint context_id = 0;
-    gchar text[64];
-    g_snprintf(text, 60, _("Track %d"), number+1);
-    context_id = gtk_statusbar_get_context_id(GTK_STATUSBAR(
-        rc_gui.track_num_status), "Track-Number");
-    gtk_statusbar_pop(GTK_STATUSBAR(rc_gui.track_num_status), context_id);
-    gtk_statusbar_push(GTK_STATUSBAR(rc_gui.track_num_status), context_id,
-        text);
 }
 
 /*
@@ -1187,7 +1007,7 @@ gboolean gui_set_cover_image(gchar *filename)
             rc_gui.no_cover_image);
         return FALSE;
     }
-    album_new_pixbuf = gdk_pixbuf_scale_simple(album_src_pixbuf, 102, 98,
+    album_new_pixbuf = gdk_pixbuf_scale_simple(album_src_pixbuf, 84, 80,
         GDK_INTERP_HYPER);
     g_object_unref(album_src_pixbuf);
     if(album_new_pixbuf==NULL)
@@ -1210,16 +1030,26 @@ void gui_show_hide_window(GtkWidget *widget, gpointer data)
 {
     RCSetting *setting = get_setting();
     if(!setting->min_to_tray) return;
-	if(gtk_widget_get_visible(rc_gui.main_window)==TRUE)
-	{
-		gtk_widget_hide(GTK_WIDGET(rc_gui.main_window));
-	}
-	else
+    if(gtk_widget_get_visible(rc_gui.main_window)==TRUE)
+    {
+        gtk_widget_hide(GTK_WIDGET(rc_gui.main_window));
+    }
+    else
     {
         gtk_window_set_skip_taskbar_hint(GTK_WINDOW(rc_gui.main_window),
             FALSE);
-		gtk_widget_show(GTK_WIDGET(rc_gui.main_window));
+        gtk_widget_show(GTK_WIDGET(rc_gui.main_window));
         gtk_window_deiconify(GTK_WINDOW(rc_gui.main_window));
     }
+}
+
+/*
+ * Tray icon popup menu.
+ */
+
+void gui_tray_icon_popup(GtkStatusIcon *status_icon, guint button,
+    guint ctivate_time, gpointer data)  
+{
+    g_printf("Who calls me? Popup the menu plz!\n");
 }
 

@@ -32,7 +32,6 @@ static GtkCellRenderer *renderer_pixbuf[2];
 static GtkTreeViewColumn *list_file_column;
 static GtkTreeViewColumn *play_list_index_column;
 static GtkTreeViewColumn *play_list_title_column;
-static GtkTreeViewColumn *play_list_artist_column;
 static GtkTreeViewColumn *play_list_time_column;
 
 /*
@@ -73,8 +72,6 @@ void gui_tree_view_build()
         "#", renderer_pixbuf[1], "stock-id", 1, NULL);
     play_list_title_column = gtk_tree_view_column_new_with_attributes(
         _("Title"), renderer_text[2], "text", 2, NULL);
-    play_list_artist_column = gtk_tree_view_column_new_with_attributes(
-        _("Artist"), renderer_text[3], "text", 3, NULL);
     play_list_time_column = gtk_tree_view_column_new_with_attributes(
         _("Length"), renderer_text[4], "text", 5, NULL);
     gtk_tree_view_column_set_title(list_file_column, "Playlist");
@@ -87,7 +84,6 @@ void gui_tree_view_build()
     gtk_tree_view_append_column(GTK_TREE_VIEW(rc_ui->list_file_tree_view),
         list_file_column);
     gtk_tree_view_column_set_expand(play_list_title_column, TRUE);
-    gtk_tree_view_column_set_expand(play_list_artist_column, TRUE);
     gtk_tree_view_column_set_sizing(play_list_time_column,
         GTK_TREE_VIEW_COLUMN_FIXED);
     gtk_tree_view_column_set_fixed_width(play_list_index_column ,30);
@@ -100,8 +96,6 @@ void gui_tree_view_build()
     gtk_tree_view_append_column(GTK_TREE_VIEW(rc_ui->play_list_tree_view),
         play_list_title_column);
     gtk_tree_view_append_column(GTK_TREE_VIEW(rc_ui->play_list_tree_view),
-        play_list_artist_column);
-    gtk_tree_view_append_column(GTK_TREE_VIEW(rc_ui->play_list_tree_view),
         play_list_time_column);
     rc_ui->list_file_selection = gtk_tree_view_get_selection(
         GTK_TREE_VIEW(rc_ui->list_file_tree_view));
@@ -113,6 +107,8 @@ void gui_tree_view_build()
         GTK_SELECTION_MULTIPLE);
     gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(
         rc_ui->list_file_tree_view), FALSE);
+        gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(
+        rc_ui->play_list_tree_view), FALSE);
     gtk_tree_view_set_reorderable(GTK_TREE_VIEW(rc_ui->play_list_tree_view),
         FALSE);
     gtk_tree_view_set_reorderable(GTK_TREE_VIEW(rc_ui->list_file_tree_view),
@@ -479,7 +475,7 @@ void gui_play_list_dnd_data_received(GtkWidget *widget,
         {
             GList *path_list = NULL;
             gint count = 0;
-	        memcpy(&path_list, seldata->data, sizeof(path_list));
+            memcpy(&path_list, seldata->data, sizeof(path_list));
             if(path_list==NULL) break;
             length = g_list_length(path_list);
             indices = g_malloc(length*sizeof(gint));
@@ -541,7 +537,6 @@ void gui_play_list_dnd_data_received(GtkWidget *widget,
                     if(reorder_array[i]==gcore->music_index)
                     {
                         gcore->music_index = i;
-                        gui_set_tracknum_statusbar(i);
                         break;
                     }
                 }
@@ -571,10 +566,13 @@ void gui_play_list_dnd_data_received(GtkWidget *widget,
             while(uri_array[count]!=NULL)
             {
                 uri = uri_array[count];
-                flag = plist_insert_music(uri, gcore->list_index_selected,
-                    target);
-                target++;
-                count++;
+                if(rc_is_mfile_supported(uri))
+                {
+                    flag = plist_insert_music(uri, gcore->list_index_selected,
+                        target);
+                    target++;
+                    count++;
+                }
             }
             g_strfreev(uri_array);
             break;
@@ -656,6 +654,7 @@ void gui_list_file_dnd_data_received(GtkWidget *widget,
     gint *index = NULL;
     gint i = 0;
     gint length = 0;
+    gboolean end_flag = FALSE;
     GtkTreeViewDropPosition pos;
     GtkTreePath *path_start = NULL, *path_drop = NULL;
     GtkTreeIter iter_start, iter_drop;
@@ -669,14 +668,7 @@ void gui_list_file_dnd_data_received(GtkWidget *widget,
         target = index[0];
         gtk_tree_path_free(path_drop);
     }
-    else
-    {
-        target = plist_get_list_length() - 1;
-        path_drop = gtk_tree_path_new_from_indices(target, -1);
-        gtk_tree_model_get_iter(rc_ui->list_file_tree_model, &iter_drop,
-            path_drop);
-        gtk_tree_path_free(path_drop);
-    }
+    else end_flag = TRUE;
     switch(info)
     {
         case 0:
@@ -684,14 +676,24 @@ void gui_list_file_dnd_data_received(GtkWidget *widget,
             source = *(seldata->data);
             CoreData *gcore = get_core();
             if(pos==GTK_TREE_VIEW_DROP_AFTER ||
-                pos==GTK_TREE_VIEW_DROP_INTO_OR_AFTER) target++;
+                pos==GTK_TREE_VIEW_DROP_INTO_OR_AFTER)
+            {
+                target++;
+                if(!gtk_tree_model_iter_next(rc_ui->list_file_tree_model,
+                    &iter_drop))
+                    end_flag = TRUE;
+            }
             path_start = gtk_tree_path_new_from_indices(source, -1);
             gtk_tree_model_get_iter(rc_ui->list_file_tree_model, &iter_start,
                 path_start);
             gtk_tree_path_free(path_start);
             gcore->list_index_selected = target;
-            gtk_list_store_swap(GTK_LIST_STORE(rc_ui->list_file_tree_model),
-                &iter_start, &iter_drop);
+            if(!end_flag)
+                gtk_list_store_move_before(GTK_LIST_STORE(
+                    rc_ui->list_file_tree_model), &iter_start, &iter_drop);
+            else
+                gtk_list_store_move_before(GTK_LIST_STORE(
+                    rc_ui->list_file_tree_model), &iter_start, NULL);
             break;
         }
         case 1:
@@ -701,7 +703,7 @@ void gui_list_file_dnd_data_received(GtkWidget *widget,
             GList *path_list = NULL;
             GList *list_foreach = NULL;
             GtkTreePath **path_array;
-	    memcpy(&path_list, seldata->data, sizeof(path_list));
+        memcpy(&path_list, seldata->data, sizeof(path_list));
             if(path_list==NULL) break;
             length = g_list_length(path_list);
             path_list = g_list_sort_with_data(path_list, (GCompareDataFunc)

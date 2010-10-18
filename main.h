@@ -55,6 +55,8 @@ const gchar *const *rc_get_artists();
 gboolean rc_get_stable();
 const gchar *rc_get_app_dir();
 const gchar *rc_get_home_dir();
+const gchar *const *rc_get_mfile_support_glob();
+gboolean rc_is_mfile_supported(gchar *);
 gboolean rc_dbus_init(gchar **);
 
 #endif

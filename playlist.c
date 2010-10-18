@@ -48,8 +48,11 @@ static gboolean plist_metadata_bus_handler(GstBus *bus, GstMessage *message,
     gchar *tag_filetype = NULL;
     gchar *tag_album = NULL;
     gchar *tag_comment = NULL;
+    gchar *tag_cuelist = NULL;
     guint bitrates = 0;
     guint tracknum = 0;
+    guint tag_cue_num = 0;
+    gint i = 0;
     if(mmd==NULL) return FALSE;
     if(mmd->uri==NULL) return FALSE;
     switch(GST_MESSAGE_TYPE(message)) 
@@ -57,13 +60,13 @@ static gboolean plist_metadata_bus_handler(GstBus *bus, GstMessage *message,
         case GST_MESSAGE_EOS:
         {
             mmd->eos = TRUE;
-	    return TRUE;
+        return TRUE;
         }
-	case GST_MESSAGE_ERROR:
-	{
+        case GST_MESSAGE_ERROR:
+        {
             mmd->eos = TRUE;
-	    return TRUE;
-	}
+            return TRUE;
+        }
         case GST_MESSAGE_TAG:
         {
             GstTagList *tags;
@@ -77,7 +80,7 @@ static gboolean plist_metadata_bus_handler(GstBus *bus, GstMessage *message,
             {
                 g_utf8_strncpy(mmd->title, tag_title, 127);
                 g_free(tag_title);
-      	    }
+            }
             if(gst_tag_list_get_string(tags, GST_TAG_ARTIST, &tag_artist))
             {
                 g_utf8_strncpy(mmd->artist, tag_artist, 127);
@@ -97,11 +100,28 @@ static gboolean plist_metadata_bus_handler(GstBus *bus, GstMessage *message,
                 if(bitrates>0) mmd->bitrate = bitrates;
             if(gst_tag_list_get_uint(tags, GST_TAG_TRACK_NUMBER, &tracknum))
                 mmd->tracknum = tracknum;
+            tag_cue_num = gst_tag_list_get_tag_size(tags,
+                GST_TAG_EXTENDED_COMMENT);
+            for(i=0;i<tag_cue_num && !mmd->cue_flag && mmd->emb_cue_data==NULL;
+                i++)
+            {
+                if(gst_tag_list_get_string_index(tags, 
+                    GST_TAG_EXTENDED_COMMENT, i, &tag_cuelist))
+                {
+                    if(!strncmp(tag_cuelist, "cuesheet=", 9))
+                    {
+                        mmd->cue_flag = TRUE;
+                        mmd->emb_cue_data = g_strdup(tag_cuelist+9);
+                        rc_debug_print("Got embeded CUE Sheet!\n");
+                    }
+                    g_free(tag_cuelist);
+                }
+            }
             gst_tag_list_free(tags);
             return TRUE;
             break;
-	}
-	case GST_MESSAGE_ELEMENT:
+        }
+        case GST_MESSAGE_ELEMENT:
         {
             if(gst_is_missing_plugin_message(message))
             {
@@ -110,7 +130,7 @@ static gboolean plist_metadata_bus_handler(GstBus *bus, GstMessage *message,
             }
             break;
         }
-	default: break;
+        default: break;
     }
     return FALSE;
 }
@@ -194,16 +214,95 @@ gboolean plist_insert_music(const gchar *uri, gint list_index,
     gchar new_title[512];
     gchar new_length[64];
     CoreData *gcore = get_core();
-    MusicMetaData mmd;
+    MusicMetaData mmd, *cue_mmd;
     GtkTreeIter iter;
     GtkListStore *pl_store;
+    GSList *cue_mmd_list, *cue_list_foreach;
     uri_d = g_strdup(uri);
     bzero(&mmd, sizeof(MusicMetaData));
+    if(g_regex_match_simple("(.CUE)$", uri_d, G_REGEX_CASELESS, 0))
+    {
+        /* CUE Format */
+        filename = g_filename_from_uri(uri_d, NULL, NULL);
+        cue_mmd_list = plist_read_cue_file(filename);
+        g_free(filename);
+        if(cue_mmd_list==NULL)
+        {
+            g_free(uri_d);
+            return FALSE;
+        }
+        filename = NULL;
+        pl_store = plist_get_list_store(list_index);
+        for(cue_list_foreach=cue_mmd_list;cue_list_foreach!=NULL;
+            cue_list_foreach=g_slist_next(cue_list_foreach))
+        {
+            cue_mmd = cue_list_foreach->data;
+            seclength = cue_mmd->length / 100;
+            time_min = seclength / 60;
+            time_sec = seclength % 60;
+            g_snprintf(new_length, 63, "%02d:%02d", time_min, time_sec);
+            if(music_index>=0)
+            {
+                gtk_list_store_insert(pl_store, &iter, music_index);
+                music_index++;
+            }
+            else
+                gtk_list_store_append(pl_store, &iter);
+            gtk_list_store_set(pl_store, &iter, 0, uri_d, 1, NULL, 2, 
+                cue_mmd->title, 3, cue_mmd->artist, 4, cue_mmd->album, 5,
+                new_length, 6, cue_mmd->tracknum, -1);
+            if(gcore->list_index==list_index && gcore->music_index>=music_index
+                && music_index>=0)
+            {
+                gcore->music_index++;
+            }
+            g_free(cue_mmd->uri);
+            g_free(cue_mmd);
+        }
+        g_slist_free(cue_mmd_list);
+        return TRUE;
+    }
     plist_load_metadata(uri_d, &mmd, &errorno);
     if(errorno!=0)
     {
         g_free(uri_d);
         return FALSE;
+    }
+    if(mmd.cue_flag && mmd.emb_cue_data!=NULL)
+    {
+        /* Embeded CUE Sheet */
+        cue_mmd_list = plist_read_emb_cue_sheet(&mmd);
+        g_free(mmd.emb_cue_data);
+        if(cue_mmd_list==NULL) return FALSE;
+        pl_store = plist_get_list_store(list_index);
+        for(cue_list_foreach=cue_mmd_list;cue_list_foreach!=NULL;
+            cue_list_foreach=g_slist_next(cue_list_foreach))
+        {
+            cue_mmd = cue_list_foreach->data;
+            seclength = cue_mmd->length / 100;
+            time_min = seclength / 60;
+            time_sec = seclength % 60;
+            g_snprintf(new_length, 63, "%02d:%02d", time_min, time_sec);
+            if(music_index>=0)
+            {
+                gtk_list_store_insert(pl_store, &iter, music_index);
+                music_index++;
+            }
+            else
+                gtk_list_store_append(pl_store, &iter);
+            gtk_list_store_set(pl_store, &iter, 0, uri_d, 1, NULL, 2, 
+                cue_mmd->title, 3, cue_mmd->artist, 4, cue_mmd->album, 5,
+                new_length, 6, cue_mmd->tracknum, -1);
+            if(gcore->list_index==list_index && gcore->music_index>=music_index
+                && music_index>=0)
+            {
+                gcore->music_index++;
+            }
+            g_free(cue_mmd->uri);
+            g_free(cue_mmd);
+        }
+        g_slist_free(cue_mmd_list);
+        return TRUE;
     }
     if(mmd.title[0]!='\0')
         g_utf8_strncpy(new_title, mmd.title, 127);
@@ -238,7 +337,6 @@ gboolean plist_insert_music(const gchar *uri, gint list_index,
         && music_index>=0)
     {
         gcore->music_index++;
-        gui_set_tracknum_statusbar(gcore->music_index);
     }
     g_free(uri_d);
     return TRUE;
@@ -309,6 +407,8 @@ void plist_load_metadata(gchar *uri, MusicMetaData *mmd, gint *errorno)
         return;
     }
     mmd->uri = uri;
+    mmd->cue_flag = FALSE;
+    mmd->emb_cue_data = NULL;
     mmd->eos = FALSE;
     mmd->bitrate = 0;
     mmd->tracknum = 0;
@@ -344,9 +444,9 @@ void plist_load_metadata(gchar *uri, MusicMetaData *mmd, gint *errorno)
         if(msg!=NULL) 
         {
             plist_metadata_bus_handler(bus, msg, mmd);
-	    gst_message_unref(msg);
-	    changeTimeout = 0;
-	}
+            gst_message_unref(msg);
+            changeTimeout = 0;
+        }
         else changeTimeout++;
         state_ret = gst_element_get_state(mmd_pipeline, NULL, NULL, 0);
     }
@@ -363,7 +463,7 @@ void plist_load_metadata(gchar *uri, MusicMetaData *mmd, gint *errorno)
     path = g_filename_from_uri(uri, NULL, NULL);
     if(path!=NULL)
     {
-        if(g_str_has_suffix(path, ".MP3") || g_str_has_suffix(path, ".mp3"))
+        if(g_regex_match_simple("(.MP3)$", path, G_REGEX_CASELESS, 0))
         {
             rc_debug_print("This audio file is an MP3 file. "
                 "Search ID3 tag.\n");
@@ -411,6 +511,7 @@ gboolean plist_play_by_index(gint list_index, gint music_index)
     guint bitrate = 0;
     gint64 timeinfo;
     gint time_min, time_sec;
+    gint trackno = -1;
     gchar *list_uri = NULL;
     gchar list_title[512];
     gchar list_length[64];
@@ -426,8 +527,9 @@ gboolean plist_play_by_index(gint list_index, gint music_index)
     gchar *music_basename = NULL;
     gboolean lyric_flag = FALSE;
     gboolean cover_flag = FALSE;
+    GSList *cue_mmd_list = NULL, *cue_list_foreach = NULL;
     gint i = 0;
-    MusicMetaData mmd_new;
+    MusicMetaData mmd_new, *cue_mmd;
     list_store = plist_get_list_store(list_index);
     old_store = plist_get_list_store(gcore->list_index);
     path = gtk_tree_path_new_from_indices(music_index, -1);
@@ -435,17 +537,90 @@ gboolean plist_play_by_index(gint list_index, gint music_index)
     if(!gtk_tree_model_get_iter(GTK_TREE_MODEL(list_store), &iter, path))
     {
         g_printf("Cannot find iter!\n");
+        if(path!=NULL) gtk_tree_path_free(path);
+        if(path_old!=NULL) gtk_tree_path_free(path_old);
         return FALSE;
     }
-    gtk_tree_model_get(GTK_TREE_MODEL(list_store), &iter, 0, &list_uri, -1);
-    if(list_uri==NULL) return FALSE;
+    gtk_tree_model_get(GTK_TREE_MODEL(list_store), &iter, 0, &list_uri, 6,
+        &trackno, -1);
     gtk_tree_path_free(path);
-    bzero(&mmd_new, sizeof(MusicMetaData));
-    plist_load_metadata(list_uri, &mmd_new, &errorno);
-    if(errorno!=0)
+    if(list_uri==NULL)
     {
-        rc_debug_print("ERROR: Cannot read metadata!\n");
+        if(path_old!=NULL) gtk_tree_path_free(path_old); 
         return FALSE;
+    }
+    bzero(&mmd_new, sizeof(MusicMetaData));
+    if(g_regex_match_simple("(.CUE)$", list_uri, G_REGEX_CASELESS, 0))
+    {
+        rc_debug_print("Trying to play CUE file...\n");
+        fpathname = g_filename_from_uri(list_uri, NULL, NULL);
+        cue_mmd_list = plist_read_cue_file(fpathname);
+        g_free(fpathname);
+        fpathname = NULL;
+        if(cue_mmd_list==NULL)
+        {
+            rc_debug_print("ERROR: Cannot open CUE file!\n");
+            if(path_old!=NULL) gtk_tree_path_free(path_old);
+            return FALSE;
+        }
+        for(cue_list_foreach=cue_mmd_list;cue_list_foreach!=NULL;
+            cue_list_foreach=g_slist_next(cue_list_foreach))
+        {
+            cue_mmd = cue_list_foreach->data;
+            if(cue_mmd->tracknum==trackno)
+            {
+                bcopy(cue_mmd, &mmd_new, sizeof(MusicMetaData));
+                mmd_new.uri = g_strdup(cue_mmd->uri);
+                mmd_new.cue_flag = TRUE;
+                break;
+            }
+            g_free(cue_mmd->uri);
+            g_free(cue_mmd);
+        }
+        g_slist_free(cue_mmd_list);
+        if(!mmd_new.cue_flag)
+        {
+            rc_debug_print("ERROR: Cannot find required track!\n");
+            if(path_old!=NULL) gtk_tree_path_free(path_old);
+            return FALSE;
+        }
+    }
+    else
+    {
+        plist_load_metadata(list_uri, &mmd_new, &errorno);
+        if(errorno!=0)
+        {
+            rc_debug_print("ERROR: Cannot read metadata!\n");
+            if(path_old!=NULL) gtk_tree_path_free(path_old);
+            return FALSE;
+        }
+        if(mmd_new.cue_flag && mmd_new.emb_cue_data!=NULL && trackno>=0)
+        {
+            rc_debug_print("Trying to play embeded CUE Sheet\n");
+            cue_mmd_list = plist_read_emb_cue_sheet(&mmd_new);
+            if(cue_mmd_list==NULL)
+            {
+                rc_debug_print("ERROR: Cannot open embeded CUE Sheet! Play "
+                    "this file as a normal file...\n");
+            }
+            else
+            {
+                for(cue_list_foreach=cue_mmd_list;cue_list_foreach!=NULL;
+                    cue_list_foreach=g_slist_next(cue_list_foreach))
+                {
+                    cue_mmd = cue_list_foreach->data;
+                    if(cue_mmd->tracknum==trackno)
+                    {
+                        bcopy(cue_mmd, &mmd_new, sizeof(MusicMetaData));
+                        mmd_new.uri = g_strdup(list_uri);
+                        mmd_new.cue_flag = TRUE;
+                    }
+                    g_free(cue_mmd->uri);
+                    g_free(cue_mmd);
+                }
+                g_slist_free(cue_mmd_list);
+            }
+        }
     }
     timeinfo = mmd_new.length / 100;
     time_min = timeinfo / 60;
@@ -485,15 +660,24 @@ gboolean plist_play_by_index(gint list_index, gint music_index)
         g_snprintf(music_info, 1024, "%s - %s ", list_title, music_artist);
     else
         g_snprintf(music_info, 1024, "%s", list_title);
-    gui_set_bitrate_label(mmd_new.file_type, bitrate);
-    core_set_uri(list_uri);
+    core_set_uri(mmd_new.uri);
+    if(mmd_new.cue_flag)
+    {
+        gcore->cue_start_time = mmd_new.cue_start_time * 10000000;
+        gcore->cue_end_time = mmd_new.cue_end_time * 10000000;
+    }
+    else
+    {
+        gcore->cue_start_time = -1;
+        gcore->cue_end_time = -1;
+    }
     rc_debug_print("Play music file: %s\n", list_uri);
-    gui_set_music_info_label(list_title, mmd_new.artist, mmd_new.album);
+    gui_set_music_info_label(list_title, mmd_new.artist, mmd_new.album, 
+        mmd_new.file_type, bitrate);
     gcore->list_index = list_index;
     gcore->music_index = music_index;
     gui_list_view_set_state(NULL, gcore->list_index, 
         GTK_STOCK_MEDIA_PLAY);
-    gui_set_tracknum_statusbar(music_index);
     /* Try to find lyric file */
     music_path = g_filename_from_uri(list_uri, NULL, NULL);
     g_free(list_uri);
@@ -612,8 +796,9 @@ gboolean plist_insert_list(const gchar *listname, gint index)
     GtkTreeIter iter;
     gchar new_name[512];
     g_utf8_strncpy(new_name, listname, 127);
-    pl_store = gtk_list_store_new(6, G_TYPE_STRING, G_TYPE_STRING,
-        G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
+    pl_store = gtk_list_store_new(7, G_TYPE_STRING, G_TYPE_STRING,
+        G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING,
+        G_TYPE_INT);
     if(index>=0)
         gtk_list_store_insert(list_store_head, &iter, index);
     else
@@ -718,6 +903,7 @@ gboolean plist_load_playlist_setting()
     gint fname_length = 0;
     gint64 timeinfo;
     gint time_min, time_sec;
+    gint trackno;
     gchar time_str[64];
     GtkTreeIter iter;
     fname_length = strlen(rc_set_dir) + strlen(play_list_setting_file) + 16;
@@ -753,7 +939,7 @@ gboolean plist_load_playlist_setting()
                 if(line[0]=='U' && line[1]=='R' && line[2]=='=')  /* uri */
                 {
                     gtk_list_store_append(pl_store, &iter);
-                    gtk_list_store_set(pl_store, &iter, 0, buf, -1);
+                    gtk_list_store_set(pl_store, &iter, 0, buf, 6, -1, -1);
                     buf[0]='\0';
                 }
             }
@@ -795,6 +981,16 @@ gboolean plist_load_playlist_setting()
                     time_sec = timeinfo % 60;
                     g_snprintf(time_str, 63, "%02d:%02d", time_min, time_sec);
                     gtk_list_store_set(pl_store, &iter, 5, time_str, -1);
+                    buf[0]='\0';
+                }
+            }
+            sscanf(line,"TN=%[^\n]",buf);  /* track number (For CUE Sheet) */
+            if(line_length>=4 && pl_store!=NULL)
+            {
+                if(line[0]=='T' && line[1]=='N' && line[2]=='=')
+                {
+                    sscanf(buf,"%d",&trackno);
+                    gtk_list_store_set(pl_store, &iter, 6, trackno, -1);
                     buf[0]='\0';
                 }
             }
@@ -842,6 +1038,7 @@ gboolean plist_save_playlist_setting()
     gint time_min, time_sec;
     long long time_length = 0;
     gchar *list_uri, *list_title, *list_artist, *list_album, *list_time;
+    gint list_trackno = -1;
     if(list_length<1) return FALSE;
     fname_length = strlen(rc_set_dir) + strlen(play_list_setting_file) + 16;
     gchar *plist_set_file_full_path = g_malloc0(fname_length);
@@ -868,7 +1065,7 @@ gboolean plist_save_playlist_setting()
                 {
                     gtk_tree_model_get(GTK_TREE_MODEL(pl_store), &iter,
                         0, &list_uri, 2, &list_title, 3, &list_artist, 4, 
-                        &list_album, 5, &list_time, -1);
+                        &list_album, 5, &list_time, 6, &list_trackno, -1);
                     sscanf(list_time, "%d:%d", &time_min, &time_sec);
                     time_length = (time_min * 60 + time_sec) * 100;
                     fprintf(fp, "UR=%s\n", list_uri);
@@ -882,6 +1079,7 @@ gboolean plist_save_playlist_setting()
                     else
                         fprintf(fp, "AL=%s\n", "");
                     fprintf(fp, "TL=%lld\n", time_length);
+                    fprintf(fp, "TN=%d\n", list_trackno);
                     if(list_uri!=NULL) g_free(list_uri);
                     if(list_title!=NULL) g_free(list_title);
                     if(list_artist!=NULL) g_free(list_artist);
@@ -952,7 +1150,6 @@ void plist_plist_move2(gint list_index, GtkTreePath **from_paths,
                 gcore->music_index = indices2[0];
                 gui_list_view_set_state(NULL, to_list_index, 
                     GTK_STOCK_MEDIA_PLAY);
-                gui_set_tracknum_statusbar(gcore->music_index);
             }
             gtk_tree_path_free(path);
         }
@@ -1277,5 +1474,273 @@ void plist_load_uri_from_remote(const gchar *uri)
         plist_insert_music(ruri, list_index, -1);
         g_free(ruri);
     }
+}
+
+/*
+ * Read CUE Sheet file and parse it. 
+ */
+
+GSList *plist_read_cue_file(gchar *filename)
+{
+    if(filename==NULL) return NULL;
+    if(!g_regex_match_simple("(.CUE)$", filename, G_REGEX_CASELESS, 0))
+        return NULL;
+    GSList *track_list = NULL, *list_foreach = NULL;
+    MusicMetaData *md_elem = NULL;
+    MusicMetaData music_md;
+    gchar *music_filename = NULL;
+    gchar *cue_raw_data = NULL;
+    gchar *cue_data = NULL;
+    gchar *new_text = NULL;
+    gchar *ex_encoding = NULL;
+    gchar *path = NULL;
+    gchar *buf = NULL;
+    gchar *uri = NULL;
+    gchar **line_data_array = NULL;
+    gchar *line_data = NULL;
+    gchar line_buf[512];
+    gchar album_name[512];
+    gchar chr;
+    gsize length = 0, new_length = 0, size1 = 0, size2 = 0;
+    gboolean flag = FALSE;
+    gsize i = 0, j = 0;
+    gint track_index, track_sm, track_ss, track_sd;
+    gint errorno = 0;
+    GRegex *music_filename_regex;
+    GMatchInfo *match_info;
+    guint track_num = 0;
+    flag = g_file_get_contents(filename, &cue_raw_data, &length, NULL);
+    if(!flag) return NULL;
+    ex_encoding = "GB18030";
+    if(!g_utf8_validate(cue_raw_data, length, NULL))
+    {
+        new_text = g_convert(cue_raw_data, length, "UTF-8",
+            ex_encoding, &size1, &size2, NULL);
+        if(new_text==NULL)
+        {
+            g_free(cue_raw_data);
+            return NULL;
+        }
+        g_free(cue_raw_data);
+        length = strlen(new_text);
+        cue_raw_data = new_text;
+    }
+    cue_data = g_malloc0(length * sizeof(gchar));
+    for(i=0;i<length;i++)
+    {
+        chr = cue_raw_data[i];
+        if(chr!='\r')
+        {
+            cue_data[j] = chr;
+            new_length++;
+            j++;
+        }
+    }
+    g_free(cue_raw_data);
+    path = g_path_get_dirname(filename);
+    music_filename_regex = g_regex_new("(FILE \").*[\"]", G_REGEX_CASELESS,
+        0, NULL);
+    g_regex_match(music_filename_regex, cue_data, 0, &match_info);
+    if(g_match_info_matches(match_info))
+    {
+        buf = g_match_info_fetch(match_info, 0);
+        new_text = g_strndup(buf+6, strlen(buf)-7);
+        g_free(buf);
+        music_filename = g_strdup_printf("%s%c%s", path, G_DIR_SEPARATOR,
+            new_text);
+        g_free(new_text);
+    }
+    g_match_info_free(match_info);
+    g_regex_unref(music_filename_regex);
+    bzero(&music_md, sizeof(MusicMetaData));
+    uri = g_filename_to_uri(music_filename, NULL, NULL);
+    plist_load_metadata(uri, &music_md, &errorno);
+    g_free(uri);
+    if(errorno!=0)
+    {
+        g_free(music_filename);
+        g_free(path);
+        g_free(cue_data);
+        return NULL;
+    }
+    line_data_array = g_strsplit(cue_data, "\n", 0);
+    md_elem = NULL;
+    bzero(line_buf, sizeof(line_buf));
+    bzero(album_name, sizeof(album_name));
+    for(i=0;line_data_array[i]!=NULL;i++)
+    {
+        line_data = line_data_array[i];
+        if(g_regex_match_simple("(TRACK )[0-9]+( AUDIO)",
+            line_data, G_REGEX_CASELESS, 0))
+        {
+            track_num++;
+            md_elem = g_malloc0(sizeof(MusicMetaData));
+            md_elem->uri = g_filename_to_uri(music_filename, NULL, NULL);
+            sscanf(line_data, "%*s%d", &(md_elem->tracknum));
+            md_elem->cue_flag = TRUE;
+            g_utf8_strncpy(md_elem->album, album_name, 127);
+            g_utf8_strncpy(md_elem->file_type, music_md.file_type, 63);
+            track_list = g_slist_append(track_list, md_elem);
+            rc_debug_print("Got track %d from CUE File: %s\n", track_num,
+                filename);
+        }
+        else if(md_elem!=NULL && g_regex_match_simple("(INDEX )[0-9]+ [0-9]+:"
+            "[0-9]{2}:[0-9]{2}", line_data, G_REGEX_CASELESS, 0))
+        {
+            sscanf(line_data, "%*s%d %d:%d:%d", &track_index, &track_sm,
+                &track_ss, &track_sd);
+            if(track_index==1)
+                md_elem->cue_start_time = (track_sm*60+track_ss)*100+track_sd;
+        }
+        else if(md_elem!=NULL && g_regex_match_simple("(TITLE \").*[\"]",
+            line_data, G_REGEX_CASELESS, 0))
+        {
+            sscanf(line_data, "%*[^\"]\"%512[^\"]", line_buf);
+            g_utf8_strncpy(md_elem->title, line_buf, 127);
+        }
+        else if(md_elem!=NULL && g_regex_match_simple("(PERFORMER \").*[\"]",
+            line_data, G_REGEX_CASELESS, 0))
+        {
+            sscanf(line_data, "%*[^\"]\"%512[^\"]", line_buf);
+            g_utf8_strncpy(md_elem->artist, line_buf, 127);
+        }
+        else if(md_elem==NULL && g_regex_match_simple("(TITLE \").*[\"]",
+            line_data, G_REGEX_CASELESS, 0))
+        {
+            sscanf(line_data, "%*[^\"]\"%512[^\"]", line_buf);
+            g_utf8_strncpy(album_name, line_buf, 127);
+        }
+    }
+    g_strfreev(line_data_array);
+    g_free(music_filename);
+    g_free(path);
+    list_foreach = track_list;
+    md_elem = list_foreach->data;
+    list_foreach = g_slist_next(list_foreach);
+    for( ;list_foreach!=NULL;list_foreach=g_slist_next(list_foreach))
+    {
+        md_elem->cue_end_time = ((MusicMetaData *)
+            (list_foreach->data))->cue_start_time;
+        md_elem->length = md_elem->cue_end_time - md_elem->cue_start_time;
+        md_elem = list_foreach->data;
+    }
+    md_elem->cue_end_time = music_md.length;
+    md_elem->length = music_md.length - md_elem->cue_start_time;
+    return track_list;
+}
+
+/*
+ * Read embeded CUE Sheet and parse it. 
+ */
+
+GSList *plist_read_emb_cue_sheet(MusicMetaData *cue_mmd)
+{
+    if(cue_mmd==NULL) return NULL;
+    if(!cue_mmd->cue_flag || cue_mmd->emb_cue_data==NULL) return NULL;
+    GSList *track_list = NULL, *list_foreach = NULL;
+    MusicMetaData *md_elem = NULL;
+    gchar *cue_raw_data = NULL;
+    gchar *cue_data = NULL;
+    gchar *new_text = NULL;
+    gchar *ex_encoding = NULL;
+    gchar **line_data_array = NULL;
+    gchar *line_data = NULL;
+    gchar line_buf[512];
+    gchar album_name[512];
+    gchar chr;
+    gsize length = 0, new_length = 0, size1 = 0, size2 = 0;
+    gsize i = 0, j = 0;
+    gint track_index, track_sm, track_ss, track_sd;
+    guint track_num = 0;
+    ex_encoding = "GB18030";
+    length = strlen(cue_mmd->emb_cue_data);
+    cue_raw_data = g_strdup(cue_mmd->emb_cue_data);
+    if(!g_utf8_validate(cue_raw_data, length, NULL))
+    {
+        new_text = g_convert(cue_raw_data, length, "UTF-8",
+            ex_encoding, &size1, &size2, NULL);
+        if(new_text==NULL)
+        {
+            g_free(cue_raw_data);
+            return NULL;
+        }
+        g_free(cue_raw_data);
+        length = strlen(new_text);
+        cue_raw_data = new_text;
+    }
+    cue_data = g_malloc0(length * sizeof(gchar));
+    for(i=0;i<length;i++)
+    {
+        chr = cue_raw_data[i];
+        if(chr!='\r')
+        {
+            cue_data[j] = chr;
+            new_length++;
+            j++;
+        }
+    }
+    g_free(cue_raw_data);
+    line_data_array = g_strsplit(cue_data, "\n", 0);
+    md_elem = NULL;
+    bzero(line_buf, sizeof(line_buf));
+    bzero(album_name, sizeof(album_name));
+    for(i=0;line_data_array[i]!=NULL;i++)
+    {
+        line_data = line_data_array[i];
+        if(g_regex_match_simple("(TRACK )[0-9]+( AUDIO)",
+            line_data, G_REGEX_CASELESS, 0))
+        {
+            track_num++;
+            md_elem = g_malloc0(sizeof(MusicMetaData));
+            md_elem->uri = g_strdup(cue_mmd->uri);
+            sscanf(line_data, "%*s%d", &(md_elem->tracknum));
+            md_elem->cue_flag = TRUE;
+            g_utf8_strncpy(md_elem->album, album_name, 127);
+            g_utf8_strncpy(md_elem->file_type, cue_mmd->file_type, 63);
+            track_list = g_slist_append(track_list, md_elem);
+            rc_debug_print("Got track %d from embeded CUE Sheet: %s\n", track_num,
+                cue_mmd->uri);
+        }
+        else if(md_elem!=NULL && g_regex_match_simple("(INDEX )[0-9]+ [0-9]+:"
+            "[0-9]{2}:[0-9]{2}", line_data, G_REGEX_CASELESS, 0))
+        {
+            sscanf(line_data, "%*s%d %d:%d:%d", &track_index, &track_sm,
+                &track_ss, &track_sd);
+            if(track_index==1)
+                md_elem->cue_start_time = (track_sm*60+track_ss)*100+track_sd;
+        }
+        else if(md_elem!=NULL && g_regex_match_simple("(TITLE \").*[\"]",
+            line_data, G_REGEX_CASELESS, 0))
+        {
+            sscanf(line_data, "%*[^\"]\"%512[^\"]", line_buf);
+            g_utf8_strncpy(md_elem->title, line_buf, 127);
+        }
+        else if(md_elem!=NULL && g_regex_match_simple("(PERFORMER \").*[\"]",
+            line_data, G_REGEX_CASELESS, 0))
+        {
+            sscanf(line_data, "%*[^\"]\"%512[^\"]", line_buf);
+            g_utf8_strncpy(md_elem->artist, line_buf, 127);
+        }
+        else if(md_elem==NULL && g_regex_match_simple("(TITLE \").*[\"]",
+            line_data, G_REGEX_CASELESS, 0))
+        {
+            sscanf(line_data, "%*[^\"]\"%512[^\"]", line_buf);
+            g_utf8_strncpy(album_name, line_buf, 127);
+        }
+    }
+    g_strfreev(line_data_array);
+    list_foreach = track_list;
+    md_elem = list_foreach->data;
+    list_foreach = g_slist_next(list_foreach);
+    for( ;list_foreach!=NULL;list_foreach=g_slist_next(list_foreach))
+    {
+        md_elem->cue_end_time = ((MusicMetaData *)
+            (list_foreach->data))->cue_start_time;
+        md_elem->length = md_elem->cue_end_time - md_elem->cue_start_time;
+        md_elem = list_foreach->data;
+    }
+    md_elem->cue_end_time = cue_mmd->length;
+    md_elem->length = cue_mmd->length - md_elem->cue_start_time;
+    return track_list;
 }
 

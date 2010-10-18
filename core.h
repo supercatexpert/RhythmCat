@@ -66,6 +66,7 @@ typedef struct _CoreData
     guint ver_minor;
     guint ver_micro;
     guint ver_nano;
+    gint64 cue_start_time, cue_end_time;
 }CoreData;
 
 /* Functions */

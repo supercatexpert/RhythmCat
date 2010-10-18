@@ -397,7 +397,7 @@ void set_save_setting()
         (gint)(rc_setting.lrc_bg_color[2] * 0xFF));
     g_key_file_set_string(sys_keyfile,"Player",
         "LRCBGColor", color_str);
-    if(rc_setting.skin_rc_file!=NULL)
+    if(rc_setting.lrc_bg_image!=NULL)
         g_key_file_set_string(sys_keyfile,"Player",
             "LRCBGImage", rc_setting.lrc_bg_image);
     else

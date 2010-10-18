@@ -30,7 +30,7 @@ GuiData *rc_ui;
 
 void gui_menu_initial_menus()
 {
-    int count = 0;
+    gint count = 0;
     rc_ui = get_gui();
     bzero(&rc_menu, sizeof(GuiMenu));
     /* List right click popup menu. */
@@ -114,6 +114,10 @@ void gui_menu_initial_menus()
         G_CALLBACK(gui_reflesh_music_info),NULL);
     g_signal_connect(G_OBJECT(rc_menu.pl_menu_item[9]),"activate",
         G_CALLBACK(gui_tools_convert_create),NULL);
+    /* Status icon popup menu */
+    rc_menu.ma_pmenu = gtk_menu_new();
+
+    gtk_widget_show_all(rc_menu.ma_pmenu);
     gui_menu_create_main_menus();
 }
 

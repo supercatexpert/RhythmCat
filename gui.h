@@ -65,18 +65,15 @@ typedef struct _GuiData
     GtkWidget *main_window;
     GtkWidget *lyric_vbox;
     GtkWidget *main_menu_bar;
+	GtkWidget *plist_notebook;
     GtkWidget *sub_notebook;
     GtkWidget *title_label, *artist_label, *album_label;
-    GtkWidget *time_label, *track_label;
+    GtkWidget *time_label, *info_label;
     GtkWidget *album_image, *album_eventbox, *album_frame;
     GtkWidget *control_images[4], *control_buttons[4];
-    GtkWidget *repeat_checkbutton, *random_checkbutton;
+    GtkWidget *volume_button;
     GtkWidget *time_scroll_bar;
     GtkWidget *list_file_tree_view, *play_list_tree_view;
-    GtkWidget *volume_scroll_bar;
-    GtkWidget *music_info_status;
-    GtkWidget *track_num_status;
-    GtkWidget *player_state_status;
     GtkTreeModel *list_file_tree_model, *play_list_tree_model;
     GtkTreeSelection *list_file_selection, *play_list_selection;
     guint main_window_width;
@@ -92,7 +89,7 @@ typedef struct _GuiData
 /* Functions */
 GuiData *get_gui();
 void quit_player(GtkWidget *, gpointer);
-void gui_set_music_info_label(gchar *, gchar *, gchar *);
+void gui_set_music_info_label(gchar *, gchar *, gchar *, gchar *, guint);
 gboolean create_main_window();
 gboolean gui_press_prev_button(GtkButton *, gpointer);
 gboolean gui_press_play_button(GtkButton *, gpointer);
@@ -102,7 +99,7 @@ gboolean gui_press_repeat_button(GtkToggleButton *, gpointer);
 gboolean gui_press_random_button(GtkToggleButton *, gpointer);
 void gui_set_play_button_state(gboolean);
 gboolean gui_adjust_play_position(GtkWidget *, gpointer);
-gboolean gui_adjust_volume(GtkWidget *,gpointer);
+gboolean gui_adjust_volume(GtkScaleButton *, gdouble, gpointer);
 gboolean gui_see_scale_disable(GtkWidget *,gpointer);
 gboolean gui_see_scale_enable(GtkWidget *,gpointer);
 gboolean gui_seek_scale_button_pressed(GtkWidget *, GdkEventButton *, gpointer);
@@ -112,7 +109,6 @@ gboolean gui_play_list_popup_menu(GtkWidget *, GdkEventButton *, gpointer);
 gboolean gui_list_file_popup_menu(GtkWidget *, GdkEventButton *, gpointer);
 gboolean gui_play_list_button_release_event(GtkWidget *,
     GdkEventButton *, gpointer);
-void gui_set_bitrate_label(gchar *, guint);
 void gui_set_volume(gdouble);
 void gui_set_player_state();
 gboolean gui_press_repeat_menu(GtkCheckMenuItem *, gpointer);
@@ -122,14 +118,13 @@ gboolean gui_press_vol_down_menu(GtkMenuItem *, gpointer);
 gboolean gui_press_backward_menu(GtkMenuItem *, gpointer);
 gboolean gui_press_forward_menu(GtkMenuItem *, gpointer);
 void gui_set_play_list_menu(GtkTreeView *, gpointer);
-void gui_set_state_statusbar(CoreState);
-void gui_set_tracknum_statusbar(gint);
 gboolean gui_show_playlist_page(GtkMenuItem *, gpointer);
 gboolean gui_show_lyric_page(GtkMenuItem *, gpointer);
 gboolean gui_show_eq_window(GtkMenuItem *, gpointer);
 void gui_reflesh_music_info(GtkMenuItem *, gpointer);
 gboolean gui_set_cover_image(gchar *);
 void gui_show_hide_window(GtkWidget *, gpointer);
+void gui_tray_icon_popup(GtkStatusIcon *, guint, guint, gpointer);
 
 #endif
 

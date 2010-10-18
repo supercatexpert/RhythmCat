@@ -72,7 +72,7 @@ static gboolean core_bus_call(GstBus *bus,GstMessage *msg, gpointer data)
         {
             gchar *debug;
             GError *error;
-           	gst_message_parse_error(msg,&error,&debug);
+               gst_message_parse_error(msg,&error,&debug);
             rc_debug_print("CORE Error: %s\nDEBUG: %s\n",error->message,debug);
             g_error_free(error);
             g_free(debug);
@@ -198,7 +198,6 @@ void create_core()
     gst_element_set_state(play, GST_STATE_READY);
     gst_version(&rc_core.ver_major, &rc_core.ver_minor, &rc_core.ver_micro,
         &rc_core.ver_nano);
-    gui_set_state_statusbar(CORE_STOPPED);
     gui_init_eq_data();
     rc_debug_print("CORE is successfully loaded!\n"); 
 }
@@ -248,8 +247,7 @@ void core_set_uri(gchar *uri)
 gchar *core_get_uri()
 {
     gchar *uri;
-    g_object_get(G_OBJECT(rc_core.play), "uri", &uri, NULL);
-    g_printf("URI: %s\n", uri);
+    g_object_get(G_OBJECT(rc_core.play), "uri", &uri, NULL);;
     return uri;
 }
 
@@ -260,6 +258,8 @@ gchar *core_get_uri()
 gboolean core_play()
 {
     GstState state;
+    gint64 pos = -1;
+    guint timeout = 0;
     gst_element_get_state(rc_core.play,&state,NULL,GST_CLOCK_TIME_NONE);
     gboolean flag = TRUE;
     if(state!=GST_STATE_PAUSED && state!=GST_STATE_PLAYING &&
@@ -270,10 +270,24 @@ gboolean core_play()
     }
     flag = gst_element_set_state(rc_core.play,GST_STATE_PLAYING);
     if(!flag) return FALSE;
+    if(rc_core.cue_start_time!=-1 && rc_core.cue_end_time!=-1 &&
+        (state==GST_STATE_NULL || state==GST_STATE_READY) )
+    {
+        gst_element_get_state(rc_core.play, &state, NULL, 125 * GST_MSECOND);
+        core_set_play_seek(rc_core.cue_start_time, rc_core.cue_end_time);
+        do
+        {
+            gst_element_set_state(rc_core.play,GST_STATE_PAUSED);
+            if(gst_element_get_state(rc_core.play, &state, NULL,
+                125 * GST_MSECOND)==GST_STATE_CHANGE_SUCCESS) break;
+            timeout++;
+        }
+        while(pos<0 && timeout<40);
+        gst_element_set_state(rc_core.play,GST_STATE_PLAYING);
+    }
     rc_core.core_state = CORE_PLAYING;
     gui_see_scale_enable(NULL,NULL);
     gui_set_play_button_state(TRUE);
-    gui_set_state_statusbar(CORE_PLAYING);
     return TRUE;
 }
 
@@ -288,7 +302,6 @@ gboolean core_pause()
     if(!flag) return FALSE;
     rc_core.core_state = CORE_PAUSED;
     gui_set_play_button_state(FALSE);
-    gui_set_state_statusbar(CORE_PAUSED);
     return TRUE;
 }
 
@@ -311,7 +324,6 @@ gboolean core_stop()
         gui_play_list_view_set_state(NULL, rc_core.music_index, 
             NULL);
     }
-    gui_set_state_statusbar(CORE_STOPPED);
     return TRUE;
 }
 
@@ -344,8 +356,10 @@ gboolean core_set_play_position(gint64 mtime)
 { 
     if(mtime<0) return FALSE;
     mtime*=10000000;
-    gst_element_seek_simple(rc_core.play, GST_FORMAT_TIME, GST_SEEK_FLAG_FLUSH,
-        mtime);
+    if(rc_core.cue_start_time!=-1 && rc_core.cue_end_time!=-1)
+        mtime += rc_core.cue_start_time;
+    gst_element_seek_simple(rc_core.play, GST_FORMAT_TIME, 
+        GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_ACCURATE, mtime);
     return TRUE;
 }
 
@@ -361,9 +375,13 @@ gboolean core_set_play_position_by_persent(gdouble mpersent)
     mpersent/=100;
     GstFormat fmt = GST_FORMAT_TIME;
     gst_element_query_duration(rc_core.play,&fmt,&length);
+    if(rc_core.cue_start_time!=-1 && rc_core.cue_end_time!=-1)
+        length = rc_core.cue_end_time - rc_core.cue_start_time;
     length=length*mpersent;
+    if(rc_core.cue_start_time!=-1 && rc_core.cue_end_time!=-1)
+        length += rc_core.cue_start_time;
     gst_element_seek_simple(rc_core.play,GST_FORMAT_TIME,
-        GST_SEEK_FLAG_FLUSH,length);
+        GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_ACCURATE,length);
     return TRUE;
 }
 
@@ -378,6 +396,8 @@ gint64 core_get_play_position()
     GstFormat fmt = GST_FORMAT_TIME;
     if(gst_element_query_position(rc_core.play,&fmt,&pos))
     {
+        if(rc_core.cue_start_time!=-1 && rc_core.cue_end_time!=-1)
+            pos = pos - rc_core.cue_start_time;
         position=pos/10000000; /* (Unit: 10msec) */
         if(position<0) position=0;
     }
@@ -393,6 +413,8 @@ gint64 core_get_music_length()
     gint64 length = 0;
     gint64 dura;
     GstFormat fmt = GST_FORMAT_TIME;
+    if(rc_core.cue_start_time!=-1 && rc_core.cue_end_time!=-1)
+        return (rc_core.cue_end_time-rc_core.cue_start_time)/10000000;
     if(gst_element_query_duration(rc_core.play,&fmt,&dura))
     {
         length=dura/10000000;  //(Format: 00:00.00)
@@ -638,10 +660,14 @@ CoreState core_get_play_state()
 
 gboolean core_set_play_seek(gint64 start_time, gint64 end_time)
 {
+    gboolean flag = FALSE;
     if(start_time!=-1 && end_time!=-1 && start_time<end_time)
-        return gst_element_seek(rc_core.play, 1.0, GST_FORMAT_TIME,
+    {
+        flag = gst_element_seek(rc_core.play, 1.0, GST_FORMAT_TIME,
             GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_ACCURATE, GST_SEEK_TYPE_SET,
             start_time, GST_SEEK_TYPE_SET, end_time);
+        return flag;
+    }
     else
         return FALSE;
 }

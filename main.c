@@ -30,8 +30,8 @@ static gchar *rc_set_dir = NULL;
 static const gchar *rc_app_dir = NULL;
 static const gchar *rc_home_dir = NULL;
 static const gchar rc_program_name[] = "RhythmCat Music Player";
-static const gchar rc_build_num[] = "build 100918, alpha 3";
-static const gchar rc_ver_num[] = "0.5.8";
+static const gchar rc_build_num[] = "build 101005, alpha 4";
+static const gchar rc_ver_num[] = "0.5.10";
 static const gboolean rc_is_stable = FALSE;
 static const gchar rc_dbus_name[] = "org.supercat.RhythmCat";
 static const gchar rc_dbus_path_player[] = "/org/supercat/RhythmCat/Player";
@@ -43,17 +43,31 @@ static const gchar rc_dbus_interface_shell[] =
 static const gchar const *rc_authors[] = {"SuperCat","Mr. Zhu",NULL};
 static const gchar const *rc_documenters[] = {"SuperCat","Ms. Mi",NULL};
 static const gchar const *rc_artists[] = {"SuperCat","Ms. Mi","GC-Boy",NULL};
+static const gchar const *rc_support_format_glob[] = {"*.[F,f][L,l][A,a][C,c]",
+    "*.[O,o][G,g][G,g,A,a,M,m]", "*.[M,m][P,p][2-3]", "*.[W,w][M,m][A,a]",
+    "*.[W,w][A,a][V,v]", "*.[A,a][P,p][E,e]", "*.[A,a][A,a][C,c]",
+    "*.[A,a][C,c]3", "*.[M,m][I,i][D,d]", "*.[C,c][U,u][E,e]", NULL};
+static const gchar *rc_support_formatx = "(.FLAC|.OGG|.MP3|.WMA|.WAV|.OGA|.OGM"
+    "|.APE|.AAC|.AC3|.MIDI|.CUE|.MP2|.MID)$";
 static gboolean debug_flag = FALSE;
 static char **remaining_args = NULL;
 static GObject *rc_shell_info = NULL;
+static GRegex *support_format_regex;
 
 void rc_initial(int *argc, char **argv[])
 {
+    static GOptionEntry options[] =
+    {
+        {"debug", 'd', 0, G_OPTION_ARG_NONE, &debug_flag,
+            N_("Enable debug mode"), NULL},
+        {G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_STRING_ARRAY, &remaining_args,
+            NULL, N_("[URI...]")},
+        {NULL}
+    };
     g_set_application_name("RhythmCat");
     const gchar *homedir = g_getenv("HOME");
     gchar *appfilepath = NULL;
     char full_path[PATH_MAX];
-    GOptionContext *context;
     GError *error = NULL;
     if(homedir==NULL) homedir = g_get_home_dir();
     rc_home_dir = homedir;
@@ -72,30 +86,19 @@ void rc_initial(int *argc, char **argv[])
     rc_app_dir = g_path_get_dirname(appfilepath);
     srand((unsigned)time(0));
     g_mkdir_with_parents(rc_set_dir, 0700);
+    if(!g_thread_supported()) g_thread_init(NULL);
+    gdk_threads_init();
+    g_type_init();
+    dbus_g_thread_init();
     /* Arguments/Options process. */
-    static const GOptionEntry options[] =
-    {
-        {"debug", 'd', 0, G_OPTION_ARG_NONE, &debug_flag,
-            N_("Enable debug mode"), NULL},
-        {G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_STRING_ARRAY, &remaining_args,
-            NULL, N_("[URI...]")},
-        {NULL}
-    };
-    context = g_option_context_new(NULL);
-    g_option_context_add_main_entries(context, options, GETTEXT_PACKAGE);
-    if(g_option_context_parse(context, argc, argv, &error)==FALSE)
+    if(!gtk_init_with_args(argc, argv, NULL, options, GETTEXT_PACKAGE, &error))
     {
         g_printf(_("%s\nRun '%s --help' to see a full list of available "
             "command line options.\n"), error->message, (*argv)[0]);
         g_error_free(error);
-        g_option_context_free (context);
         exit(1);
     }
-    g_option_context_free(context);
     if(debug_flag) rc_debug_set_mode(1);
-
-
-
     rc_debug_print("\n***** RhythmCat DEBUG Messages *****\n");  
     rc_debug_print("DEBUG MODE Enabled!\n"); 
     rc_debug_print("Got home directory at: %s\n", rc_home_dir);
@@ -103,12 +106,10 @@ void rc_initial(int *argc, char **argv[])
     rc_debug_print("Starting RhythmCat, version: %s\n", rc_ver_num);
     if(!rc_is_stable) rc_debug_print("This program is under testing, report "
         "bugs to me if you find any.\n");
+    support_format_regex = g_regex_new(rc_support_formatx, G_REGEX_CASELESS,
+        G_REGEX_MATCH_ANCHORED, &error);
+    if(error!=NULL) g_error_free(error);
     set_initial_setting();
-    if(!g_thread_supported()) g_thread_init(NULL);
-    gdk_threads_init();
-    g_type_init();
-    dbus_g_thread_init();
-    gtk_init(argc, argv);
     gst_init(argc, argv);
     rc_dbus_init(remaining_args);
     create_main_window();
@@ -165,6 +166,17 @@ const gchar *rc_get_app_dir()
 const gchar *rc_get_home_dir()
 {
     return rc_home_dir;
+}
+
+const gchar *const *rc_get_mfile_support_glob()
+{
+    return rc_support_format_glob;
+}
+
+gboolean rc_is_mfile_supported(gchar *filename)
+{
+    return g_regex_match_simple(rc_support_formatx, filename, G_REGEX_CASELESS,
+        0);
 }
 
 gboolean rc_dbus_init(gchar **remaining_args)
@@ -245,7 +257,6 @@ gboolean rc_dbus_init(gchar **remaining_args)
         }
         else
         {
-            //load_uri_args ((const char **) remaining_args, (GFunc) dbus_load_uri, shell_proxy);
             for(i=0;remaining_args[i]!=NULL;i++)
             {
                 dbus_g_proxy_call(shell_proxy, "LoadURI", &error, 
@@ -254,11 +265,6 @@ gboolean rc_dbus_init(gchar **remaining_args)
             }
             g_object_unref(G_OBJECT(shell_proxy));
         }
-
-
-
-
-
         /* Selfdestruct */
         exit(0);
     }

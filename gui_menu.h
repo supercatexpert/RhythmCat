@@ -36,6 +36,7 @@ typedef struct _GuiMenu
 {
     GtkWidget *ls_menu_item[4];
     GtkWidget *pl_menu_item[10];
+    GtkWidget *ma_menu_item[5];
     GtkWidget *main_menu_items[5];
     GtkWidget *main_menus[5];
     GtkWidget *file_menu_items[9];
@@ -48,6 +49,7 @@ typedef struct _GuiMenu
     GSList *repeat_item_list, *random_item_list;
     GtkWidget *list_tview_pmenu;
     GtkWidget *plist_tview_pmenu;
+    GtkWidget *ma_pmenu;
     GtkWidget *mw_menu;
 }GuiMenu;
 
