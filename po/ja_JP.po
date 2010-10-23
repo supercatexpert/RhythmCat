@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RhythmCat 0.5.0\n"
 "Report-Msgid-Bugs-To: http://code.google.com/p/rhythmcat/issues/list\n"
-"POT-Creation-Date: 2010-10-20 09:15-0400\n"
+"POT-Creation-Date: 2010-10-24 00:29-0400\n"
 "PO-Revision-Date: 2010-08-25 19:46+0800\n"
 "Last-Translator: SuperCat <supercatexpert@gmail.com>\n"
 "Language-Team: SuperCat <supercatexpert@gmail.com>\n"
@@ -353,7 +353,7 @@ msgstr ""
 msgid "Default Playlist"
 msgstr "デフォルトプレイリスト"
 
-#: src/playlist.c:323 src/playlist.c:647 src/playlist.c:1237
+#: src/playlist.c:323 src/playlist.c:645 src/playlist.c:1286
 msgid "Unknown title"
 msgstr "不明なタイトル"
 

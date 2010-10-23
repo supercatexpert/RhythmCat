@@ -131,11 +131,11 @@ gchar *rc_get_data_dir(char *arg0)
     gchar *data_dir = NULL;
     gchar *bin_dir = NULL;
     char full_path[PATH_MAX];
-    if(readlink("/proc/self/exe", full_path, PATH_MAX)!=0)
+    if(readlink("/proc/self/exe", full_path, PATH_MAX)<=0)
     {
         if(realpath(arg0, full_path)==NULL)
         {
-            snprintf(full_path, PATH_MAX, "/usr/bin");
+            snprintf(full_path, PATH_MAX, "/usr/bin/RhythmCat");
         }
     }
     bin_dir = g_path_get_dirname(full_path);

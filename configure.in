@@ -2,8 +2,8 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.67])
-AC_INIT([RhythmCat], [0.6.0], [http://code.google.com/p/rhythmcat/issues/list])
-AM_INIT_AUTOMAKE(RhythmCat, 0.6.0)
+AC_INIT([RhythmCat], [0.6.1], [http://code.google.com/p/rhythmcat/issues/list])
+AM_INIT_AUTOMAKE(RhythmCat, 0.6.1)
 AC_CONFIG_SRCDIR([src/main.c])
 AC_CONFIG_HEADERS([config.h])
 
