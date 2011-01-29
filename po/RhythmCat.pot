@@ -1,0 +1,887 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: RhythmCat 0.6.1\n"
+"Report-Msgid-Bugs-To: http://code.google.com/p/rhythmcat/issues/list\n"
+"POT-Creation-Date: 2010-10-25 10:03-0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/gui_kara.c:110
+msgid "Free Lossless Audio Codec (*.FLAC)"
+msgstr ""
+
+#: src/gui_kara.c:116
+msgid "Ogg Vorbis (*.OGG)"
+msgstr ""
+
+#: src/gui_kara.c:119
+msgid "Select the filename of the voice file"
+msgstr ""
+
+#: src/gui_kara.c:187
+#, c-format
+msgid ""
+"Recording will start in <b><span foreground=\"red\">%d</span></b> seconds"
+msgstr ""
+
+#: src/gui_kara.c:201 src/gui_kara.c:239 src/gui_kara.c:415
+msgid "Ready"
+msgstr ""
+
+#: src/gui_kara.c:209
+msgid "Recording..."
+msgstr ""
+
+#: src/gui_kara.c:280
+msgid "Mix Completed"
+msgstr ""
+
+#: src/gui_kara.c:324
+msgid "Free Lossless Audio Codec (*.FLAC"
+msgstr ""
+
+#: src/gui_kara.c:330
+msgid "Ogg Vorbis (*.OGG"
+msgstr ""
+
+#: src/gui_kara.c:333
+msgid "Select the filename of the mix music file"
+msgstr ""
+
+#: src/gui_kara.c:400
+msgid "Karaoke Mode"
+msgstr ""
+
+#: src/gui_kara.c:414 src/gui_kara.c:432
+msgid "_Use Lossless Format"
+msgstr ""
+
+#: src/gui_kara.c:426
+msgid "_Recoder"
+msgstr ""
+
+#: src/gui_kara.c:427
+msgid "_Mixer"
+msgstr ""
+
+#: src/gui_kara.c:436
+msgid "_Start"
+msgstr ""
+
+#: src/gui_kara.c:440
+msgid "Mic Level:"
+msgstr ""
+
+#: src/gui_kara.c:441
+msgid "Mic Volume:"
+msgstr ""
+
+#: src/gui_kara.c:442
+msgid "Output File:"
+msgstr ""
+
+#: src/gui_kara.c:446
+msgid "<b>Voice File:</b>"
+msgstr ""
+
+#: src/gui_kara.c:447
+msgid "<b>Music File:</b>"
+msgstr ""
+
+#: src/gui_kara.c:448
+msgid "<b>Output File:</b>"
+msgstr ""
+
+#: src/main.c:69
+msgid "Enable debug mode"
+msgstr ""
+
+#: src/main.c:71
+msgid "[URI...]"
+msgstr ""
+
+#: src/main.c:96
+#, c-format
+msgid ""
+"%s\n"
+"Run '%s --help' to see a full list of available command line options.\n"
+msgstr ""
+
+#: src/gui_lrc.c:383
+msgid "Do you want to save lyric file?"
+msgstr ""
+
+#: src/gui_lrc.c:413
+msgid "Return to Lyric Show Mode"
+msgstr ""
+
+#: src/gui_lrc.c:418
+msgid "Load Lyric"
+msgstr ""
+
+#: src/gui_lrc.c:422
+msgid "Save Lyric"
+msgstr ""
+
+#: src/gui_lrc.c:427
+msgid "Add Time Tag"
+msgstr ""
+
+#: src/gui_lrc.c:431
+msgid "Replace Time Tag"
+msgstr ""
+
+#: src/gui_lrc.c:435
+msgid "Remove Time Tag"
+msgstr ""
+
+#: src/gui_lrc.c:656 src/gui_lrc.c:701
+msgid "Lyric File(*.LRC, *.lrc)"
+msgstr ""
+
+#: src/gui_lrc.c:659
+msgid "Load lyric..."
+msgstr ""
+
+#: src/gui_lrc.c:704
+msgid "Save lyric..."
+msgstr ""
+
+#: src/gui_tools.c:262
+msgid "Converter Setup"
+msgstr ""
+
+#: src/gui_tools.c:271
+msgid "Filename"
+msgstr ""
+
+#: src/gui_tools.c:274
+msgid "Select the output directory"
+msgstr ""
+
+#: src/gui_tools.c:331
+msgid "<b>Output Format</b>"
+msgstr ""
+
+#: src/gui_tools.c:333
+msgid "<b>Output Path</b>"
+msgstr ""
+
+#: src/gui_tools.c:335
+msgid "<b>Output Mode</b>"
+msgstr ""
+
+#: src/gui_tools.c:337
+msgid "Convert Mode"
+msgstr ""
+
+#: src/gui_tools.c:339
+msgid "When file already exists"
+msgstr ""
+
+#: src/gui_tools.c:341
+msgid "Filename Preview"
+msgstr ""
+
+#: src/gui_tools.c:342 src/gui_dialog.c:284
+msgid "Bitrate: "
+msgstr ""
+
+#: src/gui_tools.c:343
+msgid "Quality: "
+msgstr ""
+
+#: src/gui_tools.c:344
+msgid "kbps"
+msgstr ""
+
+#: src/gui_tools.c:345
+msgid "From: "
+msgstr ""
+
+#: src/gui_tools.c:346
+msgid "  To: "
+msgstr ""
+
+#: src/gui_tools.c:347 src/gui_tools.c:349
+msgid "m"
+msgstr ""
+
+#: src/gui_tools.c:348 src/gui_tools.c:350
+msgid "s"
+msgstr ""
+
+#: src/gui_tools.c:352
+msgid "_CBR/ABR"
+msgstr ""
+
+#: src/gui_tools.c:355
+msgid "_VBR/Compress Level"
+msgstr ""
+
+#: src/gui_tools.c:357
+msgid "_Source file directory"
+msgstr ""
+
+#: src/gui_tools.c:360
+msgid "S_pecify directory"
+msgstr ""
+
+#: src/gui_tools.c:362
+msgid "Convert each file to an _individual file"
+msgstr ""
+
+#: src/gui_tools.c:365
+msgid "_Merge all files into one output file"
+msgstr ""
+
+#: src/gui_tools.c:368
+msgid "Crop a _part from the source file"
+msgstr ""
+
+#: src/gui_tools.c:370
+msgid "_Ask"
+msgstr ""
+
+#: src/gui_tools.c:373
+msgid "S_kip"
+msgstr ""
+
+#: src/gui_tools.c:376
+msgid "_Overwrite"
+msgstr ""
+
+#: src/gui_tools.c:564
+#, c-format
+msgid "File \"%s\" already exists. Overwrite?"
+msgstr ""
+
+#: src/gui_tools.c:566
+msgid "Overwrite"
+msgstr ""
+
+#: src/gui_tools.c:567
+msgid "Overwrite All"
+msgstr ""
+
+#: src/gui_tools.c:568
+msgid "Skip"
+msgstr ""
+
+#: src/gui_tools.c:569
+msgid "Skip All"
+msgstr ""
+
+#: src/gui_tools.c:570
+msgid "Cancel"
+msgstr ""
+
+#: src/gui_tools.c:572
+msgid "File already exists."
+msgstr ""
+
+#: src/gui_tools.c:699
+#, c-format
+msgid "(%d of %d) - Start converting from file: %s\n"
+msgstr ""
+
+#: src/gui_tools.c:707
+#, c-format
+msgid "Converting - %d/%d..."
+msgstr ""
+
+#: src/gui_tools.c:749
+#, c-format
+msgid "(%d of %d) - ERROR: Cannot convert from file: %s\n"
+msgstr ""
+
+#: src/gui_tools.c:767
+#, c-format
+msgid "(%d of %d) - File already exists, skipped converting file from: %s\n"
+msgstr ""
+
+#: src/gui_tools.c:799
+msgid "Merging all files..."
+msgstr ""
+
+#: src/gui_tools.c:800
+msgid "Merging files..."
+msgstr ""
+
+#: src/gui_tools.c:805
+msgid "Merging all files\n"
+msgstr ""
+
+#: src/gui_tools.c:851 src/gui_tools.c:865
+msgid "All convert missions completed"
+msgstr ""
+
+#: src/gui_tools.c:911
+msgid "The time range should be in the length of the audio file!"
+msgstr ""
+
+#: src/gui_tools.c:966
+msgid "Converting..."
+msgstr ""
+
+#: src/gui_tools.c:979
+msgid "Source"
+msgstr ""
+
+#: src/gui_tools.c:980
+msgid "Destination"
+msgstr ""
+
+#: src/gui_tools.c:1017
+msgid "Do you want to stop the convertion?"
+msgstr ""
+
+#: src/playlist.c:171
+msgid "Default Playlist"
+msgstr ""
+
+#: src/playlist.c:323 src/playlist.c:645 src/playlist.c:1286
+msgid "Unknown title"
+msgstr ""
+
+#: src/gui.c:200
+msgid "RhythmCat Music Player"
+msgstr ""
+
+#: src/gui.c:268
+msgid "Vol: "
+msgstr ""
+
+#: src/gui.c:273 src/gui.c:276
+msgid "Playlists"
+msgstr ""
+
+#: src/gui.c:274
+msgid "Lyrics"
+msgstr ""
+
+#: src/gui.c:275
+msgid "Current Playlist"
+msgstr ""
+
+#: src/gui.c:277
+msgid "Not Playing"
+msgstr ""
+
+#: src/gui.c:282
+msgid "Stopped"
+msgstr ""
+
+#: src/gui.c:602
+#, c-format
+msgid "%s Lossless"
+msgstr ""
+
+#: src/gui.c:604
+#, c-format
+msgid "%s %d kbps"
+msgstr ""
+
+#: src/gui_treeview.c:74
+msgid "Title"
+msgstr ""
+
+#: src/gui_treeview.c:76
+msgid "Length"
+msgstr ""
+
+#: src/gui_treeview.c:326
+#, c-format
+msgid "Playlist %d"
+msgstr ""
+
+#: src/gui_dialog.c:99
+msgid "A music player based on GTK+ 2.0 & Gstreamer 0.10"
+msgstr ""
+
+#: src/gui_dialog.c:130
+msgid "All supported music files(*.FLAC;*.OGG;*.MP3;*.WAV;*.WMA...)"
+msgstr ""
+
+#: src/gui_dialog.c:138
+msgid "Select the music you want to play..."
+msgstr ""
+
+#: src/gui_dialog.c:140
+msgid "Select the music you want to append..."
+msgstr ""
+
+#: src/gui_dialog.c:265
+msgid "Music Information"
+msgstr ""
+
+#: src/gui_dialog.c:274 src/gui_setting.c:146
+msgid "General"
+msgstr ""
+
+#: src/gui_dialog.c:275
+msgid "Metadata"
+msgstr ""
+
+#: src/gui_dialog.c:282
+msgid "Format: "
+msgstr ""
+
+#: src/gui_dialog.c:286
+msgid "Length: "
+msgstr ""
+
+#: src/gui_dialog.c:288
+msgid "Size:   "
+msgstr ""
+
+#: src/gui_dialog.c:290
+msgid "Title: "
+msgstr ""
+
+#: src/gui_dialog.c:292
+msgid "Artist: "
+msgstr ""
+
+#: src/gui_dialog.c:294
+msgid "Location: "
+msgstr ""
+
+#: src/gui_dialog.c:296
+msgid "Album: "
+msgstr ""
+
+#: src/gui_dialog.c:298
+msgid "Comment: "
+msgstr ""
+
+#: src/gui_dialog.c:300
+msgid "Track Number: "
+msgstr ""
+
+#: src/gui_dialog.c:407
+msgid "Unknown"
+msgstr ""
+
+#: src/gui_dialog.c:506
+msgid "Select the directory you want to import..."
+msgstr ""
+
+#: src/gui_dialog.c:544 src/gui_dialog.c:586
+msgid "M3U Playlist(*.M3U, *.m3u)"
+msgstr ""
+
+#: src/gui_dialog.c:547
+msgid "Save the playlist..."
+msgstr ""
+
+#: src/gui_dialog.c:589
+msgid "Load the playlist..."
+msgstr ""
+
+#: src/gui_dialog.c:628
+msgid "Select the directory you want to store the playlists..."
+msgstr ""
+
+#: src/gui_dialog.c:688
+msgid "Change the tag successfully!"
+msgstr ""
+
+#: src/gui_menu.c:39 src/gui_menu.c:139
+msgid "_New Playlist"
+msgstr ""
+
+#: src/gui_menu.c:43
+msgid "_Rename Playlist"
+msgstr ""
+
+#: src/gui_menu.c:47
+msgid "_Delete Playlist"
+msgstr ""
+
+#: src/gui_menu.c:51 src/gui_menu.c:164
+msgid "_Export Playlist"
+msgstr ""
+
+#: src/gui_menu.c:69 src/gui_menu.c:216
+msgid "_Track Information"
+msgstr ""
+
+#: src/gui_menu.c:74
+msgid "Import Music _Files"
+msgstr ""
+
+#: src/gui_menu.c:78
+msgid "Import _List"
+msgstr ""
+
+#: src/gui_menu.c:83 src/gui_menu.c:192
+msgid "Select _All"
+msgstr ""
+
+#: src/gui_menu.c:87
+msgid "_Remove from List"
+msgstr ""
+
+#: src/gui_menu.c:92 src/gui_menu.c:197
+msgid "Re_flesh Music"
+msgstr ""
+
+#: src/gui_menu.c:96 src/gui_menu.c:243
+msgid "_Convert Audio"
+msgstr ""
+
+#: src/gui_menu.c:131
+msgid "_File"
+msgstr ""
+
+#: src/gui_menu.c:132
+msgid "_Edit"
+msgstr ""
+
+#: src/gui_menu.c:133
+msgid "_View"
+msgstr ""
+
+#: src/gui_menu.c:134
+msgid "_Control"
+msgstr ""
+
+#: src/gui_menu.c:135
+msgid "_Help"
+msgstr ""
+
+#: src/gui_menu.c:147
+msgid "_Open Music"
+msgstr ""
+
+#: src/gui_menu.c:154
+msgid "Import _Playlist"
+msgstr ""
+
+#: src/gui_menu.c:159
+msgid "Import _Folder"
+msgstr ""
+
+#: src/gui_menu.c:169
+msgid "Export _All Playlists"
+msgstr ""
+
+#: src/gui_menu.c:180
+msgid "Play_list"
+msgstr ""
+
+#: src/gui_menu.c:185
+msgid "_Remove"
+msgstr ""
+
+#: src/gui_menu.c:205
+msgid "Plu_gins"
+msgstr ""
+
+#: src/gui_menu.c:210
+msgid "_Preferences"
+msgstr ""
+
+#: src/gui_menu.c:224
+msgid "_Playlists"
+msgstr ""
+
+#: src/gui_menu.c:228
+msgid "_Lyrics"
+msgstr ""
+
+#: src/gui_menu.c:232
+msgid "_Edit Lyrics"
+msgstr ""
+
+#: src/gui_menu.c:234
+msgid "_Equalizer"
+msgstr ""
+
+#: src/gui_menu.c:239
+msgid "OS_D Lyric Show"
+msgstr ""
+
+#: src/gui_menu.c:248
+msgid "_Karaoke Mode"
+msgstr ""
+
+#: src/gui_menu.c:251
+msgid "_Mini Mode"
+msgstr ""
+
+#: src/gui_menu.c:260
+msgid "_Play/Pause"
+msgstr ""
+
+#: src/gui_menu.c:267
+msgid "_Stop"
+msgstr ""
+
+#: src/gui_menu.c:272
+msgid "Pre_vious"
+msgstr ""
+
+#: src/gui_menu.c:279
+msgid "_Next"
+msgstr ""
+
+#: src/gui_menu.c:286
+msgid "_Backward"
+msgstr ""
+
+#: src/gui_menu.c:293
+msgid "_Forward"
+msgstr ""
+
+#: src/gui_menu.c:301
+msgid "_Increase Volume"
+msgstr ""
+
+#: src/gui_menu.c:305
+msgid "_Decrease Volume"
+msgstr ""
+
+#: src/gui_menu.c:310
+msgid "_Repeat"
+msgstr ""
+
+#: src/gui_menu.c:315
+msgid "_No Repeat"
+msgstr ""
+
+#: src/gui_menu.c:320
+msgid "Single _Music Repeat"
+msgstr ""
+
+#: src/gui_menu.c:324
+msgid "Single _Playlist Repeat"
+msgstr ""
+
+#: src/gui_menu.c:328
+msgid "_All Playlists Repeat"
+msgstr ""
+
+#: src/gui_menu.c:333
+msgid "Sh_uffle"
+msgstr ""
+
+#: src/gui_menu.c:338
+msgid "_No Random"
+msgstr ""
+
+#: src/gui_menu.c:343
+msgid "_Single Playlist Random"
+msgstr ""
+
+#: src/gui_menu.c:347
+msgid "_All Playlists Random"
+msgstr ""
+
+#: src/gui_eq.c:59 src/gui_eq.c:95
+msgid "Disabled"
+msgstr ""
+
+#: src/gui_eq.c:60
+msgid "Pop"
+msgstr ""
+
+#: src/gui_eq.c:61
+msgid "Rock"
+msgstr ""
+
+#: src/gui_eq.c:62
+msgid "Metal"
+msgstr ""
+
+#: src/gui_eq.c:63
+msgid "Dance"
+msgstr ""
+
+#: src/gui_eq.c:64
+msgid "Electronic"
+msgstr ""
+
+#: src/gui_eq.c:65
+msgid "Jazz"
+msgstr ""
+
+#: src/gui_eq.c:66
+msgid "Classical"
+msgstr ""
+
+#: src/gui_eq.c:67
+msgid "Blues"
+msgstr ""
+
+#: src/gui_eq.c:68
+msgid "Vocal"
+msgstr ""
+
+#: src/gui_eq.c:69 src/gui_eq.c:96
+msgid "Custom"
+msgstr ""
+
+#: src/gui_eq.c:123
+msgid "Equalizer"
+msgstr ""
+
+#: src/gui_eq.c:298 src/gui_eq.c:359
+msgid "EQ Setting File(*.EQF, *.eqf)"
+msgstr ""
+
+#: src/gui_eq.c:301
+msgid "Load Equalizer Setting..."
+msgstr ""
+
+#: src/gui_eq.c:362
+msgid "Save Equalizer Setting..."
+msgstr ""
+
+#: src/gui_setting.c:85
+msgid "Settings"
+msgstr ""
+
+#: src/gui_setting.c:148
+msgid "Appearance"
+msgstr ""
+
+#: src/gui_setting.c:150
+msgid "Playback"
+msgstr ""
+
+#: src/gui_setting.c:152
+msgid "Playlist"
+msgstr ""
+
+#: src/gui_setting.c:154
+msgid "Lryic Show"
+msgstr ""
+
+#: src/gui_setting.c:156
+msgid "OSD Lyric Show"
+msgstr ""
+
+#: src/gui_setting.c:280
+msgid "<b>General</b>"
+msgstr ""
+
+#: src/gui_setting.c:299
+msgid "<b>Theme</b>"
+msgstr ""
+
+#: src/gui_setting.c:304
+msgid "Use _System GTK2+ RC Theme"
+msgstr ""
+
+#: src/gui_setting.c:307
+msgid "Use _Custom GTK2+ RC Theme"
+msgstr ""
+
+#: src/gui_setting.c:309
+msgid "Please select a GTK2+ RC File"
+msgstr ""
+
+#: src/gui_setting.c:313
+msgid "GTK2+ RC File (gtkrc)"
+msgstr ""
+
+#: src/gui_setting.c:338
+msgid "<b>Playback</b>"
+msgstr ""
+
+#: src/gui_setting.c:343
+msgid "Auto play on startup"
+msgstr ""
+
+#: src/gui_setting.c:345
+msgid "Advance to the next playlist"
+msgstr ""
+
+#: src/gui_setting.c:368
+msgid "<b>Metadata</b>"
+msgstr ""
+
+#: src/gui_setting.c:372
+msgid "ID3 Tag fallback character encodings: "
+msgstr ""
+
+#: src/gui_setting.c:398
+msgid "<b>Lyric Show</b>"
+msgstr ""
+
+#: src/gui_setting.c:404
+msgid "PNG File(*.PNG, *.png)"
+msgstr ""
+
+#: src/gui_setting.c:410
+msgid "Fallback character encodings: "
+msgstr ""
+
+#: src/gui_setting.c:411 src/gui_setting.c:494
+msgid "Font: "
+msgstr ""
+
+#: src/gui_setting.c:412
+msgid "Line spacing: "
+msgstr ""
+
+#: src/gui_setting.c:413
+msgid "Background Image: "
+msgstr ""
+
+#: src/gui_setting.c:414
+msgid "Background Color: "
+msgstr ""
+
+#: src/gui_setting.c:415
+msgid "Frontground Color: "
+msgstr ""
+
+#: src/gui_setting.c:416 src/gui_setting.c:498
+msgid "Highlight Color: "
+msgstr ""
+
+#: src/gui_setting.c:427
+msgid "Please select a image file"
+msgstr ""
+
+#: src/gui_setting.c:485
+msgid "<b>OSD Lyric Show</b>"
+msgstr ""
+
+#: src/gui_setting.c:495
+msgid "Lyric Window Width: "
+msgstr ""
+
+#: src/gui_setting.c:496
+msgid "Lyric Position: "
+msgstr ""
+
+#: src/gui_setting.c:497
+msgid "Lyric Color: "
+msgstr ""
+
+#: src/gui_setting.c:501 src/gui_setting.c:503
+msgid "Color 1"
+msgstr ""
+
+#: src/gui_setting.c:502 src/gui_setting.c:504
+msgid "Color 2"
+msgstr ""
+
+#: src/gui_setting.c:508
+msgid "Movable Lyric Window"
+msgstr ""
