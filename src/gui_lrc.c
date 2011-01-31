@@ -24,6 +24,12 @@
  */
 
 #include "gui_lrc.h"
+#include "gui.h"
+#include "lyric.h"
+#include "main.h"
+#include "core.h"
+#include "gui_menu.h"
+#include "settings.h"
 
 static GuiLrcData rc_glrc;
 GuiData *rc_ui;

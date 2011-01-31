@@ -24,6 +24,20 @@
  */
 
 #include "gui.h"
+#include "core.h"
+#include "tag.h"
+#include "playlist.h"
+#include "settings.h"
+#include "main.h"
+#include "lyric.h"
+#include "debug.h"
+#include "gui_treeview.h"
+#include "gui_style.h"
+#include "gui_setting.h"
+#include "gui_lrc.h"
+#include "gui_menu.h"
+#include "gui_eq.h"
+#include "gui_dialog.h"
 #include "img_nocov.xpm"
 #include "img_icon.xpm"
 
@@ -482,7 +496,7 @@ void rc_gui_set_play_button_state(gboolean state)
 
 gboolean rc_gui_adjust_play_position(GtkWidget *widget, gpointer data)
 {
-    double persent = gtk_range_get_value(GTK_RANGE(rc_gui.time_scroll_bar));
+    gdouble persent = gtk_range_get_value(GTK_RANGE(rc_gui.time_scroll_bar));
     rc_core_set_play_position_by_persent(persent);
     return FALSE;
 }
@@ -596,7 +610,7 @@ gboolean rc_gui_seek_scale_button_released(GtkWidget *widget,
     GdkEventButton *event, gpointer data)
 {
     rc_gui.update_seek_scale_flag = TRUE;
-    rc_gui_adjust_play_position(NULL,NULL);
+    rc_gui_adjust_play_position(NULL, NULL);
     return FALSE;
 }
 

@@ -24,6 +24,10 @@
  */
 
 #include "msg.h"
+#include "global.h"
+#include "core.h"
+#include "gui.h"
+#include "tag.h"
 
 typedef struct
 {
@@ -104,13 +108,25 @@ guint rc_msg_async_queue_watch_new(GAsyncQueue *queue, gint priority,
     return id;
 }
 
-static void rc_msg_process_func(gpointer item, gpointer data)
+static void rc_msg_process_func(gpointer data, gpointer user_data)
 {
-    gpointer msg = NULL;
-    if(item!=NULL)
+    MsgData *msg = (MsgData *)data;
+    MusicMetaData *mmd;
+    if(data!=NULL)
     {
-        g_printf("Msg: %s\n", (gchar *)item);
-        g_free(item);
+        switch(msg->type)
+        {
+            case MSG_TYPE_PL_INSERT:
+                mmd = msg->data;
+                rc_plist_list2_insert_item(mmd->uri, mmd->title,
+                    mmd->artist, mmd->album, mmd->length, mmd->tracknum,
+                    mmd->list1_index, mmd->list2_index);
+                rc_tag_free(mmd);
+                break;
+            default:
+                break;
+        }
+        g_free(data);
     }
 }
 
@@ -123,8 +139,12 @@ void rc_msg_init()
         rc_msg_process_func, NULL, NULL, context);
 }
 
-void rc_msg_push(gpointer data)
+void rc_msg_push(MsgType type, gpointer data)
 {
-    g_async_queue_push(msg_queue, data);
+    MsgData *msg;
+    msg = g_malloc(sizeof(MsgData));
+    msg->type = type;
+    msg->data = data;
+    g_async_queue_push(msg_queue, msg);
 }
 

@@ -24,20 +24,20 @@
  */
 
 #include "main.h"
+#include "core.h"
+#include "gui.h"
+#include "playlist.h"
+#include "settings.h"
+#include "shell.h"
+#include "plugin.h"
+#include "debug.h"
 #include "shell_glue.h"
-
-#define PACKAGE "RhythmCat"
-#define GETTEXT_PACKAGE "RhythmCat"
-
-#ifndef LOCALEDIR
-#define LOCALEDIR "locale"
-#endif
 
 static gchar *rc_set_dir = NULL;
 static const gchar *rc_app_dir = NULL;
 static const gchar *rc_home_dir = NULL;
 static const gchar rc_program_name[] = "RhythmCat Music Player";
-static const gchar rc_build_num[] = "build 110130, alpha 1";
+static const gchar rc_build_num[] = "build 110201, alpha 1";
 static const gchar rc_ver_num[] = "0.9.0";
 static const gboolean rc_is_stable = FALSE;
 static const gchar rc_dbus_name[] = "org.supercat.RhythmCat";
@@ -53,9 +53,9 @@ static const gchar const *rc_artists[] = {"SuperCat","Ms. Mi","GC-Boy",NULL};
 static const gchar const *rc_support_format_glob[] = {"*.[F,f][L,l][A,a][C,c]",
     "*.[O,o][G,g][G,g,A,a,M,m]", "*.[M,m][P,p][2-3]", "*.[W,w][M,m][A,a]",
     "*.[W,w][A,a][V,v]", "*.[A,a][P,p][E,e]", "*.[A,a][A,a][C,c]",
-    "*.[A,a][C,c]3", "*.[M,m][I,i][D,d]", "*.[C,c][U,u][E,e]", NULL};
+    "*.[A,a][C,c]3", "*.[M,m][I,i][D,d]", NULL};
 static const gchar *rc_support_formatx = "(.FLAC|.OGG|.MP3|.WMA|.WAV|.OGA|.OGM"
-    "|.APE|.AAC|.AC3|.MIDI|.CUE|.MP2|.MID)$";
+    "|.APE|.AAC|.AC3|.MIDI|.MP2|.MID)$";
 static gboolean debug_flag = FALSE;
 static char **remaining_args = NULL;
 static GObject *rc_shell_info = NULL;

@@ -24,6 +24,10 @@
  */
 
 #include "plugin.h"
+#include "core.h"
+#include "gui.h"
+#include "playlist.h"
+#include "debug.h"
 
 GList *plugin_data_list = NULL;
 

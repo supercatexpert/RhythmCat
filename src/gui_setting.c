@@ -24,6 +24,9 @@
  */
 
 #include "gui_setting.h"
+#include "gui.h"
+#include "main.h"
+#include "settings.h"
 
 /* Variables */
 static RCSetting *rc_setting;

@@ -24,6 +24,8 @@
  */
 
 #include "gui_style.h"
+#include "gui.h"
+#include "settings.h"
 
 void rc_gui_style_init()
 {

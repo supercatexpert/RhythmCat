@@ -16,13 +16,6 @@
 #include <gtk/gtk.h>
 #include <gst/gst.h>
 #include <gst/pbutils/missing-plugins.h>
-#include "core.h"
-#include "gui.h"
-#include "settings.h"
-#include "tag.h"
-#include "lyric.h"
-#include "main.h"
-#include "debug.h"
 
 /*
  * ListStore1: 0:State, 1:Name, 2: ListStore2(gpointer).
@@ -46,6 +39,8 @@ gboolean rc_plist_init();
 void rc_plist_uninit_playlist();
 gboolean rc_plist_insert_list(const gchar *, gint);
 gboolean rc_plist_insert_music(const gchar *, gint, gint);
+void rc_plist_list2_insert_item(const gchar *, const gchar *, const gchar *,
+    const gchar *, gint64, gint, gint, gint);
 gboolean rc_plist_remove_list(gint);
 gchar *rc_plist_get_list1_name(gint);
 gint rc_plist_get_list1_length();

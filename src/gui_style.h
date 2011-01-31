@@ -29,7 +29,6 @@
 #include <glib/gprintf.h>
 #include <gdk/gdk.h>
 #include <gtk/gtk.h>
-#include "gui.h"
 
 /* Functions */
 void rc_gui_style_init();

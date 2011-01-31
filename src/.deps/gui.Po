@@ -513,10 +513,9 @@ gui.o: gui.c gui.h /usr/include/stdio.h /usr/include/features.h \
  /usr/include/bits/setjmp.h /usr/include/string.h \
  /usr/include/bits/string.h /usr/include/bits/string2.h \
  /usr/include/glib-2.0/glib/gi18n.h /usr/include/libintl.h \
- /usr/include/locale.h /usr/include/bits/locale.h global.h \
- /usr/include/glib-2.0/glib/gstdio.h core.h playlist.h \
- /usr/include/gstreamer-0.10/gst/pbutils/missing-plugins.h settings.h \
- main.h /usr/include/dbus-1.0/dbus/dbus.h \
+ /usr/include/locale.h /usr/include/bits/locale.h core.h tag.h \
+ /usr/include/gstreamer-0.10/gst/pbutils/missing-plugins.h playlist.h \
+ settings.h main.h /usr/include/dbus-1.0/dbus/dbus.h \
  /usr/lib/dbus-1.0/include/dbus/dbus-arch-deps.h \
  /usr/include/dbus-1.0/dbus/dbus-macros.h \
  /usr/include/dbus-1.0/dbus/dbus-address.h \
@@ -534,8 +533,7 @@ gui.o: gui.c gui.h /usr/include/stdio.h /usr/include/features.h \
  /usr/include/dbus-1.0/dbus/dbus-signature.h \
  /usr/include/dbus-1.0/dbus/dbus-threads.h \
  /usr/include/dbus-1.0/dbus/dbus-glib.h \
- /usr/include/dbus-1.0/dbus/dbus-gtype-specialized.h shell.h debug.h \
- plugin.h /usr/include/dlfcn.h /usr/include/bits/dlfcn.h tag.h lyric.h \
+ /usr/include/dbus-1.0/dbus/dbus-gtype-specialized.h lyric.h debug.h \
  gui_treeview.h gui_style.h gui_setting.h gui_lrc.h \
  /usr/include/gtksourceview-2.0/gtksourceview/gtksourceview.h \
  /usr/include/gtksourceview-2.0/gtksourceview/gtksourcebuffer.h \
@@ -1770,15 +1768,13 @@ gui.h:
 
 /usr/include/bits/locale.h:
 
-global.h:
-
-/usr/include/glib-2.0/glib/gstdio.h:
-
 core.h:
 
-playlist.h:
+tag.h:
 
 /usr/include/gstreamer-0.10/gst/pbutils/missing-plugins.h:
+
+playlist.h:
 
 settings.h:
 
@@ -1822,19 +1818,9 @@ main.h:
 
 /usr/include/dbus-1.0/dbus/dbus-gtype-specialized.h:
 
-shell.h:
+lyric.h:
 
 debug.h:
-
-plugin.h:
-
-/usr/include/dlfcn.h:
-
-/usr/include/bits/dlfcn.h:
-
-tag.h:
-
-lyric.h:
 
 gui_treeview.h:
 

@@ -34,27 +34,22 @@
 #include <glib/gprintf.h>
 #include <gst/gst.h>
 #include <gst/pbutils/missing-plugins.h>
-#include "settings.h"
-#include "debug.h"
 
 /* Custom struct type to store the music metadata. */
 typedef struct _MusicMetaData
 {
     gint64 length;
-    gint64 cue_start_time;
-    gint64 cue_end_time;
     gchar *uri;
-    gchar *emb_cue_data;
     guint tracknum;
     guint bitrate;
-    gint cue_track_num;
     gint eos;
+    gint list1_index;
+    gint list2_index;
     gchar title[512];
     gchar artist[512];
     gchar album[512];
     gchar comment[512];
     gchar file_type[256];
-    gboolean cue_flag;
     gboolean audio_flag;
     gboolean video_flag;
 }MusicMetaData;
@@ -64,8 +59,6 @@ void rc_tag_free(MusicMetaData *);
 gchar **rc_tag_get_id3(gchar *);
 gchar *rc_tag_get_name_from_fpath(const gchar *);
 gchar *rc_tag_find_file(const gchar *, const gchar *, const gchar *);
-GSList *rc_tag_read_cue_file(const gchar *);
-GSList *rc_tag_read_emb_cue_sheet(const MusicMetaData *);
 
 #endif
 

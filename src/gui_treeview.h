@@ -30,7 +30,6 @@
 #include <glib.h>
 #include <glib/gprintf.h>
 #include <gtk/gtk.h>
-#include "gui.h"
 
 /* Functions */
 void rc_gui_treeview_init();
@@ -43,7 +42,6 @@ void rc_gui_list1_insert(GtkWidget *, const gchar *, const gchar *,
 void rc_gui_list1_row_selected(GtkTreeView *, gpointer);
 void rc_gui_list2_row_activated(GtkTreeView *, GtkTreePath *, 
     GtkTreeViewColumn *, gpointer);
-void rc_gui_list1_set_state(GtkWidget *, gint, const gchar *);
 void rc_gui_list1_set_name(GtkWidget *, gint, const gchar *);
 void rc_gui_select_list1(gint);
 void rc_gui_select_list2(gint);

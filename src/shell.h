@@ -34,8 +34,6 @@
 #include <gst/gst.h>
 #include <dbus/dbus.h>
 #include <dbus/dbus-glib.h>
-#include "debug.h"
-#include "playlist.h"
 
 typedef struct RCShell
 {

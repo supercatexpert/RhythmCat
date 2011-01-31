@@ -24,12 +24,64 @@
  */
 
 #include "playlist.h"
+#include "core.h"
+#include "gui.h"
+#include "settings.h"
+#include "tag.h"
+#include "msg.h"
+#include "lyric.h"
+#include "main.h"
+#include "debug.h"
+
+typedef struct _PlistImportData
+{
+    gchar *uri;
+    gint list1_index;
+    gint list2_index;
+}PlistImportData;
 
 /* Variables */
 static gchar play_list_setting_file[] = "playlist.dat";
 static gchar *default_list_name = "[Default]";
 static PlistData rc_plist;
-static GThreadPool *plist_thread_pool;
+static GThread *plist_import_threads[2];
+static GAsyncQueue *plist_import_job_queue;
+static const gint plist_import_thread_num = 2;
+static gboolean plist_import_job_flag = TRUE;
+
+/*
+ * Process import jobs.
+ */
+
+static gpointer rc_plist_import_job_func(gpointer data)
+{
+    MusicMetaData *mmd = NULL;
+    PlistImportData *import_data;
+    gchar *uri;
+    gchar *filename = NULL;
+    gchar *fpathname = NULL;
+    CoreData *gcore = rc_core_get_core();
+    while(plist_import_job_flag)
+    {
+        import_data = g_async_queue_pop(plist_import_job_queue);
+        if(import_data==NULL) continue;
+        if(import_data->uri!=NULL)
+        {
+            mmd = rc_tag_read_metadata(import_data->uri);
+            g_free(import_data->uri);
+            if(mmd==NULL)
+            {
+                g_free(import_data);
+                continue;
+            }
+            mmd->list1_index = import_data->list1_index;
+            mmd->list2_index = import_data->list2_index;
+            rc_msg_push(MSG_TYPE_PL_INSERT, mmd);
+        }
+        g_free(import_data);
+    }
+    return NULL;
+}
 
 /*
  * Initial playlist store list.
@@ -38,6 +90,8 @@ static GThreadPool *plist_thread_pool;
 gboolean rc_plist_init()
 {
     static gboolean init = FALSE;
+    GError *error = NULL;
+    gint i;
     if(init) return FALSE;
     init = TRUE;
     rc_debug_print("Plist: Loading playlists...\n");
@@ -60,6 +114,18 @@ gboolean rc_plist_init()
             rc_core_play();
         }
     }
+    plist_import_job_queue = g_async_queue_new();
+    for(i=0;i<plist_import_thread_num;i++)
+    {
+        plist_import_threads[i] = g_thread_create(
+            (GThreadFunc)rc_plist_import_job_func, NULL, FALSE, &error);
+        if(error!=NULL)
+        {
+            rc_debug_perror("Plist-ERROR: %s\n", error->message);
+            g_error_free(error);
+        }
+    }
+    plist_import_job_flag = TRUE;
     rc_debug_print("Plist: Playlists are successfully loaded!\n");
     return TRUE;
 }
@@ -81,11 +147,28 @@ void rc_plist_uninit_playlist()
  * Insert music data to playlist.
  */
 
-gboolean rc_plist_insert_music(const gchar *uri, gint list_index,
-    gint music_index)
+gboolean rc_plist_insert_music(const gchar *uri, gint list1_index,
+    gint list2_index)
 {
-    if(music_index < -1 || uri==NULL) return FALSE;
-    gchar *uri_d;
+    PlistImportData *import_data;
+    import_data = g_malloc0(sizeof(PlistImportData));
+    import_data->uri = g_strdup(uri);
+    import_data->list1_index = list1_index;
+    import_data->list2_index = list2_index;
+    g_async_queue_push(plist_import_job_queue, import_data);
+    return TRUE;
+}
+
+/*
+ * Insert music to list2 by metadata.
+ */
+
+void rc_plist_list2_insert_item(const gchar *uri, const gchar *title,
+    const gchar *artist, const gchar *album, gint64 length, gint trackno,
+    gint list1_index, gint list2_index)
+{
+    GtkTreeIter iter;
+    GtkListStore *pl_store;
     gint64 seclength;
     gint time_min, time_sec;
     gchar *realname = NULL;
@@ -93,92 +176,11 @@ gboolean rc_plist_insert_music(const gchar *uri, gint list_index,
     gchar *fpathname = NULL;
     gchar new_title[512];
     gchar new_length[64];
-    CoreData *gcore = rc_core_get_core();
-    MusicMetaData *mmd = NULL, *cue_mmd = NULL;
-    GtkTreeIter iter;
-    GtkListStore *pl_store;
-    GSList *cue_mmd_list, *cue_list_foreach;
-    uri_d = g_strdup(uri);
-    if(g_regex_match_simple("(.CUE)$", uri_d, G_REGEX_CASELESS, 0))
-    {
-        /* CUE Format */
-        filename = g_filename_from_uri(uri_d, NULL, NULL);
-        cue_mmd_list = rc_tag_read_cue_file(filename);
-        g_free(filename);
-        if(cue_mmd_list==NULL)
-        {
-            g_free(uri_d);
-            return FALSE;
-        }
-        filename = NULL;
-        pl_store = rc_plist_get_list_store(list_index);
-        for(cue_list_foreach=cue_mmd_list;cue_list_foreach!=NULL;
-            cue_list_foreach=g_slist_next(cue_list_foreach))
-        {
-            cue_mmd = cue_list_foreach->data;
-            seclength = cue_mmd->length / GST_SECOND;
-            time_min = seclength / 60;
-            time_sec = seclength % 60;
-            g_snprintf(new_length, 63, "%02d:%02d", time_min, time_sec);
-            if(music_index>=0)
-            {
-                gtk_list_store_insert(pl_store, &iter, music_index);
-                music_index++;
-            }
-            else
-                gtk_list_store_append(pl_store, &iter);
-            gtk_list_store_set(pl_store, &iter, 0, uri_d, 1, NULL, 2, 
-                cue_mmd->title, 3, cue_mmd->artist, 4, cue_mmd->album, 5,
-                new_length, 6, cue_mmd->tracknum, -1);
-            g_free(cue_mmd->uri);
-            g_free(cue_mmd);
-        }
-        g_slist_free(cue_mmd_list);
-        return TRUE;
-    }
-    mmd = rc_tag_read_metadata(uri_d);
-    g_free(uri_d);
-    if(mmd==NULL)
-    {
-        return FALSE;
-    }
-    if(mmd->cue_flag && mmd->emb_cue_data!=NULL)
-    {
-        /* Embeded CUE Sheet */
-        cue_mmd_list = rc_tag_read_emb_cue_sheet(mmd);
-        g_free(mmd->emb_cue_data);
-        if(cue_mmd_list==NULL) return FALSE;
-        pl_store = rc_plist_get_list_store(list_index);
-        for(cue_list_foreach=cue_mmd_list;cue_list_foreach!=NULL;
-            cue_list_foreach=g_slist_next(cue_list_foreach))
-        {
-            cue_mmd = cue_list_foreach->data;
-            seclength = cue_mmd->length / 100;
-            time_min = seclength / 60;
-            time_sec = seclength % 60;
-            g_snprintf(new_length, 63, "%02d:%02d", time_min, time_sec);
-            if(music_index>=0)
-            {
-                gtk_list_store_insert(pl_store, &iter, music_index);
-                music_index++;
-            }
-            else
-                gtk_list_store_append(pl_store, &iter);
-            gtk_list_store_set(pl_store, &iter, 0, cue_mmd->uri, 1, NULL, 2,
-                cue_mmd->title, 3, cue_mmd->artist, 4, cue_mmd->album, 5,
-                new_length, 6, cue_mmd->tracknum, -1);
-            g_free(cue_mmd->uri);
-            g_free(cue_mmd);
-        }
-        g_slist_free(cue_mmd_list);
-        rc_tag_free(mmd);
-        return TRUE;
-    }
-    if(mmd->title[0]!='\0')
-        g_utf8_strncpy(new_title, mmd->title, 127);
+    if(title[0]!='\0')
+        g_utf8_strncpy(new_title, title, 127);
     else
     {
-        fpathname = g_filename_from_uri(mmd->uri, NULL, NULL);
+        fpathname = g_filename_from_uri(uri, NULL, NULL);
         if(fpathname!=NULL)
         {
             realname = rc_tag_get_name_from_fpath(fpathname);
@@ -192,19 +194,17 @@ gboolean rc_plist_insert_music(const gchar *uri, gint list_index,
         else
             g_utf8_strncpy(new_title, _("Unknown Title"), 127);
     }
-    seclength = mmd->length / GST_SECOND;
+    seclength = length / GST_SECOND;
     time_min = seclength / 60;
     time_sec = seclength % 60;
     g_snprintf(new_length, 63, "%02d:%02d", time_min, time_sec);
-    pl_store = rc_plist_get_list_store(list_index);
-    if(music_index>=0)
-        gtk_list_store_insert(pl_store, &iter, music_index);
+    pl_store = rc_plist_get_list_store(list1_index);
+    if(list2_index>=0)
+        gtk_list_store_insert(pl_store, &iter, list2_index);
     else
         gtk_list_store_append(pl_store, &iter);
-    gtk_list_store_set(pl_store, &iter, 0, mmd->uri, 1, NULL, 2,
-        new_title, 3, mmd->artist, 4, mmd->album, 5, new_length, -1);
-    rc_tag_free(mmd);
-    return TRUE;
+    gtk_list_store_set(pl_store, &iter, 0, uri, 1, NULL, 2,
+        new_title, 3, artist, 4, album, 5, new_length, 6, trackno, -1);
 }
 
 /*
@@ -229,9 +229,8 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
     gchar *cover_filename = NULL;
     gchar *fpathname = NULL;
     gchar *realname = NULL;
-    GSList *cue_mmd_list = NULL, *cue_list_foreach = NULL;
     gint i = 0;
-    MusicMetaData *mmd_new = NULL, *cue_mmd = NULL;
+    MusicMetaData *mmd_new = NULL;
     list_store = rc_plist_get_list_store(list_index);
     path = gtk_tree_path_new_from_indices(music_index, -1);
     if(!gtk_tree_model_get_iter(GTK_TREE_MODEL(list_store), &iter, path))
@@ -247,80 +246,12 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
     {
         return FALSE;
     }
-    if(g_regex_match_simple("(.CUE)$", list_uri, G_REGEX_CASELESS, 0))
+    mmd_new = rc_tag_read_metadata(list_uri);
+    g_free(list_uri);
+    if(mmd_new==NULL)
     {
-        rc_debug_print("Plist: Trying to play CUE file...\n");
-        fpathname = g_filename_from_uri(list_uri, NULL, NULL);
-        g_free(list_uri);
-        cue_mmd_list = rc_tag_read_cue_file(fpathname);
-        g_free(fpathname);
-        fpathname = NULL;
-        if(cue_mmd_list==NULL)
-        {
-            rc_debug_perror("Plist-ERROR: Cannot open CUE file!\n");
-            return FALSE;
-        }
-        for(cue_list_foreach=cue_mmd_list;cue_list_foreach!=NULL;
-            cue_list_foreach=g_slist_next(cue_list_foreach))
-        {
-            cue_mmd = cue_list_foreach->data;
-            if(cue_mmd->tracknum==trackno)
-            {
-                mmd_new = g_malloc(sizeof(MusicMetaData));
-                bcopy(cue_mmd, mmd_new, sizeof(MusicMetaData));
-                mmd_new->uri = g_strdup(cue_mmd->uri);
-                mmd_new->cue_flag = TRUE;
-                break;
-            }
-            g_free(cue_mmd->uri);
-            g_free(cue_mmd);
-        }
-        g_slist_free(cue_mmd_list);
-        if(!mmd_new->cue_flag)
-        {
-            rc_debug_perror("Plist-ERROR: Cannot find required track!\n");
-            return FALSE;
-        }
-    }
-    else
-    {
-        mmd_new = rc_tag_read_metadata(list_uri);
-        g_free(list_uri);
-        if(mmd_new==NULL)
-        {
-            rc_debug_perror("Plist-ERROR: Cannot read metadata!\n");
-            return FALSE;
-        }
-        if(mmd_new->cue_flag && mmd_new->emb_cue_data!=NULL && trackno>=0)
-        {
-            rc_debug_print("Plist: Trying to play embeded CUE Sheet\n");
-            cue_mmd_list = rc_tag_read_emb_cue_sheet(mmd_new);
-            if(cue_mmd_list==NULL)
-            {
-                rc_debug_perror("Plist: Cannot open embeded CUE Sheet! Play "
-                    "this file as a normal file...\n");
-            }
-            else
-            {
-                for(cue_list_foreach=cue_mmd_list;cue_list_foreach!=NULL;
-                    cue_list_foreach=g_slist_next(cue_list_foreach))
-                {
-                    cue_mmd = cue_list_foreach->data;
-                    if(cue_mmd->tracknum==trackno)
-                    {
-                        rc_tag_free(mmd_new);
-                        mmd_new = g_malloc(sizeof(MusicMetaData));
-                        bcopy(cue_mmd, mmd_new, sizeof(MusicMetaData));
-                        g_free(mmd_new->uri);
-                        mmd_new->uri = g_strdup(list_uri);
-                        mmd_new->cue_flag = TRUE;
-                    }
-                    g_free(cue_mmd->uri);
-                    g_free(cue_mmd);
-                }
-                g_slist_free(cue_mmd_list);
-            }
-        }
+        rc_debug_perror("Plist-ERROR: Cannot read metadata!\n");
+        return FALSE;
     }
     timeinfo = mmd_new->length / GST_SECOND;
     time_min = timeinfo / 60;
@@ -344,11 +275,11 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
             g_utf8_strncpy(list_title, _("Unknown title"), 127);
         }
     }
+    g_utf8_strncpy(album_name, mmd_new->album, 127);
+    rc_core_set_uri(mmd_new->uri);
     gtk_list_store_set(list_store, &iter, 1, GTK_STOCK_MEDIA_PLAY, 2, 
         list_title, 3, mmd_new->artist, 4, mmd_new->album, 5, list_timelen,
         -1);
-    g_utf8_strncpy(album_name, mmd_new->album, 127);
-    rc_core_set_uri(mmd_new->uri);
     if(rc_plist.list1_reference!=NULL)
     {
         gtk_tree_row_reference_free(rc_plist.list1_reference);
@@ -360,15 +291,6 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
         rc_plist.list2_reference = NULL;
     }
     rc_debug_print("Plist: Play music file: %s\n", mmd_new->uri);
-    if(mmd_new->cue_flag)
-    {
-        rc_core_set_cue_time(mmd_new->cue_start_time * 10 * GST_MSECOND,
-            mmd_new->cue_end_time * 10 * GST_MSECOND);
-    }
-    else
-    {
-        rc_core_set_cue_time(-1, -1);
-    }
     rc_gui_music_info_set_text(list_title, mmd_new->artist, mmd_new->album, 
         mmd_new->length, mmd_new->file_type, mmd_new->bitrate);
     path = gtk_tree_path_new_from_indices(list_index, -1);
@@ -901,7 +823,7 @@ gboolean rc_plist_load_playlist_setting()
                     buf[0]='\0';
                 }
             }
-            sscanf(line,"TN=%[^\n]",buf);  /* track number (For CUE Sheet) */
+            sscanf(line,"TN=%[^\n]",buf);  /* track number */
             if(line_length>=4 && pl_store!=NULL)
             {
                 if(line[0]=='T' && line[1]=='N' && line[2]=='=')

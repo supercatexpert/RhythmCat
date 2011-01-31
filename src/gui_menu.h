@@ -30,7 +30,6 @@
 #include <gdk/gdk.h>
 #include <gdk/gdkkeysyms.h>
 #include <gtk/gtk.h>
-#include "gui.h"
 
 typedef struct _GuiMenu
 {

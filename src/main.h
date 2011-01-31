@@ -35,14 +35,13 @@
 #include <dbus/dbus.h>
 #include <dbus/dbus-glib.h>
 #include <limits.h>
-#include "global.h"
-#include "core.h"
-#include "gui.h"
-#include "playlist.h"
-#include "settings.h"
-#include "shell.h"
-#include "plugin.h"
-#include "debug.h"
+
+#define PACKAGE "RhythmCat"
+#define GETTEXT_PACKAGE "RhythmCat"
+
+#ifndef LOCALEDIR
+#define LOCALEDIR "locale"
+#endif
 
 void rc_initial(int *, char **[]);
 gchar *rc_get_data_dir(char *);

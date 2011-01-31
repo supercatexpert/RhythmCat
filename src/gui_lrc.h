@@ -32,7 +32,6 @@
 #include <gtk/gtk.h>
 #include <gtksourceview/gtksourceview.h>
 #include <gtksourceview/gtksourcelanguagemanager.h>
-#include "gui.h"
 
 /* Custom struct type to store the GUI Lyric data. */
 

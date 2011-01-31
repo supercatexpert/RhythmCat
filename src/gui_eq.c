@@ -24,6 +24,10 @@
  */
 
 #include "gui_eq.h"
+#include "core.h"
+#include "gui.h"
+#include "main.h"
+#include "settings.h"
 
 GuiData *rc_ui;
 GtkWidget *eq_window;

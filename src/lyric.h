@@ -29,8 +29,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
-#include "global.h"
-#include "settings.h"
 
 /* Custom struct type to store the data of lyrics. */
 typedef struct _LrcData

@@ -29,9 +29,6 @@
 #include <glib.h>
 #include <glib/gprintf.h>
 #include <gtk/gtk.h>
-#include "core.h"
-#include "gui.h"
-
 
 /* Custom struct type to store the data of EQ. */
 typedef struct _EQData

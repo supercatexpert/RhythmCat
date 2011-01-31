@@ -29,7 +29,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <glib.h>
-#include "global.h"
 
 #define DEBUG_MODE 0
 

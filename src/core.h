@@ -33,24 +33,14 @@
 #include <gtk/gtk.h>
 #include <time.h>
 #include <glib/gi18n.h>
-#include "global.h"
-#include "gui.h"
-#include "playlist.h"
-#include "settings.h"
-#include "debug.h"
-
-#define PACKAGE "RhythmCat"
-#define GETTEXT_PACKAGE "RhythmCat"
 
 /* Custom struct type to store the core. */
 typedef struct _CoreData
 {
-    GstElement *play;
+    GstElement *playbin;
     GstElement *audio_sink;
     GstElement *eq_plugin;
     GstElement *vol_plugin;
-    GstBuffer *frame;
-    GstBus *bus;
     gdouble volume;
     gdouble eq[10];
     gint repeat;
@@ -60,14 +50,13 @@ typedef struct _CoreData
     guint ver_minor;
     guint ver_micro;
     guint ver_nano;
-    gint64 cue_start_time, cue_end_time;
 }CoreData;
 
 /* Functions */
 void rc_core_init();
 CoreData *rc_core_get_core();
 void rc_core_delete();
-void rc_core_set_uri(gchar *);
+void rc_core_set_uri(const gchar *);
 gchar *rc_core_get_uri();
 gboolean rc_core_play();
 gboolean rc_core_pause();
@@ -78,12 +67,8 @@ gboolean rc_core_set_play_position_by_persent(gdouble);
 gint64 rc_core_get_play_position();
 gint64 rc_core_get_music_length();
 gdouble rc_core_get_volume();
-gint rc_core_get_random_number(gint);
-void rc_core_set_repeat_mode(gint);
 void rc_core_set_eq_effect(gdouble *);
 GstState rc_core_get_play_state();
-gboolean rc_core_set_play_seek(gint64, gint64);
-void rc_core_set_cue_time(gint64, gint64);
 
 #endif
 

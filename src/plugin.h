@@ -31,10 +31,6 @@
 #include <glib.h>
 #include <gtk/gtk.h>
 #include <gst/gst.h>
-#include "core.h"
-#include "gui.h"
-#include "playlist.h"
-#include "debug.h"
 
 typedef struct _PluginData
 {

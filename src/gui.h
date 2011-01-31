@@ -35,21 +35,6 @@
 #include <gst/gst.h>
 #include <png.h>
 #include <glib/gi18n.h>
-#include "global.h"
-#include "core.h"
-#include "tag.h"
-#include "playlist.h"
-#include "settings.h"
-#include "main.h"
-#include "lyric.h"
-#include "debug.h"
-#include "gui_treeview.h"
-#include "gui_style.h"
-#include "gui_setting.h"
-#include "gui_lrc.h"
-#include "gui_menu.h"
-#include "gui_eq.h"
-#include "gui_dialog.h"
 
 /* Custom struct type to store the GUI data. */
 typedef struct _GuiData

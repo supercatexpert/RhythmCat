@@ -35,16 +35,14 @@
 #include <gst/gst.h>
 #include <png.h>
 #include <glib/gi18n.h>
-#include "global.h"
-#include "core.h"
-#include "gui.h"
 
 typedef void (*MsgAsyncQueueWatchFunc)(gpointer item, gpointer data);
 
 typedef enum _MsgType
 {
     MSG_TYPE_ECHO = 0,
-    MSG_TYPE_TEST = 1
+    MSG_TYPE_TEST = 1,
+    MSG_TYPE_PL_INSERT = 2
 }MsgType;
 
 typedef struct _MsgData
@@ -57,6 +55,7 @@ typedef struct _MsgData
 guint rc_msg_async_queue_watch_new(GAsyncQueue *, gint,
     MsgAsyncQueueWatchFunc, gpointer, GDestroyNotify, GMainContext *);
 void rc_msg_init();
+void rc_msg_push(MsgType, gpointer);
 
 #endif
 

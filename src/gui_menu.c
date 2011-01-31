@@ -24,6 +24,12 @@
  */
 
 #include "gui_menu.h"
+#include "gui.h"
+#include "gui_dialog.h"
+#include "gui_treeview.h"
+#include "gui_setting.h"
+#include "gui_lrc.h"
+#include "playlist.h"
 
 static GuiMenu rc_menu;
 GuiData *rc_ui;

@@ -24,6 +24,9 @@
  */
 
 #include "gui_treeview.h"
+#include "gui.h"
+#include "playlist.h"
+#include "gui_menu.h"
 
 /* Variables */
 static GuiData *rc_ui;
@@ -365,28 +368,6 @@ void rc_gui_list2_row_activated(GtkTreeView *list, GtkTreePath *path,
     list2_index = indices[0];
     rc_plist_play_by_index(list1_index, list2_index);
     rc_core_play();
-}
-
-/*
- * Set the color of the item in the list.
- */
-
-void rc_gui_list1_set_state(GtkWidget *list, gint list_index,
-    const gchar *state)
-{
-    GtkListStore *store;
-    GtkTreeIter iter;
-    GtkTreePath *path;
-    if(list_index<0 || list_index>=rc_plist_get_list1_length()) return;
-    path = gtk_tree_path_new_from_indices(list_index,-1);
-    if(!gtk_tree_model_get_iter(rc_ui->list1_tree_model,&iter,path))
-    {
-        gtk_tree_path_free(path);
-        return;
-    }
-    gtk_tree_path_free(path);
-    store = GTK_LIST_STORE(rc_ui->list1_tree_model);
-    gtk_list_store_set(store, &iter, 0, state, -1);
 }
 
 /*

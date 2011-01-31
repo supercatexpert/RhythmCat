@@ -24,6 +24,7 @@
  */
 
 #include "lyric.h"
+#include "settings.h"
 
 /* Variables */
 static GList *lrc_line_data = NULL;

@@ -24,6 +24,13 @@
  */
 
 #include "gui_dialog.h"
+#include "gui.h"
+#include "core.h"
+#include "tag.h"
+#include "playlist.h"
+#include "main.h"
+#include "settings.h"
+#include "gui_menu.h"
 
 /* Variables */
 static gchar *support_format[]={"*.FLAC","*.flac","*.OGG","*.ogg","*.MP3",

@@ -31,9 +31,6 @@
 #include <glib.h>
 #include <gst/gst.h>
 #include <gtk/gtk.h>
-#include "global.h"
-#include "core.h"
-#include "main.h"
 
 /* Custom struct type to store the settings of player. */
 typedef struct _RCSetting

@@ -528,31 +528,10 @@ shell.o: shell.c shell.h /usr/include/stdio.h /usr/include/features.h \
  /usr/include/dbus-1.0/dbus/dbus-glib.h \
  /usr/include/dbus-1.0/dbus/dbus-gtype-specialized.h debug.h \
  /usr/include/unistd.h /usr/include/bits/posix_opt.h \
- /usr/include/bits/confname.h /usr/include/getopt.h global.h \
- /usr/include/glib-2.0/glib/gstdio.h playlist.h \
+ /usr/include/bits/confname.h /usr/include/getopt.h playlist.h \
  /usr/include/glib-2.0/glib/gi18n.h /usr/include/libintl.h \
  /usr/include/locale.h /usr/include/bits/locale.h \
- /usr/include/gstreamer-0.10/gst/pbutils/missing-plugins.h core.h gui.h \
- /usr/include/libpng12/png.h /usr/include/zlib.h /usr/include/zconf.h \
- /usr/include/zlibdefs.h /usr/include/libpng12/pngconf.h \
- /usr/include/setjmp.h /usr/include/bits/setjmp.h tag.h settings.h main.h \
- plugin.h /usr/include/dlfcn.h /usr/include/bits/dlfcn.h lyric.h \
- gui_treeview.h gui_style.h gui_setting.h gui_lrc.h \
- /usr/include/gtksourceview-2.0/gtksourceview/gtksourceview.h \
- /usr/include/gtksourceview-2.0/gtksourceview/gtksourcebuffer.h \
- /usr/include/gtksourceview-2.0/gtksourceview/gtksourcelanguage.h \
- /usr/include/gtksourceview-2.0/gtksourceview/gtksourcemark.h \
- /usr/include/gtksourceview-2.0/gtksourceview/gtksourcestylescheme.h \
- /usr/include/gtksourceview-2.0/gtksourceview/gtksourcestyle.h \
- /usr/include/gtksourceview-2.0/gtksourceview/gtksourceundomanager.h \
- /usr/include/gtksourceview-2.0/gtksourceview/gtksourcecompletion.h \
- /usr/include/gtksourceview-2.0/gtksourceview/gtksourcecompletioninfo.h \
- /usr/include/gtksourceview-2.0/gtksourceview/gtksourcecompletionprovider.h \
- /usr/include/gtksourceview-2.0/gtksourceview/gtksourcecompletionproposal.h \
- /usr/include/gtksourceview-2.0/gtksourceview/gtksourcecompletioncontext.h \
- /usr/include/gtksourceview-2.0/gtksourceview/gtksourcegutter.h \
- /usr/include/gtksourceview-2.0/gtksourceview/gtksourcelanguagemanager.h \
- gui_menu.h /usr/include/gtk-2.0/gdk/gdkkeysyms.h gui_eq.h gui_dialog.h
+ /usr/include/gstreamer-0.10/gst/pbutils/missing-plugins.h
 
 shell.h:
 
@@ -1788,10 +1767,6 @@ debug.h:
 
 /usr/include/getopt.h:
 
-global.h:
-
-/usr/include/glib-2.0/glib/gstdio.h:
-
 playlist.h:
 
 /usr/include/glib-2.0/glib/gi18n.h:
@@ -1803,79 +1778,3 @@ playlist.h:
 /usr/include/bits/locale.h:
 
 /usr/include/gstreamer-0.10/gst/pbutils/missing-plugins.h:
-
-core.h:
-
-gui.h:
-
-/usr/include/libpng12/png.h:
-
-/usr/include/zlib.h:
-
-/usr/include/zconf.h:
-
-/usr/include/zlibdefs.h:
-
-/usr/include/libpng12/pngconf.h:
-
-/usr/include/setjmp.h:
-
-/usr/include/bits/setjmp.h:
-
-tag.h:
-
-settings.h:
-
-main.h:
-
-plugin.h:
-
-/usr/include/dlfcn.h:
-
-/usr/include/bits/dlfcn.h:
-
-lyric.h:
-
-gui_treeview.h:
-
-gui_style.h:
-
-gui_setting.h:
-
-gui_lrc.h:
-
-/usr/include/gtksourceview-2.0/gtksourceview/gtksourceview.h:
-
-/usr/include/gtksourceview-2.0/gtksourceview/gtksourcebuffer.h:
-
-/usr/include/gtksourceview-2.0/gtksourceview/gtksourcelanguage.h:
-
-/usr/include/gtksourceview-2.0/gtksourceview/gtksourcemark.h:
-
-/usr/include/gtksourceview-2.0/gtksourceview/gtksourcestylescheme.h:
-
-/usr/include/gtksourceview-2.0/gtksourceview/gtksourcestyle.h:
-
-/usr/include/gtksourceview-2.0/gtksourceview/gtksourceundomanager.h:
-
-/usr/include/gtksourceview-2.0/gtksourceview/gtksourcecompletion.h:
-
-/usr/include/gtksourceview-2.0/gtksourceview/gtksourcecompletioninfo.h:
-
-/usr/include/gtksourceview-2.0/gtksourceview/gtksourcecompletionprovider.h:
-
-/usr/include/gtksourceview-2.0/gtksourceview/gtksourcecompletionproposal.h:
-
-/usr/include/gtksourceview-2.0/gtksourceview/gtksourcecompletioncontext.h:
-
-/usr/include/gtksourceview-2.0/gtksourceview/gtksourcegutter.h:
-
-/usr/include/gtksourceview-2.0/gtksourceview/gtksourcelanguagemanager.h:
-
-gui_menu.h:
-
-/usr/include/gtk-2.0/gdk/gdkkeysyms.h:
-
-gui_eq.h:
-
-gui_dialog.h:

@@ -4,6 +4,8 @@
  */
 
 #include "shell.h"
+#include "debug.h"
+#include "playlist.h"
 
 G_DEFINE_TYPE(RCShell, rc_shell, G_TYPE_OBJECT)
 
