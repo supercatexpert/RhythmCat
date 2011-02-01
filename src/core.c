@@ -28,6 +28,7 @@
 #include "playlist.h"
 #include "settings.h"
 #include "debug.h"
+#include "gui_eq.h"
 
 #define AUDIO_FREQ 44100
 
@@ -282,7 +283,6 @@ gboolean rc_core_pause()
 
 gboolean rc_core_stop()
 {
-    gboolean flag = TRUE;
     gst_element_set_state(rc_core.playbin, GST_STATE_NULL);
     rc_plist_stop();
     rc_gui_set_play_button_state(FALSE);

@@ -514,8 +514,8 @@ gui_menu.o: gui_menu.c gui_menu.h /usr/include/glib-2.0/glib.h \
  /usr/include/bits/string.h /usr/include/bits/string2.h \
  /usr/include/glib-2.0/glib/gi18n.h /usr/include/libintl.h \
  /usr/include/locale.h /usr/include/bits/locale.h gui_dialog.h \
- gui_treeview.h gui_setting.h gui_lrc.h \
- /usr/include/gtksourceview-2.0/gtksourceview/gtksourceview.h \
+ /usr/include/glib-2.0/glib/gstdio.h gui_treeview.h gui_setting.h \
+ gui_lrc.h /usr/include/gtksourceview-2.0/gtksourceview/gtksourceview.h \
  /usr/include/gtksourceview-2.0/gtksourceview/gtksourcebuffer.h \
  /usr/include/gtksourceview-2.0/gtksourceview/gtksourcelanguage.h \
  /usr/include/gtksourceview-2.0/gtksourceview/gtksourcemark.h \
@@ -1752,6 +1752,8 @@ gui.h:
 /usr/include/bits/locale.h:
 
 gui_dialog.h:
+
+/usr/include/glib-2.0/glib/gstdio.h:
 
 gui_treeview.h:
 

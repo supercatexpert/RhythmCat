@@ -31,6 +31,7 @@
 #include "shell.h"
 #include "plugin.h"
 #include "debug.h"
+#include "msg.h"
 #include "shell_glue.h"
 
 static gchar *rc_set_dir = NULL;

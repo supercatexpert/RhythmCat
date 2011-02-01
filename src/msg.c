@@ -28,6 +28,7 @@
 #include "core.h"
 #include "gui.h"
 #include "tag.h"
+#include "playlist.h"
 
 typedef struct
 {
@@ -35,7 +36,6 @@ typedef struct
     GAsyncQueue *queue;
 }MsgAsyncQueueWatch;
 
-static guint idle_id = 0;
 static GAsyncQueue *msg_queue;
 
 static gboolean rc_msg_async_queue_watch_prepare(GSource *source,

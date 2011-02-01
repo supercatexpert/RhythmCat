@@ -2,8 +2,8 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.67])
-AC_INIT([RhythmCat], [0.6.1], [http://code.google.com/p/rhythmcat/issues/list])
-AM_INIT_AUTOMAKE(RhythmCat, 0.6.1)
+AC_INIT([RhythmCat], [0.9.0], [http://code.google.com/p/rhythmcat/issues/list])
+AM_INIT_AUTOMAKE(RhythmCat, 0.9.0)
 AC_CONFIG_SRCDIR([src/main.c])
 AC_CONFIG_HEADERS([config.h])
 
@@ -14,14 +14,13 @@ ALL_LINGUAS="zh_CN zh_TW ja_JP"
 AC_PROG_CC
 AC_PROG_INSTALL
 AC_PROG_LN_S
-CFLAGS="$CFLAGS -DINSTALL_PATH=\\\"$datadir/RhythmCat/\\\""
+CFLAGS="-Wall -O2 -DINSTALL_PATH=\\\"$datadir/RhythmCat/\\\""
 
 # Checks for libraries.
 PKG_CHECK_MODULES([GLIB2], [glib-2.0, gthread-2.0, gmodule-2.0, gio-2.0])
 PKG_CHECK_MODULES([DBUS_GLIB], [dbus-glib-1])
 PKG_CHECK_MODULES([GTK2], [gtk+-2.0 >= 2.12.0])
 PKG_CHECK_MODULES([GSTREAMER], [gstreamer-0.10])
-PKG_CHECK_MODULES([GSTREAMER_BASE], [gstreamer-base-0.10, gstreamer-plugins-base-0.10])
 PKG_CHECK_MODULES([GTKSOURCEVIEW2], [gtksourceview-2.0])
 
 # Checks for header files.

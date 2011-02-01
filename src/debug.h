@@ -29,6 +29,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <glib.h>
+#include <glib/gprintf.h>
 
 #define DEBUG_MODE 0
 

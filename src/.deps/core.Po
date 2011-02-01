@@ -518,7 +518,7 @@ core.o: core.c core.h /usr/include/stdio.h /usr/include/features.h \
  /usr/include/libpng12/pngconf.h /usr/include/setjmp.h \
  /usr/include/bits/setjmp.h playlist.h \
  /usr/include/gstreamer-0.10/gst/pbutils/missing-plugins.h settings.h \
- debug.h
+ debug.h gui_eq.h
 
 core.h:
 
@@ -1745,3 +1745,5 @@ playlist.h:
 settings.h:
 
 debug.h:
+
+gui_eq.h:

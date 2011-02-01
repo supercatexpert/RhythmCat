@@ -550,7 +550,7 @@ gui.o: gui.c gui.h /usr/include/stdio.h /usr/include/features.h \
  /usr/include/gtksourceview-2.0/gtksourceview/gtksourcegutter.h \
  /usr/include/gtksourceview-2.0/gtksourceview/gtksourcelanguagemanager.h \
  gui_menu.h /usr/include/gtk-2.0/gdk/gdkkeysyms.h gui_eq.h gui_dialog.h \
- img_nocov.xpm img_icon.xpm
+ /usr/include/glib-2.0/glib/gstdio.h img_nocov.xpm img_icon.xpm
 
 gui.h:
 
@@ -1865,6 +1865,8 @@ gui_menu.h:
 gui_eq.h:
 
 gui_dialog.h:
+
+/usr/include/glib-2.0/glib/gstdio.h:
 
 img_nocov.xpm:
 

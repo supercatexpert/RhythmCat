@@ -12,7 +12,7 @@
 GETTEXT_MACRO_VERSION = 0.18
 
 PACKAGE = RhythmCat
-VERSION = 0.6.1
+VERSION = 0.9.0
 PACKAGE_BUGREPORT = http://code.google.com/p/rhythmcat/issues/list
 
 SHELL = /bin/sh
@@ -222,7 +222,7 @@ $(DOMAIN).pot-update: $(POTFILES) $(srcdir)/POTFILES.in remove-potcdate.sed
 	      --files-from=$(srcdir)/POTFILES.in \
 	      --copyright-holder='$(COPYRIGHT_HOLDER)' \
 	      --package-name="$${package_gnu}RhythmCat" \
-	      --package-version='0.6.1' \
+	      --package-version='0.9.0' \
 	      --msgid-bugs-address="$$msgid_bugs_address" \
 	    ;; \
 	esac

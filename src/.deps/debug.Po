@@ -69,7 +69,8 @@ debug.o: debug.c debug.h /usr/include/stdio.h /usr/include/features.h \
  /usr/include/glib-2.0/glib/gtimer.h /usr/include/glib-2.0/glib/gtree.h \
  /usr/include/glib-2.0/glib/gurifuncs.h \
  /usr/include/glib-2.0/glib/gvarianttype.h \
- /usr/include/glib-2.0/glib/gvariant.h
+ /usr/include/glib-2.0/glib/gvariant.h \
+ /usr/include/glib-2.0/glib/gprintf.h
 
 debug.h:
 
@@ -294,3 +295,5 @@ debug.h:
 /usr/include/glib-2.0/glib/gvarianttype.h:
 
 /usr/include/glib-2.0/glib/gvariant.h:
+
+/usr/include/glib-2.0/glib/gprintf.h:

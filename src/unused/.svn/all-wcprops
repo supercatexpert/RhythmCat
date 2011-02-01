@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 33
+/svn/!svn/ver/20/trunk/src/unused
+END
+gui_lrc_desk.h
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/20/trunk/src/unused/gui_lrc_desk.h
+END
+tools.c
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svn/!svn/ver/20/trunk/src/unused/tools.c
+END
+gui_kara.c
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/20/trunk/src/unused/gui_kara.c
+END
+karaoke.h
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/20/trunk/src/unused/karaoke.h
+END
+gui_tools.c
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/20/trunk/src/unused/gui_tools.c
+END
+tools.h
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svn/!svn/ver/20/trunk/src/unused/tools.h
+END
+gui_kara.h
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/20/trunk/src/unused/gui_kara.h
+END
+gui_tools.h
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/20/trunk/src/unused/gui_tools.h
+END
+gui_lrc_desk.c
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/20/trunk/src/unused/gui_lrc_desk.c
+END
+karaoke.c
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/20/trunk/src/unused/karaoke.c
+END

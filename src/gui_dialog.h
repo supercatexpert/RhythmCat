@@ -29,6 +29,7 @@
 #include <glib.h>
 #include <glib/gprintf.h>
 #include <gtk/gtk.h>
+#include <glib/gstdio.h>
 
 #define MAX_DIR_DEPTH 5
 

@@ -26,6 +26,8 @@
 #include "playlist.h"
 #include "core.h"
 #include "gui.h"
+#include "gui_treeview.h"
+#include "gui_lrc.h"
 #include "settings.h"
 #include "tag.h"
 #include "msg.h"
@@ -48,6 +50,7 @@ static GThread *plist_import_threads[2];
 static GAsyncQueue *plist_import_job_queue;
 static const gint plist_import_thread_num = 2;
 static gboolean plist_import_job_flag = TRUE;
+static GCancellable *plist_import_thread_cancel = NULL;
 
 /*
  * Process import jobs.
@@ -57,10 +60,7 @@ static gpointer rc_plist_import_job_func(gpointer data)
 {
     MusicMetaData *mmd = NULL;
     PlistImportData *import_data;
-    gchar *uri;
-    gchar *filename = NULL;
-    gchar *fpathname = NULL;
-    CoreData *gcore = rc_core_get_core();
+    plist_import_thread_cancel = g_cancellable_new();
     while(plist_import_job_flag)
     {
         import_data = g_async_queue_pop(plist_import_job_queue);
@@ -137,6 +137,12 @@ gboolean rc_plist_init()
 void rc_plist_uninit_playlist()
 {
     gint list_count = 0;
+    plist_import_job_flag = FALSE;
+    if(plist_import_thread_cancel!=NULL)
+    {
+        g_cancellable_cancel(plist_import_thread_cancel);
+        g_object_unref(plist_import_thread_cancel);
+    }
     for(list_count=rc_plist_get_list1_length()-1;list_count>=0;list_count--)
     {
         rc_plist_remove_list(list_count);
@@ -172,7 +178,6 @@ void rc_plist_list2_insert_item(const gchar *uri, const gchar *title,
     gint64 seclength;
     gint time_min, time_sec;
     gchar *realname = NULL;
-    gchar *filename = NULL;
     gchar *fpathname = NULL;
     gchar new_title[512];
     gchar new_length[64];
@@ -214,9 +219,8 @@ void rc_plist_list2_insert_item(const gchar *uri, const gchar *title,
 gboolean rc_plist_play_by_index(gint list_index, gint music_index)
 {
     GtkListStore *list_store;
-    GtkTreePath *path, *path_old;
-    GtkTreeIter iter, iter_old;
-    GtkTreeModel *model;
+    GtkTreePath *path;
+    GtkTreeIter iter;
     gint64 timeinfo;
     gint time_min, time_sec;
     gint trackno = -1;
@@ -229,7 +233,6 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
     gchar *cover_filename = NULL;
     gchar *fpathname = NULL;
     gchar *realname = NULL;
-    gint i = 0;
     MusicMetaData *mmd_new = NULL;
     list_store = rc_plist_get_list_store(list_index);
     path = gtk_tree_path_new_from_indices(music_index, -1);
@@ -450,8 +453,9 @@ gboolean rc_plist_play_prev()
     rc_core_stop();
     list2_index--;
     if(list2_index<0) list2_index = 0;
-    rc_plist_play_by_index(list1_index, list2_index);
-    return rc_core_play();
+    if(rc_plist_play_by_index(list1_index, list2_index))
+        return rc_core_play();
+    else return FALSE;
 }
 
 /*
@@ -486,23 +490,27 @@ gboolean rc_plist_play_next(gboolean next_list)
         rc_core_stop();
         if(rc_plist.repeat_mode==1 && next_list)
         {
-            rc_plist_play_by_index(list1_index, list2_index-1);
-            return rc_core_play();
+            if(rc_plist_play_by_index(list1_index, list2_index-1))
+                return rc_core_play();
+            else return FALSE;
         }
         if(list2_index<rc_plist_get_list2_length(list1_index))
         {
-            rc_plist_play_by_index(list1_index, list2_index);
-            return rc_core_play();
+            if(rc_plist_play_by_index(list1_index, list2_index))
+                return rc_core_play();
+            else return FALSE;
         }
         if(!next_list)
         {
-            rc_plist_play_by_index(list1_index, list2_index-1);
-            return rc_core_play();
+            if(rc_plist_play_by_index(list1_index, list2_index-1))
+                return rc_core_play();
+            else return FALSE;
         }
         if(rc_plist.repeat_mode==2)
         {
-            rc_plist_play_by_index(list1_index, 0);
-            return rc_core_play();
+            if(rc_plist_play_by_index(list1_index, 0))
+                return rc_core_play();
+            else return FALSE;
         }
         list1_length = rc_plist_get_list1_length();
         list1_index++;
@@ -511,14 +519,16 @@ gboolean rc_plist_play_next(gboolean next_list)
             list2_length = rc_plist_get_list2_length(i);
             if(list2_length>0)
             {
-                rc_plist_play_by_index(list1_index, 0);
-                return rc_core_play();
+                if(rc_plist_play_by_index(list1_index, 0))
+                    return rc_core_play();
+                else return FALSE;
             }
         }
         if(rc_plist.repeat_mode==3)
         {
-            rc_plist_play_by_index(0, 0);
-            return rc_core_play();
+            if(rc_plist_play_by_index(0, 0))
+                return rc_core_play();
+            else return FALSE;
         }
         else return FALSE;
     }
@@ -542,12 +552,14 @@ gboolean rc_plist_play_next(gboolean next_list)
             gtk_tree_path_free(path2);
             list2_length = rc_plist_get_list2_length(list1_index);
             list2_index = rand() % list2_length;
-            rc_plist_play_by_index(list1_index, list2_index);
-            return rc_core_play();
+            if(rc_plist_play_by_index(list1_index, list2_index))
+                return rc_core_play();
+            else return FALSE;
         }
         else if(rc_plist.random_mode==2)
-        { 
+        {
             list1_length = rc_plist_get_list1_length();
+            list2_length = 0;
             indices = g_malloc(list1_length*sizeof(gint));
             for(i=0;i<list1_length;i++)
             {
@@ -953,7 +965,6 @@ void rc_plist_plist_move2(gint list_index, GtkTreePath **from_paths,
     gint f_length, gint to_list_index)
 {
     if(to_list_index<0 || to_list_index>=rc_plist_get_list1_length()) return;
-    CoreData *gcore = rc_core_get_core();
     GtkListStore *from_list_store = NULL, *to_list_store = NULL;
     GtkTreeIter from_iter, to_iter, tmp_iter;
     GtkTreePath *path;
@@ -1196,7 +1207,6 @@ void rc_plist_load_argument(char *argv[])
 {
     if(argv==NULL) return;
     RCSetting *rc_setting = rc_set_get_setting();
-    CoreData *gcore = rc_core_get_core();
     gint i = 0;
     gint list_index = -1;
     gint music_index = 0;

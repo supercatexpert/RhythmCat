@@ -26,6 +26,7 @@
 #include "settings.h"
 #include "core.h"
 #include "main.h"
+#include "playlist.h"
 
 /* Variables */
 static RCSetting rc_setting;

@@ -57,7 +57,6 @@ static gboolean rc_tag_bus_handler(GstBus *bus, GstMessage *message,
     gchar *tag_comment = NULL;
     guint bitrates = 0;
     guint tracknum = 0;
-    gint i = 0;
     if(mmd==NULL) return FALSE;
     if(mmd->uri==NULL) return FALSE;
     switch(GST_MESSAGE_TYPE(message)) 
@@ -497,7 +496,6 @@ MusicMetaData *rc_tag_read_metadata(gchar *uri)
     GstElement *decodebin;
     GstElement *fakesink;
     gchar *path = NULL;
-    gchar *realname = NULL;
     gchar **tag_id3 = NULL;
     gint changeTimeout = 0;
     gint64 dura = 0;

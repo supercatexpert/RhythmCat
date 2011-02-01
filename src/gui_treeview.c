@@ -25,6 +25,8 @@
 
 #include "gui_treeview.h"
 #include "gui.h"
+#include "core.h"
+#include "main.h"
 #include "playlist.h"
 #include "gui_menu.h"
 

@@ -855,7 +855,6 @@ void rc_gui_reflesh_music_info(GtkMenuItem *widget, gpointer data)
 {
     static gboolean running = FALSE;
     if(running) return;
-    CoreData *gcore = rc_core_get_core();
     gtk_widget_set_sensitive(ui_menu->edit_menu_items[4], FALSE);
     running = TRUE;
     //rc_plist_reflesh_info(gcore->list_index_selected);

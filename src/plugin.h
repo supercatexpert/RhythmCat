@@ -34,16 +34,15 @@
 
 typedef struct _PluginData
 {
-    void *pl_handle;
-    const gchar *pl_name;
-
-    int (*pl_load_func)(void);
-    const gchar *(*pl_get_name_func)(void);
+    gchar *name;
+    gchar *comment;
+    gchar *path;
 }PluginData;
 
 /* Function */
-gboolean plugin_initial();
-gboolean plugin_load(gchar *);
+gboolean rc_plugin_init();
+gboolean rc_module_load(const gchar *);
+gboolean rc_python_load(const gchar *);
 
 
 #endif

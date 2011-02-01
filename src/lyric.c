@@ -243,7 +243,6 @@ const LrcData *rc_lrc_get_line_by_time(gint64 time)
         }
         item = tmp;
     }
-    if(list_foreach==NULL) return NULL;
     return item;
 }
 

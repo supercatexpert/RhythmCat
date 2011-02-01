@@ -30,6 +30,7 @@
 #include "core.h"
 #include "gui_menu.h"
 #include "settings.h"
+#include "debug.h"
 
 static GuiLrcData rc_glrc;
 GuiData *rc_ui;

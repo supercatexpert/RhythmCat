@@ -29,19 +29,17 @@
 #include "tag.h"
 #include "playlist.h"
 #include "main.h"
+#include "debug.h"
 #include "settings.h"
 #include "gui_menu.h"
+#include "gui_treeview.h"
 
 /* Variables */
-static gchar *support_format[]={"*.FLAC","*.flac","*.OGG","*.ogg","*.MP3",
-    "*.mp3", "*.WMA","*.wma","*.WAV","*.wav","*.OGA","*.oga","*.OGM","*.ogm",
-    "*.APE","*.ape","*.AAC","*.aac","*.AC3","*.ac3","*.CUE","*.cue",NULL};
 GtkWidget *metadata_entry[9];
 
 static void rc_gui_open_music_dir_recu(const gchar *dir_name, gint depth)
 {
     if(depth<=0) return;
-    CoreData *gcore = rc_core_get_core();
     gchar *full_file_name = NULL;
     GDir *dir = g_dir_open(dir_name, 0, NULL);
     if(dir==NULL) return;
@@ -121,7 +119,6 @@ void rc_gui_show_open_dialog(GtkWidget *widget, gpointer data)
     gboolean open_and_play = FALSE;
     if(data!=NULL && GPOINTER_TO_INT(data)==1) open_and_play = TRUE;
     const gchar *const *support_format_glub = NULL;
-    CoreData *gcore = rc_core_get_core();
     GuiData *rc_ui = rc_gui_get_gui();
     GtkWidget *file_chooser;
     GtkFileFilter *file_filter1;
@@ -206,7 +203,6 @@ void rc_gui_show_music_info(GtkWidget *widget, gpointer data)
     GuiData *rc_ui = rc_gui_get_gui();
     static GList *path_list = NULL;
     gchar *list_uri;
-    gint errorno = 0;
     GtkTreePath *path = NULL;
     GtkTreeIter iter;
     MusicMetaData *mmd = NULL;
@@ -540,7 +536,6 @@ void rc_gui_open_music_directory(GtkWidget *widget, gpointer data)
 
 void rc_gui_save_playlist_dialog(GtkWidget *widget, gpointer data)
 {
-    CoreData *gcore = rc_core_get_core();
     GuiData *rc_ui = rc_gui_get_gui();
     GtkWidget *file_chooser;
     GtkFileFilter *file_filter1;
@@ -583,7 +578,6 @@ void rc_gui_save_playlist_dialog(GtkWidget *widget, gpointer data)
 
 void rc_gui_load_playlist_dialog(GtkWidget *widget, gpointer data)
 {
-    CoreData *gcore = rc_core_get_core();
     GuiData *rc_ui = rc_gui_get_gui();
     GtkWidget *file_chooser;
     GtkFileFilter *file_filter1;
