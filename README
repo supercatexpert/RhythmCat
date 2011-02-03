@@ -1,0 +1,98 @@
+English Introduction
+-------------------------------------------------------------------------------
+Introduction:
+
+RhythmCat is a music player which can be running under Linux. It can be used as
+ a normal music player, and it can also show lyrics in a single window, or even
+ on the desktop. It can help you mix your voice into the original music. And
+this player can help you convert the format of your music files, or cut/join
+your music...
+
+Developing platform:
+
+Operating System: Debian Lenny/5.0.4 for AMD64
+Compiler: gcc 4.3
+Programming Language: C
+Dependent Libraries: GTK+-2.0 Gstreamer-0.10 Gstreamer-plugins-base-0.10
+                     Gstreamer-plugins-good-0.10 libgtksourceview2.0-0
+Developing stage:
+
+Alpha / Work in process.
+
+License:
+
+GNU GPL v3.
+You MUST accept the GPL v3 License, then you can use this program and the source
+code.
+You can get the GPL v3 License (plain text) here:
+http://www.gnu.org/licenses/gpl.txt
+Or read the COPYING file in the source archive.
+
+How to use this program:
+
+Now this program is under developing, so we only provide source code. You
+need to compile it, then you can use this program. Before you compile it, you
+should check the developing environment, and the libraries which this program
+depends. In Debian/Ubuntu, you can run the commands below to help you install
+the packages that the compiling needed:
+
+sudo apt-get install build-essential gnome-devel libgstreamer0.10-dev \
+ libgstreamer-plugins-base0.10-dev libgtksourceview2.0-dev  
+
+Then you can try to compile it (under i386/AMD64 architecture):
+
+make rebuild
+
+This program is just in alpha stage. We provide no WARRANTY. 
+If you found any bugs, please send an e-mail to me, and report the bugs you
+found. My e-mail: supercatexpert@gmail.com. Or send the Issue on the 
+Google Code project page.
+
+中文说明
+-------------------------------------------------------------------------------
+介绍:
+
+RhythmCat 是一个可以在Linux平台下工作的音乐播放器。它可以在一个单独的窗口内显示歌
+词，甚至可以在桌面上显示。它也可以帮助您将您的声音与伴奏合成(卡拉OK模式)。这个播放器
+也能让您将音乐在不同的格式间转换，或者剪辑/合成您的音乐。
+
+开发环境:
+
+操作系统: Debian Lenny/5.0.3 for AMD64
+编译器: gcc 4.3
+编程语言: C
+依赖的库: GTK+-2.0 Gstreamer-0.10 Gstreamer-plugins-base-0.10
+         Gstreamer-plugins-good-0.10
+开发阶段:
+
+Alpha / 完成中。
+
+协议:
+
+GNU GPL v3(第三版)。
+您必须遵守GPL v3协议才能够使用本程序和源代码。
+你可以从以下地址获得GPL v3协议的副本(英文纯文本):
+http://www.gnu.org/licenses/gpl.txt
+或者阅读源码包中的COPYING文件(英文版)或COPYING_CN(简体中文版)，内容和效力以英文版
+为准，中文版仅供参考。
+警告：请不了解GPL v3协议规定的人员在使用本程序和源代码之前务必阅读GPL v3协议，否则
+您无权使用本程序及源代码。尤其请中国国内的IT从业人员注意。我们保留对违反GPL v3协议
+使用本程序以及源代码的企业及个人提起诉讼的权利。
+
+如何使用该程序:
+
+现在这个程序还处于开发阶段，所以我们只提供了源代码。您需要编译它们才能使用该程序。在
+您编译之前，您需要检查您的开发环境和所需要的库。在Debian/Ubuntu下，您可以运行以下命
+令来安装编译过程所需要的包：
+
+sudo apt-get install build-essential gnome-devel libgstreamer0.10-dev \
+ libgstreamer-plugins-base0.10-dev libgtksourceview2.0-dev 
+
+然后您可以开始编译 (在 i386/AMD64 平台下):
+
+make rebuild
+
+这个程序尚处于Alpha开发阶段，我们不为该程序提供任何保证。
+如果您发现了本程序的任何一个BUG，请给我发送E-Mail，并且汇报您发现的BUG。我的E-Mail:
+supercatexpert@gmail.com。或者您可以在Google Code页面上发布Issue。
+

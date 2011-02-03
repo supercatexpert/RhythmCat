@@ -1,0 +1,21 @@
+# List of source files which contain translatable strings.
+src/core.c
+src/gui_kara.c
+src/gui_style.c
+src/main.c
+src/tag_id3.c
+src/debug.c
+src/gui_lrc.c
+src/gui_tools.c
+src/playlist.c
+src/tools.c
+src/gui.c
+src/gui_lrc_desk.c
+src/gui_treeview.c
+src/gui_dialog.c
+src/gui_menu.c
+src/karaoke.c
+src/settings.c
+src/gui_eq.c
+src/gui_setting.c
+
