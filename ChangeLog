@@ -1,4 +1,0 @@
-2010-10-19  gettextize  <bug-gnu-gettext@gnu.org>
-
-	* configure.in (AM_GNU_GETTEXT_VERSION): Bump to 0.18.1.
-
