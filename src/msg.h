@@ -43,7 +43,7 @@ typedef enum _MsgType
     MSG_TYPE_ECHO = 0,
     MSG_TYPE_TEST = 1,
     MSG_TYPE_PL_INSERT = 2,
-    MSG_TYPE_PL_REFLUSH = 3
+    MSG_TYPE_PL_REFRESH = 3
 }MsgType;
 
 typedef struct _MsgData

@@ -49,10 +49,10 @@ static GuiData rc_gui;
 static GuiMenu *ui_menu;
 
 /*
- * Reflush the information label.
+ * refresh the information label.
  */
 
-static gboolean rc_gui_reflush_time_info(gpointer data)
+static gboolean rc_gui_refresh_time_info(gpointer data)
 {
     gint64 pos = 0, len = 0;
     gdouble persent = 0.0;
@@ -176,6 +176,7 @@ static void rc_gui_layout_init()
     vbox2 = gtk_vbox_new(FALSE, 2);
     vbox3 = gtk_vbox_new(FALSE, 0);
     vol_hbox = gtk_hbox_new(FALSE, 2);
+    rc_gui.status_hbox = gtk_hbox_new(FALSE, 2);
     control_button_hbox = gtk_hbox_new(FALSE, 1);
     playlist_ctrl_hbox = gtk_hbox_new(TRUE, 1);
     list1_scr_window = gtk_scrolled_window_new(NULL, NULL);
@@ -230,10 +231,17 @@ static void rc_gui_layout_init()
     gtk_box_pack_end(GTK_BOX(vbox3), rc_gui.time_scroll_bar, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(hbox1), album_frame, FALSE, FALSE, 2);
     gtk_box_pack_start(GTK_BOX(hbox1), vbox3, TRUE, TRUE, 2);
+    gtk_box_pack_start(GTK_BOX(rc_gui.status_hbox), rc_gui.status_label, FALSE,
+        FALSE, 2);
+    gtk_box_pack_start(GTK_BOX(rc_gui.status_hbox), rc_gui.status_progress,
+        TRUE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(rc_gui.status_hbox),
+        rc_gui.status_cancel_button, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(player_vbox), hbox1, FALSE, TRUE, 4);
     gtk_box_pack_start(GTK_BOX(player_vbox), rc_gui.plist_notebook, TRUE, TRUE,
         0);
-    gtk_widget_set_size_request(player_vbox, 360, -1);
+    gtk_box_pack_start(GTK_BOX(player_vbox), rc_gui.status_hbox, FALSE, FALSE,
+        0);
     gtk_box_pack_start(GTK_BOX(main_vbox), rc_gui.main_menu_bar, FALSE,
         FALSE, 0);
     gtk_box_pack_start(GTK_BOX(main_vbox), player_vbox, TRUE, TRUE, 0);
@@ -331,6 +339,7 @@ gboolean rc_gui_init()
     rc_gui.lrc_viewport = gtk_viewport_new(NULL, NULL);
     rc_gui.album_image = gtk_image_new_from_pixbuf(rc_gui.no_cover_image);
     rc_gui.album_eventbox = gtk_event_box_new();
+    rc_gui.status_label = gtk_label_new(NULL);
     rc_gui.lrc_label = gtk_label_new(NULL);
     rc_gui.title_label = gtk_label_new(NULL);
     rc_gui.artist_label = gtk_label_new(NULL);
@@ -338,6 +347,7 @@ gboolean rc_gui_init()
     rc_gui.info_label = gtk_label_new(NULL);
     rc_gui.time_label = gtk_label_new("00:00");
     rc_gui.length_label = gtk_label_new("00:00");
+    rc_gui.status_progress = gtk_progress_bar_new();
     rc_gui.lrc_vport_adj = gtk_viewport_get_hadjustment(GTK_VIEWPORT(
         rc_gui.lrc_viewport));
     gtk_status_icon_set_tooltip_text(rc_gui.tray_icon,
@@ -369,6 +379,7 @@ gboolean rc_gui_init()
     gtk_widget_set_size_request(rc_gui.album_image, img_cover_w, img_cover_h);
     rc_gui.volume_button = gtk_volume_button_new();
     gtk_button_set_relief(GTK_BUTTON(rc_gui.volume_button), GTK_RELIEF_NONE);
+    rc_gui.status_cancel_button = gtk_button_new_from_stock(GTK_STOCK_CANCEL);
     rc_gui.control_images[0] = gtk_image_new_from_stock(
         GTK_STOCK_MEDIA_PREVIOUS, GTK_ICON_SIZE_BUTTON);
     rc_gui.control_images[1] = gtk_image_new_from_stock(GTK_STOCK_MEDIA_PLAY,
@@ -399,11 +410,12 @@ gboolean rc_gui_init()
     rc_gui_lrc_init();
     rc_gui_signal_bind();
     rc_gui_style_init();
-    rc_gui_style_reflush();
-    rc_gui.time_info_reflush_timeout = g_timeout_add(200,
-        (GSourceFunc)(rc_gui_reflush_time_info),NULL);
+    rc_gui_style_refresh();
+    rc_gui.time_info_refresh_timeout = g_timeout_add(200,
+        (GSourceFunc)(rc_gui_refresh_time_info),NULL);
     gtk_widget_show_all(rc_gui.main_window);
     rc_gui_seek_scaler_disable();
+    rc_gui_status_task_set(0, 0);
 
     /* Disable unusable menus */
     gtk_widget_set_sensitive(ui_menu->edit_menu_items[2], FALSE);
@@ -851,11 +863,11 @@ gboolean rc_gui_show_eq_window(GtkMenuItem *widget, gpointer data)
  * Reflesh the music info in the current playlist.
  */
 
-void rc_gui_reflesh_music_info(GtkMenuItem *widget, gpointer data)
+void rc_gui_refresh_music_info(GtkMenuItem *widget, gpointer data)
 {
     gint list1_index = rc_gui_list1_get_selected_index();
     if(list1_index>=0)
-        rc_plist_list2_reflush(list1_index);
+        rc_plist_list2_refresh(list1_index);
 }
 
 /*
@@ -929,5 +941,57 @@ void rc_gui_tray_icon_popup(GtkStatusIcon *status_icon, guint button,
     guint ctivate_time, gpointer data)  
 {
     g_printf("Who calls me? Popup the menu plz!\n");
+}
+
+/*
+ * Set the number of tasks.
+ */
+
+void rc_gui_status_task_set(guint type, guint len)
+{
+    if(len<=0 || type<=0 || type>=3)
+    {
+        rc_gui.status_task_length = 0;
+        gtk_widget_hide_all(rc_gui.status_hbox);
+        return;
+    }
+    rc_gui.status_task_length+=len;
+    switch(type)
+    {
+        case 1:
+            gtk_label_set_text(GTK_LABEL(rc_gui.status_label),
+                _("Importing..."));
+            break;
+        case 2:
+            gtk_label_set_text(GTK_LABEL(rc_gui.status_label),
+                _("Refreshing..."));
+            break;
+        default:
+            break;
+    }
+    gtk_widget_show_all(rc_gui.status_hbox);
+}
+
+/*
+ * Set the remaining tasks for status progressbar.
+ */
+
+void rc_gui_status_progress_set_progress(gint factor)
+{
+    static guint completed_num = 0;
+    gdouble persent = 0.0;
+    gchar text[64];
+    completed_num+=factor;
+    if(completed_num>=rc_gui.status_task_length)
+    {
+        rc_gui_status_task_set(0, 0);
+        completed_num = 0;
+        return;
+    }
+    persent = (gdouble)(completed_num) / rc_gui.status_task_length;
+    g_snprintf(text, 63, "%u / %u", completed_num, rc_gui.status_task_length);
+    gtk_progress_bar_set_text(GTK_PROGRESS_BAR(rc_gui.status_progress), text);
+    gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(rc_gui.status_progress),
+        persent);
 }
 

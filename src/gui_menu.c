@@ -322,7 +322,7 @@ static void rc_gui_menu_main_menu_init()
     g_signal_connect(G_OBJECT(rc_menu.edit_menu_items[3]),"activate",
         G_CALLBACK(rc_gui_list2_select_all),NULL);
     g_signal_connect(G_OBJECT(rc_menu.edit_menu_items[4]),"activate",
-        G_CALLBACK(rc_gui_reflesh_music_info),NULL);
+        G_CALLBACK(rc_gui_refresh_music_info),NULL);
     g_signal_connect(G_OBJECT(rc_menu.edit_menu_items[7]),"activate",
         G_CALLBACK(rc_gui_create_setting_window),NULL);
     g_signal_connect(G_OBJECT(rc_menu.view_menu_items[0]),"activate",
@@ -456,7 +456,7 @@ void rc_gui_menu_init()
     g_signal_connect(G_OBJECT(rc_menu.pl_menu_item[6]),"activate",
         G_CALLBACK(rc_gui_list2_delete_lists),NULL);
     g_signal_connect(G_OBJECT(rc_menu.pl_menu_item[8]),"activate",
-        G_CALLBACK(rc_gui_reflesh_music_info),NULL);
+        G_CALLBACK(rc_gui_refresh_music_info),NULL);
     /* Status icon popup menu */
     rc_menu.ma_pmenu = gtk_menu_new();
     gtk_widget_show_all(rc_menu.ma_pmenu);

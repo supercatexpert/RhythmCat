@@ -32,7 +32,7 @@
 
 /* Functions */
 void rc_gui_style_init();
-void rc_gui_style_reflush();
+void rc_gui_style_refresh();
 
 #endif
 

@@ -631,7 +631,7 @@ void rc_gui_list2_dnd_data_received(GtkWidget *widget,
                 rc_ui->list2_tree_model, NULL);
             if(target<0) target = list_length;
             uri_array = g_uri_list_extract_uris(uris);
-            while(uri_array[count]!=NULL)
+            for( ;uri_array[count]!=NULL;count++)
             {
                 uri = uri_array[count];
                 if(rc_is_mfile_supported(uri))
@@ -639,15 +639,16 @@ void rc_gui_list2_dnd_data_received(GtkWidget *widget,
                     flag = rc_plist_insert_music(uri, 
                         rc_gui_list1_get_selected_index(), target);
                     target++;
-                    count++;
                 }
             }
             g_strfreev(uri_array);
+            if(target>0)
+                rc_gui_status_task_set(1, target);
             break;
         }
         case 7:
         {
-           g_printf("%s",seldata->data);
+            g_printf("%s",seldata->data);
         }
         default: break;
     }

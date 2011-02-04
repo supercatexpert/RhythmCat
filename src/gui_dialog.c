@@ -52,7 +52,7 @@ static void rc_gui_open_music_dir_recu(const gchar *dir_name, gint depth)
         file_name = g_dir_read_name(dir);
         if(file_name==NULL) break;
         full_file_name = g_strdup_printf("%s%c%s", dir_name, 
-                G_DIR_SEPARATOR, file_name);
+            G_DIR_SEPARATOR, file_name);
         if(g_file_test(full_file_name, G_FILE_TEST_IS_DIR))
             rc_gui_open_music_dir_recu(full_file_name, depth-1);
         if(!g_file_test(full_file_name, G_FILE_TEST_IS_REGULAR))
@@ -60,7 +60,7 @@ static void rc_gui_open_music_dir_recu(const gchar *dir_name, gint depth)
             g_free(full_file_name);
             continue;
         }
-		music_file_flag = rc_is_mfile_supported(full_file_name);
+        music_file_flag = rc_is_mfile_supported(full_file_name);
         if(music_file_flag)
         {
             uri = g_filename_to_uri(full_file_name, NULL, NULL);
@@ -71,7 +71,11 @@ static void rc_gui_open_music_dir_recu(const gchar *dir_name, gint depth)
         }
         g_free(full_file_name);
     }
-    while(file_name!=NULL); 
+    while(file_name!=NULL);
+    if(count>0)
+    {
+        rc_gui_status_task_set(1, count);
+    }
     g_dir_close(dir);          
 }
 
@@ -112,8 +116,6 @@ void rc_gui_about_player()
 
 void rc_gui_show_open_dialog(GtkWidget *widget, gpointer data)
 {
-    gboolean open_and_play = FALSE;
-    if(data!=NULL && GPOINTER_TO_INT(data)==1) open_and_play = TRUE;
     const gchar *const *support_format_glub = NULL;
     GuiData *rc_ui = rc_gui_get_gui();
     GtkWidget *file_chooser;
@@ -123,6 +125,7 @@ void rc_gui_show_open_dialog(GtkWidget *widget, gpointer data)
     gint index = 0;
     gint list1_selected_index;
     GSList *filelist = NULL;
+    const GSList *filelist_foreach = NULL;
     gint flist_length = 0;
     gchar *uri = NULL;
     gchar *dialog_title = NULL;
@@ -135,10 +138,7 @@ void rc_gui_show_open_dialog(GtkWidget *widget, gpointer data)
         gtk_file_filter_add_pattern(file_filter1, support_format_glub[count]);
     }
     count = 0;
-    if(open_and_play)
-        dialog_title = _("Select the music you want to play...");
-    else
-        dialog_title = _("Select the music you want to append...");
+    dialog_title = _("Select the music you want to add...");
     file_chooser = gtk_file_chooser_dialog_new(dialog_title,
         GTK_WINDOW(rc_ui->main_window),GTK_FILE_CHOOSER_ACTION_OPEN,
         GTK_STOCK_OPEN,GTK_RESPONSE_ACCEPT,GTK_STOCK_CANCEL,
@@ -148,31 +148,23 @@ void rc_gui_show_open_dialog(GtkWidget *widget, gpointer data)
     gtk_file_chooser_set_select_multiple(GTK_FILE_CHOOSER(file_chooser),TRUE);
     gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(file_chooser), file_filter1);
     result = gtk_dialog_run(GTK_DIALOG(file_chooser));
-    if(open_and_play) index = 0;
     switch(result)
     {
         case GTK_RESPONSE_ACCEPT:
-            if(open_and_play)
-                rc_core_stop();
             list1_selected_index = rc_gui_list1_get_selected_index();
             filelist = gtk_file_chooser_get_uris(
                 GTK_FILE_CHOOSER(file_chooser));
             flist_length = g_slist_length(filelist);
-            for(count=0;count<=flist_length-1;count++)
+            for(filelist_foreach=filelist;filelist_foreach!=NULL;
+                filelist_foreach=g_slist_next(filelist_foreach))
             {
-                uri = g_slist_nth_data(filelist,count);
-                if(open_and_play)
-                    rc_plist_insert_music(uri, list1_selected_index, index);
-                else
-                    rc_plist_insert_music(uri, list1_selected_index, -1);
+                uri = filelist_foreach->data;
+                rc_plist_insert_music(uri, list1_selected_index, -1);
                 g_free(uri);
             }
+            if(flist_length>0)
+                rc_gui_status_task_set(1, flist_length);
             g_slist_free(filelist);
-            if(open_and_play)
-            {
-                rc_plist_play_by_index(list1_selected_index, 0);
-                rc_core_play();
-            }
             break;
         case GTK_RESPONSE_CANCEL:
             break;

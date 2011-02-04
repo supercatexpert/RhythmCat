@@ -112,6 +112,7 @@ static void rc_msg_process_func(gpointer data, gpointer user_data)
 {
     MsgData *msg = (MsgData *)data;
     MusicMetaData *mmd;
+    guint len;
     if(data!=NULL)
     {
         switch(msg->type)
@@ -122,13 +123,15 @@ static void rc_msg_process_func(gpointer data, gpointer user_data)
                     mmd->artist, mmd->album, mmd->length, mmd->tracknum,
                     mmd->list1_index, mmd->list2_index);
                 rc_tag_free(mmd);
+                rc_gui_status_progress_set_progress(1);
                 break;
-            case MSG_TYPE_PL_REFLUSH:
+            case MSG_TYPE_PL_REFRESH:
                 mmd = msg->data;
-                rc_plist_list2_reflush_item(mmd->uri, mmd->title,
+                rc_plist_list2_refresh_item(mmd->uri, mmd->title,
                     mmd->artist, mmd->album, mmd->length, mmd->tracknum,
                     (GtkTreeRowReference *)mmd->user_data);
                 rc_tag_free(mmd);
+                rc_gui_status_progress_set_progress(1);
             default:
                 break;
         }

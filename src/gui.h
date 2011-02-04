@@ -51,13 +51,16 @@ typedef struct _GuiData
     GtkWidget *time_scroll_bar;
     GtkWidget *lrc_label, *lrc_viewport;
     GtkWidget *list1_tree_view, *list2_tree_view;
+    GtkWidget *status_hbox, *status_progress, *status_label;
+    GtkWidget *status_cancel_button;
     GtkTreeModel *list1_tree_model, *list2_tree_model;
     GtkTreeSelection *list1_selection, *list2_selection;
     GtkAdjustment *lrc_vport_adj;
     guint main_window_width;
     guint main_window_height;
+    guint status_task_length;
     gboolean update_seek_scale_flag;
-    guint time_info_reflush_timeout;
+    guint time_info_refresh_timeout;
     GtkTreeRowReference *list1_selected_reference;
     GdkPixbuf *no_cover_image;
     GdkPixbuf *icon_image;
@@ -101,10 +104,12 @@ void rc_gui_set_list2_menu(GtkTreeView *, gpointer);
 gboolean rc_gui_show_playlist_page(GtkMenuItem *, gpointer);
 gboolean rc_gui_show_lyric_page(GtkMenuItem *, gpointer);
 gboolean rc_gui_show_eq_window(GtkMenuItem *, gpointer);
-void rc_gui_reflesh_music_info(GtkMenuItem *, gpointer);
+void rc_gui_refresh_music_info(GtkMenuItem *, gpointer);
 gboolean rc_gui_set_cover_image(gchar *);
 void rc_gui_show_hide_window(GtkWidget *, gpointer);
 void rc_gui_tray_icon_popup(GtkStatusIcon *, guint, guint, gpointer);
+void rc_gui_status_task_set(guint, guint);
+void rc_gui_status_progress_set_progress(gint);
 
 #endif
 

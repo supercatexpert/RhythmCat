@@ -40,7 +40,7 @@ typedef struct _PlistImportData
     gchar *uri;
     gint list1_index;
     gint list2_index;
-    gboolean reflush_flag;
+    gboolean refresh_flag;
     GtkTreeRowReference *reference;
 }PlistImportData;
 
@@ -79,10 +79,10 @@ static gpointer rc_plist_import_job_func(gpointer data)
             mmd->list1_index = import_data->list1_index;
             mmd->list2_index = import_data->list2_index;
             mmd->user_data = import_data->reference;
-            if(!import_data->reflush_flag)
+            if(!import_data->refresh_flag)
                 rc_msg_push(MSG_TYPE_PL_INSERT, mmd);
             else
-                rc_msg_push(MSG_TYPE_PL_REFLUSH, mmd);
+                rc_msg_push(MSG_TYPE_PL_REFRESH, mmd);
         }
         g_free(import_data);
     }
@@ -167,7 +167,7 @@ gboolean rc_plist_insert_music(const gchar *uri, gint list1_index,
     import_data->uri = g_strdup(uri);
     import_data->list1_index = list1_index;
     import_data->list2_index = list2_index;
-    import_data->reflush_flag = FALSE;
+    import_data->refresh_flag = FALSE;
     g_async_queue_push(plist_import_job_queue, import_data);
     return TRUE;
 }
@@ -220,10 +220,10 @@ void rc_plist_list2_insert_item(const gchar *uri, const gchar *title,
 }
 
 /*
- * Reflush list2 by metadata.
+ * Refresh list2 by metadata.
  */
 
-void rc_plist_list2_reflush_item(const gchar *uri, const gchar *title,
+void rc_plist_list2_refresh_item(const gchar *uri, const gchar *title,
     const gchar *artist, const gchar *album, gint64 length, gint trackno,
     GtkTreeRowReference *reference)
 {
@@ -1198,6 +1198,7 @@ void rc_plist_load_playlist(const gchar *s_filename, gint index)
     g_free(contents);
     file_data = file_list;
     file_array = g_strsplit(file_data, "\n", 0);
+    i = 0;
     while(file_array[linenum]!=NULL)
     {
         line = file_array[linenum];
@@ -1218,13 +1219,15 @@ void rc_plist_load_playlist(const gchar *s_filename, gint index)
             if(uri!=NULL)
             {
                 rc_plist_insert_music(uri, index, -1);
+                i++;
                 g_free(uri);
             }
         }
         linenum++;
     }
     g_strfreev(file_array);
-
+    if(i>0)
+        rc_gui_status_task_set(1, i);
     g_free(path);
     g_free(file_list);
 }
@@ -1260,17 +1263,18 @@ GtkListStore *rc_plist_get_list_head()
 }
 
 /*
- * Reflush the items in list2.
+ * Refresh the items in list2.
  */
 
-gboolean rc_plist_list2_reflush(gint list1_index)
+gboolean rc_plist_list2_refresh(gint list1_index)
 {
-    PlistImportData *reflush_data;
+    PlistImportData *refresh_data;
     GtkListStore *store;
     GtkTreeModel *model;
     GtkTreeIter iter;
     GtkTreeRowReference *reference;
     GtkTreePath *path;
+    gint i = 0;
     if(g_async_queue_length(plist_import_job_queue)>0) return FALSE;
     store = rc_plist_get_list_store(list1_index);
     if(store==NULL) return FALSE;
@@ -1283,13 +1287,15 @@ gboolean rc_plist_list2_reflush(gint list1_index)
         reference = gtk_tree_row_reference_new(model, path);
         gtk_tree_path_free(path);
         if(reference==NULL) continue;
-        reflush_data = g_malloc0(sizeof(PlistImportData));
-        gtk_tree_model_get(model, &iter, 0, &reflush_data->uri, -1);
-        reflush_data->reference = reference;
-        reflush_data->reflush_flag = TRUE;
-        g_async_queue_push(plist_import_job_queue, reflush_data);
+        refresh_data = g_malloc0(sizeof(PlistImportData));
+        gtk_tree_model_get(model, &iter, 0, &refresh_data->uri, -1);
+        refresh_data->reference = reference;
+        refresh_data->refresh_flag = TRUE;
+        g_async_queue_push(plist_import_job_queue, refresh_data);
+        i++;
     }
     while(gtk_tree_model_iter_next(model, &iter));
+    rc_gui_status_task_set(2, i);
     return TRUE;
 }
 

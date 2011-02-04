@@ -94,6 +94,7 @@ void rc_gui_style_init()
     gtk_widget_modify_fg(rc_ui->length_label, GTK_STATE_NORMAL, &color);
     gtk_widget_modify_fg(rc_ui->info_label, GTK_STATE_NORMAL, &color);
     gtk_widget_modify_fg(rc_ui->lrc_label, GTK_STATE_NORMAL, &color);
+    gtk_widget_modify_fg(rc_ui->status_label, GTK_STATE_NORMAL, &color);
     gdk_color_parse("#6CD02F", &color);
     gtk_widget_modify_fg(rc_ui->time_label, GTK_STATE_NORMAL, &color);
     gdk_color_parse("#F0F0F0", &color);
@@ -102,7 +103,7 @@ void rc_gui_style_init()
     gtk_widget_modify_bg(rc_ui->lrc_viewport, GTK_STATE_NORMAL, &color);
 }
 
-void rc_gui_style_reflush()
+void rc_gui_style_refresh()
 {
     RCSetting *setting = rc_set_get_setting();
     if(setting->skin_rc_file==NULL) return;
