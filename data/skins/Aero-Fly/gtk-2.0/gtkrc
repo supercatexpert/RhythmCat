@@ -1,0 +1,925 @@
+#========================================================
+# Color
+#========================================================
+gtk_color_scheme = "fg_color: #101010\nbg_color: #E5E5E5\nbase_color: #FFFFFF\ntext_color: #FFFFFF\nselected_bg_color: #FF8F4C\nselected_fg_color: #1A1A1A\ntooltip_bg_color:#FFE6C4\ntooltip_fg_color:#330606"
+
+
+#=========================================================
+# Notebook
+#=========================================================
+style "notebook"
+{
+GtkNotebook::tab-overlap 	      = 6
+GtkNotebook::tab-curvature	      = 3
+
+xthickness = 4
+ythickness = 3
+
+engine "pixmap" 
+{
+        # Focus - not currently working
+        #=============================
+        image
+        {
+                function		= FOCUS
+		recolorable		= TRUE
+		detail                  = "tab"
+		file			= "Images/Tabs/null.png"
+		border	                = { 4,4,4,4}
+		stretch	                = TRUE
+	}
+           
+           
+         # Tabs
+         #=============================     
+	image 
+	{
+		function		= EXTENSION
+		recolorable		= TRUE
+		state			= ACTIVE
+		file			= "Images/Tabs/null.png"
+		border	                = { 3,3,1,3}
+		stretch	                = TRUE
+		gap_side		= TOP
+	}
+	image 
+	{
+		function		= EXTENSION
+		recolorable		= TRUE
+		detail                  = "tab"
+		state			= ACTIVE
+		file			= "Images/Tabs/null.png"
+		border		        = { 3,3,3,1}
+		stretch	                = TRUE
+		gap_side		= BOTTOM
+	}
+	image 
+	{
+		function		= EXTENSION
+		recolorable		= TRUE
+		state			= ACTIVE
+		file			= "Images/Tabs/null.png"
+		border		        = { 3,1,3,3}
+		stretch		        = TRUE
+		gap_side		= RIGHT
+	}
+	image 
+	{
+		function		= EXTENSION
+		recolorable		= TRUE
+		state			= ACTIVE
+		file			= "Images/Tabs/null.png"
+		border		        = { 1,3,3,3}
+		stretch		        = TRUE
+		gap_side		= LEFT
+	}	
+	
+	
+	image 
+	{
+		function		= EXTENSION
+		recolorable		= TRUE
+		detail                  = "tab"
+		file			= "Images/Tabs/tab-focus.png"
+		border		        = { 3, 3, 5, 1}
+		stretch		        = TRUE
+		gap_side		= BOTTOM
+	}
+	image 
+	{
+		function		= EXTENSION
+		recolorable		= TRUE
+		file			= "Images/Tabs/null.png"
+		detail                  = "tab"
+		border		        = { 3, 3, 1, 5}
+		stretch		        = TRUE
+		gap_side		= TOP
+	}
+	image 
+	{
+		function		= EXTENSION
+		recolorable		= TRUE
+		detail                  = "tab"
+		file			= "Images/Tabs/null.png"
+		border		        = { 5, 1, 3, 3}
+		stretch		        = TRUE
+		gap_side		= RIGHT
+	}
+	image 
+	{
+		function		= EXTENSION
+		recolorable		= TRUE
+		detail                  = "tab"
+		file			= "Images/Tabs/null.png"
+		border		        = { 1, 5, 3, 3}
+		stretch		        = TRUE
+		gap_side		= LEFT
+	}
+
+         # Tab containers
+         #============================= 
+	image 
+	{
+		function		= BOX_GAP
+		recolorable		= TRUE
+		file			= "Images/Tabs/null.png" 
+		border		        = { 4, 4, 4, 4  }
+		stretch		        = TRUE
+		gap_file		= "Images/Tabs/null.png"
+		gap_border              = { 3, 3, 2, 2  }
+		gap_start_file	        = "Images/Tabs/null.png"
+		gap_start_border        = { 2, 2, 3, 3 }
+		gap_end_file	        = "Images/Tabs/null.png"
+		gap_end_border	        = { 2, 2, 3, 3 }
+		gap_side		= TOP
+	}
+	image 
+	{
+		function		= BOX_GAP
+		recolorable		= TRUE
+		file			= "Images/Tabs/null.png"
+		border	                = { 4, 4, 4, 4  }
+		stretch		        = TRUE
+		gap_file		= "Images/Tabs/null.png"
+		gap_border		= { 5, 5, 5, 5  }
+		gap_start_file	        = "Images/Tabs/null.png"
+		gap_start_border	= { 2, 2, 3, 3 }
+		gap_end_file	        = "Images/Tabs/null.png"
+		gap_end_border	        = { 2, 2, 3, 3 }
+		gap_side		= BOTTOM
+	}
+	image 
+	{
+		function		= BOX_GAP
+		recolorable		= TRUE
+		file			= "Images/Tabs/null.png"
+		border		        = { 2, 4, 4, 4  }
+		stretch		        = TRUE
+		gap_file		= "Images/Tabs/null.png"
+		gap_border		= { 2, 2, 2, 2  }
+		gap_start_file	        = "Images/Tabs/null.png"
+		gap_start_border      	= { 3, 2, 3, 2 }
+		gap_end_file	        = "Images/Tabs/null.png"
+		gap_end_border	        = { 3, 2, 2, 3 }
+		gap_side		= LEFT
+	}
+	image 
+	{
+                function		= BOX_GAP
+                recolorable		= TRUE
+                file			= "Images/Tabs/null.png" 
+                border		        =  { 4, 2, 4, 4  }
+                stretch		        = TRUE
+                gap_file		= "Images/Tabs/null.png"
+                gap_border		= { 1, 1, 3, 3  }
+                gap_start_file	        = "Images/Tabs/null.png"
+                gap_start_border	= { 2, 3, 3, 2 } 
+                gap_end_file	        = "Images/Tabs/null.png"
+                gap_end_border	        = { 2, 3, 2, 3 }
+                gap_side		= RIGHT
+	}
+	
+         # No Tabs
+         #============================= 
+	image 
+	{
+	      function		= BOX
+	      recolorable	= TRUE
+	      file		= "Images/Tabs/null.png"
+	      border		= { 5, 5, 6, 5  }
+	      stretch		= TRUE
+	}
+}
+}
+widget	"mm_window.*notebook_main"	style	"notebook"
+
+
+style "button_play"
+{ 
+
+	engine "pixmap"
+	{
+	
+	# Focus image
+	image
+	{
+		function		= FOCUS
+		recolorable		= TRUE
+		detail			= "button"
+		file			= "Images/Buttons/null.png"
+		border			= {4, 4, 4, 4}
+		stretch			= TRUE
+
+	}
+
+	# Normal button
+	image 
+	{
+		function		= BOX
+		state			= NORMAL
+		shadow			= OUT
+		file			= "Images/Buttons/play_normal.png"
+		border			={ 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+
+	#Used for default buttons glow
+	image 
+	{
+		function		= BOX
+		state			= NORMAL
+		detail			= "buttondefault"
+		file			= "Images/Buttons/null.png"		
+		border			={ 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+	
+	# Pressed
+	image
+	{
+		function		= BOX
+		state			= ACTIVE
+		file			= "Images/Buttons/play_press.png"
+		border			= { 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+	
+	
+	
+	#@author:dilomo@ prelight used on toggle buttons when they are pressed in
+	image
+	{
+		function		= BOX
+		state			= PRELIGHT
+		recolorable		= TRUE
+		shadow			= IN
+		file			= "Images/Buttons/play_press.png"
+		border			= { 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+
+	#@author:dilomo@ prelight used on normal buttons
+	image
+	{
+		function		= BOX
+		state			= PRELIGHT
+		recolorable		= TRUE
+		shadow			= OUT
+		file			= "Images/Buttons/play_normal.png"
+		border			= { 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+	
+	image 
+	{
+		function		= BOX
+		state			= INSENSITIVE
+		shadow			= IN
+		file			= "Images/Buttons/null.png"	
+		border			= { 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+	
+	image 
+	{
+		function		= BOX
+		state			= INSENSITIVE
+		shadow			= OUT
+		file			= "Images/Buttons/null.png"	
+		border			= { 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+	
+		
+    }
+}
+widget        "mm_window.*button_play*" 			style "button_play"
+style "button_stop"
+{ 
+
+	engine "pixmap"
+	{
+	
+	# Focus image
+	image
+	{
+		function		= FOCUS
+		recolorable		= TRUE
+		detail			= "button"
+		file			= "Images/Buttons/null.png"
+		border			= {4, 4, 4, 4}
+		stretch			= TRUE
+
+	}
+
+	# Normal button
+	image 
+	{
+		function		= BOX
+		state			= NORMAL
+		shadow			= OUT
+		file			= "Images/Buttons/stop_normal.png"
+		border			={ 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+
+	#Used for default buttons glow
+	image 
+	{
+		function		= BOX
+		state			= NORMAL
+		detail			= "buttondefault"
+		file			= "Images/Buttons/null.png"		
+		border			={ 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+	
+	# Pressed
+	image
+	{
+		function		= BOX
+		state			= ACTIVE
+		file			= "Images/Buttons/stop_normal.png"
+		border			= { 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+	
+	
+	
+	#@author:dilomo@ prelight used on toggle buttons when they are pressed in
+	image
+	{
+		function		= BOX
+		state			= PRELIGHT
+		recolorable		= TRUE
+		shadow			= IN
+		file			= "Images/Buttons/null.png"
+		border			= { 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+
+	#@author:dilomo@ prelight used on normal buttons
+	image
+	{
+		function		= BOX
+		state			= PRELIGHT
+		recolorable		= TRUE
+		shadow			= OUT
+		file			= "Images/Buttons/stop_normal.png"
+		border			= { 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+	
+	image 
+	{
+		function		= BOX
+		state			= INSENSITIVE
+		shadow			= IN
+		file			= "Images/Buttons/null.png"	
+		border			= { 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+	
+	image 
+	{
+		function		= BOX
+		state			= INSENSITIVE
+		shadow			= OUT
+		file			= "Images/Buttons/null.png"	
+		border			= { 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+	
+		
+    }
+}
+widget        "mm_window.*button_stop*" 			style "button_stop"
+style "button_pre"
+{ 
+	engine "pixmap"
+	{
+	
+	# Focus image
+	image
+	{
+		function		= FOCUS
+		recolorable		= TRUE
+		detail			= "button"
+		file			= "Images/Buttons/null.png"
+		border			= {4, 4, 4, 4}
+		stretch			= TRUE
+
+	}
+
+	# Normal button
+	image 
+	{
+		function		= BOX
+		state			= NORMAL
+		shadow			= OUT
+		file			= "Images/Buttons/pre_normal.png"
+		border			={ 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+
+	#Used for default buttons glow
+	image 
+	{
+		function		= BOX
+		state			= NORMAL
+		detail			= "buttondefault"
+		file			= "Images/Buttons/null.png"		
+		border			={ 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+	
+	# Pressed
+	image
+	{
+		function		= BOX
+		state			= ACTIVE
+		file			= "Images/Buttons/pre_notify.png"
+		border			= { 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+	
+	
+	
+	#@author:dilomo@ prelight used on toggle buttons when they are pressed in
+	image
+	{
+		function		= BOX
+		state			= PRELIGHT
+		recolorable		= TRUE
+		shadow			= IN
+		file			= "Images/Buttons/null.png"
+		border			= { 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+
+	#@author:dilomo@ prelight used on normal buttons
+	image
+	{
+		function		= BOX
+		state			= PRELIGHT
+		recolorable		= TRUE
+		shadow			= OUT
+		file			= "Images/Buttons/pre_notify.png"
+		border			= { 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+	
+	image 
+	{
+		function		= BOX
+		state			= INSENSITIVE
+		shadow			= IN
+		file			= "Images/Buttons/null.png"	
+		border			= { 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+	
+	image 
+	{
+		function		= BOX
+		state			= INSENSITIVE
+		shadow			= OUT
+		file			= "Images/Buttons/null.png"	
+		border			= { 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+	
+		
+    }
+}
+
+widget        "mm_window.*button_pre*" 			style "button_pre"
+style "mm_button_next"
+{ 
+
+	engine "pixmap"
+	{
+	
+	# Focus image
+	image
+	{
+		function		= FOCUS
+		recolorable		= TRUE
+		detail			= "button"
+		file			= "Images/Buttons/null.png"
+		border			= {4, 4, 4, 4}
+		stretch			= TRUE
+
+	}
+
+	# Normal button
+	image 
+	{
+		function		= BOX
+		state			= NORMAL
+		shadow			= OUT
+		file			= "Images/Buttons/next_normal.png"
+		border			={ 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+
+	#Used for default buttons glow
+	image 
+	{
+		function		= BOX
+		state			= NORMAL
+		detail			= "buttondefault"
+		file			= "Images/Buttons/null.png"		
+		border			={ 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+	
+	# Pressed
+	image
+	{
+		function		= BOX
+		state			= ACTIVE
+
+		file			= "Images/Buttons/next_notify.png"
+		border			= { 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+	
+	
+	
+	#@author:dilomo@ prelight used on toggle buttons when they are pressed in
+	image
+	{
+		function		= BOX
+		state			= PRELIGHT
+		recolorable		= TRUE
+		shadow			= IN
+		file			= "Images/Buttons/null.png"
+		border			= { 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+
+	#@author:dilomo@ prelight used on normal buttons
+	image
+	{
+		function		= BOX
+		state			= PRELIGHT
+		recolorable		= TRUE
+		shadow			= OUT
+		file			= "Images/Buttons/next_notify.png"
+		border			= { 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+	
+	image 
+	{
+		function		= BOX
+		state			= INSENSITIVE
+		shadow			= IN
+		file			= "Images/Buttons/null.png"	
+		border			= { 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+	
+	image 
+	{
+		function		= BOX
+		state			= INSENSITIVE
+		shadow			= OUT
+		file			= "Images/Buttons/null.png"	
+		border			= { 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+	
+		
+    }
+}
+widget        "mm_window.*button_next*" 			style "mm_button_next"
+style "mm_button_conf"
+{ 
+
+	bg[NORMAL]        = shade (0.98, @bg_color)
+	bg[PRELIGHT]      = shade (1.04, @bg_color)
+	bg[ACTIVE]        = shade (0.92, @bg_color)
+	
+	GtkButton::interior_focus = 1
+
+	GtkWidget::focus_padding = 0
+	GtkButton::focus_width = 1
+	GtkButton::displace_focus = 1
+	
+	# Make it vertical
+	GtkButton::child_displacement_x = 0
+	GtkButton::child_displacement_y = 1
+	
+	# Increase because focus padding is zero
+	GtkButton::inner-border =  {2, 2, 2, 2}
+	
+	# Use to show glow around default buttons
+	GtkButton::default-border = { 3, 3, 3, 3}
+	GtkButton::default-outside-border = { 3, 3, 3, 3}
+
+ 
+	engine "pixmap"
+	{
+	
+	# Focus image
+	image
+	{
+		function		= FOCUS
+		recolorable		= TRUE
+		detail			= "button"
+		file			= "Images/Buttons/null.png"
+		border			= {4, 4, 4, 4}
+		stretch			= TRUE
+
+	}
+
+	# Normal button
+	image 
+	{
+		function		= BOX
+		state			= NORMAL
+		shadow			= OUT
+		file			= "Images/Buttons/conf_normal.png"
+		border			={ 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+
+	#Used for default buttons glow
+	image 
+	{
+		function		= BOX
+		state			= NORMAL
+		detail			= "buttondefault"
+		file			= "Images/Buttons/null.png"
+		border			={ 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+	
+	# Pressed
+	image
+	{
+		function		= BOX
+		state			= ACTIVE
+		file			= "Images/Buttons/button-pressed.png"
+		border			= { 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+	
+	
+	
+	#@author:dilomo@ prelight used on toggle buttons when they are pressed in
+	image
+	{
+		function		= BOX
+		state			= PRELIGHT
+		recolorable		= TRUE
+		shadow			= IN
+		file			= "Images/Buttons/button-pressed-prelight.png"
+		border			= { 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+
+	#@author:dilomo@ prelight used on normal buttons
+	image
+	{
+		function		= BOX
+		state			= PRELIGHT
+		recolorable		= TRUE
+		shadow			= OUT
+		file			= "Images/Buttons/conf_notify.png"
+		border			= { 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+	
+	image 
+	{
+		function		= BOX
+		state			= INSENSITIVE
+		shadow			= IN
+		file			= "Images/Buttons/button-insensitive-in.png"
+		border			= { 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+	
+	image 
+	{
+		function		= BOX
+		state			= INSENSITIVE
+		shadow			= OUT
+		file			= "Images/Buttons/button-insensitive.png"
+		border			= { 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+	
+		
+    }
+}
+widget        "mm_window.*button_conf*" 			style "mm_button_conf"
+
+
+style "button_close"
+{ 
+
+	bg[NORMAL]        = shade (0.98, @bg_color)
+	bg[PRELIGHT]      = shade (1.04, @bg_color)
+	bg[ACTIVE]        = shade (0.92, @bg_color)
+	
+	GtkButton::interior_focus = 1
+
+	GtkWidget::focus_padding = 0
+	GtkButton::focus_width = 1
+	GtkButton::displace_focus = 1
+	
+	# Make it vertical
+	GtkButton::child_displacement_x = 0
+	GtkButton::child_displacement_y = 1
+	
+	# Increase because focus padding is zero
+	GtkButton::inner-border =  {2, 2, 2, 2}
+	
+	# Use to show glow around default buttons
+	GtkButton::default-border = { 3, 3, 3, 3}
+	GtkButton::default-outside-border = { 3, 3, 3, 3}
+
+ 
+	engine "pixmap"
+	{
+	
+	# Focus image
+	image
+	{
+		function		= FOCUS
+		recolorable		= TRUE
+		detail			= "button"
+		file			= "Images/Buttons/close.png"
+		border			= {4, 4, 4, 4}
+		stretch			= TRUE
+
+	}
+
+	# Normal button
+	image 
+	{
+		function		= BOX
+		state			= NORMAL
+		shadow			= OUT
+		file			= "Images/Buttons/null.png"
+		border			={ 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+
+	#Used for default buttons glow
+	image 
+	{
+		function		= BOX
+		state			= NORMAL
+		detail			= "buttondefault"
+		file			= "Images/Buttons/null.png"		
+		border			={ 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+	#@author:dilomo@ prelight used on normal buttons
+	image
+	{
+		function		= BOX
+		state			= PRELIGHT
+		recolorable		= TRUE
+		shadow			= OUT
+		file			= "Images/Buttons/close.png"
+		border			= { 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+	
+	image 
+	{
+		function		= BOX
+		state			= INSENSITIVE
+		shadow			= IN
+		file			= "Images/Buttons/close.png"	
+		border			= { 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+
+	image 
+	{
+		function		= BOX
+		state			= INSENSITIVE
+		shadow			= OUT
+		file			= "Images/Buttons/close.png"	
+		border			= { 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+	
+		
+    }
+}
+
+
+widget        "mm_window.*button_close" 			style "button_close"
+
+style "button_min"
+{ 
+
+	bg[NORMAL]        = shade (0.98, @bg_color)
+	bg[PRELIGHT]      = shade (1.04, @bg_color)
+	bg[ACTIVE]        = shade (0.92, @bg_color)
+	
+	GtkButton::interior_focus = 1
+
+	GtkWidget::focus_padding = 0
+	GtkButton::focus_width = 1
+	GtkButton::displace_focus = 1
+	
+	# Make it vertical
+	GtkButton::child_displacement_x = 0
+	GtkButton::child_displacement_y = 1
+	
+	# Increase because focus padding is zero
+	GtkButton::inner-border =  {2, 2, 2, 2}
+	
+	# Use to show glow around default buttons
+	GtkButton::default-border = { 3, 3, 3, 3}
+	GtkButton::default-outside-border = { 3, 3, 3, 3}
+
+ 
+	engine "pixmap"
+	{
+	
+
+	# Normal button
+	image 
+	{
+		function		= BOX
+		state			= NORMAL
+		shadow			= OUT
+		file			= "Images/Buttons/null.png"
+		border			={ 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+
+	#Used for default buttons glow
+	image 
+	{
+		function		= BOX
+		state			= NORMAL
+		detail			= "buttondefault"
+		file			= "Images/Buttons/null.png"		
+		border			={ 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+	#@author:dilomo@ prelight used on normal buttons
+	image
+	{
+		function		= BOX
+		state			= PRELIGHT
+		recolorable		= TRUE
+		shadow			= OUT
+		file			= "Images/Buttons/min.png"
+		border			= { 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+	
+	image 
+	{
+		function		= BOX
+		state			= INSENSITIVE
+		shadow			= IN
+		file			= "Images/Buttons/min.png"	
+		border			= { 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+
+	image 
+	{
+		function		= BOX
+		state			= INSENSITIVE
+		shadow			= OUT
+		file			= "Images/Buttons/min.png"	
+		border			= { 4, 4, 4, 4 }
+		stretch			= TRUE
+	}
+	
+		
+    }
+}
+widget        "mm_window.*button_min" 			style "button_min"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

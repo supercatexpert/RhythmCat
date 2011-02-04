@@ -1,0 +1,587 @@
+# Arbeit Netscape made by Dolsilwa
+# it is based on Aurora Smooth by zhuqin
+# Aurora GTK Engine 1.5.1 is required 
+# Equinox Engine 1.20 is required
+
+# you can change icon sizes here, numbers stand for pixels,
+# e.g. 16,16 means the icon size is 16x16 pixels.
+gtk-icon-sizes = "panel-menu=16,16:panel=16,16:gtk-button=16,16:gtk-large-toolbar=24,24"
+gtk-button-images = 1 # 1 = enable, 0 = disable icons on buttons
+
+#default color scheme
+gtk_color_scheme = "fg_color:#000000\nbg_color:#cdcdce\nbase_color:#FFFFFF\ntext_color:#1A1A1A\nselected_bg_color:#19B2FF\nselected_fg_color:#FFFFFF\ntooltip_fg_color:#EEEEEE\ntooltip_bg_color:#222222"
+gtk-menu-popup-delay = 50
+
+style "theme-default"
+{
+	# button
+  	GtkButton::default_border			= {0, 0, 0, 0}
+  	#GtkButton::default_outside_border	       	= {0, 0, 0, 0}
+  	GtkButton::inner-border		       		= {0, 0, 0, 0}
+  	#GtkButton::button-relief 		       	= GTK_RELIEF_NONE
+  	GtkButton::child-displacement-x	       		= 1
+  	GtkButton::child-displacement-y	       		= 1
+  	#GtkButton::displace-focus		       	= 1
+  	#GtkButton::shadow_type		       		= GTK_SHADOW_NONE
+  	#GtkButton::image-spacing		       	= 2
+  	#GtkButton::focus-padding		       	= 0
+
+  	# button box
+  	#GtkButtonBox::child-internal-pad-x		= 0
+
+  	# check button
+  	#GtkCheckButton::indicator-size			= 15
+  	#GtkCheckButton::indicator-spacing		= 1
+
+  	# radio button
+  	#GtkRadioButton::indicator-size			= 15
+	
+  	# color button
+  	#GtkColorButton::default_border			= {0, 0, 0, 0}
+  	#GtkColorButton::child-displacement-y		= 1
+
+  	# check menuitem
+  	#GtkCheckMenuitem::indicator-size		= 13
+
+  	# combo box
+  	#GtkComboBox::appears-as-list 			= 1
+  	#GtkComboBox::arrow-size			= 10
+  	#GtkComboBox::shadow_type			= GTK_SHADOW_OUT
+	
+  	# combo box entry
+  	#GtkComboBoxEntry::appears-as-list 		= 1
+
+  	# entry
+  	GtkEntry::inner-border				= {1, 1, 1, 1}
+  	GtkEntry::honors-transparent-bg-hint    	= 1
+
+  	# expander
+  	GtkExpander::expander_size			= 8
+  	GtkExpander::expander-spacing			= 2
+	
+  	# spin button
+  	#GtkSpinButton::shadow_type			= GTK_SHADOW_NONE
+  	#GtkSpinButton::inner-border			= {0, 0, 0, 0}
+
+  	# menu
+  	GtkMenu::horizontal-offset			= -1
+  	#GtkMenu::vertical-offset			= 0
+  	#GtkMenu::horizontal-padding			= 2
+  	#GtkMenu::vertical-padding			= 2
+  	#GtkMenu::double-arrows				= 0
+
+  	# menubar
+  	GtkMenuBar::internal-padding			= 0
+  	#GtkMenuBar::shadow_type			= GTK_SHADOW_NONE
+  	#GtkMenuBar::button-relief			= GTK_RELIEF_NONE
+	
+  	# menuitem
+  	GtkMenuItem::arrow-scaling			= 0.5
+  	#GtkMenuItem::arrow-spacing			= 0
+  	GtkMenuItem::horizontal-padding			= 2
+  	GtkMenuItem::toggle-spacing			= 3
+  	#GtkMenuItem::selected-shadow-type		= GTK_SHADOW_NONE
+	
+  	# notebook
+  	GtkNotebook::arrow-spacing			= 0
+  	GtkNotebook::tab-curvature			= 2.0
+  	GtkNotebook::tab-overlap			= 3
+  	#GtkNotebook::has-secondary-backward-stepper 	= 1
+  	#GtkNotebook::has-secondary-forward-stepper  	= 1
+  	#GtkNotebook::has-backward-stepper		= 1
+  	#GtkNotebook::has-forward-stepper		= 1
+	
+  	# option menu
+  	#GtkOptionMenu::indicator-size			= {0, 0}
+  	#GtkOptionMenu::indicator-spacing		= {0, 0, 0, 0}
+	
+  	GtkPaned::handle_size				= 6
+	
+  	# progressbar
+  	#GtkProgressBar::xspacing			= 0
+  	#GtkProgressBar::yspacing			= 0
+	
+  	# scale
+  	GtkScale::slider-length				= 20
+  	GtkScale::slider-width				= 11
+  	#GtkScale::trough-border			= 0
+  	GtkScale::value-spacing				= 0
+  	#GtkScale::stepper-size 			= 14
+  	#GtkScale::activate_slider			= 0
+  	#GtkScale::trough-side-details			= 1
+  	GtkScale::trough-under-steppers			= 0
+  	#GtkScale::arrow-displacement-x			= 0
+  	#GtkScale::arrow-displacement-y			= 0
+	
+  	# scrollbar
+  	GtkScrollbar::fixed-slider-length		= 1
+  	GtkScrollbar::min_slider_length			= 35
+  	GtkScrollbar::has-backward-stepper		= 1
+  	#GtkScrollbar::has-forward-stepper		= 1
+  	GtkScrollbar::has-secondary-backward-stepper	= 1
+  	#GtkScrollbar::has-secondary-forward-stepper	= 1
+	
+  	# range
+  	GtkRange::trough-border				= 0
+  	GtkRange::slider-width				= 13
+  	GtkRange::activate-slider			= 0
+  	#GtkRange::arrow-displacement-x			= 0
+  	#GtkRange::arrow-displacement-y			= 0
+  	GtkRange::stepper-size				= 14
+  	#GtkRange::stepper-spacing			= 0
+  	GtkRange::trough-side-details 			= 0
+  	GtkRange::trough-under-steppers 		= 0
+	
+  	# scrolledwindow
+  	GtkScrolledWindow::scrollbar-spacing		= 1
+  	GtkScrolledWindow::scrollbars-within-bevel	= 0
+  	#GtkScrolledWindow::shadow_type			= GTK_SHADOW_NONE
+	
+  	#GtkStatusbar::shadow_type 			= GTK_SHADOW_NONE
+	
+  	#GtkToolButton::icon-spacing			= 0
+	
+  	# toolbar
+  	#GtkToolbar::internal-padding			= 0
+  	#GtkToolbar::button-relief			= GTK_RELIEF_NONE
+  	#GtkToolbar::shadow-type			= GTK_SHADOW_NONE
+  	GtkToolbar::space-size				= 4
+  	#GtkToolbar::max-child-expand			= 0
+  	#GtkToolbar::space-style			= GTK_TOOLBAR_SPACE_LINE
+	
+  	# treeview
+  	GtkTreeView::expander_size			= 8
+  	#GtkTreeView::vertical-separator		= 2
+  	GtkTreeView::horizontal-separator		= 4
+  	#GtkTreeView::allow-rules			= 1
+  	GtkTreeView::odd-row-color			= mix (0.9, @base_color, @selected_bg_color)
+  	GtkTreeView::even-row-color			= "#EDEDED"
+  	#GtkTreeView::indent-expanders			= 1
+  	#GtkTreeView::row-ending-details		= 1
+	
+  	# widget
+  	GtkWidget::focus-line-width			= 0
+  	#GtkWidget::focus-padding			= 1
+  	#GtkWidget::interior-focus			= 0
+  	GtkWidget::link-color				= "#0062dc"
+  	GtkWidget::visited-link-color			= "#8c00dc"
+  	#GtkWidget::scroll-arrow-hlength		= 16
+  	#GtkWidget::scroll-arrow-vlength		= 16
+  	#GtkWidget::separator-height			= 0
+  	#GtkWidget::separator-width			= 0
+  	#GtkWidget::wide-separators			= 0
+	
+  	#BonoboUiToolbar::shadow-type			= GTK_SHADOW_NONE
+	
+  	#GnomeHref::link_color				= "#0062dc"
+	
+  	# wncktasklist
+  	WnckTasklist::fade-overlay-rect			= 0
+  	WnckTasklist::fade-loop-time			= 5.0
+  	#WnckTasklist::fade-max-loop			= 50
+  	WnckTasklist::fade-opacity			= 0.5 # final opacity
+	
+  	xthickness = 1
+  	ythickness = 1
+	
+  	fg[NORMAL]        	= @fg_color
+  	fg[ACTIVE]        	= @fg_color
+  	fg[PRELIGHT]      	= @fg_color
+  	fg[SELECTED]      	= @selected_fg_color
+  	fg[INSENSITIVE]   	= darker (@bg_color)
+	
+  	bg[NORMAL]        	= @bg_color
+  	bg[ACTIVE]        	= @bg_color
+  	bg[PRELIGHT]      	= mix (0.8, @bg_color, @selected_bg_color)
+  	bg[SELECTED]      	= @selected_bg_color
+  	bg[INSENSITIVE]   	= @bg_color
+	
+  	base[NORMAL]      	= @base_color
+  	base[ACTIVE]      	= mix (0.4, @bg_color, @selected_bg_color)
+  	base[PRELIGHT]    	= "#c3c3c3"
+  	base[SELECTED]    	= @selected_bg_color
+  	base[INSENSITIVE] 	= shade (1.05, @bg_color)
+	
+  	text[NORMAL]		= @text_color
+  	text[ACTIVE]      	= @base_color
+  	text[PRELIGHT]   	= @text_color
+  	text[SELECTED]    	= @selected_fg_color
+  	text[INSENSITIVE]	= darker (@bg_color)
+	
+  	engine "aurora"
+	{
+    	menubarstyle  	= 1 # 0 = flat, 1 = gradient, 2 = sunken
+    	curvature      	= 2.0
+    	arrowsize      	= 0.5 # controls combo_arrow circle size.  Diameter set by (11 + 2 * arrowsize)
+    	old_arrowstyle 	= FALSE # set to TRUE for original circled arrows
+    	animation      	= TRUE # FALSE = disabled, TRUE = enabled
+    	contrast       	= 1.0
+  	}
+}
+
+style "theme-slim" = "theme-default"
+{
+  	xthickness = 0
+  	ythickness = 0
+}
+
+style "theme-wide" = "theme-default"
+{
+  	xthickness = 2
+  	ythickness = 2
+}
+
+style "theme-wider" = "theme-default"
+{
+  	xthickness = 3
+  	ythickness = 3
+}
+
+# button
+style "theme-button" = "theme-wider"
+{
+    	bg[NORMAL]   		= shade (0.90, @bg_color)
+    	bg[ACTIVE]   		= shade (0.82, @bg_color)
+    	bg[PRELIGHT] 		= shade (1.05, @bg_color)
+
+  	engine "equinox" 
+  	{
+	curvature 	= 2.5
+	arrowsize       = 0.1 # controls combo_arrow circle size.  Diameter set by (11 + 2 * arrowsize)
+  	}
+}
+
+# entry
+style "theme-entry" = "theme-button"
+{
+}
+
+# frame
+style "theme-frame" = "theme-wide"
+{
+}
+
+# toolbar
+style "theme-toolbar" 
+
+{
+	bg[NORMAL]   		= shade (1.01, @bg_color)
+
+	engine "equinox" 
+	{
+        toolbarstyle	= 5 # 0 = flat, 1 = gradient, 2 = flat without border, 3 = gradient without border, 4 = flat with bottom border, 5 = gradient with bottom border
+        separatorstyle 	= 1 # 0 = solid, 1 = gradient
+        animation    	= TRUE # FALSE = disabled, TRUE = enabled
+	}
+}
+
+# handlebox
+style "theme-handlebox" = "theme-default"
+{
+ 	 bg[NORMAL] 		= shade(0.925, @bg_color)
+}
+
+# progressbar
+style "theme-progressbar" = "theme-default"
+{
+  	bg[NORMAL] 		= "#f2f2f2"
+  	
+	engine "aurora"
+  	{
+    	animation 	= TRUE
+  	}
+}
+
+# slider
+style "theme-scale" = "theme-slim"
+{ 
+  	xthickness = 0
+  	ythickness = 0 
+
+  	bg[NORMAL]   		= mix (0.6, @bg_color, @selected_bg_color)
+  	bg[PRELIGHT] 		= shade (1.1, mix (0.6, @bg_color, @selected_bg_color))
+}
+
+# scrollbar
+style "theme-range" = "theme-scrollbar"
+{
+  	xthickness = 2
+  	ythickness = 2 
+    bg[NORMAL]        = shade (1.0930, @bg_color)
+    bg[PRELIGHT]      = mix (0.93, shade (1.14, @bg_color), @selected_bg_color)
+
+    #Arrows
+    text[NORMAL]      = shade (0.275,@selected_fg_color)
+    text[PRELIGHT]    = @selected_fg_color
+    text[ACTIVE]      = shade (0.10,@selected_fg_color)
+    text[INSENSITIVE] = mix (0.80,shade (0.90,@bg_color),@fg_color)
+}
+
+style "theme-scrollbar"  
+{
+	engine "murrine"
+	{
+		border_shades       	= { .8, .6} # draw a gradient on the border.
+		border_colors       	= { @bg_color, @bg_color }
+		contrast		= .6 
+		glazestyle          	= 0     # 0 = flat, 1 = curved, 2 = concave, 3 = top-curved, 4 = beryl
+		glow_shade          	= 1.14   # sets glow amount for buttons or widgets
+		glowstyle           	= 0     # 0 = top, 1 = bottom, 2 = top and bottom, 3 = center (vertical), 4 = center (horizontal) 
+		highlight_shade     	= 1.02  # set highlight amount for buttons or widgets
+		lightborder_shade   	= 1.2   # sets lightborder amount for buttons or widgets
+		arrowstyle          = 1     # 0 = normal arrows, 1 = filled arrows
+		#border_colors      = { "#ffffff", "#ffffff" } # colors used on borders of many widgets
+		border_shades       = { 0.6, 0.6 } # gradient to draw on border
+		colorize_scrollbar  = FALSE # FALSE = disabled, TRUE = enabled
+		contrast            = 0.4   # 0.8 for less contrast, more than 1.0 for more contrast on borders
+		focus_color         = "#FE765E"
+		glow_shade          = 1.1   # sets glow amount for buttons or widgets
+		glowstyle           = 0     # 0 = top, 1 = bottom, 2 = top and bottom, 3 = center (vertical), 4 = center (horizontal) 
+		gradient_shades     = {1.2,1.0,1.0,0.7} # default: {1.1,1.0,1.0,1.1}
+		lightborderstyle    = 1     # 0 = lightborder on top side, 1 = lightborder on all sides
+		prelight_shade      = .95  # shade level for scrollbar's slider, comboboxstyle(1), and prelight state with gradient_colors
+		progressbarstyle    = 0     # 0 = no stripes, 1 = diagonal stripes, 2 = vertical stripes 
+		reliefstyle	    = 4     # 0 = flat, 1 = inset, 2 = shadow, 3 = shadow with gradient, 4 = stronger shadow with gradient
+		roundness           = 9     # 0 = squared, 1 = old default, more will increase roundness
+		scrollbarstyle      = 0     # 0 = nothing, 1 = circles, 2 = handles, 3 = diagonal stripes, 4 = diagonal stripes and handles, 5 = horizontal stripes, 6 = horizontal stripes and handles
+		shadow_shades 	    = { 0.8, 2.2 } # draw gradient on shadow of some widgets
+		stepperstyle        = 1     # 0 = standard, 1 = integrated stepper handles, 2 = squared steppers with round slider
+		trough_shades       = { 0.98, 1.2 } # draw gradient on trough of GtkScrollbar and GtkProgressbar	
+	}
+
+	bg[NORMAL]	= shade (1.0, @bg_color)
+	bg[PRELIGHT] 	= shade (1.06, @bg_color)
+}
+
+# notebook
+style "theme-notebook" = "theme-wide"
+{
+  	bg[NORMAL] 		= shade (1.05, @bg_color)
+  	fg[ACTIVE] 		= shade (0.3, @bg_color)
+  	bg[ACTIVE] 		= shade (0.9, @bg_color)
+}
+
+# resizer
+style "theme-paned" = "theme-default"
+{
+  	bg[PRELIGHT] 		= shade (1.1, @bg_color)
+}
+
+# menu
+style "theme-menu" = "theme-slim"
+{
+  	bg[NORMAL] 		= @base_color
+}
+
+# menu item
+style "theme-menu-item" = "theme-wide"
+{
+  	fg[PRELIGHT] 	 	= @selected_fg_color
+  	text[PRELIGHT] 		= @selected_fg_color
+}
+
+# menubar
+style "theme-menubar" = "theme-slim"
+{
+	bg[NORMAL]   		= shade (0.96, @bg_color)
+}
+
+# menubar item
+style "theme-menubar-item" = "theme-menu-item"
+{
+}
+
+# tree
+style "theme-tree" = "theme-slim"
+{
+  	# headers
+  	xthickness = 2
+  	bg[NORMAL]   		= shade (1.05, @bg_color)
+  	bg[PRELIGHT] 		= mix (0.9, @base_color, @selected_bg_color)
+  	bg[ACTIVE]   		= mix (0.8, @base_color, @selected_bg_color)
+}
+
+# lists
+style "theme-tree-arrow" = "theme-slim"
+{
+  	bg[NORMAL] 		= @selected_bg_color
+}
+
+# tooltips
+style "theme-tooltips" = "theme-wider"
+{
+	GtkWidget::new-tooltip-style = 1
+	xthickness = 8
+	ythickness = 5
+
+	bg[NORMAL] 		= @tooltip_bg_color
+	bg[SELECTED] 		= "#000000"
+	fg[NORMAL] 		= @tooltip_fg_color
+
+	engine "murrine"
+	{
+	roundness	= 0
+	trough_shades	= { 0.15, 0.3 }
+	}
+}
+
+# combo
+style "theme-combo" = "theme-entry"
+{
+}
+
+# combo box
+style "theme-combo-box" = "theme-button"
+{
+  	ythickness = 1
+}
+
+style "theme-combo-arrow" = "theme-button"
+{
+}
+
+style "theme-check-radio-button" = "theme-button"
+{
+}
+
+style "theme-calendar" = "theme-slim"
+{
+}
+
+style "theme-separator-menu-item"
+{
+  	GtkSeparatorMenuItem::horizontal-padding = 2
+  	# We are setting the desired height by using wide-separators
+  	# There is no other way to get the odd height ...
+  	GtkWidget::wide-separators = 1
+  	GtkWidget::separator-width = 1
+  	GtkWidget::separator-height = 5
+  	xthickness = 1
+  	ythickness = 0
+}
+
+# statusbar
+style "theme-statusbar" = "theme-default"
+{
+  	#font_name = "10" # scale statusbar
+}
+
+# DODANE !!!!!
+
+style "murrine-notebook-bg2"
+{
+	xthickness = 0
+	ythickness = 0
+	bg[NORMAL]   		= mix (0.1, "#B5B5B5", "#f4f4f4")
+	bg[ACTIVE]   		= mix (0.35, "#B5B5B5", "#f4f4f4")
+	bg[INSENSITIVE]   	= mix (0.3, "#B5B5B5", "#E4E4E4")
+
+	engine "murrine"
+	{		
+	contrast = 1.5
+	gradient_shades = {1.1,1.06,0.92,0.85} # { 1.1, 1.02, 0.97, 0.93 }
+	lightborder_shade = 1.5
+	}
+}
+
+style "nautilus-handle"
+{
+	GtkPaned::handle-size         = 1
+	
+	engine "pixmap"
+	{
+		image # for the thin gray line separating the sidepane and viewpane
+		{
+		function	= HANDLE
+		recolorable	= TRUE
+		file		= "Handles/handle-nautilus.png"
+		stretch		= TRUE
+		border 		= { 0, 0, 0, 0 }
+		}
+	}
+}
+
+
+
+widget "*Nautilus*Splitter"                     style "nautilus-handle"
+
+
+
+
+# widget styles
+class "GtkWidget"	style "theme-default"
+class "GtkCheckButton"  style "theme-check-radio-button"
+class "GtkButton"       style "theme-button"
+class "GtkScale"        style "theme-scale"
+class "GtkRange"        style "theme-range"
+class "GtkPaned"        style "theme-paned"
+class "GtkFrame"        style "theme-frame"
+class "GtkMenu"         style "theme-menu"
+class "GtkMenuBar"      style "theme-menubar"
+class "GtkEntry"        style "theme-entry"
+class "GtkMenuItem"     style "theme-menu-item"
+class "GtkNotebook"     style "theme-notebook"
+class "GtkProgressBar"  style "theme-progressbar"
+class "GtkToolbar"      style "theme-toolbar"
+class "GtkHandleBox*"   style "theme-handlebox"
+class "GtkSeparator"    style "theme-wide"
+class "GtkArrow"        style "theme-combo-arrow"
+class "GtkSpinButton"	style "theme-entry"
+class "GtkCalendar"     style "theme-calendar"
+class "GtkScrollbar"	style "theme-scrollbar"
+class "GtkVScrollbar"  				style "theme-scrollbar"
+class "GtkHScrollbar"  				style "theme-scrollbar"
+# menus
+widget_class "*.<GtkMenuItem>.*"			style "theme-menu-item"
+widget_class "*<GtkMenuBar>.<GtkMenuItem>*"		style "theme-menubar-item"
+widget_class "*<GtkSeparatorMenuItem>*" 		style "theme-separator-menu-item"
+widget_class "*<GtkButton>"				style "theme-button"
+widget_class "*<GtkCheckButton>"			style  "theme-check-radio-button"
+widget_class "*<GtkHandleBox>"				style
+"theme-handlebox"
+
+#statusbar
+widget_class "*<GtkStatusbar>*"		       style "theme-statusbar"
+
+# handlebox
+widget_class "*<GtkHandleBox>"		       style "theme-handlebox"
+# combobox stuff
+widget_class "*.GtkCombo*"		       style "theme-combo"
+widget_class "*.GtkComboBox*"		       style "theme-combo-box"
+widget_class "*.GtkComboBoxEntry*"	       style "theme-combo"
+
+# tooltips stuff
+widget "gtk-tooltip*"			       style "theme-tooltips"
+
+# notebook stuff
+widget_class "*<GtkNotebook>"				style "theme-notebook"
+widget_class "*.GtkNotebook.*GtkEventBox"		style "theme-notebook"
+widget_class "*.GtkNotebook.*GtkViewport"		style "theme-notebook"
+widget_class "*.GtkNotebook.GtkLabel*"			style "theme-notebook" #for tabs
+widget_class "*<GtkNotebook>*<GtkDrawingArea>"		style "theme-notebook"
+widget_class "*<GtkNotebook>*<GtkLayout>"		style "theme-notebook"
+#widget_class "*<GtkNotebook>*<GtkViewport>" 		style "theme-notebook"
+widget_class "*<GtkNotebook>.GtkLabel*"			style "theme-notebook" #for tabs
+widget_class "*<GtkNotebook>*<GtkScrolledWindow>"	style "murrine-notebook-bg2"
+
+# treeview stuff
+widget_class "*.<GtkTreeView>.GtkButton"		style "theme-tree"
+widget_class "*.GtkCTree.GtkButton"			style "theme-tree"
+widget_class "*.GtkList.GtkButton"			style "theme-tree"
+widget_class "*.GtkCList.GtkButton"			style "theme-tree"
+
+# For arrow bg
+widget_class "*.<GtkTreeView>.GtkButton.*GtkArrow"	style "theme-tree-arrow"
+widget_class "*.GtkCTree.GtkButton.*GtkArrow"		style "theme-tree-arrow"
+widget_class "*.GtkList.GtkButton.*GtkArrow"		style "theme-tree-arrow"
+
+style "panelbutton" = "theme-button"
+{
+  # as buttons are draw lower this helps center text
+  ythickness = 3 # higher value for bigger size panels
+}
+widget_class "*Panel*GtkToggleButton*"			style "panelbutton"
+widget_class "*.ETree.ECanvas" 				style "theme-tree" #evolution
+widget_class "*.ETable.ECanvas" 			style "theme-tree" #evolution
+
+include "nautilus/nautilus.rc"

@@ -1,0 +1,43 @@
+#                                               -*- Autoconf -*-
+# Process this file with autoconf to produce a configure script.
+
+AC_PREREQ([2.67])
+AC_INIT([RhythmCat], [0.9.0], [http://code.google.com/p/rhythmcat/issues/list])
+AM_INIT_AUTOMAKE(RhythmCat, 0.9.0)
+AC_CONFIG_SRCDIR([src/main.c])
+AC_CONFIG_HEADERS([config.h])
+
+# Set of available languages.
+ALL_LINGUAS="zh_CN zh_TW ja_JP"
+
+# Checks for programs.
+AC_PROG_CC
+AC_PROG_INSTALL
+AC_PROG_LN_S
+CFLAGS="-Wall -O2 -DINSTALL_PATH=\\\"$datadir/RhythmCat/\\\""
+
+# Checks for libraries.
+PKG_CHECK_MODULES([GLIB2], [glib-2.0, gthread-2.0, gmodule-2.0, gio-2.0])
+PKG_CHECK_MODULES([DBUS_GLIB], [dbus-glib-1])
+PKG_CHECK_MODULES([GTK2], [gtk+-2.0 >= 2.12.0])
+PKG_CHECK_MODULES([GSTREAMER], [gstreamer-0.10])
+PKG_CHECK_MODULES([GTKSOURCEVIEW2], [gtksourceview-2.0])
+
+# Checks for header files.
+AC_CHECK_HEADERS([stdlib.h string.h unistd.h stdio.h limits.h])
+
+# Checks for typedefs, structures, and compiler characteristics.
+AC_TYPE_PID_T
+
+# Checks for library functions.
+AC_FUNC_FORK
+AC_CHECK_FUNCS([bzero memset realpath strrchr strstr])
+
+dnl Add the languages which your application supports to po/LINGUAS
+GETTEXT_PACKAGE=RhythmCat
+AM_GNU_GETTEXT_VERSION([0.18.1])
+AM_GNU_GETTEXT([external])
+
+AC_OUTPUT([Makefile po/Makefile.in po/Makefile src/Makefile data/Makefile \
+    data/conf/Makefile data/images/Makefile])
+
