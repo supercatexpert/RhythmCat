@@ -38,10 +38,10 @@
 typedef struct _PlistImportData
 {
     gchar *uri;
-    gint list1_index;
     gint list2_index;
     gboolean refresh_flag;
     GtkTreeRowReference *reference;
+    GtkListStore *store;
 }PlistImportData;
 
 /* Variables */
@@ -76,9 +76,9 @@ static gpointer rc_plist_import_job_func(gpointer data)
                 g_free(import_data);
                 continue;
             }
-            mmd->list1_index = import_data->list1_index;
             mmd->list2_index = import_data->list2_index;
-            mmd->user_data = import_data->reference;
+            mmd->reference = import_data->reference;
+            mmd->store = import_data->store;
             if(!import_data->refresh_flag)
                 rc_msg_push(MSG_TYPE_PL_INSERT, mmd);
             else
@@ -162,10 +162,13 @@ void rc_plist_uninit_playlist()
 gboolean rc_plist_insert_music(const gchar *uri, gint list1_index,
     gint list2_index)
 {
+    GtkListStore *store;
     PlistImportData *import_data;
+    store = rc_plist_get_list_store(list1_index);
+    if(store==NULL) return FALSE;
     import_data = g_malloc0(sizeof(PlistImportData));
     import_data->uri = g_strdup(uri);
-    import_data->list1_index = list1_index;
+    import_data->store = rc_plist_get_list_store(list1_index);
     import_data->list2_index = list2_index;
     import_data->refresh_flag = FALSE;
     g_async_queue_push(plist_import_job_queue, import_data);
@@ -178,16 +181,16 @@ gboolean rc_plist_insert_music(const gchar *uri, gint list1_index,
 
 void rc_plist_list2_insert_item(const gchar *uri, const gchar *title,
     const gchar *artist, const gchar *album, gint64 length, gint trackno,
-    gint list1_index, gint list2_index)
+    GtkListStore *store, gint list2_index)
 {
     GtkTreeIter iter;
-    GtkListStore *pl_store;
     gint64 seclength;
     gint time_min, time_sec;
     gchar *realname = NULL;
     gchar *fpathname = NULL;
     gchar new_title[512];
     gchar new_length[64];
+    if(!GTK_IS_LIST_STORE(store)) return;
     if(title[0]!='\0')
         g_utf8_strncpy(new_title, title, 127);
     else
@@ -210,12 +213,11 @@ void rc_plist_list2_insert_item(const gchar *uri, const gchar *title,
     time_min = seclength / 60;
     time_sec = seclength % 60;
     g_snprintf(new_length, 63, "%02d:%02d", time_min, time_sec);
-    pl_store = rc_plist_get_list_store(list1_index);
     if(list2_index>=0)
-        gtk_list_store_insert(pl_store, &iter, list2_index);
+        gtk_list_store_insert(store, &iter, list2_index);
     else
-        gtk_list_store_append(pl_store, &iter);
-    gtk_list_store_set(pl_store, &iter, 0, uri, 1, NULL, 2,
+        gtk_list_store_append(store, &iter);
+    gtk_list_store_set(store, &iter, 0, uri, 1, NULL, 2,
         new_title, 3, artist, 4, album, 5, new_length, 6, trackno, -1);
 }
 
@@ -242,6 +244,11 @@ void rc_plist_list2_refresh_item(const gchar *uri, const gchar *title,
         return;
     }
     pl_store = GTK_LIST_STORE(gtk_tree_row_reference_get_model(reference));
+    if(!GTK_IS_LIST_STORE(pl_store))
+    {
+        gtk_tree_row_reference_free(reference);
+        return;
+    }
     path = gtk_tree_row_reference_get_path(reference);
     gtk_tree_row_reference_free(reference);
     gtk_tree_model_get_iter(GTK_TREE_MODEL(pl_store), &iter, path);
@@ -1275,7 +1282,6 @@ gboolean rc_plist_list2_refresh(gint list1_index)
     GtkTreeRowReference *reference;
     GtkTreePath *path;
     gint i = 0;
-    if(g_async_queue_length(plist_import_job_queue)>0) return FALSE;
     store = rc_plist_get_list_store(list1_index);
     if(store==NULL) return FALSE;
     model = GTK_TREE_MODEL(store);
@@ -1297,6 +1303,37 @@ gboolean rc_plist_list2_refresh(gint list1_index)
     while(gtk_tree_model_iter_next(model, &iter));
     rc_gui_status_task_set(2, i);
     return TRUE;
+}
+
+/*
+ * Get the remain job number in the job queue.
+ */
+
+gint rc_plist_import_job_get_length()
+{
+    return g_async_queue_length(plist_import_job_queue) +
+        plist_import_thread_num;
+}
+
+/*
+ * Cancel all jobs in the job queue.
+ */
+
+void rc_plist_import_job_cancel()
+{
+    PlistImportData *import_data;
+    while(g_async_queue_length(plist_import_job_queue) +
+        plist_import_thread_num>0)
+    {
+        import_data = g_async_queue_try_pop(plist_import_job_queue);
+        if(import_data!=NULL)
+        {
+            if(import_data->uri!=NULL) g_free(import_data->uri);
+            if(import_data->reference!=NULL)
+                gtk_tree_row_reference_free(import_data->reference);
+            g_free(import_data);
+        }
+    }
 }
 
 /*

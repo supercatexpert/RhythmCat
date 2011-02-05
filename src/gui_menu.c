@@ -61,7 +61,7 @@ static void rc_gui_menu_main_menu_init()
         accel_group, GDK_n, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
     rc_menu.file_menu_items[1] = gtk_separator_menu_item_new();
     rc_menu.file_menu_items[2] = gtk_image_menu_item_new_with_mnemonic(
-        _("_Open Music"));
+        _("_Import Music"));
     gtk_widget_add_accelerator(rc_menu.file_menu_items[2], "activate", 
         accel_group, GDK_o, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
     gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(
@@ -111,7 +111,7 @@ static void rc_gui_menu_main_menu_init()
         rc_menu.edit_menu_items[3]), gtk_image_new_from_stock(
         GTK_STOCK_SELECT_ALL, GTK_ICON_SIZE_MENU));
     rc_menu.edit_menu_items[4] = gtk_image_menu_item_new_with_mnemonic(
-        _("Re_flesh Music"));
+        _("Re_fresh Music Information"));
     gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(
         rc_menu.edit_menu_items[4]), gtk_image_new_from_stock(
         GTK_STOCK_REFRESH, GTK_ICON_SIZE_MENU));
@@ -137,12 +137,14 @@ static void rc_gui_menu_main_menu_init()
     gtk_widget_add_accelerator(rc_menu.view_menu_items[0], "activate", 
         accel_group, GDK_i, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
     rc_menu.view_menu_items[1] = gtk_separator_menu_item_new();
-    rc_menu.view_menu_items[2] = gtk_menu_item_new_with_mnemonic(
-        _("_Playlists"));
+    rc_menu.view_menu_items[2] = gtk_radio_menu_item_new_with_mnemonic(
+        NULL, _("_Playlists"));
     gtk_widget_add_accelerator(rc_menu.view_menu_items[2], "activate", 
         accel_group, GDK_p, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
-    rc_menu.view_menu_items[3] = gtk_menu_item_new_with_mnemonic(
-        _("_Lyrics"));
+    rc_menu.view_menu_items[3] =
+        gtk_radio_menu_item_new_with_mnemonic_from_widget(
+        GTK_RADIO_MENU_ITEM(rc_menu.view_menu_items[2]),
+        _("_Lyric Show"));
     gtk_widget_add_accelerator(rc_menu.view_menu_items[3], "activate", 
         accel_group, GDK_l, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
     rc_menu.view_menu_items[4] = gtk_check_menu_item_new_with_mnemonic(
@@ -229,7 +231,7 @@ static void rc_gui_menu_main_menu_init()
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(rc_menu.ctrl_menu_items[10]),
         rc_menu.repeat_menus);
     rc_menu.repeat_menu_items[0] = gtk_radio_menu_item_new_with_mnemonic(
-        rc_menu.repeat_item_list, _("_No Repeat"));
+        NULL, _("_No Repeat"));
     rc_menu.repeat_menu_items[1] = gtk_separator_menu_item_new();
     rc_menu.repeat_menu_items[2] = 
         gtk_radio_menu_item_new_with_mnemonic_from_widget(
@@ -252,7 +254,7 @@ static void rc_gui_menu_main_menu_init()
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(rc_menu.ctrl_menu_items[11]),
         rc_menu.random_menus);
     rc_menu.random_menu_items[0] = gtk_radio_menu_item_new_with_mnemonic(
-        rc_menu.repeat_item_list, _("_No Random"));
+        NULL, _("_No Random"));
     rc_menu.random_menu_items[1] = gtk_separator_menu_item_new();
     rc_menu.random_menu_items[2] =
         gtk_radio_menu_item_new_with_mnemonic_from_widget(
@@ -303,70 +305,70 @@ static void rc_gui_menu_main_menu_init()
         gtk_menu_shell_append(GTK_MENU_SHELL(rc_menu.main_menus[4]),
             rc_menu.help_menu_items[i]);
     }
-    g_signal_connect(G_OBJECT(rc_menu.file_menu_items[0]),"activate",
-        G_CALLBACK(rc_gui_list1_new_list),NULL);
-    g_signal_connect(G_OBJECT(rc_menu.file_menu_items[2]),"activate",
-        G_CALLBACK(rc_gui_show_open_dialog),GINT_TO_POINTER(1));
-    g_signal_connect(G_OBJECT(rc_menu.file_menu_items[3]),"activate",
-        G_CALLBACK(rc_gui_load_playlist_dialog),NULL);
-    g_signal_connect(G_OBJECT(rc_menu.file_menu_items[4]),"activate",
-        G_CALLBACK(rc_gui_open_music_directory),NULL);
-    g_signal_connect(G_OBJECT(rc_menu.file_menu_items[5]),"activate",
-        G_CALLBACK(rc_gui_save_playlist_dialog),NULL);
-    g_signal_connect(G_OBJECT(rc_menu.file_menu_items[6]),"activate",
-        G_CALLBACK(rc_gui_save_all_playlists_dialog),NULL);
-    g_signal_connect(G_OBJECT(rc_menu.file_menu_items[8]),"activate",
-        G_CALLBACK(rc_gui_quit_player),NULL);
-    g_signal_connect(G_OBJECT(rc_menu.edit_menu_items[2]),"activate",
-        G_CALLBACK(rc_gui_list2_delete_lists),NULL);
-    g_signal_connect(G_OBJECT(rc_menu.edit_menu_items[3]),"activate",
-        G_CALLBACK(rc_gui_list2_select_all),NULL);
-    g_signal_connect(G_OBJECT(rc_menu.edit_menu_items[4]),"activate",
-        G_CALLBACK(rc_gui_refresh_music_info),NULL);
-    g_signal_connect(G_OBJECT(rc_menu.edit_menu_items[7]),"activate",
-        G_CALLBACK(rc_gui_create_setting_window),NULL);
-    g_signal_connect(G_OBJECT(rc_menu.view_menu_items[0]),"activate",
-        G_CALLBACK(rc_gui_show_music_info),NULL);
-    g_signal_connect(G_OBJECT(rc_menu.view_menu_items[2]),"activate",
-        G_CALLBACK(rc_gui_show_playlist_page),NULL);
-    g_signal_connect(G_OBJECT(rc_menu.view_menu_items[3]),"activate",
-        G_CALLBACK(rc_gui_show_lyric_page),NULL);
-    g_signal_connect(G_OBJECT(rc_menu.view_menu_items[4]),"activate",
-        G_CALLBACK(rc_gui_edit_lyric),NULL);
-    g_signal_connect(G_OBJECT(rc_menu.view_menu_items[5]),"activate",
-        G_CALLBACK(rc_gui_show_eq_window),NULL);
-    g_signal_connect(G_OBJECT(rc_menu.ctrl_menu_items[0]),"activate",
-        G_CALLBACK(rc_gui_play_button_clicked),NULL);
-    g_signal_connect(G_OBJECT(rc_menu.ctrl_menu_items[1]),"activate",
-        G_CALLBACK(rc_gui_stop_button_clicked),NULL);
-    g_signal_connect(G_OBJECT(rc_menu.ctrl_menu_items[2]),"activate",
-        G_CALLBACK(rc_gui_prev_button_clicked),NULL);
-    g_signal_connect(G_OBJECT(rc_menu.ctrl_menu_items[3]),"activate",
-        G_CALLBACK(rc_gui_next_button_clicked),NULL);
-    g_signal_connect(G_OBJECT(rc_menu.ctrl_menu_items[4]),"activate",
-        G_CALLBACK(rc_gui_press_backward_menu),NULL);
-    g_signal_connect(G_OBJECT(rc_menu.ctrl_menu_items[5]),"activate",
-        G_CALLBACK(rc_gui_press_forward_menu),NULL);
-    g_signal_connect(G_OBJECT(rc_menu.ctrl_menu_items[7]),"activate",
-        G_CALLBACK(rc_gui_press_vol_up_menu),NULL);
-    g_signal_connect(G_OBJECT(rc_menu.ctrl_menu_items[8]),"activate",
-        G_CALLBACK(rc_gui_press_vol_down_menu),NULL);
-    g_signal_connect(G_OBJECT(rc_menu.help_menu_items[0]),"activate",
-        G_CALLBACK(rc_gui_about_player),NULL);
-    g_signal_connect(G_OBJECT(rc_menu.repeat_menu_items[0]),"toggled",
-        G_CALLBACK(rc_gui_press_repeat_menu),GINT_TO_POINTER(0));
-    g_signal_connect(G_OBJECT(rc_menu.repeat_menu_items[2]),"toggled",
-        G_CALLBACK(rc_gui_press_repeat_menu),GINT_TO_POINTER(1));
-    g_signal_connect(G_OBJECT(rc_menu.repeat_menu_items[3]),"toggled",
-        G_CALLBACK(rc_gui_press_repeat_menu),GINT_TO_POINTER(2));
-    g_signal_connect(G_OBJECT(rc_menu.repeat_menu_items[4]),"toggled",
-        G_CALLBACK(rc_gui_press_repeat_menu),GINT_TO_POINTER(3));
-    g_signal_connect(G_OBJECT(rc_menu.random_menu_items[0]),"toggled",
-        G_CALLBACK(rc_gui_press_random_menu),GINT_TO_POINTER(0));
-    g_signal_connect(G_OBJECT(rc_menu.random_menu_items[2]),"toggled",
-        G_CALLBACK(rc_gui_press_random_menu),GINT_TO_POINTER(1));
-    g_signal_connect(G_OBJECT(rc_menu.random_menu_items[3]),"toggled",
-        G_CALLBACK(rc_gui_press_random_menu),GINT_TO_POINTER(2));
+    g_signal_connect(G_OBJECT(rc_menu.file_menu_items[0]), "activate",
+        G_CALLBACK(rc_gui_list1_new_list), NULL);
+    g_signal_connect(G_OBJECT(rc_menu.file_menu_items[2]), "activate",
+        G_CALLBACK(rc_gui_show_open_dialog), NULL);
+    g_signal_connect(G_OBJECT(rc_menu.file_menu_items[3]), "activate",
+        G_CALLBACK(rc_gui_load_playlist_dialog), NULL);
+    g_signal_connect(G_OBJECT(rc_menu.file_menu_items[4]), "activate",
+        G_CALLBACK(rc_gui_open_music_directory), NULL);
+    g_signal_connect(G_OBJECT(rc_menu.file_menu_items[5]), "activate",
+        G_CALLBACK(rc_gui_save_playlist_dialog), NULL);
+    g_signal_connect(G_OBJECT(rc_menu.file_menu_items[6]), "activate",
+        G_CALLBACK(rc_gui_save_all_playlists_dialog), NULL);
+    g_signal_connect(G_OBJECT(rc_menu.file_menu_items[8]), "activate",
+        G_CALLBACK(rc_gui_quit_player), NULL);
+    g_signal_connect(G_OBJECT(rc_menu.edit_menu_items[2]), "activate",
+        G_CALLBACK(rc_gui_list2_delete_lists), NULL);
+    g_signal_connect(G_OBJECT(rc_menu.edit_menu_items[3]), "activate",
+        G_CALLBACK(rc_gui_list2_select_all), NULL);
+    g_signal_connect(G_OBJECT(rc_menu.edit_menu_items[4]), "activate",
+        G_CALLBACK(rc_gui_refresh_music_info), NULL);
+    g_signal_connect(G_OBJECT(rc_menu.edit_menu_items[7]), "activate",
+        G_CALLBACK(rc_gui_create_setting_window), NULL);
+    g_signal_connect(G_OBJECT(rc_menu.view_menu_items[0]), "activate",
+        G_CALLBACK(rc_gui_show_music_info), NULL);
+    g_signal_connect(G_OBJECT(rc_menu.view_menu_items[2]), "activate",
+        G_CALLBACK(rc_gui_show_playlist_page), NULL);
+    g_signal_connect(G_OBJECT(rc_menu.view_menu_items[3]), "activate",
+        G_CALLBACK(rc_gui_show_lyric_page), NULL);
+    g_signal_connect(G_OBJECT(rc_menu.view_menu_items[4]), "activate",
+        G_CALLBACK(rc_gui_edit_lyric), NULL);
+    g_signal_connect(G_OBJECT(rc_menu.view_menu_items[5]), "activate",
+        G_CALLBACK(rc_gui_show_eq_window), NULL);
+    g_signal_connect(G_OBJECT(rc_menu.ctrl_menu_items[0]), "activate",
+        G_CALLBACK(rc_gui_play_button_clicked), NULL);
+    g_signal_connect(G_OBJECT(rc_menu.ctrl_menu_items[1]), "activate",
+        G_CALLBACK(rc_gui_stop_button_clicked), NULL);
+    g_signal_connect(G_OBJECT(rc_menu.ctrl_menu_items[2]), "activate",
+        G_CALLBACK(rc_gui_prev_button_clicked), NULL);
+    g_signal_connect(G_OBJECT(rc_menu.ctrl_menu_items[3]), "activate",
+        G_CALLBACK(rc_gui_next_button_clicked), NULL);
+    g_signal_connect(G_OBJECT(rc_menu.ctrl_menu_items[4]), "activate",
+        G_CALLBACK(rc_gui_press_backward_menu), NULL);
+    g_signal_connect(G_OBJECT(rc_menu.ctrl_menu_items[5]), "activate",
+        G_CALLBACK(rc_gui_press_forward_menu), NULL);
+    g_signal_connect(G_OBJECT(rc_menu.ctrl_menu_items[7]), "activate",
+        G_CALLBACK(rc_gui_press_vol_up_menu), NULL);
+    g_signal_connect(G_OBJECT(rc_menu.ctrl_menu_items[8]), "activate",
+        G_CALLBACK(rc_gui_press_vol_down_menu), NULL);
+    g_signal_connect(G_OBJECT(rc_menu.help_menu_items[0]), "activate",
+        G_CALLBACK(rc_gui_about_player), NULL);
+    g_signal_connect(G_OBJECT(rc_menu.repeat_menu_items[0]), "toggled",
+        G_CALLBACK(rc_gui_press_repeat_menu), GINT_TO_POINTER(0));
+    g_signal_connect(G_OBJECT(rc_menu.repeat_menu_items[2]), "toggled",
+        G_CALLBACK(rc_gui_press_repeat_menu), GINT_TO_POINTER(1));
+    g_signal_connect(G_OBJECT(rc_menu.repeat_menu_items[3]), "toggled",
+        G_CALLBACK(rc_gui_press_repeat_menu), GINT_TO_POINTER(2));
+    g_signal_connect(G_OBJECT(rc_menu.repeat_menu_items[4]), "toggled",
+        G_CALLBACK(rc_gui_press_repeat_menu), GINT_TO_POINTER(3));
+    g_signal_connect(G_OBJECT(rc_menu.random_menu_items[0]), "toggled",
+        G_CALLBACK(rc_gui_press_random_menu), GINT_TO_POINTER(0));
+    g_signal_connect(G_OBJECT(rc_menu.random_menu_items[2]), "toggled",
+        G_CALLBACK(rc_gui_press_random_menu), GINT_TO_POINTER(1));
+    g_signal_connect(G_OBJECT(rc_menu.random_menu_items[3]), "toggled",
+        G_CALLBACK(rc_gui_press_random_menu), GINT_TO_POINTER(2));
 }
 
 /*
@@ -434,7 +436,7 @@ void rc_gui_menu_init()
         gtk_image_new_from_stock(GTK_STOCK_REMOVE, GTK_ICON_SIZE_MENU));
     rc_menu.pl_menu_item[7] = gtk_separator_menu_item_new();
     rc_menu.pl_menu_item[8] = gtk_image_menu_item_new_with_mnemonic(
-        _("Re_flesh Music"));
+        _("Re_fresh Music Information"));
     gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(rc_menu.pl_menu_item[8]),
         gtk_image_new_from_stock(GTK_STOCK_REFRESH, GTK_ICON_SIZE_MENU));
     rc_menu.pl_menu_item[9] = gtk_image_menu_item_new_with_mnemonic(

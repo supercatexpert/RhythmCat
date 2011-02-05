@@ -248,7 +248,6 @@ static void rc_gui_layout_init()
     gtk_container_add(GTK_CONTAINER(rc_gui.main_window), main_vbox);
 }
 
-
 /*
  * Bind widget events to callbacks.
  */
@@ -296,6 +295,8 @@ static void rc_gui_signal_bind()
         G_CALLBACK(rc_gui_stop_button_clicked), NULL);
     g_signal_connect(G_OBJECT(rc_gui.control_buttons[3]), "clicked",
         G_CALLBACK(rc_gui_next_button_clicked), NULL);
+    g_signal_connect(G_OBJECT(rc_gui.status_cancel_button), "clicked",
+        G_CALLBACK(rc_gui_import_cancel_button_clicked), NULL);
     g_signal_connect(GTK_STATUS_ICON(rc_gui.tray_icon), "activate", 
         G_CALLBACK(rc_gui_show_hide_window), NULL);
     g_signal_connect(GTK_STATUS_ICON(rc_gui.tray_icon), "popup-menu",
@@ -412,7 +413,7 @@ gboolean rc_gui_init()
     rc_gui_style_init();
     rc_gui_style_refresh();
     rc_gui.time_info_refresh_timeout = g_timeout_add(200,
-        (GSourceFunc)(rc_gui_refresh_time_info),NULL);
+        (GSourceFunc)(rc_gui_refresh_time_info), NULL);
     gtk_widget_show_all(rc_gui.main_window);
     rc_gui_seek_scaler_disable();
     rc_gui_status_task_set(0, 0);
@@ -920,7 +921,7 @@ void rc_gui_show_hide_window(GtkWidget *widget, gpointer data)
 {
     RCSetting *setting = rc_set_get_setting();
     if(!setting->min_to_tray) return;
-    if(gtk_widget_get_visible(rc_gui.main_window)==TRUE)
+    if(gtk_widget_get_visible(rc_gui.main_window))
     {
         gtk_widget_hide(GTK_WIDGET(rc_gui.main_window));
     }
@@ -949,10 +950,22 @@ void rc_gui_tray_icon_popup(GtkStatusIcon *status_icon, guint button,
 
 void rc_gui_status_task_set(guint type, guint len)
 {
+    ui_menu = rc_gui_get_menu();
     if(len<=0 || type<=0 || type>=3)
     {
         rc_gui.status_task_length = 0;
         gtk_widget_hide_all(rc_gui.status_hbox);
+        gtk_widget_set_sensitive(ui_menu->file_menu_items[2], TRUE);
+        gtk_widget_set_sensitive(ui_menu->file_menu_items[3], TRUE);
+        gtk_widget_set_sensitive(ui_menu->file_menu_items[4], TRUE);
+        gtk_widget_set_sensitive(ui_menu->file_menu_items[5], TRUE);
+        gtk_widget_set_sensitive(ui_menu->file_menu_items[6], TRUE);
+        gtk_widget_set_sensitive(ui_menu->edit_menu_items[4], TRUE);
+        gtk_widget_set_sensitive(ui_menu->ls_menu_item[2], TRUE);
+        gtk_widget_set_sensitive(ui_menu->ls_menu_item[3], TRUE);
+        gtk_widget_set_sensitive(ui_menu->pl_menu_item[2], TRUE);
+        gtk_widget_set_sensitive(ui_menu->pl_menu_item[3], TRUE);
+        gtk_widget_set_sensitive(ui_menu->pl_menu_item[8], TRUE);
         return;
     }
     rc_gui.status_task_length+=len;
@@ -970,19 +983,32 @@ void rc_gui_status_task_set(guint type, guint len)
             break;
     }
     gtk_widget_show_all(rc_gui.status_hbox);
+    gtk_widget_set_sensitive(ui_menu->file_menu_items[2], FALSE);
+    gtk_widget_set_sensitive(ui_menu->file_menu_items[3], FALSE);
+    gtk_widget_set_sensitive(ui_menu->file_menu_items[4], FALSE);
+    gtk_widget_set_sensitive(ui_menu->file_menu_items[5], FALSE);
+    gtk_widget_set_sensitive(ui_menu->file_menu_items[6], FALSE);
+    gtk_widget_set_sensitive(ui_menu->edit_menu_items[4], FALSE);
+    gtk_widget_set_sensitive(ui_menu->ls_menu_item[2], FALSE);
+    gtk_widget_set_sensitive(ui_menu->ls_menu_item[3], FALSE);
+    gtk_widget_set_sensitive(ui_menu->pl_menu_item[2], FALSE);
+    gtk_widget_set_sensitive(ui_menu->pl_menu_item[3], FALSE);
+    gtk_widget_set_sensitive(ui_menu->pl_menu_item[8], FALSE);
 }
 
 /*
  * Set the remaining tasks for status progressbar.
  */
 
-void rc_gui_status_progress_set_progress(gint factor)
+void rc_gui_status_progress_set_progress()
 {
     static guint completed_num = 0;
     gdouble persent = 0.0;
+    gint remaining_num;
     gchar text[64];
-    completed_num+=factor;
-    if(completed_num>=rc_gui.status_task_length)
+    remaining_num = rc_plist_import_job_get_length();
+    completed_num = rc_gui.status_task_length - remaining_num;
+    if(remaining_num<=0)
     {
         rc_gui_status_task_set(0, 0);
         completed_num = 0;
@@ -993,5 +1019,15 @@ void rc_gui_status_progress_set_progress(gint factor)
     gtk_progress_bar_set_text(GTK_PROGRESS_BAR(rc_gui.status_progress), text);
     gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(rc_gui.status_progress),
         persent);
+}
+
+/*
+ * Cancel the jobs in the job queue.
+ */
+
+void rc_gui_import_cancel_button_clicked(GtkWidget *widget, gpointer data)
+{
+    rc_plist_import_job_cancel();
+    rc_gui_status_task_set(0, 0);
 }
 

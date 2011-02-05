@@ -109,7 +109,8 @@ gboolean rc_gui_set_cover_image(gchar *);
 void rc_gui_show_hide_window(GtkWidget *, gpointer);
 void rc_gui_tray_icon_popup(GtkStatusIcon *, guint, guint, gpointer);
 void rc_gui_status_task_set(guint, guint);
-void rc_gui_status_progress_set_progress(gint);
+void rc_gui_status_progress_set_progress();
+void rc_gui_import_cancel_button_clicked(GtkWidget *, gpointer);
 
 #endif
 

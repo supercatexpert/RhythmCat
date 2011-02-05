@@ -165,9 +165,6 @@ tag.o: tag.c tag.h /usr/include/glib-2.0/glib.h \
  /usr/include/gstreamer-0.10/gst/gstparse.h \
  /usr/include/gstreamer-0.10/gst/gstxml.h \
  /usr/include/gstreamer-0.10/gst/gstcompat.h \
- /usr/include/gstreamer-0.10/gst/pbutils/missing-plugins.h settings.h \
- /usr/include/unistd.h /usr/include/bits/posix_opt.h \
- /usr/include/bits/confname.h /usr/include/getopt.h \
  /usr/include/gtk-2.0/gtk/gtk.h /usr/include/gtk-2.0/gdk/gdk.h \
  /usr/include/gtk-2.0/gdk/gdkapplaunchcontext.h \
  /usr/include/glib-2.0/gio/gio.h /usr/include/glib-2.0/gio/giotypes.h \
@@ -514,7 +511,10 @@ tag.o: tag.c tag.h /usr/include/glib-2.0/glib.h \
  /usr/include/gtk-2.0/gtk/gtkoldeditable.h \
  /usr/include/gtk-2.0/gtk/gtkoptionmenu.h \
  /usr/include/gtk-2.0/gtk/gtkpreview.h \
- /usr/include/gtk-2.0/gtk/gtktipsquery.h debug.h
+ /usr/include/gtk-2.0/gtk/gtktipsquery.h \
+ /usr/include/gstreamer-0.10/gst/pbutils/missing-plugins.h settings.h \
+ /usr/include/unistd.h /usr/include/bits/posix_opt.h \
+ /usr/include/bits/confname.h /usr/include/getopt.h debug.h
 
 tag.h:
 
@@ -951,18 +951,6 @@ tag.h:
 /usr/include/gstreamer-0.10/gst/gstxml.h:
 
 /usr/include/gstreamer-0.10/gst/gstcompat.h:
-
-/usr/include/gstreamer-0.10/gst/pbutils/missing-plugins.h:
-
-settings.h:
-
-/usr/include/unistd.h:
-
-/usr/include/bits/posix_opt.h:
-
-/usr/include/bits/confname.h:
-
-/usr/include/getopt.h:
 
 /usr/include/gtk-2.0/gtk/gtk.h:
 
@@ -1721,5 +1709,17 @@ settings.h:
 /usr/include/gtk-2.0/gtk/gtkpreview.h:
 
 /usr/include/gtk-2.0/gtk/gtktipsquery.h:
+
+/usr/include/gstreamer-0.10/gst/pbutils/missing-plugins.h:
+
+settings.h:
+
+/usr/include/unistd.h:
+
+/usr/include/bits/posix_opt.h:
+
+/usr/include/bits/confname.h:
+
+/usr/include/getopt.h:
 
 debug.h:

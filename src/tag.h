@@ -33,6 +33,7 @@
 #include <glib/gi18n.h>
 #include <glib/gprintf.h>
 #include <gst/gst.h>
+#include <gtk/gtk.h>
 #include <gst/pbutils/missing-plugins.h>
 
 /* Custom struct type to store the music metadata. */
@@ -43,7 +44,6 @@ typedef struct _MusicMetaData
     guint tracknum;
     guint bitrate;
     gint eos;
-    gint list1_index;
     gint list2_index;
     gchar title[512];
     gchar artist[512];
@@ -52,6 +52,8 @@ typedef struct _MusicMetaData
     gchar file_type[256];
     gboolean audio_flag;
     gboolean video_flag;
+    GtkTreeRowReference *reference;
+    GtkListStore *store;
     gpointer user_data;
 }MusicMetaData;
 

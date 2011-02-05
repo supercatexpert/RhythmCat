@@ -40,7 +40,7 @@ void rc_plist_uninit_playlist();
 gboolean rc_plist_insert_list(const gchar *, gint);
 gboolean rc_plist_insert_music(const gchar *, gint, gint);
 void rc_plist_list2_insert_item(const gchar *, const gchar *, const gchar *,
-    const gchar *, gint64, gint, gint, gint);
+    const gchar *, gint64, gint, GtkListStore *, gint);
 void rc_plist_list2_refresh_item(const gchar *, const gchar *, const gchar *,
     const gchar *, gint64, gint, GtkTreeRowReference *);
 gboolean rc_plist_remove_list(gint);
@@ -64,6 +64,8 @@ void rc_plist_load_playlist(const gchar *, gint);
 GtkListStore *rc_plist_get_list_store(gint);
 GtkListStore *rc_plist_get_list_head();
 gboolean rc_plist_list2_refresh(gint);
+gint rc_plist_import_job_get_length();
+void rc_plist_import_job_cancel();
 void rc_plist_load_argument(char *[]);
 void rc_plist_load_uri_from_remote(const gchar *);
 

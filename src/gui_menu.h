@@ -45,7 +45,6 @@ typedef struct _GuiMenu
     GtkWidget *help_menu_items[2];
     GtkWidget *repeat_menus, *repeat_menu_items[5];
     GtkWidget *random_menus, *random_menu_items[4];
-    GSList *repeat_item_list, *random_item_list;
     GtkWidget *list_tview_pmenu;
     GtkWidget *plist_tview_pmenu;
     GtkWidget *ma_pmenu;
