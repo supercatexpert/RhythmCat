@@ -22,8 +22,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef HAVE_rc_core_H
-#define HAVE_rc_core_H
+#ifndef HAVE_CORE_H
+#define HAVE_CORE_H
 
 #include <stdio.h>
 #include <stdlib.h>

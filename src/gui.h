@@ -41,6 +41,7 @@ typedef struct _GuiData
 {
     GtkWidget *main_window;
     GtkWidget *lyric_vbox;
+    GtkWidget *eq_vbox;
     GtkWidget *main_menu_bar;
     GtkWidget *plist_notebook;
     GtkWidget *title_label, *artist_label, *album_label;
@@ -103,7 +104,7 @@ gboolean rc_gui_press_forward_menu(GtkMenuItem *, gpointer);
 void rc_gui_set_list2_menu(GtkTreeView *, gpointer);
 gboolean rc_gui_show_playlist_page(GtkMenuItem *, gpointer);
 gboolean rc_gui_show_lyric_page(GtkMenuItem *, gpointer);
-gboolean rc_gui_show_eq_window(GtkMenuItem *, gpointer);
+gboolean rc_gui_show_eq_page(GtkMenuItem *, gpointer);
 void rc_gui_refresh_music_info(GtkMenuItem *, gpointer);
 gboolean rc_gui_set_cover_image(gchar *);
 void rc_gui_show_hide_window(GtkWidget *, gpointer);

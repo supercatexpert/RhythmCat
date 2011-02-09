@@ -153,7 +153,7 @@ static void rc_gui_layout_init()
     GtkWidget *hbox1, *hbox2, *hbox3, *hbox4, *hbox5;
     GtkWidget *vbox1, *vbox2, *vbox3;
     GtkWidget *control_button_hbox;
-    GtkWidget *playlists_label, *lyric_label;
+    GtkWidget *playlists_label, *lyric_label, *eq_label;
     GtkWidget *pls_label;
     GtkWidget *playlist_frame;
     GtkWidget *vol_hbox;
@@ -165,6 +165,7 @@ static void rc_gui_layout_init()
     gint i = 0;
     main_vbox = gtk_vbox_new(FALSE, 0);
     rc_gui.lyric_vbox = gtk_vbox_new(FALSE, 0);
+    rc_gui.eq_vbox = gtk_vbox_new(FALSE, 10);
     player_vbox = gtk_vbox_new(FALSE, 0);
     playlist_vbox = gtk_vbox_new(FALSE, 0);
     hbox1 = gtk_hbox_new(FALSE, 2);
@@ -200,6 +201,7 @@ static void rc_gui_layout_init()
     playlist_frame = gtk_frame_new(NULL);
     playlists_label = gtk_label_new(_("Playlists"));
     lyric_label = gtk_label_new(_("Lyrics"));
+    eq_label = gtk_label_new(_("Equalizer"));
     pls_label = gtk_label_new(_("Playlists"));
     gtk_container_add(GTK_CONTAINER(rc_gui.lrc_viewport), rc_gui.lrc_label);
     gtk_paned_pack1(GTK_PANED(list_hpaned), list1_scr_window, TRUE, FALSE);
@@ -211,6 +213,8 @@ static void rc_gui_layout_init()
         list_hpaned, pls_label);
     gtk_notebook_append_page(GTK_NOTEBOOK(rc_gui.plist_notebook),
         rc_gui.lyric_vbox, lyric_label);
+    gtk_notebook_append_page(GTK_NOTEBOOK(rc_gui.plist_notebook),
+        rc_gui.eq_vbox, eq_label);
     gtk_notebook_set_show_tabs(GTK_NOTEBOOK(rc_gui.plist_notebook), FALSE);
     gtk_box_pack_start(GTK_BOX(vbox1), rc_gui.title_label, FALSE, TRUE, 0);
     gtk_box_pack_start(GTK_BOX(vbox1), rc_gui.artist_label, FALSE, TRUE, 0);
@@ -303,7 +307,7 @@ static void rc_gui_signal_bind()
         G_CALLBACK(rc_gui_tray_icon_popup), NULL);
     g_signal_connect(G_OBJECT(rc_gui.main_window), "window-state-event",
         G_CALLBACK(rc_gui_window_state_changed),NULL);
-    g_signal_connect(G_OBJECT(rc_gui.main_window),"destroy",
+    g_signal_connect(G_OBJECT(rc_gui.main_window), "destroy",
         G_CALLBACK(rc_gui_quit_player),NULL);
 }
 
@@ -419,9 +423,12 @@ gboolean rc_gui_init()
     rc_gui_status_task_set(0, 0);
 
     /* Disable unusable menus */
-    gtk_widget_set_sensitive(ui_menu->edit_menu_items[2], FALSE);
-    gtk_widget_set_sensitive(ui_menu->edit_menu_items[6], FALSE);
-    gtk_widget_set_sensitive(ui_menu->view_menu_items[11], FALSE);
+    gtk_widget_set_sensitive(ui_menu->edit_menu_items[MENU_EDIT_REMOVE],
+        FALSE);
+    gtk_widget_set_sensitive(ui_menu->edit_menu_items[MENU_EDIT_PLUGIN],
+        FALSE);
+    gtk_widget_set_sensitive(ui_menu->view_menu_items[MENU_VIEW_MINI],
+        FALSE);
     rc_debug_print("GUI: Main window is successfully loaded!\n"); 
     return FALSE;
 }
@@ -490,7 +497,7 @@ void rc_gui_set_play_button_state(gboolean state)
         gtk_image_set_from_stock(GTK_IMAGE(rc_gui.control_images[1]),
             GTK_STOCK_MEDIA_PAUSE, GTK_ICON_SIZE_BUTTON);
         gtk_image_set_from_stock(GTK_IMAGE(gtk_image_menu_item_get_image(
-            GTK_IMAGE_MENU_ITEM(ui_menu->ctrl_menu_items[0]))), 
+            GTK_IMAGE_MENU_ITEM(ui_menu->ctrl_menu_items[MENU_CTRL_PLAY]))), 
             GTK_STOCK_MEDIA_PAUSE, GTK_ICON_SIZE_MENU);
     }
     else
@@ -498,7 +505,7 @@ void rc_gui_set_play_button_state(gboolean state)
         gtk_image_set_from_stock(GTK_IMAGE(rc_gui.control_images[1]),
             GTK_STOCK_MEDIA_PLAY, GTK_ICON_SIZE_BUTTON);
         gtk_image_set_from_stock(GTK_IMAGE(gtk_image_menu_item_get_image(
-            GTK_IMAGE_MENU_ITEM(ui_menu->ctrl_menu_items[0]))), 
+            GTK_IMAGE_MENU_ITEM(ui_menu->ctrl_menu_items[MENU_CTRL_PLAY]))), 
             GTK_STOCK_MEDIA_PLAY, GTK_ICON_SIZE_MENU);
     }
 }
@@ -592,13 +599,17 @@ gboolean rc_gui_adjust_volume(GtkScaleButton *widget, gdouble vol,
 {
     double persent = vol * 100;
     if(100.0 - persent <= 10e-3)
-        gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[7], FALSE);
+        gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[MENU_CTRL_VOL_UP],
+            FALSE);
     else
-        gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[7], TRUE);
+        gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[MENU_CTRL_VOL_UP],
+            TRUE);
     if(persent <= 10e-3)
-        gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[8], FALSE);
+        gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[MENU_CTRL_VOL_DOWN],
+            FALSE);
     else
-        gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[8], TRUE);
+        gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[MENU_CTRL_VOL_DOWN],
+            TRUE);
     rc_core_set_volume(persent);
     return FALSE;
 }
@@ -653,8 +664,10 @@ void rc_gui_seek_scaler_disable()
 {
     gtk_range_set_value(GTK_RANGE(rc_gui.time_scroll_bar),0);
     gtk_widget_set_sensitive(rc_gui.time_scroll_bar, FALSE);
-    gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[4], FALSE);
-    gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[5], FALSE);
+    gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[MENU_CTRL_BACKWORD],
+        FALSE);
+    gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[MENU_CTRL_FORWORD],
+        FALSE);
 }
 
 /*
@@ -664,8 +677,10 @@ void rc_gui_seek_scaler_disable()
 void rc_gui_seek_scaler_enable()
 {
     gtk_widget_set_sensitive(rc_gui.time_scroll_bar, TRUE);
-    gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[4], TRUE);
-    gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[5], TRUE);
+    gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[MENU_CTRL_BACKWORD],
+        TRUE);
+    gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[MENU_CTRL_FORWORD],
+        TRUE);
 }
 
 /*
@@ -676,7 +691,7 @@ gboolean rc_gui_list1_popup_menu(GtkWidget *widget, GdkEventButton *event,
     gpointer data)
 {
     if(event->button!=3) return FALSE;
-    gtk_menu_popup(GTK_MENU(ui_menu->list_tview_pmenu), NULL, NULL, NULL,
+    gtk_menu_popup(GTK_MENU(ui_menu->list1_pop_menu), NULL, NULL, NULL,
         NULL, 3, gtk_get_current_event_time());
     return FALSE;
 }
@@ -690,13 +705,17 @@ void rc_gui_set_volume(gdouble volume)
     volume /= 100;
     gtk_scale_button_set_value(GTK_SCALE_BUTTON(rc_gui.volume_button), volume);
     if(1.0 - volume <= 10e-3)
-        gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[7], FALSE);
+        gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[MENU_CTRL_VOL_UP],
+            FALSE);
     else
-        gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[7], TRUE);
+        gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[MENU_CTRL_VOL_UP],
+            TRUE);
     if(volume <= 10e-3)
-        gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[8], FALSE);
+        gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[MENU_CTRL_VOL_DOWN],
+            FALSE);
     else
-        gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[8], TRUE);
+        gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[MENU_CTRL_VOL_DOWN],
+            TRUE);
 }
 
 /*
@@ -705,21 +724,18 @@ void rc_gui_set_volume(gdouble volume)
 
 void rc_gui_set_player_state()
 {
-    RCSetting *setting = rc_set_get_setting();
     gint repeat, random;
     rc_plist_get_play_mode(&repeat, &random);
     if(repeat>0)
     {
         gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(
-            ui_menu->repeat_menu_items[repeat+1]), TRUE);
+            ui_menu->repeat_menu_items[repeat+MENU_REPEAT_SEP1]), TRUE);
     }
     if(random>0)
     {
         gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(
-            ui_menu->random_menu_items[random+1]), TRUE);
+            ui_menu->random_menu_items[random+MENU_RANDOM_SEP1]), TRUE);
     }
-    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(
-        ui_menu->view_menu_items[7]), setting->osd_lyric_flag);
 }
 
 /*
@@ -812,21 +828,22 @@ void rc_gui_set_list2_menu(GtkTreeView *widget, gpointer data)
         rc_gui.list2_selection);
     if(value>0)
     {
-        gtk_widget_set_sensitive(ui_menu->edit_menu_items[2], TRUE);
-        gtk_widget_set_sensitive(ui_menu->view_menu_items[0], TRUE);
-        gtk_widget_set_sensitive(ui_menu->pl_menu_item[0], TRUE);
-        gtk_widget_set_sensitive(ui_menu->pl_menu_item[6], TRUE);
-        gtk_widget_set_sensitive(ui_menu->pl_menu_item[8], TRUE);
-        gtk_widget_set_sensitive(ui_menu->view_menu_items[8], TRUE);
+        gtk_widget_set_sensitive(ui_menu->edit_menu_items[MENU_EDIT_REMOVE],
+            TRUE);
+        gtk_widget_set_sensitive(ui_menu->list2_menu_item[MENU_LIST2_REMOVE],
+            TRUE);
+        if(rc_gui.status_task_length==0)
+            gtk_widget_set_sensitive(
+                ui_menu->list2_menu_item[MENU_LIST2_REFRESH], TRUE);
     }
     else
     {
-        gtk_widget_set_sensitive(ui_menu->edit_menu_items[2], FALSE);
-        gtk_widget_set_sensitive(ui_menu->view_menu_items[0], FALSE);
-        gtk_widget_set_sensitive(ui_menu->pl_menu_item[0], FALSE);
-        gtk_widget_set_sensitive(ui_menu->pl_menu_item[6], FALSE);
-        gtk_widget_set_sensitive(ui_menu->pl_menu_item[8], FALSE);
-        gtk_widget_set_sensitive(ui_menu->view_menu_items[8], FALSE);
+        gtk_widget_set_sensitive(ui_menu->edit_menu_items[MENU_EDIT_REMOVE],
+            FALSE);
+        gtk_widget_set_sensitive(ui_menu->list2_menu_item[MENU_LIST2_REMOVE],
+            FALSE);
+        gtk_widget_set_sensitive(ui_menu->list2_menu_item[MENU_LIST2_REFRESH],
+            FALSE);
     }
 }
 
@@ -854,9 +871,9 @@ gboolean rc_gui_show_lyric_page(GtkMenuItem *widget, gpointer data)
  * Show the equalizer page.
  */
 
-gboolean rc_gui_show_eq_window(GtkMenuItem *widget, gpointer data)
+gboolean rc_gui_show_eq_page(GtkMenuItem *widget, gpointer data)
 {
-    rc_gui_create_equalizer();
+    gtk_notebook_set_current_page(GTK_NOTEBOOK(rc_gui.plist_notebook), 2);
     return FALSE;
 }
 
@@ -955,17 +972,28 @@ void rc_gui_status_task_set(guint type, guint len)
     {
         rc_gui.status_task_length = 0;
         gtk_widget_hide_all(rc_gui.status_hbox);
-        gtk_widget_set_sensitive(ui_menu->file_menu_items[2], TRUE);
-        gtk_widget_set_sensitive(ui_menu->file_menu_items[3], TRUE);
-        gtk_widget_set_sensitive(ui_menu->file_menu_items[4], TRUE);
-        gtk_widget_set_sensitive(ui_menu->file_menu_items[5], TRUE);
-        gtk_widget_set_sensitive(ui_menu->file_menu_items[6], TRUE);
-        gtk_widget_set_sensitive(ui_menu->edit_menu_items[4], TRUE);
-        gtk_widget_set_sensitive(ui_menu->ls_menu_item[2], TRUE);
-        gtk_widget_set_sensitive(ui_menu->ls_menu_item[3], TRUE);
-        gtk_widget_set_sensitive(ui_menu->pl_menu_item[2], TRUE);
-        gtk_widget_set_sensitive(ui_menu->pl_menu_item[3], TRUE);
-        gtk_widget_set_sensitive(ui_menu->pl_menu_item[8], TRUE);
+        gtk_widget_set_sensitive(
+            ui_menu->file_menu_items[MENU_FILE_IMPORT_MUSIC], TRUE);
+        gtk_widget_set_sensitive(
+            ui_menu->file_menu_items[MENU_FILE_IMPORT_LIST], TRUE);
+        gtk_widget_set_sensitive(
+            ui_menu->file_menu_items[MENU_FILE_IMPORT_DIR], TRUE);
+        gtk_widget_set_sensitive(
+            ui_menu->file_menu_items[MENU_FILE_EXPORT_LIST], TRUE);
+        gtk_widget_set_sensitive(
+            ui_menu->file_menu_items[MENU_FILE_EXPORT_ALL], TRUE);
+        gtk_widget_set_sensitive(
+            ui_menu->edit_menu_items[MENU_EDIT_REFRESH], TRUE);
+        gtk_widget_set_sensitive(
+            ui_menu->list1_menu_item[MENU_LIST1_DELETE], TRUE);
+        gtk_widget_set_sensitive(
+            ui_menu->list1_menu_item[MENU_LIST1_EXPORT], TRUE);
+        gtk_widget_set_sensitive(
+            ui_menu->list2_menu_item[MENU_LIST2_IMPORT_MUSIC], TRUE);
+        gtk_widget_set_sensitive(
+            ui_menu->list2_menu_item[MENU_LIST2_IMPORT_LIST], TRUE);
+        gtk_widget_set_sensitive(
+            ui_menu->list2_menu_item[MENU_LIST2_REFRESH], TRUE);
         return;
     }
     rc_gui.status_task_length+=len;
@@ -983,17 +1011,28 @@ void rc_gui_status_task_set(guint type, guint len)
             break;
     }
     gtk_widget_show_all(rc_gui.status_hbox);
-    gtk_widget_set_sensitive(ui_menu->file_menu_items[2], FALSE);
-    gtk_widget_set_sensitive(ui_menu->file_menu_items[3], FALSE);
-    gtk_widget_set_sensitive(ui_menu->file_menu_items[4], FALSE);
-    gtk_widget_set_sensitive(ui_menu->file_menu_items[5], FALSE);
-    gtk_widget_set_sensitive(ui_menu->file_menu_items[6], FALSE);
-    gtk_widget_set_sensitive(ui_menu->edit_menu_items[4], FALSE);
-    gtk_widget_set_sensitive(ui_menu->ls_menu_item[2], FALSE);
-    gtk_widget_set_sensitive(ui_menu->ls_menu_item[3], FALSE);
-    gtk_widget_set_sensitive(ui_menu->pl_menu_item[2], FALSE);
-    gtk_widget_set_sensitive(ui_menu->pl_menu_item[3], FALSE);
-    gtk_widget_set_sensitive(ui_menu->pl_menu_item[8], FALSE);
+    gtk_widget_set_sensitive(
+        ui_menu->file_menu_items[MENU_FILE_IMPORT_MUSIC], FALSE);
+    gtk_widget_set_sensitive(
+        ui_menu->file_menu_items[MENU_FILE_IMPORT_LIST], FALSE);
+    gtk_widget_set_sensitive(
+        ui_menu->file_menu_items[MENU_FILE_IMPORT_DIR], FALSE);
+    gtk_widget_set_sensitive(
+        ui_menu->file_menu_items[MENU_FILE_EXPORT_LIST], FALSE);
+    gtk_widget_set_sensitive(
+        ui_menu->file_menu_items[MENU_FILE_EXPORT_ALL], FALSE);
+    gtk_widget_set_sensitive(
+        ui_menu->edit_menu_items[MENU_EDIT_REFRESH], FALSE);
+    gtk_widget_set_sensitive(
+        ui_menu->list1_menu_item[MENU_LIST1_DELETE], FALSE);
+    gtk_widget_set_sensitive(
+        ui_menu->list1_menu_item[MENU_LIST1_EXPORT], FALSE);
+    gtk_widget_set_sensitive(
+        ui_menu->list2_menu_item[MENU_LIST2_IMPORT_MUSIC], FALSE);
+    gtk_widget_set_sensitive(
+        ui_menu->list2_menu_item[MENU_LIST2_IMPORT_LIST], FALSE);
+    gtk_widget_set_sensitive(
+        ui_menu->list2_menu_item[MENU_LIST2_REFRESH], FALSE);
 }
 
 /*

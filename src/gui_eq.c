@@ -29,13 +29,10 @@
 #include "main.h"
 #include "settings.h"
 
-GuiData *rc_ui;
-GtkWidget *eq_window;
-GtkWidget *eq_vbox;
-GtkWidget *eq_combobox;
-GtkWidget *eq_scales[10];
-gchar *eq_styles[10];
-EQData eq_data[11];
+static GuiData *rc_ui;
+static GtkWidget *eq_combobox;
+static GtkWidget *eq_scales[10];
+static EQData eq_data[11];
 
 /*
  * Initialize EQ data.
@@ -48,7 +45,8 @@ void rc_gui_init_eq_data()
     if(init) return;
     init = TRUE;
     gint i, j;
-    gdouble value[][10] = {
+    gdouble value[][10] =
+    {
         { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}, /* Disabled */
         { 3.0, 1.0, 0.0,-2.0,-4.0,-4.0,-2.0, 0.0, 1.0, 2.0}, /* Pop */
         {-2.0, 0.0, 2.0, 4.0,-2.0,-2.0, 0.0, 0.0, 4.0, 4.0}, /* Rock */
@@ -59,7 +57,7 @@ void rc_gui_init_eq_data()
         { 0.0, 5.0, 5.0, 4.0, 0.0, 0.0, 0.0, 0.0, 2.0, 2.0}, /* Classical */
         {-2.0, 0.0, 2.0, 1.0, 0.0, 0.0, 0.0, 0.0,-2.0,-4.0}, /* Blues */
         {-4.0, 0.0, 2.0, 1.0, 0.0, 0.0, 0.0, 0.0,-4.0,-6.0}, /* Vocal */
-        };
+    };
     eq_data[0].name = _("Disabled");
     eq_data[1].name = _("Pop");
     eq_data[2].name = _("Rock");
@@ -84,60 +82,32 @@ void rc_gui_init_eq_data()
 }
 
 /*
- * Create the equalizer.
+ * Equalizer (GUI Part) initialize.
  */
 
-void rc_gui_create_equalizer()
+void rc_gui_eq_init()
 {
     RCSetting *rc_setting = rc_set_get_setting();
     CoreData *gcore = rc_core_get_core();
     rc_ui = rc_gui_get_gui();
     gint i = 0;
-    static gboolean init = FALSE;
-    if(!init)
-    {
-        eq_styles[0] = _("Disabled");
-        eq_styles[1] = _("Custom");
-        init = TRUE;
-    }
-    gboolean window_exist = FALSE;
-    if(eq_window!=NULL && GTK_IS_WIDGET(eq_window))
-        window_exist = GTK_WIDGET_REALIZED(eq_window);
-    else window_exist = FALSE;
-    if(window_exist) return;
     GtkWidget *scale_vboxs[11];
     GtkWidget *eq_labels[10];
     GtkWidget *db_labels[3];
     GtkWidget *scale_hbox;
     GtkWidget *db_vbox;
-    GtkWidget *eq_vbox;
     GtkWidget *hbox1, *hbox2;
-    GtkWidget *close_button_hbox;
-    GtkWidget *close_button;
     GtkWidget *save_button, *import_button;
     PangoAttrList *eq_attr_list;
     PangoAttribute *eq_attr;
     eq_attr_list = pango_attr_list_new();
     eq_attr = pango_attr_size_new(8 * PANGO_SCALE);
     pango_attr_list_insert(eq_attr_list, eq_attr);
-    eq_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-    gtk_window_set_transient_for(GTK_WINDOW(eq_window),
-        GTK_WINDOW(rc_ui->main_window));
-    gtk_window_set_destroy_with_parent(GTK_WINDOW(eq_window), TRUE);
-    gtk_window_set_title(GTK_WINDOW(eq_window),_("Equalizer"));
-    gtk_window_set_policy(GTK_WINDOW(eq_window), FALSE, FALSE, TRUE);
-    gtk_window_set_resizable(GTK_WINDOW(eq_window), FALSE);
-    gtk_window_set_position(GTK_WINDOW(eq_window),
-        GTK_WIN_POS_CENTER_ON_PARENT);
-    gtk_container_set_border_width(GTK_CONTAINER(eq_window), 5);
     eq_combobox = gtk_combo_box_new_text();
     hbox1 = gtk_hbox_new(FALSE, 8);
     hbox2 = gtk_hbutton_box_new();
     gtk_button_box_set_layout(GTK_BUTTON_BOX(hbox2), GTK_BUTTONBOX_END);
-    eq_vbox = gtk_vbox_new(FALSE, 10);
     scale_hbox = gtk_hbox_new(FALSE, 1);
-    close_button_hbox = gtk_hbox_new(FALSE, 0);
-    close_button = gtk_button_new_from_stock(GTK_STOCK_CLOSE);
     save_button = gtk_button_new_from_stock(GTK_STOCK_SAVE);
     import_button = gtk_button_new_from_stock(GTK_STOCK_OPEN);
     eq_labels[0] = gtk_label_new("29Hz");
@@ -166,11 +136,11 @@ void rc_gui_create_equalizer()
         gtk_range_set_value(GTK_RANGE(eq_scales[i]), gcore->eq[i]);
         gtk_widget_set_size_request(eq_scales[i], -1, 100);
         gtk_box_pack_start(GTK_BOX(scale_vboxs[i]), eq_scales[i],
-            FALSE, FALSE, 2);
+            TRUE, TRUE, 2);
         gtk_box_pack_start(GTK_BOX(scale_vboxs[i]), eq_labels[i],
             FALSE, FALSE, 2);
         gtk_box_pack_start(GTK_BOX(scale_hbox), scale_vboxs[i],
-            FALSE, FALSE, 2);
+            FALSE, FALSE, 4);
     }
     pango_attr_list_unref(eq_attr_list);
     db_vbox = gtk_vbox_new(FALSE, 2);
@@ -181,9 +151,9 @@ void rc_gui_create_equalizer()
     gtk_box_pack_start(GTK_BOX(db_vbox), db_labels[1],
         TRUE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(db_vbox), db_labels[2],
-        FALSE, FALSE, 0);
+        FALSE, FALSE, 20);
     gtk_box_pack_start(GTK_BOX(scale_vboxs[10]), db_vbox,
-        FALSE, FALSE, 2);
+        TRUE, TRUE, 2);
     gtk_box_pack_start(GTK_BOX(scale_hbox), scale_vboxs[10],
         FALSE, FALSE, 2);
     for(i=0;i<11;i++)
@@ -195,15 +165,11 @@ void rc_gui_create_equalizer()
         gtk_combo_box_set_active(GTK_COMBO_BOX(eq_combobox), 10);
     gtk_box_pack_start(GTK_BOX(hbox2), save_button, FALSE, FALSE, 2);
     gtk_box_pack_start(GTK_BOX(hbox2), import_button, FALSE, FALSE, 2);
-
-    gtk_box_pack_end(GTK_BOX(close_button_hbox), close_button, FALSE, FALSE, 2);
     gtk_box_pack_start(GTK_BOX(hbox1), eq_combobox, FALSE, FALSE, 2);
     gtk_box_pack_end(GTK_BOX(hbox1), hbox2, FALSE, FALSE, 2);
-    gtk_box_pack_start(GTK_BOX(eq_vbox), hbox1, FALSE, FALSE, 5);
-    gtk_box_pack_start(GTK_BOX(eq_vbox), scale_hbox, FALSE, FALSE, 5);
-    gtk_box_pack_start(GTK_BOX(eq_vbox), close_button_hbox, FALSE, 
-        FALSE, 5);
-    gtk_container_add(GTK_CONTAINER(eq_window), eq_vbox);
+    gtk_box_pack_start(GTK_BOX(rc_ui->eq_vbox), hbox1, FALSE, FALSE, 5);
+    gtk_box_pack_start(GTK_BOX(rc_ui->eq_vbox), scale_hbox, TRUE, TRUE, 5);
+    gtk_widget_show_all(rc_ui->eq_vbox);
     for(i=0;i<10;i++)
     {
         g_signal_connect(G_OBJECT(eq_scales[i]), "value-changed",
@@ -211,16 +177,12 @@ void rc_gui_create_equalizer()
         g_signal_connect(G_OBJECT(eq_scales[i]), "change-value",
             G_CALLBACK(rc_gui_eq_set_by_user),NULL);
     }
-    g_signal_connect(G_OBJECT(close_button), "clicked",
-        G_CALLBACK(rc_gui_close_equalizer), NULL);
     g_signal_connect(G_OBJECT(save_button), "clicked",
         G_CALLBACK(rc_gui_equalizer_save_setting), NULL);
     g_signal_connect(G_OBJECT(import_button), "clicked",
         G_CALLBACK(rc_gui_equalizer_load_setting), NULL);
     g_signal_connect(G_OBJECT(eq_combobox), "changed",
         G_CALLBACK(rc_gui_equalizer_combox_changed), NULL);
-
-    gtk_widget_show_all(eq_window);
 }
 
 /*
@@ -236,15 +198,6 @@ void rc_gui_set_equalizer(GtkAdjustment *adjustment, gpointer data)
         value[i] = gtk_range_get_value(GTK_RANGE(eq_scales[i]));
     }
     rc_core_set_eq_effect(value);
-}
-
-/*
- * Close the equalizer window.
- */
-
-void rc_gui_close_equalizer(GtkButton *widget, gpointer data)
-{
-    gtk_widget_destroy(eq_window);
 }
 
 /*

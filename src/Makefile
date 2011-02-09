@@ -54,9 +54,10 @@ PROGRAMS = $(bin_PROGRAMS)
 am_RhythmCat_OBJECTS = core.$(OBJEXT) lyric.$(OBJEXT) \
 	playlist.$(OBJEXT) tag.$(OBJEXT) settings.$(OBJEXT) \
 	plugin.$(OBJEXT) shell.$(OBJEXT) msg.$(OBJEXT) debug.$(OBJEXT) \
-	gui.$(OBJEXT) gui_setting.$(OBJEXT) gui_treeview.$(OBJEXT) \
-	gui_style.$(OBJEXT) gui_dialog.$(OBJEXT) gui_menu.$(OBJEXT) \
-	gui_lrc.$(OBJEXT) gui_eq.$(OBJEXT) main.$(OBJEXT)
+	player.$(OBJEXT) gui.$(OBJEXT) gui_setting.$(OBJEXT) \
+	gui_treeview.$(OBJEXT) gui_style.$(OBJEXT) \
+	gui_dialog.$(OBJEXT) gui_menu.$(OBJEXT) gui_lrc.$(OBJEXT) \
+	gui_eq.$(OBJEXT) main.$(OBJEXT)
 RhythmCat_OBJECTS = $(am_RhythmCat_OBJECTS)
 RhythmCat_DEPENDENCIES =
 DEFAULT_INCLUDES = -I. -I$(top_builddir)
@@ -198,8 +199,8 @@ top_build_prefix = ../
 top_builddir = ..
 top_srcdir = ..
 RhythmCat_SOURCES = core.c lyric.c playlist.c tag.c settings.c plugin.c \
-    shell.c msg.c debug.c gui.c gui_setting.c gui_treeview.c gui_style.c \
-    gui_dialog.c gui_menu.c gui_lrc.c gui_eq.c main.c     
+    shell.c msg.c debug.c player.c gui.c gui_setting.c gui_treeview.c \
+    gui_style.c gui_dialog.c gui_menu.c gui_lrc.c gui_eq.c main.c        
 
 INCLUDES = -pthread -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include   -pthread -I/usr/include/dbus-1.0 -I/usr/lib/dbus-1.0/include -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include   -pthread -I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/gio-unix-2.0/ -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng12 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include   -pthread -I/usr/include/gstreamer-0.10 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/libxml2   \
     -pthread -I/usr/include/gtksourceview-2.0 -I/usr/include/libxml2 -I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/gio-unix-2.0/ -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng12 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include   -DLOCALEDIR=\"$(localedir)\"
@@ -301,6 +302,7 @@ include ./$(DEPDIR)/gui_treeview.Po
 include ./$(DEPDIR)/lyric.Po
 include ./$(DEPDIR)/main.Po
 include ./$(DEPDIR)/msg.Po
+include ./$(DEPDIR)/player.Po
 include ./$(DEPDIR)/playlist.Po
 include ./$(DEPDIR)/plugin.Po
 include ./$(DEPDIR)/settings.Po

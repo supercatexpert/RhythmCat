@@ -1,7 +1,7 @@
 /*
- * Audio Tools (Core part) Declaration
+ * Player Class Declaration
  *
- * tools.h
+ * player.h
  * This file is part of <RhythmCat>
  *
  * Copyright (C) 2010 - SuperCat, license: GPL v3
@@ -22,30 +22,48 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef HAVE_TOOLS_H
-#define HAVE_TOOLS_H
+#ifndef HAVE_PLAYER_H
+#define HAVE_PLAYER_H
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <glib.h>
+#include <glib-object.h>
 #include <gst/gst.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include "global.h"
-#include "gui.h"
-#include "playlist.h"
-#include "debug.h"
-#include "tag.h"
+#include <gtk/gtk.h>
 
-/* Functions */
-gboolean tools_convert_start(const gchar *, const gchar *, const gchar *,
-    gint, gdouble, gint, gint, gint64, gint64, const MusicMetaData *);
-void tools_convert_stop();
-gdouble tools_convert_get_wpersent();
-gint tools_convert_get_work_status();
-gboolean tools_change_tag(const gchar *, const gchar *, const MusicMetaData *);
-gboolean tools_convert_merge_wave(gchar **, gint, const gchar *);
+#define RC_PLAYER_TYPE (rc_player_get_type())
+#define RC_PLAYER(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), RC_PLAYER_TYPE, \
+    RCPlayer))
+
+typedef struct _RCPlayer RCPlayer;
+typedef struct _RCPlayerClass RCPlayerClass;
+
+struct _RCPlayer
+{
+    GObject parent;
+    gint dummy;
+};
+
+struct _RCPlayerClass
+{
+    GObjectClass parent_class;
+    void (*object_born)();
+    void (*player_play)();
+    void (*player_stop)();
+    void (*player_pause)();
+    void (*player_continue)();
+    void (*lyric_found)();
+    void (*lyric_not_found)();
+};
+
+GType rc_player_get_type();
+RCPlayer *rc_player_new();
+
+gboolean rc_player_object_init();
+void rc_player_object_signal_emit_simple(const char *);
+gulong rc_player_object_signal_connect_simple(const char *, GCallback);
 
 #endif
 

@@ -36,13 +36,10 @@
 /* Functions */
 void rc_gui_about_player();
 void rc_gui_show_open_dialog(GtkWidget *, gpointer);
-void rc_gui_show_music_info(GtkWidget *, gpointer);
 void rc_gui_open_music_directory(GtkWidget *, gpointer);
 void rc_gui_save_playlist_dialog(GtkWidget *, gpointer);
 void rc_gui_load_playlist_dialog(GtkWidget *, gpointer);
 void rc_gui_save_all_playlists_dialog(GtkWidget *, gpointer);
-void rc_gui_change_music_info(GtkWidget *, gpointer);
-void rc_gui_music_info_tagged();
 
 #endif
 

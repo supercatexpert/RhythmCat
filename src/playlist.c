@@ -34,6 +34,7 @@
 #include "lyric.h"
 #include "main.h"
 #include "debug.h"
+#include "player.h"
 
 typedef struct _PlistImportData
 {
@@ -395,12 +396,14 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
         rc_debug_print("Plist: Found lyric file: %s, enable the lyric show.\n",
             lyric_filename);
         rc_gui_lrc_enable();
+        rc_player_object_signal_emit_simple("lyric-found");
     }
     else
     {
         rc_debug_print("Plist: Not found lyric file, disable the lyric "
             "show.\n");
         rc_gui_lrc_disable();
+        rc_player_object_signal_emit_simple("lyric-not-found");
     }
     if(lyric_filename!=NULL) g_free(lyric_filename);
     cover_filename = rc_tag_find_file(music_dir, album_name,

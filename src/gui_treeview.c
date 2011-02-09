@@ -283,8 +283,7 @@ gboolean rc_gui_list2_button_release_event(GtkWidget *widget,
     }
     if(event->button==3)
     {
-
-        gtk_menu_popup(GTK_MENU(ui_menu->plist_tview_pmenu), NULL, NULL, NULL,
+        gtk_menu_popup(GTK_MENU(ui_menu->list2_pop_menu), NULL, NULL, NULL,
             NULL,3, gtk_get_current_event_time());
     }
     return FALSE;

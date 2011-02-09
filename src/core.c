@@ -29,6 +29,7 @@
 #include "settings.h"
 #include "debug.h"
 #include "gui_eq.h"
+#include "player.h"
 
 #define AUDIO_FREQ 44100
 
@@ -197,7 +198,6 @@ void rc_core_init()
     gst_element_set_state(play, GST_STATE_READY);
     gst_version(&rc_core.ver_major, &rc_core.ver_minor, &rc_core.ver_micro,
         &rc_core.ver_nano);
-    rc_gui_init_eq_data();
     rc_debug_print("Core: CORE is successfully loaded!\n");
 }
 
@@ -257,6 +257,10 @@ gboolean rc_core_play()
         flag = gst_element_set_state(rc_core.playbin, GST_STATE_NULL);
         if(!flag) return FALSE;
     }
+    if(state!=GST_STATE_PAUSED && state!=GST_STATE_PLAYING)
+        rc_player_object_signal_emit_simple("player-play");
+    else
+        rc_player_object_signal_emit_simple("player-continue");
     flag = gst_element_set_state(rc_core.playbin, GST_STATE_PLAYING);
     if(!flag) return FALSE;
     rc_gui_set_play_button_state(TRUE);
@@ -274,6 +278,7 @@ gboolean rc_core_pause()
     flag = gst_element_set_state(rc_core.playbin, GST_STATE_PAUSED);
     if(!flag) return FALSE;
     rc_gui_set_play_button_state(FALSE);
+    rc_player_object_signal_emit_simple("player-pause");
     return TRUE;
 }
 
@@ -287,6 +292,7 @@ gboolean rc_core_stop()
     rc_plist_stop();
     rc_gui_set_play_button_state(FALSE);
     rc_gui_seek_scaler_disable();
+    rc_player_object_signal_emit_simple("player-stop");
     return TRUE;
 }
 

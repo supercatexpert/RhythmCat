@@ -515,21 +515,8 @@ playlist.o: playlist.c playlist.h /usr/include/stdio.h \
  /usr/include/libpng12/png.h /usr/include/zlib.h /usr/include/zconf.h \
  /usr/include/zlibdefs.h /usr/include/libpng12/pngconf.h \
  /usr/include/setjmp.h /usr/include/bits/setjmp.h gui_treeview.h \
- gui_lrc.h /usr/include/gtksourceview-2.0/gtksourceview/gtksourceview.h \
- /usr/include/gtksourceview-2.0/gtksourceview/gtksourcebuffer.h \
- /usr/include/gtksourceview-2.0/gtksourceview/gtksourcelanguage.h \
- /usr/include/gtksourceview-2.0/gtksourceview/gtksourcemark.h \
- /usr/include/gtksourceview-2.0/gtksourceview/gtksourcestylescheme.h \
- /usr/include/gtksourceview-2.0/gtksourceview/gtksourcestyle.h \
- /usr/include/gtksourceview-2.0/gtksourceview/gtksourceundomanager.h \
- /usr/include/gtksourceview-2.0/gtksourceview/gtksourcecompletion.h \
- /usr/include/gtksourceview-2.0/gtksourceview/gtksourcecompletioninfo.h \
- /usr/include/gtksourceview-2.0/gtksourceview/gtksourcecompletionprovider.h \
- /usr/include/gtksourceview-2.0/gtksourceview/gtksourcecompletionproposal.h \
- /usr/include/gtksourceview-2.0/gtksourceview/gtksourcecompletioncontext.h \
- /usr/include/gtksourceview-2.0/gtksourceview/gtksourcegutter.h \
- /usr/include/gtksourceview-2.0/gtksourceview/gtksourcelanguagemanager.h \
- settings.h tag.h msg.h lyric.h main.h /usr/include/dbus-1.0/dbus/dbus.h \
+ gui_lrc.h settings.h tag.h msg.h lyric.h main.h \
+ /usr/include/dbus-1.0/dbus/dbus.h \
  /usr/lib/dbus-1.0/include/dbus/dbus-arch-deps.h \
  /usr/include/dbus-1.0/dbus/dbus-macros.h \
  /usr/include/dbus-1.0/dbus/dbus-address.h \
@@ -547,7 +534,7 @@ playlist.o: playlist.c playlist.h /usr/include/stdio.h \
  /usr/include/dbus-1.0/dbus/dbus-signature.h \
  /usr/include/dbus-1.0/dbus/dbus-threads.h \
  /usr/include/dbus-1.0/dbus/dbus-glib.h \
- /usr/include/dbus-1.0/dbus/dbus-gtype-specialized.h debug.h
+ /usr/include/dbus-1.0/dbus/dbus-gtype-specialized.h debug.h player.h
 
 playlist.h:
 
@@ -1775,34 +1762,6 @@ gui_treeview.h:
 
 gui_lrc.h:
 
-/usr/include/gtksourceview-2.0/gtksourceview/gtksourceview.h:
-
-/usr/include/gtksourceview-2.0/gtksourceview/gtksourcebuffer.h:
-
-/usr/include/gtksourceview-2.0/gtksourceview/gtksourcelanguage.h:
-
-/usr/include/gtksourceview-2.0/gtksourceview/gtksourcemark.h:
-
-/usr/include/gtksourceview-2.0/gtksourceview/gtksourcestylescheme.h:
-
-/usr/include/gtksourceview-2.0/gtksourceview/gtksourcestyle.h:
-
-/usr/include/gtksourceview-2.0/gtksourceview/gtksourceundomanager.h:
-
-/usr/include/gtksourceview-2.0/gtksourceview/gtksourcecompletion.h:
-
-/usr/include/gtksourceview-2.0/gtksourceview/gtksourcecompletioninfo.h:
-
-/usr/include/gtksourceview-2.0/gtksourceview/gtksourcecompletionprovider.h:
-
-/usr/include/gtksourceview-2.0/gtksourceview/gtksourcecompletionproposal.h:
-
-/usr/include/gtksourceview-2.0/gtksourceview/gtksourcecompletioncontext.h:
-
-/usr/include/gtksourceview-2.0/gtksourceview/gtksourcegutter.h:
-
-/usr/include/gtksourceview-2.0/gtksourceview/gtksourcelanguagemanager.h:
-
 settings.h:
 
 tag.h:
@@ -1852,3 +1811,5 @@ main.h:
 /usr/include/dbus-1.0/dbus/dbus-gtype-specialized.h:
 
 debug.h:
+
+player.h:

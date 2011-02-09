@@ -536,7 +536,7 @@ main.o: main.c main.h /usr/include/stdio.h /usr/include/features.h \
  /usr/include/setjmp.h /usr/include/bits/setjmp.h playlist.h \
  /usr/include/gstreamer-0.10/gst/pbutils/missing-plugins.h settings.h \
  shell.h plugin.h /usr/include/dlfcn.h /usr/include/bits/dlfcn.h debug.h \
- msg.h shell_glue.h
+ msg.h shell_glue.h player.h gui_eq.h
 
 main.h:
 
@@ -1815,3 +1815,7 @@ debug.h:
 msg.h:
 
 shell_glue.h:
+
+player.h:
+
+gui_eq.h:

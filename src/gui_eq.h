@@ -38,6 +38,7 @@ typedef struct _EQData
 }EQData;
 
 void rc_gui_init_eq_data();
+void rc_gui_eq_init();
 void rc_gui_create_equalizer();
 void rc_gui_set_equalizer(GtkAdjustment *, gpointer);
 void rc_gui_close_equalizer(GtkButton *, gpointer);

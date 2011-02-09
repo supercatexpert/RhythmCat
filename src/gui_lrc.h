@@ -30,20 +30,12 @@
 #include <glib/gprintf.h>
 #include <gdk/gdk.h>
 #include <gtk/gtk.h>
-#include <gtksourceview/gtksourceview.h>
-#include <gtksourceview/gtksourcelanguagemanager.h>
 
 /* Custom struct type to store the GUI Lyric data. */
 
 typedef struct _GuiLrcData
 {
     GtkWidget *lrc_scene;
-    GtkWidget *lrc_text;
-    GtkWidget *lrc_notebook;
-    GtkWidget *lrc_toolbar;
-    GtkToolItem *lrc_tool_buttons[15];
-    GtkSourceBuffer *lrc_buffer;
-    GtkTextIter lrc_iter;
     guint64 lrc_line_length;
     gint64 lrc_line_num;
     gint64 lrc_time_delay;
@@ -65,32 +57,13 @@ typedef struct _GuiLrcData
 
 /* Functions */
 void rc_gui_lrc_init();
-GuiLrcData *get_rc_gui_lrc();
+GuiLrcData *rc_gui_lrc_get_data();
 void rc_gui_lrc_draw_bg();				
 gboolean rc_gui_lrc_show(GtkWidget *, gpointer);
 gboolean rc_gui_lrc_expose(GtkWidget *, gpointer);
 gboolean rc_gui_lrc_update(GtkWidget *, gpointer);
 void rc_gui_lrc_enable();
 void rc_gui_lrc_disable();
-void rc_gui_edit_lyric(GtkMenuItem *, gpointer);
-void rc_gui_lrc_new_toolbar();
-void rc_gui_lrc_edit_add_tag(GtkWidget *, gpointer);
-void rc_gui_lrc_edit_replace_tag(GtkWidget *, gpointer);
-void rc_gui_lrc_edit_delete_tag(GtkWidget *, gpointer);
-void rc_gui_lrc_edit_cut_selection(GtkWidget *, gpointer);
-void rc_gui_lrc_edit_copy_selection(GtkWidget *, gpointer);
-void rc_gui_lrc_edit_paste_selection(GtkWidget *, gpointer);
-void rc_gui_lrc_edit_delete_selection(GtkWidget *, gpointer);
-void rc_gui_lrc_edit_mark_set(GtkTextBuffer *, GtkTextIter *, GtkTextMark *,
-    gpointer);
-void rc_gui_lrc_edit_undo_selection(GtkWidget *, gpointer);
-void rc_gui_lrc_edit_redo_selection(GtkWidget *, gpointer);
-void rc_gui_lrc_edit_changed(GtkTextBuffer *, gpointer);
-void rc_gui_lrc_edit_undo(GtkWidget *, gpointer);
-void rc_gui_lrc_edit_redo(GtkWidget *, gpointer);
-void rc_gui_lrc_edit_return(GtkWidget *, gpointer);
-void rc_gui_lrc_edit_load(GtkWidget *, gpointer);
-void rc_gui_lrc_edit_save(GtkWidget *, gpointer);
 
 #endif
 

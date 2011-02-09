@@ -429,24 +429,9 @@ gui_lrc.o: gui_lrc.c gui_lrc.h /usr/include/stdlib.h \
  /usr/include/gtk-2.0/gtk/gtkoldeditable.h \
  /usr/include/gtk-2.0/gtk/gtkoptionmenu.h \
  /usr/include/gtk-2.0/gtk/gtkpreview.h \
- /usr/include/gtk-2.0/gtk/gtktipsquery.h \
- /usr/include/gtksourceview-2.0/gtksourceview/gtksourceview.h \
- /usr/include/gtksourceview-2.0/gtksourceview/gtksourcebuffer.h \
- /usr/include/gtksourceview-2.0/gtksourceview/gtksourcelanguage.h \
- /usr/include/gtksourceview-2.0/gtksourceview/gtksourcemark.h \
- /usr/include/gtksourceview-2.0/gtksourceview/gtksourcestylescheme.h \
- /usr/include/gtksourceview-2.0/gtksourceview/gtksourcestyle.h \
- /usr/include/gtksourceview-2.0/gtksourceview/gtksourceundomanager.h \
- /usr/include/gtksourceview-2.0/gtksourceview/gtksourcecompletion.h \
- /usr/include/gtksourceview-2.0/gtksourceview/gtksourcecompletioninfo.h \
- /usr/include/gtksourceview-2.0/gtksourceview/gtksourcecompletionprovider.h \
- /usr/include/gtksourceview-2.0/gtksourceview/gtksourcecompletionproposal.h \
- /usr/include/gtksourceview-2.0/gtksourceview/gtksourcecompletioncontext.h \
- /usr/include/gtksourceview-2.0/gtksourceview/gtksourcegutter.h \
- /usr/include/gtksourceview-2.0/gtksourceview/gtksourcelanguagemanager.h \
- gui.h /usr/include/unistd.h /usr/include/bits/posix_opt.h \
- /usr/include/bits/confname.h /usr/include/getopt.h \
- /usr/include/gstreamer-0.10/gst/gst.h \
+ /usr/include/gtk-2.0/gtk/gtktipsquery.h gui.h /usr/include/unistd.h \
+ /usr/include/bits/posix_opt.h /usr/include/bits/confname.h \
+ /usr/include/getopt.h /usr/include/gstreamer-0.10/gst/gst.h \
  /usr/include/gstreamer-0.10/gst/glib-compat.h \
  /usr/include/gstreamer-0.10/gst/gstenumtypes.h \
  /usr/include/gstreamer-0.10/gst/gstversion.h \
@@ -1558,34 +1543,6 @@ gui_lrc.h:
 /usr/include/gtk-2.0/gtk/gtkpreview.h:
 
 /usr/include/gtk-2.0/gtk/gtktipsquery.h:
-
-/usr/include/gtksourceview-2.0/gtksourceview/gtksourceview.h:
-
-/usr/include/gtksourceview-2.0/gtksourceview/gtksourcebuffer.h:
-
-/usr/include/gtksourceview-2.0/gtksourceview/gtksourcelanguage.h:
-
-/usr/include/gtksourceview-2.0/gtksourceview/gtksourcemark.h:
-
-/usr/include/gtksourceview-2.0/gtksourceview/gtksourcestylescheme.h:
-
-/usr/include/gtksourceview-2.0/gtksourceview/gtksourcestyle.h:
-
-/usr/include/gtksourceview-2.0/gtksourceview/gtksourceundomanager.h:
-
-/usr/include/gtksourceview-2.0/gtksourceview/gtksourcecompletion.h:
-
-/usr/include/gtksourceview-2.0/gtksourceview/gtksourcecompletioninfo.h:
-
-/usr/include/gtksourceview-2.0/gtksourceview/gtksourcecompletionprovider.h:
-
-/usr/include/gtksourceview-2.0/gtksourceview/gtksourcecompletionproposal.h:
-
-/usr/include/gtksourceview-2.0/gtksourceview/gtksourcecompletioncontext.h:
-
-/usr/include/gtksourceview-2.0/gtksourceview/gtksourcegutter.h:
-
-/usr/include/gtksourceview-2.0/gtksourceview/gtksourcelanguagemanager.h:
 
 gui.h:
 

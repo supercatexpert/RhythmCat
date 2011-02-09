@@ -33,12 +33,14 @@
 #include "debug.h"
 #include "msg.h"
 #include "shell_glue.h"
+#include "player.h"
+#include "gui_eq.h"
 
 static gchar *rc_set_dir = NULL;
 static const gchar *rc_app_dir = NULL;
 static const gchar *rc_home_dir = NULL;
 static const gchar rc_program_name[] = "RhythmCat Music Player";
-static const gchar rc_build_num[] = "build 110205, alpha 1";
+static const gchar rc_build_num[] = "build 110209, alpha 1";
 static const gchar rc_ver_num[] = "0.9.0";
 static const gboolean rc_is_stable = FALSE;
 static const gchar rc_dbus_name[] = "org.supercat.RhythmCat";
@@ -123,8 +125,11 @@ void rc_initial(int *argc, char **argv[])
     bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
     rc_gui_init();
     rc_core_init();
+    rc_gui_init_eq_data();
+    rc_gui_eq_init();
     rc_msg_init();
     rc_plist_init();
+    rc_player_object_init();
     rc_plist_load_argument(remaining_args);
 }
 
