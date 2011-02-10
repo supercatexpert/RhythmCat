@@ -22,8 +22,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef HAVE_rc_gui_SETTING_H
-#define HAVE_rc_gui_SETTING_H
+#ifndef HAVE_GUI_SETTING_H
+#define HAVE_GUI_SETTING_H
 
 #include <stdlib.h>
 #include <glib.h>
@@ -42,7 +42,6 @@ void rc_gui_create_setting_appearance();
 void rc_gui_create_setting_playback();
 void rc_gui_create_setting_playlist();
 void rc_gui_create_setting_lyric();
-void rc_gui_create_setting_desklrc();
 
 #endif
 

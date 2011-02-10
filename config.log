@@ -38,121 +38,115 @@ PATH: /usr/games
 ## Core tests. ##
 ## ----------- ##
 
-configure:2302: checking for a BSD-compatible install
-configure:2370: result: /usr/bin/install -c
-configure:2381: checking whether build environment is sane
-configure:2431: result: yes
-configure:2572: checking for a thread-safe mkdir -p
-configure:2611: result: /bin/mkdir -p
-configure:2624: checking for gawk
-configure:2640: found /usr/bin/gawk
-configure:2651: result: gawk
-configure:2662: checking whether make sets $(MAKE)
-configure:2684: result: yes
-configure:2820: checking for gcc
-configure:2836: found /usr/bin/gcc
-configure:2847: result: gcc
-configure:3076: checking for C compiler version
-configure:3085: gcc --version >&5
+configure:2294: checking for a BSD-compatible install
+configure:2362: result: /usr/bin/install -c
+configure:2373: checking whether build environment is sane
+configure:2423: result: yes
+configure:2564: checking for a thread-safe mkdir -p
+configure:2603: result: /bin/mkdir -p
+configure:2616: checking for gawk
+configure:2632: found /usr/bin/gawk
+configure:2643: result: gawk
+configure:2654: checking whether make sets $(MAKE)
+configure:2676: result: yes
+configure:2812: checking for gcc
+configure:2828: found /usr/bin/gcc
+configure:2839: result: gcc
+configure:3068: checking for C compiler version
+configure:3077: gcc --version >&5
 gcc (Debian 4.4.5-8) 4.4.5
 Copyright (C) 2010 Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-configure:3096: $? = 0
-configure:3085: gcc -v >&5
+configure:3088: $? = 0
+configure:3077: gcc -v >&5
 Using built-in specs.
 Target: x86_64-linux-gnu
 Configured with: ../src/configure -v --with-pkgversion='Debian 4.4.5-8' --with-bugurl=file:///usr/share/doc/gcc-4.4/README.Bugs --enable-languages=c,c++,fortran,objc,obj-c++ --prefix=/usr --program-suffix=-4.4 --enable-shared --enable-multiarch --enable-linker-build-id --with-system-zlib --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --with-gxx-include-dir=/usr/include/c++/4.4 --libdir=/usr/lib --enable-nls --enable-clocale=gnu --enable-libstdcxx-debug --enable-objc-gc --with-arch-32=i586 --with-tune=generic --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu
 Thread model: posix
 gcc version 4.4.5 (Debian 4.4.5-8) 
-configure:3096: $? = 0
-configure:3085: gcc -V >&5
+configure:3088: $? = 0
+configure:3077: gcc -V >&5
 gcc: '-V' option must have argument
-configure:3096: $? = 1
-configure:3085: gcc -qversion >&5
+configure:3088: $? = 1
+configure:3077: gcc -qversion >&5
 gcc: unrecognized option '-qversion'
 gcc: no input files
-configure:3096: $? = 1
-configure:3116: checking whether the C compiler works
-configure:3138: gcc    conftest.c  >&5
-configure:3142: $? = 0
-configure:3190: result: yes
-configure:3193: checking for C compiler default output file name
-configure:3195: result: a.out
-configure:3201: checking for suffix of executables
-configure:3208: gcc -o conftest    conftest.c  >&5
-configure:3212: $? = 0
-configure:3234: result: 
-configure:3256: checking whether we are cross compiling
-configure:3264: gcc -o conftest    conftest.c  >&5
-configure:3268: $? = 0
-configure:3275: ./conftest
-configure:3279: $? = 0
-configure:3294: result: no
-configure:3299: checking for suffix of object files
-configure:3321: gcc -c   conftest.c >&5
-configure:3325: $? = 0
-configure:3346: result: o
-configure:3350: checking whether we are using the GNU C compiler
-configure:3369: gcc -c   conftest.c >&5
-configure:3369: $? = 0
-configure:3378: result: yes
-configure:3387: checking whether gcc accepts -g
-configure:3407: gcc -c -g  conftest.c >&5
-configure:3407: $? = 0
-configure:3448: result: yes
-configure:3465: checking for gcc option to accept ISO C89
-configure:3529: gcc  -c -g -O2  conftest.c >&5
-configure:3529: $? = 0
-configure:3542: result: none needed
-configure:3573: checking for style of include used by make
-configure:3601: result: GNU
-configure:3626: checking dependency style of gcc
-configure:3736: result: gcc3
-configure:3752: checking whether ln -s works
-configure:3756: result: yes
-configure:3819: checking for pkg-config
-configure:3837: found /usr/bin/pkg-config
-configure:3849: result: /usr/bin/pkg-config
-configure:3874: checking pkg-config is at least version 0.9.0
-configure:3877: result: yes
-configure:3887: checking for GLIB2
-configure:3894: $PKG_CONFIG --exists --print-errors "glib-2.0, gthread-2.0, gmodule-2.0, gio-2.0"
-configure:3897: $? = 0
-configure:3910: $PKG_CONFIG --exists --print-errors "glib-2.0, gthread-2.0, gmodule-2.0, gio-2.0"
-configure:3913: $? = 0
-configure:3970: result: yes
-configure:3976: checking for DBUS_GLIB
-configure:3983: $PKG_CONFIG --exists --print-errors "dbus-glib-1"
-configure:3986: $? = 0
-configure:3999: $PKG_CONFIG --exists --print-errors "dbus-glib-1"
-configure:4002: $? = 0
-configure:4059: result: yes
-configure:4065: checking for GTK2
-configure:4072: $PKG_CONFIG --exists --print-errors "gtk+-2.0 >= 2.12.0"
-configure:4075: $? = 0
-configure:4088: $PKG_CONFIG --exists --print-errors "gtk+-2.0 >= 2.12.0"
-configure:4091: $? = 0
-configure:4148: result: yes
-configure:4154: checking for GSTREAMER
-configure:4161: $PKG_CONFIG --exists --print-errors "gstreamer-0.10"
-configure:4164: $? = 0
-configure:4177: $PKG_CONFIG --exists --print-errors "gstreamer-0.10"
-configure:4180: $? = 0
-configure:4237: result: yes
-configure:4243: checking for GTKSOURCEVIEW2
-configure:4250: $PKG_CONFIG --exists --print-errors "gtksourceview-2.0"
-configure:4253: $? = 0
-configure:4266: $PKG_CONFIG --exists --print-errors "gtksourceview-2.0"
-configure:4269: $? = 0
-configure:4326: result: yes
-configure:4338: checking how to run the C preprocessor
-configure:4369: gcc -E  conftest.c
-configure:4369: $? = 0
-configure:4383: gcc -E  conftest.c
+configure:3088: $? = 1
+configure:3108: checking whether the C compiler works
+configure:3130: gcc    conftest.c  >&5
+configure:3134: $? = 0
+configure:3182: result: yes
+configure:3185: checking for C compiler default output file name
+configure:3187: result: a.out
+configure:3193: checking for suffix of executables
+configure:3200: gcc -o conftest    conftest.c  >&5
+configure:3204: $? = 0
+configure:3226: result: 
+configure:3248: checking whether we are cross compiling
+configure:3256: gcc -o conftest    conftest.c  >&5
+configure:3260: $? = 0
+configure:3267: ./conftest
+configure:3271: $? = 0
+configure:3286: result: no
+configure:3291: checking for suffix of object files
+configure:3313: gcc -c   conftest.c >&5
+configure:3317: $? = 0
+configure:3338: result: o
+configure:3342: checking whether we are using the GNU C compiler
+configure:3361: gcc -c   conftest.c >&5
+configure:3361: $? = 0
+configure:3370: result: yes
+configure:3379: checking whether gcc accepts -g
+configure:3399: gcc -c -g  conftest.c >&5
+configure:3399: $? = 0
+configure:3440: result: yes
+configure:3457: checking for gcc option to accept ISO C89
+configure:3521: gcc  -c -g -O2  conftest.c >&5
+configure:3521: $? = 0
+configure:3534: result: none needed
+configure:3565: checking for style of include used by make
+configure:3593: result: GNU
+configure:3618: checking dependency style of gcc
+configure:3728: result: gcc3
+configure:3744: checking whether ln -s works
+configure:3748: result: yes
+configure:3811: checking for pkg-config
+configure:3829: found /usr/bin/pkg-config
+configure:3841: result: /usr/bin/pkg-config
+configure:3866: checking pkg-config is at least version 0.9.0
+configure:3869: result: yes
+configure:3879: checking for GLIB2
+configure:3886: $PKG_CONFIG --exists --print-errors "glib-2.0, gthread-2.0, gmodule-2.0, gio-2.0"
+configure:3889: $? = 0
+configure:3902: $PKG_CONFIG --exists --print-errors "glib-2.0, gthread-2.0, gmodule-2.0, gio-2.0"
+configure:3905: $? = 0
+configure:3962: result: yes
+configure:3968: checking for DBUS_GLIB
+configure:3975: $PKG_CONFIG --exists --print-errors "dbus-glib-1"
+configure:3978: $? = 0
+configure:3991: $PKG_CONFIG --exists --print-errors "dbus-glib-1"
+configure:3994: $? = 0
+configure:4051: result: yes
+configure:4057: checking for GTK2
+configure:4064: $PKG_CONFIG --exists --print-errors "gtk+-2.0 >= 2.12.0"
+configure:4067: $? = 0
+configure:4080: $PKG_CONFIG --exists --print-errors "gtk+-2.0 >= 2.12.0"
+configure:4083: $? = 0
+configure:4140: result: yes
+configure:4146: checking for GSTREAMER
+configure:4153: $PKG_CONFIG --exists --print-errors "gstreamer-0.10"
+configure:4156: $? = 0
+configure:4169: $PKG_CONFIG --exists --print-errors "gstreamer-0.10"
+configure:4172: $? = 0
+configure:4229: result: yes
+configure:4241: checking how to run the C preprocessor
+configure:4272: gcc -E  conftest.c
+configure:4272: $? = 0
+configure:4286: gcc -E  conftest.c
 conftest.c:11:28: error: ac_nonexistent.h: No such file or directory
-configure:4383: $? = 1
+configure:4286: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "RhythmCat"
@@ -165,12 +159,12 @@ configure: failed program was:
 | #define VERSION "0.9.0"
 | /* end confdefs.h.  */
 | #include <ac_nonexistent.h>
-configure:4408: result: gcc -E
-configure:4428: gcc -E  conftest.c
-configure:4428: $? = 0
-configure:4442: gcc -E  conftest.c
+configure:4311: result: gcc -E
+configure:4331: gcc -E  conftest.c
+configure:4331: $? = 0
+configure:4345: gcc -E  conftest.c
 conftest.c:11:28: error: ac_nonexistent.h: No such file or directory
-configure:4442: $? = 1
+configure:4345: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "RhythmCat"
@@ -183,102 +177,102 @@ configure: failed program was:
 | #define VERSION "0.9.0"
 | /* end confdefs.h.  */
 | #include <ac_nonexistent.h>
-configure:4471: checking for grep that handles long lines and -e
-configure:4529: result: /bin/grep
-configure:4534: checking for egrep
-configure:4596: result: /bin/grep -E
-configure:4601: checking for ANSI C header files
+configure:4374: checking for grep that handles long lines and -e
+configure:4432: result: /bin/grep
+configure:4437: checking for egrep
+configure:4499: result: /bin/grep -E
+configure:4504: checking for ANSI C header files
+configure:4524: gcc -c -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"  conftest.c >&5
+<command-line>: warning: missing terminating " character
+configure:4524: $? = 0
+configure:4597: gcc -o conftest -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"   conftest.c  >&5
+<command-line>: warning: missing terminating " character
+configure:4597: $? = 0
+configure:4597: ./conftest
+configure:4597: $? = 0
+configure:4608: result: yes
+configure:4621: checking for sys/types.h
 configure:4621: gcc -c -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"  conftest.c >&5
 <command-line>: warning: missing terminating " character
 configure:4621: $? = 0
-configure:4694: gcc -o conftest -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"   conftest.c  >&5
+configure:4621: result: yes
+configure:4621: checking for sys/stat.h
+configure:4621: gcc -c -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"  conftest.c >&5
 <command-line>: warning: missing terminating " character
-configure:4694: $? = 0
-configure:4694: ./conftest
-configure:4694: $? = 0
-configure:4705: result: yes
-configure:4718: checking for sys/types.h
-configure:4718: gcc -c -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"  conftest.c >&5
+configure:4621: $? = 0
+configure:4621: result: yes
+configure:4621: checking for stdlib.h
+configure:4621: gcc -c -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"  conftest.c >&5
 <command-line>: warning: missing terminating " character
-configure:4718: $? = 0
-configure:4718: result: yes
-configure:4718: checking for sys/stat.h
-configure:4718: gcc -c -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"  conftest.c >&5
+configure:4621: $? = 0
+configure:4621: result: yes
+configure:4621: checking for string.h
+configure:4621: gcc -c -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"  conftest.c >&5
 <command-line>: warning: missing terminating " character
-configure:4718: $? = 0
-configure:4718: result: yes
-configure:4718: checking for stdlib.h
-configure:4718: gcc -c -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"  conftest.c >&5
+configure:4621: $? = 0
+configure:4621: result: yes
+configure:4621: checking for memory.h
+configure:4621: gcc -c -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"  conftest.c >&5
 <command-line>: warning: missing terminating " character
-configure:4718: $? = 0
-configure:4718: result: yes
-configure:4718: checking for string.h
-configure:4718: gcc -c -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"  conftest.c >&5
+configure:4621: $? = 0
+configure:4621: result: yes
+configure:4621: checking for strings.h
+configure:4621: gcc -c -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"  conftest.c >&5
 <command-line>: warning: missing terminating " character
-configure:4718: $? = 0
-configure:4718: result: yes
-configure:4718: checking for memory.h
-configure:4718: gcc -c -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"  conftest.c >&5
+configure:4621: $? = 0
+configure:4621: result: yes
+configure:4621: checking for inttypes.h
+configure:4621: gcc -c -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"  conftest.c >&5
 <command-line>: warning: missing terminating " character
-configure:4718: $? = 0
-configure:4718: result: yes
-configure:4718: checking for strings.h
-configure:4718: gcc -c -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"  conftest.c >&5
+configure:4621: $? = 0
+configure:4621: result: yes
+configure:4621: checking for stdint.h
+configure:4621: gcc -c -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"  conftest.c >&5
 <command-line>: warning: missing terminating " character
-configure:4718: $? = 0
-configure:4718: result: yes
-configure:4718: checking for inttypes.h
-configure:4718: gcc -c -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"  conftest.c >&5
+configure:4621: $? = 0
+configure:4621: result: yes
+configure:4621: checking for unistd.h
+configure:4621: gcc -c -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"  conftest.c >&5
 <command-line>: warning: missing terminating " character
-configure:4718: $? = 0
-configure:4718: result: yes
-configure:4718: checking for stdint.h
-configure:4718: gcc -c -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"  conftest.c >&5
+configure:4621: $? = 0
+configure:4621: result: yes
+configure:4636: checking for stdlib.h
+configure:4636: result: yes
+configure:4636: checking for string.h
+configure:4636: result: yes
+configure:4636: checking for unistd.h
+configure:4636: result: yes
+configure:4636: checking stdio.h usability
+configure:4636: gcc -c -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"  conftest.c >&5
 <command-line>: warning: missing terminating " character
-configure:4718: $? = 0
-configure:4718: result: yes
-configure:4718: checking for unistd.h
-configure:4718: gcc -c -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"  conftest.c >&5
+configure:4636: $? = 0
+configure:4636: result: yes
+configure:4636: checking stdio.h presence
+configure:4636: gcc -E  conftest.c
+configure:4636: $? = 0
+configure:4636: result: yes
+configure:4636: checking for stdio.h
+configure:4636: result: yes
+configure:4636: checking limits.h usability
+configure:4636: gcc -c -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"  conftest.c >&5
 <command-line>: warning: missing terminating " character
-configure:4718: $? = 0
-configure:4718: result: yes
-configure:4733: checking for stdlib.h
-configure:4733: result: yes
-configure:4733: checking for string.h
-configure:4733: result: yes
-configure:4733: checking for unistd.h
-configure:4733: result: yes
-configure:4733: checking stdio.h usability
-configure:4733: gcc -c -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"  conftest.c >&5
+configure:4636: $? = 0
+configure:4636: result: yes
+configure:4636: checking limits.h presence
+configure:4636: gcc -E  conftest.c
+configure:4636: $? = 0
+configure:4636: result: yes
+configure:4636: checking for limits.h
+configure:4636: result: yes
+configure:4648: checking for pid_t
+configure:4648: gcc -c -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"  conftest.c >&5
 <command-line>: warning: missing terminating " character
-configure:4733: $? = 0
-configure:4733: result: yes
-configure:4733: checking stdio.h presence
-configure:4733: gcc -E  conftest.c
-configure:4733: $? = 0
-configure:4733: result: yes
-configure:4733: checking for stdio.h
-configure:4733: result: yes
-configure:4733: checking limits.h usability
-configure:4733: gcc -c -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"  conftest.c >&5
-<command-line>: warning: missing terminating " character
-configure:4733: $? = 0
-configure:4733: result: yes
-configure:4733: checking limits.h presence
-configure:4733: gcc -E  conftest.c
-configure:4733: $? = 0
-configure:4733: result: yes
-configure:4733: checking for limits.h
-configure:4733: result: yes
-configure:4745: checking for pid_t
-configure:4745: gcc -c -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"  conftest.c >&5
-<command-line>: warning: missing terminating " character
-configure:4745: $? = 0
-configure:4745: gcc -c -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"  conftest.c >&5
+configure:4648: $? = 0
+configure:4648: gcc -c -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"  conftest.c >&5
 <command-line>: warning: missing terminating " character
 conftest.c: In function 'main':
 conftest.c:62: error: expected expression before ')' token
-configure:4745: $? = 1
+configure:4648: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "RhythmCat"
@@ -346,12 +340,12 @@ configure: failed program was:
 |   ;
 |   return 0;
 | }
-configure:4745: result: yes
-configure:4760: checking vfork.h usability
-configure:4760: gcc -c -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"  conftest.c >&5
+configure:4648: result: yes
+configure:4663: checking vfork.h usability
+configure:4663: gcc -c -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"  conftest.c >&5
 <command-line>: warning: missing terminating " character
 conftest.c:59:19: error: vfork.h: No such file or directory
-configure:4760: $? = 1
+configure:4663: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "RhythmCat"
@@ -412,11 +406,11 @@ configure: failed program was:
 | # include <unistd.h>
 | #endif
 | #include <vfork.h>
-configure:4760: result: no
-configure:4760: checking vfork.h presence
-configure:4760: gcc -E  conftest.c
+configure:4663: result: no
+configure:4663: checking vfork.h presence
+configure:4663: gcc -E  conftest.c
 conftest.c:26:19: error: vfork.h: No such file or directory
-configure:4760: $? = 1
+configure:4663: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "RhythmCat"
@@ -444,85 +438,85 @@ configure: failed program was:
 | #define HAVE_LIMITS_H 1
 | /* end confdefs.h.  */
 | #include <vfork.h>
-configure:4760: result: no
-configure:4760: checking for vfork.h
-configure:4760: result: no
-configure:4773: checking for fork
-configure:4773: gcc -o conftest -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"   conftest.c  >&5
+configure:4663: result: no
+configure:4663: checking for vfork.h
+configure:4663: result: no
+configure:4676: checking for fork
+configure:4676: gcc -o conftest -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"   conftest.c  >&5
 <command-line>: warning: missing terminating " character
 conftest.c:49: warning: conflicting types for built-in function 'fork'
-configure:4773: $? = 0
-configure:4773: result: yes
-configure:4773: checking for vfork
-configure:4773: gcc -o conftest -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"   conftest.c  >&5
+configure:4676: $? = 0
+configure:4676: result: yes
+configure:4676: checking for vfork
+configure:4676: gcc -o conftest -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"   conftest.c  >&5
 <command-line>: warning: missing terminating " character
-configure:4773: $? = 0
-configure:4773: result: yes
-configure:4783: checking for working fork
-configure:4805: gcc -o conftest -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"   conftest.c  >&5
+configure:4676: $? = 0
+configure:4676: result: yes
+configure:4686: checking for working fork
+configure:4708: gcc -o conftest -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"   conftest.c  >&5
 <command-line>: warning: missing terminating " character
-configure:4805: $? = 0
-configure:4805: ./conftest
-configure:4805: $? = 0
-configure:4815: result: yes
-configure:4836: checking for working vfork
-configure:4946: result: yes
-configure:4974: checking for bzero
-configure:4974: gcc -o conftest -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"   conftest.c  >&5
+configure:4708: $? = 0
+configure:4708: ./conftest
+configure:4708: $? = 0
+configure:4718: result: yes
+configure:4739: checking for working vfork
+configure:4849: result: yes
+configure:4877: checking for bzero
+configure:4877: gcc -o conftest -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"   conftest.c  >&5
 <command-line>: warning: missing terminating " character
 conftest.c:53: warning: conflicting types for built-in function 'bzero'
-configure:4974: $? = 0
-configure:4974: result: yes
-configure:4974: checking for memset
-configure:4974: gcc -o conftest -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"   conftest.c  >&5
+configure:4877: $? = 0
+configure:4877: result: yes
+configure:4877: checking for memset
+configure:4877: gcc -o conftest -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"   conftest.c  >&5
 <command-line>: warning: missing terminating " character
 conftest.c:54: warning: conflicting types for built-in function 'memset'
-configure:4974: $? = 0
-configure:4974: result: yes
-configure:4974: checking for realpath
-configure:4974: gcc -o conftest -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"   conftest.c  >&5
+configure:4877: $? = 0
+configure:4877: result: yes
+configure:4877: checking for realpath
+configure:4877: gcc -o conftest -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"   conftest.c  >&5
 <command-line>: warning: missing terminating " character
-configure:4974: $? = 0
-configure:4974: result: yes
-configure:4974: checking for strrchr
-configure:4974: gcc -o conftest -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"   conftest.c  >&5
+configure:4877: $? = 0
+configure:4877: result: yes
+configure:4877: checking for strrchr
+configure:4877: gcc -o conftest -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"   conftest.c  >&5
 <command-line>: warning: missing terminating " character
 conftest.c:56: warning: conflicting types for built-in function 'strrchr'
-configure:4974: $? = 0
-configure:4974: result: yes
-configure:4974: checking for strstr
-configure:4974: gcc -o conftest -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"   conftest.c  >&5
+configure:4877: $? = 0
+configure:4877: result: yes
+configure:4877: checking for strstr
+configure:4877: gcc -o conftest -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"   conftest.c  >&5
 <command-line>: warning: missing terminating " character
 conftest.c:57: warning: conflicting types for built-in function 'strstr'
-configure:4974: $? = 0
-configure:4974: result: yes
-configure:4987: checking whether NLS is requested
-configure:4996: result: yes
-configure:5037: checking for msgfmt
+configure:4877: $? = 0
+configure:4877: result: yes
+configure:4890: checking whether NLS is requested
+configure:4899: result: yes
+configure:4940: checking for msgfmt
 configure: trying /usr/bin/msgfmt...
 0 translated messages.
-configure:5069: result: /usr/bin/msgfmt
-configure:5078: checking for gmsgfmt
-configure:5109: result: /usr/bin/msgfmt
-configure:5160: checking for xgettext
+configure:4972: result: /usr/bin/msgfmt
+configure:4981: checking for gmsgfmt
+configure:5012: result: /usr/bin/msgfmt
+configure:5063: checking for xgettext
 configure: trying /usr/bin/xgettext...
 /usr/bin/xgettext: warning: file `/dev/null' extension `' is unknown; will try C
-configure:5192: result: /usr/bin/xgettext
-configure:5238: checking for msgmerge
+configure:5095: result: /usr/bin/xgettext
+configure:5141: checking for msgmerge
 configure: trying /usr/bin/msgmerge...
-configure:5269: result: /usr/bin/msgmerge
-configure:5306: checking build system type
-configure:5320: result: x86_64-unknown-linux-gnu
-configure:5340: checking host system type
-configure:5353: result: x86_64-unknown-linux-gnu
-configure:5397: checking for ld used by GCC
-configure:5461: result: /usr/bin/ld
-configure:5468: checking if the linker (/usr/bin/ld) is GNU ld
-configure:5481: result: yes
-configure:5488: checking for shared library run path origin
-configure:5501: result: done
-configure:6073: checking for CFPreferencesCopyAppValue
-configure:6091: gcc -o conftest -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"   conftest.c  -Wl,-framework -Wl,CoreFoundation >&5
+configure:5172: result: /usr/bin/msgmerge
+configure:5209: checking build system type
+configure:5223: result: x86_64-unknown-linux-gnu
+configure:5243: checking host system type
+configure:5256: result: x86_64-unknown-linux-gnu
+configure:5300: checking for ld used by GCC
+configure:5364: result: /usr/bin/ld
+configure:5371: checking if the linker (/usr/bin/ld) is GNU ld
+configure:5384: result: yes
+configure:5391: checking for shared library run path origin
+configure:5404: result: done
+configure:5976: checking for CFPreferencesCopyAppValue
+configure:5994: gcc -o conftest -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"   conftest.c  -Wl,-framework -Wl,CoreFoundation >&5
 <command-line>: warning: missing terminating " character
 conftest.c:35:42: error: CoreFoundation/CFPreferences.h: No such file or directory
 conftest.c: In function 'main':
@@ -530,7 +524,7 @@ conftest.c:39: warning: implicit declaration of function 'CFPreferencesCopyAppVa
 conftest.c:39: error: 'NULL' undeclared (first use in this function)
 conftest.c:39: error: (Each undeclared identifier is reported only once
 conftest.c:39: error: for each function it appears in.)
-configure:6091: $? = 1
+configure:5994: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "RhythmCat"
@@ -574,14 +568,14 @@ configure: failed program was:
 |   ;
 |   return 0;
 | }
-configure:6100: result: no
-configure:6107: checking for CFLocaleCopyCurrent
-configure:6125: gcc -o conftest -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"   conftest.c  -Wl,-framework -Wl,CoreFoundation >&5
+configure:6003: result: no
+configure:6010: checking for CFLocaleCopyCurrent
+configure:6028: gcc -o conftest -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"   conftest.c  -Wl,-framework -Wl,CoreFoundation >&5
 <command-line>: warning: missing terminating " character
 conftest.c:35:37: error: CoreFoundation/CFLocale.h: No such file or directory
 conftest.c: In function 'main':
 conftest.c:39: warning: implicit declaration of function 'CFLocaleCopyCurrent'
-configure:6125: $? = 1
+configure:6028: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "RhythmCat"
@@ -625,17 +619,17 @@ configure: failed program was:
 |   ;
 |   return 0;
 | }
-configure:6134: result: no
-configure:6183: checking for GNU gettext in libc
-configure:6203: gcc -o conftest -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"   conftest.c  >&5
+configure:6037: result: no
+configure:6086: checking for GNU gettext in libc
+configure:6106: gcc -o conftest -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"   conftest.c  >&5
 <command-line>: warning: missing terminating " character
-configure:6203: $? = 0
-configure:6212: result: yes
-configure:7003: checking whether to use NLS
-configure:7005: result: yes
-configure:7008: checking where the gettext function comes from
-configure:7019: result: libc
-configure:7198: creating ./config.status
+configure:6106: $? = 0
+configure:6115: result: yes
+configure:6906: checking whether to use NLS
+configure:6908: result: yes
+configure:6911: checking where the gettext function comes from
+configure:6922: result: libc
+configure:7101: creating ./config.status
 
 ## ---------------------- ##
 ## Running config.status. ##
@@ -652,17 +646,17 @@ generated by GNU Autoconf 2.67.  Invocation command line was
 
 on supercat-laptop
 
-config.status:931: creating Makefile
-config.status:931: creating po/Makefile.in
-config.status:931: creating po/Makefile
-config.status:931: creating src/Makefile
-config.status:931: creating data/Makefile
-config.status:931: creating data/conf/Makefile
-config.status:931: creating data/images/Makefile
-config.status:931: creating config.h
-config.status:1111: config.h is unchanged
-config.status:1159: executing depfiles commands
-config.status:1159: executing po-directories commands
+config.status:926: creating Makefile
+config.status:926: creating po/Makefile.in
+config.status:926: creating po/Makefile
+config.status:926: creating src/Makefile
+config.status:926: creating data/Makefile
+config.status:926: creating data/conf/Makefile
+config.status:926: creating data/images/Makefile
+config.status:926: creating config.h
+config.status:1106: config.h is unchanged
+config.status:1154: executing depfiles commands
+config.status:1154: executing po-directories commands
 
 ## ---------------- ##
 ## Cache variables. ##
@@ -694,10 +688,6 @@ ac_cv_env_GTK2_CFLAGS_set=
 ac_cv_env_GTK2_CFLAGS_value=
 ac_cv_env_GTK2_LIBS_set=
 ac_cv_env_GTK2_LIBS_value=
-ac_cv_env_GTKSOURCEVIEW2_CFLAGS_set=
-ac_cv_env_GTKSOURCEVIEW2_CFLAGS_value=
-ac_cv_env_GTKSOURCEVIEW2_LIBS_set=
-ac_cv_env_GTKSOURCEVIEW2_LIBS_value=
 ac_cv_env_LDFLAGS_set=
 ac_cv_env_LDFLAGS_value=
 ac_cv_env_LIBS_set=
@@ -778,8 +768,6 @@ pkg_cv_GSTREAMER_CFLAGS='-pthread -I/usr/include/gstreamer-0.10 -I/usr/include/g
 pkg_cv_GSTREAMER_LIBS='-pthread -lgstreamer-0.10 -lgobject-2.0 -lgmodule-2.0 -lxml2 -lgthread-2.0 -lrt -lglib-2.0  '
 pkg_cv_GTK2_CFLAGS='-pthread -I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/gio-unix-2.0/ -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng12 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include  '
 pkg_cv_GTK2_LIBS='-pthread -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lpangoft2-1.0 -lgdk_pixbuf-2.0 -lm -lpangocairo-1.0 -lcairo -lgio-2.0 -lpango-1.0 -lfreetype -lfontconfig -lgobject-2.0 -lgmodule-2.0 -lgthread-2.0 -lrt -lglib-2.0  '
-pkg_cv_GTKSOURCEVIEW2_CFLAGS='-pthread -I/usr/include/gtksourceview-2.0 -I/usr/include/libxml2 -I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/gio-unix-2.0/ -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng12 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include  '
-pkg_cv_GTKSOURCEVIEW2_LIBS='-pthread -lgtksourceview-2.0 -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lpangoft2-1.0 -lgdk_pixbuf-2.0 -lm -lpangocairo-1.0 -lcairo -lgio-2.0 -lpango-1.0 -lfreetype -lfontconfig -lgobject-2.0 -lgmodule-2.0 -lgthread-2.0 -lrt -lglib-2.0  '
 
 ## ----------------- ##
 ## Output variables. ##
@@ -819,8 +807,6 @@ GSTREAMER_CFLAGS='-pthread -I/usr/include/gstreamer-0.10 -I/usr/include/glib-2.0
 GSTREAMER_LIBS='-pthread -lgstreamer-0.10 -lgobject-2.0 -lgmodule-2.0 -lxml2 -lgthread-2.0 -lrt -lglib-2.0  '
 GTK2_CFLAGS='-pthread -I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/gio-unix-2.0/ -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng12 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include  '
 GTK2_LIBS='-pthread -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lpangoft2-1.0 -lgdk_pixbuf-2.0 -lm -lpangocairo-1.0 -lcairo -lgio-2.0 -lpango-1.0 -lfreetype -lfontconfig -lgobject-2.0 -lgmodule-2.0 -lgthread-2.0 -lrt -lglib-2.0  '
-GTKSOURCEVIEW2_CFLAGS='-pthread -I/usr/include/gtksourceview-2.0 -I/usr/include/libxml2 -I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/gio-unix-2.0/ -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng12 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include  '
-GTKSOURCEVIEW2_LIBS='-pthread -lgtksourceview-2.0 -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lpangoft2-1.0 -lgdk_pixbuf-2.0 -lm -lpangocairo-1.0 -lcairo -lgio-2.0 -lpango-1.0 -lfreetype -lfontconfig -lgobject-2.0 -lgmodule-2.0 -lgthread-2.0 -lrt -lglib-2.0  '
 INSTALL_DATA='${INSTALL} -m 644'
 INSTALL_PROGRAM='${INSTALL}'
 INSTALL_SCRIPT='${INSTALL}'

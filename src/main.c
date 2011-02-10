@@ -131,6 +131,7 @@ void rc_initial(int *argc, char **argv[])
     rc_plist_init();
     rc_player_object_init();
     rc_plist_load_argument(remaining_args);
+    rc_plugin_load("plugins/desktop-lyric/desktop-lyric.conf");
 }
 
 gchar *rc_get_data_dir(char *arg0)

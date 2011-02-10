@@ -41,6 +41,7 @@ typedef struct _PluginData
 
 /* Function */
 gboolean rc_plugin_init();
+gboolean rc_plugin_load(const gchar *);
 gboolean rc_module_load(const gchar *);
 gboolean rc_python_load(const gchar *);
 
