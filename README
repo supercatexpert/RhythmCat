@@ -10,11 +10,11 @@ your music...
 
 Developing platform:
 
-Operating System: Debian Lenny/5.0.4 for AMD64
-Compiler: gcc 4.3
+Operating System: Debian Squeeze/6.0.0 for AMD64
+Compiler: gcc 4.4
 Programming Language: C
-Dependent Libraries: GTK+-2.0 Gstreamer-0.10 Gstreamer-plugins-base-0.10
-                     Gstreamer-plugins-good-0.10 libgtksourceview2.0-0
+Dependent Libraries: GTK+-2.0(>=2.14) Gstreamer-0.10 Gstreamer-plugins-base-0.10
+                     Gstreamer-plugins-good-0.10
 Developing stage:
 
 Alpha / Work in process.
@@ -36,8 +36,8 @@ should check the developing environment, and the libraries which this program
 depends. In Debian/Ubuntu, you can run the commands below to help you install
 the packages that the compiling needed:
 
-sudo apt-get install build-essential gnome-devel libgstreamer0.10-dev \
- libgstreamer-plugins-base0.10-dev libgtksourceview2.0-dev  
+sudo apt-get install build-essential libgtk2.0-dev libgstreamer0.10-dev \
+ libgstreamer-plugins-base0.10-dev
 
 Then you can try to compile it (under i386/AMD64 architecture):
 
@@ -58,10 +58,10 @@ RhythmCat 是一个可以在Linux平台下工作的音乐播放器。它可以�
 
 开发环境:
 
-操作系统: Debian Lenny/5.0.3 for AMD64
-编译器: gcc 4.3
+操作系统: Debian Squeeze/6.0.0 for AMD64
+编译器: gcc 4.4
 编程语言: C
-依赖的库: GTK+-2.0 Gstreamer-0.10 Gstreamer-plugins-base-0.10
+依赖的库: GTK+-2.0(>=2.14) Gstreamer-0.10 Gstreamer-plugins-base-0.10
          Gstreamer-plugins-good-0.10
 开发阶段:
 
@@ -85,8 +85,8 @@ http://www.gnu.org/licenses/gpl.txt
 您编译之前，您需要检查您的开发环境和所需要的库。在Debian/Ubuntu下，您可以运行以下命
 令来安装编译过程所需要的包：
 
-sudo apt-get install build-essential gnome-devel libgstreamer0.10-dev \
- libgstreamer-plugins-base0.10-dev libgtksourceview2.0-dev 
+sudo apt-get install build-essential libgtk2.0-dev libgstreamer0.10-dev \
+ libgstreamer-plugins-base0.10-dev
 
 然后您可以开始编译 (在 i386/AMD64 平台下):
 

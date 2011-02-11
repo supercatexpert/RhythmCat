@@ -62,8 +62,10 @@ GType rc_player_get_type();
 RCPlayer *rc_player_new();
 
 gboolean rc_player_object_init();
+GObject *rc_player_object_get();
 void rc_player_object_signal_emit_simple(const char *);
 gulong rc_player_object_signal_connect_simple(const char *, GCallback);
+void rc_player_object_signal_disconnect(gulong);
 
 #endif
 

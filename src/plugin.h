@@ -32,12 +32,28 @@
 #include <gtk/gtk.h>
 #include <gst/gst.h>
 
+typedef enum
+{
+    PLUGIN_TYPE_MODULE = 1,
+    PLUGIN_TYPE_PYTHON = 2
+}PluginType;
+
 typedef struct _PluginData
 {
-    gchar *name;
-    gchar *comment;
     gchar *path;
+    gchar *name;
+    gchar *desc;
+    gchar *author;
+    gchar *version;
+    PluginType type;
 }PluginData;
+
+typedef struct _ModuleData
+{
+    G_MODULE_EXPORT gint (*module_init)();
+    G_MODULE_EXPORT void (*module_exit)();
+    G_MODULE_EXPORT void (*module_configure)();
+}ModuleData;
 
 /* Function */
 gboolean rc_plugin_init();

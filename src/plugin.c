@@ -1,5 +1,5 @@
 /*
- * Plugin
+ * Plugin Support
  * Load and manage the plugins.
  *
  * plugin.c
@@ -29,7 +29,7 @@
 #include "playlist.h"
 #include "debug.h"
 
-GList *plugin_data_list = NULL;
+static GList *plugin_list = NULL;
 
 gboolean rc_plugin_init()
 {
@@ -39,10 +39,14 @@ gboolean rc_plugin_init()
 gboolean rc_plugin_load(const gchar *filename)
 {
     GKeyFile *keyfile;
+    PluginData *plugin_data = NULL;
     GError *error = NULL;
+    gchar *plugin_dir = NULL, *plugin_path = NULL;
     gchar *plugin_type = NULL, *plugin_file = NULL, *plugin_name = NULL;
     gchar *plugin_desc = NULL, *plugin_author = NULL;
     gchar *plugin_copyright = NULL, *plugin_website = NULL;
+    gchar *plugin_version = NULL;
+    gint plugin_typenum = 0;
     keyfile = g_key_file_new();
     if(!g_key_file_load_from_file(keyfile, filename, G_KEY_FILE_NONE, NULL))
     {
@@ -63,7 +67,33 @@ gboolean rc_plugin_load(const gchar *filename)
         NULL);
     plugin_website = g_key_file_get_string(keyfile, "RC Plugin", "Website",
         NULL);
-
+    plugin_version = g_key_file_get_string(keyfile, "RC Plugin", "Version",
+        NULL);
+    if(strlen(plugin_name)<=0) goto error_out;
+    plugin_dir = g_path_get_dirname(filename);
+    plugin_path = g_strdup_printf("%s%c%s", plugin_dir, G_DIR_SEPARATOR,
+        plugin_file);
+    g_free(plugin_dir);
+    plugin_dir = NULL;
+    g_free(plugin_file);
+    plugin_file = NULL;
+    if(g_strcmp0(plugin_type, "Module")==0)
+    {
+        plugin_typenum = PLUGIN_TYPE_MODULE;
+        if(!rc_module_load(plugin_path)) goto error_out;
+    }
+    else if(g_strcmp0(plugin_type, "Python")==0)
+    {
+        plugin_typenum = PLUGIN_TYPE_PYTHON;
+    }
+    else goto error_out;
+    plugin_data = g_malloc0(sizeof(PluginData));
+    plugin_data->path = plugin_path;
+    plugin_data->name = plugin_name;
+    plugin_data->desc = plugin_desc;
+    plugin_data->author = plugin_author;
+    plugin_data->version = plugin_version;
+    plugin_data->type = plugin_typenum;
     g_printf("Plugin: %s\nType: %s\nFile: %s\nDescription: %s\n", plugin_name,
         plugin_type, plugin_file, plugin_desc);
 
@@ -71,6 +101,9 @@ gboolean rc_plugin_load(const gchar *filename)
     return TRUE;
 
     error_out:
+        rc_debug_perror("Plugin-ERROR: Cannot load plugin!\n");
+        if(plugin_dir!=NULL) g_free(plugin_dir);
+        if(plugin_path!=NULL) g_free(plugin_path);
         if(plugin_type!=NULL) g_free(plugin_type);
         if(plugin_file!=NULL) g_free(plugin_file);
         if(plugin_name!=NULL) g_free(plugin_name);
@@ -78,7 +111,8 @@ gboolean rc_plugin_load(const gchar *filename)
         if(plugin_author!=NULL) g_free(plugin_author);
         if(plugin_copyright!=NULL) g_free(plugin_copyright);
         if(plugin_website!=NULL) g_free(plugin_website);
-        g_error_free(error);
+        if(plugin_version!=NULL) g_free(plugin_version);
+        if(error!=NULL) g_error_free(error);
         g_key_file_free(keyfile);
         return FALSE;
 }
@@ -86,9 +120,21 @@ gboolean rc_plugin_load(const gchar *filename)
 gboolean rc_module_load(const gchar *filename)
 {
     GModule *module;
+    ModuleData module_data;
     module = g_module_open(filename, G_MODULE_BIND_LAZY);
     if(module==NULL) return FALSE;
-    
+    g_printf("OK!\n");
+    if(!g_module_symbol(module, "rc_plugin_module_init",
+        (gpointer *)&module_data.module_init))
+        return FALSE;
+    if(!g_module_symbol(module, "rc_plugin_module_exit",
+        (gpointer *)&module_data.module_exit))
+        return FALSE;
+    if(!g_module_symbol(module, "rc_plugin_module_configure",
+        (gpointer *)&module_data.module_configure))
+        return FALSE;
+
+    module_data.module_init();
     return TRUE;
 }
 

@@ -538,6 +538,12 @@ void rc_gui_list2_dnd_data_received(GtkWidget *widget,
     GtkTreePath *path_drop = NULL;
     gint list_length = 0;
     gboolean insert_flag = FALSE;
+    GList *path_list = NULL;
+    gchar *uris = NULL;
+    gchar **uri_array = NULL;
+    gchar *uri = NULL;
+    guint count = 0;
+    gboolean flag = FALSE;
     gtk_tree_view_get_dest_row_at_pos(GTK_TREE_VIEW(
         rc_ui->list2_tree_view), x,y, &path_drop, &pos);
     if(path_drop!=NULL)
@@ -551,9 +557,8 @@ void rc_gui_list2_dnd_data_received(GtkWidget *widget,
     {
         case 1: 
         {
-            GList *path_list = NULL;
-            gint count = 0;
-            memcpy(&path_list, seldata->data, sizeof(path_list));
+            memcpy(&path_list, gtk_selection_data_get_data(seldata),
+                sizeof(path_list));
             if(path_list==NULL) break;
             length = g_list_length(path_list);
             indices = g_malloc(length*sizeof(gint));
@@ -616,14 +621,8 @@ void rc_gui_list2_dnd_data_received(GtkWidget *widget,
         }
         case 6:
         {
-            gchar *uris = NULL;
-            gchar **uri_array = NULL;
-            gchar *uri = NULL;
-            guint count = 0;
-            gboolean flag = FALSE;
-            if(seldata->data!=NULL)
-                uris = (gchar *)seldata->data;
-            else break;
+            uris = (gchar *)gtk_selection_data_get_data(seldata);
+            if(uri==NULL) break;
             if(pos==GTK_TREE_VIEW_DROP_AFTER ||
                 pos==GTK_TREE_VIEW_DROP_INTO_OR_AFTER) target++;
             list_length = gtk_tree_model_iter_n_children(
@@ -647,7 +646,7 @@ void rc_gui_list2_dnd_data_received(GtkWidget *widget,
         }
         case 7:
         {
-            g_printf("%s",seldata->data);
+            g_printf("%s", gtk_selection_data_get_data(seldata));
         }
         default: break;
     }
@@ -744,7 +743,7 @@ void rc_gui_list1_dnd_data_received(GtkWidget *widget,
     {
         case 0:
         {
-            source = *(seldata->data);
+            source = *(gtk_selection_data_get_data(seldata));
             if(pos==GTK_TREE_VIEW_DROP_AFTER ||
                 pos==GTK_TREE_VIEW_DROP_INTO_OR_AFTER)
             {
@@ -768,7 +767,8 @@ void rc_gui_list1_dnd_data_received(GtkWidget *widget,
         case 1:
         {
             if(target==rc_gui_list1_get_selected_index()) break;
-            memcpy(&path_list, seldata->data, sizeof(path_list));
+            memcpy(&path_list, gtk_selection_data_get_data(seldata),
+                sizeof(path_list));
             if(path_list==NULL) break;
             length = g_list_length(path_list);
             path_list = g_list_sort_with_data(path_list, (GCompareDataFunc)

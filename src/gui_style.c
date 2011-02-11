@@ -86,7 +86,7 @@ void rc_gui_style_init()
     pango_attr_list_unref(length_attr_list);
     gtk_label_set_attributes(GTK_LABEL(rc_ui->lrc_label), lrc_attr_list);
     pango_attr_list_unref(lrc_attr_list);
-    rc_ui->style = gtk_style_copy(rc_ui->main_window->style);
+    rc_ui->style = gtk_style_copy(gtk_widget_get_style(rc_ui->main_window));
     gdk_color_parse("#F0F0F0", &color);
     gtk_widget_modify_fg(rc_ui->title_label, GTK_STATE_NORMAL, &color);
     gtk_widget_modify_fg(rc_ui->artist_label, GTK_STATE_NORMAL, &color);

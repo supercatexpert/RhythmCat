@@ -46,7 +46,6 @@ void rc_gui_lrc_init()
     rc_glrc.lrc_line_num = -1L;
     rc_glrc.lrc_time_delay = 0L;
     rc_glrc.lyric_data = NULL;
-    rc_glrc.lyric_line = NULL;
     rc_glrc.lyric_font = "Monospace 10";
     rc_glrc.lyric_line_ds = 0;
     rc_glrc.background[0] = 0.23046875;
@@ -97,7 +96,7 @@ void rc_gui_lrc_draw_bg()
         else
             rc_glrc.bg_image=NULL;
     }
-    cr = gdk_cairo_create(rc_glrc.lrc_scene->window);
+    cr = gdk_cairo_create(gtk_widget_get_window(rc_glrc.lrc_scene));
     if(rc_glrc.bg_image!=NULL)
     {
         cairo_set_source_surface(cr, rc_glrc.bg_image, 0, 0);
@@ -136,8 +135,11 @@ gboolean rc_gui_lrc_show(GtkWidget *widget, gpointer data)
     gboolean lrc_last_line = FALSE;
     PangoLayout *layout;
     PangoFontDescription *desc;
-    if(!GTK_WIDGET_DRAWABLE(rc_glrc.lrc_scene)) return TRUE;
-    g_object_get(G_OBJECT(rc_glrc.lrc_scene),"visible",&visible,NULL);
+    GdkWindow *lrc_window;
+    if(!GTK_IS_WIDGET(rc_glrc.lrc_scene)) return TRUE;
+    lrc_window = gtk_widget_get_window(rc_glrc.lrc_scene);
+    if(!GDK_IS_DRAWABLE(lrc_window)) return TRUE;
+    g_object_get(G_OBJECT(rc_glrc.lrc_scene), "visible", &visible, NULL);
     if(!visible) return TRUE;
     if(!rc_glrc.lyric_flag) return TRUE;
     if(rc_glrc.lyric_data==NULL) return TRUE;
@@ -152,8 +154,9 @@ gboolean rc_gui_lrc_show(GtkWidget *widget, gpointer data)
         rc_glrc.text_hilight[count] = rc_setting->lrc_hi_color[count];
         rc_glrc.background[count] = rc_setting->lrc_bg_color[count];
     }
-    gdk_window_get_size(rc_glrc.lrc_scene->window, &width, &height);
-    lrc_cr = gdk_cairo_create(rc_glrc.lrc_scene->window);
+    gdk_drawable_get_size(GDK_DRAWABLE(lrc_window),
+        &width, &height);
+    lrc_cr = gdk_cairo_create(lrc_window);
     layout = pango_cairo_create_layout(lrc_cr);
     pango_layout_set_text(layout, "Font size test!", -1);
     desc = pango_font_description_from_string(rc_glrc.lyric_font);
@@ -230,9 +233,13 @@ gboolean rc_gui_lrc_show(GtkWidget *widget, gpointer data)
 
 gboolean rc_gui_lrc_expose(GtkWidget *widget, gpointer data)
 {
-    if(!GTK_WIDGET_DRAWABLE(rc_glrc.lrc_scene)) return FALSE;
-    gint i;
+    gboolean visible = FALSE;
+    gint i = 0;
     static RCSetting *rc_setting = NULL;
+    if(!GDK_IS_DRAWABLE(gtk_widget_get_window(rc_glrc.lrc_scene)))
+        return TRUE;
+    g_object_get(G_OBJECT(rc_glrc.lrc_scene), "visible", &visible, NULL);
+    if(!visible) return FALSE;
     rc_setting = rc_set_get_setting();
     for(i=0;i<3;i++) rc_glrc.background[i] = rc_setting->lrc_bg_color[i];
     rc_gui_lrc_draw_bg();
@@ -246,6 +253,7 @@ gboolean rc_gui_lrc_update(GtkWidget *widget, gpointer data)
     guint64 time;
     LrcData *lrc_data;
     guint count = 0;
+    gboolean visible = FALSE;
     static gint i = -2;
     if(rc_glrc.lyric_new_flag)
     {
@@ -253,26 +261,26 @@ gboolean rc_gui_lrc_update(GtkWidget *widget, gpointer data)
         rc_glrc.lyric_new_flag = FALSE;
     }
     rc_glrc.lyric_data = rc_lrc_get_lrc_data();
-    const GList *list_foreach = rc_glrc.lyric_data;
+    const GList *list_foreach = NULL;
     if(rc_glrc.lyric_data==NULL) return TRUE;
     rc_glrc.lrc_line_length = g_list_length((GList *)rc_glrc.lyric_data);
     if(rc_glrc.lrc_line_length<1) return TRUE;
     playing_time = rc_core_get_play_position() / GST_MSECOND / 10;
-    while(list_foreach!=NULL)
+    for(list_foreach=rc_glrc.lyric_data;list_foreach!=NULL;
+        list_foreach = g_list_next(list_foreach))
     {
         lrc_data = list_foreach->data;
         time = lrc_data->time;
         if(time<=playing_time)
         {
-            rc_glrc.lyric_line = list_foreach;
             rc_glrc.lrc_line_num = count;
         }
         else if(playing_time<((LrcData *)(rc_glrc.lyric_data->data))->time)
-            rc_glrc.lrc_line_num = -1;
-        list_foreach = g_list_next(list_foreach);
+            rc_glrc.lrc_line_num = -1;     
         count++;
     }
-    if(!GTK_WIDGET_DRAWABLE(rc_glrc.lrc_scene)) return TRUE;
+    g_object_get(G_OBJECT(rc_glrc.lrc_scene), "visible", &visible, NULL);
+    if(!visible) return TRUE;
     if(rc_glrc.lyric_flag) gtk_widget_queue_draw(rc_glrc.lrc_scene);
     return TRUE;   
 }

@@ -58,6 +58,7 @@ static gboolean rc_gui_refresh_time_info(gpointer data)
     gdouble persent = 0.0;
     gint lrc_label_width, lrc_vport_width;
     gint lrc_width;
+    gboolean sensitive = FALSE;
     gdouble lrc_vport_lower, lrc_vport_upper, lrc_vport_value;
     const LrcData *lrc_data;
     pos = rc_core_get_play_position();
@@ -66,8 +67,9 @@ static gboolean rc_gui_refresh_time_info(gpointer data)
     {
         rc_gui_time_label_set_text(pos);
     }
-    if(len!=0 && rc_gui.update_seek_scale_flag &&
-        GTK_WIDGET_SENSITIVE(rc_gui.time_scroll_bar)) 
+    g_object_get(G_OBJECT(rc_gui.time_scroll_bar), "sensitive", &sensitive,
+        NULL);
+    if(len!=0 && rc_gui.update_seek_scale_flag && sensitive) 
     {    
         persent = (gdouble)pos / len;
         gtk_range_set_value(GTK_RANGE(rc_gui.time_scroll_bar), persent*100);
@@ -76,9 +78,10 @@ static gboolean rc_gui_refresh_time_info(gpointer data)
     if(lrc_data!=NULL)
     {
         gtk_label_set_text(GTK_LABEL(rc_gui.lrc_label), lrc_data->text);
-        gdk_window_get_size(rc_gui.lrc_label->window, &lrc_label_width, NULL);
-        gdk_window_get_size(rc_gui.lrc_viewport->window, &lrc_vport_width,
-            NULL);
+        gdk_drawable_get_size(GDK_DRAWABLE(gtk_widget_get_window(
+            rc_gui.lrc_label)), &lrc_label_width, NULL);
+        gdk_drawable_get_size(GDK_DRAWABLE(gtk_widget_get_window(
+            rc_gui.lrc_label)), &lrc_vport_width, NULL);
         lrc_width = lrc_label_width - lrc_vport_width;
         lrc_vport_lower = gtk_adjustment_get_lower(rc_gui.lrc_vport_adj);
         lrc_vport_value = lrc_vport_lower;
@@ -355,8 +358,8 @@ gboolean rc_gui_init()
     rc_gui.status_progress = gtk_progress_bar_new();
     rc_gui.lrc_vport_adj = gtk_viewport_get_hadjustment(GTK_VIEWPORT(
         rc_gui.lrc_viewport));
-    gtk_status_icon_set_tooltip_text(rc_gui.tray_icon,
-        _("RhythmCat Music Player"));
+    g_object_set(G_OBJECT(rc_gui.tray_icon), "has-tooltip", TRUE,
+        "tooltip-text", _("RhythmCat Music Player"), NULL);
     gtk_viewport_set_shadow_type(GTK_VIEWPORT(rc_gui.lrc_viewport),
         GTK_SHADOW_NONE);
     gtk_window_set_title(GTK_WINDOW(rc_gui.main_window),
@@ -853,7 +856,14 @@ void rc_gui_set_list2_menu(GtkTreeView *widget, gpointer data)
 
 gboolean rc_gui_show_playlist_page(GtkMenuItem *widget, gpointer data)
 {
-    gtk_notebook_set_current_page(GTK_NOTEBOOK(rc_gui.plist_notebook), 0);
+    gint pos = gtk_notebook_get_current_page(GTK_NOTEBOOK(
+        rc_gui.plist_notebook));
+    if(pos!=0)
+    {
+        gtk_notebook_set_current_page(GTK_NOTEBOOK(rc_gui.plist_notebook), 0);
+        gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(
+            ui_menu->view_menu_items[MENU_VIEW_LIST]), TRUE);
+    }
     return FALSE;
 }
 
@@ -863,7 +873,14 @@ gboolean rc_gui_show_playlist_page(GtkMenuItem *widget, gpointer data)
 
 gboolean rc_gui_show_lyric_page(GtkMenuItem *widget, gpointer data)
 {
-    gtk_notebook_set_current_page(GTK_NOTEBOOK(rc_gui.plist_notebook), 1);
+    gint pos = gtk_notebook_get_current_page(GTK_NOTEBOOK(
+        rc_gui.plist_notebook));
+    if(pos!=1)
+    {
+        gtk_notebook_set_current_page(GTK_NOTEBOOK(rc_gui.plist_notebook), 1);
+        gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(
+            ui_menu->view_menu_items[MENU_VIEW_LYRIC]), TRUE);
+    }
     return FALSE;
 }
 
@@ -873,7 +890,14 @@ gboolean rc_gui_show_lyric_page(GtkMenuItem *widget, gpointer data)
 
 gboolean rc_gui_show_eq_page(GtkMenuItem *widget, gpointer data)
 {
-    gtk_notebook_set_current_page(GTK_NOTEBOOK(rc_gui.plist_notebook), 2);
+    gint pos = gtk_notebook_get_current_page(GTK_NOTEBOOK(
+        rc_gui.plist_notebook));
+    if(pos!=2)
+    {
+        gtk_notebook_set_current_page(GTK_NOTEBOOK(rc_gui.plist_notebook), 2);
+        gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(
+            ui_menu->view_menu_items[MENU_VIEW_EQ]), TRUE);
+    }
     return FALSE;
 }
 
@@ -888,7 +912,7 @@ void rc_gui_refresh_music_info(GtkMenuItem *widget, gpointer data)
         rc_plist_list2_refresh(list1_index);
 }
 
-/*
+/*GTK_WIDGET_SENSITIVE
  * Set the image of cover.
  */
 
@@ -936,9 +960,11 @@ gboolean rc_gui_set_cover_image(gchar *filename)
 
 void rc_gui_show_hide_window(GtkWidget *widget, gpointer data)
 {
+    gboolean visible = FALSE;
     RCSetting *setting = rc_set_get_setting();
     if(!setting->min_to_tray) return;
-    if(gtk_widget_get_visible(rc_gui.main_window))
+    g_object_get(G_OBJECT(rc_gui.main_window), "visible", &visible, NULL);
+    if(visible)
     {
         gtk_widget_hide(GTK_WIDGET(rc_gui.main_window));
     }

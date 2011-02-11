@@ -65,9 +65,9 @@ static void rc_player_class_init(RCPlayerClass *class)
         G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCPlayerClass, player_stop),
         NULL, NULL, g_cclosure_marshal_VOID__VOID,
         G_TYPE_NONE, 0, NULL);
-    object_signals[PLAYER_PAUSE] = g_signal_new("player-pause", RC_PLAYER_TYPE,
-        G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCPlayerClass, player_pause),
-        NULL, NULL, g_cclosure_marshal_VOID__VOID,
+    object_signals[PLAYER_PAUSE] = g_signal_new("player-pause",
+        RC_PLAYER_TYPE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCPlayerClass,
+        player_pause), NULL, NULL, g_cclosure_marshal_VOID__VOID,
         G_TYPE_NONE, 0, NULL);
     object_signals[PLAYER_CONTINUE] = g_signal_new("player-continue",
         RC_PLAYER_TYPE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCPlayerClass,
@@ -114,6 +114,11 @@ gboolean rc_player_object_init()
     return TRUE;
 }
 
+GObject *rc_player_object_get()
+{
+    return player_object;
+}
+
 void rc_player_object_signal_emit_simple(const char *name)
 {
     if(player_object==NULL) return;
@@ -125,5 +130,10 @@ gulong rc_player_object_signal_connect_simple(const char *name,
 {
     if(player_object==NULL) return 0;
     return g_signal_connect(player_object, name, callback, NULL);
+}
+
+void rc_player_object_signal_disconnect(gulong id)
+{
+    g_signal_handler_disconnect(player_object, id);
 }
 

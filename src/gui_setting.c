@@ -60,13 +60,17 @@ static gboolean setting_changed = FALSE;
 
 void rc_gui_create_setting_window(GtkWidget *widget, gpointer data)
 {
-    if(setting_window!=NULL && GTK_IS_WIDGET(setting_window) &&
-        GTK_WIDGET_REALIZED(setting_window) && 
-        GTK_WIDGET_VISIBLE(setting_window))
-        return;
     GtkWidget *vbox1;
     GtkWidget *hbox1, *hbox2;
     gint i;
+    gboolean visible = FALSE;
+    if(G_IS_OBJECT(setting_window))
+        g_object_get(G_OBJECT(setting_window), "visible", &visible, NULL);
+    if(setting_window!=NULL && GTK_IS_WIDGET(setting_window))
+    {
+        if(!visible) gtk_widget_show_all(setting_window);
+        return;
+    }
     rc_setting = rc_set_get_setting();
     rc_ui = rc_gui_get_gui();
     setting_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
