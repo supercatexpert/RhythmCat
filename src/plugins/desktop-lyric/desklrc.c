@@ -2,7 +2,7 @@
  * Desktop Lyric Plugin
  * Show lyric on the desktop.
  *
- * plugin.c
+ * desklrc.c
  * This file is part of <RhythmCat>
  *
  * Copyright (C) 2010 - SuperCat, license: GPL v3

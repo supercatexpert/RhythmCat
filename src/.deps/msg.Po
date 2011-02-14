@@ -13,8 +13,6 @@ msg.o: msg.c msg.h /usr/include/stdio.h /usr/include/features.h \
  /usr/include/bits/select.h /usr/include/bits/sigset.h \
  /usr/include/bits/time.h /usr/include/sys/sysmacros.h \
  /usr/include/bits/pthreadtypes.h /usr/include/alloca.h \
- /usr/include/unistd.h /usr/include/bits/posix_opt.h \
- /usr/include/bits/confname.h /usr/include/getopt.h \
  /usr/include/glib-2.0/glib.h /usr/include/glib-2.0/glib/galloca.h \
  /usr/include/glib-2.0/glib/gtypes.h \
  /usr/lib/glib-2.0/include/glibconfig.h \
@@ -509,6 +507,8 @@ msg.o: msg.c msg.h /usr/include/stdio.h /usr/include/features.h \
  /usr/include/gstreamer-0.10/gst/gstxml.h \
  /usr/include/gstreamer-0.10/gst/gstcompat.h /usr/include/libpng12/png.h \
  /usr/include/zlib.h /usr/include/zconf.h /usr/include/zlibdefs.h \
+ /usr/include/unistd.h /usr/include/bits/posix_opt.h \
+ /usr/include/bits/confname.h /usr/include/getopt.h \
  /usr/include/libpng12/pngconf.h /usr/include/setjmp.h \
  /usr/include/bits/setjmp.h /usr/include/string.h \
  /usr/include/bits/string.h /usr/include/bits/string2.h \
@@ -578,14 +578,6 @@ msg.h:
 /usr/include/bits/pthreadtypes.h:
 
 /usr/include/alloca.h:
-
-/usr/include/unistd.h:
-
-/usr/include/bits/posix_opt.h:
-
-/usr/include/bits/confname.h:
-
-/usr/include/getopt.h:
 
 /usr/include/glib-2.0/glib.h:
 
@@ -1712,6 +1704,14 @@ msg.h:
 /usr/include/zconf.h:
 
 /usr/include/zlibdefs.h:
+
+/usr/include/unistd.h:
+
+/usr/include/bits/posix_opt.h:
+
+/usr/include/bits/confname.h:
+
+/usr/include/getopt.h:
 
 /usr/include/libpng12/pngconf.h:
 

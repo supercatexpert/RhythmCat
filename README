@@ -3,18 +3,17 @@ English Introduction
 Introduction:
 
 RhythmCat is a music player which can be running under Linux. It can be used as
- a normal music player, and it can also show lyrics in a single window, or even
- on the desktop. It can help you mix your voice into the original music. And
-this player can help you convert the format of your music files, or cut/join
-your music...
+a normal music player, and it can also show lyrics in the player window, it can
+extend its functions by plugins...
 
 Developing platform:
 
 Operating System: Debian Squeeze/6.0.0 for AMD64
-Compiler: gcc 4.4
+Compiler: gcc 4.4.5
 Programming Language: C
-Dependent Libraries: GTK+-2.0(>=2.14) Gstreamer-0.10 Gstreamer-plugins-base-0.10
-                     Gstreamer-plugins-good-0.10
+Dependent Libraries: GTK+-2.0(>=2.14) Gstreamer-0.10 
+                     Gstreamer-plugins-base-0.10 Gstreamer-plugins-good-0.10
+
 Developing stage:
 
 Alpha / Work in process.
@@ -22,26 +21,45 @@ Alpha / Work in process.
 License:
 
 GNU GPL v3.
-You MUST accept the GPL v3 License, then you can use this program and the source
-code.
+You MUST accept the GPL v3 License, then you can use this program and the
+source code.
 You can get the GPL v3 License (plain text) here:
 http://www.gnu.org/licenses/gpl.txt
 Or read the COPYING file in the source archive.
 
-How to use this program:
+How to install this program:
 
-Now this program is under developing, so we only provide source code. You
-need to compile it, then you can use this program. Before you compile it, you
-should check the developing environment, and the libraries which this program
-depends. In Debian/Ubuntu, you can run the commands below to help you install
-the packages that the compiling needed:
+The source codes of latest version can be downloaded by SVN:
+
+svn checkout http://rhythmcat.googlecode.com/svn/trunk/ rhythmcat-read-only
+
+Or get the latest version by Git:
+
+git clone git://github.com/supercatexpert/RhythmCat.git
+
+We now provide source code and binaries for Linux on both i386 and AMD64 (you
+can find the package of source code and binaries in the Downloads page).
+Binaries can be executed directly in most of desktop distributions of Linux.
+If you cannot run the program, you should check if the needed libraries are
+installed. Notice that if you downloaded the source code, you should compile
+it, then you can use this program. Before you compile it, you should check the
+developing environment, and the libraries which this program depends. In
+Debian/Ubuntu, you can run the commands below to help you install the packages
+that the compiling needed: 
 
 sudo apt-get install build-essential libgtk2.0-dev libgstreamer0.10-dev \
- libgstreamer-plugins-base0.10-dev
+    libgstreamer-plugins-base0.10-dev 
 
-Then you can try to compile it (under i386/AMD64 architecture):
+If you want to play MP3 or other Restricted Format, please install Gstreamer
+Bad & Ugly plugins. In Debian/Ubuntu, you can just run:
 
-make rebuild
+sudo apt-get install gstreamer0.10-plugins-bad gstreamer0.10-plugins-ugly
+
+Then you can try to compile it:
+
+./configure
+make
+sudo make install
 
 This program is just in alpha stage. We provide no WARRANTY. 
 If you found any bugs, please send an e-mail to me, and report the bugs you
@@ -52,14 +70,13 @@ Google Code project page.
 -------------------------------------------------------------------------------
 介绍:
 
-RhythmCat 是一个可以在Linux平台下工作的音乐播放器。它可以在一个单独的窗口内显示歌
-词，甚至可以在桌面上显示。它也可以帮助您将您的声音与伴奏合成(卡拉OK模式)。这个播放器
-也能让您将音乐在不同的格式间转换，或者剪辑/合成您的音乐。
+RhythmCat 是一个可以在Linux平台下工作的音乐播放器。它可以在播放器的窗口内显示歌词，
+也可以通过插件扩展其功能。
 
 开发环境:
 
 操作系统: Debian Squeeze/6.0.0 for AMD64
-编译器: gcc 4.4
+编译器: gcc 4.4.5
 编程语言: C
 依赖的库: GTK+-2.0(>=2.14) Gstreamer-0.10 Gstreamer-plugins-base-0.10
          Gstreamer-plugins-good-0.10
@@ -79,18 +96,34 @@ http://www.gnu.org/licenses/gpl.txt
 您无权使用本程序及源代码。尤其请中国国内的IT从业人员注意。我们保留对违反GPL v3协议
 使用本程序以及源代码的企业及个人提起诉讼的权利。
 
-如何使用该程序:
+如何安装这个程序:
 
-现在这个程序还处于开发阶段，所以我们只提供了源代码。您需要编译它们才能使用该程序。在
-您编译之前，您需要检查您的开发环境和所需要的库。在Debian/Ubuntu下，您可以运行以下命
-令来安装编译过程所需要的包：
+最新版本的源代码可以通过SVN获取:
+
+svn checkout http://rhythmcat.googlecode.com/svn/trunk/ rhythmcat-read-only
+
+或者通过Git获取:
+
+git clone git://github.com/supercatexpert/RhythmCat.git
+
+我们提供了源代码和在Linux下运行的二进制文件(i386版和AMD64版)，你可以在Downloads找到
+它们。二进制文件可以在大多数桌面Linux发行版上运行。如果您不能运行这个程序，你需要检查程序
+所需要的库是否已经被安装。如果您下载了源代码，您需要通过编译才能够运行这个程序。在编译之前，
+您需要安装编译环境。在Debian/Ubuntu下，您可以运行下面的命令来安装编译所需要的包: 
 
 sudo apt-get install build-essential libgtk2.0-dev libgstreamer0.10-dev \
- libgstreamer-plugins-base0.10-dev
+    libgstreamer-plugins-base0.10-dev 
 
-然后您可以开始编译 (在 i386/AMD64 平台下):
+如果您需要播放MP3等版权受限的格式，请安装Gstreamer Bad 和 Ugly 插件。在Debian/Ubuntu下，
+您可以运行以下命令来安装这些包: 
 
-make rebuild
+sudo apt-get install gstreamer0.10-plugins-bad gstreamer0.10-plugins-ugly
+
+然后您可以用如下的方式进行编译和安装:
+
+./configure
+make
+sudo make install
 
 这个程序尚处于Alpha开发阶段，我们不为该程序提供任何保证。
 如果您发现了本程序的任何一个BUG，请给我发送E-Mail，并且汇报您发现的BUG。我的E-Mail:

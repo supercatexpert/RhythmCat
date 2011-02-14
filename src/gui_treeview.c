@@ -28,11 +28,9 @@
 #include "core.h"
 #include "main.h"
 #include "playlist.h"
-#include "gui_menu.h"
 
 /* Variables */
 static GuiData *rc_ui;
-static GuiMenu *ui_menu;
 static GtkCellRenderer *renderer_text[5];
 static GtkCellRenderer *renderer_pixbuf[2];
 static GtkTreeViewColumn *list1_column;
@@ -127,7 +125,6 @@ static void rc_gui_list2_tree_view_set_drag()
 void rc_gui_treeview_init()
 {
     rc_ui = rc_gui_get_gui();
-    ui_menu = rc_gui_get_menu();
     gint count = 0;
     rc_ui->list2_tree_model = NULL;
     rc_ui->list1_tree_model = NULL;
@@ -139,19 +136,19 @@ void rc_gui_treeview_init()
         renderer_text[count] = gtk_cell_renderer_text_new();
     for(count=0;count<2;count++)
         renderer_pixbuf[count] = gtk_cell_renderer_pixbuf_new();
-    gtk_cell_renderer_set_fixed_size(renderer_text[1], 34, -1);
+    gtk_cell_renderer_set_fixed_size(renderer_text[0], 80, -1);
+    gtk_cell_renderer_set_fixed_size(renderer_text[1], 120, -1);
     gtk_cell_renderer_set_fixed_size(renderer_text[4], 55, -1);
+    g_object_set(G_OBJECT(renderer_text[0]), "ellipsize", PANGO_ELLIPSIZE_END,
+        "ellipsize-set", TRUE, NULL);
     g_object_set(G_OBJECT(renderer_text[1]), "ellipsize", PANGO_ELLIPSIZE_END,
-        NULL);
-    g_object_set(G_OBJECT(renderer_text[1]),"ellipsize-set",TRUE,NULL);
+        "ellipsize-set", TRUE, NULL);
     g_object_set(G_OBJECT(renderer_text[2]),"ellipsize",PANGO_ELLIPSIZE_END,
-        NULL);
-    g_object_set(G_OBJECT(renderer_text[2]),"ellipsize-set",TRUE,NULL);
+        "ellipsize-set", TRUE, NULL);
     g_object_set(G_OBJECT(renderer_text[3]),"ellipsize",PANGO_ELLIPSIZE_END,
+        "ellipsize-set", TRUE, NULL);
+    g_object_set(G_OBJECT(renderer_text[4]), "xalign", 1.0, "width-chars", 5,
         NULL);
-    g_object_set(G_OBJECT(renderer_text[3]),"ellipsize-set",TRUE,NULL);
-    g_object_set(G_OBJECT(renderer_text[4]), "xalign", 1.0, NULL);
-    g_object_set(G_OBJECT(renderer_text[4]),"width-chars",5,NULL);
     gtk_cell_renderer_set_fixed_size(renderer_pixbuf[0], 16, -1);
     gtk_cell_renderer_set_fixed_size(renderer_pixbuf[1], 16, -1);
     list1_column = gtk_tree_view_column_new();
@@ -162,14 +159,15 @@ void rc_gui_treeview_init()
     list2_time_column = gtk_tree_view_column_new_with_attributes(
         _("Length"), renderer_text[4], "text", 5, NULL);
     gtk_tree_view_column_set_title(list1_column, "Playlist");
-    gtk_tree_view_column_pack_start(list1_column,renderer_pixbuf[0],FALSE);
-    gtk_tree_view_column_pack_start(list1_column,renderer_text[0], FALSE);
+    gtk_tree_view_column_pack_start(list1_column, renderer_pixbuf[0], FALSE);
+    gtk_tree_view_column_pack_start(list1_column, renderer_text[0], TRUE);
     gtk_tree_view_column_add_attribute(list1_column,renderer_pixbuf[0],
         "stock-id", 0);
     gtk_tree_view_column_add_attribute(list1_column,renderer_text[0],
         "text", 1);
     gtk_tree_view_append_column(GTK_TREE_VIEW(rc_ui->list1_tree_view),
         list1_column);
+    gtk_tree_view_column_set_expand(list1_column, TRUE);
     gtk_tree_view_column_set_expand(list2_title_column, TRUE);
     gtk_tree_view_column_set_sizing(list2_time_column,
         GTK_TREE_VIEW_COLUMN_FIXED);
@@ -223,6 +221,20 @@ void rc_gui_list_tree_reset_list_store()
         rc_ui->list1_tree_model);
     rc_ui->list1_selection = gtk_tree_view_get_selection(
         GTK_TREE_VIEW(rc_ui->list1_tree_view));
+}
+
+/*
+ * Popup the menu of the list.
+ */
+
+gboolean rc_gui_list1_popup_menu(GtkWidget *widget, GdkEventButton *event,
+    gpointer data)
+{
+    if(event->button!=3) return FALSE;
+    gtk_menu_popup(GTK_MENU(gtk_ui_manager_get_widget(rc_ui->main_ui,
+        "/List1PopupMenu")), NULL, NULL, NULL, NULL, 3,
+        gtk_get_current_event_time());
+    return FALSE;
 }
 
 /*
@@ -283,8 +295,9 @@ gboolean rc_gui_list2_button_release_event(GtkWidget *widget,
     }
     if(event->button==3)
     {
-        gtk_menu_popup(GTK_MENU(ui_menu->list2_pop_menu), NULL, NULL, NULL,
-            NULL,3, gtk_get_current_event_time());
+        gtk_menu_popup(GTK_MENU(gtk_ui_manager_get_widget(rc_ui->main_ui,
+            "/List2PopupMenu")), NULL, NULL, NULL, NULL, 3,
+            gtk_get_current_event_time());
     }
     return FALSE;
 }

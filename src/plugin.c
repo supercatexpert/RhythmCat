@@ -95,7 +95,7 @@ gboolean rc_plugin_load(const gchar *filename)
     plugin_data->version = plugin_version;
     plugin_data->type = plugin_typenum;
     g_printf("Plugin: %s\nType: %s\nFile: %s\nDescription: %s\n", plugin_name,
-        plugin_type, plugin_file, plugin_desc);
+        plugin_type, plugin_path, plugin_desc);
 
     g_key_file_free(keyfile);
     return TRUE;

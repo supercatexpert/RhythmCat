@@ -1,30 +1,26 @@
-plugin.o: plugin.c plugin.h /usr/include/stdio.h /usr/include/features.h \
- /usr/include/bits/predefs.h /usr/include/sys/cdefs.h \
- /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
- /usr/include/gnu/stubs-64.h \
- /usr/lib/gcc/x86_64-linux-gnu/4.4.5/include/stddef.h \
- /usr/include/bits/types.h /usr/include/bits/typesizes.h \
- /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
- /usr/lib/gcc/x86_64-linux-gnu/4.4.5/include/stdarg.h \
- /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
- /usr/include/bits/stdio.h /usr/include/dlfcn.h /usr/include/bits/dlfcn.h \
- /usr/include/glib-2.0/glib.h /usr/include/glib-2.0/glib/galloca.h \
- /usr/include/glib-2.0/glib/gtypes.h \
+plugin.o: plugin.c plugin.h /usr/include/glib-2.0/glib.h \
+ /usr/include/glib-2.0/glib/galloca.h /usr/include/glib-2.0/glib/gtypes.h \
  /usr/lib/glib-2.0/include/glibconfig.h \
  /usr/include/glib-2.0/glib/gmacros.h \
+ /usr/lib/gcc/x86_64-linux-gnu/4.4.5/include/stddef.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.4.5/include-fixed/limits.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.4.5/include-fixed/syslimits.h \
- /usr/include/limits.h /usr/include/bits/posix1_lim.h \
+ /usr/include/limits.h /usr/include/features.h \
+ /usr/include/bits/predefs.h /usr/include/sys/cdefs.h \
+ /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
+ /usr/include/gnu/stubs-64.h /usr/include/bits/posix1_lim.h \
  /usr/include/bits/local_lim.h /usr/include/linux/limits.h \
  /usr/include/bits/posix2_lim.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.4.5/include/float.h \
  /usr/include/glib-2.0/glib/garray.h \
  /usr/include/glib-2.0/glib/gasyncqueue.h \
  /usr/include/glib-2.0/glib/gthread.h /usr/include/glib-2.0/glib/gerror.h \
+ /usr/lib/gcc/x86_64-linux-gnu/4.4.5/include/stdarg.h \
  /usr/include/glib-2.0/glib/gquark.h /usr/include/glib-2.0/glib/gutils.h \
  /usr/include/glib-2.0/glib/gatomic.h \
  /usr/include/glib-2.0/glib/gbacktrace.h /usr/include/signal.h \
- /usr/include/bits/sigset.h /usr/include/bits/signum.h \
+ /usr/include/bits/sigset.h /usr/include/bits/types.h \
+ /usr/include/bits/typesizes.h /usr/include/bits/signum.h \
  /usr/include/time.h /usr/include/bits/siginfo.h \
  /usr/include/bits/sigaction.h /usr/include/bits/sigcontext.h \
  /usr/include/bits/sigstack.h /usr/include/bits/pthreadtypes.h \
@@ -176,8 +172,10 @@ plugin.o: plugin.c plugin.h /usr/include/stdio.h /usr/include/features.h \
  /usr/include/pango-1.0/pango/pango-layout.h \
  /usr/include/pango-1.0/pango/pango-tabs.h \
  /usr/include/pango-1.0/pango/pango-renderer.h \
- /usr/include/pango-1.0/pango/pango-utils.h \
- /usr/lib/gtk-2.0/include/gdkconfig.h \
+ /usr/include/pango-1.0/pango/pango-utils.h /usr/include/stdio.h \
+ /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
+ /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
+ /usr/include/bits/stdio.h /usr/lib/gtk-2.0/include/gdkconfig.h \
  /usr/include/gtk-2.0/gdk/gdkdisplay.h \
  /usr/include/gtk-2.0/gdk/gdkevents.h /usr/include/gtk-2.0/gdk/gdkcolor.h \
  /usr/include/gtk-2.0/gdk/gdkdnd.h /usr/include/gtk-2.0/gdk/gdkinput.h \
@@ -506,20 +504,36 @@ plugin.o: plugin.c plugin.h /usr/include/stdio.h /usr/include/features.h \
  /usr/include/gstreamer-0.10/gst/gstutils.h \
  /usr/include/gstreamer-0.10/gst/gstparse.h \
  /usr/include/gstreamer-0.10/gst/gstxml.h \
- /usr/include/gstreamer-0.10/gst/gstcompat.h core.h /usr/include/unistd.h \
- /usr/include/bits/posix_opt.h /usr/include/bits/confname.h \
- /usr/include/getopt.h /usr/include/glib-2.0/glib/gi18n.h \
- /usr/include/libintl.h /usr/include/locale.h /usr/include/bits/locale.h \
- /usr/include/string.h /usr/include/bits/string.h \
- /usr/include/bits/string2.h gui.h /usr/include/glib-2.0/glib/gprintf.h \
- /usr/include/libpng12/png.h /usr/include/zlib.h /usr/include/zconf.h \
- /usr/include/zlibdefs.h /usr/include/libpng12/pngconf.h \
- /usr/include/setjmp.h /usr/include/bits/setjmp.h playlist.h \
- /usr/include/gstreamer-0.10/gst/pbutils/missing-plugins.h debug.h
+ /usr/include/gstreamer-0.10/gst/gstcompat.h core.h \
+ /usr/include/glib-2.0/glib/gi18n.h /usr/include/libintl.h \
+ /usr/include/locale.h /usr/include/bits/locale.h /usr/include/string.h \
+ /usr/include/bits/string.h /usr/include/bits/string2.h gui.h \
+ /usr/include/glib-2.0/glib/gprintf.h /usr/include/libpng12/png.h \
+ /usr/include/zlib.h /usr/include/zconf.h /usr/include/zlibdefs.h \
+ /usr/include/unistd.h /usr/include/bits/posix_opt.h \
+ /usr/include/bits/confname.h /usr/include/getopt.h \
+ /usr/include/libpng12/pngconf.h /usr/include/setjmp.h \
+ /usr/include/bits/setjmp.h playlist.h debug.h
 
 plugin.h:
 
-/usr/include/stdio.h:
+/usr/include/glib-2.0/glib.h:
+
+/usr/include/glib-2.0/glib/galloca.h:
+
+/usr/include/glib-2.0/glib/gtypes.h:
+
+/usr/lib/glib-2.0/include/glibconfig.h:
+
+/usr/include/glib-2.0/glib/gmacros.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/4.4.5/include/stddef.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/4.4.5/include-fixed/limits.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/4.4.5/include-fixed/syslimits.h:
+
+/usr/include/limits.h:
 
 /usr/include/features.h:
 
@@ -532,46 +546,6 @@ plugin.h:
 /usr/include/gnu/stubs.h:
 
 /usr/include/gnu/stubs-64.h:
-
-/usr/lib/gcc/x86_64-linux-gnu/4.4.5/include/stddef.h:
-
-/usr/include/bits/types.h:
-
-/usr/include/bits/typesizes.h:
-
-/usr/include/libio.h:
-
-/usr/include/_G_config.h:
-
-/usr/include/wchar.h:
-
-/usr/lib/gcc/x86_64-linux-gnu/4.4.5/include/stdarg.h:
-
-/usr/include/bits/stdio_lim.h:
-
-/usr/include/bits/sys_errlist.h:
-
-/usr/include/bits/stdio.h:
-
-/usr/include/dlfcn.h:
-
-/usr/include/bits/dlfcn.h:
-
-/usr/include/glib-2.0/glib.h:
-
-/usr/include/glib-2.0/glib/galloca.h:
-
-/usr/include/glib-2.0/glib/gtypes.h:
-
-/usr/lib/glib-2.0/include/glibconfig.h:
-
-/usr/include/glib-2.0/glib/gmacros.h:
-
-/usr/lib/gcc/x86_64-linux-gnu/4.4.5/include-fixed/limits.h:
-
-/usr/lib/gcc/x86_64-linux-gnu/4.4.5/include-fixed/syslimits.h:
-
-/usr/include/limits.h:
 
 /usr/include/bits/posix1_lim.h:
 
@@ -591,6 +565,8 @@ plugin.h:
 
 /usr/include/glib-2.0/glib/gerror.h:
 
+/usr/lib/gcc/x86_64-linux-gnu/4.4.5/include/stdarg.h:
+
 /usr/include/glib-2.0/glib/gquark.h:
 
 /usr/include/glib-2.0/glib/gutils.h:
@@ -602,6 +578,10 @@ plugin.h:
 /usr/include/signal.h:
 
 /usr/include/bits/sigset.h:
+
+/usr/include/bits/types.h:
+
+/usr/include/bits/typesizes.h:
 
 /usr/include/bits/signum.h:
 
@@ -960,6 +940,20 @@ plugin.h:
 /usr/include/pango-1.0/pango/pango-renderer.h:
 
 /usr/include/pango-1.0/pango/pango-utils.h:
+
+/usr/include/stdio.h:
+
+/usr/include/libio.h:
+
+/usr/include/_G_config.h:
+
+/usr/include/wchar.h:
+
+/usr/include/bits/stdio_lim.h:
+
+/usr/include/bits/sys_errlist.h:
+
+/usr/include/bits/stdio.h:
 
 /usr/lib/gtk-2.0/include/gdkconfig.h:
 
@@ -1701,14 +1695,6 @@ plugin.h:
 
 core.h:
 
-/usr/include/unistd.h:
-
-/usr/include/bits/posix_opt.h:
-
-/usr/include/bits/confname.h:
-
-/usr/include/getopt.h:
-
 /usr/include/glib-2.0/glib/gi18n.h:
 
 /usr/include/libintl.h:
@@ -1735,6 +1721,14 @@ gui.h:
 
 /usr/include/zlibdefs.h:
 
+/usr/include/unistd.h:
+
+/usr/include/bits/posix_opt.h:
+
+/usr/include/bits/confname.h:
+
+/usr/include/getopt.h:
+
 /usr/include/libpng12/pngconf.h:
 
 /usr/include/setjmp.h:
@@ -1742,7 +1736,5 @@ gui.h:
 /usr/include/bits/setjmp.h:
 
 playlist.h:
-
-/usr/include/gstreamer-0.10/gst/pbutils/missing-plugins.h:
 
 debug.h:

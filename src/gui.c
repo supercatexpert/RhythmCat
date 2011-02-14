@@ -35,9 +35,9 @@
 #include "gui_style.h"
 #include "gui_setting.h"
 #include "gui_lrc.h"
-#include "gui_menu.h"
 #include "gui_eq.h"
 #include "gui_dialog.h"
+#include "gui_plugin.h"
 #include "img_nocov.xpm"
 #include "img_icon.xpm"
 
@@ -46,14 +46,291 @@ const guint img_cover_w = 160;
 
 /* Variables */
 static GuiData rc_gui;
-static GuiMenu *ui_menu;
+
+static GtkActionEntry rc_menu_entries[] =
+{
+    { "FileMenu", NULL, "_File" },
+    { "EditMenu", NULL, "_Edit" },
+    { "ViewMenu", NULL, "_View" },
+    { "ControlMenu", NULL, "_Control" },
+    { "HelpMenu", NULL, "_Help" },
+    { "RepeatMenu", NULL, "_Repeat" },
+    { "RandomMenu", NULL, "Ran_dom" },
+    { "FileNewList", GTK_STOCK_NEW,
+      "_New Playlist", "<control>N",
+      "Create a new playlist",
+      G_CALLBACK(rc_gui_list1_new_list) },
+    { "FileImportMusic", GTK_STOCK_OPEN,
+      "Import _Music", "<control>O",
+      "Import music file",
+      G_CALLBACK(rc_gui_show_open_dialog) },
+    { "FileImportList", GTK_STOCK_FILE,
+      "Import _Playlist", NULL,
+      "Import music from playlist",
+      G_CALLBACK(rc_gui_load_playlist_dialog) },
+    { "FileImportFolder", GTK_STOCK_DIRECTORY,
+      "Import _Folder", NULL,
+      "Import all music from folder",
+      G_CALLBACK(rc_gui_open_music_directory) },
+    { "FileExportList", GTK_STOCK_SAVE,
+      "_Export Playlist", "<control>S",
+      "Export music to a playlist",
+      G_CALLBACK(rc_gui_save_playlist_dialog) },
+    { "FileExportAll", GTK_STOCK_SAVE_AS,
+      "Export _All Playlists", NULL,
+      "Export all playlists to a folder",
+      G_CALLBACK(rc_gui_save_all_playlists_dialog) },
+    { "FileQuit", GTK_STOCK_QUIT,
+      "_Quit", "<control>Q",
+      "Quit this player",
+      G_CALLBACK(rc_gui_quit_player) },
+    { "EditRenameList", GTK_STOCK_EDIT,
+      "Re_name Playlist", "F2",
+      "Raname the playlist",
+      G_CALLBACK(rc_gui_list1_rename_list) },
+    { "EditRemoveList", GTK_STOCK_REMOVE,
+      "R_emove Playlist", NULL,
+      "Remove the playlist",
+      G_CALLBACK(rc_gui_list1_delete_list) },
+    { "EditRemoveMusic", GTK_STOCK_DELETE,
+      "_Remove Music", NULL,
+      "Remove music from playlist",
+      G_CALLBACK(rc_gui_list2_delete_lists) },
+    { "EditSelectAll", GTK_STOCK_SELECT_ALL,
+      "Select _All", "<control>A",
+      "Select all music in the playlist",
+      G_CALLBACK(rc_gui_list2_select_all) },
+    { "EditRefreshList", GTK_STOCK_REFRESH,
+      "Re_fresh Playlist", "F5",
+      "Refresh music information in the playlist",
+      G_CALLBACK(rc_gui_refresh_music_info) },
+    { "EditPlugin", GTK_STOCK_EXECUTE,
+      "Plu_gins", "F11",
+      "Configure plugins",
+      G_CALLBACK(rc_gui_plugin_window_create) },
+    { "EditPreferences", GTK_STOCK_PREFERENCES,
+      "_Preferences", "F8",
+      "Configure the player",
+      G_CALLBACK(rc_gui_create_setting_window) },
+    { "ViewMiniMode", NULL,
+      "Mini Mode", "<control><alt>M",
+      "Enable mini mode",
+      NULL },
+    { "ControlPlay", GTK_STOCK_MEDIA_PLAY,
+      "_Play/Pause", "<control>L",
+      "Play or pause the music",
+      G_CALLBACK(rc_gui_play_button_clicked) },
+    { "ControlStop", GTK_STOCK_MEDIA_STOP,
+      "_Stop", "<control>P",
+      "Stop the music",
+      G_CALLBACK(rc_gui_stop_button_clicked) },
+    { "ControlPrev", GTK_STOCK_MEDIA_PREVIOUS,
+      "Pre_vious", "<alt>Left",
+      "Play previous music",
+      G_CALLBACK(rc_gui_prev_button_clicked) },
+    { "ControlNext", GTK_STOCK_MEDIA_NEXT,
+      "_Next", "<alt>Right",
+      "Play next music",
+      G_CALLBACK(rc_gui_next_button_clicked) },
+    { "ControlBackward", GTK_STOCK_MEDIA_REWIND,
+      "_Backward", "<control>Left",
+      "Backward 5 seconds",
+      G_CALLBACK(rc_gui_press_backward_menu) },
+    { "ControlForward", GTK_STOCK_MEDIA_FORWARD,
+      "_Forward", "<control>Right",
+      "Forward 5 seconds",
+      G_CALLBACK(rc_gui_press_forward_menu) },
+    { "ControlVolumeUp", GTK_STOCK_GO_UP,
+      "_Increase Volume", "<control>Up",
+      "Increase the volume",
+      G_CALLBACK(rc_gui_press_vol_up_menu) },
+    { "ControlVolumeDown", GTK_STOCK_GO_DOWN,
+      "_Decrease Volume", "<control>Down",
+      "Decrease the volume",
+      G_CALLBACK(rc_gui_press_vol_down_menu) },
+    { "HelpContents", GTK_STOCK_HELP,
+      "_Contents", "F1",
+      "Get help contents",
+      NULL },
+    { "HelpAbout", GTK_STOCK_ABOUT,
+      "_About", NULL,
+      "About this player",
+      G_CALLBACK(rc_gui_about_player) },
+    { "List1NewList", GTK_STOCK_NEW,
+      "_New Playlist", NULL,
+      "Create a new playlist",
+      G_CALLBACK(rc_gui_list1_new_list) },
+    { "List1RenameList", GTK_STOCK_EDIT,
+      "Re_name Playlist", NULL,
+      "Raname the playlist",
+      G_CALLBACK(rc_gui_list1_rename_list) },
+    { "List1RemoveList", GTK_STOCK_REMOVE,
+      "R_emove Playlist", NULL,
+      "Remove the playlist",
+      G_CALLBACK(rc_gui_list1_delete_list) },
+    { "List1ExportList", GTK_STOCK_SAVE,
+      "E_xport Playlist", NULL,
+      "Export music to a playlist",
+      G_CALLBACK(rc_gui_save_playlist_dialog) },
+    { "List2ImportMusic", GTK_STOCK_OPEN,
+      "Import _Music", NULL,
+      "Import music file",
+      G_CALLBACK(rc_gui_show_open_dialog) },
+    { "List2ImportList", GTK_STOCK_FILE,
+      "Import _Playlist", NULL,
+      "Import music from playlist",
+      G_CALLBACK(rc_gui_load_playlist_dialog) },
+    { "List2SelectAll", GTK_STOCK_SELECT_ALL,
+      "Select _All", NULL,
+      "Select all music in the playlist",
+      G_CALLBACK(rc_gui_list2_select_all) },
+    { "List2RemoveMusic", GTK_STOCK_REMOVE,
+      "R_emove Music", NULL,
+      "Remove music from playlist",
+      G_CALLBACK(rc_gui_list2_delete_lists) },
+    { "List2RefreshList", GTK_STOCK_REFRESH,
+      "Re_fresh Playlist", NULL,
+      "Refresh music information in the playlist",
+      G_CALLBACK(rc_gui_refresh_music_info) }
+};
+
+static guint rc_menu_n_entries = G_N_ELEMENTS(rc_menu_entries);
+
+static GtkRadioActionEntry rc_menu_view_entries[] =
+{
+    { "ViewPlaylist", NULL,
+      "_Playlists", "<control>1",
+      "Show playlits", 0 },
+    { "ViewLyricShow", NULL,
+      "_Lyric Show", "<control>2",
+      "Show lyric show", 1 },
+    { "ViewEqualizer", NULL,
+      "_Equalizer", "<control>3",
+      "Show equalizer", 2 }
+};
+
+static guint rc_menu_view_n_entries = G_N_ELEMENTS(rc_menu_view_entries);
+
+static GtkRadioActionEntry rc_menu_repeat_entres[] =
+{
+    { "RepeatNoRepeat", NULL,
+      "_No Repeat", NULL,
+      "No repeat", 0 },
+    { "RepeatMusicRepeat", NULL,
+      "Single _Music Repeat", NULL,
+      "Repeat playing single music", 1 },
+    { "RepeatListRepeat", NULL,
+      "Single _Playlist Repeat", NULL,
+      "Repeat playing single playlist", 2 },
+    { "RepeatAllRepeat", NULL,
+      "_All Playlists Repeat", NULL,
+      "Repeat playing all playlists", 3 }
+};
+
+static guint rc_menu_repeat_n_entres = G_N_ELEMENTS(rc_menu_repeat_entres);
+
+static GtkRadioActionEntry rc_menu_random_entres[] =
+{
+    { "RandomNoRandom", NULL,
+      "_No Random", NULL,
+      "No random playing", 0 },
+    { "RandomSingleRandom", NULL,
+      "_Single Playlist Random", NULL,
+      "Random playing a music in the playlist", 1 },
+    { "RandomAllRandom", NULL,
+      "_All Playlists Random", NULL,
+      "Random playing a music in all playlists", 2 }
+};
+
+static guint rc_menu_random_n_entres = G_N_ELEMENTS(rc_menu_random_entres);
+
+static const gchar *rc_ui_info =
+    "<ui>"
+    "  <menubar name='RCMenuBar'>"
+    "    <menu action='FileMenu'>"
+    "      <menuitem action='FileNewList'/>"
+    "      <separator/>"
+    "      <menuitem action='FileImportMusic'/>"
+    "      <menuitem action='FileImportList'/>"
+    "      <menuitem action='FileImportFolder'/>"
+    "      <separator/>"
+    "      <menuitem action='FileExportList'/>"
+    "      <menuitem action='FileExportAll'/>"
+    "      <separator/>"
+    "      <menuitem action='FileQuit'/>"
+    "    </menu>"
+    "    <menu action='EditMenu'>"
+    "      <menuitem action='EditRenameList'/>"
+    "      <menuitem action='EditRemoveList'/>"
+    "      <separator/>"
+    "      <menuitem action='EditRemoveMusic'/>"
+    "      <menuitem action='EditSelectAll'/>"
+    "      <menuitem action='EditRefreshList'/>"
+    "      <separator/>"
+    "      <menuitem action='EditPlugin'/>"
+    "      <menuitem action='EditPreferences'/>"
+    "    </menu>"
+    "    <menu action='ViewMenu'>"
+    "      <menuitem action='ViewPlaylist'/>"
+    "      <menuitem action='ViewLyricShow'/>"
+    "      <menuitem action='ViewEqualizer'/>"
+    "      <separator/>"
+    "      <menuitem action='ViewMiniMode'/>"
+    "    </menu>"
+    "    <menu action='ControlMenu'>"
+    "      <menuitem action='ControlPlay'/>"
+    "      <menuitem action='ControlStop'/>"
+    "      <menuitem action='ControlPrev'/>"
+    "      <menuitem action='ControlNext'/>"
+    "      <menuitem action='ControlBackward'/>"
+    "      <menuitem action='ControlForward'/>"
+    "      <separator/>"
+    "      <menuitem action='ControlVolumeUp'/>"
+    "      <menuitem action='ControlVolumeDown'/>"
+    "      <separator/>"
+    "      <menu action='RepeatMenu'>"
+    "        <menuitem action='RepeatNoRepeat'/>"
+    "        <separator/>"
+    "        <menuitem action='RepeatMusicRepeat'/>"
+    "        <menuitem action='RepeatListRepeat'/>"
+    "        <menuitem action='RepeatAllRepeat'/>"
+    "      </menu>"
+    "      <menu action='RandomMenu'>"
+    "        <menuitem action='RandomNoRandom'/>"
+    "        <separator/>"
+    "        <menuitem action='RandomSingleRandom'/>"
+    "        <menuitem action='RandomAllRandom'/>"
+    "      </menu>"
+    "    </menu>"
+    "    <menu action='HelpMenu'>"
+    "      <menuitem action='HelpContents'/>"
+    "      <menuitem action='HelpAbout'/>"
+    "    </menu>"
+    "  </menubar>"
+    "  <popup action='List1PopupMenu'>"
+    "    <menuitem action='List1NewList'/>"
+    "    <menuitem action='List1RenameList'/>"
+    "    <menuitem action='List1RemoveList'/>"
+    "    <menuitem action='List1ExportList'/>"
+    "  </popup>"
+    "  <popup action='List2PopupMenu'>"
+    "    <menuitem action='List2ImportMusic'/>"
+    "    <menuitem action='List2ImportList'/>"
+    "    <separator/>"
+    "    <menuitem action='List2SelectAll'/>"
+    "    <menuitem action='List2RemoveMusic'/>"
+    "    <separator/>"
+    "    <menuitem action='List2RefreshList'/>"
+    "  </popup>"
+    "</ui>";
 
 /*
- * refresh the information label.
+ * Refresh the information label.
  */
 
 static gboolean rc_gui_refresh_time_info(gpointer data)
 {
+    GtkAllocation allocation;
     gint64 pos = 0, len = 0;
     gdouble persent = 0.0;
     gint lrc_label_width, lrc_vport_width;
@@ -78,10 +355,10 @@ static gboolean rc_gui_refresh_time_info(gpointer data)
     if(lrc_data!=NULL)
     {
         gtk_label_set_text(GTK_LABEL(rc_gui.lrc_label), lrc_data->text);
-        gdk_drawable_get_size(GDK_DRAWABLE(gtk_widget_get_window(
-            rc_gui.lrc_label)), &lrc_label_width, NULL);
-        gdk_drawable_get_size(GDK_DRAWABLE(gtk_widget_get_window(
-            rc_gui.lrc_label)), &lrc_vport_width, NULL);
+        gtk_widget_get_allocation(rc_gui.lrc_label, &allocation);
+        lrc_label_width = allocation.width;
+        gtk_widget_get_allocation(rc_gui.lrc_viewport, &allocation);
+        lrc_vport_width = allocation.width;
         lrc_width = lrc_label_width - lrc_vport_width;
         lrc_vport_lower = gtk_adjustment_get_lower(rc_gui.lrc_vport_adj);
         lrc_vport_value = lrc_vport_lower;
@@ -190,8 +467,8 @@ static void rc_gui_layout_init()
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(list2_scr_window),
         GTK_POLICY_NEVER,GTK_POLICY_AUTOMATIC);
     control_buttons_hbox = gtk_hbox_new(FALSE, 0);
-    control_hbox = gtk_hbox_new(FALSE,1);
-    info_label_hbox = gtk_hbox_new(FALSE,20);
+    control_hbox = gtk_hbox_new(FALSE, 1);
+    info_label_hbox = gtk_hbox_new(FALSE, 20);
     list_hpaned = gtk_hpaned_new();
     gtk_container_add(GTK_CONTAINER(list1_scr_window), 
         rc_gui.list1_tree_view);
@@ -209,7 +486,7 @@ static void rc_gui_layout_init()
     gtk_container_add(GTK_CONTAINER(rc_gui.lrc_viewport), rc_gui.lrc_label);
     gtk_paned_pack1(GTK_PANED(list_hpaned), list1_scr_window, TRUE, FALSE);
     gtk_paned_pack2(GTK_PANED(list_hpaned), list2_scr_window, TRUE, FALSE);
-    gtk_paned_set_position(GTK_PANED(list_hpaned), 70);
+    gtk_paned_set_position(GTK_PANED(list_hpaned), 160);
     gtk_container_child_set(GTK_CONTAINER(list_hpaned), list1_scr_window,
         "resize", FALSE, "shrink", FALSE, NULL);
     gtk_notebook_append_page(GTK_NOTEBOOK(rc_gui.plist_notebook),
@@ -249,8 +526,8 @@ static void rc_gui_layout_init()
         0);
     gtk_box_pack_start(GTK_BOX(player_vbox), rc_gui.status_hbox, FALSE, FALSE,
         0);
-    gtk_box_pack_start(GTK_BOX(main_vbox), rc_gui.main_menu_bar, FALSE,
-        FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(main_vbox), gtk_ui_manager_get_widget(
+        rc_gui.main_ui, "/RCMenuBar"), FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(main_vbox), player_vbox, TRUE, TRUE, 0);
     gtk_container_add(GTK_CONTAINER(rc_gui.main_window), main_vbox);
 }
@@ -321,11 +598,13 @@ static void rc_gui_signal_bind()
 gboolean rc_gui_init()
 {
     static gboolean init = FALSE;
+    GtkActionGroup *actions;
+    GError *error = NULL;
     if(init) return TRUE;
     init = TRUE;
     textdomain(GETTEXT_PACKAGE);
     GdkGeometry main_window_hints;
-    GtkObject *position_adjustment;
+    GtkAdjustment *position_adjustment;
     gint i = 0;
     bzero(&rc_gui, sizeof(GuiData));
     rc_gui.main_window_width = 600;
@@ -343,6 +622,7 @@ gboolean rc_gui_init()
         &image_icon);
     rc_gui.tray_icon = gtk_status_icon_new_from_pixbuf(rc_gui.icon_image);
     rc_gui.main_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    rc_gui.main_ui = gtk_ui_manager_new();
     rc_gui.plist_notebook = gtk_notebook_new();
     rc_gui.lrc_viewport = gtk_viewport_new(NULL, NULL);
     rc_gui.album_image = gtk_image_new_from_pixbuf(rc_gui.no_cover_image);
@@ -405,15 +685,37 @@ gboolean rc_gui_init()
             rc_gui.control_images[i]);
     }
     gtk_label_set_justify(GTK_LABEL(rc_gui.time_label), GTK_JUSTIFY_RIGHT);
-    position_adjustment = gtk_adjustment_new(0.0, 0.0, 105.0, 1.0, 2.0, 5.0);
+    position_adjustment = (GtkAdjustment *)gtk_adjustment_new(0.0, 0.0, 105.0,
+        1.0, 2.0, 5.0);
     rc_gui.time_scroll_bar = gtk_hscale_new(GTK_ADJUSTMENT(
         position_adjustment));
     gtk_scale_set_draw_value(GTK_SCALE(rc_gui.time_scroll_bar),FALSE);
     g_object_set(rc_gui.time_scroll_bar, "can-focus", FALSE, NULL);
     g_object_set(rc_gui.volume_button, "can-focus", FALSE, NULL);
     rc_gui_treeview_init();
-    rc_gui_menu_init();
-    ui_menu = rc_gui_get_menu();
+    actions = gtk_action_group_new("RCActions");
+    gtk_action_group_add_actions(actions, rc_menu_entries,
+        rc_menu_n_entries, NULL);
+    gtk_action_group_add_radio_actions(actions, rc_menu_view_entries,
+        rc_menu_view_n_entries, 0, G_CALLBACK(rc_gui_press_view_menu),
+        NULL);
+    gtk_action_group_add_radio_actions(actions, rc_menu_repeat_entres,
+        rc_menu_repeat_n_entres, 0, G_CALLBACK(rc_gui_press_repeat_menu),
+        NULL);
+    gtk_action_group_add_radio_actions(actions, rc_menu_random_entres,
+        rc_menu_random_n_entres, 0, G_CALLBACK(rc_gui_press_random_menu),
+        NULL);
+    gtk_ui_manager_insert_action_group(rc_gui.main_ui, actions, 0);
+    g_object_unref(actions);
+    gtk_window_add_accel_group(GTK_WINDOW(rc_gui.main_window), 
+        gtk_ui_manager_get_accel_group(rc_gui.main_ui));
+    if(!gtk_ui_manager_add_ui_from_string(rc_gui.main_ui, rc_ui_info, -1,
+        &error))
+    {
+        rc_debug_perror("Gui-ERROR: Building menus failed: %s\n",
+            error->message);
+        g_error_free(error);
+    }
     rc_gui_layout_init();
     rc_gui_lrc_init();
     rc_gui_signal_bind();
@@ -426,12 +728,10 @@ gboolean rc_gui_init()
     rc_gui_status_task_set(0, 0);
 
     /* Disable unusable menus */
-    gtk_widget_set_sensitive(ui_menu->edit_menu_items[MENU_EDIT_REMOVE],
-        FALSE);
-    gtk_widget_set_sensitive(ui_menu->edit_menu_items[MENU_EDIT_PLUGIN],
-        FALSE);
-    gtk_widget_set_sensitive(ui_menu->view_menu_items[MENU_VIEW_MINI],
-        FALSE);
+    gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+        "/RCMenuBar/EditMenu/EditRemoveMusic"), FALSE);
+    gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+        "/RCMenuBar/ViewMenu/ViewMiniMode"), FALSE);
     rc_debug_print("GUI: Main window is successfully loaded!\n"); 
     return FALSE;
 }
@@ -499,17 +799,17 @@ void rc_gui_set_play_button_state(gboolean state)
     {
         gtk_image_set_from_stock(GTK_IMAGE(rc_gui.control_images[1]),
             GTK_STOCK_MEDIA_PAUSE, GTK_ICON_SIZE_BUTTON);
-        gtk_image_set_from_stock(GTK_IMAGE(gtk_image_menu_item_get_image(
-            GTK_IMAGE_MENU_ITEM(ui_menu->ctrl_menu_items[MENU_CTRL_PLAY]))), 
-            GTK_STOCK_MEDIA_PAUSE, GTK_ICON_SIZE_MENU);
+        g_object_set(G_OBJECT(gtk_ui_manager_get_action(rc_gui.main_ui,
+            "/RCMenuBar/ControlMenu/ControlPlay")), "stock-id",
+            GTK_STOCK_MEDIA_PAUSE, NULL);
     }
     else
     {
         gtk_image_set_from_stock(GTK_IMAGE(rc_gui.control_images[1]),
             GTK_STOCK_MEDIA_PLAY, GTK_ICON_SIZE_BUTTON);
-        gtk_image_set_from_stock(GTK_IMAGE(gtk_image_menu_item_get_image(
-            GTK_IMAGE_MENU_ITEM(ui_menu->ctrl_menu_items[MENU_CTRL_PLAY]))), 
-            GTK_STOCK_MEDIA_PLAY, GTK_ICON_SIZE_MENU);
+        g_object_set(G_OBJECT(gtk_ui_manager_get_action(rc_gui.main_ui,
+            "/RCMenuBar/ControlMenu/ControlPlay")), "stock-id",
+            GTK_STOCK_MEDIA_PLAY, NULL);
     }
 }
 
@@ -600,19 +900,19 @@ void rc_gui_time_label_set_text(gint64 time)
 gboolean rc_gui_adjust_volume(GtkScaleButton *widget, gdouble vol,
     gpointer data)
 {
-    double persent = vol * 100;
+    gdouble persent = vol * 100;
     if(100.0 - persent <= 10e-3)
-        gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[MENU_CTRL_VOL_UP],
-            FALSE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+            "/RCMenuBar/ControlMenu/ControlVolumeUp"), FALSE);
     else
-        gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[MENU_CTRL_VOL_UP],
-            TRUE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+            "/RCMenuBar/ControlMenu/ControlVolumeUp"), TRUE);
     if(persent <= 10e-3)
-        gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[MENU_CTRL_VOL_DOWN],
-            FALSE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+            "/RCMenuBar/ControlMenu/ControlVolumeDown"), FALSE);
     else
-        gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[MENU_CTRL_VOL_DOWN],
-            TRUE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+            "/RCMenuBar/ControlMenu/ControlVolumeDown"), TRUE);
     rc_core_set_volume(persent);
     return FALSE;
 }
@@ -667,10 +967,10 @@ void rc_gui_seek_scaler_disable()
 {
     gtk_range_set_value(GTK_RANGE(rc_gui.time_scroll_bar),0);
     gtk_widget_set_sensitive(rc_gui.time_scroll_bar, FALSE);
-    gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[MENU_CTRL_BACKWORD],
-        FALSE);
-    gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[MENU_CTRL_FORWORD],
-        FALSE);
+    gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+        "/RCMenuBar/ControlMenu/ControlBackward"), FALSE);
+    gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+        "/RCMenuBar/ControlMenu/ControlForward"), FALSE);
 }
 
 /*
@@ -680,23 +980,10 @@ void rc_gui_seek_scaler_disable()
 void rc_gui_seek_scaler_enable()
 {
     gtk_widget_set_sensitive(rc_gui.time_scroll_bar, TRUE);
-    gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[MENU_CTRL_BACKWORD],
-        TRUE);
-    gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[MENU_CTRL_FORWORD],
-        TRUE);
-}
-
-/*
- * Popup the menu of the list.
- */
-
-gboolean rc_gui_list1_popup_menu(GtkWidget *widget, GdkEventButton *event,
-    gpointer data)
-{
-    if(event->button!=3) return FALSE;
-    gtk_menu_popup(GTK_MENU(ui_menu->list1_pop_menu), NULL, NULL, NULL,
-        NULL, 3, gtk_get_current_event_time());
-    return FALSE;
+    gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+        "/RCMenuBar/ControlMenu/ControlBackward"), TRUE);
+    gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+        "/RCMenuBar/ControlMenu/ControlForward"), TRUE);
 }
 
 /*
@@ -708,17 +995,17 @@ void rc_gui_set_volume(gdouble volume)
     volume /= 100;
     gtk_scale_button_set_value(GTK_SCALE_BUTTON(rc_gui.volume_button), volume);
     if(1.0 - volume <= 10e-3)
-        gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[MENU_CTRL_VOL_UP],
-            FALSE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+            "/RCMenuBar/ControlMenu/ControlVolumeUp"), FALSE);
     else
-        gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[MENU_CTRL_VOL_UP],
-            TRUE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+            "/RCMenuBar/ControlMenu/ControlVolumeUp"), TRUE);
     if(volume <= 10e-3)
-        gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[MENU_CTRL_VOL_DOWN],
-            FALSE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+            "/RCMenuBar/ControlMenu/ControlVolumeDown"), FALSE);
     else
-        gtk_widget_set_sensitive(ui_menu->ctrl_menu_items[MENU_CTRL_VOL_DOWN],
-            TRUE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+            "/RCMenuBar/ControlMenu/ControlVolumeDown"), TRUE);
 }
 
 /*
@@ -731,38 +1018,44 @@ void rc_gui_set_player_state()
     rc_plist_get_play_mode(&repeat, &random);
     if(repeat>0)
     {
-        gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(
-            ui_menu->repeat_menu_items[repeat+MENU_REPEAT_SEP1]), TRUE);
+        gtk_radio_action_set_current_value(GTK_RADIO_ACTION(
+            gtk_ui_manager_get_action(rc_gui.main_ui,
+            "/RCMenuBar/ControlMenu/RepeatMenu/RepeatNoRepeat")), repeat);
     }
     if(random>0)
     {
-        gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(
-            ui_menu->random_menu_items[random+MENU_RANDOM_SEP1]), TRUE);
+        gtk_radio_action_set_current_value(GTK_RADIO_ACTION(
+            gtk_ui_manager_get_action(rc_gui.main_ui,
+            "/RCMenuBar/ControlMenu/RandomMenu/RandomNoRandom")), random);
     }
+}
+
+/*
+ * Press the view menu.
+ */
+
+void rc_gui_press_view_menu(GtkAction *action, GtkRadioAction *current)
+{
+    gtk_notebook_set_current_page(GTK_NOTEBOOK(rc_gui.plist_notebook),
+        gtk_radio_action_get_current_value(current));
 }
 
 /*
  * Press the repeat menu.
  */
 
-gboolean rc_gui_press_repeat_menu(GtkCheckMenuItem *widget, gpointer data)
+void rc_gui_press_repeat_menu(GtkAction *action, GtkRadioAction *current)
 {
-    gint state = GPOINTER_TO_INT(data);
-    if(!gtk_check_menu_item_get_active(widget)) return FALSE;
-    rc_plist_set_play_mode(state, -1);
-    return FALSE;
+    rc_plist_set_play_mode(gtk_radio_action_get_current_value(current), -1);
 }
 
 /*
  * Press the random menu.
  */
 
-gboolean rc_gui_press_random_menu(GtkCheckMenuItem *widget, gpointer data)
+void rc_gui_press_random_menu(GtkAction *action, GtkRadioAction *current)
 {
-    gint state = GPOINTER_TO_INT(data);
-    if(!gtk_check_menu_item_get_active(widget)) return FALSE;
-    rc_plist_set_play_mode(-1, state);
-    return FALSE;
+    rc_plist_set_play_mode(-1, gtk_radio_action_get_current_value(current));
 }
 
 /*
@@ -831,74 +1124,23 @@ void rc_gui_set_list2_menu(GtkTreeView *widget, gpointer data)
         rc_gui.list2_selection);
     if(value>0)
     {
-        gtk_widget_set_sensitive(ui_menu->edit_menu_items[MENU_EDIT_REMOVE],
-            TRUE);
-        gtk_widget_set_sensitive(ui_menu->list2_menu_item[MENU_LIST2_REMOVE],
-            TRUE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+            "/RCMenuBar/EditMenu/EditRemoveMusic"), TRUE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+            "/List2PopupMenu/List2RemoveMusic"), TRUE);
         if(rc_gui.status_task_length==0)
-            gtk_widget_set_sensitive(
-                ui_menu->list2_menu_item[MENU_LIST2_REFRESH], TRUE);
+            gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+                "/List2PopupMenu/List2RefreshList"), TRUE);
     }
     else
     {
-        gtk_widget_set_sensitive(ui_menu->edit_menu_items[MENU_EDIT_REMOVE],
-            FALSE);
-        gtk_widget_set_sensitive(ui_menu->list2_menu_item[MENU_LIST2_REMOVE],
-            FALSE);
-        gtk_widget_set_sensitive(ui_menu->list2_menu_item[MENU_LIST2_REFRESH],
-            FALSE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+            "/RCMenuBar/EditMenu/EditRemoveMusic"), FALSE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+            "/List2PopupMenu/List2RemoveMusic"), FALSE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+            "/List2PopupMenu/List2RefreshList"), FALSE);
     }
-}
-
-/*
- * Show the playlists page.
- */
-
-gboolean rc_gui_show_playlist_page(GtkMenuItem *widget, gpointer data)
-{
-    gint pos = gtk_notebook_get_current_page(GTK_NOTEBOOK(
-        rc_gui.plist_notebook));
-    if(pos!=0)
-    {
-        gtk_notebook_set_current_page(GTK_NOTEBOOK(rc_gui.plist_notebook), 0);
-        gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(
-            ui_menu->view_menu_items[MENU_VIEW_LIST]), TRUE);
-    }
-    return FALSE;
-}
-
-/*
- * Show the lyrics page.
- */
-
-gboolean rc_gui_show_lyric_page(GtkMenuItem *widget, gpointer data)
-{
-    gint pos = gtk_notebook_get_current_page(GTK_NOTEBOOK(
-        rc_gui.plist_notebook));
-    if(pos!=1)
-    {
-        gtk_notebook_set_current_page(GTK_NOTEBOOK(rc_gui.plist_notebook), 1);
-        gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(
-            ui_menu->view_menu_items[MENU_VIEW_LYRIC]), TRUE);
-    }
-    return FALSE;
-}
-
-/*
- * Show the equalizer page.
- */
-
-gboolean rc_gui_show_eq_page(GtkMenuItem *widget, gpointer data)
-{
-    gint pos = gtk_notebook_get_current_page(GTK_NOTEBOOK(
-        rc_gui.plist_notebook));
-    if(pos!=2)
-    {
-        gtk_notebook_set_current_page(GTK_NOTEBOOK(rc_gui.plist_notebook), 2);
-        gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(
-            ui_menu->view_menu_items[MENU_VIEW_EQ]), TRUE);
-    }
-    return FALSE;
 }
 
 /*
@@ -993,33 +1235,32 @@ void rc_gui_tray_icon_popup(GtkStatusIcon *status_icon, guint button,
 
 void rc_gui_status_task_set(guint type, guint len)
 {
-    ui_menu = rc_gui_get_menu();
     if(len<=0 || type<=0 || type>=3)
     {
         rc_gui.status_task_length = 0;
-        gtk_widget_hide_all(rc_gui.status_hbox);
-        gtk_widget_set_sensitive(
-            ui_menu->file_menu_items[MENU_FILE_IMPORT_MUSIC], TRUE);
-        gtk_widget_set_sensitive(
-            ui_menu->file_menu_items[MENU_FILE_IMPORT_LIST], TRUE);
-        gtk_widget_set_sensitive(
-            ui_menu->file_menu_items[MENU_FILE_IMPORT_DIR], TRUE);
-        gtk_widget_set_sensitive(
-            ui_menu->file_menu_items[MENU_FILE_EXPORT_LIST], TRUE);
-        gtk_widget_set_sensitive(
-            ui_menu->file_menu_items[MENU_FILE_EXPORT_ALL], TRUE);
-        gtk_widget_set_sensitive(
-            ui_menu->edit_menu_items[MENU_EDIT_REFRESH], TRUE);
-        gtk_widget_set_sensitive(
-            ui_menu->list1_menu_item[MENU_LIST1_DELETE], TRUE);
-        gtk_widget_set_sensitive(
-            ui_menu->list1_menu_item[MENU_LIST1_EXPORT], TRUE);
-        gtk_widget_set_sensitive(
-            ui_menu->list2_menu_item[MENU_LIST2_IMPORT_MUSIC], TRUE);
-        gtk_widget_set_sensitive(
-            ui_menu->list2_menu_item[MENU_LIST2_IMPORT_LIST], TRUE);
-        gtk_widget_set_sensitive(
-            ui_menu->list2_menu_item[MENU_LIST2_REFRESH], TRUE);
+        gtk_widget_hide(rc_gui.status_hbox);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+            "/RCMenuBar/FileMenu/FileImportMusic"), TRUE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+            "/RCMenuBar/FileMenu/FileImportList"), TRUE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+            "/RCMenuBar/FileMenu/FileImportFolder"), TRUE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+            "/RCMenuBar/FileMenu/FileExportList"), TRUE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+            "/RCMenuBar/FileMenu/FileExportAll"), TRUE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+            "/RCMenuBar/EditMenu/EditRefreshList"), TRUE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+            "/List1PopupMenu/List1RemoveList"), TRUE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+            "/List1PopupMenu/List1ExportList"), TRUE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+            "/List2PopupMenu/List2ImportMusic"), TRUE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+            "/List2PopupMenu/List2ImportList"), TRUE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+            "/List2PopupMenu/List2RefreshList"), TRUE);
         return;
     }
     rc_gui.status_task_length+=len;
@@ -1037,28 +1278,28 @@ void rc_gui_status_task_set(guint type, guint len)
             break;
     }
     gtk_widget_show_all(rc_gui.status_hbox);
-    gtk_widget_set_sensitive(
-        ui_menu->file_menu_items[MENU_FILE_IMPORT_MUSIC], FALSE);
-    gtk_widget_set_sensitive(
-        ui_menu->file_menu_items[MENU_FILE_IMPORT_LIST], FALSE);
-    gtk_widget_set_sensitive(
-        ui_menu->file_menu_items[MENU_FILE_IMPORT_DIR], FALSE);
-    gtk_widget_set_sensitive(
-        ui_menu->file_menu_items[MENU_FILE_EXPORT_LIST], FALSE);
-    gtk_widget_set_sensitive(
-        ui_menu->file_menu_items[MENU_FILE_EXPORT_ALL], FALSE);
-    gtk_widget_set_sensitive(
-        ui_menu->edit_menu_items[MENU_EDIT_REFRESH], FALSE);
-    gtk_widget_set_sensitive(
-        ui_menu->list1_menu_item[MENU_LIST1_DELETE], FALSE);
-    gtk_widget_set_sensitive(
-        ui_menu->list1_menu_item[MENU_LIST1_EXPORT], FALSE);
-    gtk_widget_set_sensitive(
-        ui_menu->list2_menu_item[MENU_LIST2_IMPORT_MUSIC], FALSE);
-    gtk_widget_set_sensitive(
-        ui_menu->list2_menu_item[MENU_LIST2_IMPORT_LIST], FALSE);
-    gtk_widget_set_sensitive(
-        ui_menu->list2_menu_item[MENU_LIST2_REFRESH], FALSE);
+    gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+        "/RCMenuBar/FileMenu/FileImportMusic"), FALSE);
+    gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+        "/RCMenuBar/FileMenu/FileImportList"), FALSE);
+    gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+        "/RCMenuBar/FileMenu/FileImportFolder"), FALSE);
+    gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+        "/RCMenuBar/FileMenu/FileExportList"), FALSE);
+    gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+        "/RCMenuBar/FileMenu/FileExportAll"), FALSE);
+    gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+        "/RCMenuBar/EditMenu/EditRefreshList"), FALSE);
+    gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+        "/List1PopupMenu/List1RemoveList"), FALSE);
+    gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+        "/List1PopupMenu/List1ExportList"), FALSE);
+    gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+        "/List2PopupMenu/List2ImportMusic"), FALSE);
+    gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+        "/List2PopupMenu/List2ImportList"), FALSE);
+    gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+        "/List2PopupMenu/List2RefreshList"), FALSE);
 }
 
 /*

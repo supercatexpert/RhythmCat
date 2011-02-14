@@ -68,9 +68,8 @@ lyric.o: lyric.c lyric.h /usr/include/stdio.h /usr/include/features.h \
  /usr/include/glib-2.0/glib/gtimer.h /usr/include/glib-2.0/glib/gtree.h \
  /usr/include/glib-2.0/glib/gurifuncs.h \
  /usr/include/glib-2.0/glib/gvarianttype.h \
- /usr/include/glib-2.0/glib/gvariant.h settings.h /usr/include/unistd.h \
- /usr/include/bits/posix_opt.h /usr/include/bits/confname.h \
- /usr/include/getopt.h /usr/include/gstreamer-0.10/gst/gst.h \
+ /usr/include/glib-2.0/glib/gvariant.h settings.h \
+ /usr/include/gstreamer-0.10/gst/gst.h \
  /usr/include/gstreamer-0.10/gst/glib-compat.h \
  /usr/include/gstreamer-0.10/gst/gstenumtypes.h \
  /usr/include/glib-2.0/glib-object.h \
@@ -734,14 +733,6 @@ lyric.h:
 /usr/include/glib-2.0/glib/gvariant.h:
 
 settings.h:
-
-/usr/include/unistd.h:
-
-/usr/include/bits/posix_opt.h:
-
-/usr/include/bits/confname.h:
-
-/usr/include/getopt.h:
 
 /usr/include/gstreamer-0.10/gst/gst.h:
 

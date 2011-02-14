@@ -1,7 +1,7 @@
 /*
- * Debug Declaration
+ * Plugin Declaration (GUI Part)
  *
- * debug.h
+ * gui_plugin.h
  * This file is part of <RhythmCat>
  *
  * Copyright (C) 2010 - SuperCat, license: GPL v3
@@ -22,20 +22,13 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef HAVE_DEBUG_H
-#define HAVE_DEBUG_H
+#ifndef HAVE_GUI_PLUGIN_H
+#define HAVE_GUI_PLUGIN_H
 
-#include <stdlib.h>
-#include <unistd.h>
 #include <glib.h>
-#include <glib/gprintf.h>
+#include <gtk/gtk.h>
 
-#define DEBUG_MODE 0
-
-int rc_debug_get_flag();
-void rc_debug_set_mode(int);
-gint rc_debug_print(const gchar *, ...);
-gint rc_debug_perror(const gchar *, ...);
+void rc_gui_plugin_window_create(GtkWidget *, gpointer);
 
 #endif
 

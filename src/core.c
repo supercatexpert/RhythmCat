@@ -185,14 +185,11 @@ void rc_core_init()
     rc_gui_seek_scaler_disable();
     rc_core.playbin = play;
     rc_core.eos = FALSE;
-    rc_core.repeat = setting->repeat_mode;
-    rc_core.random = setting->random_mode;
     rc_core.eq_plugin = audio_equalizer;
     rc_core.volume = setting->volume;
     /* Use Volume Plugin to avoid the bug in Gstreamer 0.10.28. */
     rc_core.vol_plugin = volume_plugin;
     rc_gui_set_volume(setting->volume * 100);
-    rc_gui_set_player_state();
     g_object_set(G_OBJECT(play), "video-sink", 
         video_fakesink, NULL);
     gst_element_set_state(play, GST_STATE_READY);

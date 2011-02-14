@@ -25,9 +25,7 @@
 #ifndef HAVE_PLAYER_H
 #define HAVE_PLAYER_H
 
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <glib.h>
 #include <glib-object.h>
 #include <gst/gst.h>

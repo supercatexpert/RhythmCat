@@ -31,7 +31,6 @@
 #include "main.h"
 #include "debug.h"
 #include "settings.h"
-#include "gui_menu.h"
 #include "gui_treeview.h"
 
 /* Variables */

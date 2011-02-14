@@ -80,6 +80,8 @@ void rc_gui_create_setting_window(GtkWidget *widget, gpointer data)
     hbox2 = gtk_hbutton_box_new();
     gtk_button_box_set_layout(GTK_BUTTON_BOX(hbox2), GTK_BUTTONBOX_END);
     rc_gui_create_setting_treeview();
+    gtk_window_set_type_hint(GTK_WINDOW(setting_window),
+        GDK_WINDOW_TYPE_HINT_DIALOG);
     gtk_window_set_decorated(GTK_WINDOW(setting_window), TRUE);
     gtk_window_set_transient_for(GTK_WINDOW(setting_window),
         GTK_WINDOW(rc_ui->main_window));

@@ -26,10 +26,6 @@
 #ifndef HAVE_COMMON_DECLARATION
 #define HAVE_COMMON_DECLARATION
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
 #include <glib.h>
 #include <glib/gstdio.h>
 #include <gtk/gtk.h>

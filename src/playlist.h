@@ -5,9 +5,7 @@
 #ifndef HAVE_PLAYLIST_H
 #define HAVE_PLAYLIST_H
 
-#include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <string.h>
 #include <time.h>
 #include <glib.h>
@@ -15,7 +13,6 @@
 #include <glib/gprintf.h>
 #include <gtk/gtk.h>
 #include <gst/gst.h>
-#include <gst/pbutils/missing-plugins.h>
 
 /*
  * ListStore1: 0:State, 1:Name, 2: ListStore2(gpointer).

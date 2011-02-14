@@ -56,8 +56,8 @@ am_RhythmCat_OBJECTS = core.$(OBJEXT) lyric.$(OBJEXT) \
 	plugin.$(OBJEXT) shell.$(OBJEXT) msg.$(OBJEXT) debug.$(OBJEXT) \
 	player.$(OBJEXT) gui.$(OBJEXT) gui_setting.$(OBJEXT) \
 	gui_treeview.$(OBJEXT) gui_style.$(OBJEXT) \
-	gui_dialog.$(OBJEXT) gui_menu.$(OBJEXT) gui_lrc.$(OBJEXT) \
-	gui_eq.$(OBJEXT) main.$(OBJEXT)
+	gui_dialog.$(OBJEXT) gui_lrc.$(OBJEXT) gui_eq.$(OBJEXT) \
+	gui_plugin.$(OBJEXT) main.$(OBJEXT)
 RhythmCat_OBJECTS = $(am_RhythmCat_OBJECTS)
 RhythmCat_DEPENDENCIES =
 DEFAULT_INCLUDES = -I. -I$(top_builddir)
@@ -185,7 +185,7 @@ mandir = ${datarootdir}/man
 mkdir_p = /bin/mkdir -p
 oldincludedir = /usr/include
 pdfdir = ${docdir}
-prefix = /opt/amd64/RhythmCat
+prefix = /usr/local
 program_transform_name = s,x,x,
 psdir = ${docdir}
 sbindir = ${exec_prefix}/sbin
@@ -198,7 +198,7 @@ top_builddir = ..
 top_srcdir = ..
 RhythmCat_SOURCES = core.c lyric.c playlist.c tag.c settings.c plugin.c \
     shell.c msg.c debug.c player.c gui.c gui_setting.c gui_treeview.c \
-    gui_style.c gui_dialog.c gui_menu.c gui_lrc.c gui_eq.c main.c        
+    gui_style.c gui_dialog.c gui_lrc.c gui_eq.c gui_plugin.c main.c        
 
 INCLUDES = -pthread -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include   -pthread -I/usr/include/dbus-1.0 -I/usr/lib/dbus-1.0/include -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include   -pthread -I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/gio-unix-2.0/ -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng12 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include   -pthread -I/usr/include/gstreamer-0.10 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/libxml2   \
     -DLOCALEDIR=\"$(localedir)\"
@@ -293,7 +293,7 @@ include ./$(DEPDIR)/gui.Po
 include ./$(DEPDIR)/gui_dialog.Po
 include ./$(DEPDIR)/gui_eq.Po
 include ./$(DEPDIR)/gui_lrc.Po
-include ./$(DEPDIR)/gui_menu.Po
+include ./$(DEPDIR)/gui_plugin.Po
 include ./$(DEPDIR)/gui_setting.Po
 include ./$(DEPDIR)/gui_style.Po
 include ./$(DEPDIR)/gui_treeview.Po

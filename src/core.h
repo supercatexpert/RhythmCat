@@ -25,9 +25,7 @@
 #ifndef HAVE_CORE_H
 #define HAVE_CORE_H
 
-#include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <glib.h>
 #include <gst/gst.h>
 #include <gtk/gtk.h>
@@ -43,8 +41,6 @@ typedef struct _CoreData
     GstElement *vol_plugin;
     gdouble volume;
     gdouble eq[10];
-    gint repeat;
-    gint random;
     gint eos;
     guint ver_major;
     guint ver_minor;

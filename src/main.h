@@ -25,7 +25,6 @@
 #ifndef HAVE_MAIN_H
 #define HAVE_MAIN_H
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>

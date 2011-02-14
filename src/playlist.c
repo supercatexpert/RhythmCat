@@ -133,6 +133,9 @@ gboolean rc_plist_init()
         }
     }
     plist_import_job_flag = TRUE;
+    rc_plist.repeat_mode = rc_setting->repeat_mode;
+    rc_plist.random_mode = rc_setting->random_mode;
+    rc_gui_set_player_state();
     rc_debug_print("Plist: Playlists are successfully loaded!\n");
     return TRUE;
 }

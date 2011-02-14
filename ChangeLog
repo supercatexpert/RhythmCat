@@ -2,3 +2,9 @@
 
 	* configure.in (AM_GNU_GETTEXT_VERSION): Bump to 0.18.1.
 
+2011-02-11  SuperCat    <supercatexpert@gmail.com>
+
+        Added plugin support and Desktop Lyric Show plugin.
+
+
+

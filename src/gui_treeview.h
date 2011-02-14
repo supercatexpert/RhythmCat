@@ -26,7 +26,6 @@
 #define HAVE_GUI_TREEVIEW_H
 
 #include <stdlib.h>
-#include <unistd.h>
 #include <glib.h>
 #include <glib/gprintf.h>
 #include <gtk/gtk.h>
@@ -34,6 +33,7 @@
 /* Functions */
 void rc_gui_treeview_init();
 void rc_gui_list_tree_reset_list_store();
+gboolean rc_gui_list1_popup_menu(GtkWidget *, GdkEventButton *, gpointer);
 gboolean rc_gui_list2_popup_menu(GtkWidget *, GdkEventButton *, gpointer);
 gboolean rc_gui_list2_button_release_event(GtkWidget *,
     GdkEventButton *, gpointer);

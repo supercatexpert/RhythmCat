@@ -513,8 +513,8 @@ tag.o: tag.c tag.h /usr/include/glib-2.0/glib.h \
  /usr/include/gtk-2.0/gtk/gtkpreview.h \
  /usr/include/gtk-2.0/gtk/gtktipsquery.h \
  /usr/include/gstreamer-0.10/gst/pbutils/missing-plugins.h settings.h \
- /usr/include/unistd.h /usr/include/bits/posix_opt.h \
- /usr/include/bits/confname.h /usr/include/getopt.h debug.h
+ debug.h /usr/include/unistd.h /usr/include/bits/posix_opt.h \
+ /usr/include/bits/confname.h /usr/include/getopt.h
 
 tag.h:
 
@@ -1714,6 +1714,8 @@ tag.h:
 
 settings.h:
 
+debug.h:
+
 /usr/include/unistd.h:
 
 /usr/include/bits/posix_opt.h:
@@ -1721,5 +1723,3 @@ settings.h:
 /usr/include/bits/confname.h:
 
 /usr/include/getopt.h:
-
-debug.h:

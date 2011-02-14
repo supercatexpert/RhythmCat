@@ -25,9 +25,6 @@
 #ifndef HAVE_PLUGIN_H
 #define HAVE_PLUGIN_H
 
-
-#include <stdio.h>
-#include <dlfcn.h>
 #include <glib.h>
 #include <gtk/gtk.h>
 #include <gst/gst.h>

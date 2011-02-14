@@ -27,7 +27,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <glib.h>
 #include <glib/gprintf.h>
 #include <gdk/gdk.h>
@@ -39,6 +38,7 @@
 /* Custom struct type to store the GUI data. */
 typedef struct _GuiData
 {
+    GtkUIManager *main_ui;
     GtkWidget *main_window;
     GtkWidget *lyric_vbox;
     GtkWidget *eq_vbox;
@@ -92,19 +92,16 @@ gboolean rc_gui_seek_scale_button_pressed(GtkWidget *, GdkEventButton *,
 gboolean rc_gui_seek_scale_button_released(GtkWidget *, GdkEventButton *,
     gpointer);
 void rc_gui_seek_scale_value_changed(GtkRange *, gpointer);
-gboolean rc_gui_list1_popup_menu(GtkWidget *, GdkEventButton *, gpointer);
 void rc_gui_set_volume(gdouble);
 void rc_gui_set_player_state();
-gboolean rc_gui_press_repeat_menu(GtkCheckMenuItem *, gpointer);
-gboolean rc_gui_press_random_menu(GtkCheckMenuItem *, gpointer);
+void rc_gui_press_view_menu(GtkAction *, GtkRadioAction *);
+void rc_gui_press_repeat_menu(GtkAction *, GtkRadioAction *);
+void rc_gui_press_random_menu(GtkAction *, GtkRadioAction *);
 gboolean rc_gui_press_vol_up_menu(GtkMenuItem *, gpointer);
 gboolean rc_gui_press_vol_down_menu(GtkMenuItem *, gpointer);
 gboolean rc_gui_press_backward_menu(GtkMenuItem *, gpointer);
 gboolean rc_gui_press_forward_menu(GtkMenuItem *, gpointer);
 void rc_gui_set_list2_menu(GtkTreeView *, gpointer);
-gboolean rc_gui_show_playlist_page(GtkMenuItem *, gpointer);
-gboolean rc_gui_show_lyric_page(GtkMenuItem *, gpointer);
-gboolean rc_gui_show_eq_page(GtkMenuItem *, gpointer);
 void rc_gui_refresh_music_info(GtkMenuItem *, gpointer);
 gboolean rc_gui_set_cover_image(gchar *);
 void rc_gui_show_hide_window(GtkWidget *, gpointer);

@@ -9,9 +9,7 @@ gui_treeview.o: gui_treeview.c gui_treeview.h /usr/include/stdlib.h \
  /usr/include/sys/select.h /usr/include/bits/select.h \
  /usr/include/bits/sigset.h /usr/include/bits/time.h \
  /usr/include/sys/sysmacros.h /usr/include/bits/pthreadtypes.h \
- /usr/include/alloca.h /usr/include/unistd.h \
- /usr/include/bits/posix_opt.h /usr/include/bits/confname.h \
- /usr/include/getopt.h /usr/include/glib-2.0/glib.h \
+ /usr/include/alloca.h /usr/include/glib-2.0/glib.h \
  /usr/include/glib-2.0/glib/galloca.h /usr/include/glib-2.0/glib/gtypes.h \
  /usr/lib/glib-2.0/include/glibconfig.h \
  /usr/include/glib-2.0/glib/gmacros.h \
@@ -510,6 +508,8 @@ gui_treeview.o: gui_treeview.c gui_treeview.h /usr/include/stdlib.h \
  /usr/include/gstreamer-0.10/gst/gstxml.h \
  /usr/include/gstreamer-0.10/gst/gstcompat.h /usr/include/libpng12/png.h \
  /usr/include/zlib.h /usr/include/zconf.h /usr/include/zlibdefs.h \
+ /usr/include/unistd.h /usr/include/bits/posix_opt.h \
+ /usr/include/bits/confname.h /usr/include/getopt.h \
  /usr/include/libpng12/pngconf.h /usr/include/setjmp.h \
  /usr/include/bits/setjmp.h /usr/include/string.h \
  /usr/include/bits/string.h /usr/include/bits/string2.h \
@@ -533,9 +533,7 @@ gui_treeview.o: gui_treeview.c gui_treeview.h /usr/include/stdlib.h \
  /usr/include/dbus-1.0/dbus/dbus-signature.h \
  /usr/include/dbus-1.0/dbus/dbus-threads.h \
  /usr/include/dbus-1.0/dbus/dbus-glib.h \
- /usr/include/dbus-1.0/dbus/dbus-gtype-specialized.h playlist.h \
- /usr/include/gstreamer-0.10/gst/pbutils/missing-plugins.h gui_menu.h \
- /usr/include/gtk-2.0/gdk/gdkkeysyms.h
+ /usr/include/dbus-1.0/dbus/dbus-gtype-specialized.h playlist.h
 
 gui_treeview.h:
 
@@ -582,14 +580,6 @@ gui_treeview.h:
 /usr/include/bits/pthreadtypes.h:
 
 /usr/include/alloca.h:
-
-/usr/include/unistd.h:
-
-/usr/include/bits/posix_opt.h:
-
-/usr/include/bits/confname.h:
-
-/usr/include/getopt.h:
 
 /usr/include/glib-2.0/glib.h:
 
@@ -1735,6 +1725,14 @@ gui.h:
 
 /usr/include/zlibdefs.h:
 
+/usr/include/unistd.h:
+
+/usr/include/bits/posix_opt.h:
+
+/usr/include/bits/confname.h:
+
+/usr/include/getopt.h:
+
 /usr/include/libpng12/pngconf.h:
 
 /usr/include/setjmp.h:
@@ -1798,9 +1796,3 @@ main.h:
 /usr/include/dbus-1.0/dbus/dbus-gtype-specialized.h:
 
 playlist.h:
-
-/usr/include/gstreamer-0.10/gst/pbutils/missing-plugins.h:
-
-gui_menu.h:
-
-/usr/include/gtk-2.0/gdk/gdkkeysyms.h:

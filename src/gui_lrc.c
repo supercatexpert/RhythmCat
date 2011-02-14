@@ -28,19 +28,16 @@
 #include "lyric.h"
 #include "main.h"
 #include "core.h"
-#include "gui_menu.h"
 #include "settings.h"
 #include "debug.h"
 
 static GuiLrcData rc_glrc;
 GuiData *rc_ui;
-GuiMenu *ui_menu;
 
 void rc_gui_lrc_init()
 {
     RCSetting *rc_setting = rc_set_get_setting();
     rc_ui = rc_gui_get_gui();
-    ui_menu = rc_gui_get_menu();
     bzero(&rc_glrc, sizeof(GuiLrcData));
     rc_glrc.lrc_line_length = 0L;
     rc_glrc.lrc_line_num = -1L;
@@ -116,6 +113,7 @@ gboolean rc_gui_lrc_show(GtkWidget *widget, gpointer data)
     static gboolean visible = TRUE;
     const GList *list_foreach = rc_glrc.lyric_data;
     static RCSetting *rc_setting = NULL;
+    GtkAllocation allocation;
     if(rc_setting==NULL) rc_setting = rc_set_get_setting();
     gint64 i = 0L;
     guint64 playing_time;
@@ -138,7 +136,7 @@ gboolean rc_gui_lrc_show(GtkWidget *widget, gpointer data)
     GdkWindow *lrc_window;
     if(!GTK_IS_WIDGET(rc_glrc.lrc_scene)) return TRUE;
     lrc_window = gtk_widget_get_window(rc_glrc.lrc_scene);
-    if(!GDK_IS_DRAWABLE(lrc_window)) return TRUE;
+    if(!GDK_IS_WINDOW(lrc_window)) return TRUE;
     g_object_get(G_OBJECT(rc_glrc.lrc_scene), "visible", &visible, NULL);
     if(!visible) return TRUE;
     if(!rc_glrc.lyric_flag) return TRUE;
@@ -154,8 +152,9 @@ gboolean rc_gui_lrc_show(GtkWidget *widget, gpointer data)
         rc_glrc.text_hilight[count] = rc_setting->lrc_hi_color[count];
         rc_glrc.background[count] = rc_setting->lrc_bg_color[count];
     }
-    gdk_drawable_get_size(GDK_DRAWABLE(lrc_window),
-        &width, &height);
+    gtk_widget_get_allocation(rc_glrc.lrc_scene, &allocation);
+    width = allocation.width;
+    height = allocation.height;
     lrc_cr = gdk_cairo_create(lrc_window);
     layout = pango_cairo_create_layout(lrc_cr);
     pango_layout_set_text(layout, "Font size test!", -1);
@@ -236,7 +235,7 @@ gboolean rc_gui_lrc_expose(GtkWidget *widget, gpointer data)
     gboolean visible = FALSE;
     gint i = 0;
     static RCSetting *rc_setting = NULL;
-    if(!GDK_IS_DRAWABLE(gtk_widget_get_window(rc_glrc.lrc_scene)))
+    if(!GDK_IS_WINDOW(gtk_widget_get_window(rc_glrc.lrc_scene)))
         return TRUE;
     g_object_get(G_OBJECT(rc_glrc.lrc_scene), "visible", &visible, NULL);
     if(!visible) return FALSE;
