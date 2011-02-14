@@ -693,15 +693,16 @@ void rc_gui_list2_dnd_data_get(GtkWidget *widget, GdkDragContext *context,
 void rc_gui_list2_dnd_motion(GtkWidget *widget, GdkDragContext *context,
     gint x, gint y, guint time, gpointer data)
 {
-    static gdouble persent = 0.0;
-    static gint height = 0;
+    GtkAllocation allocation;
+    gdouble persent = 0.0;
+    gint height = 0;
     gint bx, by;
     GtkTreeViewDropPosition pos;
     GtkTreePath *path_drop = NULL;
     gtk_tree_view_get_dest_row_at_pos(GTK_TREE_VIEW(
-        rc_ui->list2_tree_view), x,y, &path_drop, &pos);
-    gdk_drawable_get_size(gtk_tree_view_get_bin_window(
-        GTK_TREE_VIEW(rc_ui->list2_tree_view)),NULL,&height);
+        rc_ui->list2_tree_view), x, y, &path_drop, &pos);
+    gtk_widget_get_allocation(rc_ui->list2_tree_view, &allocation);
+    height = allocation.height;
     if(pos==GTK_TREE_VIEW_DROP_INTO_OR_BEFORE) pos=GTK_TREE_VIEW_DROP_BEFORE;
     if(pos==GTK_TREE_VIEW_DROP_INTO_OR_AFTER) pos=GTK_TREE_VIEW_DROP_AFTER;
     if(path_drop)

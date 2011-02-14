@@ -31,6 +31,7 @@
 
 static GuiData *rc_ui;
 static GtkWidget *eq_combobox;
+static GtkListStore *eq_liststore;
 static GtkWidget *eq_scales[10];
 static EQData eq_data[11];
 
@@ -98,12 +99,19 @@ void rc_gui_eq_init()
     GtkWidget *db_vbox;
     GtkWidget *hbox1, *hbox2;
     GtkWidget *save_button, *import_button;
+    GtkCellRenderer *renderer = NULL;
+    GtkTreeIter iter;
     PangoAttrList *eq_attr_list;
     PangoAttribute *eq_attr;
     eq_attr_list = pango_attr_list_new();
     eq_attr = pango_attr_size_new(8 * PANGO_SCALE);
     pango_attr_list_insert(eq_attr_list, eq_attr);
-    eq_combobox = gtk_combo_box_new_text();
+    eq_liststore = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_INT);
+    renderer = gtk_cell_renderer_text_new();
+    eq_combobox = gtk_combo_box_new_with_model(GTK_TREE_MODEL(eq_liststore));
+    gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(eq_combobox), renderer, TRUE);
+    gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(eq_combobox), renderer,
+        "text", 0, NULL);
     hbox1 = gtk_hbox_new(FALSE, 8);
     hbox2 = gtk_hbutton_box_new();
     gtk_button_box_set_layout(GTK_BUTTON_BOX(hbox2), GTK_BUTTONBOX_END);
@@ -157,7 +165,12 @@ void rc_gui_eq_init()
     gtk_box_pack_start(GTK_BOX(scale_hbox), scale_vboxs[10],
         FALSE, FALSE, 2);
     for(i=0;i<11;i++)
-        gtk_combo_box_append_text(GTK_COMBO_BOX(eq_combobox), eq_data[i].name);
+    {
+        gtk_list_store_append(eq_liststore, &iter);
+        gtk_list_store_set(eq_liststore, &iter, 0, eq_data[i].name, 1,
+            i, -1);
+        //gtk_combo_box_append_text(GTK_COMBO_BOX(eq_combobox), eq_data[i].name);
+    }
     if(rc_setting->eq_style!=-1)
         gtk_combo_box_set_active(GTK_COMBO_BOX(eq_combobox), 
             rc_setting->eq_style);
