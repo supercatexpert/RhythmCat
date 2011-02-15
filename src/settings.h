@@ -35,31 +35,22 @@ typedef struct _RCSetting
 {
     gboolean auto_play;
     gboolean auto_next;
-    gboolean osd_lyric_flag;
-    gboolean osd_lyric_movable;
     gboolean min_to_tray;
     gint repeat_mode;
     gint random_mode;
     gint lrc_bg_image_style;
-    gint osd_lyric_pos[2];
     gint eq_style;
     guint lrc_line_ds;
-    guint osd_lryic_width;
     gchar *skin_rc_file;
     gchar *tag_ex_encoding;
     gchar *lrc_ex_encoding;
     gchar *lrc_font;
     gchar *lrc_bg_image;
-    gchar *osd_lyric_font;
     gdouble volume;
     gdouble eq_array[10];
     gdouble lrc_bg_color[3];
     gdouble lrc_fg_color[3];
     gdouble lrc_hi_color[3];
-    gdouble osd_lyric_fg_color1[3];
-    gdouble osd_lyric_fg_color2[3];
-    gdouble osd_lyric_bg_color1[3];
-    gdouble osd_lyric_bg_color2[3]; 
 }RCSetting;
 
 /* Functions */

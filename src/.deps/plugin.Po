@@ -1,14 +1,23 @@
-plugin.o: plugin.c plugin.h /usr/include/glib-2.0/glib.h \
+plugin.o: plugin.c plugin.h /usr/include/string.h /usr/include/features.h \
+ /usr/include/bits/predefs.h /usr/include/sys/cdefs.h \
+ /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
+ /usr/include/gnu/stubs-64.h \
+ /usr/lib/gcc/x86_64-linux-gnu/4.4.5/include/stddef.h \
+ /usr/include/xlocale.h /usr/include/bits/string.h \
+ /usr/include/bits/string2.h /usr/include/endian.h \
+ /usr/include/bits/endian.h /usr/include/bits/byteswap.h \
+ /usr/include/bits/types.h /usr/include/bits/typesizes.h \
+ /usr/include/stdlib.h /usr/include/sys/types.h /usr/include/time.h \
+ /usr/include/sys/select.h /usr/include/bits/select.h \
+ /usr/include/bits/sigset.h /usr/include/bits/time.h \
+ /usr/include/sys/sysmacros.h /usr/include/bits/pthreadtypes.h \
+ /usr/include/alloca.h /usr/include/glib-2.0/glib.h \
  /usr/include/glib-2.0/glib/galloca.h /usr/include/glib-2.0/glib/gtypes.h \
  /usr/lib/glib-2.0/include/glibconfig.h \
  /usr/include/glib-2.0/glib/gmacros.h \
- /usr/lib/gcc/x86_64-linux-gnu/4.4.5/include/stddef.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.4.5/include-fixed/limits.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.4.5/include-fixed/syslimits.h \
- /usr/include/limits.h /usr/include/features.h \
- /usr/include/bits/predefs.h /usr/include/sys/cdefs.h \
- /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
- /usr/include/gnu/stubs-64.h /usr/include/bits/posix1_lim.h \
+ /usr/include/limits.h /usr/include/bits/posix1_lim.h \
  /usr/include/bits/local_lim.h /usr/include/linux/limits.h \
  /usr/include/bits/posix2_lim.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.4.5/include/float.h \
@@ -19,17 +28,14 @@ plugin.o: plugin.c plugin.h /usr/include/glib-2.0/glib.h \
  /usr/include/glib-2.0/glib/gquark.h /usr/include/glib-2.0/glib/gutils.h \
  /usr/include/glib-2.0/glib/gatomic.h \
  /usr/include/glib-2.0/glib/gbacktrace.h /usr/include/signal.h \
- /usr/include/bits/sigset.h /usr/include/bits/types.h \
- /usr/include/bits/typesizes.h /usr/include/bits/signum.h \
- /usr/include/time.h /usr/include/bits/siginfo.h \
+ /usr/include/bits/signum.h /usr/include/bits/siginfo.h \
  /usr/include/bits/sigaction.h /usr/include/bits/sigcontext.h \
- /usr/include/bits/sigstack.h /usr/include/bits/pthreadtypes.h \
- /usr/include/bits/sigthread.h /usr/include/glib-2.0/glib/gbase64.h \
+ /usr/include/bits/sigstack.h /usr/include/bits/sigthread.h \
+ /usr/include/glib-2.0/glib/gbase64.h \
  /usr/include/glib-2.0/glib/gbitlock.h \
- /usr/include/glib-2.0/glib/gbookmarkfile.h /usr/include/bits/time.h \
- /usr/include/xlocale.h /usr/include/glib-2.0/glib/gcache.h \
- /usr/include/glib-2.0/glib/glist.h /usr/include/glib-2.0/glib/gmem.h \
- /usr/include/glib-2.0/glib/gslice.h \
+ /usr/include/glib-2.0/glib/gbookmarkfile.h \
+ /usr/include/glib-2.0/glib/gcache.h /usr/include/glib-2.0/glib/glist.h \
+ /usr/include/glib-2.0/glib/gmem.h /usr/include/glib-2.0/glib/gslice.h \
  /usr/include/glib-2.0/glib/gchecksum.h \
  /usr/include/glib-2.0/glib/gcompletion.h \
  /usr/include/glib-2.0/glib/gconvert.h \
@@ -447,10 +453,6 @@ plugin.o: plugin.c plugin.h /usr/include/glib-2.0/glib.h \
  /usr/include/libxml2/libxml/encoding.h /usr/include/iconv.h \
  /usr/include/libxml2/libxml/xmlIO.h \
  /usr/include/libxml2/libxml/globals.h /usr/include/libxml2/libxml/SAX.h \
- /usr/include/stdlib.h /usr/include/sys/types.h /usr/include/endian.h \
- /usr/include/bits/endian.h /usr/include/bits/byteswap.h \
- /usr/include/sys/select.h /usr/include/bits/select.h \
- /usr/include/sys/sysmacros.h /usr/include/alloca.h \
  /usr/include/libxml2/libxml/xlink.h /usr/include/libxml2/libxml/SAX2.h \
  /usr/include/libxml2/libxml/xmlmemory.h \
  /usr/include/libxml2/libxml/threads.h \
@@ -506,34 +508,36 @@ plugin.o: plugin.c plugin.h /usr/include/glib-2.0/glib.h \
  /usr/include/gstreamer-0.10/gst/gstxml.h \
  /usr/include/gstreamer-0.10/gst/gstcompat.h core.h \
  /usr/include/glib-2.0/glib/gi18n.h /usr/include/libintl.h \
- /usr/include/locale.h /usr/include/bits/locale.h /usr/include/string.h \
- /usr/include/bits/string.h /usr/include/bits/string2.h gui.h \
+ /usr/include/locale.h /usr/include/bits/locale.h gui.h \
  /usr/include/glib-2.0/glib/gprintf.h /usr/include/libpng12/png.h \
  /usr/include/zlib.h /usr/include/zconf.h /usr/include/zlibdefs.h \
  /usr/include/unistd.h /usr/include/bits/posix_opt.h \
  /usr/include/bits/confname.h /usr/include/getopt.h \
  /usr/include/libpng12/pngconf.h /usr/include/setjmp.h \
- /usr/include/bits/setjmp.h playlist.h debug.h
+ /usr/include/bits/setjmp.h playlist.h debug.h main.h \
+ /usr/include/dbus-1.0/dbus/dbus.h \
+ /usr/lib/dbus-1.0/include/dbus/dbus-arch-deps.h \
+ /usr/include/dbus-1.0/dbus/dbus-macros.h \
+ /usr/include/dbus-1.0/dbus/dbus-address.h \
+ /usr/include/dbus-1.0/dbus/dbus-types.h \
+ /usr/include/dbus-1.0/dbus/dbus-errors.h \
+ /usr/include/dbus-1.0/dbus/dbus-bus.h \
+ /usr/include/dbus-1.0/dbus/dbus-connection.h \
+ /usr/include/dbus-1.0/dbus/dbus-memory.h \
+ /usr/include/dbus-1.0/dbus/dbus-message.h \
+ /usr/include/dbus-1.0/dbus/dbus-shared.h \
+ /usr/include/dbus-1.0/dbus/dbus-misc.h \
+ /usr/include/dbus-1.0/dbus/dbus-pending-call.h \
+ /usr/include/dbus-1.0/dbus/dbus-protocol.h \
+ /usr/include/dbus-1.0/dbus/dbus-server.h \
+ /usr/include/dbus-1.0/dbus/dbus-signature.h \
+ /usr/include/dbus-1.0/dbus/dbus-threads.h \
+ /usr/include/dbus-1.0/dbus/dbus-glib.h \
+ /usr/include/dbus-1.0/dbus/dbus-gtype-specialized.h
 
 plugin.h:
 
-/usr/include/glib-2.0/glib.h:
-
-/usr/include/glib-2.0/glib/galloca.h:
-
-/usr/include/glib-2.0/glib/gtypes.h:
-
-/usr/lib/glib-2.0/include/glibconfig.h:
-
-/usr/include/glib-2.0/glib/gmacros.h:
-
-/usr/lib/gcc/x86_64-linux-gnu/4.4.5/include/stddef.h:
-
-/usr/lib/gcc/x86_64-linux-gnu/4.4.5/include-fixed/limits.h:
-
-/usr/lib/gcc/x86_64-linux-gnu/4.4.5/include-fixed/syslimits.h:
-
-/usr/include/limits.h:
+/usr/include/string.h:
 
 /usr/include/features.h:
 
@@ -546,6 +550,60 @@ plugin.h:
 /usr/include/gnu/stubs.h:
 
 /usr/include/gnu/stubs-64.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/4.4.5/include/stddef.h:
+
+/usr/include/xlocale.h:
+
+/usr/include/bits/string.h:
+
+/usr/include/bits/string2.h:
+
+/usr/include/endian.h:
+
+/usr/include/bits/endian.h:
+
+/usr/include/bits/byteswap.h:
+
+/usr/include/bits/types.h:
+
+/usr/include/bits/typesizes.h:
+
+/usr/include/stdlib.h:
+
+/usr/include/sys/types.h:
+
+/usr/include/time.h:
+
+/usr/include/sys/select.h:
+
+/usr/include/bits/select.h:
+
+/usr/include/bits/sigset.h:
+
+/usr/include/bits/time.h:
+
+/usr/include/sys/sysmacros.h:
+
+/usr/include/bits/pthreadtypes.h:
+
+/usr/include/alloca.h:
+
+/usr/include/glib-2.0/glib.h:
+
+/usr/include/glib-2.0/glib/galloca.h:
+
+/usr/include/glib-2.0/glib/gtypes.h:
+
+/usr/lib/glib-2.0/include/glibconfig.h:
+
+/usr/include/glib-2.0/glib/gmacros.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/4.4.5/include-fixed/limits.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/4.4.5/include-fixed/syslimits.h:
+
+/usr/include/limits.h:
 
 /usr/include/bits/posix1_lim.h:
 
@@ -577,15 +635,7 @@ plugin.h:
 
 /usr/include/signal.h:
 
-/usr/include/bits/sigset.h:
-
-/usr/include/bits/types.h:
-
-/usr/include/bits/typesizes.h:
-
 /usr/include/bits/signum.h:
-
-/usr/include/time.h:
 
 /usr/include/bits/siginfo.h:
 
@@ -595,8 +645,6 @@ plugin.h:
 
 /usr/include/bits/sigstack.h:
 
-/usr/include/bits/pthreadtypes.h:
-
 /usr/include/bits/sigthread.h:
 
 /usr/include/glib-2.0/glib/gbase64.h:
@@ -604,10 +652,6 @@ plugin.h:
 /usr/include/glib-2.0/glib/gbitlock.h:
 
 /usr/include/glib-2.0/glib/gbookmarkfile.h:
-
-/usr/include/bits/time.h:
-
-/usr/include/xlocale.h:
 
 /usr/include/glib-2.0/glib/gcache.h:
 
@@ -1555,24 +1599,6 @@ plugin.h:
 
 /usr/include/libxml2/libxml/SAX.h:
 
-/usr/include/stdlib.h:
-
-/usr/include/sys/types.h:
-
-/usr/include/endian.h:
-
-/usr/include/bits/endian.h:
-
-/usr/include/bits/byteswap.h:
-
-/usr/include/sys/select.h:
-
-/usr/include/bits/select.h:
-
-/usr/include/sys/sysmacros.h:
-
-/usr/include/alloca.h:
-
 /usr/include/libxml2/libxml/xlink.h:
 
 /usr/include/libxml2/libxml/SAX2.h:
@@ -1703,12 +1729,6 @@ core.h:
 
 /usr/include/bits/locale.h:
 
-/usr/include/string.h:
-
-/usr/include/bits/string.h:
-
-/usr/include/bits/string2.h:
-
 gui.h:
 
 /usr/include/glib-2.0/glib/gprintf.h:
@@ -1738,3 +1758,43 @@ gui.h:
 playlist.h:
 
 debug.h:
+
+main.h:
+
+/usr/include/dbus-1.0/dbus/dbus.h:
+
+/usr/lib/dbus-1.0/include/dbus/dbus-arch-deps.h:
+
+/usr/include/dbus-1.0/dbus/dbus-macros.h:
+
+/usr/include/dbus-1.0/dbus/dbus-address.h:
+
+/usr/include/dbus-1.0/dbus/dbus-types.h:
+
+/usr/include/dbus-1.0/dbus/dbus-errors.h:
+
+/usr/include/dbus-1.0/dbus/dbus-bus.h:
+
+/usr/include/dbus-1.0/dbus/dbus-connection.h:
+
+/usr/include/dbus-1.0/dbus/dbus-memory.h:
+
+/usr/include/dbus-1.0/dbus/dbus-message.h:
+
+/usr/include/dbus-1.0/dbus/dbus-shared.h:
+
+/usr/include/dbus-1.0/dbus/dbus-misc.h:
+
+/usr/include/dbus-1.0/dbus/dbus-pending-call.h:
+
+/usr/include/dbus-1.0/dbus/dbus-protocol.h:
+
+/usr/include/dbus-1.0/dbus/dbus-server.h:
+
+/usr/include/dbus-1.0/dbus/dbus-signature.h:
+
+/usr/include/dbus-1.0/dbus/dbus-threads.h:
+
+/usr/include/dbus-1.0/dbus/dbus-glib.h:
+
+/usr/include/dbus-1.0/dbus/dbus-gtype-specialized.h:

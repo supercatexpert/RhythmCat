@@ -335,6 +335,7 @@ static gboolean rc_gui_refresh_time_info(gpointer data)
     gdouble persent = 0.0;
     gint lrc_label_width, lrc_vport_width;
     gint lrc_width;
+    gint temp;
     gboolean sensitive = FALSE;
     gdouble lrc_vport_lower, lrc_vport_upper, lrc_vport_value;
     const LrcData *lrc_data;
@@ -364,12 +365,13 @@ static gboolean rc_gui_refresh_time_info(gpointer data)
         lrc_vport_value = lrc_vport_lower;
         if(lrc_width>0 && lrc_data->length>0)
         {
-            lrc_width += 20;
             lrc_vport_upper = gtk_adjustment_get_lower(rc_gui.lrc_vport_adj);
             persent = (gdouble)(pos / GST_MSECOND / 10 - lrc_data->time) /
                 lrc_data->length;
-            lrc_vport_value = lrc_vport_lower + lrc_width * persent;
-
+            lrc_vport_value = lrc_vport_lower + lrc_width;
+            lrc_width += 20;
+            temp = lrc_vport_lower + lrc_width * persent;
+            if(lrc_vport_value>=temp) lrc_vport_value = temp;
         }
         gtk_adjustment_set_value(rc_gui.lrc_vport_adj, lrc_vport_value);
     }
@@ -694,6 +696,7 @@ gboolean rc_gui_init()
     g_object_set(rc_gui.volume_button, "can-focus", FALSE, NULL);
     rc_gui_treeview_init();
     actions = gtk_action_group_new("RCActions");
+    gtk_action_group_set_translation_domain(actions, GETTEXT_PACKAGE);
     gtk_action_group_add_actions(actions, rc_menu_entries,
         rc_menu_n_entries, NULL);
     gtk_action_group_add_radio_actions(actions, rc_menu_view_entries,

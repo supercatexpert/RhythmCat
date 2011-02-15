@@ -39,15 +39,9 @@ void rc_set_initial_setting()
     rc_setting.auto_play = FALSE;
     rc_setting.auto_next = TRUE;
     rc_setting.min_to_tray = FALSE;
-    rc_setting.osd_lyric_flag = FALSE;
-    rc_setting.osd_lyric_movable = TRUE;
-    rc_setting.osd_lryic_width = 1000;
-    rc_setting.osd_lyric_pos[0] = 200;
-    rc_setting.osd_lyric_pos[1] = 30;
     rc_setting.tag_ex_encoding = g_strdup("GBK");
     rc_setting.lrc_ex_encoding = g_strdup("GBK");
     rc_setting.lrc_font = g_strdup("Monospace 10");
-    rc_setting.osd_lyric_font = g_strdup("Monospace 25");
     rc_setting.lrc_bg_color[0] = 0.23046875;
     rc_setting.lrc_bg_color[1] = 0.3359375;
     rc_setting.lrc_bg_color[2] = 0.44921875;
@@ -57,18 +51,6 @@ void rc_set_initial_setting()
     rc_setting.lrc_hi_color[0] = 1.0;
     rc_setting.lrc_hi_color[1] = 1.0;
     rc_setting.lrc_hi_color[2] = 1.0;
-    rc_setting.osd_lyric_bg_color1[0] = 0.3;
-    rc_setting.osd_lyric_bg_color1[1] = 1.0;
-    rc_setting.osd_lyric_bg_color1[2] = 1.0;
-    rc_setting.osd_lyric_bg_color2[0] = 0.0;
-    rc_setting.osd_lyric_bg_color2[1] = 0.0;
-    rc_setting.osd_lyric_bg_color2[2] = 1.0;
-    rc_setting.osd_lyric_fg_color1[0] = 1.0;
-    rc_setting.osd_lyric_fg_color1[1] = 0.3;
-    rc_setting.osd_lyric_fg_color1[2] = 0.3;
-    rc_setting.osd_lyric_fg_color2[0] = 1.0;
-    rc_setting.osd_lyric_fg_color2[1] = 1.0;
-    rc_setting.osd_lyric_fg_color2[2] = 0.0;
     /* Load system setting. */
     conf_file = g_strdup_printf("%s%cconf%csetting.conf", rc_get_app_dir(), 
         G_DIR_SEPARATOR, G_DIR_SEPARATOR);
@@ -157,16 +139,6 @@ void rc_set_load_setting(gchar *filename)
     if(error==NULL) rc_setting.min_to_tray = value_bool;
     g_clear_error(&error);
     value_bool = FALSE;
-    value_bool = g_key_file_get_boolean(sys_keyfile, "Player",
-        "OSDLRCMovable", &error);
-    if(error==NULL) rc_setting.osd_lyric_movable = value_bool;
-    g_clear_error(&error);
-    value_bool = FALSE;
-    value_bool = g_key_file_get_boolean(sys_keyfile, "Player",
-        "OSDLRCEnable", &error);
-    if(error==NULL) rc_setting.osd_lyric_flag = value_bool;
-    g_clear_error(&error);
-    value_bool = FALSE;
     value_int = g_key_file_get_integer(sys_keyfile, "Player",
         "EQStyle", &error);
     if(error==NULL)
@@ -208,21 +180,6 @@ void rc_set_load_setting(gchar *filename)
     value_int = g_key_file_get_integer(sys_keyfile, "Player",
         "LRCLineDistance", &error);
     if(error==NULL) rc_setting.lrc_line_ds = value_int;
-    g_clear_error(&error);
-    value_int = 0;
-    value_int = g_key_file_get_integer(sys_keyfile, "Player",
-        "OSDLRCWidth", &error);
-    if(error==NULL) rc_setting.osd_lryic_width = value_int;
-    g_clear_error(&error);
-    value_int = 0;
-    value_int = g_key_file_get_integer(sys_keyfile, "Player",
-        "OSDLRCPosX", &error);
-    if(error==NULL) rc_setting.osd_lyric_pos[0] = value_int;
-    g_clear_error(&error);
-    value_int = 0;
-    value_int = g_key_file_get_integer(sys_keyfile, "Player",
-        "OSDLRCPosY", &error);
-    if(error==NULL) rc_setting.osd_lyric_pos[1] = value_int;
     g_clear_error(&error);
     value_int = 0;
     value_str = g_key_file_get_string(sys_keyfile,"Player",
@@ -278,63 +235,6 @@ void rc_set_load_setting(gchar *filename)
         g_free(value_str);
     }
     value_str = NULL;
-    value_str = g_key_file_get_string(sys_keyfile,"Player",
-        "OSDLRCFont", NULL);
-    if(value_str!=NULL)
-    {
-        if(rc_setting.osd_lyric_font!=NULL) 
-            g_free(rc_setting.osd_lyric_font);
-        rc_setting.osd_lyric_font = value_str;
-    }
-    value_str = NULL;
-    value_str = g_key_file_get_string(sys_keyfile,"Player",
-        "OSDLRCFGColor1", NULL);
-    if(value_str!=NULL)
-    {
-        sscanf(value_str, "#%02X%02X%02X", &value_color[0], &value_color[1],
-            &value_color[2]);
-        for(count=0;count<3;count++)
-            rc_setting.osd_lyric_fg_color1[count] =
-                (gdouble)value_color[count] / 0xFF;
-        g_free(value_str);
-    }
-    value_str = NULL;
-    value_str = g_key_file_get_string(sys_keyfile,"Player",
-        "OSDLRCFGColor2", NULL);
-    if(value_str!=NULL)
-    {
-        sscanf(value_str, "#%02X%02X%02X", &value_color[0], &value_color[1],
-            &value_color[2]);
-        for(count=0;count<3;count++)
-            rc_setting.osd_lyric_fg_color2[count] =
-                (gdouble)value_color[count] / 0xFF;
-        g_free(value_str);
-    }
-    value_str = NULL;
-    value_str = g_key_file_get_string(sys_keyfile,"Player",
-        "OSDLRCBGColor1", NULL);
-    if(value_str!=NULL)
-    {
-        sscanf(value_str, "#%02X%02X%02X", &value_color[0], &value_color[1],
-            &value_color[2]);
-        for(count=0;count<3;count++)
-            rc_setting.osd_lyric_bg_color1[count] =
-                (gdouble)value_color[count] / 0xFF;
-        g_free(value_str);
-    }
-    value_str = NULL;
-    value_str = g_key_file_get_string(sys_keyfile,"Player",
-        "OSDLRCBGColor2", NULL);
-    if(value_str!=NULL)
-    {
-        sscanf(value_str, "#%02X%02X%02X", &value_color[0], &value_color[1],
-            &value_color[2]);
-        for(count=0;count<3;count++)
-            rc_setting.osd_lyric_bg_color2[count] =
-                (gdouble)value_color[count] / 0xFF;
-        g_free(value_str);
-    }
-    value_str = NULL;
     /* More setting items(?) here. */
     g_key_file_free(sys_keyfile);
 }
@@ -366,12 +266,6 @@ void rc_set_save_setting()
         "RandomMode", rc_setting.random_mode);
     g_key_file_set_integer(sys_keyfile, "Player",
         "EQStyle", rc_setting.eq_style);
-    g_key_file_set_integer(sys_keyfile, "Player",
-        "OSDLRCWidth", rc_setting.osd_lryic_width);
-    g_key_file_set_integer(sys_keyfile, "Player",
-        "OSDLRCPosX", rc_setting.osd_lyric_pos[0]);
-    g_key_file_set_integer(sys_keyfile, "Player",
-        "OSDLRCPosY", rc_setting.osd_lyric_pos[1]);
     g_key_file_set_double_list(sys_keyfile, "Player",
         "EQ", rc_setting.eq_array, 10);
     g_key_file_set_boolean(sys_keyfile, "Player",
@@ -380,18 +274,12 @@ void rc_set_save_setting()
         "AutoNext", rc_setting.auto_next);
     g_key_file_set_boolean(sys_keyfile, "Player",
         "MinToTray", rc_setting.min_to_tray);
-    g_key_file_set_boolean(sys_keyfile, "Player",
-        "OSDLRCEnable", rc_setting.osd_lyric_flag);
-    g_key_file_set_boolean(sys_keyfile, "Player",
-        "OSDLRCMovable", rc_setting.osd_lyric_movable);
     g_key_file_set_string(sys_keyfile,"Player",
         "TagExEncoding", rc_setting.tag_ex_encoding);
     g_key_file_set_string(sys_keyfile,"Player",
         "LRCExEncoding", rc_setting.lrc_ex_encoding);
     g_key_file_set_string(sys_keyfile,"Player",
         "LRCFont", rc_setting.lrc_font);
-    g_key_file_set_string(sys_keyfile,"Player",
-        "OSDLRCFont", rc_setting.osd_lyric_font);
     g_snprintf(color_str, 8, "#%02X%02X%02X", 
         (gint)(rc_setting.lrc_bg_color[0] * 0xFF),
         (gint)(rc_setting.lrc_bg_color[1] * 0xFF),
@@ -418,30 +306,6 @@ void rc_set_save_setting()
         (gint)(rc_setting.lrc_hi_color[2] * 0xFF));
     g_key_file_set_string(sys_keyfile,"Player",
         "LRCHiColor", color_str);
-    g_snprintf(color_str, 8, "#%02X%02X%02X", 
-        (gint)(rc_setting.osd_lyric_fg_color1[0] * 0xFF),
-        (gint)(rc_setting.osd_lyric_fg_color1[1] * 0xFF),
-        (gint)(rc_setting.osd_lyric_fg_color1[2] * 0xFF));
-    g_key_file_set_string(sys_keyfile,"Player",
-        "OSDLRCFGColor1", color_str);
-    g_snprintf(color_str, 8, "#%02X%02X%02X", 
-        (gint)(rc_setting.osd_lyric_fg_color2[0] * 0xFF),
-        (gint)(rc_setting.osd_lyric_fg_color2[1] * 0xFF),
-        (gint)(rc_setting.osd_lyric_fg_color2[2] * 0xFF));
-    g_key_file_set_string(sys_keyfile,"Player",
-        "OSDLRCFGColor2", color_str);
-    g_snprintf(color_str, 8, "#%02X%02X%02X", 
-        (gint)(rc_setting.osd_lyric_bg_color1[0] * 0xFF),
-        (gint)(rc_setting.osd_lyric_bg_color1[1] * 0xFF),
-        (gint)(rc_setting.osd_lyric_bg_color1[2] * 0xFF));
-    g_key_file_set_string(sys_keyfile,"Player",
-        "OSDLRCBGColor1", color_str);
-    g_snprintf(color_str, 8, "#%02X%02X%02X", 
-        (gint)(rc_setting.osd_lyric_bg_color2[0] * 0xFF),
-        (gint)(rc_setting.osd_lyric_bg_color2[1] * 0xFF),
-        (gint)(rc_setting.osd_lyric_bg_color2[2] * 0xFF));
-    g_key_file_set_string(sys_keyfile,"Player",
-        "OSDLRCBGColor2", color_str);
     g_key_file_set_integer(sys_keyfile, "Player",
         "LRCLineDistance", rc_setting.lrc_line_ds);
     /* More setting items(?) here. */

@@ -40,7 +40,7 @@ static gchar *rc_set_dir = NULL;
 static const gchar *rc_app_dir = NULL;
 static const gchar *rc_home_dir = NULL;
 static const gchar rc_program_name[] = "RhythmCat Music Player";
-static const gchar rc_build_num[] = "build 110214, alpha 1";
+static const gchar rc_build_num[] = "build 110215, alpha 1";
 static const gchar rc_ver_num[] = "0.9.0";
 static const gboolean rc_is_stable = FALSE;
 static const gchar rc_dbus_name[] = "org.supercat.RhythmCat";
@@ -131,7 +131,7 @@ void rc_initial(int *argc, char **argv[])
     rc_plist_init();
     rc_player_object_init();
     rc_plist_load_argument(remaining_args);
-    rc_plugin_load("plugins/desktop-lyric/desktop-lyric.conf");
+    rc_plugin_init();
 }
 
 gchar *rc_get_data_dir(char *arg0)

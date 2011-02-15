@@ -25,6 +25,7 @@
 
 #include "gui_plugin.h"
 #include "gui.h"
+#include "plugin.h"
 
 static GtkWidget *plugin_window;
 static GtkWidget *plugin_conf_button;
@@ -50,14 +51,42 @@ static void rc_gui_plugin_list_toggled(GtkCellRendererToggle *renderer,
     gtk_list_store_set(GTK_LIST_STORE(plugin_list_model), &iter,
         0, state, -1);
     g_printf("Toggled: %s\n", path_str);
-} 
+}
+
+static void rc_gui_plugin_row_selected(GtkTreeView *tree, gpointer data)
+{
+    GtkTreeIter iter;
+    GtkTreeSelection *selection;
+    gchar *title = NULL;
+    gchar *name, *version, *desc, *author, *website;
+    selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(plugin_list_view));
+    if(gtk_tree_selection_get_selected(selection, NULL, &iter))
+    {
+        gtk_tree_model_get(plugin_list_model, &iter, 1, &name, 2, &version,
+            3, &desc, 4, &author, 5, &website, -1);
+        if(name!=NULL && version!=NULL)
+        {
+            title = g_strdup_printf("<b>%s</b> <i>%s</i>", name, version);
+            gtk_label_set_markup(GTK_LABEL(plugin_name_label), title);
+            gtk_label_set_text(GTK_LABEL(plugin_desc_label), desc);
+            gtk_label_set_text(GTK_LABEL(plugin_author_label), author);
+            gtk_label_set_text(GTK_LABEL(plugin_website_label), website);
+        }
+        if(name!=NULL) g_free(name);
+        if(version!=NULL) g_free(version);
+        if(desc!=NULL) g_free(desc);
+        if(author!=NULL) g_free(author);
+        if(website!=NULL) g_free(website);
+    }
+}
 
 static void rc_gui_plugin_list_create()
 {
     GtkListStore *plugin_list_store;
     GtkTreeViewColumn *plugin_list_columns[2];
     GtkCellRenderer *plugin_list_renderers[2];
-    plugin_list_store = gtk_list_store_new(2, G_TYPE_BOOLEAN, G_TYPE_STRING);
+    plugin_list_store = gtk_list_store_new(6, G_TYPE_BOOLEAN, G_TYPE_STRING,
+        G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
     plugin_list_model = GTK_TREE_MODEL(plugin_list_store);
     plugin_list_view = gtk_tree_view_new_with_model(plugin_list_model);
     plugin_list_renderers[0] = gtk_cell_renderer_toggle_new();
@@ -65,7 +94,7 @@ static void rc_gui_plugin_list_create()
     gtk_cell_renderer_set_fixed_size(plugin_list_renderers[1], 50, -1);
     g_object_set(G_OBJECT(plugin_list_renderers[0]), "mode",
         GTK_CELL_RENDERER_MODE_ACTIVATABLE, NULL);
-    g_object_set(G_OBJECT(plugin_list_renderers[1]),"ellipsize-set", TRUE,
+    g_object_set(G_OBJECT(plugin_list_renderers[1]), "ellipsize-set", TRUE,
         NULL, "ellipsize", PANGO_ELLIPSIZE_END, NULL);
     plugin_list_columns[0] = gtk_tree_view_column_new_with_attributes(
         _("Enabled"), plugin_list_renderers[0], "active", 0, NULL);
@@ -75,15 +104,36 @@ static void rc_gui_plugin_list_create()
         plugin_list_columns[0]);
     gtk_tree_view_append_column(GTK_TREE_VIEW(plugin_list_view),
         plugin_list_columns[1]);
-
-    GtkTreeIter iter;
-    gtk_list_store_append(plugin_list_store, &iter);
-    gtk_list_store_set(plugin_list_store, &iter, 0, TRUE, 1, "Test1", -1);
-    gtk_list_store_append(plugin_list_store, &iter);
-    gtk_list_store_set(plugin_list_store, &iter, 0, FALSE, 1, "Test2", -1);
-
     g_signal_connect(G_OBJECT(plugin_list_renderers[0]), "toggled",
         G_CALLBACK(rc_gui_plugin_list_toggled), NULL);
+    g_signal_connect(G_OBJECT(plugin_list_view), "cursor-changed",
+        G_CALLBACK(rc_gui_plugin_row_selected),NULL);
+}
+
+static void rc_gui_plugin_load_info()
+{
+    const GSList *plugin_list, *list_foreach;
+    gboolean running = FALSE;
+    GtkTreeIter iter;
+    GtkListStore *plugin_list_store = GTK_LIST_STORE(plugin_list_model);
+    PluginData *plugin_data = NULL;
+    rc_plugin_list_free();
+    rc_plugin_search_dir("plugins");
+    plugin_list = rc_plugin_get_list();
+    for(list_foreach=plugin_list;list_foreach!=NULL;
+        list_foreach=g_slist_next(list_foreach))
+    {
+        plugin_data = list_foreach->data;
+        if(plugin_data==NULL) continue;
+        gtk_list_store_append(plugin_list_store, &iter);
+        if(plugin_data->type==PLUGIN_TYPE_MODULE)
+            running = rc_plugin_module_check_running(plugin_data->path);
+        else running = FALSE;
+        gtk_list_store_set(plugin_list_store, &iter, 0, running, 1,
+            plugin_data->name, 2, plugin_data->version, 3,
+            plugin_data->desc, 4, plugin_data->author, 5,
+            plugin_data->website, -1);
+    }
 }
 
 void rc_gui_plugin_window_create(GtkWidget *widget, gpointer data)
@@ -124,11 +174,9 @@ void rc_gui_plugin_window_create(GtkWidget *widget, gpointer data)
     plugin_conf_button = gtk_button_new_with_mnemonic(_("C_onfigure"));
     plugin_close_button = gtk_button_new_with_mnemonic(_("_Close"));
     plugin_name_label = gtk_label_new(NULL);
-    gtk_label_set_markup(GTK_LABEL(plugin_name_label),
-        _("<b>Plugin Name</b> <i>1.0</i>"));
-    plugin_desc_label = gtk_label_new("Plugin Description");
-    plugin_author_label = gtk_label_new("Author <author@mailsite.com>");
-    plugin_website_label = gtk_label_new("http://code.google.com/p/rhythmcat");
+    plugin_desc_label = gtk_label_new(NULL);
+    plugin_author_label = gtk_label_new(NULL);
+    plugin_website_label = gtk_label_new(NULL);
     label1 = gtk_label_new(NULL);
     gtk_label_set_markup(GTK_LABEL(label1), _("<b>Description:</b>"));
     label2 = gtk_label_new(NULL);
@@ -170,5 +218,6 @@ void rc_gui_plugin_window_create(GtkWidget *widget, gpointer data)
     gtk_box_pack_start(GTK_BOX(vbox1), button_hbox1, FALSE, FALSE, 4);
     gtk_container_add(GTK_CONTAINER(plugin_window), vbox1);
     gtk_widget_show_all(plugin_window);
+    rc_gui_plugin_load_info();
 }
 

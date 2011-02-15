@@ -25,6 +25,8 @@
 #ifndef HAVE_PLUGIN_H
 #define HAVE_PLUGIN_H
 
+#include <string.h>
+#include <stdlib.h>
 #include <glib.h>
 #include <gtk/gtk.h>
 #include <gst/gst.h>
@@ -38,15 +40,18 @@ typedef enum
 typedef struct _PluginData
 {
     gchar *path;
-    gchar *name;
-    gchar *desc;
-    gchar *author;
-    gchar *version;
+    gchar name[48];
+    gchar desc[256];
+    gchar author[64];
+    gchar version[24];
+    gchar website[96];
     PluginType type;
 }PluginData;
 
 typedef struct _ModuleData
 {
+    GModule *module;
+    gchar *path;
     G_MODULE_EXPORT gint (*module_init)();
     G_MODULE_EXPORT void (*module_exit)();
     G_MODULE_EXPORT void (*module_configure)();
@@ -54,10 +59,15 @@ typedef struct _ModuleData
 
 /* Function */
 gboolean rc_plugin_init();
-gboolean rc_plugin_load(const gchar *);
-gboolean rc_module_load(const gchar *);
-gboolean rc_python_load(const gchar *);
-
+gboolean rc_plugin_search_dir(const gchar *);
+const GSList *rc_plugin_get_list();
+void rc_plugin_list_free();
+void rc_plugin_plugin_free(PluginData *);
+void rc_plugin_module_free(ModuleData *);
+gboolean rc_plugin_module_check_running(const gchar *);
+gboolean rc_plugin_load(const gchar *, PluginData **);
+gboolean rc_plugin_module_load(const gchar *);
+gboolean rc_plugin_python_load(const gchar *);
 
 #endif
 

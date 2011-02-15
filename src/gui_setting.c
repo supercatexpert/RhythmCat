@@ -170,7 +170,7 @@ void rc_gui_setting_row_selected(GtkTreeView *tree, gpointer data)
     gint index = 0;
     gint *indices = NULL;
     selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(setting_treeview));
-    if(gtk_tree_selection_get_selected(selection,NULL,&iter))
+    if(gtk_tree_selection_get_selected(selection, NULL, &iter))
     {
         path = gtk_tree_model_get_path(setting_tree_model, &iter);
         indices = gtk_tree_path_get_indices(path);
