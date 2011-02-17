@@ -6,6 +6,5 @@ RhythmCat_SOURCES = core.c lyric.c playlist.c tag.c settings.c plugin.c \
 INCLUDES = @GLIB2_CFLAGS@ @DBUS_GLIB_CFLAGS@ @GTK2_CFLAGS@ @GSTREAMER_CFLAGS@ \
     -DLOCALEDIR=\"$(localedir)\"
 
-RhythmCat_LDADD = @GLIB2_LIBS@ @DBUS_GLIB_LIBS@ @GTK2_LIBS@ @GSTREAMER_LIBS@ \
-    -lgstpbutils-0.10
+RhythmCat_LDADD = @GLIB2_LIBS@ @DBUS_GLIB_LIBS@ @GTK2_LIBS@ @GSTREAMER_LIBS@
 

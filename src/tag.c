@@ -43,6 +43,28 @@ typedef struct _TagDecodedPadData
     gboolean non_audio_flag;
 }TagDecodedPadData;
 
+static void rc_tag_plugin_install_result(GstInstallPluginsReturn result,
+    gpointer data)
+{
+    switch(result)
+    {
+        case GST_INSTALL_PLUGINS_SUCCESS:
+            rc_debug_print("Tag: Install plugin successfully!\n");
+            break;
+        case GST_INSTALL_PLUGINS_NOT_FOUND:
+            rc_debug_perror("Tag-ERROR: Cannot found necessary plugin!\n");
+            break;
+        case GST_INSTALL_PLUGINS_ERROR:
+            rc_debug_perror("Tag-ERROR: Cannot install plugin!\n");
+            break;
+        case GST_INSTALL_PLUGINS_USER_ABORT:
+            rc_debug_perror("Tag-ERROR: User abouted!\n");
+            break;
+        default:
+            rc_debug_perror("Tag-ERROR: Cannot install plugin!\n");
+    }
+}
+
 /*
  * Gstreamer message bus for tag reading.
  */
@@ -57,6 +79,7 @@ static gboolean rc_tag_bus_handler(GstBus *bus, GstMessage *message,
     gchar *tag_comment = NULL;
     guint bitrates = 0;
     guint tracknum = 0;
+    gchar *plugin_error_msg = NULL;
     if(mmd==NULL) return FALSE;
     if(mmd->uri==NULL) return FALSE;
     switch(GST_MESSAGE_TYPE(message)) 
@@ -113,8 +136,19 @@ static gboolean rc_tag_bus_handler(GstBus *bus, GstMessage *message,
         {
             if(gst_is_missing_plugin_message(message))
             {
-                rc_debug_print("Tag-ERROR: Missing plugin to open the "
+                rc_debug_perror("Tag-ERROR: Missing plugin to open the "
                     "media file!\n");
+                if(gst_install_plugins_supported())
+                {
+                    rc_debug_print("Tag: Trying to install necessary "
+                        "plugin\n");
+                    plugin_error_msg =
+                        gst_missing_plugin_message_get_installer_detail(
+                            message);
+                    gst_install_plugins_async(&plugin_error_msg, NULL,
+                        rc_tag_plugin_install_result, NULL);
+                    g_free(plugin_error_msg);
+                }
             }
             break;
         }

@@ -509,7 +509,9 @@ gui_eq.o: gui_eq.c gui_eq.h /usr/include/stdlib.h /usr/include/features.h \
  /usr/include/gstreamer-0.10/gst/gstcompat.h \
  /usr/include/glib-2.0/glib/gi18n.h /usr/include/libintl.h \
  /usr/include/locale.h /usr/include/bits/locale.h /usr/include/string.h \
- /usr/include/bits/string.h /usr/include/bits/string2.h gui.h \
+ /usr/include/bits/string.h /usr/include/bits/string2.h \
+ /usr/include/gstreamer-0.10/gst/pbutils/missing-plugins.h \
+ /usr/include/gstreamer-0.10/gst/pbutils/install-plugins.h gui.h \
  /usr/include/libpng12/png.h /usr/include/zlib.h /usr/include/zconf.h \
  /usr/include/zlibdefs.h /usr/include/unistd.h \
  /usr/include/bits/posix_opt.h /usr/include/bits/confname.h \
@@ -1730,6 +1732,10 @@ core.h:
 /usr/include/bits/string.h:
 
 /usr/include/bits/string2.h:
+
+/usr/include/gstreamer-0.10/gst/pbutils/missing-plugins.h:
+
+/usr/include/gstreamer-0.10/gst/pbutils/install-plugins.h:
 
 gui.h:
 

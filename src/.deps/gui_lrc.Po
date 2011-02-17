@@ -532,7 +532,9 @@ gui_lrc.o: gui_lrc.c gui_lrc.h /usr/include/stdlib.h \
  /usr/include/dbus-1.0/dbus/dbus-signature.h \
  /usr/include/dbus-1.0/dbus/dbus-threads.h \
  /usr/include/dbus-1.0/dbus/dbus-glib.h \
- /usr/include/dbus-1.0/dbus/dbus-gtype-specialized.h core.h settings.h \
+ /usr/include/dbus-1.0/dbus/dbus-gtype-specialized.h core.h \
+ /usr/include/gstreamer-0.10/gst/pbutils/missing-plugins.h \
+ /usr/include/gstreamer-0.10/gst/pbutils/install-plugins.h settings.h \
  debug.h
 
 gui_lrc.h:
@@ -1796,6 +1798,10 @@ main.h:
 /usr/include/dbus-1.0/dbus/dbus-gtype-specialized.h:
 
 core.h:
+
+/usr/include/gstreamer-0.10/gst/pbutils/missing-plugins.h:
+
+/usr/include/gstreamer-0.10/gst/pbutils/install-plugins.h:
 
 settings.h:
 

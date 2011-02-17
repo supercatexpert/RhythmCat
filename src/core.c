@@ -45,6 +45,28 @@ static CoreData rc_core;
 static guint spect_bands = 30;
 static gdouble magnitude[30];
 
+static void rc_core_plugin_install_result(GstInstallPluginsReturn result,
+    gpointer data)
+{
+    switch(result)
+    {
+        case GST_INSTALL_PLUGINS_SUCCESS:
+            rc_debug_print("Core: Install plugin successfully!\n");
+            break;
+        case GST_INSTALL_PLUGINS_NOT_FOUND:
+            rc_debug_perror("Core-ERROR: Cannot found necessary plugin!\n");
+            break;
+        case GST_INSTALL_PLUGINS_ERROR:
+            rc_debug_perror("Core-ERROR: Cannot install plugin!\n");
+            break;
+        case GST_INSTALL_PLUGINS_USER_ABORT:
+            rc_debug_perror("Core-ERROR: User abouted!\n");
+            break;
+        default:
+            rc_debug_perror("Core-ERROR: Cannot install plugin!\n");
+    }
+}
+
 
 /*
  * Gstreamer bus call (Used to receive tag, EOS, and so on.)
@@ -57,6 +79,7 @@ static gboolean rc_core_bus_call(GstBus *bus, GstMessage *msg, gpointer data)
     const GValue *magnitudes;
     const GValue *mag;
     gchar *debug;
+    gchar *plugin_error_msg;
     GError *error;
     guint i;
     gdouble db;
@@ -109,6 +132,20 @@ static gboolean rc_core_bus_call(GstBus *bus, GstMessage *msg, gpointer data)
                 }
                 else db = -80.0;
                 magnitude[i] = db;
+            }
+        }
+        if(gst_is_missing_plugin_message(msg))
+        {
+            rc_debug_perror("Tag-ERROR: Missing plugin to open the "
+                "media file!\n");
+            if(gst_install_plugins_supported())
+            {
+                rc_debug_print("Tag: Trying to install necessary plugin\n");
+                plugin_error_msg =
+                    gst_missing_plugin_message_get_installer_detail(msg);
+                gst_install_plugins_async(&plugin_error_msg, NULL,
+                    rc_core_plugin_install_result, NULL);
+                g_free(plugin_error_msg);
             }
         }
     }

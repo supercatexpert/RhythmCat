@@ -514,8 +514,10 @@ msg.o: msg.c msg.h /usr/include/stdio.h /usr/include/features.h \
  /usr/include/bits/string.h /usr/include/bits/string2.h \
  /usr/include/glib-2.0/glib/gi18n.h /usr/include/libintl.h \
  /usr/include/locale.h /usr/include/bits/locale.h global.h \
- /usr/include/glib-2.0/glib/gstdio.h core.h gui.h tag.h \
- /usr/include/gstreamer-0.10/gst/pbutils/missing-plugins.h playlist.h
+ /usr/include/glib-2.0/glib/gstdio.h core.h \
+ /usr/include/gstreamer-0.10/gst/pbutils/missing-plugins.h \
+ /usr/include/gstreamer-0.10/gst/pbutils/install-plugins.h gui.h tag.h \
+ playlist.h
 
 msg.h:
 
@@ -1739,10 +1741,12 @@ global.h:
 
 core.h:
 
+/usr/include/gstreamer-0.10/gst/pbutils/missing-plugins.h:
+
+/usr/include/gstreamer-0.10/gst/pbutils/install-plugins.h:
+
 gui.h:
 
 tag.h:
-
-/usr/include/gstreamer-0.10/gst/pbutils/missing-plugins.h:
 
 playlist.h:

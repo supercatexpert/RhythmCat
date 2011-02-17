@@ -31,6 +31,8 @@
 #include <gtk/gtk.h>
 #include <time.h>
 #include <glib/gi18n.h>
+#include <gst/pbutils/missing-plugins.h>
+#include <gst/pbutils/install-plugins.h>
 
 /* Custom struct type to store the core. */
 typedef struct _CoreData

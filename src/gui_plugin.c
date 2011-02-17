@@ -95,7 +95,7 @@ static void rc_gui_plugin_list_create()
     g_object_set(G_OBJECT(plugin_list_renderers[0]), "mode",
         GTK_CELL_RENDERER_MODE_ACTIVATABLE, NULL);
     g_object_set(G_OBJECT(plugin_list_renderers[1]), "ellipsize-set", TRUE,
-        NULL, "ellipsize", PANGO_ELLIPSIZE_END, NULL);
+        "ellipsize", PANGO_ELLIPSIZE_END, NULL);
     plugin_list_columns[0] = gtk_tree_view_column_new_with_attributes(
         _("Enabled"), plugin_list_renderers[0], "active", 0, NULL);
     plugin_list_columns[1] = gtk_tree_view_column_new_with_attributes(

@@ -4150,12 +4150,12 @@ if test -n "$GSTREAMER_CFLAGS"; then
     pkg_cv_GSTREAMER_CFLAGS="$GSTREAMER_CFLAGS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gstreamer-0.10\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "gstreamer-0.10") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gstreamer-0.10 >= 0.10.15, gstreamer-pbutils-0.10\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "gstreamer-0.10 >= 0.10.15, gstreamer-pbutils-0.10") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_GSTREAMER_CFLAGS=`$PKG_CONFIG --cflags "gstreamer-0.10" 2>/dev/null`
+  pkg_cv_GSTREAMER_CFLAGS=`$PKG_CONFIG --cflags "gstreamer-0.10 >= 0.10.15, gstreamer-pbutils-0.10" 2>/dev/null`
 else
   pkg_failed=yes
 fi
@@ -4166,12 +4166,12 @@ if test -n "$GSTREAMER_LIBS"; then
     pkg_cv_GSTREAMER_LIBS="$GSTREAMER_LIBS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gstreamer-0.10\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "gstreamer-0.10") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gstreamer-0.10 >= 0.10.15, gstreamer-pbutils-0.10\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "gstreamer-0.10 >= 0.10.15, gstreamer-pbutils-0.10") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_GSTREAMER_LIBS=`$PKG_CONFIG --libs "gstreamer-0.10" 2>/dev/null`
+  pkg_cv_GSTREAMER_LIBS=`$PKG_CONFIG --libs "gstreamer-0.10 >= 0.10.15, gstreamer-pbutils-0.10" 2>/dev/null`
 else
   pkg_failed=yes
 fi
@@ -4191,14 +4191,14 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        GSTREAMER_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "gstreamer-0.10" 2>&1`
+	        GSTREAMER_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "gstreamer-0.10 >= 0.10.15, gstreamer-pbutils-0.10" 2>&1`
         else 
-	        GSTREAMER_PKG_ERRORS=`$PKG_CONFIG --print-errors "gstreamer-0.10" 2>&1`
+	        GSTREAMER_PKG_ERRORS=`$PKG_CONFIG --print-errors "gstreamer-0.10 >= 0.10.15, gstreamer-pbutils-0.10" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$GSTREAMER_PKG_ERRORS" >&5
 
-	as_fn_error $? "Package requirements (gstreamer-0.10) were not met:
+	as_fn_error $? "Package requirements (gstreamer-0.10 >= 0.10.15, gstreamer-pbutils-0.10) were not met:
 
 $GSTREAMER_PKG_ERRORS
 

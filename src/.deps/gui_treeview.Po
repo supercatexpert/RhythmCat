@@ -514,7 +514,9 @@ gui_treeview.o: gui_treeview.c gui_treeview.h /usr/include/stdlib.h \
  /usr/include/bits/setjmp.h /usr/include/string.h \
  /usr/include/bits/string.h /usr/include/bits/string2.h \
  /usr/include/glib-2.0/glib/gi18n.h /usr/include/libintl.h \
- /usr/include/locale.h /usr/include/bits/locale.h core.h main.h \
+ /usr/include/locale.h /usr/include/bits/locale.h core.h \
+ /usr/include/gstreamer-0.10/gst/pbutils/missing-plugins.h \
+ /usr/include/gstreamer-0.10/gst/pbutils/install-plugins.h main.h \
  /usr/include/dbus-1.0/dbus/dbus.h \
  /usr/lib/dbus-1.0/include/dbus/dbus-arch-deps.h \
  /usr/include/dbus-1.0/dbus/dbus-macros.h \
@@ -1754,6 +1756,10 @@ gui.h:
 /usr/include/bits/locale.h:
 
 core.h:
+
+/usr/include/gstreamer-0.10/gst/pbutils/missing-plugins.h:
+
+/usr/include/gstreamer-0.10/gst/pbutils/install-plugins.h:
 
 main.h:
 

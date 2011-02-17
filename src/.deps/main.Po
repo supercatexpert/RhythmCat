@@ -529,7 +529,9 @@ main.o: main.c main.h /usr/include/stdlib.h /usr/include/features.h \
  /usr/include/dbus-1.0/dbus/dbus-glib.h \
  /usr/include/dbus-1.0/dbus/dbus-gtype-specialized.h core.h \
  /usr/include/glib-2.0/glib/gi18n.h /usr/include/libintl.h \
- /usr/include/locale.h /usr/include/bits/locale.h gui.h \
+ /usr/include/locale.h /usr/include/bits/locale.h \
+ /usr/include/gstreamer-0.10/gst/pbutils/missing-plugins.h \
+ /usr/include/gstreamer-0.10/gst/pbutils/install-plugins.h gui.h \
  /usr/include/libpng12/png.h /usr/include/zlib.h /usr/include/zconf.h \
  /usr/include/zlibdefs.h /usr/include/unistd.h \
  /usr/include/bits/posix_opt.h /usr/include/bits/confname.h \
@@ -1770,6 +1772,10 @@ core.h:
 /usr/include/locale.h:
 
 /usr/include/bits/locale.h:
+
+/usr/include/gstreamer-0.10/gst/pbutils/missing-plugins.h:
+
+/usr/include/gstreamer-0.10/gst/pbutils/install-plugins.h:
 
 gui.h:
 

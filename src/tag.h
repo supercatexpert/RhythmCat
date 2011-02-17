@@ -35,6 +35,7 @@
 #include <gst/gst.h>
 #include <gtk/gtk.h>
 #include <gst/pbutils/missing-plugins.h>
+#include <gst/pbutils/install-plugins.h>
 
 /* Custom struct type to store the music metadata. */
 typedef struct _MusicMetaData

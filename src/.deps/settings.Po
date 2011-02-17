@@ -509,7 +509,9 @@ settings.o: settings.c settings.h /usr/include/stdlib.h \
  /usr/include/gtk-2.0/gtk/gtktipsquery.h core.h \
  /usr/include/glib-2.0/glib/gi18n.h /usr/include/libintl.h \
  /usr/include/locale.h /usr/include/bits/locale.h /usr/include/string.h \
- /usr/include/bits/string.h /usr/include/bits/string2.h main.h \
+ /usr/include/bits/string.h /usr/include/bits/string2.h \
+ /usr/include/gstreamer-0.10/gst/pbutils/missing-plugins.h \
+ /usr/include/gstreamer-0.10/gst/pbutils/install-plugins.h main.h \
  /usr/include/glib-2.0/glib/gprintf.h /usr/include/dbus-1.0/dbus/dbus.h \
  /usr/lib/dbus-1.0/include/dbus/dbus-arch-deps.h \
  /usr/include/dbus-1.0/dbus/dbus-macros.h \
@@ -1723,6 +1725,10 @@ core.h:
 /usr/include/bits/string.h:
 
 /usr/include/bits/string2.h:
+
+/usr/include/gstreamer-0.10/gst/pbutils/missing-plugins.h:
+
+/usr/include/gstreamer-0.10/gst/pbutils/install-plugins.h:
 
 main.h:
 

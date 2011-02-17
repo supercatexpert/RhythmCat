@@ -509,7 +509,9 @@ core.o: core.c core.h /usr/include/stdlib.h /usr/include/features.h \
  /usr/include/gtk-2.0/gtk/gtktipsquery.h \
  /usr/include/glib-2.0/glib/gi18n.h /usr/include/libintl.h \
  /usr/include/locale.h /usr/include/bits/locale.h /usr/include/string.h \
- /usr/include/bits/string.h /usr/include/bits/string2.h gui.h \
+ /usr/include/bits/string.h /usr/include/bits/string2.h \
+ /usr/include/gstreamer-0.10/gst/pbutils/missing-plugins.h \
+ /usr/include/gstreamer-0.10/gst/pbutils/install-plugins.h gui.h \
  /usr/include/glib-2.0/glib/gprintf.h /usr/include/libpng12/png.h \
  /usr/include/zlib.h /usr/include/zconf.h /usr/include/zlibdefs.h \
  /usr/include/unistd.h /usr/include/bits/posix_opt.h \
@@ -1709,6 +1711,10 @@ core.h:
 /usr/include/bits/string.h:
 
 /usr/include/bits/string2.h:
+
+/usr/include/gstreamer-0.10/gst/pbutils/missing-plugins.h:
+
+/usr/include/gstreamer-0.10/gst/pbutils/install-plugins.h:
 
 gui.h:
 
