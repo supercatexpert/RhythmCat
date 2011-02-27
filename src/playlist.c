@@ -27,7 +27,6 @@
 #include "core.h"
 #include "gui.h"
 #include "gui_treeview.h"
-#include "gui_lrc.h"
 #include "settings.h"
 #include "tag.h"
 #include "msg.h"
@@ -305,6 +304,7 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
     gchar *fpathname = NULL;
     gchar *realname = NULL;
     MusicMetaData *mmd_new = NULL;
+    gboolean image_flag = FALSE;
     list_store = rc_plist_get_list_store(list_index);
     path = gtk_tree_path_new_from_indices(music_index, -1);
     if(!gtk_tree_model_get_iter(GTK_TREE_MODEL(list_store), &iter, path))
@@ -354,19 +354,26 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
     gtk_list_store_set(list_store, &iter, 1, GTK_STOCK_MEDIA_PLAY, 2, 
         list_title, 3, mmd_new->artist, 4, mmd_new->album, 5, list_timelen,
         -1);
-    if(rc_plist.list1_reference!=NULL)
+    if(gtk_tree_row_reference_valid(rc_plist.list1_reference))
     {
         gtk_tree_row_reference_free(rc_plist.list1_reference);
         rc_plist.list1_reference = NULL;
     }
-    if(rc_plist.list2_reference!=NULL)
+    if(gtk_tree_row_reference_valid(rc_plist.list2_reference))
     {
         gtk_tree_row_reference_free(rc_plist.list2_reference);
         rc_plist.list2_reference = NULL;
     }
     rc_debug_print("Plist: Play music file: %s\n", mmd_new->uri);
     rc_gui_music_info_set_text(list_title, mmd_new->artist, mmd_new->album, 
-        mmd_new->length, mmd_new->file_type, mmd_new->bitrate);
+        mmd_new->length, mmd_new->file_type, mmd_new->bitrate,
+        mmd_new->samplerate, mmd_new->channels);
+    if(mmd_new->image!=NULL)
+    {
+        image_flag = rc_gui_set_cover_image_by_buf(mmd_new->image);
+        if(image_flag)
+            rc_debug_print("Plist: Found cover image in tag!\n");
+    }
     path = gtk_tree_path_new_from_indices(list_index, -1);
     if(gtk_tree_model_get_iter(GTK_TREE_MODEL(rc_plist.list_store), &iter,
         path))
@@ -398,30 +405,31 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
     {
         rc_debug_print("Plist: Found lyric file: %s, enable the lyric show.\n",
             lyric_filename);
-        rc_gui_lrc_enable();
         rc_player_object_signal_emit_simple("lyric-found");
     }
     else
     {
         rc_debug_print("Plist: Not found lyric file, disable the lyric "
             "show.\n");
-        rc_gui_lrc_disable();
         rc_player_object_signal_emit_simple("lyric-not-found");
     }
     if(lyric_filename!=NULL) g_free(lyric_filename);
-    cover_filename = rc_tag_find_file(music_dir, album_name,
-        ".BMP|.JPG|.JPEG|.PNG");
-    if(cover_filename==NULL)
-        cover_filename = rc_tag_find_file(image_dir, album_name,
-            ".BMP|.JPG|.JPEG|.PNG");
-    g_free(image_dir);
-    if(cover_filename!=NULL && rc_gui_set_cover_image(cover_filename))
+    if(!image_flag)
     {
-        rc_debug_print("Plist: Found cover image file: %s.\n",
-            cover_filename);
+        cover_filename = rc_tag_find_file(music_dir, album_name,
+            ".BMP|.JPG|.JPEG|.PNG");
+        if(cover_filename==NULL)
+            cover_filename = rc_tag_find_file(image_dir, album_name,
+                ".BMP|.JPG|.JPEG|.PNG");
+        g_free(image_dir);
+        if(cover_filename!=NULL && rc_gui_set_cover_image(cover_filename))
+        {
+            rc_debug_print("Plist: Found cover image file: %s.\n",
+                cover_filename);
+        }
+        else
+            rc_gui_set_cover_image(NULL);
     }
-    else
-        rc_gui_set_cover_image(NULL);
     g_free(music_dir);
     g_free(realname);
     return TRUE;

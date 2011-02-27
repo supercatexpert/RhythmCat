@@ -3883,12 +3883,15 @@ if test -n "$GLIB2_CFLAGS"; then
     pkg_cv_GLIB2_CFLAGS="$GLIB2_CFLAGS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"glib-2.0, gthread-2.0, gmodule-2.0, gio-2.0\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "glib-2.0, gthread-2.0, gmodule-2.0, gio-2.0") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"glib-2.0 >= 2.16, gthread-2.0 >= 2.16, \\
+    gmodule-2.0 >= 2.16, gio-2.0 >= 2.16\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "glib-2.0 >= 2.16, gthread-2.0 >= 2.16, \
+    gmodule-2.0 >= 2.16, gio-2.0 >= 2.16") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_GLIB2_CFLAGS=`$PKG_CONFIG --cflags "glib-2.0, gthread-2.0, gmodule-2.0, gio-2.0" 2>/dev/null`
+  pkg_cv_GLIB2_CFLAGS=`$PKG_CONFIG --cflags "glib-2.0 >= 2.16, gthread-2.0 >= 2.16, \
+    gmodule-2.0 >= 2.16, gio-2.0 >= 2.16" 2>/dev/null`
 else
   pkg_failed=yes
 fi
@@ -3899,12 +3902,15 @@ if test -n "$GLIB2_LIBS"; then
     pkg_cv_GLIB2_LIBS="$GLIB2_LIBS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"glib-2.0, gthread-2.0, gmodule-2.0, gio-2.0\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "glib-2.0, gthread-2.0, gmodule-2.0, gio-2.0") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"glib-2.0 >= 2.16, gthread-2.0 >= 2.16, \\
+    gmodule-2.0 >= 2.16, gio-2.0 >= 2.16\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "glib-2.0 >= 2.16, gthread-2.0 >= 2.16, \
+    gmodule-2.0 >= 2.16, gio-2.0 >= 2.16") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_GLIB2_LIBS=`$PKG_CONFIG --libs "glib-2.0, gthread-2.0, gmodule-2.0, gio-2.0" 2>/dev/null`
+  pkg_cv_GLIB2_LIBS=`$PKG_CONFIG --libs "glib-2.0 >= 2.16, gthread-2.0 >= 2.16, \
+    gmodule-2.0 >= 2.16, gio-2.0 >= 2.16" 2>/dev/null`
 else
   pkg_failed=yes
 fi
@@ -3924,14 +3930,17 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        GLIB2_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "glib-2.0, gthread-2.0, gmodule-2.0, gio-2.0" 2>&1`
+	        GLIB2_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "glib-2.0 >= 2.16, gthread-2.0 >= 2.16, \
+    gmodule-2.0 >= 2.16, gio-2.0 >= 2.16" 2>&1`
         else
-	        GLIB2_PKG_ERRORS=`$PKG_CONFIG --print-errors "glib-2.0, gthread-2.0, gmodule-2.0, gio-2.0" 2>&1`
+	        GLIB2_PKG_ERRORS=`$PKG_CONFIG --print-errors "glib-2.0 >= 2.16, gthread-2.0 >= 2.16, \
+    gmodule-2.0 >= 2.16, gio-2.0 >= 2.16" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$GLIB2_PKG_ERRORS" >&5
 
-	as_fn_error $? "Package requirements (glib-2.0, gthread-2.0, gmodule-2.0, gio-2.0) were not met:
+	as_fn_error $? "Package requirements (glib-2.0 >= 2.16, gthread-2.0 >= 2.16, \
+    gmodule-2.0 >= 2.16, gio-2.0 >= 2.16) were not met:
 
 $GLIB2_PKG_ERRORS
 
@@ -3972,12 +3981,12 @@ if test -n "$DBUS_GLIB_CFLAGS"; then
     pkg_cv_DBUS_GLIB_CFLAGS="$DBUS_GLIB_CFLAGS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"dbus-glib-1\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "dbus-glib-1") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"dbus-glib-1 >= 0.76\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "dbus-glib-1 >= 0.76") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_DBUS_GLIB_CFLAGS=`$PKG_CONFIG --cflags "dbus-glib-1" 2>/dev/null`
+  pkg_cv_DBUS_GLIB_CFLAGS=`$PKG_CONFIG --cflags "dbus-glib-1 >= 0.76" 2>/dev/null`
 else
   pkg_failed=yes
 fi
@@ -3988,12 +3997,12 @@ if test -n "$DBUS_GLIB_LIBS"; then
     pkg_cv_DBUS_GLIB_LIBS="$DBUS_GLIB_LIBS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"dbus-glib-1\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "dbus-glib-1") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"dbus-glib-1 >= 0.76\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "dbus-glib-1 >= 0.76") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_DBUS_GLIB_LIBS=`$PKG_CONFIG --libs "dbus-glib-1" 2>/dev/null`
+  pkg_cv_DBUS_GLIB_LIBS=`$PKG_CONFIG --libs "dbus-glib-1 >= 0.76" 2>/dev/null`
 else
   pkg_failed=yes
 fi
@@ -4013,14 +4022,14 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        DBUS_GLIB_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "dbus-glib-1" 2>&1`
+	        DBUS_GLIB_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "dbus-glib-1 >= 0.76" 2>&1`
         else
-	        DBUS_GLIB_PKG_ERRORS=`$PKG_CONFIG --print-errors "dbus-glib-1" 2>&1`
+	        DBUS_GLIB_PKG_ERRORS=`$PKG_CONFIG --print-errors "dbus-glib-1 >= 0.76" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$DBUS_GLIB_PKG_ERRORS" >&5
 
-	as_fn_error $? "Package requirements (dbus-glib-1) were not met:
+	as_fn_error $? "Package requirements (dbus-glib-1 >= 0.76) were not met:
 
 $DBUS_GLIB_PKG_ERRORS
 
@@ -4061,12 +4070,12 @@ if test -n "$GTK2_CFLAGS"; then
     pkg_cv_GTK2_CFLAGS="$GTK2_CFLAGS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-2.0 >= 2.14.0\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "gtk+-2.0 >= 2.14.0") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-2.0 >= 2.12.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "gtk+-2.0 >= 2.12.0") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_GTK2_CFLAGS=`$PKG_CONFIG --cflags "gtk+-2.0 >= 2.14.0" 2>/dev/null`
+  pkg_cv_GTK2_CFLAGS=`$PKG_CONFIG --cflags "gtk+-2.0 >= 2.12.0" 2>/dev/null`
 else
   pkg_failed=yes
 fi
@@ -4077,12 +4086,12 @@ if test -n "$GTK2_LIBS"; then
     pkg_cv_GTK2_LIBS="$GTK2_LIBS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-2.0 >= 2.14.0\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "gtk+-2.0 >= 2.14.0") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-2.0 >= 2.12.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "gtk+-2.0 >= 2.12.0") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_GTK2_LIBS=`$PKG_CONFIG --libs "gtk+-2.0 >= 2.14.0" 2>/dev/null`
+  pkg_cv_GTK2_LIBS=`$PKG_CONFIG --libs "gtk+-2.0 >= 2.12.0" 2>/dev/null`
 else
   pkg_failed=yes
 fi
@@ -4102,14 +4111,14 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        GTK2_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "gtk+-2.0 >= 2.14.0" 2>&1`
+	        GTK2_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "gtk+-2.0 >= 2.12.0" 2>&1`
         else
-	        GTK2_PKG_ERRORS=`$PKG_CONFIG --print-errors "gtk+-2.0 >= 2.14.0" 2>&1`
+	        GTK2_PKG_ERRORS=`$PKG_CONFIG --print-errors "gtk+-2.0 >= 2.12.0" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$GTK2_PKG_ERRORS" >&5
 
-	as_fn_error $? "Package requirements (gtk+-2.0 >= 2.14.0) were not met:
+	as_fn_error $? "Package requirements (gtk+-2.0 >= 2.12.0) were not met:
 
 $GTK2_PKG_ERRORS
 
@@ -4150,12 +4159,15 @@ if test -n "$GSTREAMER_CFLAGS"; then
     pkg_cv_GSTREAMER_CFLAGS="$GSTREAMER_CFLAGS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gstreamer-0.10 >= 0.10.15, gstreamer-pbutils-0.10\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "gstreamer-0.10 >= 0.10.15, gstreamer-pbutils-0.10") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gstreamer-0.10 >= 0.10.15, \\
+    gstreamer-pbutils-0.10 >= 0.10.15\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "gstreamer-0.10 >= 0.10.15, \
+    gstreamer-pbutils-0.10 >= 0.10.15") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_GSTREAMER_CFLAGS=`$PKG_CONFIG --cflags "gstreamer-0.10 >= 0.10.15, gstreamer-pbutils-0.10" 2>/dev/null`
+  pkg_cv_GSTREAMER_CFLAGS=`$PKG_CONFIG --cflags "gstreamer-0.10 >= 0.10.15, \
+    gstreamer-pbutils-0.10 >= 0.10.15" 2>/dev/null`
 else
   pkg_failed=yes
 fi
@@ -4166,12 +4178,15 @@ if test -n "$GSTREAMER_LIBS"; then
     pkg_cv_GSTREAMER_LIBS="$GSTREAMER_LIBS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gstreamer-0.10 >= 0.10.15, gstreamer-pbutils-0.10\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "gstreamer-0.10 >= 0.10.15, gstreamer-pbutils-0.10") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gstreamer-0.10 >= 0.10.15, \\
+    gstreamer-pbutils-0.10 >= 0.10.15\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "gstreamer-0.10 >= 0.10.15, \
+    gstreamer-pbutils-0.10 >= 0.10.15") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_GSTREAMER_LIBS=`$PKG_CONFIG --libs "gstreamer-0.10 >= 0.10.15, gstreamer-pbutils-0.10" 2>/dev/null`
+  pkg_cv_GSTREAMER_LIBS=`$PKG_CONFIG --libs "gstreamer-0.10 >= 0.10.15, \
+    gstreamer-pbutils-0.10 >= 0.10.15" 2>/dev/null`
 else
   pkg_failed=yes
 fi
@@ -4191,14 +4206,17 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        GSTREAMER_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "gstreamer-0.10 >= 0.10.15, gstreamer-pbutils-0.10" 2>&1`
+	        GSTREAMER_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "gstreamer-0.10 >= 0.10.15, \
+    gstreamer-pbutils-0.10 >= 0.10.15" 2>&1`
         else
-	        GSTREAMER_PKG_ERRORS=`$PKG_CONFIG --print-errors "gstreamer-0.10 >= 0.10.15, gstreamer-pbutils-0.10" 2>&1`
+	        GSTREAMER_PKG_ERRORS=`$PKG_CONFIG --print-errors "gstreamer-0.10 >= 0.10.15, \
+    gstreamer-pbutils-0.10 >= 0.10.15" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$GSTREAMER_PKG_ERRORS" >&5
 
-	as_fn_error $? "Package requirements (gstreamer-0.10 >= 0.10.15, gstreamer-pbutils-0.10) were not met:
+	as_fn_error $? "Package requirements (gstreamer-0.10 >= 0.10.15, \
+    gstreamer-pbutils-0.10 >= 0.10.15) were not met:
 
 $GSTREAMER_PKG_ERRORS
 

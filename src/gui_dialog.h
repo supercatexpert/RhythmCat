@@ -35,6 +35,8 @@
 
 /* Functions */
 void rc_gui_about_player();
+void rc_gui_show_message_dialog(GtkMessageType, const gchar *, const gchar *,
+    ...);
 void rc_gui_show_open_dialog(GtkWidget *, gpointer);
 void rc_gui_open_music_directory(GtkWidget *, gpointer);
 void rc_gui_save_playlist_dialog(GtkWidget *, gpointer);

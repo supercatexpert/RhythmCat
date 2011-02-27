@@ -535,9 +535,9 @@ gui.o: gui.c gui.h /usr/include/stdio.h /usr/include/features.h \
  /usr/include/dbus-1.0/dbus/dbus-threads.h \
  /usr/include/dbus-1.0/dbus/dbus-glib.h \
  /usr/include/dbus-1.0/dbus/dbus-gtype-specialized.h lyric.h debug.h \
- gui_treeview.h gui_style.h gui_setting.h gui_lrc.h gui_eq.h gui_dialog.h \
- /usr/include/glib-2.0/glib/gstdio.h gui_plugin.h img_nocov.xpm \
- img_icon.xpm
+ gui_treeview.h gui_style.h gui_setting.h gui_eq.h gui_dialog.h \
+ /usr/include/glib-2.0/glib/gstdio.h gui_plugin.h imgs/img_nocov.xpm \
+ imgs/img_icon.xpm
 
 gui.h:
 
@@ -1817,8 +1817,6 @@ gui_style.h:
 
 gui_setting.h:
 
-gui_lrc.h:
-
 gui_eq.h:
 
 gui_dialog.h:
@@ -1827,6 +1825,6 @@ gui_dialog.h:
 
 gui_plugin.h:
 
-img_nocov.xpm:
+imgs/img_nocov.xpm:
 
-img_icon.xpm:
+imgs/img_icon.xpm:

@@ -41,7 +41,6 @@ void rc_gui_create_setting_general();
 void rc_gui_create_setting_appearance();
 void rc_gui_create_setting_playback();
 void rc_gui_create_setting_playlist();
-void rc_gui_create_setting_lyric();
 
 #endif
 

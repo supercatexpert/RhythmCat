@@ -52,9 +52,9 @@ typedef struct _ModuleData
 {
     GModule *module;
     gchar *path;
-    G_MODULE_EXPORT gint (*module_init)();
-    G_MODULE_EXPORT void (*module_exit)();
-    G_MODULE_EXPORT void (*module_configure)();
+    gint (*module_init)();
+    void (*module_exit)();
+    void (*module_configure)();
 }ModuleData;
 
 /* Function */

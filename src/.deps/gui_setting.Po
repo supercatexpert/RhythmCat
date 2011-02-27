@@ -533,7 +533,7 @@ gui_setting.o: gui_setting.c gui_setting.h /usr/include/stdlib.h \
  /usr/include/dbus-1.0/dbus/dbus-signature.h \
  /usr/include/dbus-1.0/dbus/dbus-threads.h \
  /usr/include/dbus-1.0/dbus/dbus-glib.h \
- /usr/include/dbus-1.0/dbus/dbus-gtype-specialized.h settings.h gui_lrc.h
+ /usr/include/dbus-1.0/dbus/dbus-gtype-specialized.h settings.h
 
 gui_setting.h:
 
@@ -1794,5 +1794,3 @@ main.h:
 /usr/include/dbus-1.0/dbus/dbus-gtype-specialized.h:
 
 settings.h:
-
-gui_lrc.h:

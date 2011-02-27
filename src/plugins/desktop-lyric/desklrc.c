@@ -55,6 +55,17 @@ static gint lyric_line_num = 0;
 static gulong lyric_found_signal, lyric_stop_signal;
 static gboolean plugin_live = TRUE;
 
+const gchar *g_module_check_init(GModule *module)
+{
+    g_printf("DeskLRC: Plugin loaded successfully!\n");
+    return NULL;
+}
+
+void g_module_unload(GModule *module)
+{
+    g_printf("DeskLRC: Plugin exited!\n");
+}
+
 static void rc_plugin_desklrc_lyric_found()
 {
     rc_plugin_desklrc_enable(TRUE);

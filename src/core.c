@@ -24,14 +24,14 @@
  */
 
 #include "core.h"
+#include "tag.h"
 #include "gui.h"
+#include "gui_dialog.h"
 #include "playlist.h"
 #include "settings.h"
 #include "debug.h"
 #include "gui_eq.h"
 #include "player.h"
-
-#define AUDIO_FREQ 44100
 
 /* Variables */
 /*
@@ -44,6 +44,7 @@
 static CoreData rc_core;
 static guint spect_bands = 30;
 static gdouble magnitude[30];
+static const gint audio_freq = 48000;
 
 static void rc_core_plugin_install_result(GstInstallPluginsReturn result,
     gpointer data)
@@ -86,33 +87,23 @@ static gboolean rc_core_bus_call(GstBus *bus, GstMessage *msg, gpointer data)
     switch(GST_MESSAGE_TYPE(msg))
     {
         case GST_MESSAGE_EOS:
-        {
             rc_core.eos = TRUE;
             rc_plist_play_next(TRUE);
             break;
-        }
         case GST_MESSAGE_SEGMENT_DONE:
-        {
             rc_debug_print("CORE: Segment done!\n");
             break;
-        }
         case GST_MESSAGE_ERROR:
-        {
             gst_message_parse_error(msg, &error, &debug);
             rc_debug_perror("Core-ERROR: %s\nDEBUG: %s\n", error->message,
                 debug);
             g_error_free(error);
             g_free(debug);
             break;
-        }
         case GST_MESSAGE_TAG:
-        {
             break;
-        }
         case GST_MESSAGE_BUFFERING:
-        {
             break;
-        }
         default:
             break;
     }
@@ -152,6 +143,43 @@ static gboolean rc_core_bus_call(GstBus *bus, GstMessage *msg, gpointer data)
     return TRUE;
 }
 
+static gboolean rc_core_plugin_check()
+{
+    GstElementFactory *playbin, *fakesink, *equalizer, *audiosink, *convert;
+    GstElementFactory *volume, *spectrum;
+    gboolean flag = FALSE;
+    playbin = gst_element_factory_find("playbin2");
+    if(playbin==NULL)
+        playbin = gst_element_factory_find("playbin");
+    if(playbin==NULL)
+    {
+        g_assert("Core-CRITICAL: Failed to make playbin/playbin2 element!\n");
+        exit(1);
+    }
+    gst_object_unref(GST_OBJECT(playbin));
+    fakesink = gst_element_factory_find("fakesink");
+    if(fakesink==NULL)
+    {
+        g_assert("Core-CRITICAL: Failed to make fakesink element!\n");
+        exit(1);
+    }
+    gst_object_unref(GST_OBJECT(fakesink));
+    equalizer = gst_element_factory_find("equalizer-10bands");
+    audiosink = gst_element_factory_find("autoaudiosink");
+    volume = gst_element_factory_find("volume");
+    spectrum = gst_element_factory_find("spectrum");
+    convert = gst_element_factory_find("audioconvert");
+    if(equalizer!=NULL && audiosink!=NULL && volume!=NULL && spectrum!=NULL
+        && convert!=NULL)
+        flag = TRUE;
+    if(equalizer!=NULL) gst_object_unref(equalizer);
+    if(audiosink!=NULL) gst_object_unref(audiosink);
+    if(volume!=NULL) gst_object_unref(volume);
+    if(spectrum!=NULL) gst_object_unref(spectrum);
+    if(convert!=NULL) gst_object_unref(convert);
+    return flag;
+}
+
 /*
  * Create gstreamer playbin. Initialize the player.
  */
@@ -172,63 +200,119 @@ void rc_core_init()
     GstElement *spectrum_plugin = NULL;
     GstPad *pad1;
     GstCaps *caps;
+    gboolean flag = FALSE;
     rc_debug_print("Core: Loading CORE...\n");
     RCSetting *setting = rc_set_get_setting();
-    play = gst_element_factory_make("playbin","play");
-    audio_sink = gst_element_factory_make("autoaudiosink", "audio_sink");
-    video_fakesink = gst_element_factory_make("fakesink", "video_sink");
-    audio_equalizer = gst_element_factory_make("equalizer-10bands",
-        "audio_equalizer"); 
-    audio_convert = gst_element_factory_make("audioconvert", "eqauconv");
-    volume_plugin = gst_element_factory_make("volume", "volume_plugin");
-    spectrum_plugin = gst_element_factory_make("spectrum", "spectrum_plugin");
-    if(!GST_IS_ELEMENT(play))
-        g_assert("Core-CRITICAL: Failed to make playbin element!\n");
-    if(!GST_IS_ELEMENT(audio_equalizer))
-        g_assert("Core-CRITICAL: Failed to make equalizer element!\n");
-    if(!GST_IS_ELEMENT(audio_sink))
-        g_assert("Core-CRITICAL: Failed to make audio sink element!\n");
-    if(!GST_IS_ELEMENT(audio_convert))
-        g_assert("Core-CRITICAL: Failed to make audio convert element!\n");
-    if(!GST_IS_ELEMENT(volume_plugin))
-        g_assert("Core-CRITICAL: Failed to make volume element!\n");
-    if(!GST_IS_ELEMENT(spectrum_plugin))
-        g_assert("Core-CRITICAL: Failed to make spectrum element!\n");
-    g_object_set(G_OBJECT(video_fakesink), "sync", TRUE, NULL);
-    g_object_set(G_OBJECT(spectrum_plugin), "bands", spect_bands, "threshold",
-        -80, "message", TRUE, "message-magnitude", TRUE, NULL);
-    seff = gst_bin_new("audio-bin");
-    gst_bin_add_many(GST_BIN(seff), audio_equalizer, audio_convert,
-        spectrum_plugin, volume_plugin, audio_sink, NULL);
-    caps = gst_caps_new_simple("audio/x-raw-int", "rate", G_TYPE_INT,
-        AUDIO_FREQ, NULL);
-    if(!gst_element_link_many(audio_equalizer, audio_convert, NULL) ||
-        !gst_element_link_filtered(audio_convert, spectrum_plugin,
-        caps) || !gst_element_link_many(spectrum_plugin, volume_plugin,
-        audio_sink, NULL))
-    {
-        g_assert("Core-CRITICAL: Failed to link elements!\n");
-    }
-    gst_caps_unref(caps);
-    pad1 = gst_element_get_static_pad(audio_equalizer, "sink");
-    gst_element_add_pad(seff, gst_ghost_pad_new(NULL, pad1));
-    g_object_set(G_OBJECT(play), "audio-sink", seff, NULL);
     bzero(&rc_core, sizeof(CoreData));
+    flag = rc_core_plugin_check();
+    if(!flag)
+    {
+        rc_debug_perror("Core-ERROR: Some effect plugins are missing, "
+            "effects are not available now!\n");
+        rc_gui_show_message_dialog(GTK_MESSAGE_ERROR,
+            _("Effect plugins are missing!"), _("Some effect plugins are "
+            "missing, effects are not available now!"));
+    }
+    play = gst_element_factory_make("playbin2", "play");
+    if(play==NULL) play = gst_element_factory_make("playbin", "play");
+    if(!GST_IS_ELEMENT(play))
+    {
+        rc_gui_show_message_dialog(GTK_MESSAGE_ERROR, _("Critical Error!"),
+            _("Failed to make playbin/playbin2 element!"));
+        g_assert("Core-CRITICAL: Failed to make playbin element!\n");
+    }
+    if(flag)
+    {
+        audio_sink = gst_element_factory_make("autoaudiosink", "audio_sink");
+        video_fakesink = gst_element_factory_make("fakesink", "video_sink");
+        audio_equalizer = gst_element_factory_make("equalizer-10bands",
+            "audio_equalizer"); 
+        audio_convert = gst_element_factory_make("audioconvert", "eqauconv");
+        volume_plugin = gst_element_factory_make("volume", "volume_plugin");
+        spectrum_plugin = gst_element_factory_make("spectrum",
+            "spectrum_plugin");
+        if(!GST_IS_ELEMENT(audio_equalizer) || !GST_IS_ELEMENT(audio_sink) ||
+            !GST_IS_ELEMENT(audio_convert) || !GST_IS_ELEMENT(volume_plugin) ||
+            !GST_IS_ELEMENT(spectrum_plugin))
+        {
+            flag = FALSE;
+            if(GST_IS_ELEMENT(audio_equalizer))
+                gst_object_unref(audio_equalizer);
+            if(GST_IS_ELEMENT(audio_sink))
+                gst_object_unref(audio_sink);
+            if(GST_IS_ELEMENT(audio_convert))
+                gst_object_unref(audio_convert);
+            if(GST_IS_ELEMENT(volume_plugin))
+                gst_object_unref(volume_plugin);
+            if(GST_IS_ELEMENT(spectrum_plugin))
+                gst_object_unref(spectrum_plugin);
+            rc_gui_show_message_dialog(GTK_MESSAGE_ERROR,
+                _("Effect plugins are missing!"), _("Some effect plugins are "
+                "missing, effects are not available now!"));
+            rc_debug_perror("Core-ERROR: Some effect plugins are missing, "
+                "effects are not available now!\n");
+        }
+    }
+    if(GST_IS_ELEMENT(video_fakesink))
+    {
+        g_object_set(G_OBJECT(video_fakesink), "sync", TRUE, NULL);
+        g_object_set(G_OBJECT(play), "video-sink", video_fakesink, NULL);
+    }
+    if(flag)
+    { 
+        g_object_set(G_OBJECT(spectrum_plugin), "bands", spect_bands,
+            "threshold", -80, "message", TRUE, "message-magnitude", TRUE,
+            NULL);
+        seff = gst_bin_new("audio-bin");
+        gst_bin_add_many(GST_BIN(seff), audio_convert, audio_equalizer,
+            spectrum_plugin, volume_plugin, audio_sink, NULL);
+        caps = gst_caps_new_simple("audio/x-raw-int", "rate", G_TYPE_INT,
+            audio_freq, NULL);
+        if(!gst_element_link_many(audio_convert, audio_equalizer, NULL) ||
+            !gst_element_link_filtered(audio_equalizer, spectrum_plugin,
+            caps) || !gst_element_link_many(spectrum_plugin, volume_plugin,
+            audio_sink, NULL))
+        {
+            flag = FALSE;
+            rc_gui_show_message_dialog(GTK_MESSAGE_ERROR,
+                _("Link elements error!"), _("Cannot link effect elements, "
+                "effects are not available now!"));
+            rc_debug_perror("Core-ERROR: Cannot link effect elements, "
+                "effects are not available now!\n");
+            if(GST_IS_ELEMENT(audio_equalizer))
+                gst_object_unref(audio_equalizer);
+            if(GST_IS_ELEMENT(audio_sink))
+                gst_object_unref(audio_sink);
+            if(GST_IS_ELEMENT(audio_convert))
+                gst_object_unref(audio_convert);
+            if(GST_IS_ELEMENT(volume_plugin))
+                gst_object_unref(volume_plugin);
+            if(GST_IS_ELEMENT(spectrum_plugin))
+                gst_object_unref(spectrum_plugin);
+            if(GST_IS_ELEMENT(seff))
+                gst_object_unref(seff);
+        }
+        gst_caps_unref(caps);
+    }
+    if(flag)
+    {
+        pad1 = gst_element_get_static_pad(audio_convert, "sink");
+        gst_element_add_pad(seff, gst_ghost_pad_new(NULL, pad1));
+        g_object_set(G_OBJECT(play), "audio-sink", seff, NULL);
+        rc_core.eq_plugin = audio_equalizer;
+        rc_core.volume = setting->volume;
+        /* Use Volume Plugin to avoid the bug in Gstreamer 0.10.28. */
+        rc_core.vol_plugin = volume_plugin;
+    }
     bus = gst_pipeline_get_bus(GST_PIPELINE(play));
     gst_bus_add_watch(bus, (GstBusFunc)rc_core_bus_call, &rc_core);
     gst_object_unref(bus);
     gst_element_set_state(play, GST_STATE_NULL);
-    gst_element_set_state(seff, GST_STATE_READY);
     rc_gui_seek_scaler_disable();
     rc_core.playbin = play;
     rc_core.eos = FALSE;
-    rc_core.eq_plugin = audio_equalizer;
-    rc_core.volume = setting->volume;
-    /* Use Volume Plugin to avoid the bug in Gstreamer 0.10.28. */
-    rc_core.vol_plugin = volume_plugin;
     rc_gui_set_volume(setting->volume * 100);
-    g_object_set(G_OBJECT(play), "video-sink", 
-        video_fakesink, NULL);
+    rc_core_set_volume(setting->volume * 100);
     gst_element_set_state(play, GST_STATE_READY);
     gst_version(&rc_core.ver_major, &rc_core.ver_minor, &rc_core.ver_micro,
         &rc_core.ver_nano);
@@ -337,7 +421,10 @@ gboolean rc_core_stop()
 gboolean rc_core_set_volume(gdouble volume)
 {
     rc_core.volume = volume / 100;
-    g_object_set(G_OBJECT(rc_core.vol_plugin), "volume", volume/100, NULL);
+    if(rc_core.vol_plugin!=NULL)
+        g_object_set(G_OBJECT(rc_core.vol_plugin), "volume", volume/100, NULL);
+    else
+        g_object_set(G_OBJECT(rc_core.playbin), "volume", volume/100, NULL);
     return TRUE;
 }
 
@@ -347,7 +434,10 @@ gboolean rc_core_set_volume(gdouble volume)
 
 gdouble rc_core_get_volume()
 {
-    g_object_get(rc_core.vol_plugin, "volume", &rc_core.volume, NULL);
+    if(rc_core.vol_plugin!=NULL)
+        g_object_get(rc_core.vol_plugin, "volume", &rc_core.volume, NULL);
+    else
+        g_object_get(rc_core.playbin, "volume", &rc_core.volume, NULL);
     return rc_core.volume * 100;
 }
 
@@ -419,6 +509,7 @@ void rc_core_set_eq_effect(gdouble *fq)
 {
     gint i = 0;
     for(i=0;i<10;i++) rc_core.eq[i] = fq[i];
+    if(rc_core.eq_plugin==NULL) return;
     g_object_set(G_OBJECT(rc_core.eq_plugin), "band0", fq[0], NULL);
     g_object_set(G_OBJECT(rc_core.eq_plugin), "band1", fq[1], NULL);
     g_object_set(G_OBJECT(rc_core.eq_plugin), "band2", fq[2], NULL);

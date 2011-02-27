@@ -44,6 +44,8 @@ typedef struct _MusicMetaData
     gchar *uri;
     guint tracknum;
     guint bitrate;
+    gint samplerate;
+    gint channels;
     gint eos;
     gint list2_index;
     gchar title[512];
@@ -51,6 +53,7 @@ typedef struct _MusicMetaData
     gchar album[512];
     gchar comment[512];
     gchar file_type[256];
+    GstBuffer *image;
     gboolean audio_flag;
     gboolean video_flag;
     GtkTreeRowReference *reference;
@@ -60,7 +63,6 @@ typedef struct _MusicMetaData
 
 MusicMetaData *rc_tag_read_metadata(gchar *);
 void rc_tag_free(MusicMetaData *);
-gchar **rc_tag_get_id3(gchar *);
 gchar *rc_tag_get_name_from_fpath(const gchar *);
 gchar *rc_tag_find_file(const gchar *, const gchar *, const gchar *);
 

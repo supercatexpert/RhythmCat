@@ -31,6 +31,9 @@
 #include <gtk/gtk.h>
 #include <stdlib.h>
 
+const gchar *g_module_check_init(GModule *);
+void g_module_unload(GModule *);
+
 gint rc_plugin_module_init();
 void rc_plugin_module_exit();
 void rc_plugin_module_configure();

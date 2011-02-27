@@ -1,8 +1,8 @@
 /*
- * GUI Lyric Show
- * Build the lyric show of the player. 
+ * Lyric Show Plugin
+ * Show lyric in the player, or in a single window.
  *
- * gui_lrc.c
+ * lyricshow.c
  * This file is part of <RhythmCat>
  *
  * Copyright (C) 2010 - SuperCat, license: GPL v3
@@ -23,20 +23,64 @@
  * Boston, MA  02110-1301  USA
  */
 
-#include "gui_lrc.h"
+#include "lyricshow.h"
+#include "core.h"
 #include "gui.h"
 #include "lyric.h"
-#include "main.h"
-#include "core.h"
-#include "settings.h"
 #include "debug.h"
+#include "player.h"
 
+static gulong lyric_found_signal, lyric_stop_signal;
 static GuiLrcData rc_glrc;
-GuiData *rc_ui;
+static GuiData *rc_ui;
+static guint id = 0;
 
-void rc_gui_lrc_init()
+
+const gchar *g_module_check_init(GModule *module)
 {
-    RCSetting *rc_setting = rc_set_get_setting();
+    g_printf("LRCShow: Plugin loaded successfully!\n");
+    return NULL;
+}
+
+void g_module_unload(GModule *module)
+{
+    g_printf("LRCShow: Plugin exited!\n");
+}
+
+static void rc_plugin_lrcshow_lyric_found()
+{
+    rc_plugin_lrcshow_enable();
+}
+
+static void rc_plugin_lrcshow_stop()
+{
+    rc_plugin_lrcshow_disable();
+}
+
+gint rc_plugin_module_init()
+{
+    rc_plugin_lrcshow_init();
+    lyric_found_signal = rc_player_object_signal_connect_simple(
+        "lyric-found", G_CALLBACK(rc_plugin_lrcshow_lyric_found));
+    lyric_stop_signal = rc_player_object_signal_connect_simple(
+        "player-stop", G_CALLBACK(rc_plugin_lrcshow_stop));
+    return 0;
+}
+
+void rc_plugin_module_exit()
+{
+    rc_player_object_signal_disconnect(lyric_found_signal);
+    rc_player_object_signal_disconnect(lyric_stop_signal);
+    g_printf("Need more clear function here!\n");
+}
+
+void rc_plugin_module_configure()
+{
+    g_printf("No configure page yet!\n");
+}
+
+void rc_plugin_lrcshow_init()
+{
     rc_ui = rc_gui_get_gui();
     bzero(&rc_glrc, sizeof(GuiLrcData));
     rc_glrc.lrc_line_length = 0L;
@@ -63,21 +107,26 @@ void rc_gui_lrc_init()
     rc_glrc.bg_image_file = NULL;
     rc_glrc.bg_image_style = 0;
     rc_glrc.lrc_scene = gtk_drawing_area_new();
-    rc_glrc.bg_image_file = rc_setting->lrc_bg_image;
-    gtk_box_pack_start(GTK_BOX(rc_ui->lyric_vbox), rc_glrc.lrc_scene, TRUE,
-        TRUE, 0);
+    rc_glrc.lrc_scrwin = gtk_scrolled_window_new(NULL, NULL);
+    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(rc_glrc.lrc_scrwin),
+        GTK_POLICY_NEVER, GTK_POLICY_NEVER);
+    gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(
+        rc_glrc.lrc_scrwin), rc_glrc.lrc_scene);
     g_signal_connect(G_OBJECT(rc_glrc.lrc_scene), "expose-event",
-        G_CALLBACK(rc_gui_lrc_expose),NULL);
-    g_timeout_add(100, (GSourceFunc)rc_gui_lrc_update, NULL);
-    gtk_widget_show(rc_glrc.lrc_scene);
+        G_CALLBACK(rc_plugin_lrcshow_expose),NULL);
+    g_timeout_add(100, (GSourceFunc)rc_plugin_lrcshow_update, NULL);
+    gtk_widget_show_all(rc_glrc.lrc_scrwin);
+    id = rc_gui_view_add_page("ViewPageLyric", "_Lyric Show",
+        rc_glrc.lrc_scrwin);
 }
 
-GuiLrcData *rc_gui_lrc_get_data()
+
+GuiLrcData *rc_plugin_lrcshow_get_data()
 {
     return &rc_glrc;
 }
 
-void rc_gui_lrc_draw_bg()
+void rc_plugin_lrcshow_draw_bg()
 {
     cairo_t *cr;
     if(rc_glrc.bg_image_file!=NULL && rc_glrc.bg_image==NULL)
@@ -108,24 +157,21 @@ void rc_gui_lrc_draw_bg()
     cairo_destroy(cr);
 }
 
-gboolean rc_gui_lrc_show(GtkWidget *widget, gpointer data)
+void rc_plugin_lrcshow_show()
 {   
     static gboolean visible = TRUE;
     const GList *list_foreach = rc_glrc.lyric_data;
-    static RCSetting *rc_setting = NULL;
-    GtkAllocation allocation;
-    if(rc_setting==NULL) rc_setting = rc_set_get_setting();
     gint64 i = 0L;
     guint64 playing_time;
     gint count = 0;
-    gint width, height;
+    static gint width = 400, height = 100;
     gchar *text;
     LrcData *lrc_data;
     gdouble lrc_height, lrc_width;
     gint t_height, t_width;
     gdouble lrc_x, lrc_y;
     gdouble lrc_y_plus = 0.0;
-    static cairo_t *lrc_cr;
+    cairo_t *lrc_cr;
     guint64 time_plus = 0;
     guint64 time_passed = 0;
     LrcData *lrc_plus = NULL;
@@ -134,28 +180,31 @@ gboolean rc_gui_lrc_show(GtkWidget *widget, gpointer data)
     PangoLayout *layout;
     PangoFontDescription *desc;
     GdkWindow *lrc_window;
-    if(!GTK_IS_WIDGET(rc_glrc.lrc_scene)) return TRUE;
+    GtkAllocation *allocation;
+    GtkAdjustment *hadj, *vadj;
+    gdouble h_value, v_value;
+    if(!GTK_IS_WIDGET(rc_glrc.lrc_scene)) return;
     lrc_window = gtk_widget_get_window(rc_glrc.lrc_scene);
-    if(!GDK_IS_WINDOW(lrc_window)) return TRUE;
+    if(!GDK_IS_WINDOW(lrc_window)) return;
     g_object_get(G_OBJECT(rc_glrc.lrc_scene), "visible", &visible, NULL);
-    if(!visible) return TRUE;
-    if(!rc_glrc.lyric_flag) return TRUE;
-    if(rc_glrc.lyric_data==NULL) return TRUE;
-    rc_glrc.lyric_line_ds = rc_setting->lrc_line_ds;
-    rc_glrc.lyric_font = rc_setting->lrc_font;
+    if(!visible) return;
+    if(!rc_glrc.lyric_flag) return;
+    if(rc_glrc.lyric_data==NULL) return;
     rc_glrc.text_color[3] = 1.0;
     rc_glrc.text_hilight[3] = 1.0;
     rc_glrc.background[3] = 1.0;
-    for(count=0;count<3;count++)
-    {
-        rc_glrc.text_color[count] = rc_setting->lrc_fg_color[count];
-        rc_glrc.text_hilight[count] = rc_setting->lrc_hi_color[count];
-        rc_glrc.background[count] = rc_setting->lrc_bg_color[count];
-    }
-    gtk_widget_get_allocation(rc_glrc.lrc_scene, &allocation);
-    width = allocation.width;
-    height = allocation.height;
     lrc_cr = gdk_cairo_create(lrc_window);
+    hadj = gtk_scrolled_window_get_hadjustment(GTK_SCROLLED_WINDOW(
+        rc_glrc.lrc_scrwin));
+    vadj = gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(
+        rc_glrc.lrc_scrwin));
+    g_object_get(G_OBJECT(hadj), "page-size", &h_value, NULL);
+    g_object_get(G_OBJECT(vadj), "page-size", &v_value, NULL);
+    width = (gint)h_value;
+    height = (gint)v_value;
+    //allocation = &(rc_glrc.lrc_scene->allocation);
+    //width = allocation->width;
+    //height = allocation->height;
     layout = pango_cairo_create_layout(lrc_cr);
     pango_layout_set_text(layout, "Font size test!", -1);
     desc = pango_font_description_from_string(rc_glrc.lyric_font);
@@ -226,27 +275,21 @@ gboolean rc_gui_lrc_show(GtkWidget *widget, gpointer data)
     }
     cairo_destroy(lrc_cr);
     g_object_unref(layout);
-    return TRUE;
 }
 
-
-gboolean rc_gui_lrc_expose(GtkWidget *widget, gpointer data)
+gboolean rc_plugin_lrcshow_expose(GtkWidget *widget, gpointer data)
 {
     gboolean visible = FALSE;
-    gint i = 0;
-    static RCSetting *rc_setting = NULL;
     if(!GDK_IS_WINDOW(gtk_widget_get_window(rc_glrc.lrc_scene)))
         return TRUE;
     g_object_get(G_OBJECT(rc_glrc.lrc_scene), "visible", &visible, NULL);
     if(!visible) return FALSE;
-    rc_setting = rc_set_get_setting();
-    for(i=0;i<3;i++) rc_glrc.background[i] = rc_setting->lrc_bg_color[i];
-    rc_gui_lrc_draw_bg();
-    if(rc_glrc.lyric_flag) rc_gui_lrc_show(widget, data);
+    rc_plugin_lrcshow_draw_bg();
+    if(rc_glrc.lyric_flag) rc_plugin_lrcshow_show();
     return FALSE;
 }
 
-gboolean rc_gui_lrc_update(GtkWidget *widget, gpointer data)
+gboolean rc_plugin_lrcshow_update(gpointer data)
 {
     guint64 playing_time;
     guint64 time;
@@ -254,13 +297,13 @@ gboolean rc_gui_lrc_update(GtkWidget *widget, gpointer data)
     guint count = 0;
     gboolean visible = FALSE;
     static gint i = -2;
+    const GList *list_foreach = NULL;
     if(rc_glrc.lyric_new_flag)
     {
         i = -2;
         rc_glrc.lyric_new_flag = FALSE;
     }
     rc_glrc.lyric_data = rc_lrc_get_lrc_data();
-    const GList *list_foreach = NULL;
     if(rc_glrc.lyric_data==NULL) return TRUE;
     rc_glrc.lrc_line_length = g_list_length((GList *)rc_glrc.lyric_data);
     if(rc_glrc.lrc_line_length<1) return TRUE;
@@ -284,17 +327,17 @@ gboolean rc_gui_lrc_update(GtkWidget *widget, gpointer data)
     return TRUE;   
 }
 
-void rc_gui_lrc_enable()
+void rc_plugin_lrcshow_enable()
 {
     rc_glrc.lyric_new_flag = TRUE;
     rc_glrc.lyric_flag = TRUE;
     rc_glrc.lrc_line_num = -1L;
-    rc_gui_lrc_update(NULL, NULL);
+    rc_plugin_lrcshow_update(NULL);
 }
 
-void rc_gui_lrc_disable()
+void rc_plugin_lrcshow_disable()
 {
     rc_glrc.lyric_flag = FALSE;
-    rc_gui_lrc_expose(NULL, NULL);
+    rc_plugin_lrcshow_expose(NULL, NULL);
 }
 

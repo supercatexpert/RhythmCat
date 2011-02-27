@@ -10,3 +10,8 @@
 
         Use GtkUIManager to build menus.
 
+2011-02-23  SuperCat    <supercatexpert@gmail.com>
+
+        Reading cover image in the tag of music file is now available.
+        Try to remove lyric show, and put this feature into a plugin.
+

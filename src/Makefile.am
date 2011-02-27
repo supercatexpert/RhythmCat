@@ -1,7 +1,7 @@
 bin_PROGRAMS = RhythmCat
 RhythmCat_SOURCES = core.c lyric.c playlist.c tag.c settings.c plugin.c \
     shell.c msg.c debug.c player.c gui.c gui_setting.c gui_treeview.c \
-    gui_style.c gui_dialog.c gui_lrc.c gui_eq.c gui_plugin.c main.c        
+    gui_style.c gui_dialog.c gui_eq.c gui_plugin.c main.c        
 
 INCLUDES = @GLIB2_CFLAGS@ @DBUS_GLIB_CFLAGS@ @GTK2_CFLAGS@ @GSTREAMER_CFLAGS@ \
     -DLOCALEDIR=\"$(localedir)\"

@@ -46,6 +46,7 @@ gboolean rc_plugin_init()
             plugin_data->name, plugin_data->path, plugin_data->desc);
     }
     rc_plugin_module_load("plugins/desktop-lyric/desklrc.so");
+    rc_plugin_module_load("plugins/lyric-show/lyricshow.so");
     return TRUE;
 }
 

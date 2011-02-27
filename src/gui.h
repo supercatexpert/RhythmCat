@@ -39,8 +39,8 @@
 typedef struct _GuiData
 {
     GtkUIManager *main_ui;
+    GtkActionGroup *main_action_group;
     GtkWidget *main_window;
-    GtkWidget *lyric_vbox;
     GtkWidget *eq_vbox;
     GtkWidget *main_menu_bar;
     GtkWidget *plist_notebook;
@@ -56,6 +56,8 @@ typedef struct _GuiData
     GtkWidget *status_cancel_button;
     GtkTreeModel *list1_tree_model, *list2_tree_model;
     GtkTreeSelection *list1_selection, *list2_selection;
+    GtkCellRenderer *renderer_text[5];
+    GtkCellRenderer *renderer_pixbuf[2];
     GtkAdjustment *lrc_vport_adj;
     guint main_window_width;
     guint main_window_height;
@@ -74,7 +76,7 @@ GuiData *rc_gui_get_gui();
 gboolean rc_gui_init();
 void rc_gui_quit_player(GtkWidget *, gpointer);
 void rc_gui_music_info_set_text(gchar *, gchar *, gchar *, gint64, gchar *,
-    guint);
+    guint, gint, gint);
 void rc_gui_time_label_set_text(gint64);
 gboolean rc_gui_prev_button_clicked(GtkButton *, gpointer);
 gboolean rc_gui_play_button_clicked(GtkButton *, gpointer);
@@ -104,11 +106,14 @@ gboolean rc_gui_press_forward_menu(GtkMenuItem *, gpointer);
 void rc_gui_set_list2_menu(GtkTreeView *, gpointer);
 void rc_gui_refresh_music_info(GtkMenuItem *, gpointer);
 gboolean rc_gui_set_cover_image(gchar *);
+gboolean rc_gui_set_cover_image_by_buf(const GstBuffer *);
 void rc_gui_show_hide_window(GtkWidget *, gpointer);
 void rc_gui_tray_icon_popup(GtkStatusIcon *, guint, guint, gpointer);
 void rc_gui_status_task_set(guint, guint);
 void rc_gui_status_progress_set_progress();
 void rc_gui_import_cancel_button_clicked(GtkWidget *, gpointer);
+guint rc_gui_view_add_page(const gchar *, const gchar *, GtkWidget *);
+gboolean rc_gui_view_remove_page(guint);
 
 #endif
 

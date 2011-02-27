@@ -31,8 +31,6 @@
 
 /* Variables */
 static GuiData *rc_ui;
-static GtkCellRenderer *renderer_text[5];
-static GtkCellRenderer *renderer_pixbuf[2];
 static GtkTreeViewColumn *list1_column;
 static GtkTreeViewColumn *list2_index_column;
 static GtkTreeViewColumn *list2_title_column;
@@ -133,37 +131,37 @@ void rc_gui_treeview_init()
     gtk_tree_view_columns_autosize(GTK_TREE_VIEW(rc_ui->list1_tree_view));
     gtk_tree_view_columns_autosize(GTK_TREE_VIEW(rc_ui->list2_tree_view));
     for(count=0;count<5;count++)
-        renderer_text[count] = gtk_cell_renderer_text_new();
+        rc_ui->renderer_text[count] = gtk_cell_renderer_text_new();
     for(count=0;count<2;count++)
-        renderer_pixbuf[count] = gtk_cell_renderer_pixbuf_new();
-    gtk_cell_renderer_set_fixed_size(renderer_text[0], 80, -1);
-    gtk_cell_renderer_set_fixed_size(renderer_text[1], 120, -1);
-    gtk_cell_renderer_set_fixed_size(renderer_text[4], 55, -1);
-    g_object_set(G_OBJECT(renderer_text[0]), "ellipsize", PANGO_ELLIPSIZE_END,
+        rc_ui->renderer_pixbuf[count] = gtk_cell_renderer_pixbuf_new();
+    gtk_cell_renderer_set_fixed_size(rc_ui->renderer_text[0], 80, -1);
+    gtk_cell_renderer_set_fixed_size(rc_ui->renderer_text[1], 120, -1);
+    gtk_cell_renderer_set_fixed_size(rc_ui->renderer_text[4], 55, -1);
+    g_object_set(G_OBJECT(rc_ui->renderer_text[0]), "ellipsize", PANGO_ELLIPSIZE_END,
         "ellipsize-set", TRUE, NULL);
-    g_object_set(G_OBJECT(renderer_text[1]), "ellipsize", PANGO_ELLIPSIZE_END,
+    g_object_set(G_OBJECT(rc_ui->renderer_text[1]), "ellipsize", PANGO_ELLIPSIZE_END,
         "ellipsize-set", TRUE, NULL);
-    g_object_set(G_OBJECT(renderer_text[2]),"ellipsize",PANGO_ELLIPSIZE_END,
+    g_object_set(G_OBJECT(rc_ui->renderer_text[2]),"ellipsize",PANGO_ELLIPSIZE_END,
         "ellipsize-set", TRUE, NULL);
-    g_object_set(G_OBJECT(renderer_text[3]),"ellipsize",PANGO_ELLIPSIZE_END,
+    g_object_set(G_OBJECT(rc_ui->renderer_text[3]),"ellipsize",PANGO_ELLIPSIZE_END,
         "ellipsize-set", TRUE, NULL);
-    g_object_set(G_OBJECT(renderer_text[4]), "xalign", 1.0, "width-chars", 5,
+    g_object_set(G_OBJECT(rc_ui->renderer_text[4]), "xalign", 1.0, "width-chars", 5,
         NULL);
-    gtk_cell_renderer_set_fixed_size(renderer_pixbuf[0], 16, -1);
-    gtk_cell_renderer_set_fixed_size(renderer_pixbuf[1], 16, -1);
+    gtk_cell_renderer_set_fixed_size(rc_ui->renderer_pixbuf[0], 16, -1);
+    gtk_cell_renderer_set_fixed_size(rc_ui->renderer_pixbuf[1], 16, -1);
     list1_column = gtk_tree_view_column_new();
     list2_index_column = gtk_tree_view_column_new_with_attributes(
-        "#", renderer_pixbuf[1], "stock-id", 1, NULL);
+        "#", rc_ui->renderer_pixbuf[1], "stock-id", 1, NULL);
     list2_title_column = gtk_tree_view_column_new_with_attributes(
-        _("Title"), renderer_text[2], "text", 2, NULL);
+        _("Title"), rc_ui->renderer_text[2], "text", 2, NULL);
     list2_time_column = gtk_tree_view_column_new_with_attributes(
-        _("Length"), renderer_text[4], "text", 5, NULL);
+        _("Length"), rc_ui->renderer_text[4], "text", 5, NULL);
     gtk_tree_view_column_set_title(list1_column, "Playlist");
-    gtk_tree_view_column_pack_start(list1_column, renderer_pixbuf[0], FALSE);
-    gtk_tree_view_column_pack_start(list1_column, renderer_text[0], TRUE);
-    gtk_tree_view_column_add_attribute(list1_column,renderer_pixbuf[0],
+    gtk_tree_view_column_pack_start(list1_column, rc_ui->renderer_pixbuf[0], FALSE);
+    gtk_tree_view_column_pack_start(list1_column, rc_ui->renderer_text[0], TRUE);
+    gtk_tree_view_column_add_attribute(list1_column,rc_ui->renderer_pixbuf[0],
         "stock-id", 0);
-    gtk_tree_view_column_add_attribute(list1_column,renderer_text[0],
+    gtk_tree_view_column_add_attribute(list1_column,rc_ui->renderer_text[0],
         "text", 1);
     gtk_tree_view_append_column(GTK_TREE_VIEW(rc_ui->list1_tree_view),
         list1_column);
@@ -204,7 +202,7 @@ void rc_gui_treeview_init()
         TRUE);
     rc_gui_list1_tree_view_set_drag();
     rc_gui_list2_tree_view_set_drag();
-    g_signal_connect(G_OBJECT(renderer_text[0]), "edited",
+    g_signal_connect(G_OBJECT(rc_ui->renderer_text[0]), "edited",
         G_CALLBACK(rc_gui_list1_edited), NULL);
 }
 
@@ -635,14 +633,14 @@ void rc_gui_list2_dnd_data_received(GtkWidget *widget,
         case 6:
         {
             uris = (gchar *)gtk_selection_data_get_data(seldata);
-            if(uri==NULL) break;
+            if(uris==NULL) break;
             if(pos==GTK_TREE_VIEW_DROP_AFTER ||
                 pos==GTK_TREE_VIEW_DROP_INTO_OR_AFTER) target++;
             list_length = gtk_tree_model_iter_n_children(
                 rc_ui->list2_tree_model, NULL);
             if(target<0) target = list_length;
             uri_array = g_uri_list_extract_uris(uris);
-            for( ;uri_array[count]!=NULL;count++)
+            for(count=0;uri_array[count]!=NULL;count++)
             {
                 uri = uri_array[count];
                 if(rc_is_mfile_supported(uri))
@@ -693,31 +691,20 @@ void rc_gui_list2_dnd_data_get(GtkWidget *widget, GdkDragContext *context,
 void rc_gui_list2_dnd_motion(GtkWidget *widget, GdkDragContext *context,
     gint x, gint y, guint time, gpointer data)
 {
-    GtkAllocation allocation;
-    gdouble persent = 0.0;
-    gint height = 0;
-    gint bx, by;
     GtkTreeViewDropPosition pos;
     GtkTreePath *path_drop = NULL;
     gtk_tree_view_get_dest_row_at_pos(GTK_TREE_VIEW(
         rc_ui->list2_tree_view), x, y, &path_drop, &pos);
-    gtk_widget_get_allocation(rc_ui->list2_tree_view, &allocation);
-    height = allocation.height;
     if(pos==GTK_TREE_VIEW_DROP_INTO_OR_BEFORE) pos=GTK_TREE_VIEW_DROP_BEFORE;
     if(pos==GTK_TREE_VIEW_DROP_INTO_OR_AFTER) pos=GTK_TREE_VIEW_DROP_AFTER;
     if(path_drop)
     {
         gtk_tree_view_set_drag_dest_row(GTK_TREE_VIEW(
             rc_ui->list2_tree_view), path_drop, pos);
-        gtk_tree_view_convert_widget_to_bin_window_coords(GTK_TREE_VIEW(
-            rc_ui->list2_tree_view), x, y, &bx, &by);
-        persent = (gdouble)by / height;
-        if(persent>=0.95)
-            gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(
-                rc_ui->list2_tree_view), path_drop, NULL, TRUE, 0.95, 0);
-        else if(persent<=0.05)
-            gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(
-                rc_ui->list2_tree_view), path_drop, NULL, TRUE, 0.05, 0);
+        if(pos==GTK_TREE_VIEW_DROP_AFTER) gtk_tree_path_next(path_drop);
+        else gtk_tree_path_prev(path_drop);
+        gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(
+            rc_ui->list2_tree_view), path_drop, NULL, FALSE, 0.0, 0.0);
         gtk_tree_path_free(path_drop);
     }
 }
@@ -904,11 +891,11 @@ void rc_gui_list1_rename_list(GtkWidget *widget, gpointer data)
         if(path==NULL) return;
     }
     else return;
-    g_object_set(G_OBJECT(renderer_text[0]), "editable", TRUE, "editable-set",
+    g_object_set(G_OBJECT(rc_ui->renderer_text[0]), "editable", TRUE, "editable-set",
         TRUE, NULL);
     gtk_tree_view_set_cursor(GTK_TREE_VIEW(rc_ui->list1_tree_view), path,
         list1_column, TRUE);
-    g_object_set(G_OBJECT(renderer_text[0]), "editable", FALSE, "editable-set",
+    g_object_set(G_OBJECT(rc_ui->renderer_text[0]), "editable", FALSE, "editable-set",
         FALSE, NULL);
     gtk_tree_path_free(path);
 }

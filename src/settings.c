@@ -236,6 +236,11 @@ void rc_set_load_setting(gchar *filename)
     }
     value_str = NULL;
     /* More setting items(?) here. */
+    if(rc_setting.tag_ex_encoding!=NULL)
+    {
+        setenv("GST_ID3_TAG_ENCODING", rc_setting.tag_ex_encoding, 1);
+        setenv("GST_ID3V2_TAG_ENCODING", rc_setting.tag_ex_encoding, 1);
+    }
     g_key_file_free(sys_keyfile);
 }
 
