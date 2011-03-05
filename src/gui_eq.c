@@ -41,11 +41,12 @@ static EQData eq_data[11];
 
 void rc_gui_init_eq_data()
 {
-    RCSetting *rc_setting = rc_set_get_setting();
     static gboolean init = FALSE;
     if(init) return;
     init = TRUE;
     gint i, j;
+    gdouble *eq_array = NULL;
+    gsize size;
     gdouble value[][10] =
     {
         { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}, /* Disabled */
@@ -74,12 +75,19 @@ void rc_gui_init_eq_data()
         for(j=0;j<10;j++)
             eq_data[i].value[j] = value[i][j];
     bzero(eq_data[10].value, 10*sizeof(gdouble));
-    for(i=0;i<10;i++) eq_data[10].value[i] = rc_setting->eq_array[i];
-    i = rc_setting->eq_style;
+    eq_array = rc_set_get_double_list("Player", "EQ", &size, NULL);
+    if(eq_array!=NULL)
+    {
+        if(size>10) size = 10;
+        for(i=0;i<size;i++)
+            eq_data[10].value[i] = eq_array[i];
+        g_free(eq_array);
+    }
+    i = rc_set_get_integer("Player", "EQStyle", NULL);
     if(i!=-1)
         rc_core_set_eq_effect(value[i]);
     else
-        rc_core_set_eq_effect(rc_setting->eq_array);
+        rc_core_set_eq_effect(eq_data[10].value);
 }
 
 /*
@@ -88,10 +96,10 @@ void rc_gui_init_eq_data()
 
 void rc_gui_eq_init()
 {
-    RCSetting *rc_setting = rc_set_get_setting();
     CoreData *gcore = rc_core_get_core();
     rc_ui = rc_gui_get_gui();
     gint i = 0;
+    gint eq_style = 0;
     GtkWidget *scale_vboxs[11];
     GtkWidget *eq_labels[10];
     GtkWidget *db_labels[3];
@@ -169,11 +177,11 @@ void rc_gui_eq_init()
         gtk_list_store_append(eq_liststore, &iter);
         gtk_list_store_set(eq_liststore, &iter, 0, eq_data[i].name, 1,
             i, -1);
-        //gtk_combo_box_append_text(GTK_COMBO_BOX(eq_combobox), eq_data[i].name);
     }
-    if(rc_setting->eq_style!=-1)
+    eq_style = rc_set_get_integer("Player", "EQStyle", NULL);
+    if(eq_style!=-1)
         gtk_combo_box_set_active(GTK_COMBO_BOX(eq_combobox), 
-            rc_setting->eq_style);
+            eq_style);
     else
         gtk_combo_box_set_active(GTK_COMBO_BOX(eq_combobox), 10);
     gtk_box_pack_start(GTK_BOX(hbox2), save_button, FALSE, FALSE, 2);
@@ -219,15 +227,16 @@ void rc_gui_set_equalizer(GtkAdjustment *adjustment, gpointer data)
 
 void rc_gui_equalizer_combox_changed(GtkComboBox *widget, gpointer data)
 {
-    RCSetting *rc_setting = rc_set_get_setting();
     gint i = 0;
     gint j = 0;
     i = gtk_combo_box_get_active(GTK_COMBO_BOX(eq_combobox));
     if(i<0 || i>10) return;
     for(j=0;j<10;j++)
         gtk_range_set_value(GTK_RANGE(eq_scales[j]), eq_data[i].value[j]);
-    if(i>=0 && i<10) rc_setting->eq_style = i;
-    else rc_setting->eq_style = -1;
+    if(i>=0 && i<10)
+        rc_set_set_integer("Player", "EQStyle", i);
+    else
+        rc_set_set_integer("Player", "EQStyle", -1);
 }
 
 /*
@@ -237,12 +246,11 @@ void rc_gui_equalizer_combox_changed(GtkComboBox *widget, gpointer data)
 gboolean rc_gui_eq_set_by_user(GtkRange *range, GtkScrollType scroll, 
     gdouble value, gpointer data)
 {
-    RCSetting *rc_setting = rc_set_get_setting();
     gint i = 0;
     for(i=0;i<10;i++)
     {
         eq_data[10].value[i] = gtk_range_get_value(GTK_RANGE(eq_scales[i]));
-        rc_setting->eq_array[i] = eq_data[10].value[i];
+        rc_set_set_double_list("Player", "EQ",  eq_data[10].value, 10);
     }
     if(gtk_combo_box_get_active(GTK_COMBO_BOX(eq_combobox))!=10)
         gtk_combo_box_set_active(GTK_COMBO_BOX(eq_combobox), 10);

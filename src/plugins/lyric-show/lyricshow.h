@@ -60,6 +60,7 @@ void g_module_unload(GModule *);
 gint rc_plugin_module_init();
 void rc_plugin_module_exit();
 void rc_plugin_module_configure();
+const gchar *rc_plugin_module_get_group_name();
 
 void rc_plugin_lrcshow_init();
 GuiLrcData *rc_plugin_lrcshow_get_data();

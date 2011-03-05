@@ -32,22 +32,83 @@
 
 static GSList *plugin_list = NULL;
 static GSList *module_list = NULL;
+static GKeyFile *plugin_configure = NULL;
 
 gboolean rc_plugin_init()
 {
-    const GSList *list_foreach;
     PluginData *plugin_data = NULL;
-    rc_plugin_search_dir("plugins");
-    for(list_foreach=plugin_list;list_foreach!=NULL;
+    gchar *conf_file = NULL;
+    gchar *plugin_file = NULL;
+    gchar **group_names = NULL;
+    guint i = 0;
+    gint type = 0;
+    plugin_configure = g_key_file_new();
+    conf_file = g_strdup_printf("%s%cplugins.conf", rc_get_set_dir(),
+        G_DIR_SEPARATOR);
+    if(!g_key_file_load_from_file(plugin_configure, conf_file, G_KEY_FILE_NONE,
+        NULL))
+    {
+        rc_debug_print("Plugin: Cannot open configure file. Maybe it is not "
+            "exist?\n");
+    }
+    g_free(conf_file);
+    group_names = g_key_file_get_groups(plugin_configure, NULL);
+    for(i=0;group_names[i]!=NULL;i++)
+    {
+        plugin_file = g_key_file_get_string(plugin_configure, group_names[i],
+            "File", NULL);
+        if(plugin_file!=NULL)
+        {
+            if(g_key_file_get_boolean(plugin_configure, group_names[i],
+                "Enabled", NULL))
+            {
+                type = g_key_file_get_integer(plugin_configure, group_names[i],
+                    "Type", NULL);
+                if(type>0)
+                {
+                    if(type==PLUGIN_TYPE_MODULE)
+                        rc_plugin_module_load(plugin_file);
+                    //else if(type==PLUGIN_TYPE_PYTHON)
+                        //rc_plugin_python_load(plugin_file);
+                    rc_plugin_plugin_free(plugin_data);
+                }
+            }
+            g_free(plugin_file);
+        }
+    }
+    g_strfreev(group_names);
+    return TRUE;
+}
+
+void rc_plugin_exit()
+{
+    GSList *list_foreach = NULL;
+    ModuleData *module_data;
+    gchar *conf_file = NULL;
+    gsize conf_data_length;
+    gchar *conf_data;
+    const gchar *group_name = NULL;
+    for(list_foreach=module_list;list_foreach!=NULL;
         list_foreach=g_slist_next(list_foreach))
     {
-        plugin_data = list_foreach->data;
-        g_printf("Plugin: %s\nFile: %s\nDescription: %s\n",
-            plugin_data->name, plugin_data->path, plugin_data->desc);
+        module_data = list_foreach->data;
+        group_name = module_data->module_get_group_name();
+        g_key_file_set_string(plugin_configure, group_name, "File",
+            module_data->path);
+        g_key_file_set_integer(plugin_configure, group_name, "Type",
+            PLUGIN_TYPE_MODULE);
+        g_key_file_set_boolean(plugin_configure, group_name, "Enabled",
+            TRUE);
+        module_data->module_exit();
+        rc_plugin_module_free(module_data);
     }
-    rc_plugin_module_load("plugins/desktop-lyric/desklrc.so");
-    rc_plugin_module_load("plugins/lyric-show/lyricshow.so");
-    return TRUE;
+    /* Save plugin configure data */
+    conf_file = g_strdup_printf("%s%cplugins.conf", rc_get_set_dir(),
+        G_DIR_SEPARATOR);
+    conf_data = g_key_file_to_data(plugin_configure, &conf_data_length, NULL);
+    g_file_set_contents(conf_file, conf_data, conf_data_length, NULL);
+    if(conf_data!=NULL) g_free(conf_data);    
+    g_free(conf_file);
 }
 
 gboolean rc_plugin_search_dir(const gchar *dirname)
@@ -248,8 +309,8 @@ gboolean rc_plugin_module_load(const gchar *filename)
         g_module_close(module);
         return FALSE;
     }
-    if(!g_module_symbol(module, "rc_plugin_module_configure",
-        (gpointer *)&module_data->module_configure))
+    if(!g_module_symbol(module, "rc_plugin_module_get_group_name",
+        (gpointer *)&module_data->module_get_group_name))
     {
         g_free(module_data);
         g_module_close(module);
@@ -266,5 +327,44 @@ gboolean rc_plugin_module_load(const gchar *filename)
     module_data->path = g_strdup(filename);
     module_list = g_slist_append(module_list, module_data);
     return TRUE;
+}
+
+void rc_plugin_module_close(const gchar *filename)
+{
+    GSList *list_foreach = NULL;
+    ModuleData *module_data;
+    const gchar *group_name = NULL;
+    for(list_foreach=module_list;list_foreach!=NULL;
+        list_foreach=g_slist_next(list_foreach))
+    {
+        module_data = list_foreach->data;
+        if(g_strcmp0(module_data->path, filename)==0)
+        {
+            group_name = module_data->module_get_group_name();
+            g_key_file_set_boolean(plugin_configure, group_name, "Enabled",
+                FALSE);
+            module_data->module_exit();
+            rc_plugin_module_free(module_data);
+            module_list = g_slist_delete_link(module_list, list_foreach);
+            break;
+        }        
+    }
+}
+
+gboolean rc_plugin_module_configure(const gchar *filename)
+{
+    gboolean flag = FALSE;
+    GModule *module = NULL;
+    void (*module_configure)();
+    module = g_module_open(filename, G_MODULE_BIND_LAZY);
+    if(module==NULL) return FALSE;
+    flag = g_module_symbol(module, "rc_plugin_module_configure",
+        (gpointer *)&module_configure);
+    if(flag)
+    {
+        module_configure();
+    }
+    g_module_close(module);
+    return flag;
 }
 

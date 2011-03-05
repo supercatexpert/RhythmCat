@@ -40,8 +40,8 @@ static gchar *rc_set_dir = NULL;
 static const gchar *rc_app_dir = NULL;
 static const gchar *rc_home_dir = NULL;
 static const gchar rc_program_name[] = "RhythmCat Music Player";
-static const gchar rc_build_num[] = "build 110227, alpha 1";
-static const gchar rc_ver_num[] = "0.9.0";
+static const gchar rc_build_num[] = "build 110306, alpha 1";
+static const gchar rc_ver_num[] = "0.9.5";
 static const gboolean rc_is_stable = FALSE;
 static const gchar rc_dbus_name[] = "org.supercat.RhythmCat";
 static const gchar rc_dbus_path_player[] = "/org/supercat/RhythmCat/Player";
@@ -63,8 +63,9 @@ static gboolean debug_flag = FALSE;
 static char **remaining_args = NULL;
 static GObject *rc_shell_info = NULL;
 static GRegex *support_format_regex;
+static const gchar *rc_locale = NULL; 
 
-void rc_initial(int *argc, char **argv[])
+void rc_init(int *argc, char **argv[])
 {
     static GOptionEntry options[] =
     {
@@ -80,7 +81,7 @@ void rc_initial(int *argc, char **argv[])
     GError *error = NULL;
     if(homedir==NULL) homedir = g_get_home_dir();
     rc_home_dir = homedir;
-    int dname_len = strlen(homedir);
+    gint dname_len = strlen(homedir);
     rc_set_dir = g_malloc0(dname_len+16);
     g_sprintf(rc_set_dir, "%s%c.RhythmCat", homedir, G_DIR_SEPARATOR);
     rc_app_dir = rc_get_data_dir(*argv[0]);
@@ -112,7 +113,7 @@ void rc_initial(int *argc, char **argv[])
     support_format_regex = g_regex_new(rc_support_formatx, G_REGEX_CASELESS,
         G_REGEX_MATCH_ANCHORED, &error);
     if(error!=NULL) g_error_free(error);
-    rc_set_initial_setting();
+    rc_set_init();
     gst_init(argc, argv);
     rc_dbus_init(remaining_args);
     if(locale_dir==NULL)
@@ -123,6 +124,7 @@ void rc_initial(int *argc, char **argv[])
         g_free(locale_dir);
     }
     bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
+    rc_locale = g_strdup(setlocale(LC_ALL, NULL));
     rc_gui_init();
     rc_core_init();
     rc_gui_init_eq_data();
@@ -132,6 +134,16 @@ void rc_initial(int *argc, char **argv[])
     rc_player_object_init();
     rc_plist_load_argument(remaining_args);
     rc_plugin_init();
+}
+
+void rc_exit()
+{
+    rc_plugin_exit();
+    rc_plist_save_playlist_setting();
+    rc_core_delete();
+    rc_set_exit();
+    rc_plist_uninit_playlist();
+    gtk_main_quit();
 }
 
 gchar *rc_get_data_dir(char *arg0)
@@ -312,9 +324,15 @@ gboolean rc_dbus_init(gchar **remaining_args)
     return TRUE;
 }
 
+const gchar *rc_get_locale()
+{
+    return rc_locale;
+}
+
+
 int main(int argc, char *argv[], char *envp[])
 {
-    rc_initial(&argc, &argv);
+    rc_init(&argc, &argv);
     gtk_main();
     g_free(rc_set_dir);
     return 0;

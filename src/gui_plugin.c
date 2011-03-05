@@ -26,6 +26,7 @@
 #include "gui_plugin.h"
 #include "gui.h"
 #include "plugin.h"
+#include "debug.h"
 
 static GtkWidget *plugin_window;
 static GtkWidget *plugin_conf_button;
@@ -41,16 +42,69 @@ static GuiData *rc_ui;
 static void rc_gui_plugin_list_toggled(GtkCellRendererToggle *renderer,
     gchar *path_str, gpointer data)
 {
+    gchar *plugin_path = NULL;
+    gint type = 0;
     GtkTreeIter iter;
     GtkTreePath *path = gtk_tree_path_new_from_string(path_str);
-    gboolean state;
+    gboolean state = FALSE;
+    gboolean flag = FALSE;
     gtk_tree_model_get_iter(plugin_list_model, &iter, path);
     gtk_tree_path_free(path);
-    gtk_tree_model_get(plugin_list_model, &iter, 0, &state, -1);
-    state ^= 1;
-    gtk_list_store_set(GTK_LIST_STORE(plugin_list_model), &iter,
-        0, state, -1);
-    g_printf("Toggled: %s\n", path_str);
+    gtk_tree_model_get(plugin_list_model, &iter, 0, &state, 1, &plugin_path,
+        7, &type, -1);
+    if(plugin_path==NULL) return;
+    if(state==0)
+    {
+        /* Enable the plugin */
+        if(type==PLUGIN_TYPE_MODULE)
+            flag = rc_plugin_module_load(plugin_path);
+        else if(type==PLUGIN_TYPE_PYTHON)
+            ;
+        gtk_list_store_set(GTK_LIST_STORE(plugin_list_model), &iter,
+            0, flag, -1);
+        if(!flag)
+            rc_debug_perror("Gui-ERROR: Cannot open the plugin %s!\n",
+                plugin_path);
+    }
+    else
+    {
+        /* Disable the plugin */
+        if(type==PLUGIN_TYPE_MODULE)
+            rc_plugin_module_close(plugin_path);
+        else if(type==PLUGIN_TYPE_PYTHON)
+            ;
+        gtk_list_store_set(GTK_LIST_STORE(plugin_list_model), &iter,
+            0, FALSE, -1);
+    }
+    g_free(plugin_path);
+}
+
+static void rc_gui_plugin_configure(GtkWidget *widget, gpointer data)
+{
+    GtkTreeIter iter;
+    GtkTreeSelection *selection;
+    gchar *path = NULL;
+    PluginType type;
+    selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(plugin_list_view));
+    if(gtk_tree_selection_get_selected(selection, NULL, &iter))
+    {
+        gtk_tree_model_get(plugin_list_model, &iter, 1, &path, 7, &type, -1);
+        if(path!=NULL)
+        {
+            switch(type)
+            {
+                case PLUGIN_TYPE_MODULE:
+                    rc_plugin_module_configure(path);
+                    break;
+                case PLUGIN_TYPE_PYTHON:
+                    g_printf("Configure Python!\n");
+                    break;
+                default:
+                    g_printf("Unknown type!\n");
+            }
+            g_free(path);
+        }
+    }
 }
 
 static void rc_gui_plugin_row_selected(GtkTreeView *tree, gpointer data)
@@ -62,8 +116,8 @@ static void rc_gui_plugin_row_selected(GtkTreeView *tree, gpointer data)
     selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(plugin_list_view));
     if(gtk_tree_selection_get_selected(selection, NULL, &iter))
     {
-        gtk_tree_model_get(plugin_list_model, &iter, 1, &name, 2, &version,
-            3, &desc, 4, &author, 5, &website, -1);
+        gtk_tree_model_get(plugin_list_model, &iter, 2, &name, 3, &version,
+            4, &desc, 5, &author, 6, &website, -1);
         if(name!=NULL && version!=NULL)
         {
             title = g_strdup_printf("<b>%s</b> <i>%s</i>", name, version);
@@ -85,8 +139,9 @@ static void rc_gui_plugin_list_create()
     GtkListStore *plugin_list_store;
     GtkTreeViewColumn *plugin_list_columns[2];
     GtkCellRenderer *plugin_list_renderers[2];
-    plugin_list_store = gtk_list_store_new(6, G_TYPE_BOOLEAN, G_TYPE_STRING,
-        G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
+    plugin_list_store = gtk_list_store_new(8, G_TYPE_BOOLEAN, G_TYPE_STRING,
+        G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING,
+        G_TYPE_STRING, G_TYPE_INT);
     plugin_list_model = GTK_TREE_MODEL(plugin_list_store);
     plugin_list_view = gtk_tree_view_new_with_model(plugin_list_model);
     plugin_list_renderers[0] = gtk_cell_renderer_toggle_new();
@@ -99,7 +154,7 @@ static void rc_gui_plugin_list_create()
     plugin_list_columns[0] = gtk_tree_view_column_new_with_attributes(
         _("Enabled"), plugin_list_renderers[0], "active", 0, NULL);
     plugin_list_columns[1] = gtk_tree_view_column_new_with_attributes(
-        _("Plugin"), plugin_list_renderers[1], "text", 1, NULL);
+        _("Plugin"), plugin_list_renderers[1], "text", 2, NULL);
     gtk_tree_view_append_column(GTK_TREE_VIEW(plugin_list_view),
         plugin_list_columns[0]);
     gtk_tree_view_append_column(GTK_TREE_VIEW(plugin_list_view),
@@ -110,10 +165,11 @@ static void rc_gui_plugin_list_create()
         G_CALLBACK(rc_gui_plugin_row_selected),NULL);
 }
 
-static void rc_gui_plugin_load_info()
+static guint rc_gui_plugin_load_info()
 {
     const GSList *plugin_list, *list_foreach;
     gboolean running = FALSE;
+    guint count = 0;
     GtkTreeIter iter;
     GtkListStore *plugin_list_store = GTK_LIST_STORE(plugin_list_model);
     PluginData *plugin_data = NULL;
@@ -130,10 +186,17 @@ static void rc_gui_plugin_load_info()
             running = rc_plugin_module_check_running(plugin_data->path);
         else running = FALSE;
         gtk_list_store_set(plugin_list_store, &iter, 0, running, 1,
-            plugin_data->name, 2, plugin_data->version, 3,
-            plugin_data->desc, 4, plugin_data->author, 5,
-            plugin_data->website, -1);
+            plugin_data->path,2, plugin_data->name, 3, plugin_data->version,
+            4, plugin_data->desc, 5, plugin_data->author, 6,
+            plugin_data->website, 7, plugin_data->type, -1);
+        count++;
     }
+    return count;
+}
+
+static void rc_gui_plugin_window_close(GtkWidget *widget, gpointer data)
+{
+    gtk_widget_destroy(plugin_window);
 }
 
 void rc_gui_plugin_window_create(GtkWidget *widget, gpointer data)
@@ -144,6 +207,7 @@ void rc_gui_plugin_window_create(GtkWidget *widget, gpointer data)
     GtkWidget *plugin_list_scr_window;
     GtkWidget *label1, *label2, *label3;
     GtkWidget *button_hbox1, *button_hbox2;
+    GtkTreePath *path;
     if(G_IS_OBJECT(plugin_window))
         g_object_get(G_OBJECT(plugin_window), "visible", &visible, NULL);
     if(plugin_window!=NULL && GTK_IS_WIDGET(plugin_window))
@@ -194,6 +258,10 @@ void rc_gui_plugin_window_create(GtkWidget *widget, gpointer data)
     gtk_misc_set_alignment(GTK_MISC(label1), 0.0, 0.5);
     gtk_misc_set_alignment(GTK_MISC(label2), 0.0, 0.5);
     gtk_misc_set_alignment(GTK_MISC(label3), 0.0, 0.5);
+    gtk_widget_set_size_request(plugin_name_label, 250, -1);
+    gtk_widget_set_size_request(plugin_desc_label, 250, -1);
+    gtk_widget_set_size_request(plugin_author_label, 250, -1);
+    gtk_widget_set_size_request(plugin_website_label, 250, -1);
     vbox1 = gtk_vbox_new(FALSE, 0);
     vbox2 = gtk_vbox_new(FALSE, 2);
     hbox1 = gtk_hbox_new(FALSE, 0);
@@ -213,11 +281,27 @@ void rc_gui_plugin_window_create(GtkWidget *widget, gpointer data)
     gtk_box_pack_start(GTK_BOX(vbox2), button_hbox2, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(hbox1), plugin_list_scr_window, TRUE, TRUE,
         4);
-    gtk_box_pack_start(GTK_BOX(hbox1), vbox2, TRUE, TRUE, 4);
+    gtk_box_pack_start(GTK_BOX(hbox1), vbox2, FALSE, FALSE, 4);
     gtk_box_pack_start(GTK_BOX(vbox1), hbox1, TRUE, TRUE, 4);
     gtk_box_pack_start(GTK_BOX(vbox1), button_hbox1, FALSE, FALSE, 4);
     gtk_container_add(GTK_CONTAINER(plugin_window), vbox1);
     gtk_widget_show_all(plugin_window);
-    rc_gui_plugin_load_info();
+    if(rc_gui_plugin_load_info()>0)
+    {
+        path = gtk_tree_path_new_first();
+        gtk_tree_view_set_cursor(GTK_TREE_VIEW(plugin_list_view), path, 
+             NULL, FALSE);
+        gtk_tree_path_free(path);
+    }
+    g_signal_connect(G_OBJECT(plugin_conf_button), "clicked",
+        G_CALLBACK(rc_gui_plugin_configure), NULL);
+    g_signal_connect(G_OBJECT(plugin_close_button), "clicked",
+        G_CALLBACK(rc_gui_plugin_window_close), NULL);
+    gtk_widget_set_size_request(vbox2, 250, -1);
 }
+
+
+
+
+
 

@@ -25,6 +25,7 @@
 
 #include "lyric.h"
 #include "settings.h"
+#include "main.h"
 
 /* Variables */
 static GList *lrc_line_data = NULL;
@@ -131,7 +132,7 @@ gboolean rc_lrc_read_from_file(const gchar *filename)
     gchar *text_data;
     gchar **text_data_array = NULL;
     guint linenum = 0;
-    RCSetting *rc_setting = rc_set_get_setting();
+    const gchar *locale;
     if(lrc_line_data!=NULL) rc_lrc_clean_data();
     if(lrc_text_data!=NULL) g_free(lrc_text_data);
     flag = g_file_get_contents(filename, &lrc_text_data, &length, NULL);
@@ -146,11 +147,23 @@ gboolean rc_lrc_read_from_file(const gchar *filename)
         lrc_text_data = NULL;
         return FALSE;
     }
-    ex_encoding = rc_setting->lrc_ex_encoding;
+    if(rc_set_get_boolean("Metadata", "AutoEncodingDetect", NULL))
+    {
+        locale = rc_get_locale();
+        if(strncmp(locale, "zh_CN", 5)==0)
+            ex_encoding = g_strdup("GB18030");
+        else if(strncmp(locale, "zh_TW", 5)==0)
+            ex_encoding = g_strdup("BIG5");
+        else if(strncmp(locale, "ja_JP", 5)==0)
+            ex_encoding = g_strdup("ShiftJIS");
+    }
+    else
+        ex_encoding = rc_set_get_string("Metadata", "LRCExEncoding", NULL);
     if(!g_utf8_validate(lrc_text_data,-1,NULL))
     {
         new_text = g_convert(lrc_text_data, length, "UTF-8",
             ex_encoding, &size1, &size2, NULL);
+        g_free(ex_encoding);
         if(new_text==NULL)
         {
             g_free(lrc_text_data);

@@ -30,10 +30,12 @@
 #include "debug.h"
 #include "player.h"
 
+static const gchar plugin_group_name[] = "LyricShowGtk2";
 static gulong lyric_found_signal, lyric_stop_signal;
 static GuiLrcData rc_glrc;
 static GuiData *rc_ui;
 static guint id = 0;
+static guint timeout_id = 0;
 
 
 const gchar *g_module_check_init(GModule *module)
@@ -69,14 +71,26 @@ gint rc_plugin_module_init()
 
 void rc_plugin_module_exit()
 {
+    g_source_remove(timeout_id);
     rc_player_object_signal_disconnect(lyric_found_signal);
     rc_player_object_signal_disconnect(lyric_stop_signal);
+    gtk_widget_destroy(rc_glrc.lrc_scrwin);
+    rc_gui_view_remove_page(id);
     g_printf("Need more clear function here!\n");
 }
 
 void rc_plugin_module_configure()
 {
+    GtkWidget *dialog;
+    dialog = gtk_dialog_new();
+    gtk_dialog_run(GTK_DIALOG(dialog));
+    gtk_widget_destroy(dialog);
     g_printf("No configure page yet!\n");
+}
+
+const gchar *rc_plugin_module_get_group_name()
+{
+    return plugin_group_name;
 }
 
 void rc_plugin_lrcshow_init()
@@ -114,7 +128,8 @@ void rc_plugin_lrcshow_init()
         rc_glrc.lrc_scrwin), rc_glrc.lrc_scene);
     g_signal_connect(G_OBJECT(rc_glrc.lrc_scene), "expose-event",
         G_CALLBACK(rc_plugin_lrcshow_expose),NULL);
-    g_timeout_add(100, (GSourceFunc)rc_plugin_lrcshow_update, NULL);
+    timeout_id = g_timeout_add(100, (GSourceFunc)rc_plugin_lrcshow_update,
+        NULL);
     gtk_widget_show_all(rc_glrc.lrc_scrwin);
     id = rc_gui_view_add_page("ViewPageLyric", "_Lyric Show",
         rc_glrc.lrc_scrwin);
@@ -180,7 +195,6 @@ void rc_plugin_lrcshow_show()
     PangoLayout *layout;
     PangoFontDescription *desc;
     GdkWindow *lrc_window;
-    GtkAllocation *allocation;
     GtkAdjustment *hadj, *vadj;
     gdouble h_value, v_value;
     if(!GTK_IS_WIDGET(rc_glrc.lrc_scene)) return;
@@ -202,9 +216,6 @@ void rc_plugin_lrcshow_show()
     g_object_get(G_OBJECT(vadj), "page-size", &v_value, NULL);
     width = (gint)h_value;
     height = (gint)v_value;
-    //allocation = &(rc_glrc.lrc_scene->allocation);
-    //width = allocation->width;
-    //height = allocation->height;
     layout = pango_cairo_create_layout(lrc_cr);
     pango_layout_set_text(layout, "Font size test!", -1);
     desc = pango_font_description_from_string(rc_glrc.lyric_font);
@@ -254,20 +265,30 @@ void rc_plugin_lrcshow_show()
         pango_layout_set_text(layout, text, -1);
         pango_layout_get_size(layout, &t_width, &t_height);
         lrc_width = (gdouble)t_width / PANGO_SCALE;
-        lrc_x = width/2 - lrc_width/2;
+        lrc_x = (width - lrc_width) / 2;
         lrc_y = height/2 + (lrc_height+rc_glrc.lyric_line_ds) * 
             (gint64)(i - rc_glrc.lrc_line_num);
         if(lrc_last_line) lrc_y_plus = 0;
         lrc_y -= lrc_y_plus;
-        cairo_move_to(lrc_cr, lrc_x, lrc_y);
         if(i==rc_glrc.lrc_line_num)
+        {
+            if(lrc_width<=width)
+                lrc_x = (width - lrc_width) /2;
+            else
+                lrc_x = 10 + (width - lrc_width - 20) * ((gdouble)(playing_time -
+                    lrc_cur->time) / (lrc_cur->length));
+            cairo_move_to(lrc_cr, lrc_x, lrc_y);
             cairo_set_source_rgba(lrc_cr, rc_glrc.text_hilight[0], 
                 rc_glrc.text_hilight[1], rc_glrc.text_hilight[2],
                 rc_glrc.text_hilight[3]);
+        }
         else
+        {
+            cairo_move_to(lrc_cr, lrc_x, lrc_y);
             cairo_set_source_rgba(lrc_cr, rc_glrc.text_color[0],
                 rc_glrc.text_color[1], rc_glrc.text_color[2],
                 rc_glrc.text_color[3]);
+        }
         if(lrc_y>=-lrc_height && lrc_y<=height)
             pango_cairo_show_layout(lrc_cr, layout);
         list_foreach = g_list_next(list_foreach);

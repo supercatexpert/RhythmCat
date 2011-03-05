@@ -30,6 +30,7 @@
 #include "debug.h"
 #include "player.h"
 
+static const gchar plugin_group_name[] = "DeskLrcGtk2";
 static GtkWidget *desklrc_window;
 static gint desklrc_height = -1;
 static gint desklrc_move_x = 0;
@@ -99,6 +100,11 @@ void rc_plugin_module_exit()
 void rc_plugin_module_configure()
 {
     g_printf("No configure page yet!\n");
+}
+
+const gchar *rc_plugin_module_get_group_name()
+{
+    return plugin_group_name;
 }
 
 void rc_plugin_desklrc_init()

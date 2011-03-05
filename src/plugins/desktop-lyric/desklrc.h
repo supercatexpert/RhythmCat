@@ -37,6 +37,7 @@ void g_module_unload(GModule *);
 gint rc_plugin_module_init();
 void rc_plugin_module_exit();
 void rc_plugin_module_configure();
+const gchar *rc_plugin_module_get_group_name();
 
 void rc_plugin_desklrc_init();
 gboolean rc_plugin_desklrc_get_composited(GtkWidget *, GdkEventExpose *,

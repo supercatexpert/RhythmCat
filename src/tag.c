@@ -27,6 +27,7 @@
 
 #include "tag.h"
 #include "settings.h"
+#include "main.h"
 #include "debug.h"
 
 /* Check ID3 reader, because there may be some memory leaks. */
@@ -288,9 +289,40 @@ MusicMetaData *rc_tag_read_metadata(gchar *uri)
     GstBus *bus;
     MusicMetaData *mmd;
     TagDecodedPadData decoded_pad_data;
+    gchar *encoding;
+    const gchar *locale;
     if(uri==NULL)
     {
         return NULL;
+    }
+    if(rc_set_get_boolean("Metadata", "AutoEncodingDetect", NULL))
+    {
+        locale = rc_get_locale();
+        if(strncmp(locale, "zh_CN", 5)==0)
+        {
+            g_setenv("GST_ID3_TAG_ENCODING", "GB18030:UTF-8", TRUE);
+            g_setenv("GST_ID3V2_TAG_ENCODING", "GB18030:UTF-8", TRUE);
+        }
+        else if(strncmp(locale, "zh_TW", 5)==0)
+        {
+            g_setenv("GST_ID3_TAG_ENCODING", "BIG5:UTF-8", TRUE);
+            g_setenv("GST_ID3V2_TAG_ENCODING", "BIG5:UTF-8", TRUE);
+        }
+        else if(strncmp(locale, "ja_JP", 5)==0)
+        {
+            g_setenv("GST_ID3_TAG_ENCODING", "ShiftJIS:UTF-8", TRUE);
+            g_setenv("GST_ID3V2_TAG_ENCODING", "ShiftJIS:UTF-8", TRUE);
+        }
+    }
+    else
+    {
+        encoding = rc_set_get_string("Metadata", "TagExEncoding", NULL);
+        if(encoding!=NULL)
+        {
+            g_setenv("GST_ID3_TAG_ENCODING", encoding, TRUE);
+            g_setenv("GST_ID3V2_TAG_ENCODING", encoding, TRUE);
+            g_free(encoding);
+        }
     }
     mmd = g_malloc0(sizeof(MusicMetaData));
     mmd->uri = g_strdup(uri);

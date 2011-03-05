@@ -301,20 +301,6 @@ gboolean rc_gui_list2_button_release_event(GtkWidget *widget,
 }
 
 /*
- * Insert one playlist to the list of the playlist.
- */
-
-void rc_gui_list1_insert(GtkWidget *list, const gchar *stockid,
-    const gchar *name, gint index)
-{
-    GtkListStore *store;
-    GtkTreeIter iter;
-    store = GTK_LIST_STORE(rc_ui->list1_tree_model);
-    gtk_list_store_insert(store, &iter, index);
-    gtk_list_store_set(store, &iter, 0, stockid, 1, name, -1);
-}
-
-/*
  * Detect if the playlist in the list is selected.
  */
 
@@ -380,28 +366,6 @@ void rc_gui_list2_row_activated(GtkTreeView *list, GtkTreePath *path,
     list2_index = indices[0];
     rc_plist_play_by_index(list1_index, list2_index);
     rc_core_play();
-}
-
-/*
- * Set the name of the item in the list.
- */
-
-void rc_gui_list1_set_name(GtkWidget *list, gint list_index,
-    const gchar *name)
-{
-    GtkListStore *store;
-    GtkTreeIter iter;
-    GtkTreePath *path;
-    if(list_index<0 || list_index>=rc_plist_get_list1_length()) return;
-    path = gtk_tree_path_new_from_indices(list_index,-1);
-    if(!gtk_tree_model_get_iter(rc_ui->list1_tree_model,&iter,path))
-    {
-        gtk_tree_path_free(path);
-        return;
-    }
-    gtk_tree_path_free(path);
-    store = GTK_LIST_STORE(rc_ui->list1_tree_model);
-    gtk_list_store_set(store, &iter, 1, name, -1);
 }
 
 /*
@@ -873,7 +837,6 @@ void rc_gui_list1_edited(GtkCellRendererText *renderer, gchar *path_str,
     bzero(new_name, 512 * sizeof(gchar));
     g_utf8_strncpy(new_name, new_text, 120);
     rc_plist_set_list1_name(index, new_name);
-    rc_gui_list1_set_name(rc_ui->list1_tree_view, index, new_name);
 }
 
 /*

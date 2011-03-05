@@ -513,7 +513,7 @@ gui_plugin.o: gui_plugin.c gui_plugin.h /usr/include/glib-2.0/glib.h \
  /usr/include/bits/setjmp.h /usr/include/string.h \
  /usr/include/bits/string.h /usr/include/bits/string2.h \
  /usr/include/glib-2.0/glib/gi18n.h /usr/include/libintl.h \
- /usr/include/locale.h /usr/include/bits/locale.h plugin.h
+ /usr/include/locale.h /usr/include/bits/locale.h plugin.h debug.h
 
 gui_plugin.h:
 
@@ -1734,3 +1734,5 @@ gui.h:
 /usr/include/bits/locale.h:
 
 plugin.h:
+
+debug.h:

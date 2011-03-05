@@ -42,7 +42,8 @@
 #define LOCALEDIR "locale"
 #endif
 
-void rc_initial(int *, char **[]);
+void rc_init(int *, char **[]);
+void rc_exit();
 gchar *rc_get_data_dir(char *);
 const gchar *rc_get_program_name();
 const gchar *rc_get_set_dir();
@@ -57,6 +58,7 @@ const gchar *rc_get_home_dir();
 const gchar *const *rc_get_mfile_support_glob();
 gboolean rc_is_mfile_supported(gchar *);
 gboolean rc_dbus_init(gchar **);
+const gchar *rc_get_locale();
 
 #endif
 

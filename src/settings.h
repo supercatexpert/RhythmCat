@@ -30,33 +30,32 @@
 #include <gst/gst.h>
 #include <gtk/gtk.h>
 
-/* Custom struct type to store the settings of player. */
-typedef struct _RCSetting
-{
-    gboolean auto_play;
-    gboolean auto_next;
-    gboolean min_to_tray;
-    gint repeat_mode;
-    gint random_mode;
-    gint lrc_bg_image_style;
-    gint eq_style;
-    guint lrc_line_ds;
-    gchar *skin_rc_file;
-    gchar *tag_ex_encoding;
-    gchar *lrc_ex_encoding;
-    gchar *lrc_font;
-    gchar *lrc_bg_image;
-    gdouble volume;
-    gdouble eq_array[10];
-    gdouble lrc_bg_color[3];
-    gdouble lrc_fg_color[3];
-    gdouble lrc_hi_color[3];
-}RCSetting;
-
 /* Functions */
-void rc_set_initial_setting();
-RCSetting *rc_set_get_setting();
-void rc_set_load_setting(gchar *);
-void rc_set_save_setting();
+void rc_set_init();
+void rc_set_exit();
+gchar *rc_set_get_string(const gchar *, const gchar *, GError **);
+gint rc_set_get_integer(const gchar *, const gchar *, GError **);
+gdouble rc_set_get_double(const gchar *, const gchar *, GError **);
+gboolean rc_set_get_boolean(const gchar *, const gchar *, GError **);
+gchar **rc_set_get_string_list(const gchar *, const gchar *, gsize *,
+    GError **);
+gboolean *rc_set_get_boolean_list(const gchar *, const gchar *, gsize *,
+    GError **);
+gint *rc_set_get_integer_list(const gchar *, const gchar *, gsize *,
+    GError **);
+gdouble *rc_set_get_double_list(const gchar *, const gchar *, gsize *,
+    GError **);
+void rc_set_set_string(const gchar *, const gchar *, const gchar *);
+void rc_set_set_boolean(const gchar *, const gchar *, gboolean);
+void rc_set_set_integer(const gchar *, const gchar *, gint);
+void rc_set_set_double(const gchar *, const gchar *, gdouble);
+void rc_set_set_string_list(const gchar *, const gchar *,
+    const gchar * const [], gsize);
+void rc_set_set_boolean_list(const gchar *, const gchar *, gboolean [],
+    gsize);
+void rc_set_set_integer_list(const gchar *, const gchar *, gint [], gsize);
+void rc_set_set_double_list(const gchar *, const gchar *, gdouble [], gsize);
+gboolean rc_set_load_setting(const gchar *);
+void rc_set_save_setting(const gchar *);
 
 #endif

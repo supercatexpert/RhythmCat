@@ -54,20 +54,25 @@ typedef struct _ModuleData
     gchar *path;
     gint (*module_init)();
     void (*module_exit)();
-    void (*module_configure)();
+    const gchar *(*module_get_group_name)();
 }ModuleData;
 
 /* Function */
 gboolean rc_plugin_init();
+void rc_plugin_exit();
 gboolean rc_plugin_search_dir(const gchar *);
 const GSList *rc_plugin_get_list();
 void rc_plugin_list_free();
+GKeyFile *rc_plugin_get_configure();
 void rc_plugin_plugin_free(PluginData *);
 void rc_plugin_module_free(ModuleData *);
 gboolean rc_plugin_module_check_running(const gchar *);
 gboolean rc_plugin_load(const gchar *, PluginData **);
 gboolean rc_plugin_module_load(const gchar *);
+void rc_plugin_module_close(const gchar *);
+gboolean rc_plugin_module_configure(const gchar *);
 gboolean rc_plugin_python_load(const gchar *);
+gboolean rc_plugin_python_configure(const gchar *);
 
 #endif
 

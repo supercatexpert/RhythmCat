@@ -20,15 +20,36 @@
  *     6: Trackno(gint).
  */
 
+/* Use enum type to show the columns int ListStore1. */
+typedef enum
+{
+    PLIST1_STATE = 0,
+    PLIST1_NAME = 1,
+    PLIST1_STORE = 2,
+    PLIST1_LAST = 3
+}Plist1Column;
+
+/* Use enum type to show the columns int ListStore2. */
+typedef enum
+{
+    PLIST2_URI = 0,
+    PLIST2_STATE = 1,
+    PLIST2_TITLE = 2,
+    PLIST2_ARTIST = 3,
+    PLIST2_ALBUM = 4,
+    PLIST2_LENGTH = 5,
+    PLIST2_TRACKNO = 6,
+    PLIST2_LAST = 7
+}Plist2Column;
+
+
+
 /* Custom struct type to store playlist data */
 typedef struct _PlistData
 {
     GtkListStore *list_store;
     GtkTreeRowReference *list1_reference;
     GtkTreeRowReference *list2_reference;
-    gint repeat_mode;
-    gint random_mode;
-    gboolean autoplay_mode;
 }PlistData;
 
 /* Functions */

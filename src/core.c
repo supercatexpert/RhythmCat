@@ -127,11 +127,11 @@ static gboolean rc_core_bus_call(GstBus *bus, GstMessage *msg, gpointer data)
         }
         if(gst_is_missing_plugin_message(msg))
         {
-            rc_debug_perror("Tag-ERROR: Missing plugin to open the "
+            rc_debug_perror("Core-ERROR: Missing plugin to open the "
                 "media file!\n");
             if(gst_install_plugins_supported())
             {
-                rc_debug_print("Tag: Trying to install necessary plugin\n");
+                rc_debug_print("Core: Trying to install necessary plugin\n");
                 plugin_error_msg =
                     gst_missing_plugin_message_get_installer_detail(msg);
                 gst_install_plugins_async(&plugin_error_msg, NULL,
@@ -200,9 +200,10 @@ void rc_core_init()
     GstElement *spectrum_plugin = NULL;
     GstPad *pad1;
     GstCaps *caps;
+    gdouble volume = 1.0;
     gboolean flag = FALSE;
+    GError *error = NULL;
     rc_debug_print("Core: Loading CORE...\n");
-    RCSetting *setting = rc_set_get_setting();
     bzero(&rc_core, sizeof(CoreData));
     flag = rc_core_plugin_check();
     if(!flag)
@@ -294,13 +295,19 @@ void rc_core_init()
         }
         gst_caps_unref(caps);
     }
+    volume = rc_set_get_double("Player", "Volume", &error);
+    if(error!=NULL)
+    {
+        volume = 1.0;
+        g_error_free(error);
+    }
     if(flag)
     {
         pad1 = gst_element_get_static_pad(audio_convert, "sink");
         gst_element_add_pad(seff, gst_ghost_pad_new(NULL, pad1));
         g_object_set(G_OBJECT(play), "audio-sink", seff, NULL);
         rc_core.eq_plugin = audio_equalizer;
-        rc_core.volume = setting->volume;
+        rc_core.volume = volume;
         /* Use Volume Plugin to avoid the bug in Gstreamer 0.10.28. */
         rc_core.vol_plugin = volume_plugin;
     }
@@ -311,8 +318,8 @@ void rc_core_init()
     rc_gui_seek_scaler_disable();
     rc_core.playbin = play;
     rc_core.eos = FALSE;
-    rc_gui_set_volume(setting->volume * 100);
-    rc_core_set_volume(setting->volume * 100);
+    rc_gui_set_volume(volume * 100);
+    rc_core_set_volume(volume * 100);
     gst_element_set_state(play, GST_STATE_READY);
     gst_version(&rc_core.ver_major, &rc_core.ver_minor, &rc_core.ver_micro,
         &rc_core.ver_nano);

@@ -125,6 +125,7 @@ void rc_gui_show_message_dialog(GtkMessageType type, const gchar *title,
         GTK_BUTTONS_CLOSE, title, format, arg_ptr);
     gtk_window_set_title(GTK_WINDOW(dialog), title);
     gtk_dialog_run(GTK_DIALOG(dialog));
+    gtk_widget_destroy(dialog);
 }
 
 /*

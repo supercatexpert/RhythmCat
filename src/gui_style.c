@@ -132,9 +132,11 @@ void rc_gui_style_init()
 
 void rc_gui_style_refresh()
 {
-    RCSetting *setting = rc_set_get_setting();
-    if(setting->skin_rc_file==NULL) return;
-    gtk_rc_parse(setting->skin_rc_file);
+    gchar *string;
+    string = rc_set_get_string("Appearance", "RCFile", NULL);
+    if(string==NULL) return;
+    gtk_rc_parse(string);
+    g_free(string);
 }
 
 

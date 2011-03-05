@@ -336,21 +336,32 @@ static gboolean rc_gui_refresh_time_info(gpointer data)
     gint64 pos = 0, len = 0;
     gdouble persent = 0.0;
     gboolean sensitive = FALSE;
+    GstState state;
     gdouble lrc_vport_lower, lrc_vport_upper, lrc_vport_value;
     gdouble lrc_vport_range, lrc_vport_page_size;
     const LrcData *lrc_data;
     pos = rc_core_get_play_position();
     len = rc_core_get_music_length();
-    if(rc_gui.update_seek_scale_flag)
-    {
-        rc_gui_time_label_set_text(pos);
-    }
+    state = rc_core_get_play_state();
     g_object_get(G_OBJECT(rc_gui.time_scroll_bar), "sensitive", &sensitive,
         NULL);
-    if(len!=0 && rc_gui.update_seek_scale_flag && sensitive) 
-    {    
-        persent = (gdouble)pos / len;
-        gtk_range_set_value(GTK_RANGE(rc_gui.time_scroll_bar), persent*100);
+    if(rc_gui.update_seek_scale_flag)
+    {
+        if(state==GST_STATE_PLAYING)
+        {
+            rc_gui_time_label_set_text(pos);
+            if(len!=0)
+            {
+                persent = (gdouble)pos / len;
+                gtk_range_set_value(GTK_RANGE(rc_gui.time_scroll_bar),
+                    persent * 100);
+            }
+        }
+        else if(state==GST_STATE_NULL || state==GST_STATE_READY)
+        {
+            rc_gui_time_label_set_text(0);
+            gtk_range_set_value(GTK_RANGE(rc_gui.time_scroll_bar), 0);
+        }
     }
     lrc_data = rc_lrc_get_line_by_time(pos);
     if(lrc_data!=NULL)
@@ -393,11 +404,7 @@ GuiData *rc_gui_get_gui()
 
 void rc_gui_quit_player(GtkWidget *widget, gpointer data)
 {
-    rc_plist_save_playlist_setting();
-    rc_set_save_setting();
-    rc_core_delete();
-    rc_plist_uninit_playlist();
-    gtk_main_quit();
+    rc_exit();
 }
 
 /*
@@ -407,8 +414,7 @@ void rc_gui_quit_player(GtkWidget *widget, gpointer data)
 static gboolean rc_gui_window_state_changed(GtkWidget *widget,
     GdkEventWindowState *event, gpointer data)
 {
-    RCSetting *setting = rc_set_get_setting();
-    if(!setting->min_to_tray) return FALSE;
+    if(!rc_set_get_boolean("Player", "MinimizeToTray", NULL)) return FALSE;
     if(event->changed_mask==GDK_WINDOW_STATE_ICONIFIED && 
         (event->new_window_state==GDK_WINDOW_STATE_ICONIFIED ||
         event->new_window_state==(GDK_WINDOW_STATE_ICONIFIED |
@@ -1285,8 +1291,7 @@ gboolean rc_gui_set_cover_image_by_buf(const GstBuffer *buf)
 void rc_gui_show_hide_window(GtkWidget *widget, gpointer data)
 {
     gboolean visible = FALSE;
-    RCSetting *setting = rc_set_get_setting();
-    if(!setting->min_to_tray) return;
+    if(!rc_set_get_boolean("Player", "MinimizeToTray", NULL)) return;
     g_object_get(G_OBJECT(rc_gui.main_window), "visible", &visible, NULL);
     if(visible)
     {
