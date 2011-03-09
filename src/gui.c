@@ -198,7 +198,35 @@ static GtkActionEntry rc_menu_entries[] =
     { "List2RefreshList", GTK_STOCK_REFRESH,
       "Re_fresh Playlist", NULL,
       "Refresh music information in the playlist",
-      G_CALLBACK(rc_gui_refresh_music_info) }
+      G_CALLBACK(rc_gui_refresh_music_info) },
+    { "TrayPlay", GTK_STOCK_MEDIA_PLAY,
+      "_Play/Pause", NULL,
+      "Play or pause the music",
+      G_CALLBACK(rc_gui_play_button_clicked) },
+    { "TrayStop", GTK_STOCK_MEDIA_STOP,
+      "_Stop", NULL,
+      "Stop the music",
+      G_CALLBACK(rc_gui_stop_button_clicked) },
+    { "TrayPrev", GTK_STOCK_MEDIA_PREVIOUS,
+      "Pre_vious", NULL,
+      "Play previous music",
+      G_CALLBACK(rc_gui_prev_button_clicked) },
+    { "TrayNext", GTK_STOCK_MEDIA_NEXT,
+      "_Next", NULL,
+      "Play next music",
+      G_CALLBACK(rc_gui_next_button_clicked) },
+    { "TrayShowPlayer", GTK_STOCK_HOME,
+      "S_how Player", NULL,
+      "Show the window of player",
+      G_CALLBACK(rc_gui_deiconify) },
+    { "TrayAbout", GTK_STOCK_ABOUT,
+      "_About", NULL,
+      "About this player",
+      G_CALLBACK(rc_gui_about_player) },
+    { "TrayQuit", GTK_STOCK_QUIT,
+      "_Quit", NULL,
+      "Quit this player",
+      G_CALLBACK(rc_gui_quit_player) }
 };
 
 static guint rc_menu_n_entries = G_N_ELEMENTS(rc_menu_entries);
@@ -325,6 +353,17 @@ static const gchar *rc_ui_info =
     "    <separator/>"
     "    <menuitem action='List2RefreshList'/>"
     "  </popup>"
+    "  <popup action='TrayPopupMenu'>"
+    "    <menuitem action='TrayPlay'/>"
+    "    <menuitem action='TrayStop'/>"
+    "    <menuitem action='TrayPrev'/>"
+    "    <menuitem action='TrayNext'/>"
+    "    <separator/>"
+    "    <menuitem action='TrayShowPlayer'/>"
+    "    <menuitem action='TrayAbout'/>"
+    "    <separator/>"
+    "    <menuitem action='TrayQuit'/>"
+    "  </popup>"
     "</ui>";
 
 /*
@@ -433,7 +472,6 @@ static gboolean rc_gui_window_state_changed(GtkWidget *widget,
 static void rc_gui_layout_init()
 {
     GtkWidget *main_vbox, *player_vbox;
-    GtkWidget *list1_scr_window, *list2_scr_window;
     GtkWidget *hbox1, *hbox2, *hbox3, *hbox4, *hbox5;
     GtkWidget *vbox1, *vbox2, *vbox3;
     GtkWidget *control_button_hbox;
@@ -441,7 +479,6 @@ static void rc_gui_layout_init()
     GtkWidget *pls_label;
     GtkWidget *playlist_frame;
     GtkWidget *vol_hbox;
-    GtkWidget *list_hpaned;
     GtkWidget *control_buttons_hbox;
     GtkWidget *control_hbox, *info_label_hbox;
     GtkWidget *playlist_vbox, *playlist_ctrl_hbox;
@@ -463,19 +500,23 @@ static void rc_gui_layout_init()
     rc_gui.status_hbox = gtk_hbox_new(FALSE, 2);
     control_button_hbox = gtk_hbox_new(FALSE, 1);
     playlist_ctrl_hbox = gtk_hbox_new(TRUE, 1);
-    list1_scr_window = gtk_scrolled_window_new(NULL, NULL);
-    list2_scr_window = gtk_scrolled_window_new(NULL, NULL);
-    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(list1_scr_window),
-        GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
-    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(list2_scr_window),
-        GTK_POLICY_NEVER,GTK_POLICY_AUTOMATIC);
+    rc_gui.list1_scr_window = gtk_scrolled_window_new(NULL, NULL);
+    rc_gui.list2_scr_window = gtk_scrolled_window_new(NULL, NULL);
+    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(
+        rc_gui.list1_scr_window), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(
+        rc_gui.list2_scr_window), GTK_POLICY_NEVER,GTK_POLICY_AUTOMATIC);
+    gtk_widget_set_name(rc_gui.list1_scr_window, "RCListScrolledWindow");
+    gtk_widget_set_name(rc_gui.list2_scr_window, "RCListScrolledWindow");
     control_buttons_hbox = gtk_hbox_new(FALSE, 0);
     control_hbox = gtk_hbox_new(FALSE, 1);
     info_label_hbox = gtk_hbox_new(FALSE, 20);
-    list_hpaned = gtk_hpaned_new();
-    gtk_container_add(GTK_CONTAINER(list1_scr_window), 
+    rc_gui.list_hpaned = gtk_hpaned_new();
+    gtk_widget_set_name(rc_gui.list_hpaned, "RCListHPaned");
+    gtk_container_set_border_width(GTK_CONTAINER(rc_gui.list_hpaned), 0);
+    gtk_container_add(GTK_CONTAINER(rc_gui.list1_scr_window), 
         rc_gui.list1_tree_view);
-    gtk_container_add(GTK_CONTAINER(list2_scr_window),
+    gtk_container_add(GTK_CONTAINER(rc_gui.list2_scr_window),
         rc_gui.list2_tree_view);
     for(i=0;i<4;i++)
         gtk_box_pack_start(GTK_BOX(control_button_hbox), 
@@ -486,13 +527,15 @@ static void rc_gui_layout_init()
     eq_label = gtk_label_new(_("Equalizer"));
     pls_label = gtk_label_new(_("Playlists"));
     gtk_container_add(GTK_CONTAINER(rc_gui.lrc_viewport), rc_gui.lrc_label);
-    gtk_paned_pack1(GTK_PANED(list_hpaned), list1_scr_window, TRUE, FALSE);
-    gtk_paned_pack2(GTK_PANED(list_hpaned), list2_scr_window, TRUE, FALSE);
-    gtk_paned_set_position(GTK_PANED(list_hpaned), 160);
-    gtk_container_child_set(GTK_CONTAINER(list_hpaned), list1_scr_window,
-        "resize", FALSE, "shrink", FALSE, NULL);
+    gtk_paned_pack1(GTK_PANED(rc_gui.list_hpaned), rc_gui.list1_scr_window,
+        TRUE, FALSE);
+    gtk_paned_pack2(GTK_PANED(rc_gui.list_hpaned), rc_gui.list2_scr_window,
+        TRUE, FALSE);
+    gtk_paned_set_position(GTK_PANED(rc_gui.list_hpaned), 160);
+    gtk_container_child_set(GTK_CONTAINER(rc_gui.list_hpaned),
+        rc_gui.list1_scr_window, "resize", FALSE, "shrink", FALSE, NULL);
     gtk_notebook_append_page(GTK_NOTEBOOK(rc_gui.plist_notebook),
-        list_hpaned, pls_label);
+        rc_gui.list_hpaned, pls_label);
     gtk_notebook_append_page(GTK_NOTEBOOK(rc_gui.plist_notebook),
         rc_gui.eq_vbox, eq_label);
     gtk_notebook_set_show_tabs(GTK_NOTEBOOK(rc_gui.plist_notebook), FALSE);
@@ -642,6 +685,7 @@ gboolean rc_gui_init()
         "tooltip-text", _("RhythmCat Music Player"), NULL);
     gtk_viewport_set_shadow_type(GTK_VIEWPORT(rc_gui.lrc_viewport),
         GTK_SHADOW_NONE);
+    gtk_notebook_set_show_border(GTK_NOTEBOOK(rc_gui.plist_notebook), FALSE);
     gtk_window_set_title(GTK_WINDOW(rc_gui.main_window),
         rc_get_program_name());
     gtk_window_set_icon(GTK_WINDOW(rc_gui.main_window),
@@ -652,6 +696,7 @@ gboolean rc_gui_init()
         rc_gui.main_window_width, rc_gui.main_window_height);
     gtk_window_set_geometry_hints(GTK_WINDOW(rc_gui.main_window), 
         GTK_WIDGET(rc_gui.main_window), &main_window_hints, GDK_HINT_MIN_SIZE);
+    gtk_widget_set_name(rc_gui.main_window, "RCMainWindow");
     gtk_misc_set_alignment(GTK_MISC(rc_gui.lrc_label), 0.0, 0.5);
     gtk_misc_set_alignment(GTK_MISC(rc_gui.title_label), 0.0, 0.5);
     gtk_misc_set_alignment(GTK_MISC(rc_gui.artist_label), 0.0, 0.5);
@@ -663,9 +708,18 @@ gboolean rc_gui_init()
     gtk_label_set_ellipsize(GTK_LABEL(rc_gui.artist_label), PANGO_ELLIPSIZE_END);
     gtk_label_set_ellipsize(GTK_LABEL(rc_gui.album_label), PANGO_ELLIPSIZE_END);
     gtk_label_set_ellipsize(GTK_LABEL(rc_gui.info_label), PANGO_ELLIPSIZE_END);
+    gtk_widget_set_name(rc_gui.title_label, "RCTitleLabel");
+    gtk_widget_set_name(rc_gui.artist_label, "RCArtistLabel");
+    gtk_widget_set_name(rc_gui.album_label, "RCAlbumLabel");
+    gtk_widget_set_name(rc_gui.info_label, "RCInfoLabel");
+    gtk_widget_set_name(rc_gui.time_label, "RCTimeLabel");
+    gtk_widget_set_name(rc_gui.length_label, "RCLengthLabel");
+    gtk_widget_set_name(rc_gui.lrc_label, "RCLyricLabel");
     rc_gui_music_info_set_text(NULL, NULL, NULL, 0, NULL, 0, 0, 0);
     gtk_widget_set_size_request(rc_gui.album_image, img_cover_w, img_cover_h);
+    gtk_widget_set_name(rc_gui.album_image, "RCAlbumImage");
     rc_gui.volume_button = gtk_volume_button_new();
+    gtk_widget_set_name(rc_gui.volume_button, "RCVolumeButton");
     gtk_button_set_relief(GTK_BUTTON(rc_gui.volume_button), GTK_RELIEF_NONE);
     g_object_set(G_OBJECT(rc_gui.volume_button), "size",
         GTK_ICON_SIZE_MENU, NULL);
@@ -686,6 +740,8 @@ gboolean rc_gui_init()
             GTK_RELIEF_NONE);
         gtk_container_add(GTK_CONTAINER(rc_gui.control_buttons[i]),
             rc_gui.control_images[i]);
+        gtk_widget_set_name(rc_gui.control_buttons[i], "RCControlButton");
+        g_object_set(rc_gui.control_buttons[i], "can-focus", FALSE, NULL);
     }
     gtk_label_set_justify(GTK_LABEL(rc_gui.time_label), GTK_JUSTIFY_RIGHT);
     position_adjustment = (GtkAdjustment *)gtk_adjustment_new(0.0, 0.0, 105.0,
@@ -694,6 +750,7 @@ gboolean rc_gui_init()
         position_adjustment));
     gtk_scale_set_draw_value(GTK_SCALE(rc_gui.time_scroll_bar),FALSE);
     g_object_set(rc_gui.time_scroll_bar, "can-focus", FALSE, NULL);
+    gtk_widget_set_name(rc_gui.time_scroll_bar, "RCTimeScalerBar");
     g_object_set(rc_gui.volume_button, "can-focus", FALSE, NULL);
     rc_gui_treeview_init();
     actions = gtk_action_group_new("RCActions");
@@ -723,8 +780,6 @@ gboolean rc_gui_init()
     }
     rc_gui_layout_init();
     rc_gui_signal_bind();
-    rc_gui_style_init();
-    rc_gui_style_refresh();
     rc_gui.time_info_refresh_timeout = g_timeout_add(200,
         (GSourceFunc)(rc_gui_refresh_time_info), NULL);
     gtk_widget_show_all(rc_gui.main_window);
@@ -736,7 +791,9 @@ gboolean rc_gui_init()
         "/RCMenuBar/EditMenu/EditRemoveMusic"), FALSE);
     gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
         "/RCMenuBar/ViewMenu/ViewMiniMode"), FALSE);
-    rc_debug_print("GUI: Main window is successfully loaded!\n"); 
+    rc_debug_print("GUI: Main window is successfully loaded!\n");
+    if(rc_set_get_boolean("Player", "AutoMinimize", NULL))
+        gtk_window_iconify(GTK_WINDOW(rc_gui.main_window));
     return FALSE;
 }
 
@@ -1311,9 +1368,10 @@ void rc_gui_show_hide_window(GtkWidget *widget, gpointer data)
  */
 
 void rc_gui_tray_icon_popup(GtkStatusIcon *status_icon, guint button,
-    guint ctivate_time, gpointer data)  
+    guint activate_time, gpointer data)  
 {
-    g_printf("Who calls me? Popup the menu plz!\n");
+    gtk_menu_popup(GTK_MENU(gtk_ui_manager_get_widget(rc_gui.main_ui,
+        "/TrayPopupMenu")), NULL, NULL, NULL, NULL, 3, activate_time);
 }
 
 /*
@@ -1487,5 +1545,17 @@ gboolean rc_gui_view_remove_page(guint id)
         }
     }
     return FALSE;
+}
+
+/*
+ * Deiconify the main window
+ */
+
+void rc_gui_deiconify(GtkAction *action)
+{
+    gtk_window_set_skip_taskbar_hint(GTK_WINDOW(rc_gui.main_window),
+        FALSE);
+    gtk_widget_show(GTK_WIDGET(rc_gui.main_window));
+    gtk_window_deiconify(GTK_WINDOW(rc_gui.main_window));
 }
 

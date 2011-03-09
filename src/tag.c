@@ -143,9 +143,9 @@ static gboolean rc_tag_bus_handler(GstBus *bus, GstMessage *message,
             }
             if(gst_tag_list_get_buffer(tags, GST_TAG_IMAGE, &tag_image))
             {
-                if(mmd->image!=NULL)
+                if(tag_image!=NULL)
                 {
-                    gst_buffer_unref(mmd->image);
+                    if(mmd->image!=NULL) gst_buffer_unref(mmd->image);
                     mmd->image = tag_image;
                 }
             }

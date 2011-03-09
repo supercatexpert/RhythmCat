@@ -25,14 +25,43 @@
 #ifndef HAVE_GUI_STYLE_H
 #define HAVE_GUI_STYLE_H
 
+#include <string.h>
 #include <glib.h>
 #include <glib/gprintf.h>
 #include <gdk/gdk.h>
 #include <gtk/gtk.h>
 
+typedef struct GuiStyleData
+{
+    gchar name[32];
+    GdkColor label_font_color;
+    GdkColor time_font_color;
+    GdkColor title_font_color;
+    GdkColor artist_font_color;
+    GdkColor album_font_color;
+    GdkColor info_font_color;
+    GdkColor length_font_color;
+    GdkColor lyric_font_color;
+    GdkColor window_bg_color;
+    GdkColor time_scalerbar_handle_normal_color;
+    GdkColor time_scalerbar_handle_prelight_color;
+    GdkColor time_scalerbar_handle_selected_color;
+    GdkColor button_bg_color;
+    GdkColor button_prelight_color;
+    GdkColor button_active_color;
+    GdkColor listview_base_normal_color;
+    GdkColor listview_base_selected_color;
+    GdkColor listview_base_active_color;
+    GdkColor listview_font_normal_color;
+    GdkColor listview_font_selected_color;
+    GdkColor listview_font_active_color;
+    GdkColor listview_scrbar_color;
+}GuiStyleData;
+
 /* Functions */
 void rc_gui_style_init();
 void rc_gui_style_refresh();
+void rc_gui_style_set_style(const GuiStyleData *);
 
 #endif
 

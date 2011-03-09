@@ -41,6 +41,7 @@ void rc_set_init()
         "RhythmCat Music Player Settings File", NULL);
     g_key_file_set_boolean(rc_configure, "Player", "AutoPlay", FALSE);
     g_key_file_set_boolean(rc_configure, "Player", "MinimizeToTray", FALSE);
+    g_key_file_set_boolean(rc_configure, "Player", "AutoMinimize", FALSE);
     g_key_file_set_integer(rc_configure, "Player", "RepeatMode", 3);
     g_key_file_set_integer(rc_configure, "Player", "RandomMode", 0);
     g_key_file_set_double(rc_configure, "Player", "Volume", 1.0);

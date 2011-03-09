@@ -40,6 +40,7 @@ static GtkWidget *setting_cancel_button;
 static GtkWidget *setting_at_ply_checkbox; /* Autoplay */
 static GtkWidget *setting_at_det_checkbox; /* Auto detect encoding */
 static GtkWidget *setting_min_tray_checkbox; /* Minimize to tray */
+static GtkWidget *setting_at_min_checkbox; /* Auto minimize when start-up */
 static GtkWidget *setting_pl_enc_entry; /* Tag Encoding */
 static GtkWidget *setting_lr_enc_entry; /* Lyric Encoding */
 static GtkWidget *setting_ap_grf_button;
@@ -91,7 +92,7 @@ void rc_gui_create_setting_window(GtkWidget *widget, gpointer data)
         gtk_notebook_append_page(GTK_NOTEBOOK(setting_notebook),
             setting_nb_pages[i], NULL);
     }
-    rc_gui_create_setting_playback();
+    rc_gui_create_setting_general();
     rc_gui_create_setting_playlist();
     rc_gui_create_setting_appearance();
     setting_changed = FALSE;
@@ -136,7 +137,7 @@ void rc_gui_create_setting_treeview()
     gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(setting_treeview),
         FALSE);
     gtk_list_store_append(setting_tree_store, &iter);
-    gtk_list_store_set(setting_tree_store, &iter, 1,  _("Playback"), -1);
+    gtk_list_store_set(setting_tree_store, &iter, 1,  _("General"), -1);
     gtk_list_store_append(setting_tree_store, &iter);
     gtk_list_store_set(setting_tree_store, &iter, 1,  _("Playlist"), -1);
     gtk_list_store_append(setting_tree_store, &iter);
@@ -178,6 +179,9 @@ void rc_gui_setting_apply(GtkButton *widget, gpointer data)
     rc_set_set_boolean("Player", "MinimizeToTray",
         gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
         setting_min_tray_checkbox)));
+    rc_set_set_boolean("Player", "AutoMinimize",
+        gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
+        setting_at_min_checkbox)));
     rc_set_set_boolean("Metadata", "AutoEncodingDetect",
         gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
         setting_at_det_checkbox)));
@@ -203,41 +207,36 @@ void rc_gui_setting_confirm(GtkButton *widget, gpointer data)
     rc_gui_close_setting_window(widget, data);
 }
 
-void rc_gui_create_setting_playback()
+void rc_gui_create_setting_general()
 {
-    GtkWidget *playback_label;
     GtkWidget *general_label;
-    GtkWidget *playback_frame;
     GtkWidget *general_frame;
-    GtkWidget *vbox1, *vbox2;
-    playback_label = gtk_label_new("");
+    GtkWidget *vbox1;
     general_label = gtk_label_new("");
-    gtk_label_set_markup(GTK_LABEL(playback_label), _("<b>Playback</b>"));
     gtk_label_set_markup(GTK_LABEL(general_label), _("<b>General</b>"));
-    playback_frame = gtk_frame_new(NULL);
     general_frame = gtk_frame_new(NULL); 
-    gtk_frame_set_label_widget(GTK_FRAME(playback_frame), playback_label);
     gtk_frame_set_label_widget(GTK_FRAME(general_frame), general_label);
-    gtk_frame_set_shadow_type(GTK_FRAME(playback_frame), GTK_SHADOW_NONE);
     gtk_frame_set_shadow_type(GTK_FRAME(general_frame), GTK_SHADOW_NONE);
     setting_at_ply_checkbox = gtk_check_button_new_with_label(
         _("Auto play on startup"));
     setting_min_tray_checkbox = gtk_check_button_new_with_label(
         _("Minimize to tray"));
+    setting_at_min_checkbox = gtk_check_button_new_with_label(
+        _("Auto minimize when startup"));
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(setting_at_ply_checkbox),
         rc_set_get_boolean("Player", "AutoPlay", NULL));
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(setting_min_tray_checkbox),
         rc_set_get_boolean("Player", "MinimizeToTray", NULL));
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(setting_at_min_checkbox),
+        rc_set_get_boolean("Player", "AutoMinimize", NULL));
     vbox1 = gtk_vbox_new(FALSE, 2);
-    vbox2 = gtk_vbox_new(FALSE, 2);
     gtk_box_pack_start(GTK_BOX(vbox1), setting_at_ply_checkbox,
         FALSE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(vbox2), setting_min_tray_checkbox,
+    gtk_box_pack_start(GTK_BOX(vbox1), setting_min_tray_checkbox,
         FALSE, FALSE, 0);
-    gtk_container_add(GTK_CONTAINER(playback_frame), vbox1);
-    gtk_container_add(GTK_CONTAINER(general_frame), vbox2);
-    gtk_box_pack_start(GTK_BOX(setting_nb_pages[0]), playback_frame,
+    gtk_box_pack_start(GTK_BOX(vbox1), setting_at_min_checkbox,
         FALSE, FALSE, 0);
+    gtk_container_add(GTK_CONTAINER(general_frame), vbox1);
     gtk_box_pack_start(GTK_BOX(setting_nb_pages[0]), general_frame,
         FALSE, FALSE, 0);
 }

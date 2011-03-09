@@ -52,8 +52,10 @@ typedef struct _GuiData
     GtkWidget *time_scroll_bar;
     GtkWidget *lrc_label, *lrc_viewport;
     GtkWidget *list1_tree_view, *list2_tree_view;
+    GtkWidget *list1_scr_window, *list2_scr_window;
     GtkWidget *status_hbox, *status_progress, *status_label;
     GtkWidget *status_cancel_button;
+    GtkWidget *list_hpaned;
     GtkTreeModel *list1_tree_model, *list2_tree_model;
     GtkTreeSelection *list1_selection, *list2_selection;
     GtkCellRenderer *renderer_text[5];
@@ -114,6 +116,7 @@ void rc_gui_status_progress_set_progress();
 void rc_gui_import_cancel_button_clicked(GtkWidget *, gpointer);
 guint rc_gui_view_add_page(const gchar *, const gchar *, GtkWidget *);
 gboolean rc_gui_view_remove_page(guint);
+void rc_gui_deiconify(GtkAction *);
 
 #endif
 

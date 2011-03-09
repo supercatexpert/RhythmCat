@@ -537,7 +537,8 @@ main.o: main.c main.h /usr/include/stdlib.h /usr/include/features.h \
  /usr/include/bits/posix_opt.h /usr/include/bits/confname.h \
  /usr/include/getopt.h /usr/include/libpng12/pngconf.h \
  /usr/include/setjmp.h /usr/include/bits/setjmp.h playlist.h settings.h \
- shell.h plugin.h debug.h msg.h shell_glue.h player.h gui_eq.h
+ shell.h plugin.h debug.h msg.h shell_glue.h player.h gui_eq.h \
+ gui_treeview.h gui_style.h
 
 main.h:
 
@@ -1818,3 +1819,7 @@ shell_glue.h:
 player.h:
 
 gui_eq.h:
+
+gui_treeview.h:
+
+gui_style.h:

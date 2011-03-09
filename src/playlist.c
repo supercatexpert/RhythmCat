@@ -110,15 +110,6 @@ gboolean rc_plist_init()
     if(rc_plist_get_list1_length()<1)
         rc_plist_build_default_list();
     rc_gui_select_list1(0);
-    if(rc_plist_get_list2_length(0)>0)
-    {
-        rc_gui_select_list2(0);
-        if(rc_set_get_boolean("Player", "AutoPlay", NULL))
-        {
-            rc_plist_play_by_index(0, 0);
-            rc_core_play();
-        }
-    }
     plist_import_job_queue = g_async_queue_new();
     for(i=0;i<plist_import_thread_num;i++)
     {

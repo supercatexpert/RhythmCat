@@ -128,6 +128,8 @@ void rc_gui_treeview_init()
     rc_ui->list1_tree_model = NULL;
     rc_ui->list1_tree_view = gtk_tree_view_new();
     rc_ui->list2_tree_view = gtk_tree_view_new();
+    gtk_widget_set_name(rc_ui->list1_tree_view, "RCListView1");
+    gtk_widget_set_name(rc_ui->list2_tree_view, "RCListView2");
     gtk_tree_view_columns_autosize(GTK_TREE_VIEW(rc_ui->list1_tree_view));
     gtk_tree_view_columns_autosize(GTK_TREE_VIEW(rc_ui->list2_tree_view));
     for(count=0;count<5;count++)

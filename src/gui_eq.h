@@ -37,15 +37,20 @@ typedef struct _EQData
     gdouble value[10];
 }EQData;
 
+typedef struct GuiEQData
+{
+    GtkWidget *eq_combobox;
+    GtkWidget *eq_scales[10];
+    GtkWidget *eq_labels[10];
+    GtkWidget *db_labels[3];
+    GtkWidget *save_button;
+    GtkWidget *import_button;
+}GuiEQData;
+
 void rc_gui_init_eq_data();
 void rc_gui_eq_init();
 void rc_gui_create_equalizer();
-void rc_gui_set_equalizer(GtkAdjustment *, gpointer);
-void rc_gui_close_equalizer(GtkButton *, gpointer);
-void rc_gui_equalizer_combox_changed(GtkComboBox *, gpointer);
-gboolean rc_gui_eq_set_by_user(GtkRange *, GtkScrollType, gdouble, gpointer);
-void rc_gui_equalizer_load_setting(GtkButton *, gpointer);
-void rc_gui_equalizer_save_setting(GtkButton *, gpointer);
+GuiEQData *rc_gui_eq_get_data();
 
 #endif
 
