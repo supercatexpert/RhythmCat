@@ -514,7 +514,7 @@ gui_setting.o: gui_setting.c gui_setting.h /usr/include/stdlib.h \
  /usr/include/bits/setjmp.h /usr/include/string.h \
  /usr/include/bits/string.h /usr/include/bits/string2.h \
  /usr/include/glib-2.0/glib/gi18n.h /usr/include/libintl.h \
- /usr/include/locale.h /usr/include/bits/locale.h main.h \
+ /usr/include/locale.h /usr/include/bits/locale.h gui_style.h main.h \
  /usr/include/dbus-1.0/dbus/dbus.h \
  /usr/lib/dbus-1.0/include/dbus/dbus-arch-deps.h \
  /usr/include/dbus-1.0/dbus/dbus-macros.h \
@@ -1752,6 +1752,8 @@ gui.h:
 /usr/include/locale.h:
 
 /usr/include/bits/locale.h:
+
+gui_style.h:
 
 main.h:
 

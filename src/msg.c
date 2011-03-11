@@ -116,6 +116,9 @@ static void rc_msg_process_func(gpointer data, gpointer user_data)
     {
         switch(msg->type)
         {
+            case MSG_TYPE_EMPTY:
+                rc_gui_status_progress_set_progress();
+                break;
             case MSG_TYPE_PL_INSERT:
                 mmd = msg->data;
                 rc_plist_list2_insert_item(mmd->uri, mmd->title,
@@ -131,6 +134,11 @@ static void rc_msg_process_func(gpointer data, gpointer user_data)
                     mmd->reference);
                 rc_tag_free(mmd);
                 rc_gui_status_progress_set_progress();
+                break;
+            case MSG_TYPE_PL_REMOVE:
+                rc_plist_list2_remove_item((GtkTreeRowReference *)msg->data);
+                rc_gui_status_progress_set_progress();
+                break;
             default:
                 break;
         }

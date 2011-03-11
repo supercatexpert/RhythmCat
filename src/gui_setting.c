@@ -25,6 +25,7 @@
 
 #include "gui_setting.h"
 #include "gui.h"
+#include "gui_style.h"
 #include "main.h"
 #include "settings.h"
 
@@ -38,13 +39,17 @@ static GtkWidget *setting_ok_button;
 static GtkWidget *setting_apply_button;
 static GtkWidget *setting_cancel_button;
 static GtkWidget *setting_at_ply_checkbox; /* Autoplay */
+static GtkWidget *setting_ld_last_checkbox; /* Load the last position */
 static GtkWidget *setting_at_det_checkbox; /* Auto detect encoding */
 static GtkWidget *setting_min_tray_checkbox; /* Minimize to tray */
+static GtkWidget *setting_min_cl_checkbox; /* Minimize when close */
 static GtkWidget *setting_at_min_checkbox; /* Auto minimize when start-up */
+static GtkWidget *setting_at_cln_checkbox; /* Auto clean invalid music file */
 static GtkWidget *setting_pl_enc_entry; /* Tag Encoding */
 static GtkWidget *setting_lr_enc_entry; /* Lyric Encoding */
-static GtkWidget *setting_ap_grf_button;
-static GtkWidget *setting_ap_grf_radio[2];
+static GtkWidget *setting_ap_grf_button; /* RC Style File button */
+static GtkWidget *setting_ap_grf_radio[2]; /* RC Style Radio button */
+static GtkWidget *setting_ap_cl_combobox; /* Color Style Combobox */
 static GtkTreeModel *setting_tree_model;
 static gboolean setting_changed = FALSE;
 
@@ -173,15 +178,25 @@ void rc_gui_setting_row_selected(GtkTreeView *tree, gpointer data)
 void rc_gui_setting_apply(GtkButton *widget, gpointer data)
 {
     gchar *string;
+    gint i;
     rc_set_set_boolean("Player", "AutoPlay",
         gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
         setting_at_ply_checkbox)));
+    rc_set_set_boolean("Player", "LoadLastPosition",
+        gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
+        setting_ld_last_checkbox)));
     rc_set_set_boolean("Player", "MinimizeToTray",
         gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
         setting_min_tray_checkbox)));
     rc_set_set_boolean("Player", "AutoMinimize",
         gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
         setting_at_min_checkbox)));
+    rc_set_set_boolean("Player", "MinimizeWhenClose",
+        gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
+        setting_min_cl_checkbox)));
+    rc_set_set_boolean("Playlist", "AutoClean",
+        gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
+        setting_at_cln_checkbox)));
     rc_set_set_boolean("Metadata", "AutoEncodingDetect",
         gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
         setting_at_det_checkbox)));
@@ -189,6 +204,9 @@ void rc_gui_setting_apply(GtkButton *widget, gpointer data)
         GTK_ENTRY(setting_pl_enc_entry)));
     rc_set_set_string("Metadata", "LRCExEncoding", gtk_entry_get_text(
         GTK_ENTRY(setting_lr_enc_entry)));
+    i = gtk_combo_box_get_active(GTK_COMBO_BOX(setting_ap_cl_combobox));
+    rc_set_set_integer("Appearance", "ColorStyle", i);
+    rc_gui_style_set_color_style_by_index(i);
     if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
         setting_ap_grf_radio[1])))
     {
@@ -217,24 +235,36 @@ void rc_gui_create_setting_general()
     general_frame = gtk_frame_new(NULL); 
     gtk_frame_set_label_widget(GTK_FRAME(general_frame), general_label);
     gtk_frame_set_shadow_type(GTK_FRAME(general_frame), GTK_SHADOW_NONE);
-    setting_at_ply_checkbox = gtk_check_button_new_with_label(
-        _("Auto play on startup"));
-    setting_min_tray_checkbox = gtk_check_button_new_with_label(
-        _("Minimize to tray"));
-    setting_at_min_checkbox = gtk_check_button_new_with_label(
-        _("Auto minimize when startup"));
+    setting_at_ply_checkbox = gtk_check_button_new_with_mnemonic(
+        _("Auto _play on startup"));
+    setting_ld_last_checkbox = gtk_check_button_new_with_mnemonic(
+        _("_Load the last playing position"));
+    setting_min_tray_checkbox = gtk_check_button_new_with_mnemonic(
+        _("Minimize to _tray"));
+    setting_at_min_checkbox = gtk_check_button_new_with_mnemonic(
+        _("Auto _minimize when startup"));
+    setting_min_cl_checkbox = gtk_check_button_new_with_mnemonic(
+        _("Minimize the window if the _close button is clicked"));
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(setting_at_ply_checkbox),
         rc_set_get_boolean("Player", "AutoPlay", NULL));
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(setting_ld_last_checkbox ),
+        rc_set_get_boolean("Player", "LoadLastPosition", NULL));
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(setting_min_tray_checkbox),
         rc_set_get_boolean("Player", "MinimizeToTray", NULL));
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(setting_at_min_checkbox),
         rc_set_get_boolean("Player", "AutoMinimize", NULL));
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(setting_min_cl_checkbox),
+        rc_set_get_boolean("Player", "MinimizeWhenClose", NULL));
     vbox1 = gtk_vbox_new(FALSE, 2);
     gtk_box_pack_start(GTK_BOX(vbox1), setting_at_ply_checkbox,
+        FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(vbox1), setting_ld_last_checkbox,
         FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(vbox1), setting_min_tray_checkbox,
         FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(vbox1), setting_at_min_checkbox,
+        FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(vbox1), setting_min_cl_checkbox,
         FALSE, FALSE, 0);
     gtk_container_add(GTK_CONTAINER(general_frame), vbox1);
     gtk_box_pack_start(GTK_BOX(setting_nb_pages[0]), general_frame,
@@ -243,21 +273,32 @@ void rc_gui_create_setting_general()
 
 void rc_gui_create_setting_playlist()
 {
+    GtkWidget *playlist_label;
+    GtkWidget *playlist_frame;
     GtkWidget *metadata_label;
     GtkWidget *metadata_frame;
     GtkWidget *label[2];
-    GtkWidget *vbox1;
+    GtkWidget *vbox1, *vbox2;
     GtkWidget *hbox1, *hbox2;
     gchar *string;
+    playlist_label = gtk_label_new("");
+    gtk_label_set_markup(GTK_LABEL(playlist_label), _("<b>Playlist</b>"));
+    playlist_frame = gtk_frame_new(NULL);
+    gtk_frame_set_label_widget(GTK_FRAME(playlist_frame), playlist_label);
+    gtk_frame_set_shadow_type(GTK_FRAME(playlist_frame), GTK_SHADOW_NONE);
     metadata_label = gtk_label_new("");
     gtk_label_set_markup(GTK_LABEL(metadata_label), _("<b>Metadata</b>"));
     metadata_frame = gtk_frame_new(NULL);
     gtk_frame_set_label_widget(GTK_FRAME(metadata_frame), metadata_label);
     gtk_frame_set_shadow_type(GTK_FRAME(metadata_frame), GTK_SHADOW_NONE);
-    label[0] = gtk_label_new(_("ID3 Tag fallback character encodings: "));
-    label[1] = gtk_label_new(_("Lyric text fallback character encodings: "));
+    label[0] = gtk_label_new(_("ID3 Tag fallback character encodings"));
+    label[1] = gtk_label_new(_("Lyric text fallback character encodings"));
+    setting_at_cln_checkbox = gtk_check_button_new_with_mnemonic(
+        _("Auto _remove invalid music file"));
     setting_pl_enc_entry = gtk_entry_new();
     setting_lr_enc_entry = gtk_entry_new();
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(setting_at_cln_checkbox),
+        rc_set_get_boolean("Playlist", "AutoClean", NULL));
     string = rc_set_get_string("Metadata", "TagExEncoding", NULL);
     if(string!=NULL)
     {
@@ -270,24 +311,30 @@ void rc_gui_create_setting_playlist()
         gtk_entry_set_text(GTK_ENTRY(setting_lr_enc_entry), string);
         g_free(string);
     }
-    setting_at_det_checkbox = gtk_check_button_new_with_label(
-        _("Auto encoding detect (use system language settings)"));
+    setting_at_det_checkbox = gtk_check_button_new_with_mnemonic(
+        _("_Auto encoding detect (use system language settings)"));
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(setting_at_det_checkbox),
         rc_set_get_boolean("Metadata", "AutoEncodingDetect", NULL));
     vbox1 = gtk_vbox_new(FALSE, 2);
+    vbox2 = gtk_vbox_new(FALSE, 2);
     hbox1 = gtk_hbox_new(FALSE, 2);
     hbox2 = gtk_hbox_new(FALSE, 2);
     gtk_box_pack_start(GTK_BOX(hbox1), label[0], FALSE, FALSE, 10);
     gtk_box_pack_start(GTK_BOX(hbox1), setting_pl_enc_entry, TRUE, TRUE, 0);
     gtk_box_pack_start(GTK_BOX(hbox2), label[1], FALSE, FALSE, 10);
     gtk_box_pack_start(GTK_BOX(hbox2), setting_lr_enc_entry, TRUE, TRUE, 0);
-    gtk_box_pack_start(GTK_BOX(vbox1), setting_at_det_checkbox, FALSE, FALSE,
+    gtk_box_pack_start(GTK_BOX(vbox1), setting_at_cln_checkbox, FALSE, FALSE,
         0);
-    gtk_box_pack_start(GTK_BOX(vbox1), hbox1, FALSE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(vbox1), hbox2, FALSE, FALSE, 0);
-    gtk_container_add(GTK_CONTAINER(metadata_frame), vbox1);
+    gtk_box_pack_start(GTK_BOX(vbox2), setting_at_det_checkbox, FALSE, FALSE,
+        0);
+    gtk_box_pack_start(GTK_BOX(vbox2), hbox1, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(vbox2), hbox2, FALSE, FALSE, 0);
+    gtk_container_add(GTK_CONTAINER(playlist_frame), vbox1);
+    gtk_container_add(GTK_CONTAINER(metadata_frame), vbox2);
+    gtk_box_pack_start(GTK_BOX(setting_nb_pages[1]), playlist_frame,
+        FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(setting_nb_pages[1]), metadata_frame,
-        TRUE, TRUE, 0);
+        FALSE, FALSE, 0);
 }
 
 
@@ -295,11 +342,33 @@ void rc_gui_create_setting_appearance()
 {
     GtkWidget *theme_label;
     GtkWidget *theme_frame;
-    GtkWidget *vbox1;
-    GtkWidget *hbox1;
+    GtkWidget *color_style_label, *color_style_frame;
+    GtkWidget *vbox1, *hbox1;
+    GtkWidget *vbox2, *hbox2;
+    GtkWidget *label1;
     gchar *string;
+    GtkCellRenderer *renderer = NULL;
+    GtkListStore *store;
+    GtkTreeIter iter;
+    guint i = 0;
+    const GuiColorStyle *color_style;
     GtkFileFilter *filter = gtk_file_filter_new();
     gtk_file_filter_add_pattern(filter, "gtkrc");
+    color_style_label = gtk_label_new("");
+    gtk_label_set_markup(GTK_LABEL(color_style_label),
+        _("<b>Color Style</b>"));
+    color_style_frame = gtk_frame_new(NULL);
+    gtk_frame_set_label_widget(GTK_FRAME(color_style_frame),
+        color_style_label);
+    gtk_frame_set_shadow_type(GTK_FRAME(color_style_frame), GTK_SHADOW_NONE);
+    store = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_INT);
+    renderer = gtk_cell_renderer_text_new();
+    setting_ap_cl_combobox = gtk_combo_box_new_with_model(
+        GTK_TREE_MODEL(store));
+    gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(setting_ap_cl_combobox),
+        renderer, TRUE);
+    gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(setting_ap_cl_combobox),
+        renderer, "text", 0, NULL);
     theme_label = gtk_label_new("");
     gtk_label_set_markup(GTK_LABEL(theme_label), _("<b>Theme</b>"));
     theme_frame = gtk_frame_new(NULL);
@@ -312,6 +381,17 @@ void rc_gui_create_setting_appearance()
         _("Use _Custom GTK2+ RC Theme"));
     setting_ap_grf_button = gtk_file_chooser_button_new(
         _("Please select a GTK2+ RC File"), GTK_FILE_CHOOSER_ACTION_OPEN);
+    gtk_list_store_append(store, &iter);
+    gtk_list_store_set(store, &iter, 0, _("None"), 1, 0, -1);
+    while((color_style=rc_gui_style_get_color_style(i))!=NULL)
+    {
+        gtk_list_store_append(store, &iter);
+        gtk_list_store_set(store, &iter, 0, color_style->name, 1,
+            i+1, -1);
+        i++;
+    }
+    gtk_combo_box_set_active(GTK_COMBO_BOX(setting_ap_cl_combobox),
+        rc_set_get_integer("Appearance", "ColorStyle", NULL));
     string = rc_set_get_string("Appearance", "RCFile", NULL);
     if(string!=NULL)
     {
@@ -327,15 +407,24 @@ void rc_gui_create_setting_appearance()
     gtk_file_filter_set_name(filter, _("GTK2+ RC File (gtkrc)"));
     gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(setting_ap_grf_button),
         filter);
+    label1 = gtk_label_new(_("Use color style"));
     vbox1 = gtk_vbox_new(FALSE, 2);
     hbox1 = gtk_hbox_new(FALSE, 2);
-    gtk_box_pack_start(GTK_BOX(hbox1), setting_ap_grf_radio[1], FALSE,
-        FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(hbox1), setting_ap_grf_button, TRUE, TRUE, 0);
-    gtk_box_pack_start(GTK_BOX(vbox1), setting_ap_grf_radio[0], FALSE,
-        FALSE, 0);
+    vbox2 = gtk_vbox_new(FALSE, 2);
+    hbox2 = gtk_hbox_new(FALSE, 2);
+    gtk_box_pack_start(GTK_BOX(hbox1), label1, FALSE, FALSE, 10);
+    gtk_box_pack_start(GTK_BOX(hbox1), setting_ap_cl_combobox, TRUE, TRUE, 0);
     gtk_box_pack_start(GTK_BOX(vbox1), hbox1, FALSE, FALSE, 0);
-    gtk_container_add(GTK_CONTAINER(theme_frame), vbox1);
+    gtk_box_pack_start(GTK_BOX(hbox2), setting_ap_grf_radio[1], FALSE,
+        FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(hbox2), setting_ap_grf_button, TRUE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(vbox2), setting_ap_grf_radio[0], FALSE,
+        FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(vbox2), hbox2, FALSE, FALSE, 0);
+    gtk_container_add(GTK_CONTAINER(color_style_frame), vbox1);
+    gtk_container_add(GTK_CONTAINER(theme_frame), vbox2);
+    gtk_box_pack_start(GTK_BOX(setting_nb_pages[2]), color_style_frame,
+        FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(setting_nb_pages[2]), theme_frame,
         TRUE, TRUE, 0);
 }

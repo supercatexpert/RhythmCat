@@ -42,7 +42,7 @@ static gchar *rc_set_dir = NULL;
 static const gchar *rc_app_dir = NULL;
 static const gchar *rc_home_dir = NULL;
 static const gchar rc_program_name[] = "RhythmCat Music Player";
-static const gchar rc_build_num[] = "build 110309, alpha 1";
+static const gchar rc_build_num[] = "build 110312, alpha 1";
 static const gchar rc_ver_num[] = "0.9.5";
 static const gboolean rc_is_stable = FALSE;
 static const gchar rc_dbus_name[] = "org.supercat.RhythmCat";
@@ -115,9 +115,6 @@ void rc_init(int *argc, char **argv[])
     support_format_regex = g_regex_new(rc_support_formatx, G_REGEX_CASELESS,
         G_REGEX_MATCH_ANCHORED, &error);
     if(error!=NULL) g_error_free(error);
-    rc_set_init();
-    gst_init(argc, argv);
-    rc_dbus_init(remaining_args);
     if(locale_dir==NULL)
         bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
     else
@@ -127,6 +124,9 @@ void rc_init(int *argc, char **argv[])
     }
     bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
     rc_locale = g_strdup(setlocale(LC_ALL, NULL));
+    rc_set_init();
+    gst_init(argc, argv);
+    rc_dbus_init(remaining_args);
     rc_gui_init();
     rc_core_init();
     rc_gui_init_eq_data();
@@ -314,11 +314,14 @@ gboolean rc_dbus_init(gchar **remaining_args)
         }
         else
         {
-            for(i=0;remaining_args[i]!=NULL;i++)
+            if(remaining_args!=NULL)
             {
-                dbus_g_proxy_call(shell_proxy, "LoadURI", &error, 
-                    G_TYPE_STRING, remaining_args[i], G_TYPE_INVALID, 
-                    G_TYPE_INVALID);
+                for(i=0;remaining_args[i]!=NULL;i++)
+                {
+                    dbus_g_proxy_call(shell_proxy, "LoadURI", &error,
+                        G_TYPE_STRING, remaining_args[i], G_TYPE_INVALID, 
+                        G_TYPE_INVALID);
+                }
             }
             g_object_unref(G_OBJECT(shell_proxy));
         }
@@ -342,7 +345,16 @@ int main(int argc, char *argv[])
         rc_gui_select_list2(0);
         if(rc_set_get_boolean("Player", "AutoPlay", NULL))
         {
-            rc_plist_play_by_index(0, 0);
+            if(rc_set_get_boolean("Player", "LoadLastPosition", NULL))
+            {
+                rc_plist_play_by_index(
+                    rc_set_get_integer("Playlist", "LastList", NULL),
+                    rc_set_get_integer("Playlist", "LastPosition", NULL));
+            }
+            else
+            {
+                rc_plist_play_by_index(0, 0);
+            }
             rc_core_play();
         }
     }

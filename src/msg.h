@@ -39,10 +39,11 @@ typedef void (*MsgAsyncQueueWatchFunc)(gpointer item, gpointer data);
 
 typedef enum _MsgType
 {
-    MSG_TYPE_ECHO = 0,
+    MSG_TYPE_EMPTY = 0,
     MSG_TYPE_TEST = 1,
     MSG_TYPE_PL_INSERT = 2,
-    MSG_TYPE_PL_REFRESH = 3
+    MSG_TYPE_PL_REFRESH = 3,
+    MSG_TYPE_PL_REMOVE = 4
 }MsgType;
 
 typedef struct _MsgData

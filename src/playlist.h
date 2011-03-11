@@ -61,6 +61,7 @@ void rc_plist_list2_insert_item(const gchar *, const gchar *, const gchar *,
     const gchar *, gint64, gint, GtkListStore *, gint);
 void rc_plist_list2_refresh_item(const gchar *, const gchar *, const gchar *,
     const gchar *, gint64, gint, GtkTreeRowReference *);
+void rc_plist_list2_remove_item(GtkTreeRowReference *);
 gboolean rc_plist_remove_list(gint);
 gchar *rc_plist_get_list1_name(gint);
 gint rc_plist_get_list1_length();

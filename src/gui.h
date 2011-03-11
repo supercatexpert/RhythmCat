@@ -98,6 +98,7 @@ gboolean rc_gui_seek_scale_button_released(GtkWidget *, GdkEventButton *,
 void rc_gui_seek_scale_value_changed(GtkRange *, gpointer);
 void rc_gui_set_volume(gdouble);
 void rc_gui_set_player_state();
+void rc_gui_press_ontop_menu(GtkAction *);
 void rc_gui_press_view_menu(GtkAction *, GtkRadioAction *);
 void rc_gui_press_repeat_menu(GtkAction *, GtkRadioAction *);
 void rc_gui_press_random_menu(GtkAction *, GtkRadioAction *);

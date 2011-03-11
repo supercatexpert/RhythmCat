@@ -276,6 +276,20 @@ static GtkRadioActionEntry rc_menu_random_entres[] =
 
 static guint rc_menu_random_n_entres = G_N_ELEMENTS(rc_menu_random_entres);
 
+static GtkToggleActionEntry rc_menu_toogle_entres[] =
+{
+    { "ViewAlwaysOnTop", GTK_STOCK_GOTO_TOP,
+      "Always On _Top", NULL,
+      "Always on top",
+      G_CALLBACK(rc_gui_press_ontop_menu), FALSE },
+    { "TrayAlwaysOnTop", GTK_STOCK_GOTO_TOP,
+      "Always On _Top", NULL,
+      "Always on top",
+      G_CALLBACK(rc_gui_press_ontop_menu), FALSE }
+};
+
+static guint rc_menu_toogle_n_entres = G_N_ELEMENTS(rc_menu_toogle_entres);
+
 static const gchar *rc_ui_info =
     "<ui>"
     "  <menubar name='RCMenuBar'>"
@@ -306,6 +320,7 @@ static const gchar *rc_ui_info =
     "      <menuitem action='ViewPlaylist'/>"
     "      <menuitem action='ViewEqualizer'/>"
     "      <separator name='ViewSep1'/>"
+    "      <menuitem action='ViewAlwaysOnTop'/>"
     "      <menuitem action='ViewMiniMode'/>"
     "    </menu>"
     "    <menu action='ControlMenu'>"
@@ -360,6 +375,7 @@ static const gchar *rc_ui_info =
     "    <menuitem action='TrayNext'/>"
     "    <separator/>"
     "    <menuitem action='TrayShowPlayer'/>"
+    "    <menuitem action='TrayAlwaysOnTop'/>"
     "    <menuitem action='TrayAbout'/>"
     "    <separator/>"
     "    <menuitem action='TrayQuit'/>"
@@ -453,6 +469,8 @@ void rc_gui_quit_player(GtkWidget *widget, gpointer data)
 static gboolean rc_gui_window_state_changed(GtkWidget *widget,
     GdkEventWindowState *event, gpointer data)
 {
+    gtk_window_set_keep_above(GTK_WINDOW(rc_gui.main_window), 
+        rc_set_get_boolean("Player", "AlwaysOnTop", NULL));
     if(!rc_set_get_boolean("Player", "MinimizeToTray", NULL)) return FALSE;
     if(event->changed_mask==GDK_WINDOW_STATE_ICONIFIED && 
         (event->new_window_state==GDK_WINDOW_STATE_ICONIFIED ||
@@ -461,6 +479,21 @@ static gboolean rc_gui_window_state_changed(GtkWidget *widget,
     {
         gtk_window_set_skip_taskbar_hint(GTK_WINDOW(rc_gui.main_window), TRUE);
         gtk_widget_hide(rc_gui.main_window);
+    }
+    return FALSE;
+}
+
+/*
+ * Catch the delete event of the main window.
+ */
+
+static gboolean rc_gui_window_delete_event_handle(GtkWidget *widget,
+    GdkEvent *event, gpointer data)
+{
+    if(rc_set_get_boolean("Player", "MinimizeWhenClose", NULL))
+    {
+        gtk_window_iconify(GTK_WINDOW(rc_gui.main_window));
+        return TRUE;
     }
     return FALSE;
 }
@@ -629,9 +662,11 @@ static void rc_gui_signal_bind()
     g_signal_connect(GTK_STATUS_ICON(rc_gui.tray_icon), "popup-menu",
         G_CALLBACK(rc_gui_tray_icon_popup), NULL);
     g_signal_connect(G_OBJECT(rc_gui.main_window), "window-state-event",
-        G_CALLBACK(rc_gui_window_state_changed),NULL);
+        G_CALLBACK(rc_gui_window_state_changed), NULL);
     g_signal_connect(G_OBJECT(rc_gui.main_window), "destroy",
-        G_CALLBACK(rc_gui_quit_player),NULL);
+        G_CALLBACK(rc_gui_quit_player), NULL);
+    g_signal_connect(G_OBJECT(rc_gui.main_window), "delete-event",
+        G_CALLBACK(rc_gui_window_delete_event_handle), NULL);
 }
 
 /*
@@ -723,7 +758,7 @@ gboolean rc_gui_init()
     gtk_button_set_relief(GTK_BUTTON(rc_gui.volume_button), GTK_RELIEF_NONE);
     g_object_set(G_OBJECT(rc_gui.volume_button), "size",
         GTK_ICON_SIZE_MENU, NULL);
-    rc_gui.status_cancel_button = gtk_button_new_from_stock(GTK_STOCK_CANCEL);
+    rc_gui.status_cancel_button = gtk_button_new_with_mnemonic(_("Cancel"));
     rc_gui.control_images[0] = gtk_image_new_from_stock(
         GTK_STOCK_MEDIA_PREVIOUS, GTK_ICON_SIZE_MENU);
     rc_gui.control_images[1] = gtk_image_new_from_stock(GTK_STOCK_MEDIA_PLAY,
@@ -766,6 +801,8 @@ gboolean rc_gui_init()
     gtk_action_group_add_radio_actions(actions, rc_menu_random_entres,
         rc_menu_random_n_entres, 0, G_CALLBACK(rc_gui_press_random_menu),
         NULL);
+    gtk_action_group_add_toggle_actions(actions, rc_menu_toogle_entres,
+        rc_menu_toogle_n_entres, NULL);
     gtk_ui_manager_insert_action_group(rc_gui.main_ui, actions, 0);
     rc_gui.main_action_group = actions;
     g_object_unref(actions);
@@ -794,6 +831,12 @@ gboolean rc_gui_init()
     rc_debug_print("GUI: Main window is successfully loaded!\n");
     if(rc_set_get_boolean("Player", "AutoMinimize", NULL))
         gtk_window_iconify(GTK_WINDOW(rc_gui.main_window));
+    if(rc_set_get_boolean("Player", "AlwaysOnTop", NULL))
+    {
+        gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(
+            gtk_ui_manager_get_action(rc_gui.main_ui,
+            "/RCMenuBar/ViewMenu/ViewAlwaysOnTop")), TRUE);
+    }
     return FALSE;
 }
 
@@ -1110,6 +1153,25 @@ void rc_gui_set_player_state()
             gtk_ui_manager_get_action(rc_gui.main_ui,
             "/RCMenuBar/ControlMenu/RandomMenu/RandomNoRandom")), random);
     }
+}
+
+/*
+ * Press always on top menu.
+ */
+
+void rc_gui_press_ontop_menu(GtkAction *action)
+{
+    gboolean flag = FALSE;
+    flag = rc_set_get_boolean("Player", "AlwaysOnTop", NULL);
+    if(gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(action))==flag)
+        return;
+    flag^=1;
+    gtk_window_set_keep_above(GTK_WINDOW(rc_gui.main_window), flag);
+    rc_set_set_boolean("Player", "AlwaysOnTop", flag);
+    gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(gtk_ui_manager_get_action(
+        rc_gui.main_ui, "/RCMenuBar/ViewMenu/ViewAlwaysOnTop")), flag);
+    gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(gtk_ui_manager_get_action(
+        rc_gui.main_ui, "/TrayPopupMenu/TrayAlwaysOnTop")), flag);
 }
 
 /*

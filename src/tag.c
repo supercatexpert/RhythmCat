@@ -302,16 +302,19 @@ MusicMetaData *rc_tag_read_metadata(gchar *uri)
         {
             g_setenv("GST_ID3_TAG_ENCODING", "GB18030:UTF-8", TRUE);
             g_setenv("GST_ID3V2_TAG_ENCODING", "GB18030:UTF-8", TRUE);
+            rc_set_set_string("Metadata", "TagExEncoding", "GB18030:UTF-8");
         }
         else if(strncmp(locale, "zh_TW", 5)==0)
         {
             g_setenv("GST_ID3_TAG_ENCODING", "BIG5:UTF-8", TRUE);
             g_setenv("GST_ID3V2_TAG_ENCODING", "BIG5:UTF-8", TRUE);
+            rc_set_set_string("Metadata", "TagExEncoding", "BIG5:UTF-8");
         }
         else if(strncmp(locale, "ja_JP", 5)==0)
         {
             g_setenv("GST_ID3_TAG_ENCODING", "ShiftJIS:UTF-8", TRUE);
             g_setenv("GST_ID3V2_TAG_ENCODING", "ShiftJIS:UTF-8", TRUE);
+            rc_set_set_string("Metadata", "TagExEncoding", "ShiftJIS:UTF-8");
         }
     }
     else

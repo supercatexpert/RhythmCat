@@ -801,7 +801,6 @@ void rc_gui_list2_delete_lists(GtkWidget *widget, gpointer data)
             list_foreach->data);
         gtk_list_store_remove(GTK_LIST_STORE(rc_ui->list2_tree_model),
             &iter);
-
     }
     if(path_list!=NULL)
     {

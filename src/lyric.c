@@ -151,11 +151,20 @@ gboolean rc_lrc_read_from_file(const gchar *filename)
     {
         locale = rc_get_locale();
         if(strncmp(locale, "zh_CN", 5)==0)
+        {
             ex_encoding = g_strdup("GB18030");
+            rc_set_set_string("Metadata", "LRCExEncoding", ex_encoding);
+        }
         else if(strncmp(locale, "zh_TW", 5)==0)
+        {
             ex_encoding = g_strdup("BIG5");
+            rc_set_set_string("Metadata", "LRCExEncoding", ex_encoding);
+        }
         else if(strncmp(locale, "ja_JP", 5)==0)
+        {
             ex_encoding = g_strdup("ShiftJIS");
+            rc_set_set_string("Metadata", "LRCExEncoding", ex_encoding);
+        }
     }
     else
         ex_encoding = rc_set_get_string("Metadata", "LRCExEncoding", NULL);

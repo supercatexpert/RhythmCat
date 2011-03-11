@@ -35,23 +35,44 @@ void rc_set_init()
 {
     gchar *conf_file = NULL;
     gdouble eq_array[10];
+    const gchar *locale;
     bzero(eq_array, sizeof(eq_array));
     rc_configure = g_key_file_new();
     g_key_file_set_comment(rc_configure, NULL, NULL,
         "RhythmCat Music Player Settings File", NULL);
-    g_key_file_set_boolean(rc_configure, "Player", "AutoPlay", FALSE);
-    g_key_file_set_boolean(rc_configure, "Player", "MinimizeToTray", FALSE);
-    g_key_file_set_boolean(rc_configure, "Player", "AutoMinimize", FALSE);
-    g_key_file_set_integer(rc_configure, "Player", "RepeatMode", 3);
-    g_key_file_set_integer(rc_configure, "Player", "RandomMode", 0);
-    g_key_file_set_double(rc_configure, "Player", "Volume", 1.0);
-    g_key_file_set_integer(rc_configure, "Player", "EQStyle", 0);
-    g_key_file_set_double_list(rc_configure, "Player", "EQ", eq_array, 10);
-    g_key_file_set_boolean(rc_configure, "Metadata", "AutoEncodingDetect",
-        TRUE);
-    g_key_file_set_string(rc_configure, "Metadata", "TagExEncoding", "");
-    g_key_file_set_string(rc_configure, "Metadata", "LRCExEncoding", "");
-    g_key_file_set_string(rc_configure, "Appearance", "RCFile", "");
+    rc_set_set_boolean("Player", "AutoPlay", FALSE);
+    rc_set_set_boolean("Player", "MinimizeToTray", FALSE);
+    rc_set_set_boolean("Player", "AutoMinimize", FALSE);
+    rc_set_set_boolean("Player", "MinimizeWhenClose", FALSE);
+    rc_set_set_boolean("Player", "AlwaysOnTop", FALSE);
+    rc_set_set_boolean("Player", "LoadLastPosition", FALSE);
+    rc_set_set_boolean("Playlist", "AutoClean", FALSE);
+    rc_set_set_integer("Playlist", "LastList", 0);
+    rc_set_set_integer("Playlist", "LastPosition", 0);
+    rc_set_set_integer("Player", "RepeatMode", 3);
+    rc_set_set_integer("Player", "RandomMode", 0);
+    rc_set_set_double("Player", "Volume", 1.0);
+    rc_set_set_integer("Player", "EQStyle", 0);
+    rc_set_set_double_list("Player", "EQ", eq_array, 10);
+    rc_set_set_integer("Appearance", "ColorStyle", 1);
+    rc_set_set_string("Appearance", "RCFile", "");
+    rc_set_set_boolean("Metadata", "AutoEncodingDetect", TRUE);
+    locale = rc_get_locale();
+    if(strncmp(locale, "zh_CN", 5)==0)
+    {
+        rc_set_set_string("Metadata", "TagExEncoding", "GB18030:UTF-8");
+        rc_set_set_string("Metadata", "LRCExEncoding", "GB18030");
+    }
+    else if(strncmp(locale, "zh_TW", 5)==0)
+    {
+        rc_set_set_string("Metadata", "TagExEncoding", "BIG5:UTF-8");
+        rc_set_set_string("Metadata", "LRCExEncoding", "BIG5");
+    }
+    else if(strncmp(locale, "ja_JP", 5)==0)
+    {
+        rc_set_set_string("Metadata", "TagExEncoding", "ShiftJIS:UTF-8");
+        rc_set_set_string("Metadata", "LRCExEncoding", "ShiftJIS");
+    }
     /* Load system setting. */
     conf_file = g_strdup_printf("%s%cconf%csetting.conf", rc_get_app_dir(), 
         G_DIR_SEPARATOR, G_DIR_SEPARATOR);

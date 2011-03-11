@@ -31,7 +31,7 @@
 #include <gdk/gdk.h>
 #include <gtk/gtk.h>
 
-typedef struct GuiStyleData
+typedef struct GuiColorStyle
 {
     gchar name[32];
     GdkColor label_font_color;
@@ -56,12 +56,14 @@ typedef struct GuiStyleData
     GdkColor listview_font_selected_color;
     GdkColor listview_font_active_color;
     GdkColor listview_scrbar_color;
-}GuiStyleData;
+}GuiColorStyle;
 
 /* Functions */
 void rc_gui_style_init();
 void rc_gui_style_refresh();
-void rc_gui_style_set_style(const GuiStyleData *);
+void rc_gui_style_set_color_style(const GuiColorStyle *);
+const GuiColorStyle *rc_gui_style_get_color_style(gint);
+void rc_gui_style_set_color_style_by_index(gint);
 
 #endif
 

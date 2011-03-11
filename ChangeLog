@@ -15,3 +15,16 @@
         Reading cover image in the tag of music file is now available.
         Try to remove lyric show, and put this feature into a plugin.
 
+2011-03-12  SuperCat    <supercatexpert@gmail.com>
+
+        Added new color styles, and added the features below:
+
+          Automatic minimize at startup.
+          Minimize window when the close button is pressed.
+          Load last playing position at startup.
+          The player window can be always on top.
+          Automatic encoding detect by system locale settings.
+          Automatic remove the invalid music item.
+
+ 
+
