@@ -25,6 +25,7 @@
 
 #include "gui_style.h"
 #include "gui.h"
+#include "gui_mini.h"
 #include "gui_eq.h"
 #include "settings.h"
 
@@ -121,15 +122,16 @@ void rc_gui_style_init()
 {
     PangoAttrList *title_attr_list, *artist_attr_list, *album_attr_list;
     PangoAttrList *time_attr_list, *length_attr_list, *info_attr_list;
-    PangoAttrList *lrc_attr_list;
+    PangoAttrList *lrc_attr_list, *mini_info_attr_list;
     PangoAttrList *list1_attr_list, *list2_attr_list;
     PangoAttribute *title_attr[2], *artist_attr[2], *album_attr[2];
     PangoAttribute *time_attr[2], *length_attr[2], *info_attr[2];
-    PangoAttribute *lrc_attr[2];
+    PangoAttribute *lrc_attr[2], *mini_info_attr[2];
     PangoAttribute *list1_attr[2], *list2_attr[2];
     gint i = 0;
     rc_gui_style_data_init();
     GuiData *rc_ui = rc_gui_get_gui();
+    GuiMiniData *rc_mini = rc_gui_mini_get_data();
     title_attr_list = pango_attr_list_new();
     artist_attr_list = pango_attr_list_new();
     album_attr_list = pango_attr_list_new();
@@ -137,6 +139,7 @@ void rc_gui_style_init()
     length_attr_list = pango_attr_list_new();
     info_attr_list = pango_attr_list_new();
     lrc_attr_list = pango_attr_list_new();
+    mini_info_attr_list = pango_attr_list_new();
     list1_attr_list = pango_attr_list_new();
     list2_attr_list = pango_attr_list_new();
     title_attr[0] = pango_attr_size_new_absolute(17 * PANGO_SCALE);
@@ -153,6 +156,8 @@ void rc_gui_style_init()
     info_attr[1] = pango_attr_weight_new(PANGO_WEIGHT_NORMAL);
     lrc_attr[0] = pango_attr_size_new_absolute(13 * PANGO_SCALE);
     lrc_attr[1] = pango_attr_weight_new(PANGO_WEIGHT_NORMAL);
+    mini_info_attr[0] = pango_attr_size_new_absolute(13 * PANGO_SCALE);
+    mini_info_attr[1] = pango_attr_weight_new(PANGO_WEIGHT_NORMAL);
     list1_attr[0] = pango_attr_size_new_absolute(13 * PANGO_SCALE);
     list1_attr[1] = pango_attr_weight_new(PANGO_WEIGHT_NORMAL);
     list2_attr[0] = pango_attr_size_new_absolute(13 * PANGO_SCALE);
@@ -171,6 +176,8 @@ void rc_gui_style_init()
     pango_attr_list_insert(length_attr_list, length_attr[1]);
     pango_attr_list_insert(lrc_attr_list, lrc_attr[0]);
     pango_attr_list_insert(lrc_attr_list, lrc_attr[1]);
+    pango_attr_list_insert(mini_info_attr_list, mini_info_attr[0]);
+    pango_attr_list_insert(mini_info_attr_list, mini_info_attr[1]);
     pango_attr_list_insert(list1_attr_list, list1_attr[0]);
     pango_attr_list_insert(list1_attr_list, list1_attr[1]);
     pango_attr_list_insert(list2_attr_list, list2_attr[0]);
@@ -188,7 +195,12 @@ void rc_gui_style_init()
     gtk_label_set_attributes(GTK_LABEL(rc_ui->length_label), length_attr_list);
     pango_attr_list_unref(length_attr_list);
     gtk_label_set_attributes(GTK_LABEL(rc_ui->lrc_label), lrc_attr_list);
+    gtk_label_set_attributes(GTK_LABEL(rc_mini->lrc_label), lrc_attr_list);
+    gtk_label_set_attributes(GTK_LABEL(rc_mini->time_label), lrc_attr_list);
     pango_attr_list_unref(lrc_attr_list);
+    gtk_label_set_attributes(GTK_LABEL(rc_mini->info_label),
+        mini_info_attr_list);
+    pango_attr_list_unref(mini_info_attr_list);
     g_object_set(G_OBJECT(rc_ui->renderer_text[0]), "attributes",
         list1_attr_list, NULL);
     for(i=1;i<5;i++)
@@ -219,6 +231,7 @@ void rc_gui_style_set_color_style(const GuiColorStyle *style_data)
 {
     gint i = 0;
     GuiData *rc_ui = rc_gui_get_gui();
+    GuiMiniData *rc_mini = rc_gui_mini_get_data();
     GuiEQData *rc_eq = rc_gui_eq_get_data();
     if(style_data==NULL)
     {
@@ -338,7 +351,54 @@ void rc_gui_style_set_color_style(const GuiColorStyle *style_data)
         gtk_widget_modify_bg(rc_eq->import_button, GTK_STATE_NORMAL, NULL);
         gtk_widget_modify_bg(rc_eq->import_button, GTK_STATE_PRELIGHT, NULL);
         gtk_widget_modify_bg(rc_eq->import_button, GTK_STATE_ACTIVE, NULL);
+        gtk_widget_modify_fg(rc_mini->info_label, GTK_STATE_NORMAL,
+            NULL);
+        gtk_widget_modify_fg(rc_mini->lrc_label, GTK_STATE_NORMAL,
+            NULL);
+        gtk_widget_modify_fg(rc_mini->time_label, GTK_STATE_NORMAL,
+            NULL);
+        gtk_widget_modify_bg(rc_mini->mini_window, GTK_STATE_NORMAL,
+            NULL);
+        gtk_widget_modify_base(rc_mini->mini_window, GTK_STATE_NORMAL,
+            NULL);
+        gtk_widget_modify_bg(rc_mini->info_viewport, GTK_STATE_NORMAL,
+            NULL);
+        gtk_widget_modify_bg(rc_mini->lrc_viewport, GTK_STATE_NORMAL,
+            NULL);
+        gtk_widget_modify_bg(rc_mini->icon_eventbox, GTK_STATE_NORMAL,
+            NULL);
+        gtk_widget_modify_bg(rc_mini->volume_button, GTK_STATE_NORMAL,
+            NULL);
+        gtk_widget_modify_bg(rc_mini->volume_button, GTK_STATE_ACTIVE,
+            NULL);
+        gtk_widget_modify_bg(rc_mini->volume_button, GTK_STATE_PRELIGHT,
+            NULL);
+        gtk_widget_modify_fg(rc_mini->resize_arrow, GTK_STATE_NORMAL,
+            NULL);
+        gtk_widget_modify_bg(rc_mini->resize_arrow, GTK_STATE_NORMAL,
+            NULL);
+        gtk_widget_modify_bg(rc_mini->resize_eventbox, GTK_STATE_NORMAL,
+            NULL);
+        for(i=0;i<4;i++)
+        {
+            gtk_widget_modify_bg(rc_mini->control_buttons[i], GTK_STATE_NORMAL,
+                NULL);
+            gtk_widget_modify_bg(rc_mini->control_buttons[i], GTK_STATE_ACTIVE,
+                NULL);
+            gtk_widget_modify_bg(rc_mini->control_buttons[i],
+                GTK_STATE_PRELIGHT, NULL);
+        }
+        for(i=0;i<3;i++)
+        {
+            gtk_widget_modify_bg(rc_mini->window_buttons[i], GTK_STATE_NORMAL,
+                NULL);
+            gtk_widget_modify_bg(rc_mini->window_buttons[i], GTK_STATE_ACTIVE,
+                NULL);
+            gtk_widget_modify_bg(rc_mini->window_buttons[i],
+                GTK_STATE_PRELIGHT, NULL);
+        }
         gtk_widget_queue_draw(rc_ui->main_window);
+        gtk_widget_queue_draw(rc_mini->mini_window);
         return;
     }
     gtk_widget_modify_fg(rc_ui->title_label, GTK_STATE_NORMAL,
@@ -501,7 +561,54 @@ void rc_gui_style_set_color_style(const GuiColorStyle *style_data)
         &style_data->button_prelight_color);
     gtk_widget_modify_bg(rc_eq->import_button, GTK_STATE_ACTIVE,
         &style_data->button_active_color);
+    gtk_widget_modify_fg(rc_mini->info_label, GTK_STATE_NORMAL,
+        &style_data->label_font_color);
+    gtk_widget_modify_fg(rc_mini->lrc_label, GTK_STATE_NORMAL,
+        &style_data->lyric_font_color);
+    gtk_widget_modify_fg(rc_mini->time_label, GTK_STATE_NORMAL,
+        &style_data->lyric_font_color);
+    gtk_widget_modify_bg(rc_mini->mini_window, GTK_STATE_NORMAL,
+        &style_data->window_bg_color);
+    gtk_widget_modify_base(rc_mini->mini_window, GTK_STATE_NORMAL,
+        &style_data->window_bg_color);
+    gtk_widget_modify_bg(rc_mini->info_viewport, GTK_STATE_NORMAL,
+        &style_data->window_bg_color);
+    gtk_widget_modify_bg(rc_mini->lrc_viewport, GTK_STATE_NORMAL,
+        &style_data->window_bg_color);
+    gtk_widget_modify_bg(rc_mini->icon_eventbox, GTK_STATE_NORMAL,
+        &style_data->window_bg_color);
+    gtk_widget_modify_bg(rc_mini->volume_button, GTK_STATE_NORMAL,
+        &style_data->window_bg_color);
+    gtk_widget_modify_bg(rc_mini->volume_button, GTK_STATE_ACTIVE,
+        &style_data->button_active_color);
+    gtk_widget_modify_bg(rc_mini->volume_button, GTK_STATE_PRELIGHT,
+        &style_data->button_prelight_color);
+    gtk_widget_modify_fg(rc_mini->resize_arrow, GTK_STATE_NORMAL,
+        &style_data->label_font_color);
+    gtk_widget_modify_bg(rc_mini->resize_arrow, GTK_STATE_NORMAL,
+        &style_data->window_bg_color);
+    gtk_widget_modify_bg(rc_mini->resize_eventbox, GTK_STATE_NORMAL,
+        &style_data->window_bg_color);
+    for(i=0;i<4;i++)
+    {
+        gtk_widget_modify_bg(rc_mini->control_buttons[i], GTK_STATE_NORMAL,
+            &style_data->window_bg_color);
+        gtk_widget_modify_bg(rc_mini->control_buttons[i], GTK_STATE_ACTIVE,
+            &style_data->button_active_color);
+        gtk_widget_modify_bg(rc_mini->control_buttons[i], GTK_STATE_PRELIGHT,
+            &style_data->button_prelight_color);
+    }
+    for(i=0;i<3;i++)
+    {
+        gtk_widget_modify_bg(rc_mini->window_buttons[i], GTK_STATE_NORMAL,
+            &style_data->window_bg_color);
+        gtk_widget_modify_bg(rc_mini->window_buttons[i], GTK_STATE_ACTIVE,
+            &style_data->button_active_color);
+        gtk_widget_modify_bg(rc_mini->window_buttons[i], GTK_STATE_PRELIGHT,
+            &style_data->button_prelight_color);
+    }
     gtk_widget_queue_draw(rc_ui->main_window);
+    gtk_widget_queue_draw(rc_mini->mini_window);
 }
 
 const GuiColorStyle *rc_gui_style_get_color_style(gint index)

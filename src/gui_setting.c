@@ -31,7 +31,7 @@
 
 /* Variables */
 static GuiData *rc_ui;
-static GtkWidget *setting_window;
+static GtkWidget *setting_window = NULL;
 static GtkWidget *setting_treeview;
 static GtkWidget *setting_notebook;
 static GtkWidget *setting_nb_pages[3];

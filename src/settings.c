@@ -46,6 +46,11 @@ void rc_set_init()
     rc_set_set_boolean("Player", "MinimizeWhenClose", FALSE);
     rc_set_set_boolean("Player", "AlwaysOnTop", FALSE);
     rc_set_set_boolean("Player", "LoadLastPosition", FALSE);
+    rc_set_set_boolean("Player", "MiniMode", FALSE);
+    rc_set_set_integer("Player", "MiniWindowWidth", 500);
+    rc_set_set_integer("Player", "MiniWindowX", 50);
+    rc_set_set_integer("Player", "MiniWindowY", 50);
+    rc_set_set_double("Player", "MiniWindowOpacity", 0.8);
     rc_set_set_boolean("Playlist", "AutoClean", FALSE);
     rc_set_set_integer("Playlist", "LastList", 0);
     rc_set_set_integer("Playlist", "LastPosition", 0);

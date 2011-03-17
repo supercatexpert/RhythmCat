@@ -37,6 +37,7 @@
 #include "gui_eq.h"
 #include "gui_dialog.h"
 #include "gui_plugin.h"
+#include "gui_mini.h"
 #include "imgs/img_nocov.xpm"
 #include "imgs/img_icon.xpm"
 
@@ -122,7 +123,7 @@ static GtkActionEntry rc_menu_entries[] =
     { "ViewMiniMode", NULL,
       "Mini Mode", "<control><alt>M",
       "Enable mini mode",
-      NULL },
+      G_CALLBACK(rc_gui_mini_mini_mode_clicked) },
     { "ControlPlay", GTK_STOCK_MEDIA_PLAY,
       "_Play/Pause", "<control>L",
       "Play or pause the music",
@@ -395,6 +396,7 @@ static gboolean rc_gui_refresh_time_info(gpointer data)
     gdouble lrc_vport_lower, lrc_vport_upper, lrc_vport_value;
     gdouble lrc_vport_range, lrc_vport_page_size;
     const LrcData *lrc_data;
+    static const gchar *text = NULL;
     pos = rc_core_get_play_position();
     len = rc_core_get_music_length();
     state = rc_core_get_play_state();
@@ -405,6 +407,7 @@ static gboolean rc_gui_refresh_time_info(gpointer data)
         if(state==GST_STATE_PLAYING)
         {
             rc_gui_time_label_set_text(pos);
+            rc_gui_mini_set_time_text(pos);
             if(len!=0)
             {
                 persent = (gdouble)pos / len;
@@ -412,16 +415,32 @@ static gboolean rc_gui_refresh_time_info(gpointer data)
                     persent * 100);
             }
         }
-        else if(state==GST_STATE_NULL || state==GST_STATE_READY)
+        else if(state!=GST_STATE_PAUSED)
         {
             rc_gui_time_label_set_text(0);
+            rc_gui_mini_set_time_text(-1);
             gtk_range_set_value(GTK_RANGE(rc_gui.time_scroll_bar), 0);
         }
+    }
+    if(state!=GST_STATE_PLAYING && state!=GST_STATE_PAUSED)
+    {
+        if(text!=NULL)
+        {
+            gtk_label_set_text(GTK_LABEL(rc_gui.lrc_label), "");
+            rc_gui_mini_set_lyric_text("");
+            text = NULL;
+        }
+        return TRUE;
     }
     lrc_data = rc_lrc_get_line_by_time(pos);
     if(lrc_data!=NULL)
     {
-        gtk_label_set_text(GTK_LABEL(rc_gui.lrc_label), lrc_data->text);
+        if(text!=lrc_data->text)
+        {
+            text = lrc_data->text;
+            gtk_label_set_text(GTK_LABEL(rc_gui.lrc_label), lrc_data->text);
+            rc_gui_mini_set_lyric_text(lrc_data->text);
+        }
         g_object_get(G_OBJECT(rc_gui.lrc_vport_adj), "page-size",
             &lrc_vport_page_size, "lower", &lrc_vport_lower, "upper",
             &lrc_vport_upper, NULL);
@@ -433,14 +452,21 @@ static gboolean rc_gui_refresh_time_info(gpointer data)
             persent = 1.2*(gdouble)(pos / GST_MSECOND / 10 - lrc_data->time) /
                 lrc_data->length;
             if(persent>1.0) persent = 1.0;
-            lrc_vport_value = lrc_vport_range * persent;
+            lrc_vport_value = lrc_vport_lower + lrc_vport_range * persent;
+            rc_gui_mini_set_lyric_persent(persent);
         }
         gtk_adjustment_set_value(rc_gui.lrc_vport_adj, lrc_vport_value);
     }
     else
     {
-        gtk_label_set_text(GTK_LABEL(rc_gui.lrc_label), "");
+        if(text!=NULL)
+        {
+            gtk_label_set_text(GTK_LABEL(rc_gui.lrc_label), "");
+            rc_gui_mini_set_lyric_text("");
+            text = NULL;
+        }
     }
+    rc_gui_mini_info_text_move();
     return TRUE;
 }
 
@@ -717,7 +743,7 @@ gboolean rc_gui_init()
     rc_gui.lrc_vport_adj = gtk_viewport_get_hadjustment(GTK_VIEWPORT(
         rc_gui.lrc_viewport));
     g_object_set(G_OBJECT(rc_gui.tray_icon), "has-tooltip", TRUE,
-        "tooltip-text", _("RhythmCat Music Player"), NULL);
+        "tooltip-text", rc_get_program_name(), NULL);
     gtk_viewport_set_shadow_type(GTK_VIEWPORT(rc_gui.lrc_viewport),
         GTK_SHADOW_NONE);
     gtk_notebook_set_show_border(GTK_NOTEBOOK(rc_gui.plist_notebook), FALSE);
@@ -750,7 +776,6 @@ gboolean rc_gui_init()
     gtk_widget_set_name(rc_gui.time_label, "RCTimeLabel");
     gtk_widget_set_name(rc_gui.length_label, "RCLengthLabel");
     gtk_widget_set_name(rc_gui.lrc_label, "RCLyricLabel");
-    rc_gui_music_info_set_text(NULL, NULL, NULL, 0, NULL, 0, 0, 0);
     gtk_widget_set_size_request(rc_gui.album_image, img_cover_w, img_cover_h);
     gtk_widget_set_name(rc_gui.album_image, "RCAlbumImage");
     rc_gui.volume_button = gtk_volume_button_new();
@@ -817,20 +842,28 @@ gboolean rc_gui_init()
     }
     rc_gui_layout_init();
     rc_gui_signal_bind();
+    rc_gui_mini_init();
     rc_gui.time_info_refresh_timeout = g_timeout_add(200,
         (GSourceFunc)(rc_gui_refresh_time_info), NULL);
-    gtk_widget_show_all(rc_gui.main_window);
     rc_gui_seek_scaler_disable();
+    rc_gui_music_info_set_data(NULL, NULL);
+    gtk_widget_show_all(rc_gui.main_window);
     rc_gui_status_task_set(0, 0);
 
     /* Disable unusable menus */
     gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
         "/RCMenuBar/EditMenu/EditRemoveMusic"), FALSE);
-    gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
-        "/RCMenuBar/ViewMenu/ViewMiniMode"), FALSE);
     rc_debug_print("GUI: Main window is successfully loaded!\n");
-    if(rc_set_get_boolean("Player", "AutoMinimize", NULL))
-        gtk_window_iconify(GTK_WINDOW(rc_gui.main_window));
+    if(rc_set_get_boolean("Player", "MiniMode", NULL))
+    {
+        gtk_widget_hide(rc_gui.main_window);
+    }
+    else
+    {
+        rc_gui_mini_window_hide(NULL, NULL);
+        if(rc_set_get_boolean("Player", "AutoMinimize", NULL))
+            gtk_window_iconify(GTK_WINDOW(rc_gui.main_window));
+    }
     if(rc_set_get_boolean("Player", "AlwaysOnTop", NULL))
     {
         gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(
@@ -915,6 +948,7 @@ void rc_gui_set_play_button_state(gboolean state)
             "/RCMenuBar/ControlMenu/ControlPlay")), "stock-id",
             GTK_STOCK_MEDIA_PLAY, NULL);
     }
+    rc_gui_mini_set_play_state(state);
 }
 
 /*
@@ -929,61 +963,72 @@ gboolean rc_gui_adjust_play_position(GtkWidget *widget, gpointer data)
 }
 
 /*
- * Set the text in the information label.
+ * Set the data in the information labels.
  */
 
-void rc_gui_music_info_set_text(gchar *title, gchar *artist, gchar *album,
-    gint64 time, gchar *format, guint bitrate, gint samplerate, gint channels)
+void rc_gui_music_info_set_data(const gchar *title, const gpointer data)
 {
+    const MusicMetaData *mmd = data;
     gchar title_info[512];
     gchar music_info[128];
     gchar timestr[64];
     gint info_prefix = 0;
+    gint64 time, len;
+    gint len_s, len_m;
+    if(mmd==NULL || mmd->length<0)
+        time = 0;
+    else
+        time = mmd->length;
     if(time<0) time = 0;
-    gint64 len = time / GST_SECOND;
-    gint len_s = len % 60;
-    gint len_m = len / 60;
-    if(format==NULL) format = _("Unknown Format");
-    info_prefix = g_snprintf(music_info, 32, "%s ", format);
-    if(bitrate>0)
-        info_prefix+=g_snprintf(music_info+info_prefix, 96, _("%d kbps "),
-            bitrate/1000);
-    if(samplerate>0)
-        info_prefix+=g_snprintf(music_info+info_prefix, 127-info_prefix,
-            _("%d Hz "), samplerate);
-    if(channels>0)
+    len = time / GST_SECOND;
+    len_s = len % 60;
+    len_m = len / 60;
+    if(mmd!=NULL && mmd->file_type!=NULL && strlen(mmd->file_type)>0)
+        info_prefix = g_snprintf(music_info, 32, "%s ", mmd->file_type);
+    else
+        info_prefix = g_snprintf(music_info, 32, "%s ", _("Unknown Format"));
+    if(mmd!=NULL)
     {
-        switch(channels)
+        if(mmd->bitrate>0)
+            info_prefix+=g_snprintf(music_info+info_prefix, 96, _("%d kbps "),
+                mmd->bitrate/1000);
+        if(mmd->samplerate>0)
+            info_prefix+=g_snprintf(music_info+info_prefix, 127-info_prefix,
+                _("%d Hz "), mmd->samplerate);
+        if(mmd->channels>0)
         {
-            case 1:          
-                info_prefix+=g_snprintf(music_info+info_prefix,
-                    127-info_prefix, _("Mono"));
-                break;
-            case 2:
-                info_prefix+=g_snprintf(music_info+info_prefix,
+            switch(mmd->channels)
+            {
+                case 1:          
+                    info_prefix+=g_snprintf(music_info+info_prefix,
+                        127-info_prefix, _("Mono"));
+                    break;
+                case 2:
+                    info_prefix+=g_snprintf(music_info+info_prefix,
                     127-info_prefix, _("Stereo"));
-                break;
-            default:
-                info_prefix+=g_snprintf(music_info+info_prefix,
-                    127-info_prefix, _("%d channels"), channels);
+                    break;
+                default:
+                    info_prefix+=g_snprintf(music_info+info_prefix,
+                        127-info_prefix, _("%d channels"), mmd->channels);
+            }
         }
-    }   
+    }
     if(title!=NULL && strlen(title)>0) 
         gtk_label_set_text(GTK_LABEL(rc_gui.title_label), title);
     else
         gtk_label_set_text(GTK_LABEL(rc_gui.title_label), _("Unknown Title"));
-    if(artist!=NULL && strlen(artist)>0) 
-        gtk_label_set_text(GTK_LABEL(rc_gui.artist_label), artist);
+    if(mmd!=NULL && mmd->artist!=NULL && strlen(mmd->artist)>0) 
+        gtk_label_set_text(GTK_LABEL(rc_gui.artist_label), mmd->artist);
     else
         gtk_label_set_text(GTK_LABEL(rc_gui.artist_label), _("Unknown Artist"));
-    if(album!=NULL && strlen(album)>0) 
-        gtk_label_set_text(GTK_LABEL(rc_gui.album_label), album);
+    if(mmd!=NULL && mmd->album!=NULL && strlen(mmd->album)>0) 
+        gtk_label_set_text(GTK_LABEL(rc_gui.album_label), mmd->album);
     else
         gtk_label_set_text(GTK_LABEL(rc_gui.album_label), _("Unknown Album"));
     g_snprintf(timestr, 63, "%02d:%02d", len_m, len_s);
     gtk_label_set_text(GTK_LABEL(rc_gui.length_label), timestr);
     gtk_label_set_text(GTK_LABEL(rc_gui.info_label), music_info);
-    if(title!=NULL)
+    if(title!=NULL && strlen(title)>0)
     {
         if(rc_get_stable())
             g_snprintf(title_info, 500, "%s - %s", rc_get_program_name(),
@@ -1001,6 +1046,29 @@ void rc_gui_music_info_set_text(gchar *title, gchar *artist, gchar *album,
                 rc_get_build_num());
     }
     gtk_window_set_title(GTK_WINDOW(rc_gui.main_window), title_info);
+    if(title!=NULL && strlen(title)>0 && mmd!=NULL)
+    {
+        info_prefix = g_snprintf(title_info, 500, "%s", title);
+        if(mmd->artist!=NULL && strlen(mmd->artist)>0)
+            info_prefix+=g_snprintf(title_info+info_prefix, 500-info_prefix,
+                " - %s", mmd->artist);
+        if(mmd->album!=NULL && strlen(mmd->album)>0)
+            info_prefix+=g_snprintf(title_info+info_prefix, 500-info_prefix,
+                " - %s", mmd->album);
+        info_prefix+=g_snprintf(title_info+info_prefix, 500-info_prefix,
+            " - (%s)", timestr);
+        rc_gui_mini_set_info_text(title_info);
+    }
+    else
+    {
+        rc_gui_mini_set_info_text("RhythmCat Music Player");
+    }
+    if(mmd!=NULL && mmd->image!=NULL)
+    {
+        rc_gui_set_cover_image_by_buf(mmd->image);
+    }
+    g_object_set(G_OBJECT(rc_gui.tray_icon), "has-tooltip", TRUE,
+        "tooltip-text", title_info, NULL);
 }
 
 /*
@@ -1230,8 +1298,7 @@ void rc_gui_press_random_menu(GtkAction *action, GtkRadioAction *current)
 
 gboolean rc_gui_press_vol_up_menu(GtkMenuItem *widget, gpointer data)
 {
-    gdouble value = gtk_scale_button_get_value(GTK_SCALE_BUTTON(
-        rc_gui.volume_button));
+    gdouble value = rc_core_get_volume() / 100;
     value+=0.05;
     if(value>1.0) value = 1.0;
     gtk_scale_button_set_value(GTK_SCALE_BUTTON(rc_gui.volume_button),
@@ -1245,8 +1312,7 @@ gboolean rc_gui_press_vol_up_menu(GtkMenuItem *widget, gpointer data)
 
 gboolean rc_gui_press_vol_down_menu(GtkMenuItem *widget, gpointer data)
 {
-    gdouble value = gtk_scale_button_get_value(GTK_SCALE_BUTTON(
-        rc_gui.volume_button));
+    gdouble value = rc_core_get_volume() / 100;
     value-=0.05;
     if(value<0.0) value = 0.0;
     gtk_scale_button_set_value(GTK_SCALE_BUTTON(rc_gui.volume_button),
@@ -1410,18 +1476,32 @@ gboolean rc_gui_set_cover_image_by_buf(const GstBuffer *buf)
 void rc_gui_show_hide_window(GtkWidget *widget, gpointer data)
 {
     gboolean visible = FALSE;
+    GuiMiniData *rc_mini = rc_gui_mini_get_data();
     if(!rc_set_get_boolean("Player", "MinimizeToTray", NULL)) return;
     g_object_get(G_OBJECT(rc_gui.main_window), "visible", &visible, NULL);
+    if(!visible)
+        g_object_get(G_OBJECT(rc_mini->mini_window), "visible", &visible,
+            NULL);
     if(visible)
     {
-        gtk_widget_hide(GTK_WIDGET(rc_gui.main_window));
+        if(rc_set_get_boolean("Player", "MiniMode", NULL))
+            rc_gui_mini_window_hide(NULL, NULL);
+        else
+            gtk_widget_hide(GTK_WIDGET(rc_gui.main_window));
     }
     else
     {
-        gtk_window_set_skip_taskbar_hint(GTK_WINDOW(rc_gui.main_window),
-            FALSE);
-        gtk_widget_show(GTK_WIDGET(rc_gui.main_window));
-        gtk_window_deiconify(GTK_WINDOW(rc_gui.main_window));
+        if(rc_set_get_boolean("Player", "MiniMode", NULL))
+        {
+            rc_gui_mini_window_show(NULL, NULL);
+        }
+        else
+        {
+            gtk_window_set_skip_taskbar_hint(GTK_WINDOW(rc_gui.main_window),
+                FALSE);
+            gtk_widget_show(GTK_WIDGET(rc_gui.main_window));
+            gtk_window_deiconify(GTK_WINDOW(rc_gui.main_window));
+        }
     }
 }
 
@@ -1615,9 +1695,16 @@ gboolean rc_gui_view_remove_page(guint id)
 
 void rc_gui_deiconify(GtkAction *action)
 {
-    gtk_window_set_skip_taskbar_hint(GTK_WINDOW(rc_gui.main_window),
-        FALSE);
-    gtk_widget_show(GTK_WIDGET(rc_gui.main_window));
-    gtk_window_deiconify(GTK_WINDOW(rc_gui.main_window));
+    if(rc_set_get_boolean("Player", "MiniMode", NULL))
+    {
+        rc_gui_mini_window_show(NULL, NULL);
+    }
+    else
+    {
+        gtk_window_set_skip_taskbar_hint(GTK_WINDOW(rc_gui.main_window),
+            FALSE);
+        gtk_widget_show(GTK_WIDGET(rc_gui.main_window));
+        gtk_window_deiconify(GTK_WINDOW(rc_gui.main_window));
+    }
 }
 

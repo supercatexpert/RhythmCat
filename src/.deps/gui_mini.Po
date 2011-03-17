@@ -1,7 +1,7 @@
-main.o: main.c main.h /usr/include/stdlib.h /usr/include/features.h \
- /usr/include/bits/predefs.h /usr/include/sys/cdefs.h \
- /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
- /usr/include/gnu/stubs-64.h \
+gui_mini.o: gui_mini.c gui_mini.h /usr/include/stdlib.h \
+ /usr/include/features.h /usr/include/bits/predefs.h \
+ /usr/include/sys/cdefs.h /usr/include/bits/wordsize.h \
+ /usr/include/gnu/stubs.h /usr/include/gnu/stubs-64.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.4.5/include/stddef.h \
  /usr/include/sys/types.h /usr/include/bits/types.h \
  /usr/include/bits/typesizes.h /usr/include/time.h /usr/include/endian.h \
@@ -9,10 +9,8 @@ main.o: main.c main.h /usr/include/stdlib.h /usr/include/features.h \
  /usr/include/sys/select.h /usr/include/bits/select.h \
  /usr/include/bits/sigset.h /usr/include/bits/time.h \
  /usr/include/sys/sysmacros.h /usr/include/bits/pthreadtypes.h \
- /usr/include/alloca.h /usr/include/string.h /usr/include/xlocale.h \
- /usr/include/bits/string.h /usr/include/bits/string2.h \
- /usr/include/glib-2.0/glib.h /usr/include/glib-2.0/glib/galloca.h \
- /usr/include/glib-2.0/glib/gtypes.h \
+ /usr/include/alloca.h /usr/include/glib-2.0/glib.h \
+ /usr/include/glib-2.0/glib/galloca.h /usr/include/glib-2.0/glib/gtypes.h \
  /usr/lib/glib-2.0/include/glibconfig.h \
  /usr/include/glib-2.0/glib/gmacros.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.4.5/include-fixed/limits.h \
@@ -33,7 +31,7 @@ main.o: main.c main.h /usr/include/stdlib.h /usr/include/features.h \
  /usr/include/bits/sigstack.h /usr/include/bits/sigthread.h \
  /usr/include/glib-2.0/glib/gbase64.h \
  /usr/include/glib-2.0/glib/gbitlock.h \
- /usr/include/glib-2.0/glib/gbookmarkfile.h \
+ /usr/include/glib-2.0/glib/gbookmarkfile.h /usr/include/xlocale.h \
  /usr/include/glib-2.0/glib/gcache.h /usr/include/glib-2.0/glib/glist.h \
  /usr/include/glib-2.0/glib/gmem.h /usr/include/glib-2.0/glib/gslice.h \
  /usr/include/glib-2.0/glib/gchecksum.h \
@@ -70,8 +68,7 @@ main.o: main.c main.h /usr/include/stdlib.h /usr/include/features.h \
  /usr/include/glib-2.0/glib/gprintf.h /usr/include/stdio.h \
  /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
  /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
- /usr/include/bits/stdio.h /usr/include/gtk-2.0/gtk/gtk.h \
- /usr/include/gtk-2.0/gdk/gdk.h \
+ /usr/include/bits/stdio.h /usr/include/gtk-2.0/gdk/gdk.h \
  /usr/include/gtk-2.0/gdk/gdkapplaunchcontext.h \
  /usr/include/glib-2.0/gio/gio.h /usr/include/glib-2.0/gio/giotypes.h \
  /usr/include/glib-2.0/gio/gioenums.h /usr/include/glib-2.0/glib-object.h \
@@ -212,7 +209,7 @@ main.o: main.c main.h /usr/include/stdlib.h /usr/include/features.h \
  /usr/include/gtk-2.0/gdk/gdkspawn.h \
  /usr/include/gtk-2.0/gdk/gdktestutils.h \
  /usr/include/gtk-2.0/gdk/gdkwindow.h \
- /usr/include/gtk-2.0/gdk/gdkvisual.h \
+ /usr/include/gtk-2.0/gdk/gdkvisual.h /usr/include/gtk-2.0/gtk/gtk.h \
  /usr/include/gtk-2.0/gtk/gtkaboutdialog.h \
  /usr/include/gtk-2.0/gtk/gtkdialog.h \
  /usr/include/gtk-2.0/gtk/gtkwindow.h \
@@ -508,7 +505,12 @@ main.o: main.c main.h /usr/include/stdlib.h /usr/include/features.h \
  /usr/include/gstreamer-0.10/gst/gstutils.h \
  /usr/include/gstreamer-0.10/gst/gstparse.h \
  /usr/include/gstreamer-0.10/gst/gstxml.h \
- /usr/include/gstreamer-0.10/gst/gstcompat.h \
+ /usr/include/gstreamer-0.10/gst/gstcompat.h core.h \
+ /usr/include/glib-2.0/glib/gi18n.h /usr/include/libintl.h \
+ /usr/include/locale.h /usr/include/bits/locale.h /usr/include/string.h \
+ /usr/include/bits/string.h /usr/include/bits/string2.h \
+ /usr/include/gstreamer-0.10/gst/pbutils/missing-plugins.h \
+ /usr/include/gstreamer-0.10/gst/pbutils/install-plugins.h gui.h main.h \
  /usr/include/dbus-1.0/dbus/dbus.h \
  /usr/lib/dbus-1.0/include/dbus/dbus-arch-deps.h \
  /usr/include/dbus-1.0/dbus/dbus-macros.h \
@@ -527,20 +529,9 @@ main.o: main.c main.h /usr/include/stdlib.h /usr/include/features.h \
  /usr/include/dbus-1.0/dbus/dbus-signature.h \
  /usr/include/dbus-1.0/dbus/dbus-threads.h \
  /usr/include/dbus-1.0/dbus/dbus-glib.h \
- /usr/include/dbus-1.0/dbus/dbus-gtype-specialized.h core.h \
- /usr/include/glib-2.0/glib/gi18n.h /usr/include/libintl.h \
- /usr/include/locale.h /usr/include/bits/locale.h \
- /usr/include/gstreamer-0.10/gst/pbutils/missing-plugins.h \
- /usr/include/gstreamer-0.10/gst/pbutils/install-plugins.h gui.h \
- playlist.h settings.h shell.h plugin.h debug.h /usr/include/unistd.h \
- /usr/include/bits/posix_opt.h /usr/include/bits/confname.h \
- /usr/include/getopt.h msg.h /usr/include/libpng12/png.h \
- /usr/include/zlib.h /usr/include/zconf.h /usr/include/zlibdefs.h \
- /usr/include/libpng12/pngconf.h /usr/include/setjmp.h \
- /usr/include/bits/setjmp.h shell_glue.h player.h gui_eq.h gui_treeview.h \
- gui_style.h
+ /usr/include/dbus-1.0/dbus/dbus-gtype-specialized.h settings.h
 
-main.h:
+gui_mini.h:
 
 /usr/include/stdlib.h:
 
@@ -585,14 +576,6 @@ main.h:
 /usr/include/bits/pthreadtypes.h:
 
 /usr/include/alloca.h:
-
-/usr/include/string.h:
-
-/usr/include/xlocale.h:
-
-/usr/include/bits/string.h:
-
-/usr/include/bits/string2.h:
 
 /usr/include/glib-2.0/glib.h:
 
@@ -657,6 +640,8 @@ main.h:
 /usr/include/glib-2.0/glib/gbitlock.h:
 
 /usr/include/glib-2.0/glib/gbookmarkfile.h:
+
+/usr/include/xlocale.h:
 
 /usr/include/glib-2.0/glib/gcache.h:
 
@@ -763,8 +748,6 @@ main.h:
 /usr/include/bits/sys_errlist.h:
 
 /usr/include/bits/stdio.h:
-
-/usr/include/gtk-2.0/gtk/gtk.h:
 
 /usr/include/gtk-2.0/gdk/gdk.h:
 
@@ -1077,6 +1060,8 @@ main.h:
 /usr/include/gtk-2.0/gdk/gdkwindow.h:
 
 /usr/include/gtk-2.0/gdk/gdkvisual.h:
+
+/usr/include/gtk-2.0/gtk/gtk.h:
 
 /usr/include/gtk-2.0/gtk/gtkaboutdialog.h:
 
@@ -1726,6 +1711,30 @@ main.h:
 
 /usr/include/gstreamer-0.10/gst/gstcompat.h:
 
+core.h:
+
+/usr/include/glib-2.0/glib/gi18n.h:
+
+/usr/include/libintl.h:
+
+/usr/include/locale.h:
+
+/usr/include/bits/locale.h:
+
+/usr/include/string.h:
+
+/usr/include/bits/string.h:
+
+/usr/include/bits/string2.h:
+
+/usr/include/gstreamer-0.10/gst/pbutils/missing-plugins.h:
+
+/usr/include/gstreamer-0.10/gst/pbutils/install-plugins.h:
+
+gui.h:
+
+main.h:
+
 /usr/include/dbus-1.0/dbus/dbus.h:
 
 /usr/lib/dbus-1.0/include/dbus/dbus-arch-deps.h:
@@ -1764,62 +1773,4 @@ main.h:
 
 /usr/include/dbus-1.0/dbus/dbus-gtype-specialized.h:
 
-core.h:
-
-/usr/include/glib-2.0/glib/gi18n.h:
-
-/usr/include/libintl.h:
-
-/usr/include/locale.h:
-
-/usr/include/bits/locale.h:
-
-/usr/include/gstreamer-0.10/gst/pbutils/missing-plugins.h:
-
-/usr/include/gstreamer-0.10/gst/pbutils/install-plugins.h:
-
-gui.h:
-
-playlist.h:
-
 settings.h:
-
-shell.h:
-
-plugin.h:
-
-debug.h:
-
-/usr/include/unistd.h:
-
-/usr/include/bits/posix_opt.h:
-
-/usr/include/bits/confname.h:
-
-/usr/include/getopt.h:
-
-msg.h:
-
-/usr/include/libpng12/png.h:
-
-/usr/include/zlib.h:
-
-/usr/include/zconf.h:
-
-/usr/include/zlibdefs.h:
-
-/usr/include/libpng12/pngconf.h:
-
-/usr/include/setjmp.h:
-
-/usr/include/bits/setjmp.h:
-
-shell_glue.h:
-
-player.h:
-
-gui_eq.h:
-
-gui_treeview.h:
-
-gui_style.h:

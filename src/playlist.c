@@ -382,6 +382,7 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
     }
     g_utf8_strncpy(album_name, mmd_new->album, 127);
     rc_core_set_uri(mmd_new->uri);
+    rc_tag_set_playing_metadata(mmd_new);
     gtk_list_store_set(list_store, &iter, PLIST2_STATE, GTK_STOCK_MEDIA_PLAY,
         PLIST2_TITLE, list_title, PLIST2_ARTIST, mmd_new->artist, PLIST2_ALBUM,
         mmd_new->album, PLIST2_LENGTH, list_timelen, -1);
@@ -396,14 +397,11 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
         rc_plist.list2_reference = NULL;
     }
     rc_debug_print("Plist: Play music file: %s\n", mmd_new->uri);
-    rc_gui_music_info_set_text(list_title, mmd_new->artist, mmd_new->album, 
-        mmd_new->length, mmd_new->file_type, mmd_new->bitrate,
-        mmd_new->samplerate, mmd_new->channels);
+    rc_gui_music_info_set_data(list_title, mmd_new);
     if(mmd_new->image!=NULL)
     {
-        image_flag = rc_gui_set_cover_image_by_buf(mmd_new->image);
-        if(image_flag)
-            rc_debug_print("Plist: Found cover image in tag!\n");
+        image_flag = TRUE;
+        rc_debug_print("Plist: Found cover image in tag!\n");
     }
     path = gtk_tree_path_new_from_indices(list_index, -1);
     if(gtk_tree_model_get_iter(GTK_TREE_MODEL(rc_plist.list_store), &iter,

@@ -25,14 +25,12 @@
 #ifndef HAVE_GUI_H
 #define HAVE_GUI_H
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <glib.h>
 #include <glib/gprintf.h>
 #include <gdk/gdk.h>
 #include <gtk/gtk.h>
 #include <gst/gst.h>
-#include <png.h>
 #include <glib/gi18n.h>
 
 /* Custom struct type to store the GUI data. */
@@ -77,8 +75,7 @@ typedef struct _GuiData
 GuiData *rc_gui_get_gui();
 gboolean rc_gui_init();
 void rc_gui_quit_player(GtkWidget *, gpointer);
-void rc_gui_music_info_set_text(gchar *, gchar *, gchar *, gint64, gchar *,
-    guint, gint, gint);
+void rc_gui_music_info_set_data(const gchar *, const gpointer);
 void rc_gui_time_label_set_text(gint64);
 gboolean rc_gui_prev_button_clicked(GtkButton *, gpointer);
 gboolean rc_gui_play_button_clicked(GtkButton *, gpointer);

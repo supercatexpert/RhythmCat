@@ -1,20 +1,16 @@
-gui.o: gui.c gui.h /usr/include/stdio.h /usr/include/features.h \
+gui.o: gui.c gui.h /usr/include/stdlib.h /usr/include/features.h \
  /usr/include/bits/predefs.h /usr/include/sys/cdefs.h \
  /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
  /usr/include/gnu/stubs-64.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.4.5/include/stddef.h \
- /usr/include/bits/types.h /usr/include/bits/typesizes.h \
- /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
- /usr/lib/gcc/x86_64-linux-gnu/4.4.5/include/stdarg.h \
- /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
- /usr/include/bits/stdio.h /usr/include/stdlib.h /usr/include/sys/types.h \
- /usr/include/time.h /usr/include/endian.h /usr/include/bits/endian.h \
- /usr/include/bits/byteswap.h /usr/include/sys/select.h \
- /usr/include/bits/select.h /usr/include/bits/sigset.h \
- /usr/include/bits/time.h /usr/include/sys/sysmacros.h \
- /usr/include/bits/pthreadtypes.h /usr/include/alloca.h \
- /usr/include/glib-2.0/glib.h /usr/include/glib-2.0/glib/galloca.h \
- /usr/include/glib-2.0/glib/gtypes.h \
+ /usr/include/sys/types.h /usr/include/bits/types.h \
+ /usr/include/bits/typesizes.h /usr/include/time.h /usr/include/endian.h \
+ /usr/include/bits/endian.h /usr/include/bits/byteswap.h \
+ /usr/include/sys/select.h /usr/include/bits/select.h \
+ /usr/include/bits/sigset.h /usr/include/bits/time.h \
+ /usr/include/sys/sysmacros.h /usr/include/bits/pthreadtypes.h \
+ /usr/include/alloca.h /usr/include/glib-2.0/glib.h \
+ /usr/include/glib-2.0/glib/galloca.h /usr/include/glib-2.0/glib/gtypes.h \
  /usr/lib/glib-2.0/include/glibconfig.h \
  /usr/include/glib-2.0/glib/gmacros.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.4.5/include-fixed/limits.h \
@@ -26,6 +22,7 @@ gui.o: gui.c gui.h /usr/include/stdio.h /usr/include/features.h \
  /usr/include/glib-2.0/glib/garray.h \
  /usr/include/glib-2.0/glib/gasyncqueue.h \
  /usr/include/glib-2.0/glib/gthread.h /usr/include/glib-2.0/glib/gerror.h \
+ /usr/lib/gcc/x86_64-linux-gnu/4.4.5/include/stdarg.h \
  /usr/include/glib-2.0/glib/gquark.h /usr/include/glib-2.0/glib/gutils.h \
  /usr/include/glib-2.0/glib/gatomic.h \
  /usr/include/glib-2.0/glib/gbacktrace.h /usr/include/signal.h \
@@ -68,7 +65,10 @@ gui.o: gui.c gui.h /usr/include/stdio.h /usr/include/features.h \
  /usr/include/glib-2.0/glib/gurifuncs.h \
  /usr/include/glib-2.0/glib/gvarianttype.h \
  /usr/include/glib-2.0/glib/gvariant.h \
- /usr/include/glib-2.0/glib/gprintf.h /usr/include/gtk-2.0/gdk/gdk.h \
+ /usr/include/glib-2.0/glib/gprintf.h /usr/include/stdio.h \
+ /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
+ /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
+ /usr/include/bits/stdio.h /usr/include/gtk-2.0/gdk/gdk.h \
  /usr/include/gtk-2.0/gdk/gdkapplaunchcontext.h \
  /usr/include/glib-2.0/gio/gio.h /usr/include/glib-2.0/gio/giotypes.h \
  /usr/include/glib-2.0/gio/gioenums.h /usr/include/glib-2.0/glib-object.h \
@@ -505,15 +505,10 @@ gui.o: gui.c gui.h /usr/include/stdio.h /usr/include/features.h \
  /usr/include/gstreamer-0.10/gst/gstutils.h \
  /usr/include/gstreamer-0.10/gst/gstparse.h \
  /usr/include/gstreamer-0.10/gst/gstxml.h \
- /usr/include/gstreamer-0.10/gst/gstcompat.h /usr/include/libpng12/png.h \
- /usr/include/zlib.h /usr/include/zconf.h /usr/include/zlibdefs.h \
- /usr/include/unistd.h /usr/include/bits/posix_opt.h \
- /usr/include/bits/confname.h /usr/include/getopt.h \
- /usr/include/libpng12/pngconf.h /usr/include/setjmp.h \
- /usr/include/bits/setjmp.h /usr/include/string.h \
- /usr/include/bits/string.h /usr/include/bits/string2.h \
+ /usr/include/gstreamer-0.10/gst/gstcompat.h \
  /usr/include/glib-2.0/glib/gi18n.h /usr/include/libintl.h \
- /usr/include/locale.h /usr/include/bits/locale.h core.h \
+ /usr/include/locale.h /usr/include/bits/locale.h /usr/include/string.h \
+ /usr/include/bits/string.h /usr/include/bits/string2.h core.h \
  /usr/include/gstreamer-0.10/gst/pbutils/missing-plugins.h \
  /usr/include/gstreamer-0.10/gst/pbutils/install-plugins.h tag.h \
  playlist.h settings.h main.h /usr/include/dbus-1.0/dbus/dbus.h \
@@ -535,13 +530,15 @@ gui.o: gui.c gui.h /usr/include/stdio.h /usr/include/features.h \
  /usr/include/dbus-1.0/dbus/dbus-threads.h \
  /usr/include/dbus-1.0/dbus/dbus-glib.h \
  /usr/include/dbus-1.0/dbus/dbus-gtype-specialized.h lyric.h debug.h \
- gui_treeview.h gui_style.h gui_setting.h gui_eq.h gui_dialog.h \
- /usr/include/glib-2.0/glib/gstdio.h gui_plugin.h imgs/img_nocov.xpm \
- imgs/img_icon.xpm
+ /usr/include/unistd.h /usr/include/bits/posix_opt.h \
+ /usr/include/bits/confname.h /usr/include/getopt.h gui_treeview.h \
+ gui_style.h gui_setting.h gui_eq.h gui_dialog.h \
+ /usr/include/glib-2.0/glib/gstdio.h gui_plugin.h gui_mini.h \
+ imgs/img_nocov.xpm imgs/img_icon.xpm
 
 gui.h:
 
-/usr/include/stdio.h:
+/usr/include/stdlib.h:
 
 /usr/include/features.h:
 
@@ -557,27 +554,11 @@ gui.h:
 
 /usr/lib/gcc/x86_64-linux-gnu/4.4.5/include/stddef.h:
 
+/usr/include/sys/types.h:
+
 /usr/include/bits/types.h:
 
 /usr/include/bits/typesizes.h:
-
-/usr/include/libio.h:
-
-/usr/include/_G_config.h:
-
-/usr/include/wchar.h:
-
-/usr/lib/gcc/x86_64-linux-gnu/4.4.5/include/stdarg.h:
-
-/usr/include/bits/stdio_lim.h:
-
-/usr/include/bits/sys_errlist.h:
-
-/usr/include/bits/stdio.h:
-
-/usr/include/stdlib.h:
-
-/usr/include/sys/types.h:
 
 /usr/include/time.h:
 
@@ -634,6 +615,8 @@ gui.h:
 /usr/include/glib-2.0/glib/gthread.h:
 
 /usr/include/glib-2.0/glib/gerror.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/4.4.5/include/stdarg.h:
 
 /usr/include/glib-2.0/glib/gquark.h:
 
@@ -756,6 +739,20 @@ gui.h:
 /usr/include/glib-2.0/glib/gvariant.h:
 
 /usr/include/glib-2.0/glib/gprintf.h:
+
+/usr/include/stdio.h:
+
+/usr/include/libio.h:
+
+/usr/include/_G_config.h:
+
+/usr/include/wchar.h:
+
+/usr/include/bits/stdio_lim.h:
+
+/usr/include/bits/sys_errlist.h:
+
+/usr/include/bits/stdio.h:
 
 /usr/include/gtk-2.0/gdk/gdk.h:
 
@@ -1719,34 +1716,6 @@ gui.h:
 
 /usr/include/gstreamer-0.10/gst/gstcompat.h:
 
-/usr/include/libpng12/png.h:
-
-/usr/include/zlib.h:
-
-/usr/include/zconf.h:
-
-/usr/include/zlibdefs.h:
-
-/usr/include/unistd.h:
-
-/usr/include/bits/posix_opt.h:
-
-/usr/include/bits/confname.h:
-
-/usr/include/getopt.h:
-
-/usr/include/libpng12/pngconf.h:
-
-/usr/include/setjmp.h:
-
-/usr/include/bits/setjmp.h:
-
-/usr/include/string.h:
-
-/usr/include/bits/string.h:
-
-/usr/include/bits/string2.h:
-
 /usr/include/glib-2.0/glib/gi18n.h:
 
 /usr/include/libintl.h:
@@ -1754,6 +1723,12 @@ gui.h:
 /usr/include/locale.h:
 
 /usr/include/bits/locale.h:
+
+/usr/include/string.h:
+
+/usr/include/bits/string.h:
+
+/usr/include/bits/string2.h:
 
 core.h:
 
@@ -1811,6 +1786,14 @@ lyric.h:
 
 debug.h:
 
+/usr/include/unistd.h:
+
+/usr/include/bits/posix_opt.h:
+
+/usr/include/bits/confname.h:
+
+/usr/include/getopt.h:
+
 gui_treeview.h:
 
 gui_style.h:
@@ -1824,6 +1807,8 @@ gui_dialog.h:
 /usr/include/glib-2.0/glib/gstdio.h:
 
 gui_plugin.h:
+
+gui_mini.h:
 
 imgs/img_nocov.xpm:
 

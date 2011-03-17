@@ -512,14 +512,10 @@ core.o: core.c core.h /usr/include/stdlib.h /usr/include/features.h \
  /usr/include/bits/string.h /usr/include/bits/string2.h \
  /usr/include/gstreamer-0.10/gst/pbutils/missing-plugins.h \
  /usr/include/gstreamer-0.10/gst/pbutils/install-plugins.h tag.h \
- /usr/include/glib-2.0/glib/gprintf.h gui.h /usr/include/libpng12/png.h \
- /usr/include/zlib.h /usr/include/zconf.h /usr/include/zlibdefs.h \
- /usr/include/unistd.h /usr/include/bits/posix_opt.h \
- /usr/include/bits/confname.h /usr/include/getopt.h \
- /usr/include/libpng12/pngconf.h /usr/include/setjmp.h \
- /usr/include/bits/setjmp.h gui_dialog.h \
+ /usr/include/glib-2.0/glib/gprintf.h gui.h gui_dialog.h \
  /usr/include/glib-2.0/glib/gstdio.h playlist.h settings.h debug.h \
- gui_eq.h player.h
+ /usr/include/unistd.h /usr/include/bits/posix_opt.h \
+ /usr/include/bits/confname.h /usr/include/getopt.h gui_eq.h player.h
 
 core.h:
 
@@ -1723,28 +1719,6 @@ tag.h:
 
 gui.h:
 
-/usr/include/libpng12/png.h:
-
-/usr/include/zlib.h:
-
-/usr/include/zconf.h:
-
-/usr/include/zlibdefs.h:
-
-/usr/include/unistd.h:
-
-/usr/include/bits/posix_opt.h:
-
-/usr/include/bits/confname.h:
-
-/usr/include/getopt.h:
-
-/usr/include/libpng12/pngconf.h:
-
-/usr/include/setjmp.h:
-
-/usr/include/bits/setjmp.h:
-
 gui_dialog.h:
 
 /usr/include/glib-2.0/glib/gstdio.h:
@@ -1754,6 +1728,14 @@ playlist.h:
 settings.h:
 
 debug.h:
+
+/usr/include/unistd.h:
+
+/usr/include/bits/posix_opt.h:
+
+/usr/include/bits/confname.h:
+
+/usr/include/getopt.h:
 
 gui_eq.h:
 

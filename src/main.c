@@ -42,7 +42,7 @@ static gchar *rc_set_dir = NULL;
 static const gchar *rc_app_dir = NULL;
 static const gchar *rc_home_dir = NULL;
 static const gchar rc_program_name[] = "RhythmCat Music Player";
-static const gchar rc_build_num[] = "build 110312, alpha 1";
+static const gchar rc_build_num[] = "build 110317, alpha 1";
 static const gchar rc_ver_num[] = "0.9.5";
 static const gboolean rc_is_stable = FALSE;
 static const gchar rc_dbus_name[] = "org.supercat.RhythmCat";
@@ -154,23 +154,43 @@ gchar *rc_get_data_dir(char *arg0)
 {
     gchar *data_dir = NULL;
     gchar *bin_dir = NULL;
+    gchar *exec_path = NULL;
     char full_path[PATH_MAX];
-    if(readlink("/proc/self/exe", full_path, PATH_MAX)<=0)
+    exec_path = g_file_read_link("/proc/self/exe", NULL);
+    if(exec_path!=NULL)
     {
-        if(realpath(arg0, full_path)==NULL)
-        {
-            snprintf(full_path, PATH_MAX, "/usr/bin/RhythmCat");
-        }
+        bin_dir = g_path_get_dirname(exec_path);
+        g_free(exec_path);
     }
-    bin_dir = g_path_get_dirname(full_path);
-    if(bin_dir==NULL) return NULL;
-    data_dir = g_strdup_printf("%s%c..%cshare%cRhythmCat", bin_dir,
-        G_DIR_SEPARATOR, G_DIR_SEPARATOR, G_DIR_SEPARATOR);
-    g_free(bin_dir);
-    if(realpath(data_dir, full_path)!=NULL)
+    if(bin_dir!=NULL)
     {
-        g_free(data_dir);
-        data_dir = g_strdup(full_path);
+        data_dir = g_strdup_printf("%s%c..%cshare%cRhythmCat", bin_dir,
+            G_DIR_SEPARATOR, G_DIR_SEPARATOR, G_DIR_SEPARATOR);
+        if(!g_file_test(data_dir, G_FILE_TEST_IS_DIR))
+        {
+            g_free(data_dir);
+            data_dir = g_strdup(bin_dir);
+        }
+        g_free(bin_dir);
+    }
+    if(data_dir==NULL)
+    {
+        if(realpath(data_dir, full_path)!=NULL)
+            data_dir = g_strdup(full_path);
+    }
+    if(data_dir==NULL)
+    {
+        if(g_file_test("/usr/share/RhythmCat", G_FILE_TEST_IS_DIR))
+            data_dir = g_strdup("/usr/share/RhythmCat");
+        else if(g_file_test("/usr/local/share/RhythmCat", G_FILE_TEST_IS_DIR))
+            data_dir = g_strdup("/usr/local/share/RhythmCat");
+        else if(g_file_test("/opt/share/RhythmCat", G_FILE_TEST_IS_DIR))
+            data_dir = g_strdup("/opt/local/share/RhythmCat");
+        else if(g_file_test("/opt/RhythmCat/share/RhythmCat",
+            G_FILE_TEST_IS_DIR))
+            data_dir = g_strdup("/opt/RhythmCat/share/RhythmCat");
+        else
+            data_dir = g_get_current_dir();
     }
     return data_dir;
 }

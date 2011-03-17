@@ -512,12 +512,13 @@ playlist.o: playlist.c playlist.h /usr/include/stdlib.h \
  /usr/include/gstreamer-0.10/gst/gstcompat.h core.h \
  /usr/include/gstreamer-0.10/gst/pbutils/missing-plugins.h \
  /usr/include/gstreamer-0.10/gst/pbutils/install-plugins.h gui.h \
- /usr/include/libpng12/png.h /usr/include/zlib.h /usr/include/zconf.h \
- /usr/include/zlibdefs.h /usr/include/unistd.h \
- /usr/include/bits/posix_opt.h /usr/include/bits/confname.h \
- /usr/include/getopt.h /usr/include/libpng12/pngconf.h \
- /usr/include/setjmp.h /usr/include/bits/setjmp.h gui_treeview.h \
- settings.h tag.h msg.h lyric.h main.h /usr/include/dbus-1.0/dbus/dbus.h \
+ gui_treeview.h settings.h tag.h msg.h /usr/include/libpng12/png.h \
+ /usr/include/zlib.h /usr/include/zconf.h /usr/include/zlibdefs.h \
+ /usr/include/unistd.h /usr/include/bits/posix_opt.h \
+ /usr/include/bits/confname.h /usr/include/getopt.h \
+ /usr/include/libpng12/pngconf.h /usr/include/setjmp.h \
+ /usr/include/bits/setjmp.h lyric.h main.h \
+ /usr/include/dbus-1.0/dbus/dbus.h \
  /usr/lib/dbus-1.0/include/dbus/dbus-arch-deps.h \
  /usr/include/dbus-1.0/dbus/dbus-macros.h \
  /usr/include/dbus-1.0/dbus/dbus-address.h \
@@ -1739,6 +1740,14 @@ core.h:
 
 gui.h:
 
+gui_treeview.h:
+
+settings.h:
+
+tag.h:
+
+msg.h:
+
 /usr/include/libpng12/png.h:
 
 /usr/include/zlib.h:
@@ -1760,14 +1769,6 @@ gui.h:
 /usr/include/setjmp.h:
 
 /usr/include/bits/setjmp.h:
-
-gui_treeview.h:
-
-settings.h:
-
-tag.h:
-
-msg.h:
 
 lyric.h:
 

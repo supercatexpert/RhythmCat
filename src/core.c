@@ -93,6 +93,8 @@ static gboolean rc_core_bus_call(GstBus *bus, GstMessage *msg, gpointer data)
         case GST_MESSAGE_SEGMENT_DONE:
             rc_debug_print("CORE: Segment done!\n");
             break;
+        case GST_MESSAGE_STATE_CHANGED:
+            break;
         case GST_MESSAGE_ERROR:
             gst_message_parse_error(msg, &error, &debug);
             rc_debug_perror("Core-ERROR: %s\nDEBUG: %s\n", error->message,
@@ -104,41 +106,39 @@ static gboolean rc_core_bus_call(GstBus *bus, GstMessage *msg, gpointer data)
             break;
         case GST_MESSAGE_BUFFERING:
             break;
+        case GST_MESSAGE_ELEMENT:
+            gstru = gst_message_get_structure(msg);
+            name = gst_structure_get_name(gstru);
+            if(strcmp(name, "spectrum")==0)
+            {
+                magnitudes = gst_structure_get_value(gstru, "magnitude");
+                for(i=0;i<spect_bands;i++)
+                {
+                    mag = gst_value_list_get_value(magnitudes, i);
+                    if(mag!=NULL)
+                        db = g_value_get_float(mag);
+                    else
+                        db = -80.0;
+                    magnitude[i] = db;
+                }
+            }
+            if(gst_is_missing_plugin_message(msg))
+            {
+                rc_debug_perror("Core-ERROR: Missing plugin to open the "
+                    "media file!\n");
+                if(gst_install_plugins_supported())
+                {
+                    rc_debug_print("Core: Trying to install necessary "
+                        "plugins\n");
+                    plugin_error_msg =
+                        gst_missing_plugin_message_get_installer_detail(msg);
+                    gst_install_plugins_async(&plugin_error_msg, NULL,
+                        rc_core_plugin_install_result, NULL);
+                    g_free(plugin_error_msg);
+                }
+            }
         default:
             break;
-    }
-    if(msg!=NULL && msg->type==GST_MESSAGE_ELEMENT)
-    {
-        gstru = gst_message_get_structure(msg);
-        name = gst_structure_get_name(gstru);
-        if(strcmp(name, "spectrum")==0)
-        {
-            magnitudes = gst_structure_get_value(gstru, "magnitude");
-            for(i=0;i<spect_bands;i++)
-            {
-                mag = gst_value_list_get_value(magnitudes, i);
-                if(mag!=NULL)
-                {
-                    db = g_value_get_float(mag);
-                }
-                else db = -80.0;
-                magnitude[i] = db;
-            }
-        }
-        if(gst_is_missing_plugin_message(msg))
-        {
-            rc_debug_perror("Core-ERROR: Missing plugin to open the "
-                "media file!\n");
-            if(gst_install_plugins_supported())
-            {
-                rc_debug_print("Core: Trying to install necessary plugin\n");
-                plugin_error_msg =
-                    gst_missing_plugin_message_get_installer_detail(msg);
-                gst_install_plugins_async(&plugin_error_msg, NULL,
-                    rc_core_plugin_install_result, NULL);
-                g_free(plugin_error_msg);
-            }
-        }
     }
     return TRUE;
 }

@@ -505,15 +505,12 @@ gui_plugin.o: gui_plugin.c gui_plugin.h /usr/include/glib-2.0/glib.h \
  /usr/include/gstreamer-0.10/gst/gstutils.h \
  /usr/include/gstreamer-0.10/gst/gstparse.h \
  /usr/include/gstreamer-0.10/gst/gstxml.h \
- /usr/include/gstreamer-0.10/gst/gstcompat.h /usr/include/libpng12/png.h \
- /usr/include/zlib.h /usr/include/zconf.h /usr/include/zlibdefs.h \
- /usr/include/unistd.h /usr/include/bits/posix_opt.h \
- /usr/include/bits/confname.h /usr/include/getopt.h \
- /usr/include/libpng12/pngconf.h /usr/include/setjmp.h \
- /usr/include/bits/setjmp.h /usr/include/string.h \
- /usr/include/bits/string.h /usr/include/bits/string2.h \
+ /usr/include/gstreamer-0.10/gst/gstcompat.h \
  /usr/include/glib-2.0/glib/gi18n.h /usr/include/libintl.h \
- /usr/include/locale.h /usr/include/bits/locale.h plugin.h debug.h
+ /usr/include/locale.h /usr/include/bits/locale.h /usr/include/string.h \
+ /usr/include/bits/string.h /usr/include/bits/string2.h plugin.h debug.h \
+ /usr/include/unistd.h /usr/include/bits/posix_opt.h \
+ /usr/include/bits/confname.h /usr/include/getopt.h
 
 gui_plugin.h:
 
@@ -1697,34 +1694,6 @@ gui.h:
 
 /usr/include/gstreamer-0.10/gst/gstcompat.h:
 
-/usr/include/libpng12/png.h:
-
-/usr/include/zlib.h:
-
-/usr/include/zconf.h:
-
-/usr/include/zlibdefs.h:
-
-/usr/include/unistd.h:
-
-/usr/include/bits/posix_opt.h:
-
-/usr/include/bits/confname.h:
-
-/usr/include/getopt.h:
-
-/usr/include/libpng12/pngconf.h:
-
-/usr/include/setjmp.h:
-
-/usr/include/bits/setjmp.h:
-
-/usr/include/string.h:
-
-/usr/include/bits/string.h:
-
-/usr/include/bits/string2.h:
-
 /usr/include/glib-2.0/glib/gi18n.h:
 
 /usr/include/libintl.h:
@@ -1733,6 +1702,20 @@ gui.h:
 
 /usr/include/bits/locale.h:
 
+/usr/include/string.h:
+
+/usr/include/bits/string.h:
+
+/usr/include/bits/string2.h:
+
 plugin.h:
 
 debug.h:
+
+/usr/include/unistd.h:
+
+/usr/include/bits/posix_opt.h:
+
+/usr/include/bits/confname.h:
+
+/usr/include/getopt.h:

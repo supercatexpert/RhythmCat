@@ -511,12 +511,9 @@ plugin.o: plugin.c plugin.h /usr/include/string.h /usr/include/features.h \
  /usr/include/locale.h /usr/include/bits/locale.h \
  /usr/include/gstreamer-0.10/gst/pbutils/missing-plugins.h \
  /usr/include/gstreamer-0.10/gst/pbutils/install-plugins.h gui.h \
- /usr/include/glib-2.0/glib/gprintf.h /usr/include/libpng12/png.h \
- /usr/include/zlib.h /usr/include/zconf.h /usr/include/zlibdefs.h \
+ /usr/include/glib-2.0/glib/gprintf.h playlist.h debug.h \
  /usr/include/unistd.h /usr/include/bits/posix_opt.h \
- /usr/include/bits/confname.h /usr/include/getopt.h \
- /usr/include/libpng12/pngconf.h /usr/include/setjmp.h \
- /usr/include/bits/setjmp.h playlist.h debug.h main.h \
+ /usr/include/bits/confname.h /usr/include/getopt.h main.h \
  /usr/include/dbus-1.0/dbus/dbus.h \
  /usr/lib/dbus-1.0/include/dbus/dbus-arch-deps.h \
  /usr/include/dbus-1.0/dbus/dbus-macros.h \
@@ -1739,13 +1736,9 @@ gui.h:
 
 /usr/include/glib-2.0/glib/gprintf.h:
 
-/usr/include/libpng12/png.h:
+playlist.h:
 
-/usr/include/zlib.h:
-
-/usr/include/zconf.h:
-
-/usr/include/zlibdefs.h:
+debug.h:
 
 /usr/include/unistd.h:
 
@@ -1754,16 +1747,6 @@ gui.h:
 /usr/include/bits/confname.h:
 
 /usr/include/getopt.h:
-
-/usr/include/libpng12/pngconf.h:
-
-/usr/include/setjmp.h:
-
-/usr/include/bits/setjmp.h:
-
-playlist.h:
-
-debug.h:
 
 main.h:
 

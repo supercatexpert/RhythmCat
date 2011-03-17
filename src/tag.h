@@ -61,8 +61,10 @@ typedef struct _MusicMetaData
     gpointer user_data;
 }MusicMetaData;
 
-MusicMetaData *rc_tag_read_metadata(gchar *);
+MusicMetaData *rc_tag_read_metadata(const gchar *);
 void rc_tag_free(MusicMetaData *);
+void rc_tag_set_playing_metadata(const MusicMetaData *);
+const MusicMetaData *rc_tag_get_playing_metadata();
 gchar *rc_tag_get_name_from_fpath(const gchar *);
 gchar *rc_tag_find_file(const gchar *, const gchar *, const gchar *);
 

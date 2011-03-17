@@ -57,7 +57,7 @@ am_RhythmCat_OBJECTS = core.$(OBJEXT) lyric.$(OBJEXT) \
 	player.$(OBJEXT) gui.$(OBJEXT) gui_setting.$(OBJEXT) \
 	gui_treeview.$(OBJEXT) gui_style.$(OBJEXT) \
 	gui_dialog.$(OBJEXT) gui_eq.$(OBJEXT) gui_plugin.$(OBJEXT) \
-	main.$(OBJEXT)
+	gui_mini.$(OBJEXT) main.$(OBJEXT)
 RhythmCat_OBJECTS = $(am_RhythmCat_OBJECTS)
 RhythmCat_DEPENDENCIES =
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
@@ -198,7 +198,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 RhythmCat_SOURCES = core.c lyric.c playlist.c tag.c settings.c plugin.c \
     shell.c msg.c debug.c player.c gui.c gui_setting.c gui_treeview.c \
-    gui_style.c gui_dialog.c gui_eq.c gui_plugin.c main.c        
+    gui_style.c gui_dialog.c gui_eq.c gui_plugin.c gui_mini.c main.c        
 
 INCLUDES = @GLIB2_CFLAGS@ @DBUS_GLIB_CFLAGS@ @GTK2_CFLAGS@ @GSTREAMER_CFLAGS@ \
     -DLOCALEDIR=\"$(localedir)\"
@@ -290,6 +290,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_dialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_eq.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_mini.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_plugin.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_setting.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_style.Po@am__quote@

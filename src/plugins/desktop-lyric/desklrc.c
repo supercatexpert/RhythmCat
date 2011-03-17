@@ -149,7 +149,7 @@ void rc_plugin_desklrc_init()
     g_signal_connect(G_OBJECT(desklrc_window), "expose-event" ,
         G_CALLBACK(rc_plugin_desklrc_expose_handler), NULL);
     g_signal_connect(G_OBJECT(desklrc_window), "button-press-event" ,
-	G_CALLBACK(rc_plugin_desklrc_drag), NULL);
+        G_CALLBACK(rc_plugin_desklrc_drag), NULL);
     g_signal_connect(G_OBJECT(desklrc_window), "motion-notify-event",
         G_CALLBACK(rc_plugin_desklrc_drag), NULL);
     g_signal_connect(G_OBJECT(desklrc_window), "button-release-event",

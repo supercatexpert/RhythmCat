@@ -28,7 +28,7 @@
 #include "plugin.h"
 #include "debug.h"
 
-static GtkWidget *plugin_window;
+static GtkWidget *plugin_window = NULL;
 static GtkWidget *plugin_conf_button;
 static GtkWidget *plugin_close_button;
 static GtkWidget *plugin_list_view;

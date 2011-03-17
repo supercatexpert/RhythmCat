@@ -507,15 +507,10 @@ gui_dialog.o: gui_dialog.c gui_dialog.h /usr/include/stdlib.h \
  /usr/include/gstreamer-0.10/gst/gstutils.h \
  /usr/include/gstreamer-0.10/gst/gstparse.h \
  /usr/include/gstreamer-0.10/gst/gstxml.h \
- /usr/include/gstreamer-0.10/gst/gstcompat.h /usr/include/libpng12/png.h \
- /usr/include/zlib.h /usr/include/zconf.h /usr/include/zlibdefs.h \
- /usr/include/unistd.h /usr/include/bits/posix_opt.h \
- /usr/include/bits/confname.h /usr/include/getopt.h \
- /usr/include/libpng12/pngconf.h /usr/include/setjmp.h \
- /usr/include/bits/setjmp.h /usr/include/string.h \
- /usr/include/bits/string.h /usr/include/bits/string2.h \
+ /usr/include/gstreamer-0.10/gst/gstcompat.h \
  /usr/include/glib-2.0/glib/gi18n.h /usr/include/libintl.h \
- /usr/include/locale.h /usr/include/bits/locale.h core.h \
+ /usr/include/locale.h /usr/include/bits/locale.h /usr/include/string.h \
+ /usr/include/bits/string.h /usr/include/bits/string2.h core.h \
  /usr/include/gstreamer-0.10/gst/pbutils/missing-plugins.h \
  /usr/include/gstreamer-0.10/gst/pbutils/install-plugins.h tag.h \
  playlist.h main.h /usr/include/dbus-1.0/dbus/dbus.h \
@@ -536,7 +531,9 @@ gui_dialog.o: gui_dialog.c gui_dialog.h /usr/include/stdlib.h \
  /usr/include/dbus-1.0/dbus/dbus-signature.h \
  /usr/include/dbus-1.0/dbus/dbus-threads.h \
  /usr/include/dbus-1.0/dbus/dbus-glib.h \
- /usr/include/dbus-1.0/dbus/dbus-gtype-specialized.h debug.h settings.h \
+ /usr/include/dbus-1.0/dbus/dbus-gtype-specialized.h debug.h \
+ /usr/include/unistd.h /usr/include/bits/posix_opt.h \
+ /usr/include/bits/confname.h /usr/include/getopt.h settings.h \
  gui_treeview.h
 
 gui_dialog.h:
@@ -1723,34 +1720,6 @@ gui.h:
 
 /usr/include/gstreamer-0.10/gst/gstcompat.h:
 
-/usr/include/libpng12/png.h:
-
-/usr/include/zlib.h:
-
-/usr/include/zconf.h:
-
-/usr/include/zlibdefs.h:
-
-/usr/include/unistd.h:
-
-/usr/include/bits/posix_opt.h:
-
-/usr/include/bits/confname.h:
-
-/usr/include/getopt.h:
-
-/usr/include/libpng12/pngconf.h:
-
-/usr/include/setjmp.h:
-
-/usr/include/bits/setjmp.h:
-
-/usr/include/string.h:
-
-/usr/include/bits/string.h:
-
-/usr/include/bits/string2.h:
-
 /usr/include/glib-2.0/glib/gi18n.h:
 
 /usr/include/libintl.h:
@@ -1758,6 +1727,12 @@ gui.h:
 /usr/include/locale.h:
 
 /usr/include/bits/locale.h:
+
+/usr/include/string.h:
+
+/usr/include/bits/string.h:
+
+/usr/include/bits/string2.h:
 
 core.h:
 
@@ -1810,6 +1785,14 @@ main.h:
 /usr/include/dbus-1.0/dbus/dbus-gtype-specialized.h:
 
 debug.h:
+
+/usr/include/unistd.h:
+
+/usr/include/bits/posix_opt.h:
+
+/usr/include/bits/confname.h:
+
+/usr/include/getopt.h:
 
 settings.h:
 

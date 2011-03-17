@@ -30,10 +30,7 @@
 #include "main.h"
 #include "debug.h"
 
-/* Check ID3 reader, because there may be some memory leaks. */
-
-gchar *extra_encoding = NULL;
-gboolean skip_id3_reading = FALSE;
+MusicMetaData playing_mmd = {0};
 
 typedef struct _TagDecodedPadData
 {
@@ -271,7 +268,7 @@ static void rc_tag_gst_new_decoded_pad_cb(GstElement *decodebin,
  * Read tag (metadata) from given URI.
  */
 
-MusicMetaData *rc_tag_read_metadata(gchar *uri)
+MusicMetaData *rc_tag_read_metadata(const gchar *uri)
 {
     GstElement *pipeline;
     GstElement *urisrc;
@@ -408,6 +405,33 @@ void rc_tag_free(MusicMetaData *mmd)
     if(mmd->uri!=NULL) g_free(mmd->uri);
     if(mmd->image!=NULL) gst_buffer_unref(mmd->image);
     g_free(mmd);
+}
+
+/*
+ * Set playing metadata.
+ */
+
+void rc_tag_set_playing_metadata(const MusicMetaData *mmd)
+{
+    if(playing_mmd.uri!=NULL) g_free(playing_mmd.uri);
+    if(playing_mmd.image!=NULL) gst_buffer_unref(playing_mmd.image);
+    memcpy(&playing_mmd, mmd, sizeof(MusicMetaData));
+    if(mmd->uri!=NULL)
+        playing_mmd.uri = g_strdup(mmd->uri);
+    else
+        playing_mmd.uri = NULL;
+    if(mmd->image!=NULL)
+        playing_mmd.image = gst_buffer_copy(mmd->image);
+    else
+        playing_mmd.image = NULL;
+}
+
+/*
+ * Get playing metadata.
+ */
+const MusicMetaData *rc_tag_get_playing_metadata()
+{
+    return &playing_mmd;
 }
 
 /*

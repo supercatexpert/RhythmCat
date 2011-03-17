@@ -42,8 +42,6 @@ typedef enum
     PLIST2_LAST = 7
 }Plist2Column;
 
-
-
 /* Custom struct type to store playlist data */
 typedef struct _PlistData
 {
