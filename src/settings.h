@@ -57,5 +57,6 @@ void rc_set_set_integer_list(const gchar *, const gchar *, gint [], gsize);
 void rc_set_set_double_list(const gchar *, const gchar *, gdouble [], gsize);
 gboolean rc_set_load_setting(const gchar *);
 void rc_set_save_setting(const gchar *);
+GKeyFile *rc_set_get_plugin_configure();
 
 #endif

@@ -96,7 +96,7 @@
 #define PACKAGE_NAME "RhythmCat"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "RhythmCat 0.9.0"
+#define PACKAGE_STRING "RhythmCat 1.0.0"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "rhythmcat"
@@ -105,13 +105,13 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "0.9.0"
+#define PACKAGE_VERSION "1.0.0"
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1
 
 /* Version number of package */
-#define VERSION "0.9.0"
+#define VERSION "1.0.0"
 
 /* Define to `int' if <sys/types.h> does not define. */
 /* #undef pid_t */

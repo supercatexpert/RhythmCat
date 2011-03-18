@@ -1456,9 +1456,10 @@ void rc_plist_load_argument(char *argv[])
  * Load music from remote.
  */
 
-void rc_plist_load_uri_from_remote(const gchar *uri)
+gboolean rc_plist_load_uri_from_remote(const gchar *uri)
 {
-    if(uri==NULL) return;
+    if(uri==NULL) return FALSE;
+    gboolean flag = FALSE;
     gint i = 0;
     gint list_index = -1;
     GtkTreeIter iter;
@@ -1466,7 +1467,7 @@ void rc_plist_load_uri_from_remote(const gchar *uri)
     GFile *gfile;
     gchar *ruri = NULL;
     if(!gtk_tree_model_get_iter_first(GTK_TREE_MODEL(rc_plist.list_store),
-        &iter)) return;
+        &iter)) return FALSE;
     i = 0;
     do
     {
@@ -1491,8 +1492,9 @@ void rc_plist_load_uri_from_remote(const gchar *uri)
             list_index = 0;
             rc_plist_insert_list(default_list_name, 0);
         }
-        rc_plist_insert_music(ruri, list_index, -1);
+        flag = rc_plist_insert_music(ruri, list_index, -1);
         g_free(ruri);
     }
+    return flag;
 }
 

@@ -27,9 +27,11 @@
 #include "core.h"
 #include "main.h"
 #include "playlist.h"
+#include "debug.h"
 
 /* Variables */
 static GKeyFile *rc_configure = NULL;
+static GKeyFile *rc_plugin_configure = NULL;
 
 void rc_set_init()
 {
@@ -38,6 +40,7 @@ void rc_set_init()
     const gchar *locale;
     bzero(eq_array, sizeof(eq_array));
     rc_configure = g_key_file_new();
+    rc_plugin_configure = g_key_file_new();
     g_key_file_set_comment(rc_configure, NULL, NULL,
         "RhythmCat Music Player Settings File", NULL);
     rc_set_set_boolean("Player", "AutoPlay", FALSE);
@@ -87,6 +90,16 @@ void rc_set_init()
     conf_file = g_strdup_printf("%s%c.RhythmCat%csetting.conf",
         rc_get_home_dir(), G_DIR_SEPARATOR, G_DIR_SEPARATOR);
     rc_set_load_setting(conf_file);
+    g_free(conf_file);
+    /* Load plugin setting. */
+    conf_file = g_strdup_printf("%s%cplugins.conf", rc_get_set_dir(),
+        G_DIR_SEPARATOR);
+    if(!g_key_file_load_from_file(rc_plugin_configure, conf_file,
+        G_KEY_FILE_NONE, NULL))
+    {
+        rc_debug_print("Plugin: Cannot open configure file. Maybe it is not "
+            "exist?\n");
+    }
     g_free(conf_file);
 }
 
@@ -213,5 +226,8 @@ void rc_set_save_setting(const gchar *filename)
     if(conf_data!=NULL) g_free(conf_data);
 }
 
-
+GKeyFile *rc_set_get_plugin_configure()
+{
+    return rc_plugin_configure;
+}
 

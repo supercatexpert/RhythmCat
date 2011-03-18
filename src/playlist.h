@@ -84,7 +84,7 @@ gboolean rc_plist_list2_refresh(gint);
 gint rc_plist_import_job_get_length();
 void rc_plist_import_job_cancel();
 void rc_plist_load_argument(char *[]);
-void rc_plist_load_uri_from_remote(const gchar *);
+gboolean rc_plist_load_uri_from_remote(const gchar *);
 
 #endif
 

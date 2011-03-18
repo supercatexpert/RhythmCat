@@ -26,6 +26,8 @@
 #include "shell.h"
 #include "debug.h"
 #include "playlist.h"
+#include "core.h"
+#include "gui.h"
 
 G_DEFINE_TYPE(RCShell, rc_shell, G_TYPE_OBJECT)
 
@@ -38,11 +40,36 @@ static void rc_shell_class_init(RCShellClass *class)
 {
 }
 
-
-void rc_shell_load_uri(RCShell *shell, const gchar *uri, GError **error)
+gboolean rc_shell_load_uri(RCShell *shell, const gchar *uri, GError **error)
 {
-    if(uri==NULL) return;
+    if(uri==NULL) return FALSE;
     rc_debug_print("SHELL: Load URI from remote: %s\n", uri);
-    rc_plist_load_uri_from_remote(uri);
+    return rc_plist_load_uri_from_remote(uri);
+}
+
+gboolean rc_shell_play(RCShell *shell, gboolean *playing, GError **error)
+{
+    rc_gui_play_button_clicked(NULL, NULL);
+    if(rc_core_get_play_state()==GST_STATE_PLAYING)
+        *playing = TRUE;
+    else
+        *playing = FALSE;
+    return TRUE;
+}
+
+gboolean rc_shell_stop(RCShell *shell, GError **error)
+{
+    rc_core_stop();
+    return TRUE;
+}
+
+gboolean rc_shell_prev(RCShell *shell, GError **error)
+{
+    return rc_plist_play_prev();
+}
+
+gboolean rc_shell_next(RCShell *shell, GError **error)
+{
+    return rc_plist_play_next(FALSE);
 }
 

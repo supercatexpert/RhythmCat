@@ -29,6 +29,7 @@
 #include "playlist.h"
 #include "debug.h"
 #include "main.h"
+#include "settings.h"
 
 static GSList *plugin_list = NULL;
 static GSList *module_list = NULL;
@@ -37,21 +38,11 @@ static GKeyFile *plugin_configure = NULL;
 gboolean rc_plugin_init()
 {
     PluginData *plugin_data = NULL;
-    gchar *conf_file = NULL;
     gchar *plugin_file = NULL;
     gchar **group_names = NULL;
     guint i = 0;
     gint type = 0;
-    plugin_configure = g_key_file_new();
-    conf_file = g_strdup_printf("%s%cplugins.conf", rc_get_set_dir(),
-        G_DIR_SEPARATOR);
-    if(!g_key_file_load_from_file(plugin_configure, conf_file, G_KEY_FILE_NONE,
-        NULL))
-    {
-        rc_debug_print("Plugin: Cannot open configure file. Maybe it is not "
-            "exist?\n");
-    }
-    g_free(conf_file);
+    plugin_configure = rc_set_get_plugin_configure();
     group_names = g_key_file_get_groups(plugin_configure, NULL);
     for(i=0;group_names[i]!=NULL;i++)
     {

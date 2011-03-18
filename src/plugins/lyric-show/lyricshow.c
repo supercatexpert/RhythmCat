@@ -29,6 +29,7 @@
 #include "lyric.h"
 #include "debug.h"
 #include "player.h"
+#include "settings.h"
 
 static const gchar plugin_group_name[] = "LyricShowGtk2";
 static gulong lyric_found_signal, lyric_stop_signal;
@@ -36,11 +37,13 @@ static GuiLrcData rc_glrc;
 static GuiData *rc_ui;
 static guint id = 0;
 static guint timeout_id = 0;
+static GKeyFile *keyfile = NULL;
 
 
 const gchar *g_module_check_init(GModule *module)
 {
     g_printf("LRCShow: Plugin loaded successfully!\n");
+    keyfile = rc_set_get_plugin_configure();
     return NULL;
 }
 
@@ -71,21 +74,105 @@ gint rc_plugin_module_init()
 
 void rc_plugin_module_exit()
 {
+    rc_plugin_lrcshow_save_conf();
     g_source_remove(timeout_id);
     rc_player_object_signal_disconnect(lyric_found_signal);
     rc_player_object_signal_disconnect(lyric_stop_signal);
     gtk_widget_destroy(rc_glrc.lrc_scrwin);
     rc_gui_view_remove_page(id);
-    g_printf("Need more clear function here!\n");
+    g_free(rc_glrc.lyric_font);
 }
 
 void rc_plugin_module_configure()
 {
     GtkWidget *dialog;
-    dialog = gtk_dialog_new();
-    gtk_dialog_run(GTK_DIALOG(dialog));
+    GtkWidget *content_area;
+    GtkWidget *label[5];
+    GtkWidget *table;
+    GtkWidget *font_button;
+    GtkWidget *space_spin;
+    GtkWidget *bg_color_button;
+    GtkWidget *fg_color_button;
+    GtkWidget *hi_color_button;
+    GdkColor color;
+    gint i, result;
+    dialog = gtk_dialog_new_with_buttons(_("Lyric Show Preferences"), NULL,
+        GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT, GTK_STOCK_OK,
+        GTK_RESPONSE_ACCEPT, GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT, NULL);
+    table = gtk_table_new(2, 5, FALSE);
+    label[0] = gtk_label_new(_("Font: "));
+    label[1] = gtk_label_new(_("Line spacing: "));
+    label[2] = gtk_label_new(_("Background Color: "));
+    label[3] = gtk_label_new(_("Frontground Color: "));
+    label[4] = gtk_label_new(_("Highlight Color: "));
+    font_button = gtk_font_button_new_with_font(rc_glrc.lyric_font);
+    space_spin = gtk_spin_button_new_with_range(0, 100, 1);
+    color.red = rc_glrc.background[0] * 0xFFFF;
+    color.green = rc_glrc.background[1] * 0xFFFF;
+    color.blue = rc_glrc.background[2] * 0xFFFF;
+    bg_color_button = gtk_color_button_new_with_color(&color);
+    color.red = rc_glrc.text_color[0] * 0xFFFF;
+    color.green = rc_glrc.text_color[1] * 0xFFFF;
+    color.blue = rc_glrc.text_color[2] * 0xFFFF;
+    fg_color_button = gtk_color_button_new_with_color(&color);
+    color.red = rc_glrc.text_hilight[0] * 0xFFFF;
+    color.green = rc_glrc.text_hilight[1] * 0xFFFF;
+    color.blue = rc_glrc.text_hilight[2] * 0xFFFF;
+    hi_color_button = gtk_color_button_new_with_color(&color);
+    for(i=0;i<5;i++)
+        gtk_misc_set_alignment(GTK_MISC(label[i]), 0.0, 0.5);
+    gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(space_spin), FALSE);
+    gtk_spin_button_set_value(GTK_SPIN_BUTTON(space_spin),
+        rc_glrc.lyric_line_ds);
+    gtk_table_attach(GTK_TABLE(table), label[0], 0, 1, 0, 1, GTK_FILL,
+        0, 2, 2);
+    gtk_table_attach(GTK_TABLE(table), font_button, 1, 2, 0, 1, GTK_FILL |
+        GTK_EXPAND, 0, 2, 2);
+    gtk_table_attach(GTK_TABLE(table), label[1], 0, 1, 1, 2, GTK_FILL,
+        0, 2, 2);
+    gtk_table_attach(GTK_TABLE(table), space_spin, 1, 2, 1, 2, GTK_FILL |
+        GTK_EXPAND, 0, 2, 2);
+    gtk_table_attach(GTK_TABLE(table), label[2], 0, 1, 2, 3, GTK_FILL,
+        0, 2, 2);
+    gtk_table_attach(GTK_TABLE(table), bg_color_button, 1, 2, 2, 3, GTK_FILL |
+        GTK_EXPAND, 0, 2, 2);
+    gtk_table_attach(GTK_TABLE(table), label[3], 0, 1, 3, 4, GTK_FILL,
+        0, 2, 2);
+    gtk_table_attach(GTK_TABLE(table), fg_color_button, 1, 2, 3, 4, GTK_FILL |
+        GTK_EXPAND, 0, 2, 2);
+    gtk_table_attach(GTK_TABLE(table), label[4], 0, 1, 4, 5, GTK_FILL,
+        0, 2, 2);
+    gtk_table_attach(GTK_TABLE(table), hi_color_button, 1, 2, 4, 5, GTK_FILL |
+        GTK_EXPAND, 0, 2, 2);
+    content_area = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
+    gtk_container_add(GTK_CONTAINER(content_area), table);
+    gtk_widget_show_all(dialog);
+    result = gtk_dialog_run(GTK_DIALOG(dialog));
+    if(result==GTK_RESPONSE_ACCEPT)
+    {
+        if(rc_glrc.lyric_font!=NULL) g_free(rc_glrc.lyric_font);
+        rc_glrc.lyric_font = g_strdup(gtk_font_button_get_font_name(
+            GTK_FONT_BUTTON(font_button)));
+        rc_glrc.lyric_line_ds = gtk_spin_button_get_value_as_int(
+            GTK_SPIN_BUTTON(space_spin));
+        gtk_color_button_get_color(GTK_COLOR_BUTTON(bg_color_button),
+            &color);
+        rc_glrc.background[0] = (double)color.red / 0xFFFF;
+        rc_glrc.background[1] = (double)color.green / 0xFFFF;
+        rc_glrc.background[2] = (double)color.blue / 0xFFFF;
+        gtk_color_button_get_color(GTK_COLOR_BUTTON(fg_color_button),
+            &color);
+        rc_glrc.text_color[0] = (double)color.red / 0xFFFF;
+        rc_glrc.text_color[1] = (double)color.green / 0xFFFF;
+        rc_glrc.text_color[2] = (double)color.blue / 0xFFFF;
+        gtk_color_button_get_color(GTK_COLOR_BUTTON(hi_color_button),
+            &color);
+        rc_glrc.text_hilight[0] = (double)color.red / 0xFFFF;
+        rc_glrc.text_hilight[1] = (double)color.green / 0xFFFF;
+        rc_glrc.text_hilight[2] = (double)color.blue / 0xFFFF;
+        rc_plugin_lrcshow_save_conf();
+    }
     gtk_widget_destroy(dialog);
-    g_printf("No configure page yet!\n");
 }
 
 const gchar *rc_plugin_module_get_group_name()
@@ -101,7 +188,7 @@ void rc_plugin_lrcshow_init()
     rc_glrc.lrc_line_num = -1L;
     rc_glrc.lrc_time_delay = 0L;
     rc_glrc.lyric_data = NULL;
-    rc_glrc.lyric_font = "Monospace 10";
+    rc_glrc.lyric_font = g_strdup("Monospace 10");
     rc_glrc.lyric_line_ds = 0;
     rc_glrc.background[0] = 0.23046875;
     rc_glrc.background[1] = 0.3359375;
@@ -117,9 +204,7 @@ void rc_plugin_lrcshow_init()
     rc_glrc.text_hilight[3] = 1.0;
     rc_glrc.lyric_flag = FALSE;
     rc_glrc.lyric_new_flag = TRUE;
-    rc_glrc.bg_image = NULL;
-    rc_glrc.bg_image_file = NULL;
-    rc_glrc.bg_image_style = 0;
+    rc_plugin_lrcshow_load_conf();
     rc_glrc.lrc_scene = gtk_drawing_area_new();
     rc_glrc.lrc_scrwin = gtk_scrolled_window_new(NULL, NULL);
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(rc_glrc.lrc_scrwin),
@@ -144,29 +229,9 @@ GuiLrcData *rc_plugin_lrcshow_get_data()
 void rc_plugin_lrcshow_draw_bg()
 {
     cairo_t *cr;
-    if(rc_glrc.bg_image_file!=NULL && rc_glrc.bg_image==NULL)
-        cairo_surface_destroy(rc_glrc.bg_image);
-    if(rc_glrc.bg_image==NULL)
-    {
-        if(rc_glrc.bg_image_file!=NULL)
-        {
-            rc_glrc.bg_image = cairo_image_surface_create_from_png(
-                rc_glrc.bg_image_file);
-            rc_glrc.bg_image_file = NULL;
-        }
-        else
-            rc_glrc.bg_image=NULL;
-    }
     cr = gdk_cairo_create(gtk_widget_get_window(rc_glrc.lrc_scene));
-    if(rc_glrc.bg_image!=NULL)
-    {
-        cairo_set_source_surface(cr, rc_glrc.bg_image, 0, 0);
-    }
-    else
-    {
-        cairo_set_source_rgba(cr, rc_glrc.background[0], rc_glrc.background[1], 
-            rc_glrc.background[2],rc_glrc.background[3]);
-    }
+    cairo_set_source_rgba(cr, rc_glrc.background[0], rc_glrc.background[1], 
+        rc_glrc.background[2],rc_glrc.background[3]);
     cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
     cairo_paint(cr);
     cairo_destroy(cr);
@@ -360,5 +425,84 @@ void rc_plugin_lrcshow_disable()
 {
     rc_glrc.lyric_flag = FALSE;
     rc_plugin_lrcshow_expose(NULL, NULL);
+}
+
+void rc_plugin_lrcshow_load_conf()
+{
+    gchar *string = NULL;
+    gint i;
+    GdkColor color;
+    string = g_key_file_get_string(keyfile, plugin_group_name, "LyricFont",
+        NULL);
+    if(string!=NULL)
+    {
+        if(rc_glrc.lyric_font!=NULL) g_free(rc_glrc.lyric_font);
+        rc_glrc.lyric_font = string;
+    }
+    i = g_key_file_get_integer(keyfile, plugin_group_name,
+        "LyricLineDistance", NULL);
+    if(i<0) i = 0;
+    rc_glrc.lyric_line_ds = i;
+    string = g_key_file_get_string(keyfile, plugin_group_name,
+        "LyricBackgroundColor", NULL);
+    if(string!=NULL)
+    {
+        gdk_color_parse(string, &color);
+        rc_glrc.background[0] = (double)color.red / 0xFFFF;
+        rc_glrc.background[1] = (double)color.green / 0xFFFF;
+        rc_glrc.background[2] = (double)color.blue / 0xFFFF;
+        g_free(string);
+    }
+    string = g_key_file_get_string(keyfile, plugin_group_name,
+        "LyricTextNormalColor", NULL);
+    if(string!=NULL)
+    {
+        gdk_color_parse(string, &color);
+        rc_glrc.text_color[0] = (double)color.red / 0xFFFF;
+        rc_glrc.text_color[1] = (double)color.green / 0xFFFF;
+        rc_glrc.text_color[2] = (double)color.blue / 0xFFFF;
+        g_free(string);
+    }
+    string = g_key_file_get_string(keyfile, plugin_group_name,
+        "LyricTextHighLightColor", NULL);
+    if(string!=NULL)
+    {
+        gdk_color_parse(string, &color);
+        rc_glrc.text_hilight[0] = (double)color.red / 0xFFFF;
+        rc_glrc.text_hilight[1] = (double)color.green / 0xFFFF;
+        rc_glrc.text_hilight[2] = (double)color.blue / 0xFFFF;
+        g_free(string);
+    }
+}
+
+void rc_plugin_lrcshow_save_conf()
+{
+    gchar *string;
+    GdkColor color;
+    g_key_file_set_string(keyfile, plugin_group_name, "LyricFont",
+        rc_glrc.lyric_font);
+    g_key_file_set_integer(keyfile, plugin_group_name, "LyricLineDistance",
+        rc_glrc.lyric_line_ds);
+    color.red = rc_glrc.background[0] * 0xFFFF;
+    color.green = rc_glrc.background[1] * 0xFFFF;
+    color.blue = rc_glrc.background[2] * 0xFFFF;
+    string = gdk_color_to_string(&color);
+    g_key_file_set_string(keyfile, plugin_group_name, "LyricBackgroundColor",
+        string);
+    g_free(string);
+    color.red = rc_glrc.text_color[0] * 0xFFFF;
+    color.green = rc_glrc.text_color[1] * 0xFFFF;
+    color.blue = rc_glrc.text_color[2] * 0xFFFF;
+    string = gdk_color_to_string(&color);
+    g_key_file_set_string(keyfile, plugin_group_name, "LyricTextNormalColor",
+        string);
+    g_free(string);
+    color.red = rc_glrc.text_hilight[0] * 0xFFFF;
+    color.green = rc_glrc.text_hilight[1] * 0xFFFF;
+    color.blue = rc_glrc.text_hilight[2] * 0xFFFF;
+    string = gdk_color_to_string(&color);
+    g_key_file_set_string(keyfile, plugin_group_name, "LyricTextHighLightColor",
+        string);
+    g_free(string);
 }
 

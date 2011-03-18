@@ -1499,8 +1499,9 @@ void rc_gui_show_hide_window(GtkWidget *widget, gpointer data)
         {
             gtk_window_set_skip_taskbar_hint(GTK_WINDOW(rc_gui.main_window),
                 FALSE);
-            gtk_widget_show(GTK_WIDGET(rc_gui.main_window));
             gtk_window_deiconify(GTK_WINDOW(rc_gui.main_window));
+            gtk_widget_show(GTK_WIDGET(rc_gui.main_window));
+            
         }
     }
 }

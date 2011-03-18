@@ -47,12 +47,20 @@ typedef struct RCShellClass
 typedef enum
 {
     RC_SHELL_LOAD_URI,
+    RC_SHELL_PLAY,
+    RC_SHELL_STOP,
+    RC_SHELL_PREV,
+    RC_SHELL_NEXT
 }RCShellEnum;
 
 #define RC_SHELL_TYPE (rc_shell_get_type())
 
 GType rc_shell_get_type(void);
-void rc_shell_load_uri(RCShell *, const gchar *, GError **);
+gboolean rc_shell_load_uri(RCShell *, const gchar *, GError **);
+gboolean rc_shell_play(RCShell *, gboolean *, GError **);
+gboolean rc_shell_stop(RCShell *, GError **);
+gboolean rc_shell_prev(RCShell *, GError **);
+gboolean rc_shell_next(RCShell *, GError **);
 
 #endif
 

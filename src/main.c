@@ -42,8 +42,8 @@ static gchar *rc_set_dir = NULL;
 static const gchar *rc_app_dir = NULL;
 static const gchar *rc_home_dir = NULL;
 static const gchar rc_program_name[] = "RhythmCat Music Player";
-static const gchar rc_build_num[] = "build 110317, alpha 1";
-static const gchar rc_ver_num[] = "0.9.5";
+static const gchar rc_build_num[] = "build 110319, alpha 1";
+static const gchar rc_ver_num[] = "1.0.0";
 static const gboolean rc_is_stable = FALSE;
 static const gchar rc_dbus_name[] = "org.supercat.RhythmCat";
 static const gchar rc_dbus_path_player[] = "/org/supercat/RhythmCat/Player";
@@ -86,7 +86,7 @@ void rc_init(int *argc, char **argv[])
     gint dname_len = strlen(homedir);
     rc_set_dir = g_malloc0(dname_len+16);
     g_sprintf(rc_set_dir, "%s%c.RhythmCat", homedir, G_DIR_SEPARATOR);
-    rc_app_dir = rc_get_data_dir(*argv[0]);
+    rc_app_dir = rc_get_data_dir();
     if(rc_app_dir!=NULL)
         locale_dir = g_strdup_printf("%s%c..%clocale", rc_app_dir,
             G_DIR_SEPARATOR, G_DIR_SEPARATOR);
@@ -150,7 +150,7 @@ void rc_exit()
     gtk_main_quit();
 }
 
-gchar *rc_get_data_dir(char *arg0)
+gchar *rc_get_data_dir()
 {
     gchar *data_dir = NULL;
     gchar *bin_dir = NULL;
@@ -341,6 +341,7 @@ gboolean rc_dbus_init(gchar **remaining_args)
                     dbus_g_proxy_call(shell_proxy, "LoadURI", &error,
                         G_TYPE_STRING, remaining_args[i], G_TYPE_INVALID, 
                         G_TYPE_INVALID);
+                    if(error!=NULL) g_error_free(error);
                 }
             }
             g_object_unref(G_OBJECT(shell_proxy));

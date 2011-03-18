@@ -2,8 +2,8 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.67])
-AC_INIT([RhythmCat], [0.9.0], [http://code.google.com/p/rhythmcat/issues/list])
-AM_INIT_AUTOMAKE(RhythmCat, 0.9.0)
+AC_INIT([RhythmCat], [1.0.0], [http://code.google.com/p/rhythmcat/issues/list])
+AM_INIT_AUTOMAKE(RhythmCat, 1.0.0)
 AC_CONFIG_SRCDIR([src/main.c])
 AC_CONFIG_HEADERS([config.h])
 
@@ -15,6 +15,11 @@ AC_PROG_CC
 AC_PROG_INSTALL
 AC_PROG_LN_S
 CFLAGS="-Wall -O2 -DINSTALL_PATH=\\\"$datadir/RhythmCat/\\\""
+
+AC_PATH_PROG(DBUSBINDINGTOOL, dbus-binding-tool, no)
+if test "$DBUSBINDINGTOOL" = no; then
+    AC_MSG_ERROR([dbus-binding-tool not found!])
+fi
 
 # Checks for libraries.
 PKG_CHECK_MODULES([GLIB2], [glib-2.0 >= 2.16, gthread-2.0 >= 2.16, \

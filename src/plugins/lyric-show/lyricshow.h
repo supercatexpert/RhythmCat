@@ -28,6 +28,7 @@
 #include <stdlib.h>
 #include <glib.h>
 #include <glib/gprintf.h>
+#include <glib/gi18n.h>
 #include <gdk/gdk.h>
 #include <gtk/gtk.h>
 
@@ -48,10 +49,6 @@ typedef struct _GuiLrcData
     double text_hilight[4];
     gboolean lyric_flag;
     gboolean lyric_new_flag;
-    gboolean lyric_edit_flag;
-    cairo_surface_t *bg_image;
-    gchar *bg_image_file;
-    gint bg_image_style;
 }GuiLrcData;
 
 const gchar *g_module_check_init(GModule *);
@@ -70,6 +67,8 @@ gboolean rc_plugin_lrcshow_expose(GtkWidget *, gpointer);
 gboolean rc_plugin_lrcshow_update(gpointer);
 void rc_plugin_lrcshow_enable();
 void rc_plugin_lrcshow_disable();
+void rc_plugin_lrcshow_load_conf();
+void rc_plugin_lrcshow_save_conf();
 
 #endif
 

@@ -199,6 +199,11 @@ static void rc_gui_plugin_window_close(GtkWidget *widget, gpointer data)
     gtk_widget_destroy(plugin_window);
 }
 
+static void rc_gui_plugin_window_destroy(GtkWidget *widget, gpointer data)
+{
+    plugin_window = NULL;
+}
+
 void rc_gui_plugin_window_create(GtkWidget *widget, gpointer data)
 {
     gboolean visible = FALSE;
@@ -207,11 +212,10 @@ void rc_gui_plugin_window_create(GtkWidget *widget, gpointer data)
     GtkWidget *plugin_list_scr_window;
     GtkWidget *label1, *label2, *label3;
     GtkWidget *button_hbox1, *button_hbox2;
-    GtkTreePath *path;
-    if(G_IS_OBJECT(plugin_window))
-        g_object_get(G_OBJECT(plugin_window), "visible", &visible, NULL);
-    if(plugin_window!=NULL && GTK_IS_WIDGET(plugin_window))
+    GtkTreePath *path; 
+    if(plugin_window!=NULL && GTK_IS_WINDOW(plugin_window))
     {
+        g_object_get(G_OBJECT(plugin_window), "visible", &visible, NULL);
         if(!visible) gtk_widget_show_all(plugin_window);
         return;
     }
@@ -297,6 +301,8 @@ void rc_gui_plugin_window_create(GtkWidget *widget, gpointer data)
         G_CALLBACK(rc_gui_plugin_configure), NULL);
     g_signal_connect(G_OBJECT(plugin_close_button), "clicked",
         G_CALLBACK(rc_gui_plugin_window_close), NULL);
+    g_signal_connect(G_OBJECT(plugin_window), "destroy",
+        G_CALLBACK(rc_gui_plugin_window_destroy), NULL);
     gtk_widget_set_size_request(vbox2, 250, -1);
 }
 

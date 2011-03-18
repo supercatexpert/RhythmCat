@@ -531,7 +531,9 @@ shell.o: shell.c shell.h /usr/include/stdlib.h /usr/include/features.h \
  /usr/include/unistd.h /usr/include/bits/posix_opt.h \
  /usr/include/bits/confname.h /usr/include/getopt.h playlist.h \
  /usr/include/glib-2.0/glib/gi18n.h /usr/include/libintl.h \
- /usr/include/locale.h /usr/include/bits/locale.h
+ /usr/include/locale.h /usr/include/bits/locale.h core.h \
+ /usr/include/gstreamer-0.10/gst/pbutils/missing-plugins.h \
+ /usr/include/gstreamer-0.10/gst/pbutils/install-plugins.h gui.h
 
 shell.h:
 
@@ -1776,3 +1778,11 @@ playlist.h:
 /usr/include/locale.h:
 
 /usr/include/bits/locale.h:
+
+core.h:
+
+/usr/include/gstreamer-0.10/gst/pbutils/missing-plugins.h:
+
+/usr/include/gstreamer-0.10/gst/pbutils/install-plugins.h:
+
+gui.h:

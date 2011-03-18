@@ -44,7 +44,7 @@
 
 void rc_init(int *, char **[]);
 void rc_exit();
-gchar *rc_get_data_dir(char *);
+gchar *rc_get_data_dir();
 const gchar *rc_get_program_name();
 const gchar *rc_get_set_dir();
 const gchar *rc_get_build_num();

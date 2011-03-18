@@ -53,6 +53,11 @@ static GtkWidget *setting_ap_cl_combobox; /* Color Style Combobox */
 static GtkTreeModel *setting_tree_model;
 static gboolean setting_changed = FALSE;
 
+static void rc_gui_setting_destroy(GtkWidget *widget, gpointer data)
+{
+    setting_window = NULL;
+}
+
 /*
  * Create Setting Window.
  */
@@ -63,10 +68,9 @@ void rc_gui_create_setting_window(GtkWidget *widget, gpointer data)
     GtkWidget *hbox1, *hbox2;
     gint i;
     gboolean visible = FALSE;
-    if(G_IS_OBJECT(setting_window))
-        g_object_get(G_OBJECT(setting_window), "visible", &visible, NULL);
-    if(setting_window!=NULL && GTK_IS_WIDGET(setting_window))
+    if(setting_window!=NULL && GTK_IS_WINDOW(setting_window))
     {
+        g_object_get(G_OBJECT(setting_window), "visible", &visible, NULL);
         if(!visible) gtk_widget_show_all(setting_window);
         return;
     }
@@ -117,6 +121,8 @@ void rc_gui_create_setting_window(GtkWidget *widget, gpointer data)
         G_CALLBACK(rc_gui_setting_apply), NULL);
     g_signal_connect(G_OBJECT(setting_ok_button), "clicked",
         G_CALLBACK(rc_gui_setting_confirm), NULL);
+    g_signal_connect(G_OBJECT(setting_window), "destroy",
+        G_CALLBACK(rc_gui_setting_destroy), NULL);
     gtk_widget_show_all(setting_window);
 }
 
