@@ -47,14 +47,14 @@ gboolean rc_shell_load_uri(RCShell *shell, const gchar *uri, GError **error)
     return rc_plist_load_uri_from_remote(uri);
 }
 
-gboolean rc_shell_play(RCShell *shell, gboolean *playing, GError **error)
+gboolean rc_shell_play(RCShell *shell, GError **error)
 {
-    rc_gui_play_button_clicked(NULL, NULL);
-    if(rc_core_get_play_state()==GST_STATE_PLAYING)
-        *playing = TRUE;
-    else
-        *playing = FALSE;
-    return TRUE;
+    return rc_core_play();
+}
+
+gboolean rc_shell_pause(RCShell *shell, GError **error)
+{
+    return rc_core_pause();
 }
 
 gboolean rc_shell_stop(RCShell *shell, GError **error)
@@ -72,4 +72,64 @@ gboolean rc_shell_next(RCShell *shell, GError **error)
 {
     return rc_plist_play_next(FALSE);
 }
+
+gboolean rc_shell_get_state(RCShell *shell, gint *state, GError **error)
+{
+    *state = rc_core_get_play_state();
+    return TRUE;
+}
+
+gboolean rc_shell_get_position(RCShell *shell, gint64 *pos, GError **error)
+{
+    *pos = rc_core_get_play_position();
+    return TRUE;
+}
+
+gboolean rc_shell_set_position(RCShell *shell, gint64 pos, GError **error)
+{
+    return rc_core_set_play_position(pos);
+}
+
+gboolean rc_shell_get_duration(RCShell *shell, gint64 *dura, GError **error)
+{
+    *dura = rc_core_get_play_position();
+    return TRUE;
+}
+
+gboolean rc_shell_get_volume(RCShell *shell, gdouble *vol, GError **error)
+{
+    *vol = rc_core_get_volume() / 100;
+    return TRUE;
+}
+
+gboolean rc_shell_set_volume(RCShell *shell, gdouble vol, GError **error)
+{
+    return rc_core_set_volume(vol * 100);
+}
+
+gboolean rc_shell_get_repeat_mode(RCShell *shell, gint *repeat, GError **error)
+{
+    rc_plist_get_play_mode(repeat, NULL);
+    return TRUE;
+}
+
+gboolean rc_shell_set_repeat_mode(RCShell *shell, gint repeat, GError **error)
+{
+    rc_plist_set_play_mode(repeat, -1);
+    return TRUE;
+}
+
+gboolean rc_shell_get_random_mode(RCShell *shell, gint *random, GError **error)
+{
+    rc_plist_get_play_mode(NULL, random);
+    return TRUE;
+}
+
+gboolean rc_shell_set_random_mode(RCShell *shell, gint random, GError **error)
+{
+    rc_plist_set_play_mode(-1, random);
+    return TRUE;
+}
+
+
 

@@ -21,16 +21,16 @@
  */
 
 /* Use enum type to show the columns int ListStore1. */
-typedef enum
+typedef enum RCPlist1Column
 {
     PLIST1_STATE = 0,
     PLIST1_NAME = 1,
     PLIST1_STORE = 2,
     PLIST1_LAST = 3
-}Plist1Column;
+}RCPlist1Column;
 
 /* Use enum type to show the columns int ListStore2. */
-typedef enum
+typedef enum RCPlist2Column
 {
     PLIST2_URI = 0,
     PLIST2_STATE = 1,
@@ -40,15 +40,15 @@ typedef enum
     PLIST2_LENGTH = 5,
     PLIST2_TRACKNO = 6,
     PLIST2_LAST = 7
-}Plist2Column;
+}RCPlist2Column;
 
 /* Custom struct type to store playlist data */
-typedef struct _PlistData
+typedef struct RCPlistData
 {
     GtkListStore *list_store;
     GtkTreeRowReference *list1_reference;
     GtkTreeRowReference *list2_reference;
-}PlistData;
+}RCPlistData;
 
 /* Functions */
 gboolean rc_plist_init();

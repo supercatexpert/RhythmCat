@@ -31,13 +31,13 @@
 #include <gtk/gtk.h>
 
 /* Custom struct type to store the data of EQ. */
-typedef struct _EQData
+typedef struct RCEQData
 {
     gchar *name;
     gdouble value[10];
-}EQData;
+}RCEQData;
 
-typedef struct GuiEQData
+typedef struct RCGuiEQData
 {
     GtkWidget *eq_combobox;
     GtkWidget *eq_scales[10];
@@ -45,12 +45,12 @@ typedef struct GuiEQData
     GtkWidget *db_labels[3];
     GtkWidget *save_button;
     GtkWidget *import_button;
-}GuiEQData;
+}RCGuiEQData;
 
 void rc_gui_init_eq_data();
 void rc_gui_eq_init();
 void rc_gui_create_equalizer();
-GuiEQData *rc_gui_eq_get_data();
+RCGuiEQData *rc_gui_eq_get_data();
 
 #endif
 

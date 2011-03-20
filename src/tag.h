@@ -38,7 +38,7 @@
 #include <gst/pbutils/install-plugins.h>
 
 /* Custom struct type to store the music metadata. */
-typedef struct _MusicMetaData
+typedef struct RCMusicMetaData
 {
     gint64 length;
     gchar *uri;
@@ -59,12 +59,12 @@ typedef struct _MusicMetaData
     GtkTreeRowReference *reference;
     GtkListStore *store;
     gpointer user_data;
-}MusicMetaData;
+}RCMusicMetaData;
 
-MusicMetaData *rc_tag_read_metadata(const gchar *);
-void rc_tag_free(MusicMetaData *);
-void rc_tag_set_playing_metadata(const MusicMetaData *);
-const MusicMetaData *rc_tag_get_playing_metadata();
+RCMusicMetaData *rc_tag_read_metadata(const gchar *);
+void rc_tag_free(RCMusicMetaData *);
+void rc_tag_set_playing_metadata(const RCMusicMetaData *);
+const RCMusicMetaData *rc_tag_get_playing_metadata();
 gchar *rc_tag_get_name_from_fpath(const gchar *);
 gchar *rc_tag_find_file(const gchar *, const gchar *, const gchar *);
 

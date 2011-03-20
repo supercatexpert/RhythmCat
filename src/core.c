@@ -33,15 +33,15 @@
 #include "gui_eq.h"
 #include "player.h"
 
-/* Variables */
-/*
- * CORE->repeat: 0: Not repeat
- *               1: Single song repeat
- *               2: Single list repeat
- *               3: All lists repeat
+/**
+ * SECTION: core
+ * @Short_description: The core of the player
+ * @Title: Core
+ *
+ * The core of the player, it uses Gstreamer as backend to play audio files.
  */
 
-static CoreData rc_core;
+static RCCoreData rc_core;
 static guint spect_bands = 30;
 static gdouble magnitude[30];
 static const gint audio_freq = 48000;
@@ -68,7 +68,6 @@ static void rc_core_plugin_install_result(GstInstallPluginsReturn result,
     }
 }
 
-
 /*
  * Gstreamer bus call (Used to receive tag, EOS, and so on.)
  */
@@ -87,7 +86,6 @@ static gboolean rc_core_bus_call(GstBus *bus, GstMessage *msg, gpointer data)
     switch(GST_MESSAGE_TYPE(msg))
     {
         case GST_MESSAGE_EOS:
-            rc_core.eos = TRUE;
             rc_plist_play_next(TRUE);
             break;
         case GST_MESSAGE_SEGMENT_DONE:
@@ -180,8 +178,10 @@ static gboolean rc_core_plugin_check()
     return flag;
 }
 
-/*
- * Create gstreamer playbin. Initialize the player.
+/**
+ * rc_core_init:
+ *
+ * Initialize the core of the player. Can be load only once.
  */
 
 void rc_core_init()
@@ -204,7 +204,7 @@ void rc_core_init()
     gboolean flag = FALSE;
     GError *error = NULL;
     rc_debug_print("Core: Loading CORE...\n");
-    bzero(&rc_core, sizeof(CoreData));
+    bzero(&rc_core, sizeof(RCCoreData));
     flag = rc_core_plugin_check();
     if(!flag)
     {
@@ -307,7 +307,6 @@ void rc_core_init()
         gst_element_add_pad(seff, gst_ghost_pad_new(NULL, pad1));
         g_object_set(G_OBJECT(play), "audio-sink", seff, NULL);
         rc_core.eq_plugin = audio_equalizer;
-        rc_core.volume = volume;
         /* Use Volume Plugin to avoid the bug in Gstreamer 0.10.28. */
         rc_core.vol_plugin = volume_plugin;
     }
@@ -317,7 +316,6 @@ void rc_core_init()
     gst_element_set_state(play, GST_STATE_NULL);
     rc_gui_seek_scaler_disable();
     rc_core.playbin = play;
-    rc_core.eos = FALSE;
     rc_gui_set_volume(volume * 100);
     rc_core_set_volume(volume * 100);
     gst_element_set_state(play, GST_STATE_READY);
@@ -326,38 +324,50 @@ void rc_core_init()
     rc_debug_print("Core: CORE is successfully loaded!\n");
 }
 
-/* 
- * Delete the core when the player exits. 
+/**
+ * rc_core_exit:
+ *
+ * Free the core when exit.
  */
 
-void rc_core_delete()
+void rc_core_exit()
 {
     gst_element_set_state(rc_core.playbin, GST_STATE_NULL);
     gst_object_unref(rc_core.playbin);
 }
 
-/*
- * Get the pointer of the core.
+/**
+ * rc_core_get_data:
+ * 
+ * Return the pointer of the core.
+ *
+ * Returns: The pointer to the data structure of the core.
  */
 
-CoreData *rc_core_get_core()
+RCCoreData *rc_core_get_data()
 {
     return &rc_core;
 }
 
-/*
- * Set the uri which gstreamer will open.
+/**
+ * rc_core_set_uri:
+ * @uri: the URI to play
+ *
+ * Set the URI to play.
  */
 
 void rc_core_set_uri(const gchar *uri)
 {
     rc_core_stop();
-    rc_core.eos = FALSE;
     g_object_set(G_OBJECT(rc_core.playbin), "uri", uri, NULL);
 }
 
-/*
- * Get the uri which gstreamer opened. (Free after usage!)
+/**
+ * rc_core_get_uri:
+ *
+ * Return the URI the core opened.
+ *
+ * Returns: The URI the core opened, free after usage.
  */
 
 gchar *rc_core_get_uri()
@@ -367,8 +377,12 @@ gchar *rc_core_get_uri()
     return uri;
 }
 
-/*
- * Play the core which set beforce. The player will start to play.
+/**
+ * rc_core_play:
+ *
+ * Set the state of the core to playing.
+ *
+ * Returns: Whether the state is set to playing successfully.
  */
 
 gboolean rc_core_play()
@@ -393,8 +407,12 @@ gboolean rc_core_play()
     return TRUE;
 }
 
-/*
- * Set the core to pause state. So playing will be paused.
+/**
+ * rc_core_pause:
+ *
+ * Set the core to pause state.
+ *
+ * Returns: Whether the state is set to paused successfully.
  */
 
 gboolean rc_core_pause()
@@ -407,8 +425,10 @@ gboolean rc_core_pause()
     return TRUE;
 }
 
-/*
- * Set the core to stop state. So playing will be stopped
+/**
+ * rc_core_stop:
+ *
+ * Set the core to stop state.
  */
 
 gboolean rc_core_stop()
@@ -421,65 +441,88 @@ gboolean rc_core_stop()
     return TRUE;
 }
 
-/*
+/**
+ * rc_core_set_volume:
+ * @volume: the volume of the player, it should be between 0.0 to 100.0.
+ *
  * Set the volume of player.
  */
 
 gboolean rc_core_set_volume(gdouble volume)
 {
-    rc_core.volume = volume / 100;
+    volume /= 100;
     if(rc_core.vol_plugin!=NULL)
-        g_object_set(G_OBJECT(rc_core.vol_plugin), "volume", volume/100, NULL);
+        g_object_set(G_OBJECT(rc_core.vol_plugin), "volume", volume, NULL);
     else
-        g_object_set(G_OBJECT(rc_core.playbin), "volume", volume/100, NULL);
+        g_object_set(G_OBJECT(rc_core.playbin), "volume", volume, NULL);
     return TRUE;
 }
 
-/*
- * Get the volume of the player.
+/**
+ * rc_core_get_volume:
+ *
+ * Return the volume of the player.
+ *
+ * Returns: The volume of the player.
  */
 
 gdouble rc_core_get_volume()
 {
+    gdouble volume;
     if(rc_core.vol_plugin!=NULL)
-        g_object_get(rc_core.vol_plugin, "volume", &rc_core.volume, NULL);
+        g_object_get(rc_core.vol_plugin, "volume", &volume, NULL);
     else
-        g_object_get(rc_core.playbin, "volume", &rc_core.volume, NULL);
-    return rc_core.volume * 100;
+        g_object_get(rc_core.playbin, "volume", &volume, NULL);
+    return volume * 100;
 }
 
-/*
- * Set the position to play by time.
+/**
+ * rc_core_set_play_position:
+ * @time: the position to go to
+ *
+ * Set the position to go to (in nanosecond).
+ * Notice that this function can only be used when the state of the player is
+ * playing or paused.
+ *
+ * Returns: Whether the time is valid.
  */
 
-gboolean rc_core_set_play_position(gint64 mtime)
+gboolean rc_core_set_play_position(gint64 time)
 { 
-    if(mtime<0) return FALSE;
+    if(time<0) return FALSE;
     gst_element_seek_simple(rc_core.playbin, GST_FORMAT_TIME, 
-        GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_ACCURATE, mtime);
+        GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_ACCURATE, time);
     return TRUE;
 }
 
-/*
- * Set the position to play by persent.
+/**
+ * rc_core_set_play_position_by_persent:
+ * @persent: the position (in persent, from 0.0 to 1.0) to go to
+ *
+ * Set the position to to go to in persent (0.0 - 1.0).
+ *
+ * Returns: Whether the persent is valid.
  */
 
-gboolean rc_core_set_play_position_by_persent(gdouble mpersent)
+gboolean rc_core_set_play_position_by_persent(gdouble persent)
 {
-    if(mpersent>100) return FALSE;
-    if(mpersent<0) return FALSE;
     gint64 length;
-    mpersent/=100;
+    if(persent>100.0 || persent<0.0) return FALSE;
+    persent/=100;
     GstFormat fmt = GST_FORMAT_TIME;
-    gst_element_query_duration(rc_core.playbin,&fmt,&length);
-    length *= mpersent;
+    gst_element_query_duration(rc_core.playbin, &fmt, &length);
+    length *= persent;
     gst_element_seek_simple(rc_core.playbin, GST_FORMAT_TIME,
         GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_ACCURATE, length);
     return TRUE;
 }
 
-/*
- * Get the playing position.
+/**
+ * rc_core_get_play_position:
+ *
+ * Return the playing position (in nanosecond).
+ *
+ * Returns: The playing position (in nanosecond).
  */
 
 gint64 rc_core_get_play_position()
@@ -493,8 +536,12 @@ gint64 rc_core_get_play_position()
     return pos;
 }
 
-/*
- * Get the time length of the music.
+/**
+ * rc_core_get_music_length:
+ *
+ * Return the time length of the playing music (in nanosecond).
+ *
+ * Returns: The time length of the playing music (in nanosecond).
  */
 
 gint64 rc_core_get_music_length()
@@ -508,14 +555,15 @@ gint64 rc_core_get_music_length()
     return dura;
 }
 
-/*
+/**
+ * rc_core_set_eq_effect:
+ * @fq: an array (10 elements) of the gain for the frequency bands
+ *
  * Set the EQ effect of the player.
  */
 
 void rc_core_set_eq_effect(gdouble *fq)
 {
-    gint i = 0;
-    for(i=0;i<10;i++) rc_core.eq[i] = fq[i];
     if(rc_core.eq_plugin==NULL) return;
     g_object_set(G_OBJECT(rc_core.eq_plugin), "band0", fq[0], NULL);
     g_object_set(G_OBJECT(rc_core.eq_plugin), "band1", fq[1], NULL);
@@ -528,6 +576,14 @@ void rc_core_set_eq_effect(gdouble *fq)
     g_object_set(G_OBJECT(rc_core.eq_plugin), "band8", fq[8], NULL);
     g_object_set(G_OBJECT(rc_core.eq_plugin), "band9", fq[9], NULL);
 }
+
+/**
+ * rc_core_get_play_state:
+ *
+ * Return the state of the core.
+ *
+ * Returns: The state of the core.
+ */
 
 GstState rc_core_get_play_state()
 {

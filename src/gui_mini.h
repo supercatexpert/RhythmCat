@@ -32,7 +32,7 @@
 #include <gtk/gtk.h>
 #include <gst/gst.h>
 
-typedef struct GuiMiniData
+typedef struct RCGuiMiniData
 {
     GtkWidget *mini_window;
     GtkWidget *icon_eventbox;
@@ -53,10 +53,10 @@ typedef struct GuiMiniData
     GtkAdjustment *lrc_vport_adj;
     guint mini_window_width;
     guint mini_window_height;
-}GuiMiniData;
+}RCGuiMiniData;
 
 void rc_gui_mini_init();
-GuiMiniData *rc_gui_mini_get_data();
+RCGuiMiniData *rc_gui_mini_get_data();
 void rc_gui_mini_set_info_text(const gchar *);
 void rc_gui_mini_set_lyric_text(const gchar *);
 void rc_gui_mini_info_text_move();

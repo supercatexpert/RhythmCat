@@ -34,26 +34,34 @@
 #include <gst/pbutils/missing-plugins.h>
 #include <gst/pbutils/install-plugins.h>
 
-/* Custom struct type to store the core. */
-typedef struct _CoreData
+/**
+ * RCCoreData: The data of the core.
+ * @playbin: The playbin element
+ * @audio_sink: The audio sink element
+ * @eq_plugin: The equalizer element
+ * @vol_plugin: The volume control element
+ * @ver_major: The major version number of Gstreamer
+ * @ver_minor: The minor version number of Gstreamer
+ * @ver_micro: The micro version number of Gstreamer
+ * @ver_nano: The nano version number of Gstreamer
+ */
+
+typedef struct RCCoreData
 {
     GstElement *playbin;
     GstElement *audio_sink;
     GstElement *eq_plugin;
     GstElement *vol_plugin;
-    gdouble volume;
-    gdouble eq[10];
-    gint eos;
     guint ver_major;
     guint ver_minor;
     guint ver_micro;
     guint ver_nano;
-}CoreData;
+}RCCoreData;
 
 /* Functions */
 void rc_core_init();
-CoreData *rc_core_get_core();
-void rc_core_delete();
+void rc_core_exit();
+RCCoreData *rc_core_get_data();
 void rc_core_set_uri(const gchar *);
 gchar *rc_core_get_uri();
 gboolean rc_core_play();

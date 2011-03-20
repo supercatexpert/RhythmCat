@@ -30,16 +30,16 @@
 #include "main.h"
 #include "debug.h"
 
-MusicMetaData playing_mmd = {0};
+RCMusicMetaData playing_mmd = {0};
 
-typedef struct _TagDecodedPadData
+typedef struct RCTagDecodedPadData
 {
     GstElement *pipeline;
     GstElement *fakesink;
     gboolean audio_flag;
     gboolean video_flag;
     gboolean non_audio_flag;
-}TagDecodedPadData;
+}RCTagDecodedPadData;
 
 static void rc_tag_plugin_install_result(GstInstallPluginsReturn result,
     gpointer data)
@@ -68,7 +68,7 @@ static void rc_tag_plugin_install_result(GstInstallPluginsReturn result,
  */
 
 static gboolean rc_tag_bus_handler(GstBus *bus, GstMessage *message,
-    MusicMetaData *mmd)
+    RCMusicMetaData *mmd)
 {
     gchar *tag_title = NULL;
     gchar *tag_artist = NULL;
@@ -183,7 +183,7 @@ static gboolean rc_tag_bus_handler(GstBus *bus, GstMessage *message,
  * The event loop for tag reading.
  */
 
-static void rc_tag_event_loop(MusicMetaData *mmd, GstElement *element,
+static void rc_tag_event_loop(RCMusicMetaData *mmd, GstElement *element,
     gboolean block)
 {
     GstBus *bus;
@@ -213,7 +213,7 @@ static void rc_tag_event_loop(MusicMetaData *mmd, GstElement *element,
  */
 
 static void rc_tag_gst_new_decoded_pad_cb(GstElement *decodebin, 
-    GstPad *pad, gboolean last, TagDecodedPadData *data)
+    GstPad *pad, gboolean last, RCTagDecodedPadData *data)
 {
     GstCaps *caps;
     GstStructure *structure;
@@ -268,7 +268,7 @@ static void rc_tag_gst_new_decoded_pad_cb(GstElement *decodebin,
  * Read tag (metadata) from given URI.
  */
 
-MusicMetaData *rc_tag_read_metadata(const gchar *uri)
+RCMusicMetaData *rc_tag_read_metadata(const gchar *uri)
 {
     GstElement *pipeline;
     GstElement *urisrc;
@@ -284,8 +284,8 @@ MusicMetaData *rc_tag_read_metadata(const gchar *uri)
     GstMessage *msg;
     GstFormat fmt = GST_FORMAT_TIME;
     GstBus *bus;
-    MusicMetaData *mmd;
-    TagDecodedPadData decoded_pad_data;
+    RCMusicMetaData *mmd;
+    RCTagDecodedPadData decoded_pad_data;
     gchar *encoding;
     const gchar *locale;
     if(uri==NULL)
@@ -324,7 +324,7 @@ MusicMetaData *rc_tag_read_metadata(const gchar *uri)
             g_free(encoding);
         }
     }
-    mmd = g_malloc0(sizeof(MusicMetaData));
+    mmd = g_malloc0(sizeof(RCMusicMetaData));
     mmd->uri = g_strdup(uri);
     mmd->eos = FALSE;
     mmd->bitrate = 0;
@@ -400,7 +400,7 @@ MusicMetaData *rc_tag_read_metadata(const gchar *uri)
  * Free the metadata struct.
  */
 
-void rc_tag_free(MusicMetaData *mmd)
+void rc_tag_free(RCMusicMetaData *mmd)
 {
     if(mmd->uri!=NULL) g_free(mmd->uri);
     if(mmd->image!=NULL) gst_buffer_unref(mmd->image);
@@ -411,11 +411,11 @@ void rc_tag_free(MusicMetaData *mmd)
  * Set playing metadata.
  */
 
-void rc_tag_set_playing_metadata(const MusicMetaData *mmd)
+void rc_tag_set_playing_metadata(const RCMusicMetaData *mmd)
 {
     if(playing_mmd.uri!=NULL) g_free(playing_mmd.uri);
     if(playing_mmd.image!=NULL) gst_buffer_unref(playing_mmd.image);
-    memcpy(&playing_mmd, mmd, sizeof(MusicMetaData));
+    memcpy(&playing_mmd, mmd, sizeof(RCMusicMetaData));
     if(mmd->uri!=NULL)
         playing_mmd.uri = g_strdup(mmd->uri);
     else
@@ -429,7 +429,7 @@ void rc_tag_set_playing_metadata(const MusicMetaData *mmd)
 /*
  * Get playing metadata.
  */
-const MusicMetaData *rc_tag_get_playing_metadata()
+const RCMusicMetaData *rc_tag_get_playing_metadata()
 {
     return &playing_mmd;
 }

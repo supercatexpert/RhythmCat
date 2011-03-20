@@ -44,23 +44,25 @@ typedef struct RCShellClass
     GObjectClass parent;
 }RCShellClass;
 
-typedef enum
-{
-    RC_SHELL_LOAD_URI,
-    RC_SHELL_PLAY,
-    RC_SHELL_STOP,
-    RC_SHELL_PREV,
-    RC_SHELL_NEXT
-}RCShellEnum;
-
 #define RC_SHELL_TYPE (rc_shell_get_type())
 
 GType rc_shell_get_type(void);
 gboolean rc_shell_load_uri(RCShell *, const gchar *, GError **);
-gboolean rc_shell_play(RCShell *, gboolean *, GError **);
+gboolean rc_shell_play(RCShell *, GError **);
+gboolean rc_shell_pause(RCShell *, GError **);
 gboolean rc_shell_stop(RCShell *, GError **);
 gboolean rc_shell_prev(RCShell *, GError **);
 gboolean rc_shell_next(RCShell *, GError **);
+gboolean rc_shell_get_state(RCShell *, gint *, GError **);
+gboolean rc_shell_get_position(RCShell *, gint64 *, GError **);
+gboolean rc_shell_set_position(RCShell *, gint64, GError **);
+gboolean rc_shell_get_duration(RCShell *, gint64 *, GError **);
+gboolean rc_shell_get_volume(RCShell *, gdouble *, GError **);
+gboolean rc_shell_set_volume(RCShell *, gdouble, GError **);
+gboolean rc_shell_get_repeat_mode(RCShell *, gint *, GError **);
+gboolean rc_shell_set_repeat_mode(RCShell *, gint, GError **);
+gboolean rc_shell_get_random_mode(RCShell *, gint *, GError **);
+gboolean rc_shell_set_random_mode(RCShell *, gint, GError **);
 
 #endif
 

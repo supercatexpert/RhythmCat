@@ -22,7 +22,7 @@ srcdir = .
 top_srcdir = ..
 
 
-prefix = /usr
+prefix = /opt/amd64/RhythmCat
 exec_prefix = ${prefix}
 datarootdir = ${prefix}/share
 datadir = ${datarootdir}
@@ -74,24 +74,24 @@ $(DISTFILES.extra1) $(DISTFILES.extra2) $(DISTFILES.extra3)
 
 POTFILES = \
      ../src/core.c \
-     ../src/gui_kara.c \
-     ../src/gui_style.c \
-     ../src/main.c \
-     ../src/tag_id3.c \
      ../src/debug.c \
-     ../src/gui_lrc.c \
-     ../src/gui_tools.c \
-     ../src/playlist.c \
-     ../src/tools.c \
      ../src/gui.c \
-     ../src/gui_lrc_desk.c \
-     ../src/gui_treeview.c \
      ../src/gui_dialog.c \
-     ../src/gui_menu.c \
-     ../src/karaoke.c \
-     ../src/settings.c \
      ../src/gui_eq.c \
-     ../src/gui_setting.c
+     ../src/gui_mini.c \
+     ../src/gui_plugin.c \
+     ../src/gui_setting.c \
+     ../src/gui_style.c \
+     ../src/gui_treeview.c \
+     ../src/lyric.c \
+     ../src/main.c \
+     ../src/msg.c \
+     ../src/player.c \
+     ../src/playlist.c \
+     ../src/plugin.c \
+     ../src/settings.c \
+     ../src/shell.c \
+     ../src/tag.c
 
 CATALOGS =  en.gmo ja_JP.gmo zh_CN.gmo zh_TW.gmo
 

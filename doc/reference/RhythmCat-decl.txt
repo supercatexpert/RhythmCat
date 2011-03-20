@@ -1,0 +1,1723 @@
+<ENUM>
+<NAME>PluginType</NAME>
+typedef enum
+{
+    PLUGIN_TYPE_MODULE = 1,
+    PLUGIN_TYPE_PYTHON = 2
+}PluginType;
+</ENUM>
+<USER_FUNCTION>
+<NAME>module_init</NAME>
+<RETURNS>gint </RETURNS>
+
+</USER_FUNCTION>
+<USER_FUNCTION>
+<NAME>module_exit</NAME>
+<RETURNS>void </RETURNS>
+
+</USER_FUNCTION>
+<USER_FUNCTION>
+<NAME>module_get_group_name</NAME>
+<RETURNS>const gchar *</RETURNS>
+
+</USER_FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_init</NAME>
+<RETURNS>gboolean </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_exit</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_search_dir</NAME>
+<RETURNS>gboolean </RETURNS>
+const gchar * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_get_list</NAME>
+<RETURNS>const GSList *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_list_free</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_plugin_free</NAME>
+<RETURNS>void </RETURNS>
+PluginData * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_module_free</NAME>
+<RETURNS>void </RETURNS>
+ModuleData * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_module_check_running</NAME>
+<RETURNS>gboolean </RETURNS>
+const gchar * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_load</NAME>
+<RETURNS>gboolean </RETURNS>
+const gchar *, PluginData ** 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_module_load</NAME>
+<RETURNS>gboolean </RETURNS>
+const gchar * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_module_close</NAME>
+<RETURNS>void </RETURNS>
+const gchar * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_module_configure</NAME>
+<RETURNS>gboolean </RETURNS>
+const gchar * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_python_load</NAME>
+<RETURNS>gboolean </RETURNS>
+const gchar * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_python_configure</NAME>
+<RETURNS>gboolean </RETURNS>
+const gchar * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_tag_read_metadata</NAME>
+<RETURNS>MusicMetaData *</RETURNS>
+const gchar * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_tag_free</NAME>
+<RETURNS>void </RETURNS>
+MusicMetaData * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_tag_set_playing_metadata</NAME>
+<RETURNS>void </RETURNS>
+const MusicMetaData * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_tag_get_playing_metadata</NAME>
+<RETURNS>const MusicMetaData *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_tag_get_name_from_fpath</NAME>
+<RETURNS>gchar *</RETURNS>
+const gchar * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_tag_find_file</NAME>
+<RETURNS>gchar *</RETURNS>
+const gchar *, const gchar *, const gchar * 
+</FUNCTION>
+<MACRO>
+<NAME>PACKAGE</NAME>
+#define PACKAGE "RhythmCat"
+</MACRO>
+<MACRO>
+<NAME>GETTEXT_PACKAGE</NAME>
+#define GETTEXT_PACKAGE "RhythmCat"
+</MACRO>
+<MACRO>
+<NAME>LOCALEDIR</NAME>
+#define LOCALEDIR "locale"
+</MACRO>
+<FUNCTION>
+<NAME>rc_init</NAME>
+<RETURNS>void </RETURNS>
+int *, char **[] 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_exit</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_get_data_dir</NAME>
+<RETURNS>gchar *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_get_program_name</NAME>
+<RETURNS>const gchar *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_get_set_dir</NAME>
+<RETURNS>const gchar *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_get_build_num</NAME>
+<RETURNS>const gchar *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_get_ver_num</NAME>
+<RETURNS>const gchar *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_get_authors</NAME>
+<RETURNS>const gchar *const *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_get_documenters</NAME>
+<RETURNS>const gchar *const *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_get_artists</NAME>
+<RETURNS>const gchar *const *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_get_stable</NAME>
+<RETURNS>gboolean </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_get_app_dir</NAME>
+<RETURNS>const gchar *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_get_home_dir</NAME>
+<RETURNS>const gchar *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_get_mfile_support_glob</NAME>
+<RETURNS>const gchar *const *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_is_mfile_supported</NAME>
+<RETURNS>gboolean </RETURNS>
+gchar * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_dbus_init</NAME>
+<RETURNS>gboolean </RETURNS>
+gchar ** 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_get_locale</NAME>
+<RETURNS>const gchar *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_lrc_read_from_file</NAME>
+<RETURNS>gboolean </RETURNS>
+const gchar * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_lrc_clean_data</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_lrc_get_lrc_data</NAME>
+<RETURNS>const GList *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_lrc_get_text_data</NAME>
+<RETURNS>const gchar *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_lrc_get_line_by_time</NAME>
+<RETURNS>const LrcData *</RETURNS>
+gint64 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_lrc_set_text</NAME>
+<RETURNS>void </RETURNS>
+const gchar * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_lrc_save_lrc</NAME>
+<RETURNS>gboolean </RETURNS>
+const gchar * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_plugin_window_create</NAME>
+<RETURNS>void </RETURNS>
+GtkWidget *, gpointer 
+</FUNCTION>
+<USER_FUNCTION>
+<NAME>MsgAsyncQueueWatchFunc</NAME>
+<RETURNS>void </RETURNS>
+gpointer item, gpointer data
+</USER_FUNCTION>
+<ENUM>
+<NAME>MsgType</NAME>
+typedef enum _MsgType
+{
+    MSG_TYPE_EMPTY = 0,
+    MSG_TYPE_TEST = 1,
+    MSG_TYPE_PL_INSERT = 2,
+    MSG_TYPE_PL_REFRESH = 3,
+    MSG_TYPE_PL_REMOVE = 4
+}MsgType;
+</ENUM>
+<FUNCTION>
+<NAME>rc_msg_async_queue_watch_new</NAME>
+<RETURNS>guint </RETURNS>
+GAsyncQueue *, gint, MsgAsyncQueueWatchFunc, gpointer, GDestroyNotify, GMainContext * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_msg_init</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_msg_push</NAME>
+<RETURNS>void </RETURNS>
+MsgType, gpointer 
+</FUNCTION>
+<MACRO>
+<NAME>DEBUG_MODE</NAME>
+#define DEBUG_MODE 0
+</MACRO>
+<FUNCTION>
+<NAME>rc_debug_get_flag</NAME>
+<RETURNS>int </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_debug_set_mode</NAME>
+<RETURNS>void </RETURNS>
+int 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_debug_print</NAME>
+<RETURNS>gint </RETURNS>
+const gchar *, ... 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_debug_perror</NAME>
+<RETURNS>gint </RETURNS>
+const gchar *, ... 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_core_init</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_core_exit</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_core_get_data</NAME>
+<RETURNS>RCCoreData *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_core_set_uri</NAME>
+<RETURNS>void </RETURNS>
+const gchar * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_core_get_uri</NAME>
+<RETURNS>gchar *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_core_play</NAME>
+<RETURNS>gboolean </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_core_pause</NAME>
+<RETURNS>gboolean </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_core_stop</NAME>
+<RETURNS>gboolean </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_core_set_volume</NAME>
+<RETURNS>gboolean </RETURNS>
+gdouble 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_core_set_play_position</NAME>
+<RETURNS>gboolean </RETURNS>
+gint64 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_core_set_play_position_by_persent</NAME>
+<RETURNS>gboolean </RETURNS>
+gdouble 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_core_get_play_position</NAME>
+<RETURNS>gint64 </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_core_get_music_length</NAME>
+<RETURNS>gint64 </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_core_get_volume</NAME>
+<RETURNS>gdouble </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_core_set_eq_effect</NAME>
+<RETURNS>void </RETURNS>
+gdouble * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_core_get_play_state</NAME>
+<RETURNS>GstState </RETURNS>
+ 
+</FUNCTION>
+<MACRO>
+<NAME>MAX_DIR_DEPTH</NAME>
+#define MAX_DIR_DEPTH 5
+</MACRO>
+<FUNCTION>
+<NAME>rc_gui_about_player</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_show_message_dialog</NAME>
+<RETURNS>void </RETURNS>
+GtkMessageType, const gchar *, const gchar *, ... 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_show_open_dialog</NAME>
+<RETURNS>void </RETURNS>
+GtkWidget *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_open_music_directory</NAME>
+<RETURNS>void </RETURNS>
+GtkWidget *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_save_playlist_dialog</NAME>
+<RETURNS>void </RETURNS>
+GtkWidget *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_load_playlist_dialog</NAME>
+<RETURNS>void </RETURNS>
+GtkWidget *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_save_all_playlists_dialog</NAME>
+<RETURNS>void </RETURNS>
+GtkWidget *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_init_eq_data</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_eq_init</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_create_equalizer</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_eq_get_data</NAME>
+<RETURNS>GuiEQData *</RETURNS>
+ 
+</FUNCTION>
+<MACRO>
+<NAME>g_marshal_value_peek_boolean</NAME>
+#define g_marshal_value_peek_boolean(v)  g_value_get_boolean (v)
+</MACRO>
+<MACRO>
+<NAME>g_marshal_value_peek_char</NAME>
+#define g_marshal_value_peek_char(v)     g_value_get_char (v)
+</MACRO>
+<MACRO>
+<NAME>g_marshal_value_peek_uchar</NAME>
+#define g_marshal_value_peek_uchar(v)    g_value_get_uchar (v)
+</MACRO>
+<MACRO>
+<NAME>g_marshal_value_peek_int</NAME>
+#define g_marshal_value_peek_int(v)      g_value_get_int (v)
+</MACRO>
+<MACRO>
+<NAME>g_marshal_value_peek_uint</NAME>
+#define g_marshal_value_peek_uint(v)     g_value_get_uint (v)
+</MACRO>
+<MACRO>
+<NAME>g_marshal_value_peek_long</NAME>
+#define g_marshal_value_peek_long(v)     g_value_get_long (v)
+</MACRO>
+<MACRO>
+<NAME>g_marshal_value_peek_ulong</NAME>
+#define g_marshal_value_peek_ulong(v)    g_value_get_ulong (v)
+</MACRO>
+<MACRO>
+<NAME>g_marshal_value_peek_int64</NAME>
+#define g_marshal_value_peek_int64(v)    g_value_get_int64 (v)
+</MACRO>
+<MACRO>
+<NAME>g_marshal_value_peek_uint64</NAME>
+#define g_marshal_value_peek_uint64(v)   g_value_get_uint64 (v)
+</MACRO>
+<MACRO>
+<NAME>g_marshal_value_peek_enum</NAME>
+#define g_marshal_value_peek_enum(v)     g_value_get_enum (v)
+</MACRO>
+<MACRO>
+<NAME>g_marshal_value_peek_flags</NAME>
+#define g_marshal_value_peek_flags(v)    g_value_get_flags (v)
+</MACRO>
+<MACRO>
+<NAME>g_marshal_value_peek_float</NAME>
+#define g_marshal_value_peek_float(v)    g_value_get_float (v)
+</MACRO>
+<MACRO>
+<NAME>g_marshal_value_peek_double</NAME>
+#define g_marshal_value_peek_double(v)   g_value_get_double (v)
+</MACRO>
+<MACRO>
+<NAME>g_marshal_value_peek_string</NAME>
+#define g_marshal_value_peek_string(v)   (char*) g_value_get_string (v)
+</MACRO>
+<MACRO>
+<NAME>g_marshal_value_peek_param</NAME>
+#define g_marshal_value_peek_param(v)    g_value_get_param (v)
+</MACRO>
+<MACRO>
+<NAME>g_marshal_value_peek_boxed</NAME>
+#define g_marshal_value_peek_boxed(v)    g_value_get_boxed (v)
+</MACRO>
+<MACRO>
+<NAME>g_marshal_value_peek_pointer</NAME>
+#define g_marshal_value_peek_pointer(v)  g_value_get_pointer (v)
+</MACRO>
+<MACRO>
+<NAME>g_marshal_value_peek_object</NAME>
+#define g_marshal_value_peek_object(v)   g_value_get_object (v)
+</MACRO>
+<MACRO>
+<NAME>g_marshal_value_peek_boolean</NAME>
+#define g_marshal_value_peek_boolean(v)  (v)->data[0].v_int
+</MACRO>
+<MACRO>
+<NAME>g_marshal_value_peek_char</NAME>
+#define g_marshal_value_peek_char(v)     (v)->data[0].v_int
+</MACRO>
+<MACRO>
+<NAME>g_marshal_value_peek_uchar</NAME>
+#define g_marshal_value_peek_uchar(v)    (v)->data[0].v_uint
+</MACRO>
+<MACRO>
+<NAME>g_marshal_value_peek_int</NAME>
+#define g_marshal_value_peek_int(v)      (v)->data[0].v_int
+</MACRO>
+<MACRO>
+<NAME>g_marshal_value_peek_uint</NAME>
+#define g_marshal_value_peek_uint(v)     (v)->data[0].v_uint
+</MACRO>
+<MACRO>
+<NAME>g_marshal_value_peek_long</NAME>
+#define g_marshal_value_peek_long(v)     (v)->data[0].v_long
+</MACRO>
+<MACRO>
+<NAME>g_marshal_value_peek_ulong</NAME>
+#define g_marshal_value_peek_ulong(v)    (v)->data[0].v_ulong
+</MACRO>
+<MACRO>
+<NAME>g_marshal_value_peek_int64</NAME>
+#define g_marshal_value_peek_int64(v)    (v)->data[0].v_int64
+</MACRO>
+<MACRO>
+<NAME>g_marshal_value_peek_uint64</NAME>
+#define g_marshal_value_peek_uint64(v)   (v)->data[0].v_uint64
+</MACRO>
+<MACRO>
+<NAME>g_marshal_value_peek_enum</NAME>
+#define g_marshal_value_peek_enum(v)     (v)->data[0].v_long
+</MACRO>
+<MACRO>
+<NAME>g_marshal_value_peek_flags</NAME>
+#define g_marshal_value_peek_flags(v)    (v)->data[0].v_ulong
+</MACRO>
+<MACRO>
+<NAME>g_marshal_value_peek_float</NAME>
+#define g_marshal_value_peek_float(v)    (v)->data[0].v_float
+</MACRO>
+<MACRO>
+<NAME>g_marshal_value_peek_double</NAME>
+#define g_marshal_value_peek_double(v)   (v)->data[0].v_double
+</MACRO>
+<MACRO>
+<NAME>g_marshal_value_peek_string</NAME>
+#define g_marshal_value_peek_string(v)   (v)->data[0].v_pointer
+</MACRO>
+<MACRO>
+<NAME>g_marshal_value_peek_param</NAME>
+#define g_marshal_value_peek_param(v)    (v)->data[0].v_pointer
+</MACRO>
+<MACRO>
+<NAME>g_marshal_value_peek_boxed</NAME>
+#define g_marshal_value_peek_boxed(v)    (v)->data[0].v_pointer
+</MACRO>
+<MACRO>
+<NAME>g_marshal_value_peek_pointer</NAME>
+#define g_marshal_value_peek_pointer(v)  (v)->data[0].v_pointer
+</MACRO>
+<MACRO>
+<NAME>g_marshal_value_peek_object</NAME>
+#define g_marshal_value_peek_object(v)   (v)->data[0].v_pointer
+</MACRO>
+<FUNCTION>
+<NAME>dbus_glib_marshal_rc_shell_BOOLEAN__INT64_POINTER</NAME>
+<RETURNS>void </RETURNS>
+GClosure     *closure, GValue       *return_value, guint         n_param_values, const GValue *param_values, gpointer      invocation_hint, gpointer      marshal_data 
+</FUNCTION>
+<FUNCTION>
+<NAME>dbus_glib_marshal_rc_shell_BOOLEAN__INT64_POINTER</NAME>
+<RETURNS>void </RETURNS>
+GClosure     *closure, GValue       *return_value G_GNUC_UNUSED, guint         n_param_values, const GValue *param_values, gpointer      invocation_hint G_GNUC_UNUSED, gpointer      marshal_data) { typedef gboolean (*GMarshalFunc_BOOLEAN__INT64_POINTER) (gpointer     data1, gint64       arg_1, gpointer     arg_2, gpointer     data2 
+</FUNCTION>
+<FUNCTION>
+<NAME>dbus_glib_marshal_rc_shell_BOOLEAN__DOUBLE_POINTER</NAME>
+<RETURNS>void </RETURNS>
+GClosure     *closure, GValue       *return_value, guint         n_param_values, const GValue *param_values, gpointer      invocation_hint, gpointer      marshal_data 
+</FUNCTION>
+<FUNCTION>
+<NAME>dbus_glib_marshal_rc_shell_BOOLEAN__DOUBLE_POINTER</NAME>
+<RETURNS>void </RETURNS>
+GClosure     *closure, GValue       *return_value G_GNUC_UNUSED, guint         n_param_values, const GValue *param_values, gpointer      invocation_hint G_GNUC_UNUSED, gpointer      marshal_data) { typedef gboolean (*GMarshalFunc_BOOLEAN__DOUBLE_POINTER) (gpointer     data1, gdouble      arg_1, gpointer     arg_2, gpointer     data2 
+</FUNCTION>
+<FUNCTION>
+<NAME>dbus_glib_marshal_rc_shell_BOOLEAN__POINTER</NAME>
+<RETURNS>void </RETURNS>
+GClosure     *closure, GValue       *return_value, guint         n_param_values, const GValue *param_values, gpointer      invocation_hint, gpointer      marshal_data 
+</FUNCTION>
+<FUNCTION>
+<NAME>dbus_glib_marshal_rc_shell_BOOLEAN__POINTER</NAME>
+<RETURNS>void </RETURNS>
+GClosure     *closure, GValue       *return_value G_GNUC_UNUSED, guint         n_param_values, const GValue *param_values, gpointer      invocation_hint G_GNUC_UNUSED, gpointer      marshal_data) { typedef gboolean (*GMarshalFunc_BOOLEAN__POINTER) (gpointer     data1, gpointer     arg_1, gpointer     data2 
+</FUNCTION>
+<FUNCTION>
+<NAME>dbus_glib_marshal_rc_shell_BOOLEAN__INT_POINTER</NAME>
+<RETURNS>void </RETURNS>
+GClosure     *closure, GValue       *return_value, guint         n_param_values, const GValue *param_values, gpointer      invocation_hint, gpointer      marshal_data 
+</FUNCTION>
+<FUNCTION>
+<NAME>dbus_glib_marshal_rc_shell_BOOLEAN__INT_POINTER</NAME>
+<RETURNS>void </RETURNS>
+GClosure     *closure, GValue       *return_value G_GNUC_UNUSED, guint         n_param_values, const GValue *param_values, gpointer      invocation_hint G_GNUC_UNUSED, gpointer      marshal_data) { typedef gboolean (*GMarshalFunc_BOOLEAN__INT_POINTER) (gpointer     data1, gint         arg_1, gpointer     arg_2, gpointer     data2 
+</FUNCTION>
+<FUNCTION>
+<NAME>dbus_glib_marshal_rc_shell_BOOLEAN__STRING_POINTER</NAME>
+<RETURNS>void </RETURNS>
+GClosure     *closure, GValue       *return_value, guint         n_param_values, const GValue *param_values, gpointer      invocation_hint, gpointer      marshal_data 
+</FUNCTION>
+<FUNCTION>
+<NAME>dbus_glib_marshal_rc_shell_BOOLEAN__STRING_POINTER</NAME>
+<RETURNS>void </RETURNS>
+GClosure     *closure, GValue       *return_value G_GNUC_UNUSED, guint         n_param_values, const GValue *param_values, gpointer      invocation_hint G_GNUC_UNUSED, gpointer      marshal_data) { typedef gboolean (*GMarshalFunc_BOOLEAN__STRING_POINTER) (gpointer     data1, gpointer     arg_1, gpointer     arg_2, gpointer     data2 
+</FUNCTION>
+<FUNCTION>
+<NAME>dbus_glib_marshal_rc_shell_BOOLEAN__POINTER_POINTER</NAME>
+<RETURNS>void </RETURNS>
+GClosure     *closure, GValue       *return_value, guint         n_param_values, const GValue *param_values, gpointer      invocation_hint, gpointer      marshal_data 
+</FUNCTION>
+<FUNCTION>
+<NAME>dbus_glib_marshal_rc_shell_BOOLEAN__POINTER_POINTER</NAME>
+<RETURNS>void </RETURNS>
+GClosure     *closure, GValue       *return_value G_GNUC_UNUSED, guint         n_param_values, const GValue *param_values, gpointer      invocation_hint G_GNUC_UNUSED, gpointer      marshal_data) { typedef gboolean (*GMarshalFunc_BOOLEAN__POINTER_POINTER) (gpointer     data1, gpointer     arg_1, gpointer     arg_2, gpointer     data2 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_style_init</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_style_refresh</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_style_set_color_style</NAME>
+<RETURNS>void </RETURNS>
+const GuiColorStyle * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_style_get_color_style</NAME>
+<RETURNS>const GuiColorStyle *</RETURNS>
+gint 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_style_set_color_style_by_index</NAME>
+<RETURNS>void </RETURNS>
+gint 
+</FUNCTION>
+<ENUM>
+<NAME>Plist1Column</NAME>
+typedef enum
+{
+    PLIST1_STATE = 0,
+    PLIST1_NAME = 1,
+    PLIST1_STORE = 2,
+    PLIST1_LAST = 3
+}Plist1Column;
+</ENUM>
+<ENUM>
+<NAME>Plist2Column</NAME>
+typedef enum
+{
+    PLIST2_URI = 0,
+    PLIST2_STATE = 1,
+    PLIST2_TITLE = 2,
+    PLIST2_ARTIST = 3,
+    PLIST2_ALBUM = 4,
+    PLIST2_LENGTH = 5,
+    PLIST2_TRACKNO = 6,
+    PLIST2_LAST = 7
+}Plist2Column;
+</ENUM>
+<FUNCTION>
+<NAME>rc_plist_init</NAME>
+<RETURNS>gboolean </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plist_uninit_playlist</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plist_insert_list</NAME>
+<RETURNS>gboolean </RETURNS>
+const gchar *, gint 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plist_insert_music</NAME>
+<RETURNS>gboolean </RETURNS>
+const gchar *, gint, gint 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plist_list2_insert_item</NAME>
+<RETURNS>void </RETURNS>
+const gchar *, const gchar *, const gchar *, const gchar *, gint64, gint, GtkListStore *, gint 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plist_list2_refresh_item</NAME>
+<RETURNS>void </RETURNS>
+const gchar *, const gchar *, const gchar *, const gchar *, gint64, gint, GtkTreeRowReference * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plist_list2_remove_item</NAME>
+<RETURNS>void </RETURNS>
+GtkTreeRowReference * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plist_remove_list</NAME>
+<RETURNS>gboolean </RETURNS>
+gint 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plist_get_list1_name</NAME>
+<RETURNS>gchar *</RETURNS>
+gint 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plist_get_list1_length</NAME>
+<RETURNS>gint </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plist_set_list1_name</NAME>
+<RETURNS>void </RETURNS>
+gint, const gchar * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plist_get_list2_length</NAME>
+<RETURNS>gint </RETURNS>
+gint 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plist_play_by_index</NAME>
+<RETURNS>gboolean </RETURNS>
+gint, gint 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plist_play_get_index</NAME>
+<RETURNS>gboolean </RETURNS>
+gint *, gint * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plist_stop</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plist_play_prev</NAME>
+<RETURNS>gboolean </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plist_play_next</NAME>
+<RETURNS>gboolean </RETURNS>
+gboolean 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plist_set_play_mode</NAME>
+<RETURNS>void </RETURNS>
+gint, gint 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plist_get_play_mode</NAME>
+<RETURNS>void </RETURNS>
+gint *, gint * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plist_load_playlist_setting</NAME>
+<RETURNS>gboolean </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plist_save_playlist_setting</NAME>
+<RETURNS>gboolean </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plist_build_default_list</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plist_plist_move2</NAME>
+<RETURNS>void </RETURNS>
+gint, GtkTreePath **, gint, gint 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plist_save_playlist</NAME>
+<RETURNS>void </RETURNS>
+const gchar *, gint 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plist_load_playlist</NAME>
+<RETURNS>void </RETURNS>
+const gchar *, gint 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plist_get_list_store</NAME>
+<RETURNS>GtkListStore *</RETURNS>
+gint 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plist_get_list_head</NAME>
+<RETURNS>GtkListStore *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plist_list2_refresh</NAME>
+<RETURNS>gboolean </RETURNS>
+gint 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plist_import_job_get_length</NAME>
+<RETURNS>gint </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plist_import_job_cancel</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plist_load_argument</NAME>
+<RETURNS>void </RETURNS>
+char *[] 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plist_load_uri_from_remote</NAME>
+<RETURNS>gboolean </RETURNS>
+const gchar * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_treeview_init</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_list_tree_reset_list_store</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_list1_popup_menu</NAME>
+<RETURNS>gboolean </RETURNS>
+GtkWidget *, GdkEventButton *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_list2_popup_menu</NAME>
+<RETURNS>gboolean </RETURNS>
+GtkWidget *, GdkEventButton *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_list2_button_release_event</NAME>
+<RETURNS>gboolean </RETURNS>
+GtkWidget *, GdkEventButton *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_list1_row_selected</NAME>
+<RETURNS>void </RETURNS>
+GtkTreeView *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_list2_row_activated</NAME>
+<RETURNS>void </RETURNS>
+GtkTreeView *, GtkTreePath *, GtkTreeViewColumn *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_select_list1</NAME>
+<RETURNS>void </RETURNS>
+gint 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_select_list2</NAME>
+<RETURNS>void </RETURNS>
+gint 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_list1_new_list</NAME>
+<RETURNS>void </RETURNS>
+GtkWidget *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_list1_delete_list</NAME>
+<RETURNS>void </RETURNS>
+GtkWidget *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_list_model_inserted</NAME>
+<RETURNS>void </RETURNS>
+GtkTreeModel *, GtkTreePath *, GtkTreeIter *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_list1_get_index</NAME>
+<RETURNS>gint </RETURNS>
+GtkTreeIter * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_list1_get_selected_index</NAME>
+<RETURNS>gint </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_list2_dnd_data_received</NAME>
+<RETURNS>void </RETURNS>
+GtkWidget *, GdkDragContext *, gint, gint, GtkSelectionData *, guint, guint, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_list2_dnd_data_get</NAME>
+<RETURNS>void </RETURNS>
+GtkWidget *, GdkDragContext *, GtkSelectionData *, guint, guint, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_list2_dnd_motion</NAME>
+<RETURNS>void </RETURNS>
+GtkWidget *, GdkDragContext *, gint, gint, guint, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_list1_dnd_data_received</NAME>
+<RETURNS>void </RETURNS>
+GtkWidget *, GdkDragContext *, gint, gint, GtkSelectionData *, guint, guint, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_list1_dnd_data_get</NAME>
+<RETURNS>void </RETURNS>
+GtkWidget *, GdkDragContext *, GtkSelectionData *, guint, guint, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_list2_delete_lists</NAME>
+<RETURNS>void </RETURNS>
+GtkWidget *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_list2_select_all</NAME>
+<RETURNS>void </RETURNS>
+GtkWidget *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_list1_edited</NAME>
+<RETURNS>void </RETURNS>
+GtkCellRendererText *, gchar *, gchar *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_list1_rename_list</NAME>
+<RETURNS>void </RETURNS>
+GtkWidget *, gpointer 
+</FUNCTION>
+<MACRO>
+<NAME>RC_SHELL_TYPE</NAME>
+#define RC_SHELL_TYPE (rc_shell_get_type())
+</MACRO>
+<FUNCTION>
+<NAME>rc_shell_get_type</NAME>
+<RETURNS>GType </RETURNS>
+void 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_shell_load_uri</NAME>
+<RETURNS>gboolean </RETURNS>
+RCShell *, const gchar *, GError ** 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_shell_play</NAME>
+<RETURNS>gboolean </RETURNS>
+RCShell *, gboolean *, GError ** 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_shell_stop</NAME>
+<RETURNS>gboolean </RETURNS>
+RCShell *, GError ** 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_shell_prev</NAME>
+<RETURNS>gboolean </RETURNS>
+RCShell *, GError ** 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_shell_next</NAME>
+<RETURNS>gboolean </RETURNS>
+RCShell *, GError ** 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_shell_get_state</NAME>
+<RETURNS>gboolean </RETURNS>
+RCShell *, gint *, GError ** 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_shell_get_position</NAME>
+<RETURNS>gboolean </RETURNS>
+RCShell *, gint64 *, GError ** 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_shell_set_position</NAME>
+<RETURNS>gboolean </RETURNS>
+RCShell *, gint64, GError ** 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_shell_get_duration</NAME>
+<RETURNS>gboolean </RETURNS>
+RCShell *, gint64 *, GError ** 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_shell_get_volume</NAME>
+<RETURNS>gboolean </RETURNS>
+RCShell *, gdouble *, GError ** 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_shell_set_volume</NAME>
+<RETURNS>gboolean </RETURNS>
+RCShell *, gdouble, GError ** 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_shell_get_repeat_mode</NAME>
+<RETURNS>gboolean </RETURNS>
+RCShell *, gint *, GError ** 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_shell_set_repeat_mode</NAME>
+<RETURNS>gboolean </RETURNS>
+RCShell *, gint, GError ** 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_shell_get_random_mode</NAME>
+<RETURNS>gboolean </RETURNS>
+RCShell *, gint *, GError ** 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_shell_set_random_mode</NAME>
+<RETURNS>gboolean </RETURNS>
+RCShell *, gint, GError ** 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_get_gui</NAME>
+<RETURNS>GuiData *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_init</NAME>
+<RETURNS>gboolean </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_quit_player</NAME>
+<RETURNS>void </RETURNS>
+GtkWidget *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_music_info_set_data</NAME>
+<RETURNS>void </RETURNS>
+const gchar *, const gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_time_label_set_text</NAME>
+<RETURNS>void </RETURNS>
+gint64 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_prev_button_clicked</NAME>
+<RETURNS>gboolean </RETURNS>
+GtkButton *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_play_button_clicked</NAME>
+<RETURNS>gboolean </RETURNS>
+GtkButton *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_stop_button_clicked</NAME>
+<RETURNS>gboolean </RETURNS>
+GtkButton *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_next_button_clicked</NAME>
+<RETURNS>gboolean </RETURNS>
+GtkButton *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_repeat_button_clicked</NAME>
+<RETURNS>gboolean </RETURNS>
+GtkToggleButton *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_random_button_clicked</NAME>
+<RETURNS>gboolean </RETURNS>
+GtkToggleButton *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_set_play_button_state</NAME>
+<RETURNS>void </RETURNS>
+gboolean 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_adjust_play_position</NAME>
+<RETURNS>gboolean </RETURNS>
+GtkWidget *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_adjust_volume</NAME>
+<RETURNS>gboolean </RETURNS>
+GtkScaleButton *, gdouble, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_seek_scaler_disable</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_seek_scaler_enable</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_seek_scale_button_pressed</NAME>
+<RETURNS>gboolean </RETURNS>
+GtkWidget *, GdkEventButton *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_seek_scale_button_released</NAME>
+<RETURNS>gboolean </RETURNS>
+GtkWidget *, GdkEventButton *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_seek_scale_value_changed</NAME>
+<RETURNS>void </RETURNS>
+GtkRange *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_set_volume</NAME>
+<RETURNS>void </RETURNS>
+gdouble 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_set_player_state</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_press_ontop_menu</NAME>
+<RETURNS>void </RETURNS>
+GtkAction * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_press_view_menu</NAME>
+<RETURNS>void </RETURNS>
+GtkAction *, GtkRadioAction * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_press_repeat_menu</NAME>
+<RETURNS>void </RETURNS>
+GtkAction *, GtkRadioAction * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_press_random_menu</NAME>
+<RETURNS>void </RETURNS>
+GtkAction *, GtkRadioAction * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_press_vol_up_menu</NAME>
+<RETURNS>gboolean </RETURNS>
+GtkMenuItem *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_press_vol_down_menu</NAME>
+<RETURNS>gboolean </RETURNS>
+GtkMenuItem *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_press_backward_menu</NAME>
+<RETURNS>gboolean </RETURNS>
+GtkMenuItem *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_press_forward_menu</NAME>
+<RETURNS>gboolean </RETURNS>
+GtkMenuItem *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_set_list2_menu</NAME>
+<RETURNS>void </RETURNS>
+GtkTreeView *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_refresh_music_info</NAME>
+<RETURNS>void </RETURNS>
+GtkMenuItem *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_set_cover_image</NAME>
+<RETURNS>gboolean </RETURNS>
+gchar * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_set_cover_image_by_buf</NAME>
+<RETURNS>gboolean </RETURNS>
+const GstBuffer * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_show_hide_window</NAME>
+<RETURNS>void </RETURNS>
+GtkWidget *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_tray_icon_popup</NAME>
+<RETURNS>void </RETURNS>
+GtkStatusIcon *, guint, guint, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_status_task_set</NAME>
+<RETURNS>void </RETURNS>
+guint, guint 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_status_progress_set_progress</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_import_cancel_button_clicked</NAME>
+<RETURNS>void </RETURNS>
+GtkWidget *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_view_add_page</NAME>
+<RETURNS>guint </RETURNS>
+const gchar *, const gchar *, GtkWidget * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_view_remove_page</NAME>
+<RETURNS>gboolean </RETURNS>
+guint 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_deiconify</NAME>
+<RETURNS>void </RETURNS>
+GtkAction * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_mini_init</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_mini_get_data</NAME>
+<RETURNS>GuiMiniData *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_mini_set_info_text</NAME>
+<RETURNS>void </RETURNS>
+const gchar * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_mini_set_lyric_text</NAME>
+<RETURNS>void </RETURNS>
+const gchar * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_mini_info_text_move</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_mini_set_lyric_persent</NAME>
+<RETURNS>void </RETURNS>
+gdouble 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_mini_set_play_state</NAME>
+<RETURNS>void </RETURNS>
+gboolean 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_mini_set_time_text</NAME>
+<RETURNS>void </RETURNS>
+gint64 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_mini_window_hide</NAME>
+<RETURNS>void </RETURNS>
+GtkWidget *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_mini_mini_mode_clicked</NAME>
+<RETURNS>void </RETURNS>
+GtkWidget *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_mini_window_show</NAME>
+<RETURNS>void </RETURNS>
+GtkWidget *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_mini_normal_mode_clicked</NAME>
+<RETURNS>void </RETURNS>
+GtkWidget *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_create_setting_window</NAME>
+<RETURNS>void </RETURNS>
+GtkWidget *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_create_setting_treeview</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_close_setting_window</NAME>
+<RETURNS>void </RETURNS>
+GtkButton *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_setting_row_selected</NAME>
+<RETURNS>void </RETURNS>
+GtkTreeView *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_setting_apply</NAME>
+<RETURNS>void </RETURNS>
+GtkButton *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_setting_confirm</NAME>
+<RETURNS>void </RETURNS>
+GtkButton *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_create_setting_general</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_create_setting_playlist</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_create_setting_appearance</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
+<MACRO>
+<NAME>RC_PLAYER_TYPE</NAME>
+#define RC_PLAYER_TYPE (rc_player_get_type())
+</MACRO>
+<MACRO>
+<NAME>RC_PLAYER</NAME>
+#define RC_PLAYER(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), RC_PLAYER_TYPE, \
+    RCPlayer))
+</MACRO>
+<STRUCT>
+<NAME>RCPlayer</NAME>
+</STRUCT>
+<STRUCT>
+<NAME>RCPlayerClass</NAME>
+</STRUCT>
+<STRUCT>
+<NAME>RCPlayer</NAME>
+struct _RCPlayer
+{
+    GObject parent;
+    gint dummy;
+};
+</STRUCT>
+<STRUCT>
+<NAME>RCPlayerClass</NAME>
+struct _RCPlayerClass
+{
+    GObjectClass parent_class;
+    void (*object_born)();
+    void (*player_play)();
+    void (*player_stop)();
+    void (*player_pause)();
+    void (*player_continue)();
+    void (*lyric_found)();
+    void (*lyric_not_found)();
+};
+</STRUCT>
+<FUNCTION>
+<NAME>rc_player_get_type</NAME>
+<RETURNS>GType </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_player_new</NAME>
+<RETURNS>RCPlayer *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_player_object_init</NAME>
+<RETURNS>gboolean </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_player_object_get</NAME>
+<RETURNS>GObject *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_player_object_signal_emit_simple</NAME>
+<RETURNS>void </RETURNS>
+const char * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_player_object_signal_connect_simple</NAME>
+<RETURNS>gulong </RETURNS>
+const char *, GCallback 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_player_object_signal_disconnect</NAME>
+<RETURNS>void </RETURNS>
+gulong 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_set_init</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_set_exit</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_set_get_string</NAME>
+<RETURNS>gchar *</RETURNS>
+const gchar *, const gchar *, GError ** 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_set_get_integer</NAME>
+<RETURNS>gint </RETURNS>
+const gchar *, const gchar *, GError ** 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_set_get_double</NAME>
+<RETURNS>gdouble </RETURNS>
+const gchar *, const gchar *, GError ** 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_set_get_boolean</NAME>
+<RETURNS>gboolean </RETURNS>
+const gchar *, const gchar *, GError ** 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_set_get_string_list</NAME>
+<RETURNS>gchar **</RETURNS>
+const gchar *, const gchar *, gsize *, GError ** 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_set_get_boolean_list</NAME>
+<RETURNS>gboolean *</RETURNS>
+const gchar *, const gchar *, gsize *, GError ** 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_set_get_integer_list</NAME>
+<RETURNS>gint *</RETURNS>
+const gchar *, const gchar *, gsize *, GError ** 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_set_get_double_list</NAME>
+<RETURNS>gdouble *</RETURNS>
+const gchar *, const gchar *, gsize *, GError ** 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_set_set_string</NAME>
+<RETURNS>void </RETURNS>
+const gchar *, const gchar *, const gchar * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_set_set_boolean</NAME>
+<RETURNS>void </RETURNS>
+const gchar *, const gchar *, gboolean 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_set_set_integer</NAME>
+<RETURNS>void </RETURNS>
+const gchar *, const gchar *, gint 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_set_set_double</NAME>
+<RETURNS>void </RETURNS>
+const gchar *, const gchar *, gdouble 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_set_set_string_list</NAME>
+<RETURNS>void </RETURNS>
+const gchar *, const gchar *, const gchar * const [], gsize 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_set_set_boolean_list</NAME>
+<RETURNS>void </RETURNS>
+const gchar *, const gchar *, gboolean [], gsize 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_set_set_integer_list</NAME>
+<RETURNS>void </RETURNS>
+const gchar *, const gchar *, gint [], gsize 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_set_set_double_list</NAME>
+<RETURNS>void </RETURNS>
+const gchar *, const gchar *, gdouble [], gsize 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_set_load_setting</NAME>
+<RETURNS>gboolean </RETURNS>
+const gchar * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_set_save_setting</NAME>
+<RETURNS>void </RETURNS>
+const gchar * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_set_get_plugin_configure</NAME>
+<RETURNS>GKeyFile *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>g_module_check_init</NAME>
+<RETURNS>const gchar *</RETURNS>
+GModule * 
+</FUNCTION>
+<FUNCTION>
+<NAME>g_module_unload</NAME>
+<RETURNS>void </RETURNS>
+GModule * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_module_init</NAME>
+<RETURNS>gint </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_module_exit</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_module_configure</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_module_get_group_name</NAME>
+<RETURNS>const gchar *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_lrcshow_init</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_lrcshow_get_data</NAME>
+<RETURNS>GuiLrcData *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_lrcshow_draw_bg</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_lrcshow_show</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_lrcshow_expose</NAME>
+<RETURNS>gboolean </RETURNS>
+GtkWidget *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_lrcshow_update</NAME>
+<RETURNS>gboolean </RETURNS>
+gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_lrcshow_enable</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_lrcshow_disable</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_lrcshow_load_conf</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_lrcshow_save_conf</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>g_module_check_init</NAME>
+<RETURNS>const gchar *</RETURNS>
+GModule * 
+</FUNCTION>
+<FUNCTION>
+<NAME>g_module_unload</NAME>
+<RETURNS>void </RETURNS>
+GModule * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_module_init</NAME>
+<RETURNS>gint </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_module_exit</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_module_configure</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_module_get_group_name</NAME>
+<RETURNS>const gchar *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_desklrc_init</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_desklrc_get_composited</NAME>
+<RETURNS>gboolean </RETURNS>
+GtkWidget *, GdkEventExpose *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_desklrc_update</NAME>
+<RETURNS>gboolean </RETURNS>
+GtkWidget *, GdkEventExpose *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_desklrc_show</NAME>
+<RETURNS>gboolean </RETURNS>
+GtkWidget *, GdkEventExpose *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_desklrc_drag</NAME>
+<RETURNS>gboolean </RETURNS>
+GtkWidget *, GdkEvent *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_desklrc_expose_handler</NAME>
+<RETURNS>gboolean </RETURNS>
+GtkWidget *, GdkEventExpose *, gpointer 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_desklrc_enable</NAME>
+<RETURNS>void </RETURNS>
+gboolean 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_desklrc_get_pos</NAME>
+<RETURNS>void </RETURNS>
+gint *, gint * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_desklrc_set_movable</NAME>
+<RETURNS>void </RETURNS>
+gboolean 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_desklrc_set_font</NAME>
+<RETURNS>void </RETURNS>
+const gchar * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_desklrc_set_color</NAME>
+<RETURNS>void </RETURNS>
+const gdouble *, const gdouble *, const gdouble *, const gdouble * 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_desklrc_set_pos</NAME>
+<RETURNS>void </RETURNS>
+gint, gint 
+</FUNCTION>

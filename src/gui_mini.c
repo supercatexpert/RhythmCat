@@ -28,9 +28,10 @@
 #include "gui.h"
 #include "main.h"
 #include "settings.h"
+#include "playlist.h"
 
-static GuiMiniData rc_mini;
-static GuiData *rc_ui;
+static RCGuiMiniData rc_mini;
+static RCGuiData *rc_ui;
 
 static void rc_gui_mini_window_close(GtkWidget *widget, gpointer data)
 {
@@ -89,6 +90,65 @@ static gboolean rc_gui_mini_window_drag(GtkWidget *widget, GdkEvent *event,
     }
     return FALSE;
 }
+
+/*
+ * Process play button clicked event.
+ * Notice that this function is only used for button event.
+ */
+
+static gboolean rc_gui_mini_play_button_clicked()
+{
+    gboolean flag = TRUE;
+    gint list1_index, list2_index;
+    if(rc_core_get_play_state()==GST_STATE_PLAYING)
+    {
+        flag = rc_core_pause();
+        if(!flag) return FALSE;
+    }
+    else
+    {
+        rc_plist_play_get_index(&list1_index, &list2_index);
+        if(rc_core_get_play_state()!=GST_STATE_PAUSED)
+            flag = rc_plist_play_by_index(list1_index, list2_index);
+        flag = rc_core_play();
+        if(!flag) return FALSE;
+    }
+    return FALSE;
+}
+
+/*
+ * Process stop button clicked event.
+ * Notice that this function is only used for button event.
+ */
+
+static gboolean rc_gui_mini_stop_button_clicked()
+{
+    rc_core_stop();
+    return FALSE;
+}
+
+/*
+ * Process previous button clicked event.
+ * Notice that this function is only used for button event.
+ */
+
+static gboolean rc_gui_mini_prev_button_clicked()
+{
+    rc_plist_play_prev();
+    return FALSE;
+}
+
+/*
+ * Process next button clicked event.
+ * Notice that this function is only used for button event.
+ */
+
+static gboolean rc_gui_mini_next_button_clicked()
+{
+    rc_plist_play_next(FALSE);
+    return FALSE;
+}
+
 
 static gboolean rc_gui_mini_window_resize(GtkWidget *widget, GdkEvent *event,
     gpointer data)
@@ -150,8 +210,8 @@ void rc_gui_mini_init()
     gint i;
     gint width, height;
     gdouble opacity;
-    rc_ui = rc_gui_get_gui();
-    bzero(&rc_mini, sizeof(GuiMiniData));
+    rc_ui = rc_gui_get_data();
+    bzero(&rc_mini, sizeof(RCGuiMiniData));
     mini_icon_pixbuf = gdk_pixbuf_scale_simple(rc_ui->icon_image, 28, 28,
         GDK_INTERP_HYPER);
     rc_mini.mini_window_width = 500;
@@ -290,13 +350,13 @@ void rc_gui_mini_init()
     g_signal_connect(G_OBJECT(rc_mini.mini_window), "button-release-event",
         G_CALLBACK(rc_gui_mini_window_drag), NULL);
     g_signal_connect(G_OBJECT(rc_mini.control_buttons[0]), "clicked",
-        G_CALLBACK(rc_gui_play_button_clicked), NULL);
+        G_CALLBACK(rc_gui_mini_play_button_clicked), NULL);
     g_signal_connect(G_OBJECT(rc_mini.control_buttons[1]), "clicked",
-        G_CALLBACK(rc_gui_stop_button_clicked), NULL);
+        G_CALLBACK(rc_gui_mini_stop_button_clicked), NULL);
     g_signal_connect(G_OBJECT(rc_mini.control_buttons[2]), "clicked",
-        G_CALLBACK(rc_gui_prev_button_clicked), NULL);
+        G_CALLBACK(rc_gui_mini_prev_button_clicked), NULL);
     g_signal_connect(G_OBJECT(rc_mini.control_buttons[3]), "clicked",
-        G_CALLBACK(rc_gui_next_button_clicked), NULL);
+        G_CALLBACK(rc_gui_mini_next_button_clicked), NULL);
     g_signal_connect(G_OBJECT(rc_mini.window_buttons[0]), "clicked",
         G_CALLBACK(rc_gui_mini_normal_mode_clicked), NULL);
     g_signal_connect(G_OBJECT(rc_mini.window_buttons[1]), "clicked",
@@ -323,7 +383,7 @@ void rc_gui_mini_init()
         "MiniWindowY", NULL));
 }
 
-GuiMiniData *rc_gui_mini_get_data()
+RCGuiMiniData *rc_gui_mini_get_data()
 {
     return &rc_mini;
 }

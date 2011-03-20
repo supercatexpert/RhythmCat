@@ -29,10 +29,10 @@
 #include "main.h"
 #include "settings.h"
 
-static GuiData *rc_ui;
+static RCGuiData *rc_ui;
 static GtkListStore *eq_liststore;
-static EQData eq_data[11];
-static GuiEQData rc_eq;
+static RCEQData eq_data[11];
+static RCGuiEQData rc_eq;
 
 
 /*
@@ -260,8 +260,7 @@ void rc_gui_init_eq_data()
 
 void rc_gui_eq_init()
 {
-    CoreData *gcore = rc_core_get_core();
-    rc_ui = rc_gui_get_gui();
+    rc_ui = rc_gui_get_data();
     gint i = 0;
     gint eq_style = 0;
     GtkWidget *scale_vboxs[11];
@@ -304,6 +303,8 @@ void rc_gui_eq_init()
     rc_eq.db_labels[0] = gtk_label_new("+12 dB");
     rc_eq.db_labels[1] = gtk_label_new("0 dB");
     rc_eq.db_labels[2] = gtk_label_new("-12 dB");
+    eq_style = rc_set_get_integer("Player", "EQStyle", NULL);
+    if(eq_style<0 || eq_style>10) eq_style = 10;
     for(i=0;i<3;i++)
     {
         gtk_label_set_attributes(GTK_LABEL(rc_eq.db_labels[i]), eq_attr_list);
@@ -314,9 +315,10 @@ void rc_gui_eq_init()
         gtk_label_set_attributes(GTK_LABEL(rc_eq.eq_labels[i]), eq_attr_list);
         scale_vboxs[i] = gtk_vbox_new(FALSE, 2);
         rc_eq.eq_scales[i] = gtk_vscale_new_with_range(-12.0, 12.0, 0.1);
+        gtk_range_set_value(GTK_RANGE(rc_eq.eq_scales[i]),
+            eq_data[eq_style].value[i]);
         gtk_scale_set_draw_value(GTK_SCALE(rc_eq.eq_scales[i]), FALSE);
         gtk_range_set_inverted(GTK_RANGE(rc_eq.eq_scales[i]), TRUE);
-        gtk_range_set_value(GTK_RANGE(rc_eq.eq_scales[i]), gcore->eq[i]);
         gtk_widget_set_size_request(rc_eq.eq_scales[i], -1, 100);
         gtk_box_pack_start(GTK_BOX(scale_vboxs[i]), rc_eq.eq_scales[i],
             TRUE, TRUE, 2);
@@ -347,7 +349,6 @@ void rc_gui_eq_init()
         gtk_list_store_set(eq_liststore, &iter, 0, eq_data[i].name, 1,
             i, -1);
     }
-    eq_style = rc_set_get_integer("Player", "EQStyle", NULL);
     if(eq_style!=-1)
         gtk_combo_box_set_active(GTK_COMBO_BOX(rc_eq.eq_combobox), 
             eq_style);
@@ -379,7 +380,7 @@ void rc_gui_eq_init()
  * Get the UI Data of Equalizer
  */
 
-GuiEQData *rc_gui_eq_get_data()
+RCGuiEQData *rc_gui_eq_get_data()
 {
     return &rc_eq;
 }

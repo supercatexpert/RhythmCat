@@ -30,7 +30,7 @@
 #include "settings.h"
 
 /* Variables */
-static GuiData *rc_ui;
+static RCGuiData *rc_ui;
 static GtkWidget *setting_window = NULL;
 static GtkWidget *setting_treeview;
 static GtkWidget *setting_notebook;
@@ -74,7 +74,7 @@ void rc_gui_create_setting_window(GtkWidget *widget, gpointer data)
         if(!visible) gtk_widget_show_all(setting_window);
         return;
     }
-    rc_ui = rc_gui_get_gui();
+    rc_ui = rc_gui_get_data();
     setting_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     setting_notebook = gtk_notebook_new();
     vbox1 = gtk_vbox_new(FALSE, 2);
@@ -357,7 +357,7 @@ void rc_gui_create_setting_appearance()
     GtkListStore *store;
     GtkTreeIter iter;
     guint i = 0;
-    const GuiColorStyle *color_style;
+    const RCGuiColorStyle *color_style;
     GtkFileFilter *filter = gtk_file_filter_new();
     gtk_file_filter_add_pattern(filter, "gtkrc");
     color_style_label = gtk_label_new("");

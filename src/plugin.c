@@ -37,7 +37,7 @@ static GKeyFile *plugin_configure = NULL;
 
 gboolean rc_plugin_init()
 {
-    PluginData *plugin_data = NULL;
+    RCPluginData *plugin_data = NULL;
     gchar *plugin_file = NULL;
     gchar **group_names = NULL;
     guint i = 0;
@@ -74,7 +74,7 @@ gboolean rc_plugin_init()
 void rc_plugin_exit()
 {
     GSList *list_foreach = NULL;
-    ModuleData *module_data;
+    RCModuleData *module_data;
     gchar *conf_file = NULL;
     gsize conf_data_length;
     gchar *conf_data;
@@ -112,7 +112,7 @@ gboolean rc_plugin_search_dir(const gchar *dirname)
     dir = g_dir_open(dirname, 0, NULL);
     if(dir==NULL) return FALSE;
     dir_item = g_dir_read_name(dir);
-    PluginData *plugin_data = NULL;
+    RCPluginData *plugin_data = NULL;
     while(dir_item!=NULL)
     {
         full_path = g_strdup_printf("%s%c%s%c%s.conf", dirname,
@@ -151,7 +151,7 @@ void rc_plugin_list_free()
     plugin_list = NULL;
 }
 
-void rc_plugin_plugin_free(PluginData *plugin_data)
+void rc_plugin_plugin_free(RCPluginData *plugin_data)
 {
     if(plugin_data==NULL) return;
     if(plugin_data->path!=NULL)
@@ -159,7 +159,7 @@ void rc_plugin_plugin_free(PluginData *plugin_data)
     g_free(plugin_data);
 }
 
-void rc_plugin_module_free(ModuleData *module_data)
+void rc_plugin_module_free(RCModuleData *module_data)
 {
     if(module_data==NULL) return;
     g_free(module_data->path);
@@ -170,7 +170,7 @@ void rc_plugin_module_free(ModuleData *module_data)
 gboolean rc_plugin_module_check_running(const gchar *path)
 {
     const GSList *list_foreach = NULL;
-    ModuleData *module_data;
+    RCModuleData *module_data;
     if(module_list==NULL) return FALSE;
     for(list_foreach=module_list;list_foreach!=NULL;
         list_foreach=g_slist_next(list_foreach))
@@ -182,7 +182,7 @@ gboolean rc_plugin_module_check_running(const gchar *path)
     return FALSE;
 }
 
-gboolean rc_plugin_load(const gchar *filename, PluginData **plugin_data)
+gboolean rc_plugin_load(const gchar *filename, RCPluginData **plugin_data)
 {
     GKeyFile *keyfile;
     GError *error = NULL;
@@ -231,7 +231,7 @@ gboolean rc_plugin_load(const gchar *filename, PluginData **plugin_data)
         plugin_typenum = PLUGIN_TYPE_PYTHON;
     }
     else goto error_out;
-    *plugin_data = g_malloc0(sizeof(PluginData));
+    *plugin_data = g_malloc0(sizeof(RCPluginData));
     (*plugin_data)->path = plugin_path;
     if(plugin_name!=NULL)
     {
@@ -281,11 +281,11 @@ gboolean rc_plugin_load(const gchar *filename, PluginData **plugin_data)
 gboolean rc_plugin_module_load(const gchar *filename)
 {
     GModule *module;
-    ModuleData *module_data;
+    RCModuleData *module_data;
     gint retval = 0;
     module = g_module_open(filename, G_MODULE_BIND_LAZY);
     if(module==NULL) return FALSE;
-    module_data = g_malloc0(sizeof(ModuleData));
+    module_data = g_malloc0(sizeof(RCModuleData));
     if(!g_module_symbol(module, "rc_plugin_module_init",
         (gpointer *)&module_data->module_init))
     {
@@ -323,7 +323,7 @@ gboolean rc_plugin_module_load(const gchar *filename)
 void rc_plugin_module_close(const gchar *filename)
 {
     GSList *list_foreach = NULL;
-    ModuleData *module_data;
+    RCModuleData *module_data;
     const gchar *group_name = NULL;
     for(list_foreach=module_list;list_foreach!=NULL;
         list_foreach=g_slist_next(list_foreach))

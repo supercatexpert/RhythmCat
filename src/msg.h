@@ -35,28 +35,28 @@
 #include <png.h>
 #include <glib/gi18n.h>
 
-typedef void (*MsgAsyncQueueWatchFunc)(gpointer item, gpointer data);
+typedef void (*RCMsgAsyncQueueWatchFunc)(gpointer item, gpointer data);
 
-typedef enum _MsgType
+typedef enum RCMsgType
 {
     MSG_TYPE_EMPTY = 0,
     MSG_TYPE_TEST = 1,
     MSG_TYPE_PL_INSERT = 2,
     MSG_TYPE_PL_REFRESH = 3,
     MSG_TYPE_PL_REMOVE = 4
-}MsgType;
+}RCMsgType;
 
-typedef struct _MsgData
+typedef struct RCMsgData
 {
-    MsgType type;
+    RCMsgType type;
     gpointer data;
-}MsgData;
+}RCMsgData;
 
 /* Functions */
 guint rc_msg_async_queue_watch_new(GAsyncQueue *, gint,
-    MsgAsyncQueueWatchFunc, gpointer, GDestroyNotify, GMainContext *);
+    RCMsgAsyncQueueWatchFunc, gpointer, GDestroyNotify, GMainContext *);
 void rc_msg_init();
-void rc_msg_push(MsgType, gpointer);
+void rc_msg_push(RCMsgType, gpointer);
 
 #endif
 

@@ -41,19 +41,463 @@
 #include "imgs/img_nocov.xpm"
 #include "imgs/img_icon.xpm"
 
+/**
+ * SECTION: gui
+ * @Short_description: The main UI of the player.
+ * @Title: GUI
+ *
+ * Show the main UI of the player.
+ */
+
 const guint img_cover_h = 160;
 const guint img_cover_w = 160;
-
-/* Variables */
-static GuiData rc_gui;
+static RCGuiData rc_gui;
 static GSList *rc_gui_view_page_list = NULL;
 
-typedef struct GuiViewPageData
+typedef struct RCGuiViewPageData
 {
     guint id;
     GtkWidget *view_widget;
     GtkAction *action;
-}GuiViewPageData;
+}RCGuiViewPageData;
+
+/*
+ * Refresh the information label.
+ */
+
+static gboolean rc_gui_refresh_time_info(gpointer data)
+{
+    gint64 pos = 0, len = 0;
+    gdouble persent = 0.0;
+    gboolean sensitive = FALSE;
+    GstState state;
+    gdouble lrc_vport_lower, lrc_vport_upper, lrc_vport_value;
+    gdouble lrc_vport_range, lrc_vport_page_size;
+    const RCLyricData *lrc_data;
+    static const gchar *text = NULL;
+    pos = rc_core_get_play_position();
+    len = rc_core_get_music_length();
+    state = rc_core_get_play_state();
+    g_object_get(G_OBJECT(rc_gui.time_scroll_bar), "sensitive", &sensitive,
+        NULL);
+    if(rc_gui.update_seek_scale_flag)
+    {
+        if(state==GST_STATE_PLAYING)
+        {
+            rc_gui_time_label_set_text(pos);
+            rc_gui_mini_set_time_text(pos);
+            if(len!=0)
+            {
+                persent = (gdouble)pos / len;
+                gtk_range_set_value(GTK_RANGE(rc_gui.time_scroll_bar),
+                    persent * 100);
+            }
+        }
+        else if(state!=GST_STATE_PAUSED)
+        {
+            rc_gui_time_label_set_text(0);
+            rc_gui_mini_set_time_text(-1);
+            gtk_range_set_value(GTK_RANGE(rc_gui.time_scroll_bar), 0);
+        }
+    }
+    if(state!=GST_STATE_PLAYING && state!=GST_STATE_PAUSED)
+    {
+        if(text!=NULL)
+        {
+            gtk_label_set_text(GTK_LABEL(rc_gui.lrc_label), "");
+            rc_gui_mini_set_lyric_text("");
+            text = NULL;
+        }
+        return TRUE;
+    }
+    lrc_data = rc_lrc_get_line_by_time(pos);
+    if(lrc_data!=NULL)
+    {
+        if(text!=lrc_data->text)
+        {
+            text = lrc_data->text;
+            gtk_label_set_text(GTK_LABEL(rc_gui.lrc_label), lrc_data->text);
+            rc_gui_mini_set_lyric_text(lrc_data->text);
+        }
+        g_object_get(G_OBJECT(rc_gui.lrc_vport_adj), "page-size",
+            &lrc_vport_page_size, "lower", &lrc_vport_lower, "upper",
+            &lrc_vport_upper, NULL);
+        lrc_vport_range = lrc_vport_upper - lrc_vport_page_size -
+            lrc_vport_lower;
+        lrc_vport_value = lrc_vport_lower;
+        if(lrc_vport_range>10e-3 && lrc_data->length>0)
+        {
+            persent = 1.2*(gdouble)(pos / GST_MSECOND / 10 - lrc_data->time) /
+                lrc_data->length;
+            if(persent>1.0) persent = 1.0;
+            lrc_vport_value = lrc_vport_lower + lrc_vport_range * persent;
+            rc_gui_mini_set_lyric_persent(persent);
+        }
+        gtk_adjustment_set_value(rc_gui.lrc_vport_adj, lrc_vport_value);
+    }
+    else
+    {
+        if(text!=NULL)
+        {
+            gtk_label_set_text(GTK_LABEL(rc_gui.lrc_label), "");
+            rc_gui_mini_set_lyric_text("");
+            text = NULL;
+        }
+    }
+    rc_gui_mini_info_text_move();
+    return TRUE;
+}
+
+/*
+ * Adjust the playing position by the dragging of the bar.
+ */
+
+static gboolean rc_gui_adjust_play_position(GtkWidget *widget, gpointer data)
+{
+    gdouble persent = gtk_range_get_value(GTK_RANGE(rc_gui.time_scroll_bar));
+    rc_core_set_play_position_by_persent(persent);
+    return FALSE;
+}
+
+
+/*
+ * Adjust the volume of the player.
+ */
+
+static gboolean rc_gui_adjust_volume(GtkScaleButton *widget, gdouble vol,
+    gpointer data)
+{
+    gdouble persent = vol * 100;
+    if(100.0 - persent <= 10e-3)
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+            "/RCMenuBar/ControlMenu/ControlVolumeUp"), FALSE);
+    else
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+            "/RCMenuBar/ControlMenu/ControlVolumeUp"), TRUE);
+    if(persent <= 10e-3)
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+            "/RCMenuBar/ControlMenu/ControlVolumeDown"), FALSE);
+    else
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+            "/RCMenuBar/ControlMenu/ControlVolumeDown"), TRUE);
+    rc_core_set_volume(persent);
+    return FALSE;
+}
+
+/*
+ * Detect if the scale bar is pressed by the mouse.
+ */
+
+static gboolean rc_gui_seek_scale_button_pressed(GtkWidget *widget, 
+    GdkEventButton *event, gpointer data)
+{
+    if(event->button==3) return TRUE;
+    rc_gui.update_seek_scale_flag = FALSE;
+    return FALSE;
+}
+
+/*
+ * Detect if the scale bar is released.
+ */
+
+static gboolean rc_gui_seek_scale_button_released(GtkWidget *widget, 
+    GdkEventButton *event, gpointer data)
+{
+    rc_gui.update_seek_scale_flag = TRUE;
+    rc_gui_adjust_play_position(NULL, NULL);
+    return FALSE;
+}
+
+
+/*
+ * Detect if the value of the scale bar is changed.
+ */
+
+static void rc_gui_seek_scale_value_changed(GtkRange *range, gpointer data)
+{
+    gdouble persent;
+    gint64 pos, len;
+    if(!rc_gui.update_seek_scale_flag)
+    {
+        persent = gtk_range_get_value(GTK_RANGE(
+            rc_gui.time_scroll_bar));
+        len = rc_core_get_music_length();
+        pos = len * persent / 100;
+        rc_gui_time_label_set_text(pos);
+    }
+}
+
+/*
+ * Cancel the jobs in the job queue.
+ */
+
+static void rc_gui_import_cancel_button_clicked()
+{
+    rc_plist_import_job_cancel();
+    rc_gui_status_task_set(0, 0);
+}
+
+/*
+ * Process play button clicked event.
+ * Notice that this function is only used for button event.
+ */
+
+static gboolean rc_gui_play_button_clicked()
+{
+    gboolean flag = TRUE;
+    gint list1_index, list2_index;
+    if(rc_core_get_play_state()==GST_STATE_PLAYING)
+    {
+        flag = rc_core_pause();
+        if(!flag) return FALSE;
+    }
+    else
+    {
+        rc_plist_play_get_index(&list1_index, &list2_index);
+        if(rc_core_get_play_state()!=GST_STATE_PAUSED)
+            flag = rc_plist_play_by_index(list1_index, list2_index);
+        flag = rc_core_play();
+        if(!flag) return FALSE;
+    }
+    return FALSE;
+}
+
+/*
+ * Process stop button clicked event.
+ * Notice that this function is only used for button event.
+ */
+
+static gboolean rc_gui_stop_button_clicked()
+{
+    rc_core_stop();
+    return FALSE;
+}
+
+/*
+ * Process previous button clicked event.
+ * Notice that this function is only used for button event.
+ */
+
+static gboolean rc_gui_prev_button_clicked()
+{
+    rc_plist_play_prev();
+    return FALSE;
+}
+
+/*
+ * Process next button clicked event.
+ * Notice that this function is only used for button event.
+ */
+
+static gboolean rc_gui_next_button_clicked()
+{
+    rc_plist_play_next(FALSE);
+    return FALSE;
+}
+
+/*
+ * Process the click event of always-on-top menu.
+ */
+
+static void rc_gui_ontop_menu_clicked(GtkAction *action)
+{
+    gboolean flag = FALSE;
+    flag = rc_set_get_boolean("Player", "AlwaysOnTop", NULL);
+    if(gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(action))==flag)
+        return;
+    flag^=1;
+    gtk_window_set_keep_above(GTK_WINDOW(rc_gui.main_window), flag);
+    rc_set_set_boolean("Player", "AlwaysOnTop", flag);
+    gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(gtk_ui_manager_get_action(
+        rc_gui.main_ui, "/RCMenuBar/ViewMenu/ViewAlwaysOnTop")), flag);
+    gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(gtk_ui_manager_get_action(
+        rc_gui.main_ui, "/TrayPopupMenu/TrayAlwaysOnTop")), flag);
+}
+
+/*
+ * Process the click event of the view menu.
+ */
+
+static void rc_gui_view_menu_clicked(GtkAction *action, GtkRadioAction *current)
+{
+    gint value = gtk_radio_action_get_current_value(current);
+    const GSList *list_foreach = NULL;
+    RCGuiViewPageData *page_data = NULL;
+    if(value==0 || value==1)
+    {
+        gtk_notebook_set_current_page(GTK_NOTEBOOK(rc_gui.plist_notebook),
+            value);
+    }
+    else
+    {
+        value-=2;
+        for(list_foreach=rc_gui_view_page_list;list_foreach!=NULL;
+            list_foreach=g_slist_next(list_foreach))
+        {
+            page_data = list_foreach->data;
+            if(value==page_data->id)
+            {
+                gtk_notebook_set_current_page(GTK_NOTEBOOK(
+                    rc_gui.plist_notebook), gtk_notebook_page_num(
+                    GTK_NOTEBOOK(rc_gui.plist_notebook),
+                    page_data->view_widget));
+            }
+        }
+    }
+}
+
+/*
+ * Process the click event of the repeat menu.
+ */
+
+static void rc_gui_repeat_menu_clicked(GtkAction *action,
+    GtkRadioAction *current)
+{
+    rc_plist_set_play_mode(gtk_radio_action_get_current_value(current), -1);
+}
+
+/*
+ * Process the click event of the random menu.
+ */
+
+static void rc_gui_random_menu_clicked(GtkAction *action,
+    GtkRadioAction *current)
+{
+    rc_plist_set_play_mode(-1, gtk_radio_action_get_current_value(current));
+}
+
+/*
+ * Process the click event of the increase volume menu.
+ */
+
+static gboolean rc_gui_vol_up_menu_clicked()
+{
+    gdouble value = rc_core_get_volume() / 100;
+    value+=0.05;
+    if(value>1.0) value = 1.0;
+    gtk_scale_button_set_value(GTK_SCALE_BUTTON(rc_gui.volume_button),
+        value);
+    return FALSE;
+}
+
+/*
+ * Process the click event of the decrease volume menu.
+ */
+
+static gboolean rc_gui_vol_down_menu_clicked()
+{
+    gdouble value = rc_core_get_volume() / 100;
+    value-=0.05;
+    if(value<0.0) value = 0.0;
+    gtk_scale_button_set_value(GTK_SCALE_BUTTON(rc_gui.volume_button),
+        value);
+    return FALSE;
+}
+
+/*
+ * Process the click event of the backward volume menu.
+ */
+
+static gboolean rc_gui_backward_menu_clicked()
+{
+    gint64 time = rc_core_get_play_position();
+    time -= 5 * GST_SECOND;
+    if(time<0) time = 0;
+    rc_core_set_play_position(time);
+    return FALSE;
+}
+
+/*
+ * Process the click event of the forward volume menu.
+ */
+
+static gboolean rc_gui_forward_menu_clicked()
+{
+    gint64 time = rc_core_get_play_position();
+    time += 5 * GST_SECOND;
+    if(time>=rc_core_get_music_length()) time = rc_core_get_music_length() - 1;
+    rc_core_set_play_position(time);
+    return FALSE;
+}
+
+/*
+ * Reflesh the music info in the current playlist.
+ */
+
+static void rc_gui_refresh_music_info()
+{
+    gint list1_index = rc_gui_list1_get_selected_index();
+    if(list1_index>=0)
+        rc_plist_list2_refresh(list1_index);
+}
+
+/*
+ * Show/Hide the Main Window.
+ */
+
+static void rc_gui_show_hide_window()
+{
+    gboolean visible = FALSE;
+    RCGuiMiniData *rc_mini = rc_gui_mini_get_data();
+    if(!rc_set_get_boolean("Player", "MinimizeToTray", NULL)) return;
+    g_object_get(G_OBJECT(rc_gui.main_window), "visible", &visible, NULL);
+    if(!visible)
+        g_object_get(G_OBJECT(rc_mini->mini_window), "visible", &visible,
+            NULL);
+    if(visible)
+    {
+        if(rc_set_get_boolean("Player", "MiniMode", NULL))
+            rc_gui_mini_window_hide(NULL, NULL);
+        else
+            gtk_widget_hide(GTK_WIDGET(rc_gui.main_window));
+    }
+    else
+    {
+        if(rc_set_get_boolean("Player", "MiniMode", NULL))
+        {
+            rc_gui_mini_window_show(NULL, NULL);
+        }
+        else
+        {
+            gtk_window_set_skip_taskbar_hint(GTK_WINDOW(rc_gui.main_window),
+                FALSE);
+            gtk_window_deiconify(GTK_WINDOW(rc_gui.main_window));
+            gtk_widget_show(GTK_WIDGET(rc_gui.main_window));
+            
+        }
+    }
+}
+
+/*
+ * Tray icon popup menu.
+ */
+
+static void rc_gui_tray_icon_popup(GtkStatusIcon *status_icon, guint button,
+    guint activate_time, gpointer data)  
+{
+    gtk_menu_popup(GTK_MENU(gtk_ui_manager_get_widget(rc_gui.main_ui,
+        "/TrayPopupMenu")), NULL, NULL, NULL, NULL, 3, activate_time);
+}
+
+/*
+ * Deiconify the main window
+ */
+
+static void rc_gui_window_deiconify(GtkAction *action)
+{
+    if(rc_set_get_boolean("Player", "MiniMode", NULL))
+    {
+        rc_gui_mini_window_show(NULL, NULL);
+    }
+    else
+    {
+        gtk_window_set_skip_taskbar_hint(GTK_WINDOW(rc_gui.main_window),
+            FALSE);
+        gtk_widget_show(GTK_WIDGET(rc_gui.main_window));
+        gtk_window_deiconify(GTK_WINDOW(rc_gui.main_window));
+    }
+}
+
 
 static GtkActionEntry rc_menu_entries[] =
 {
@@ -143,19 +587,19 @@ static GtkActionEntry rc_menu_entries[] =
     { "ControlBackward", GTK_STOCK_MEDIA_REWIND,
       "_Backward", "<control>Left",
       "Backward 5 seconds",
-      G_CALLBACK(rc_gui_press_backward_menu) },
+      G_CALLBACK(rc_gui_backward_menu_clicked) },
     { "ControlForward", GTK_STOCK_MEDIA_FORWARD,
       "_Forward", "<control>Right",
       "Forward 5 seconds",
-      G_CALLBACK(rc_gui_press_forward_menu) },
+      G_CALLBACK(rc_gui_forward_menu_clicked) },
     { "ControlVolumeUp", GTK_STOCK_GO_UP,
       "_Increase Volume", "<control>Up",
       "Increase the volume",
-      G_CALLBACK(rc_gui_press_vol_up_menu) },
+      G_CALLBACK(rc_gui_vol_up_menu_clicked) },
     { "ControlVolumeDown", GTK_STOCK_GO_DOWN,
       "_Decrease Volume", "<control>Down",
       "Decrease the volume",
-      G_CALLBACK(rc_gui_press_vol_down_menu) },
+      G_CALLBACK(rc_gui_vol_down_menu_clicked) },
     { "HelpContents", GTK_STOCK_HELP,
       "_Contents", "F1",
       "Get help contents",
@@ -219,7 +663,7 @@ static GtkActionEntry rc_menu_entries[] =
     { "TrayShowPlayer", GTK_STOCK_HOME,
       "S_how Player", NULL,
       "Show the window of player",
-      G_CALLBACK(rc_gui_deiconify) },
+      G_CALLBACK(rc_gui_window_deiconify) },
     { "TrayAbout", GTK_STOCK_ABOUT,
       "_About", NULL,
       "About this player",
@@ -282,11 +726,11 @@ static GtkToggleActionEntry rc_menu_toogle_entres[] =
     { "ViewAlwaysOnTop", GTK_STOCK_GOTO_TOP,
       "Always On _Top", NULL,
       "Always on top",
-      G_CALLBACK(rc_gui_press_ontop_menu), FALSE },
+      G_CALLBACK(rc_gui_ontop_menu_clicked), FALSE },
     { "TrayAlwaysOnTop", GTK_STOCK_GOTO_TOP,
       "Always On _Top", NULL,
       "Always on top",
-      G_CALLBACK(rc_gui_press_ontop_menu), FALSE }
+      G_CALLBACK(rc_gui_ontop_menu_clicked), FALSE }
 };
 
 static guint rc_menu_toogle_n_entres = G_N_ELEMENTS(rc_menu_toogle_entres);
@@ -383,107 +827,26 @@ static const gchar *rc_ui_info =
     "  </popup>"
     "</ui>";
 
-/*
- * Refresh the information label.
+/**
+ * rc_gui_get_data:
+ *
+ * Return the data of main UI structure.
+ *
+ * Returns: The data of main UI structure.
  */
 
-static gboolean rc_gui_refresh_time_info(gpointer data)
-{
-    gint64 pos = 0, len = 0;
-    gdouble persent = 0.0;
-    gboolean sensitive = FALSE;
-    GstState state;
-    gdouble lrc_vport_lower, lrc_vport_upper, lrc_vport_value;
-    gdouble lrc_vport_range, lrc_vport_page_size;
-    const LrcData *lrc_data;
-    static const gchar *text = NULL;
-    pos = rc_core_get_play_position();
-    len = rc_core_get_music_length();
-    state = rc_core_get_play_state();
-    g_object_get(G_OBJECT(rc_gui.time_scroll_bar), "sensitive", &sensitive,
-        NULL);
-    if(rc_gui.update_seek_scale_flag)
-    {
-        if(state==GST_STATE_PLAYING)
-        {
-            rc_gui_time_label_set_text(pos);
-            rc_gui_mini_set_time_text(pos);
-            if(len!=0)
-            {
-                persent = (gdouble)pos / len;
-                gtk_range_set_value(GTK_RANGE(rc_gui.time_scroll_bar),
-                    persent * 100);
-            }
-        }
-        else if(state!=GST_STATE_PAUSED)
-        {
-            rc_gui_time_label_set_text(0);
-            rc_gui_mini_set_time_text(-1);
-            gtk_range_set_value(GTK_RANGE(rc_gui.time_scroll_bar), 0);
-        }
-    }
-    if(state!=GST_STATE_PLAYING && state!=GST_STATE_PAUSED)
-    {
-        if(text!=NULL)
-        {
-            gtk_label_set_text(GTK_LABEL(rc_gui.lrc_label), "");
-            rc_gui_mini_set_lyric_text("");
-            text = NULL;
-        }
-        return TRUE;
-    }
-    lrc_data = rc_lrc_get_line_by_time(pos);
-    if(lrc_data!=NULL)
-    {
-        if(text!=lrc_data->text)
-        {
-            text = lrc_data->text;
-            gtk_label_set_text(GTK_LABEL(rc_gui.lrc_label), lrc_data->text);
-            rc_gui_mini_set_lyric_text(lrc_data->text);
-        }
-        g_object_get(G_OBJECT(rc_gui.lrc_vport_adj), "page-size",
-            &lrc_vport_page_size, "lower", &lrc_vport_lower, "upper",
-            &lrc_vport_upper, NULL);
-        lrc_vport_range = lrc_vport_upper - lrc_vport_page_size -
-            lrc_vport_lower;
-        lrc_vport_value = lrc_vport_lower;
-        if(lrc_vport_range>10e-3 && lrc_data->length>0)
-        {
-            persent = 1.2*(gdouble)(pos / GST_MSECOND / 10 - lrc_data->time) /
-                lrc_data->length;
-            if(persent>1.0) persent = 1.0;
-            lrc_vport_value = lrc_vport_lower + lrc_vport_range * persent;
-            rc_gui_mini_set_lyric_persent(persent);
-        }
-        gtk_adjustment_set_value(rc_gui.lrc_vport_adj, lrc_vport_value);
-    }
-    else
-    {
-        if(text!=NULL)
-        {
-            gtk_label_set_text(GTK_LABEL(rc_gui.lrc_label), "");
-            rc_gui_mini_set_lyric_text("");
-            text = NULL;
-        }
-    }
-    rc_gui_mini_info_text_move();
-    return TRUE;
-}
-
-/*
- * Get the GuiData.
- */
-
-GuiData *rc_gui_get_gui()
+RCGuiData *rc_gui_get_data()
 {
     return &rc_gui;
 }
 
-/*
+/**
+ * rc_gui_quit_player:
+ *
  * Quit the player.
  */
 
-void rc_gui_quit_player(GtkWidget *widget, gpointer data)
+void rc_gui_quit_player()
 {
     rc_exit();
 }
@@ -522,6 +885,35 @@ static gboolean rc_gui_window_delete_event_handle(GtkWidget *widget,
         return TRUE;
     }
     return FALSE;
+}
+
+/*
+ * Set the state of menu items which related to the playlist.
+ */
+
+static void rc_gui_set_list2_menu()
+{
+    gint value = gtk_tree_selection_count_selected_rows(
+        rc_gui.list2_selection);
+    if(value>0)
+    {
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+            "/RCMenuBar/EditMenu/EditRemoveMusic"), TRUE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+            "/List2PopupMenu/List2RemoveMusic"), TRUE);
+        if(rc_gui.status_task_length==0)
+            gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+                "/List2PopupMenu/List2RefreshList"), TRUE);
+    }
+    else
+    {
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+            "/RCMenuBar/EditMenu/EditRemoveMusic"), FALSE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+            "/List2PopupMenu/List2RemoveMusic"), FALSE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+            "/List2PopupMenu/List2RefreshList"), FALSE);
+    }
 }
 
 /*
@@ -695,8 +1087,12 @@ static void rc_gui_signal_bind()
         G_CALLBACK(rc_gui_window_delete_event_handle), NULL);
 }
 
-/*
- * Build the main window of the player
+/**
+ * rc_gui_init:
+ *
+ * Initialize the main window of the player.
+ *
+ * Returns: Whether the initiation succeeds.
  */
 
 gboolean rc_gui_init()
@@ -704,13 +1100,13 @@ gboolean rc_gui_init()
     static gboolean init = FALSE;
     GtkActionGroup *actions;
     GError *error = NULL;
-    if(init) return TRUE;
+    if(init) return FALSE;
     init = TRUE;
     textdomain(GETTEXT_PACKAGE);
     GdkGeometry main_window_hints;
     GtkAdjustment *position_adjustment;
     gint i = 0;
-    bzero(&rc_gui, sizeof(GuiData));
+    bzero(&rc_gui, sizeof(RCGuiData));
     rc_gui.main_window_width = 600;
     rc_gui.main_window_height = 400;
     main_window_hints.min_width = 500;
@@ -818,13 +1214,13 @@ gboolean rc_gui_init()
     gtk_action_group_add_actions(actions, rc_menu_entries,
         rc_menu_n_entries, NULL);
     gtk_action_group_add_radio_actions(actions, rc_menu_view_entries,
-        rc_menu_view_n_entries, 0, G_CALLBACK(rc_gui_press_view_menu),
+        rc_menu_view_n_entries, 0, G_CALLBACK(rc_gui_view_menu_clicked),
         NULL);
     gtk_action_group_add_radio_actions(actions, rc_menu_repeat_entres,
-        rc_menu_repeat_n_entres, 0, G_CALLBACK(rc_gui_press_repeat_menu),
+        rc_menu_repeat_n_entres, 0, G_CALLBACK(rc_gui_repeat_menu_clicked),
         NULL);
     gtk_action_group_add_radio_actions(actions, rc_menu_random_entres,
-        rc_menu_random_n_entres, 0, G_CALLBACK(rc_gui_press_random_menu),
+        rc_menu_random_n_entres, 0, G_CALLBACK(rc_gui_random_menu_clicked),
         NULL);
     gtk_action_group_add_toggle_actions(actions, rc_menu_toogle_entres,
         rc_menu_toogle_n_entres, NULL);
@@ -870,63 +1266,14 @@ gboolean rc_gui_init()
             gtk_ui_manager_get_action(rc_gui.main_ui,
             "/RCMenuBar/ViewMenu/ViewAlwaysOnTop")), TRUE);
     }
-    return FALSE;
+    return TRUE;
 }
 
-/*
- * Process previous button clicked event.
- */
-
-gboolean rc_gui_prev_button_clicked(GtkButton *button, gpointer data)
-{
-    rc_plist_play_prev();
-    return FALSE;
-}
-
-/*
- * Process play button clicked event.
- */
-
-gboolean rc_gui_play_button_clicked(GtkButton *button, gpointer data)
-{
-    gboolean flag = TRUE;
-    gint list1_index, list2_index;
-    if(rc_core_get_play_state()==GST_STATE_PLAYING)
-    {
-        flag = rc_core_pause();
-        if(!flag) return FALSE;
-    }
-    else
-    {
-        rc_plist_play_get_index(&list1_index, &list2_index);
-        if(rc_core_get_play_state()!=GST_STATE_PAUSED)
-            flag = rc_plist_play_by_index(list1_index, list2_index);
-        flag = rc_core_play();
-        if(!flag) return FALSE;
-    }
-    return FALSE;
-}
-/*
- * Process stop button clicked event.
- */
-
-gboolean rc_gui_stop_button_clicked(GtkButton *button, gpointer data)
-{
-    rc_core_stop();
-    return FALSE;
-}
-
-/*
- * Process next button clicked event.
- */
-
-gboolean rc_gui_next_button_clicked(GtkButton *button, gpointer data)
-{
-    rc_plist_play_next(FALSE);
-    return FALSE;
-}
-
-/*
+/**
+ * rc_gui_set_play_button_state:
+ * @state: the state of the play button, if it's TRUE, the image of the
+ * button is pause icon, else the image is play icon.
+ *
  * Set play button state.
  */
 
@@ -951,24 +1298,17 @@ void rc_gui_set_play_button_state(gboolean state)
     rc_gui_mini_set_play_state(state);
 }
 
-/*
- * Adjust the playing position by the dragging of the bar.
- */
-
-gboolean rc_gui_adjust_play_position(GtkWidget *widget, gpointer data)
-{
-    gdouble persent = gtk_range_get_value(GTK_RANGE(rc_gui.time_scroll_bar));
-    rc_core_set_play_position_by_persent(persent);
-    return FALSE;
-}
-
-/*
+/**
+ * rc_gui_music_info_set_data:
+ * @title: the title to set
+ * @data: the metadata, the type should be RCMetaData (defined in tag.h)
+ *
  * Set the data in the information labels.
  */
 
 void rc_gui_music_info_set_data(const gchar *title, const gpointer data)
 {
-    const MusicMetaData *mmd = data;
+    const RCMusicMetaData *mmd = data;
     gchar title_info[512];
     gchar music_info[128];
     gchar timestr[64];
@@ -1071,8 +1411,11 @@ void rc_gui_music_info_set_data(const gchar *title, const gpointer data)
         "tooltip-text", title_info, NULL);
 }
 
-/*
- * Set time label.
+/**
+ * rc_gui_time_label_set_text:
+ * @time: the time to set, in nanosecond.
+ *
+ * Set time label of the player.
  */
 
 void rc_gui_time_label_set_text(gint64 time)
@@ -1086,79 +1429,15 @@ void rc_gui_time_label_set_text(gint64 time)
     gtk_label_set_text(GTK_LABEL(rc_gui.time_label), timestr);
 }
 
-/*
- * Adjust the volume of the player.
- */
-
-gboolean rc_gui_adjust_volume(GtkScaleButton *widget, gdouble vol,
-    gpointer data)
-{
-    gdouble persent = vol * 100;
-    if(100.0 - persent <= 10e-3)
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
-            "/RCMenuBar/ControlMenu/ControlVolumeUp"), FALSE);
-    else
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
-            "/RCMenuBar/ControlMenu/ControlVolumeUp"), TRUE);
-    if(persent <= 10e-3)
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
-            "/RCMenuBar/ControlMenu/ControlVolumeDown"), FALSE);
-    else
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
-            "/RCMenuBar/ControlMenu/ControlVolumeDown"), TRUE);
-    rc_core_set_volume(persent);
-    return FALSE;
-}
-
-/*
- * Detect if the scale bar is pressed by the mouse.
- */
-
-gboolean rc_gui_seek_scale_button_pressed(GtkWidget *widget, 
-    GdkEventButton *event, gpointer data)
-{
-    if(event->button==3) return TRUE;
-    rc_gui.update_seek_scale_flag = FALSE;
-    return FALSE;
-}
-
-/*
- * Detect if the scale bar is released.
- */
-
-gboolean rc_gui_seek_scale_button_released(GtkWidget *widget, 
-    GdkEventButton *event, gpointer data)
-{
-    rc_gui.update_seek_scale_flag = TRUE;
-    rc_gui_adjust_play_position(NULL, NULL);
-    return FALSE;
-}
-
-/*
- * Detect if the value of the scale bar is changed.
- */
-
-void rc_gui_seek_scale_value_changed(GtkRange *range, gpointer data)
-{
-    gdouble persent;
-    gint64 pos, len;
-    if(!rc_gui.update_seek_scale_flag)
-    {
-        persent = gtk_range_get_value(GTK_RANGE(
-            rc_gui.time_scroll_bar));
-        len = rc_core_get_music_length();
-        pos = len * persent / 100;
-        rc_gui_time_label_set_text(pos);
-    }
-}
-
-/*
- * Disable the scaler bar if it is not needed.
+/**
+ * rc_gui_seek_scaler_disable:
+ *
+ * Disable the scaler bar and the time control menus.
  */
 
 void rc_gui_seek_scaler_disable()
 {
-    gtk_range_set_value(GTK_RANGE(rc_gui.time_scroll_bar),0);
+    gtk_range_set_value(GTK_RANGE(rc_gui.time_scroll_bar), 0);
     gtk_widget_set_sensitive(rc_gui.time_scroll_bar, FALSE);
     gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
         "/RCMenuBar/ControlMenu/ControlBackward"), FALSE);
@@ -1166,8 +1445,10 @@ void rc_gui_seek_scaler_disable()
         "/RCMenuBar/ControlMenu/ControlForward"), FALSE);
 }
 
-/*
- * Enable the scaler bar.
+/**
+ * rc_gui_seek_scaler_enable:
+ *
+ * Enable the scaler bar and the time control menus.
  */
 
 void rc_gui_seek_scaler_enable()
@@ -1179,7 +1460,10 @@ void rc_gui_seek_scaler_enable()
         "/RCMenuBar/ControlMenu/ControlForward"), TRUE);
 }
 
-/*
+/**
+ * rc_gui_set_volume:
+ * @volume: the volume to set, the value should be between 0.0 and 100.0
+ *
  * Set the volume bar value.
  */
 
@@ -1201,11 +1485,14 @@ void rc_gui_set_volume(gdouble volume)
             "/RCMenuBar/ControlMenu/ControlVolumeDown"), TRUE);
 }
 
-/*
- * Set the player state (GUI Only).
+/**
+ * rc_gui_set_player_mode:
+ *
+ * Set the player repeat mode and random mode (GUI Only).
+ * Only used when startup.
  */
 
-void rc_gui_set_player_state()
+void rc_gui_set_player_mode()
 {
     gint repeat, random;
     rc_plist_get_play_mode(&repeat, &random);
@@ -1223,174 +1510,16 @@ void rc_gui_set_player_state()
     }
 }
 
-/*
- * Press always on top menu.
- */
-
-void rc_gui_press_ontop_menu(GtkAction *action)
-{
-    gboolean flag = FALSE;
-    flag = rc_set_get_boolean("Player", "AlwaysOnTop", NULL);
-    if(gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(action))==flag)
-        return;
-    flag^=1;
-    gtk_window_set_keep_above(GTK_WINDOW(rc_gui.main_window), flag);
-    rc_set_set_boolean("Player", "AlwaysOnTop", flag);
-    gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(gtk_ui_manager_get_action(
-        rc_gui.main_ui, "/RCMenuBar/ViewMenu/ViewAlwaysOnTop")), flag);
-    gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(gtk_ui_manager_get_action(
-        rc_gui.main_ui, "/TrayPopupMenu/TrayAlwaysOnTop")), flag);
-}
-
-/*
- * Press the view menu.
- */
-
-void rc_gui_press_view_menu(GtkAction *action, GtkRadioAction *current)
-{
-    gint value = gtk_radio_action_get_current_value(current);
-    const GSList *list_foreach = NULL;
-    GuiViewPageData *page_data = NULL;
-    if(value==0 || value==1)
-    {
-        gtk_notebook_set_current_page(GTK_NOTEBOOK(rc_gui.plist_notebook),
-            value);
-    }
-    else
-    {
-        value-=2;
-        for(list_foreach=rc_gui_view_page_list;list_foreach!=NULL;
-            list_foreach=g_slist_next(list_foreach))
-        {
-            page_data = list_foreach->data;
-            if(value==page_data->id)
-            {
-                gtk_notebook_set_current_page(GTK_NOTEBOOK(
-                    rc_gui.plist_notebook), gtk_notebook_page_num(
-                    GTK_NOTEBOOK(rc_gui.plist_notebook),
-                    page_data->view_widget));
-            }
-        }
-    }
-}
-
-/*
- * Press the repeat menu.
- */
-
-void rc_gui_press_repeat_menu(GtkAction *action, GtkRadioAction *current)
-{
-    rc_plist_set_play_mode(gtk_radio_action_get_current_value(current), -1);
-}
-
-/*
- * Press the random menu.
- */
-
-void rc_gui_press_random_menu(GtkAction *action, GtkRadioAction *current)
-{
-    rc_plist_set_play_mode(-1, gtk_radio_action_get_current_value(current));
-}
-
-/*
- * Press the increase volume menu.
- */
-
-gboolean rc_gui_press_vol_up_menu(GtkMenuItem *widget, gpointer data)
-{
-    gdouble value = rc_core_get_volume() / 100;
-    value+=0.05;
-    if(value>1.0) value = 1.0;
-    gtk_scale_button_set_value(GTK_SCALE_BUTTON(rc_gui.volume_button),
-        value);
-    return FALSE;
-}
-
-/*
- * Press the decrease volume menu.
- */
-
-gboolean rc_gui_press_vol_down_menu(GtkMenuItem *widget, gpointer data)
-{
-    gdouble value = rc_core_get_volume() / 100;
-    value-=0.05;
-    if(value<0.0) value = 0.0;
-    gtk_scale_button_set_value(GTK_SCALE_BUTTON(rc_gui.volume_button),
-        value);
-    return FALSE;
-}
-
-/*
- * Press the backward volume menu.
- */
-
-gboolean rc_gui_press_backward_menu(GtkMenuItem *widget, gpointer data)
-{
-    gint64 time = rc_core_get_play_position();
-    time -= 5 * GST_SECOND;
-    if(time<0) time = 0;
-    rc_core_set_play_position(time);
-    return FALSE;
-}
-
-/*
- * Press the forward volume menu.
- */
-
-gboolean rc_gui_press_forward_menu(GtkMenuItem *widget, gpointer data)
-{
-    gint64 time = rc_core_get_play_position();
-    time += 5 * GST_SECOND;
-    if(time>=rc_core_get_music_length()) time = rc_core_get_music_length() - 1;
-    rc_core_set_play_position(time);
-    return FALSE;
-}
-
-/*
- * Set the state of menu items which related to the playlist.
- */
-
-void rc_gui_set_list2_menu(GtkTreeView *widget, gpointer data)
-{
-    gint value = gtk_tree_selection_count_selected_rows(
-        rc_gui.list2_selection);
-    if(value>0)
-    {
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
-            "/RCMenuBar/EditMenu/EditRemoveMusic"), TRUE);
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
-            "/List2PopupMenu/List2RemoveMusic"), TRUE);
-        if(rc_gui.status_task_length==0)
-            gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
-                "/List2PopupMenu/List2RefreshList"), TRUE);
-    }
-    else
-    {
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
-            "/RCMenuBar/EditMenu/EditRemoveMusic"), FALSE);
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
-            "/List2PopupMenu/List2RemoveMusic"), FALSE);
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
-            "/List2PopupMenu/List2RefreshList"), FALSE);
-    }
-}
-
-/*
- * Reflesh the music info in the current playlist.
- */
-
-void rc_gui_refresh_music_info(GtkMenuItem *widget, gpointer data)
-{
-    gint list1_index = rc_gui_list1_get_selected_index();
-    if(list1_index>=0)
-        rc_plist_list2_refresh(list1_index);
-}
-
-/*
+/**
+ * rc_gui_set_cover_image_by_file:
+ * @filename: the path of the cover image file
+ *
  * Set the image of cover.
+ *
+ * Returns: Whether the image is set.
  */
 
-gboolean rc_gui_set_cover_image(gchar *filename)
+gboolean rc_gui_set_cover_image_by_file(const gchar *filename)
 {
     GdkPixbuf *album_src_pixbuf = NULL;
     GdkPixbuf *album_new_pixbuf = NULL;
@@ -1428,8 +1557,13 @@ gboolean rc_gui_set_cover_image(gchar *filename)
     return TRUE;
 }
 
-/*
+/**
+ * rc_gui_set_cover_image_by_buf:
+ * @buf: the GstBuffer which contains the cover image
+ *
  * Set the image of cover by GstBuffer.
+ *
+ * Returns: Whether the image is set.
  */
 
 gboolean rc_gui_set_cover_image_by_buf(const GstBuffer *buf)
@@ -1469,56 +1603,12 @@ gboolean rc_gui_set_cover_image_by_buf(const GstBuffer *buf)
     return TRUE;
 }
 
-/*
- * Show/Hide the Main Window.
- */
-
-void rc_gui_show_hide_window(GtkWidget *widget, gpointer data)
-{
-    gboolean visible = FALSE;
-    GuiMiniData *rc_mini = rc_gui_mini_get_data();
-    if(!rc_set_get_boolean("Player", "MinimizeToTray", NULL)) return;
-    g_object_get(G_OBJECT(rc_gui.main_window), "visible", &visible, NULL);
-    if(!visible)
-        g_object_get(G_OBJECT(rc_mini->mini_window), "visible", &visible,
-            NULL);
-    if(visible)
-    {
-        if(rc_set_get_boolean("Player", "MiniMode", NULL))
-            rc_gui_mini_window_hide(NULL, NULL);
-        else
-            gtk_widget_hide(GTK_WIDGET(rc_gui.main_window));
-    }
-    else
-    {
-        if(rc_set_get_boolean("Player", "MiniMode", NULL))
-        {
-            rc_gui_mini_window_show(NULL, NULL);
-        }
-        else
-        {
-            gtk_window_set_skip_taskbar_hint(GTK_WINDOW(rc_gui.main_window),
-                FALSE);
-            gtk_window_deiconify(GTK_WINDOW(rc_gui.main_window));
-            gtk_widget_show(GTK_WIDGET(rc_gui.main_window));
-            
-        }
-    }
-}
-
-/*
- * Tray icon popup menu.
- */
-
-void rc_gui_tray_icon_popup(GtkStatusIcon *status_icon, guint button,
-    guint activate_time, gpointer data)  
-{
-    gtk_menu_popup(GTK_MENU(gtk_ui_manager_get_widget(rc_gui.main_ui,
-        "/TrayPopupMenu")), NULL, NULL, NULL, NULL, 3, activate_time);
-}
-
-/*
- * Set the number of tasks.
+/**
+ * rc_gui_status_task_set:
+ * @type: the task type: 1=Import, 2=Refresh others=None
+ * @len: the length of the task
+ *
+ * Set the type and the length of tasks.
  */
 
 void rc_gui_status_task_set(guint type, guint len)
@@ -1590,8 +1680,11 @@ void rc_gui_status_task_set(guint type, guint len)
         "/List2PopupMenu/List2RefreshList"), FALSE);
 }
 
-/*
+/**
+ * rc_gui_status_progress_set_progress:
+ * 
  * Set the remaining tasks for status progressbar.
+ * This function is usually used to refresh the work status.
  */
 
 void rc_gui_status_progress_set_progress()
@@ -1615,24 +1708,21 @@ void rc_gui_status_progress_set_progress()
         persent);
 }
 
-/*
- * Cancel the jobs in the job queue.
- */
-
-void rc_gui_import_cancel_button_clicked(GtkWidget *widget, gpointer data)
-{
-    rc_plist_import_job_cancel();
-    rc_gui_status_task_set(0, 0);
-}
-
-/*
- * Add new view page to player.
+/**
+ * rc_gui_view_add_page:
+ * @name: the name of the menu to add
+ * @title: the string which shows on the menu
+ * @widget: the widget to add to the page 
+ *
+ * Add new view page and menu to player.
+ *
+ * Returns: The unique ID of the added page.
  */
 
 guint rc_gui_view_add_page(const gchar *name, const gchar *title, GtkWidget *widget)
 {
     GSList *group = NULL;
-    GuiViewPageData *page_data = NULL;
+    RCGuiViewPageData *page_data = NULL;
     GtkRadioAction *action = NULL;
     guint id = 0;
     if(name==NULL || title==NULL || widget==NULL) return 0;
@@ -1648,7 +1738,7 @@ guint rc_gui_view_add_page(const gchar *name, const gchar *title, GtkWidget *wid
     gtk_action_group_add_action(rc_gui.main_action_group, GTK_ACTION(action));
     gtk_notebook_append_page(GTK_NOTEBOOK(rc_gui.plist_notebook), widget,
         NULL);
-    page_data = g_malloc0(sizeof(GuiViewPageData));
+    page_data = g_malloc0(sizeof(RCGuiViewPageData));
     page_data->id = id;
     page_data->view_widget = widget;
     page_data->action = GTK_ACTION(action);
@@ -1656,14 +1746,19 @@ guint rc_gui_view_add_page(const gchar *name, const gchar *title, GtkWidget *wid
     return id;
 }
 
-/*
+/**
+ * rc_gui_view_remove_page:
+ * @id: the unique ID of the page to remove
+ *
  * Remove a view page from player.
+ *
+ * Returns: Whether this operation is succeeded.
  */
 
 gboolean rc_gui_view_remove_page(guint id)
 {
     GSList *list_foreach = NULL;
-    GuiViewPageData *page_data = NULL;
+    RCGuiViewPageData *page_data = NULL;
     gint page_num = 0;
     for(list_foreach=rc_gui_view_page_list;list_foreach!=NULL;
         list_foreach=g_slist_next(list_foreach))
@@ -1688,24 +1783,5 @@ gboolean rc_gui_view_remove_page(guint id)
         }
     }
     return FALSE;
-}
-
-/*
- * Deiconify the main window
- */
-
-void rc_gui_deiconify(GtkAction *action)
-{
-    if(rc_set_get_boolean("Player", "MiniMode", NULL))
-    {
-        rc_gui_mini_window_show(NULL, NULL);
-    }
-    else
-    {
-        gtk_window_set_skip_taskbar_hint(GTK_WINDOW(rc_gui.main_window),
-            FALSE);
-        gtk_widget_show(GTK_WIDGET(rc_gui.main_window));
-        gtk_window_deiconify(GTK_WINDOW(rc_gui.main_window));
-    }
 }
 

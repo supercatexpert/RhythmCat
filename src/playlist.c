@@ -35,7 +35,7 @@
 #include "debug.h"
 #include "player.h"
 
-typedef struct _PlistImportData
+typedef struct RCPlistImportData
 {
     gchar *uri;
     gint list2_index;
@@ -43,12 +43,12 @@ typedef struct _PlistImportData
     gboolean auto_clean;
     GtkTreeRowReference *reference;
     GtkListStore *store;
-}PlistImportData;
+}RCPlistImportData;
 
 /* Variables */
 static gchar play_list_setting_file[] = "playlist.dat";
 static gchar *default_list_name = "[Default]";
-static PlistData rc_plist;
+static RCPlistData rc_plist;
 static GThread *plist_import_threads[2];
 static GAsyncQueue *plist_import_job_queue;
 static const gint plist_import_thread_num = 2;
@@ -61,8 +61,8 @@ static GCancellable *plist_import_thread_cancel = NULL;
 
 static gpointer rc_plist_import_job_func(gpointer data)
 {
-    MusicMetaData *mmd = NULL;
-    PlistImportData *import_data;
+    RCMusicMetaData *mmd = NULL;
+    RCPlistImportData *import_data;
     plist_import_thread_cancel = g_cancellable_new();
     while(plist_import_job_flag)
     {
@@ -114,7 +114,7 @@ gboolean rc_plist_init()
     init = TRUE;
     rc_debug_print("Plist: Loading playlists...\n");
     default_list_name = _("Default Playlist");
-    bzero(&rc_plist, sizeof(PlistData));
+    bzero(&rc_plist, sizeof(RCPlistData));
     rc_plist.list_store = gtk_list_store_new(PLIST1_LAST, G_TYPE_STRING,
         G_TYPE_STRING, G_TYPE_POINTER);
     rc_gui_list_tree_reset_list_store();
@@ -134,7 +134,7 @@ gboolean rc_plist_init()
         }
     }
     plist_import_job_flag = TRUE;
-    rc_gui_set_player_state();
+    rc_gui_set_player_mode();
     rc_debug_print("Plist: Playlists are successfully loaded!\n");
     return TRUE;
 }
@@ -166,10 +166,10 @@ gboolean rc_plist_insert_music(const gchar *uri, gint list1_index,
     gint list2_index)
 {
     GtkListStore *store;
-    PlistImportData *import_data;
+    RCPlistImportData *import_data;
     store = rc_plist_get_list_store(list1_index);
     if(store==NULL) return FALSE;
-    import_data = g_malloc0(sizeof(PlistImportData));
+    import_data = g_malloc0(sizeof(RCPlistImportData));
     import_data->uri = g_strdup(uri);
     import_data->store = rc_plist_get_list_store(list1_index);
     import_data->list2_index = list2_index;
@@ -332,7 +332,7 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
     gchar *cover_filename = NULL;
     gchar *fpathname = NULL;
     gchar *realname = NULL;
-    MusicMetaData *mmd_new = NULL;
+    RCMusicMetaData *mmd_new = NULL;
     gboolean image_flag = FALSE;
     list_store = rc_plist_get_list_store(list_index);
     path = gtk_tree_path_new_from_indices(music_index, -1);
@@ -451,13 +451,14 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
             cover_filename = rc_tag_find_file(image_dir, album_name,
                 ".BMP|.JPG|.JPEG|.PNG");
         g_free(image_dir);
-        if(cover_filename!=NULL && rc_gui_set_cover_image(cover_filename))
+        if(cover_filename!=NULL && rc_gui_set_cover_image_by_file(
+            cover_filename))
         {
             rc_debug_print("Plist: Found cover image file: %s.\n",
                 cover_filename);
         }
         else
-            rc_gui_set_cover_image(NULL);
+            rc_gui_set_cover_image_by_file(NULL);
     }
     g_free(music_dir);
     g_free(realname);
@@ -713,6 +714,7 @@ void rc_plist_set_play_mode(gint repeat, gint random)
     {
         rc_set_set_integer("Player", "RandomMode", random);
     }
+    rc_gui_set_player_mode();
 }
 
 /*
@@ -1338,7 +1340,7 @@ GtkListStore *rc_plist_get_list_head()
 
 gboolean rc_plist_list2_refresh(gint list1_index)
 {
-    PlistImportData *refresh_data;
+    RCPlistImportData *refresh_data;
     GtkListStore *store;
     GtkTreeModel *model;
     GtkTreeIter iter;
@@ -1358,7 +1360,7 @@ gboolean rc_plist_list2_refresh(gint list1_index)
         reference = gtk_tree_row_reference_new(model, path);
         gtk_tree_path_free(path);
         if(reference==NULL) continue;
-        refresh_data = g_malloc0(sizeof(PlistImportData));
+        refresh_data = g_malloc0(sizeof(RCPlistImportData));
         gtk_tree_model_get(model, &iter, PLIST2_URI, &refresh_data->uri, -1);
         refresh_data->reference = reference;
         refresh_data->refresh_flag = TRUE;
@@ -1387,7 +1389,7 @@ gint rc_plist_import_job_get_length()
 
 void rc_plist_import_job_cancel()
 {
-    PlistImportData *import_data;
+    RCPlistImportData *import_data;
     while(g_async_queue_length(plist_import_job_queue) +
         plist_import_thread_num>0)
     {

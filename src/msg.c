@@ -30,33 +30,33 @@
 #include "tag.h"
 #include "playlist.h"
 
-typedef struct
+typedef struct RCMsgAsyncQueueWatch
 {
     GSource source;
     GAsyncQueue *queue;
-}MsgAsyncQueueWatch;
+}RCMsgAsyncQueueWatch;
 
 static GAsyncQueue *msg_queue;
 
 static gboolean rc_msg_async_queue_watch_prepare(GSource *source,
     gint *timeout)
 {
-    MsgAsyncQueueWatch *watch = (MsgAsyncQueueWatch *)source;
+    RCMsgAsyncQueueWatch *watch = (RCMsgAsyncQueueWatch *)source;
     *timeout = -1;
     return (g_async_queue_length(watch->queue)>0);
 }
 
 static gboolean rc_msg_async_queue_watch_check(GSource *source)
 {
-    MsgAsyncQueueWatch *watch = (MsgAsyncQueueWatch *)source;
+    RCMsgAsyncQueueWatch *watch = (RCMsgAsyncQueueWatch *)source;
     return (g_async_queue_length(watch->queue)>0);
 }
 
 static gboolean rc_msg_async_queue_watch_dispatch(GSource *source,
     GSourceFunc callback, gpointer data)
 {
-    MsgAsyncQueueWatch *watch = (MsgAsyncQueueWatch *)source;
-    MsgAsyncQueueWatchFunc cb = (MsgAsyncQueueWatchFunc)callback;
+    RCMsgAsyncQueueWatch *watch = (RCMsgAsyncQueueWatch *)source;
+    RCMsgAsyncQueueWatchFunc cb = (RCMsgAsyncQueueWatchFunc)callback;
     gpointer item;
     item = g_async_queue_try_pop(watch->queue);
     if(item==NULL)
@@ -73,7 +73,7 @@ static gboolean rc_msg_async_queue_watch_dispatch(GSource *source,
 
 static void rc_msg_async_queue_watch_finalize(GSource *source)
 {
-    MsgAsyncQueueWatch *watch = (MsgAsyncQueueWatch *)source;
+    RCMsgAsyncQueueWatch *watch = (RCMsgAsyncQueueWatch *)source;
     if(watch->queue!=NULL)
     {
         g_async_queue_unref(watch->queue);
@@ -90,15 +90,15 @@ static GSourceFuncs rc_msg_async_queue_watch_funcs =
 };
 
 guint rc_msg_async_queue_watch_new(GAsyncQueue *queue, gint priority,
-    MsgAsyncQueueWatchFunc callback, gpointer data, GDestroyNotify notify,
+    RCMsgAsyncQueueWatchFunc callback, gpointer data, GDestroyNotify notify,
     GMainContext *context)
 {
     GSource *source;
-    MsgAsyncQueueWatch *watch;
+    RCMsgAsyncQueueWatch *watch;
     guint id;
     source = (GSource *)g_source_new(&rc_msg_async_queue_watch_funcs,
-        sizeof(MsgAsyncQueueWatch));
-    watch = (MsgAsyncQueueWatch *)source;
+        sizeof(RCMsgAsyncQueueWatch));
+    watch = (RCMsgAsyncQueueWatch *)source;
     watch->queue = g_async_queue_ref(queue);
     if(priority!=G_PRIORITY_DEFAULT)
         g_source_set_priority(source, priority);
@@ -110,8 +110,8 @@ guint rc_msg_async_queue_watch_new(GAsyncQueue *queue, gint priority,
 
 static void rc_msg_process_func(gpointer data, gpointer user_data)
 {
-    MsgData *msg = (MsgData *)data;
-    MusicMetaData *mmd;
+    RCMsgData *msg = (RCMsgData *)data;
+    RCMusicMetaData *mmd;
     if(data!=NULL)
     {
         switch(msg->type)
@@ -155,10 +155,10 @@ void rc_msg_init()
         rc_msg_process_func, NULL, NULL, context);
 }
 
-void rc_msg_push(MsgType type, gpointer data)
+void rc_msg_push(RCMsgType type, gpointer data)
 {
-    MsgData *msg;
-    msg = g_malloc(sizeof(MsgData));
+    RCMsgData *msg;
+    msg = g_malloc(sizeof(RCMsgData));
     msg->type = type;
     msg->data = data;
     g_async_queue_push(msg_queue, msg);

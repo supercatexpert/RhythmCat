@@ -37,7 +37,7 @@ static GtkWidget *plugin_desc_label;
 static GtkWidget *plugin_author_label;
 static GtkWidget *plugin_website_label;
 static GtkTreeModel *plugin_list_model;
-static GuiData *rc_ui;
+static RCGuiData *rc_ui;
 
 static void rc_gui_plugin_list_toggled(GtkCellRendererToggle *renderer,
     gchar *path_str, gpointer data)
@@ -84,7 +84,7 @@ static void rc_gui_plugin_configure(GtkWidget *widget, gpointer data)
     GtkTreeIter iter;
     GtkTreeSelection *selection;
     gchar *path = NULL;
-    PluginType type;
+    RCPluginType type;
     selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(plugin_list_view));
     if(gtk_tree_selection_get_selected(selection, NULL, &iter))
     {
@@ -172,7 +172,7 @@ static guint rc_gui_plugin_load_info()
     guint count = 0;
     GtkTreeIter iter;
     GtkListStore *plugin_list_store = GTK_LIST_STORE(plugin_list_model);
-    PluginData *plugin_data = NULL;
+    RCPluginData *plugin_data = NULL;
     rc_plugin_list_free();
     rc_plugin_search_dir("plugins");
     plugin_list = rc_plugin_get_list();
@@ -219,7 +219,7 @@ void rc_gui_plugin_window_create(GtkWidget *widget, gpointer data)
         if(!visible) gtk_widget_show_all(plugin_window);
         return;
     }
-    rc_ui = rc_gui_get_gui();
+    rc_ui = rc_gui_get_data();
     plugin_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     gtk_window_set_type_hint(GTK_WINDOW(plugin_window),
         GDK_WINDOW_TYPE_HINT_DIALOG);

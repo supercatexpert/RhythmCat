@@ -21,6 +21,9 @@ if test "$DBUSBINDINGTOOL" = no; then
     AC_MSG_ERROR([dbus-binding-tool not found!])
 fi
 
+# Check for gtk-doc
+GTK_DOC_CHECK([1.14],[--flavour no-tmpl])
+
 # Checks for libraries.
 PKG_CHECK_MODULES([GLIB2], [glib-2.0 >= 2.16, gthread-2.0 >= 2.16, \
     gmodule-2.0 >= 2.16, gio-2.0 >= 2.16])
@@ -45,5 +48,7 @@ AM_GNU_GETTEXT_VERSION([0.18.1])
 AM_GNU_GETTEXT([external])
 
 AC_OUTPUT([Makefile po/Makefile.in po/Makefile src/Makefile data/Makefile \
-    data/conf/Makefile data/images/Makefile])
+    doc/Makefile doc/reference/Makefile data/conf/Makefile data/images/Makefile])
+
+AC_CONFIG_MACRO_DIR(m4)
 

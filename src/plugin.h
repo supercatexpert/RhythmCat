@@ -31,13 +31,13 @@
 #include <gtk/gtk.h>
 #include <gst/gst.h>
 
-typedef enum
+typedef enum RCPluginType
 {
     PLUGIN_TYPE_MODULE = 1,
     PLUGIN_TYPE_PYTHON = 2
-}PluginType;
+}RCPluginType;
 
-typedef struct _PluginData
+typedef struct RCPluginData
 {
     gchar *path;
     gchar name[48];
@@ -45,17 +45,17 @@ typedef struct _PluginData
     gchar author[64];
     gchar version[24];
     gchar website[96];
-    PluginType type;
-}PluginData;
+    RCPluginType type;
+}RCPluginData;
 
-typedef struct _ModuleData
+typedef struct RCModuleData
 {
     GModule *module;
     gchar *path;
     gint (*module_init)();
     void (*module_exit)();
     const gchar *(*module_get_group_name)();
-}ModuleData;
+}RCModuleData;
 
 /* Function */
 gboolean rc_plugin_init();
@@ -63,10 +63,10 @@ void rc_plugin_exit();
 gboolean rc_plugin_search_dir(const gchar *);
 const GSList *rc_plugin_get_list();
 void rc_plugin_list_free();
-void rc_plugin_plugin_free(PluginData *);
-void rc_plugin_module_free(ModuleData *);
+void rc_plugin_plugin_free(RCPluginData *);
+void rc_plugin_module_free(RCModuleData *);
 gboolean rc_plugin_module_check_running(const gchar *);
-gboolean rc_plugin_load(const gchar *, PluginData **);
+gboolean rc_plugin_load(const gchar *, RCPluginData **);
 gboolean rc_plugin_module_load(const gchar *);
 void rc_plugin_module_close(const gchar *);
 gboolean rc_plugin_module_configure(const gchar *);

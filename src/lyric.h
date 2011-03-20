@@ -31,19 +31,19 @@
 #include <glib.h>
 
 /* Custom struct type to store the data of lyrics. */
-typedef struct _LrcData
+typedef struct RCLyricData
 {
     guint64 time;
     guint64 length;
     gchar *text;
-}LrcData;
+}RCLyricData;
 
 /* Functions */
 gboolean rc_lrc_read_from_file(const gchar *);
 void rc_lrc_clean_data();
 const GList *rc_lrc_get_lrc_data();
 const gchar *rc_lrc_get_text_data();
-const LrcData *rc_lrc_get_line_by_time(gint64);
+const RCLyricData *rc_lrc_get_line_by_time(gint64);
 void rc_lrc_set_text(const gchar *);
 gboolean rc_lrc_save_lrc(const gchar *);
 

@@ -33,7 +33,7 @@ static gchar *lrc_text_data = NULL;
 static guint64 lrc_num_of_targets = 0;
 static gchar *ex_encoding = NULL;
 
-static gint rc_lrc_time_compare(const LrcData *a, const LrcData *b)
+static gint rc_lrc_time_compare(const RCLyricData *a, const RCLyricData *b)
 {
     if(a->time > b->time) return 1;
     if(a->time == b->time) return 0;
@@ -51,7 +51,7 @@ static void rc_lrc_add_length()
 {
     const GList *line_foreach;
     const GList *line_next;
-    LrcData *item, *item_next;
+    RCLyricData *item, *item_next;
     for(line_foreach=lrc_line_data;line_foreach!=NULL;
         line_foreach=g_list_next(line_foreach))
     {
@@ -79,7 +79,7 @@ static void rc_lrc_add_line(gchar *line)
     gchar *text = NULL;
     GSList *time_list = NULL;
     GSList *time_foreach = NULL;
-    LrcData *lrc_data = NULL;
+    RCLyricData *lrc_data = NULL;
     line_data_array = g_strsplit_set(line, "[]", -1);
     while(line_data_array[sptnum]!=NULL)
     {
@@ -104,7 +104,7 @@ static void rc_lrc_add_line(gchar *line)
         for(i=0;i<tagnum;i++)
         {
             time = g_slist_nth_data(time_foreach, 0);
-            lrc_data = g_malloc0(sizeof(LrcData));
+            lrc_data = g_malloc0(sizeof(RCLyricData));
             lrc_data->time = *time;
             if(text!=NULL)
                 lrc_data->text = g_strdup(text);
@@ -220,7 +220,7 @@ void rc_lrc_clean_data()
 {
     lrc_num_of_targets = g_list_length(lrc_line_data);
     guint i;
-    LrcData *item;
+    RCLyricData *item;
     GList *list_foreach = lrc_line_data;
     for(i=0;i<lrc_num_of_targets;i++)
     {
@@ -248,10 +248,10 @@ const gchar *rc_lrc_get_text_data()
     return lrc_text_data;
 }
 
-const LrcData *rc_lrc_get_line_by_time(gint64 time)
+const RCLyricData *rc_lrc_get_line_by_time(gint64 time)
 {
     GList *list_foreach;
-    LrcData *item = NULL, *tmp = NULL;
+    RCLyricData *item = NULL, *tmp = NULL;
     if(lrc_line_data==NULL) return NULL;
     item = lrc_line_data->data;
     time = time / GST_MSECOND / 10;

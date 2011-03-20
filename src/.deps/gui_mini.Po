@@ -529,7 +529,8 @@ gui_mini.o: gui_mini.c gui_mini.h /usr/include/stdlib.h \
  /usr/include/dbus-1.0/dbus/dbus-signature.h \
  /usr/include/dbus-1.0/dbus/dbus-threads.h \
  /usr/include/dbus-1.0/dbus/dbus-glib.h \
- /usr/include/dbus-1.0/dbus/dbus-gtype-specialized.h settings.h
+ /usr/include/dbus-1.0/dbus/dbus-gtype-specialized.h settings.h \
+ playlist.h
 
 gui_mini.h:
 
@@ -1774,3 +1775,5 @@ main.h:
 /usr/include/dbus-1.0/dbus/dbus-gtype-specialized.h:
 
 settings.h:
+
+playlist.h:

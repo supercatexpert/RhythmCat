@@ -34,7 +34,7 @@
 #include <glib/gi18n.h>
 
 /* Custom struct type to store the GUI data. */
-typedef struct _GuiData
+typedef struct RCGuiData
 {
     GtkUIManager *main_ui;
     GtkActionGroup *main_action_group;
@@ -69,52 +69,25 @@ typedef struct _GuiData
     GdkPixbuf *icon_image;
     GtkStatusIcon *tray_icon;
     GtkStyle *style;
-}GuiData;
+}RCGuiData;
 
 /* Functions */
-GuiData *rc_gui_get_gui();
+RCGuiData *rc_gui_get_data();
 gboolean rc_gui_init();
-void rc_gui_quit_player(GtkWidget *, gpointer);
+void rc_gui_quit_player();
 void rc_gui_music_info_set_data(const gchar *, const gpointer);
 void rc_gui_time_label_set_text(gint64);
-gboolean rc_gui_prev_button_clicked(GtkButton *, gpointer);
-gboolean rc_gui_play_button_clicked(GtkButton *, gpointer);
-gboolean rc_gui_stop_button_clicked(GtkButton *, gpointer);
-gboolean rc_gui_next_button_clicked(GtkButton *, gpointer);
-gboolean rc_gui_repeat_button_clicked(GtkToggleButton *, gpointer);
-gboolean rc_gui_random_button_clicked(GtkToggleButton *, gpointer);
 void rc_gui_set_play_button_state(gboolean);
-gboolean rc_gui_adjust_play_position(GtkWidget *, gpointer);
-gboolean rc_gui_adjust_volume(GtkScaleButton *, gdouble, gpointer);
 void rc_gui_seek_scaler_disable();
 void rc_gui_seek_scaler_enable();
-gboolean rc_gui_seek_scale_button_pressed(GtkWidget *, GdkEventButton *,
-    gpointer);
-gboolean rc_gui_seek_scale_button_released(GtkWidget *, GdkEventButton *,
-    gpointer);
-void rc_gui_seek_scale_value_changed(GtkRange *, gpointer);
 void rc_gui_set_volume(gdouble);
-void rc_gui_set_player_state();
-void rc_gui_press_ontop_menu(GtkAction *);
-void rc_gui_press_view_menu(GtkAction *, GtkRadioAction *);
-void rc_gui_press_repeat_menu(GtkAction *, GtkRadioAction *);
-void rc_gui_press_random_menu(GtkAction *, GtkRadioAction *);
-gboolean rc_gui_press_vol_up_menu(GtkMenuItem *, gpointer);
-gboolean rc_gui_press_vol_down_menu(GtkMenuItem *, gpointer);
-gboolean rc_gui_press_backward_menu(GtkMenuItem *, gpointer);
-gboolean rc_gui_press_forward_menu(GtkMenuItem *, gpointer);
-void rc_gui_set_list2_menu(GtkTreeView *, gpointer);
-void rc_gui_refresh_music_info(GtkMenuItem *, gpointer);
-gboolean rc_gui_set_cover_image(gchar *);
+void rc_gui_set_player_mode();
+gboolean rc_gui_set_cover_image_by_file(const gchar *);
 gboolean rc_gui_set_cover_image_by_buf(const GstBuffer *);
-void rc_gui_show_hide_window(GtkWidget *, gpointer);
-void rc_gui_tray_icon_popup(GtkStatusIcon *, guint, guint, gpointer);
 void rc_gui_status_task_set(guint, guint);
 void rc_gui_status_progress_set_progress();
-void rc_gui_import_cancel_button_clicked(GtkWidget *, gpointer);
 guint rc_gui_view_add_page(const gchar *, const gchar *, GtkWidget *);
 gboolean rc_gui_view_remove_page(guint);
-void rc_gui_deiconify(GtkAction *);
 
 #endif
 

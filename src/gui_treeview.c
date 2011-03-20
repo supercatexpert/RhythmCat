@@ -30,7 +30,7 @@
 #include "playlist.h"
 
 /* Variables */
-static GuiData *rc_ui;
+static RCGuiData *rc_ui;
 static GtkTreeViewColumn *list1_column;
 static GtkTreeViewColumn *list2_index_column;
 static GtkTreeViewColumn *list2_title_column;
@@ -122,7 +122,7 @@ static void rc_gui_list2_tree_view_set_drag()
 
 void rc_gui_treeview_init()
 {
-    rc_ui = rc_gui_get_gui();
+    rc_ui = rc_gui_get_data();
     gint count = 0;
     rc_ui->list2_tree_model = NULL;
     rc_ui->list1_tree_model = NULL;

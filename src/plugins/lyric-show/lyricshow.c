@@ -34,7 +34,7 @@
 static const gchar plugin_group_name[] = "LyricShowGtk2";
 static gulong lyric_found_signal, lyric_stop_signal;
 static GuiLrcData rc_glrc;
-static GuiData *rc_ui;
+static RCGuiData *rc_ui;
 static guint id = 0;
 static guint timeout_id = 0;
 static GKeyFile *keyfile = NULL;
@@ -182,7 +182,7 @@ const gchar *rc_plugin_module_get_group_name()
 
 void rc_plugin_lrcshow_init()
 {
-    rc_ui = rc_gui_get_gui();
+    rc_ui = rc_gui_get_data();
     bzero(&rc_glrc, sizeof(GuiLrcData));
     rc_glrc.lrc_line_length = 0L;
     rc_glrc.lrc_line_num = -1L;
@@ -246,7 +246,7 @@ void rc_plugin_lrcshow_show()
     gint count = 0;
     static gint width = 400, height = 100;
     gchar *text;
-    LrcData *lrc_data;
+    RCLyricData *lrc_data;
     gdouble lrc_height, lrc_width;
     gint t_height, t_width;
     gdouble lrc_x, lrc_y;
@@ -254,8 +254,8 @@ void rc_plugin_lrcshow_show()
     cairo_t *lrc_cr;
     guint64 time_plus = 0;
     guint64 time_passed = 0;
-    LrcData *lrc_plus = NULL;
-    LrcData *lrc_cur = NULL;
+    RCLyricData *lrc_plus = NULL;
+    RCLyricData *lrc_cur = NULL;
     gboolean lrc_last_line = FALSE;
     PangoLayout *layout;
     PangoFontDescription *desc;
@@ -301,7 +301,7 @@ void rc_plugin_lrcshow_show()
         {
             rc_glrc.lrc_line_num = count;
         }
-        else if(playing_time<((LrcData *)(rc_glrc.lyric_data->data))->time)
+        else if(playing_time<((RCLyricData *)(rc_glrc.lyric_data->data))->time)
         {
             rc_glrc.lrc_line_num = -1;
             break;
@@ -379,7 +379,7 @@ gboolean rc_plugin_lrcshow_update(gpointer data)
 {
     guint64 playing_time;
     guint64 time;
-    LrcData *lrc_data;
+    RCLyricData *lrc_data;
     guint count = 0;
     gboolean visible = FALSE;
     static gint i = -2;
@@ -403,7 +403,7 @@ gboolean rc_plugin_lrcshow_update(gpointer data)
         {
             rc_glrc.lrc_line_num = count;
         }
-        else if(playing_time<((LrcData *)(rc_glrc.lyric_data->data))->time)
+        else if(playing_time<((RCLyricData *)(rc_glrc.lyric_data->data))->time)
             rc_glrc.lrc_line_num = -1;     
         count++;
     }

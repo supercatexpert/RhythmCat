@@ -31,7 +31,7 @@
 
 #define GUI_STYLE_NUM 3
 
-static GuiColorStyle color_style[GUI_STYLE_NUM];
+static RCGuiColorStyle color_style[GUI_STYLE_NUM];
 
 static void rc_gui_style_data_init()
 {
@@ -130,8 +130,8 @@ void rc_gui_style_init()
     PangoAttribute *list1_attr[2], *list2_attr[2];
     gint i = 0;
     rc_gui_style_data_init();
-    GuiData *rc_ui = rc_gui_get_gui();
-    GuiMiniData *rc_mini = rc_gui_mini_get_data();
+    RCGuiData *rc_ui = rc_gui_get_data();
+    RCGuiMiniData *rc_mini = rc_gui_mini_get_data();
     title_attr_list = pango_attr_list_new();
     artist_attr_list = pango_attr_list_new();
     album_attr_list = pango_attr_list_new();
@@ -227,12 +227,12 @@ void rc_gui_style_refresh()
     g_free(string);
 }
 
-void rc_gui_style_set_color_style(const GuiColorStyle *style_data)
+void rc_gui_style_set_color_style(const RCGuiColorStyle *style_data)
 {
     gint i = 0;
-    GuiData *rc_ui = rc_gui_get_gui();
-    GuiMiniData *rc_mini = rc_gui_mini_get_data();
-    GuiEQData *rc_eq = rc_gui_eq_get_data();
+    RCGuiData *rc_ui = rc_gui_get_data();
+    RCGuiMiniData *rc_mini = rc_gui_mini_get_data();
+    RCGuiEQData *rc_eq = rc_gui_eq_get_data();
     if(style_data==NULL)
     {
         gtk_widget_modify_fg(rc_ui->title_label, GTK_STATE_NORMAL, NULL);
@@ -611,7 +611,7 @@ void rc_gui_style_set_color_style(const GuiColorStyle *style_data)
     gtk_widget_queue_draw(rc_mini->mini_window);
 }
 
-const GuiColorStyle *rc_gui_style_get_color_style(gint index)
+const RCGuiColorStyle *rc_gui_style_get_color_style(gint index)
 {
     if(index<0 || index>=GUI_STYLE_NUM) return NULL;
     return &color_style[index];

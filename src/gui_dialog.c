@@ -85,7 +85,7 @@ static void rc_gui_open_music_dir_recu(const gchar *dir_name, gint depth)
 void rc_gui_about_player()
 {
     GtkWidget *about_dialog;
-    GuiData *rc_ui = rc_gui_get_gui();
+    RCGuiData *rc_ui = rc_gui_get_data();
     about_dialog = gtk_about_dialog_new();
     gtk_about_dialog_set_authors(GTK_ABOUT_DIALOG(about_dialog),
         (const gchar **)rc_get_authors());
@@ -118,7 +118,7 @@ void rc_gui_show_message_dialog(GtkMessageType type, const gchar *title,
 {
     GtkWidget *dialog;
     va_list arg_ptr;
-    GuiData *rc_ui = rc_gui_get_gui();
+    RCGuiData *rc_ui = rc_gui_get_data();
     va_start(arg_ptr, format);
     dialog = gtk_message_dialog_new(GTK_WINDOW(rc_ui->main_window),
         GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT, type,
@@ -135,7 +135,7 @@ void rc_gui_show_message_dialog(GtkMessageType type, const gchar *title,
 void rc_gui_show_open_dialog(GtkWidget *widget, gpointer data)
 {
     const gchar *const *support_format_glub = NULL;
-    GuiData *rc_ui = rc_gui_get_gui();
+    RCGuiData *rc_ui = rc_gui_get_data();
     GtkWidget *file_chooser;
     GtkFileFilter *file_filter1;
     gint result = 0;
@@ -197,7 +197,7 @@ void rc_gui_show_open_dialog(GtkWidget *widget, gpointer data)
 void rc_gui_open_music_directory(GtkWidget *widget, gpointer data)
 {
     GtkWidget *file_chooser;
-    GuiData *rc_ui = rc_gui_get_gui();
+    RCGuiData *rc_ui = rc_gui_get_data();
     gint result = 0;
     gchar *directory_uri = NULL;
     gchar *directory_name = NULL;
@@ -232,7 +232,7 @@ void rc_gui_open_music_directory(GtkWidget *widget, gpointer data)
 
 void rc_gui_save_playlist_dialog(GtkWidget *widget, gpointer data)
 {
-    GuiData *rc_ui = rc_gui_get_gui();
+    RCGuiData *rc_ui = rc_gui_get_data();
     GtkWidget *file_chooser;
     GtkFileFilter *file_filter1;
     gint result = 0;
@@ -274,7 +274,7 @@ void rc_gui_save_playlist_dialog(GtkWidget *widget, gpointer data)
 
 void rc_gui_load_playlist_dialog(GtkWidget *widget, gpointer data)
 {
-    GuiData *rc_ui = rc_gui_get_gui();
+    RCGuiData *rc_ui = rc_gui_get_data();
     GtkWidget *file_chooser;
     GtkFileFilter *file_filter1;
     gint result = 0;
@@ -315,7 +315,7 @@ void rc_gui_load_playlist_dialog(GtkWidget *widget, gpointer data)
 void rc_gui_save_all_playlists_dialog(GtkWidget *widget, gpointer data)
 {
     GtkWidget *file_chooser;
-    GuiData *rc_ui = rc_gui_get_gui();
+    RCGuiData *rc_ui = rc_gui_get_data();
     gint result = 0;
     gint i;
     gint length = 0;

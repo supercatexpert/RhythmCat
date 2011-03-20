@@ -42,7 +42,7 @@ static gchar *rc_set_dir = NULL;
 static const gchar *rc_app_dir = NULL;
 static const gchar *rc_home_dir = NULL;
 static const gchar rc_program_name[] = "RhythmCat Music Player";
-static const gchar rc_build_num[] = "build 110319, alpha 1";
+static const gchar rc_build_num[] = "build 110320, alpha 1";
 static const gchar rc_ver_num[] = "1.0.0";
 static const gboolean rc_is_stable = FALSE;
 static const gchar rc_dbus_name[] = "org.supercat.RhythmCat";
@@ -53,8 +53,8 @@ static const gchar rc_dbus_path_shell[] = "/org/supercat/RhythmCat/Shell";
 static const gchar rc_dbus_interface_shell[] =
     "org.supercat.RhythmCat.Shell";
 static const gchar const *rc_authors[] = {"SuperCat", "Mr. Zhu", NULL};
-static const gchar const *rc_documenters[] = {"SuperCat", "Ms. Mi", NULL};
-static const gchar const *rc_artists[] = {"SuperCat", "Ms. Mi", NULL};
+static const gchar const *rc_documenters[] = {"SuperCat", NULL};
+static const gchar const *rc_artists[] = {"SuperCat", NULL};
 static const gchar const *rc_support_format_glob[] = {"*.[F,f][L,l][A,a][C,c]",
     "*.[O,o][G,g][G,g,A,a,M,m]", "*.[M,m][P,p][2-3]", "*.[W,w][M,m][A,a]",
     "*.[W,w][A,a][V,v]", "*.[A,a][P,p][E,e]", "*.[A,a][A,a][C,c]",
@@ -144,7 +144,7 @@ void rc_exit()
 {
     rc_plugin_exit();
     rc_plist_save_playlist_setting();
-    rc_core_delete();
+    rc_core_exit();
     rc_set_exit();
     rc_plist_uninit_playlist();
     gtk_main_quit();
@@ -360,6 +360,10 @@ const gchar *rc_get_locale()
 
 int main(int argc, char *argv[])
 {
+    /* Enable this to enable memory leak check. */
+    /*
+    g_slice_set_config(G_SLICE_CONFIG_ALWAYS_MALLOC, TRUE);
+    */
     rc_init(&argc, &argv);
     if(rc_plist_get_list2_length(0)>0)
     {

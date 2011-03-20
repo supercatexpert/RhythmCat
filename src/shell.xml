@@ -8,12 +8,42 @@
       <annotation name="org.freedesktop.DBus.GLib.CSymbol" value="rc_shell_load_uri"/>
       <arg type="s" name="uri" direction="in"/>
     </method>
-    <method name="Play">
-      <arg type="b" name="playing" direction="out"/>
-    </method>
+    <method name="Play"/>
+    <method name="Pause"/>
     <method name="Stop"/>
     <method name="Prev"/>
     <method name="Next"/>
+    <method name="GetState">
+      <arg type="i" name="state" direction="out"/>
+    </method>
+    <method name="GetPosition">
+      <arg type="x" name="pos" direction="out"/>
+    </method>
+    <method name="SetPosition">
+      <arg type="x" name="pos" direction="in"/>
+    </method>
+    <method name="GetDuration">
+      <arg type="x" name="dura" direction="out"/>
+    </method>
+    <method name="GetVolume">
+      <arg type="d" name="vol" direction="out"/>
+    </method>
+    <method name="SetVolume">
+      <arg type="d" name="vol" direction="in"/>
+    </method>
+    <method name="GetRepeatMode">
+      <arg type="i" name="repeat" direction="out"/>
+    </method>
+    <method name="SetRepeatMode">
+      <arg type="i" name="repeat" direction="in"/>
+    </method>
+    <method name="GetRandomMode">
+      <arg type="i" name="random" direction="out"/>
+    </method>
+    <method name="SetRandomMode">
+      <arg type="i" name="random" direction="in"/>
+    </method>
   </interface>
+
 </node>
 
