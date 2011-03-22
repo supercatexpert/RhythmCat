@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE book PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "">
+<book xmlns="http://www.devhelp.net/book" title="RhythmCat Reference Manual" link="index.html" author="" name="RhythmCat">
+  <chapters>
+    <sub name="[Insert title here]" link="ch01.html">
+      <sub name="plugin" link="RhythmCat-plugin.html"/>
+      <sub name="Tag" link="RhythmCat-Tag.html"/>
+      <sub name="Lyric" link="RhythmCat-Lyric.html"/>
+      <sub name="gui_plugin" link="RhythmCat-gui-plugin.html"/>
+      <sub name="Asynchronous Message Queue" link="RhythmCat-Asynchronous-Message-Queue.html"/>
+      <sub name="Debug" link="RhythmCat-Debug.html"/>
+      <sub name="Core" link="RhythmCat-Core.html"/>
+      <sub name="gui_dialog" link="RhythmCat-gui-dialog.html"/>
+      <sub name="gui_eq" link="RhythmCat-gui-eq.html"/>
+      <sub name="gui_style" link="RhythmCat-gui-style.html"/>
+      <sub name="Playlist" link="RhythmCat-Playlist.html"/>
+      <sub name="gui_treeview" link="RhythmCat-gui-treeview.html"/>
+      <sub name="GUI" link="RhythmCat-GUI.html"/>
+      <sub name="Mini Mode GUI" link="RhythmCat-Mini-Mode-GUI.html"/>
+      <sub name="gui_setting" link="RhythmCat-gui-setting.html"/>
+      <sub name="Settings" link="RhythmCat-Settings.html"/>
+    </sub>
+    <sub name="Object Hierarchy" link="object-tree.html"/>
+    <sub name="API Index" link="api-index-full.html"/>
+  </chapters>
+  <functions>
+    <function name="enum RCPluginType" link="RhythmCat-plugin.html#RCPluginType"/>
+    <function name="module_init ()" link="RhythmCat-plugin.html#module-init"/>
+    <function name="module_exit ()" link="RhythmCat-plugin.html#module-exit"/>
+    <function name="module_get_group_name ()" link="RhythmCat-plugin.html#module-get-group-name"/>
+    <function name="rc_plugin_init ()" link="RhythmCat-plugin.html#rc-plugin-init"/>
+    <function name="rc_plugin_exit ()" link="RhythmCat-plugin.html#rc-plugin-exit"/>
+    <function name="rc_plugin_search_dir ()" link="RhythmCat-plugin.html#rc-plugin-search-dir"/>
+    <function name="rc_plugin_get_list ()" link="RhythmCat-plugin.html#rc-plugin-get-list"/>
+    <function name="rc_plugin_list_free ()" link="RhythmCat-plugin.html#rc-plugin-list-free"/>
+    <function name="rc_plugin_plugin_free ()" link="RhythmCat-plugin.html#rc-plugin-plugin-free"/>
+    <function name="rc_plugin_module_free ()" link="RhythmCat-plugin.html#rc-plugin-module-free"/>
+    <function name="rc_plugin_module_check_running ()" link="RhythmCat-plugin.html#rc-plugin-module-check-running"/>
+    <function name="rc_plugin_load ()" link="RhythmCat-plugin.html#rc-plugin-load"/>
+    <function name="rc_plugin_module_load ()" link="RhythmCat-plugin.html#rc-plugin-module-load"/>
+    <function name="rc_plugin_module_close ()" link="RhythmCat-plugin.html#rc-plugin-module-close"/>
+    <function name="rc_plugin_module_configure ()" link="RhythmCat-plugin.html#rc-plugin-module-configure"/>
+    <function name="rc_plugin_python_load ()" link="RhythmCat-plugin.html#rc-plugin-python-load"/>
+    <function name="rc_plugin_python_configure ()" link="RhythmCat-plugin.html#rc-plugin-python-configure"/>
+    <function name="RCMusicMetaData" link="RhythmCat-Tag.html#RCMusicMetaData"/>
+    <function name="rc_tag_read_metadata ()" link="RhythmCat-Tag.html#rc-tag-read-metadata"/>
+    <function name="rc_tag_free ()" link="RhythmCat-Tag.html#rc-tag-free"/>
+    <function name="rc_tag_set_playing_metadata ()" link="RhythmCat-Tag.html#rc-tag-set-playing-metadata"/>
+    <function name="rc_tag_get_playing_metadata ()" link="RhythmCat-Tag.html#rc-tag-get-playing-metadata"/>
+    <function name="rc_tag_get_name_from_fpath ()" link="RhythmCat-Tag.html#rc-tag-get-name-from-fpath"/>
+    <function name="rc_tag_find_file ()" link="RhythmCat-Tag.html#rc-tag-find-file"/>
+    <function name="RCLyricData" link="RhythmCat-Lyric.html#RCLyricData"/>
+    <function name="rc_lrc_read_from_file ()" link="RhythmCat-Lyric.html#rc-lrc-read-from-file"/>
+    <function name="rc_lrc_clean_data ()" link="RhythmCat-Lyric.html#rc-lrc-clean-data"/>
+    <function name="rc_lrc_get_lrc_data ()" link="RhythmCat-Lyric.html#rc-lrc-get-lrc-data"/>
+    <function name="rc_lrc_get_text_data ()" link="RhythmCat-Lyric.html#rc-lrc-get-text-data"/>
+    <function name="rc_lrc_get_line_by_time ()" link="RhythmCat-Lyric.html#rc-lrc-get-line-by-time"/>
+    <function name="rc_gui_plugin_window_create ()" link="RhythmCat-gui-plugin.html#rc-gui-plugin-window-create"/>
+    <function name="RCMsgAsyncQueueWatchFunc ()" link="RhythmCat-Asynchronous-Message-Queue.html#RCMsgAsyncQueueWatchFunc"/>
+    <function name="enum RCMsgType" link="RhythmCat-Asynchronous-Message-Queue.html#RCMsgType"/>
+    <function name="RCMsgData" link="RhythmCat-Asynchronous-Message-Queue.html#RCMsgData"/>
+    <function name="rc_msg_async_queue_watch_new ()" link="RhythmCat-Asynchronous-Message-Queue.html#rc-msg-async-queue-watch-new"/>
+    <function name="rc_msg_init ()" link="RhythmCat-Asynchronous-Message-Queue.html#rc-msg-init"/>
+    <function name="rc_msg_push ()" link="RhythmCat-Asynchronous-Message-Queue.html#rc-msg-push"/>
+    <function name="DEBUG_MODE" link="RhythmCat-Debug.html#DEBUG-MODE:CAPS"/>
+    <function name="rc_debug_get_flag ()" link="RhythmCat-Debug.html#rc-debug-get-flag"/>
+    <function name="rc_debug_set_mode ()" link="RhythmCat-Debug.html#rc-debug-set-mode"/>
+    <function name="rc_debug_print ()" link="RhythmCat-Debug.html#rc-debug-print"/>
+    <function name="rc_debug_perror ()" link="RhythmCat-Debug.html#rc-debug-perror"/>
+    <function name="RCCoreData" link="RhythmCat-Core.html#RCCoreData"/>
+    <function name="rc_core_init ()" link="RhythmCat-Core.html#rc-core-init"/>
+    <function name="rc_core_exit ()" link="RhythmCat-Core.html#rc-core-exit"/>
+    <function name="rc_core_get_data ()" link="RhythmCat-Core.html#rc-core-get-data"/>
+    <function name="rc_core_set_uri ()" link="RhythmCat-Core.html#rc-core-set-uri"/>
+    <function name="rc_core_get_uri ()" link="RhythmCat-Core.html#rc-core-get-uri"/>
+    <function name="rc_core_play ()" link="RhythmCat-Core.html#rc-core-play"/>
+    <function name="rc_core_pause ()" link="RhythmCat-Core.html#rc-core-pause"/>
+    <function name="rc_core_stop ()" link="RhythmCat-Core.html#rc-core-stop"/>
+    <function name="rc_core_set_volume ()" link="RhythmCat-Core.html#rc-core-set-volume"/>
+    <function name="rc_core_set_play_position ()" link="RhythmCat-Core.html#rc-core-set-play-position"/>
+    <function name="rc_core_set_play_position_by_persent ()" link="RhythmCat-Core.html#rc-core-set-play-position-by-persent"/>
+    <function name="rc_core_get_play_position ()" link="RhythmCat-Core.html#rc-core-get-play-position"/>
+    <function name="rc_core_get_music_length ()" link="RhythmCat-Core.html#rc-core-get-music-length"/>
+    <function name="rc_core_get_volume ()" link="RhythmCat-Core.html#rc-core-get-volume"/>
+    <function name="rc_core_set_eq_effect ()" link="RhythmCat-Core.html#rc-core-set-eq-effect"/>
+    <function name="rc_core_get_play_state ()" link="RhythmCat-Core.html#rc-core-get-play-state"/>
+    <function name="MAX_DIR_DEPTH" link="RhythmCat-gui-dialog.html#MAX-DIR-DEPTH:CAPS"/>
+    <function name="rc_gui_about_player ()" link="RhythmCat-gui-dialog.html#rc-gui-about-player"/>
+    <function name="rc_gui_show_message_dialog ()" link="RhythmCat-gui-dialog.html#rc-gui-show-message-dialog"/>
+    <function name="rc_gui_show_open_dialog ()" link="RhythmCat-gui-dialog.html#rc-gui-show-open-dialog"/>
+    <function name="rc_gui_open_music_directory ()" link="RhythmCat-gui-dialog.html#rc-gui-open-music-directory"/>
+    <function name="rc_gui_save_playlist_dialog ()" link="RhythmCat-gui-dialog.html#rc-gui-save-playlist-dialog"/>
+    <function name="rc_gui_load_playlist_dialog ()" link="RhythmCat-gui-dialog.html#rc-gui-load-playlist-dialog"/>
+    <function name="rc_gui_save_all_playlists_dialog ()" link="RhythmCat-gui-dialog.html#rc-gui-save-all-playlists-dialog"/>
+    <function name="rc_gui_init_eq_data ()" link="RhythmCat-gui-eq.html#rc-gui-init-eq-data"/>
+    <function name="rc_gui_eq_init ()" link="RhythmCat-gui-eq.html#rc-gui-eq-init"/>
+    <function name="rc_gui_create_equalizer ()" link="RhythmCat-gui-eq.html#rc-gui-create-equalizer"/>
+    <function name="rc_gui_eq_get_data ()" link="RhythmCat-gui-eq.html#rc-gui-eq-get-data"/>
+    <function name="rc_gui_style_init ()" link="RhythmCat-gui-style.html#rc-gui-style-init"/>
+    <function name="rc_gui_style_refresh ()" link="RhythmCat-gui-style.html#rc-gui-style-refresh"/>
+    <function name="rc_gui_style_set_color_style ()" link="RhythmCat-gui-style.html#rc-gui-style-set-color-style"/>
+    <function name="rc_gui_style_get_color_style ()" link="RhythmCat-gui-style.html#rc-gui-style-get-color-style"/>
+    <function name="rc_gui_style_set_color_style_by_index ()" link="RhythmCat-gui-style.html#rc-gui-style-set-color-style-by-index"/>
+    <function name="enum RCPlist1Column" link="RhythmCat-Playlist.html#RCPlist1Column"/>
+    <function name="enum RCPlist2Column" link="RhythmCat-Playlist.html#RCPlist2Column"/>
+    <function name="rc_plist_init ()" link="RhythmCat-Playlist.html#rc-plist-init"/>
+    <function name="rc_plist_exit ()" link="RhythmCat-Playlist.html#rc-plist-exit"/>
+    <function name="rc_plist_insert_list ()" link="RhythmCat-Playlist.html#rc-plist-insert-list"/>
+    <function name="rc_plist_insert_music ()" link="RhythmCat-Playlist.html#rc-plist-insert-music"/>
+    <function name="rc_plist_list2_insert_item ()" link="RhythmCat-Playlist.html#rc-plist-list2-insert-item"/>
+    <function name="rc_plist_list2_refresh_item ()" link="RhythmCat-Playlist.html#rc-plist-list2-refresh-item"/>
+    <function name="rc_plist_list2_remove_item ()" link="RhythmCat-Playlist.html#rc-plist-list2-remove-item"/>
+    <function name="rc_plist_remove_list ()" link="RhythmCat-Playlist.html#rc-plist-remove-list"/>
+    <function name="rc_plist_get_list1_name ()" link="RhythmCat-Playlist.html#rc-plist-get-list1-name"/>
+    <function name="rc_plist_get_list1_length ()" link="RhythmCat-Playlist.html#rc-plist-get-list1-length"/>
+    <function name="rc_plist_set_list1_name ()" link="RhythmCat-Playlist.html#rc-plist-set-list1-name"/>
+    <function name="rc_plist_get_list2_length ()" link="RhythmCat-Playlist.html#rc-plist-get-list2-length"/>
+    <function name="rc_plist_play_by_index ()" link="RhythmCat-Playlist.html#rc-plist-play-by-index"/>
+    <function name="rc_plist_play_get_index ()" link="RhythmCat-Playlist.html#rc-plist-play-get-index"/>
+    <function name="rc_plist_stop ()" link="RhythmCat-Playlist.html#rc-plist-stop"/>
+    <function name="rc_plist_play_prev ()" link="RhythmCat-Playlist.html#rc-plist-play-prev"/>
+    <function name="rc_plist_play_next ()" link="RhythmCat-Playlist.html#rc-plist-play-next"/>
+    <function name="rc_plist_set_play_mode ()" link="RhythmCat-Playlist.html#rc-plist-set-play-mode"/>
+    <function name="rc_plist_get_play_mode ()" link="RhythmCat-Playlist.html#rc-plist-get-play-mode"/>
+    <function name="rc_plist_load_playlist_setting ()" link="RhythmCat-Playlist.html#rc-plist-load-playlist-setting"/>
+    <function name="rc_plist_save_playlist_setting ()" link="RhythmCat-Playlist.html#rc-plist-save-playlist-setting"/>
+    <function name="rc_plist_build_default_list ()" link="RhythmCat-Playlist.html#rc-plist-build-default-list"/>
+    <function name="rc_plist_plist_move2 ()" link="RhythmCat-Playlist.html#rc-plist-plist-move2"/>
+    <function name="rc_plist_save_playlist ()" link="RhythmCat-Playlist.html#rc-plist-save-playlist"/>
+    <function name="rc_plist_load_playlist ()" link="RhythmCat-Playlist.html#rc-plist-load-playlist"/>
+    <function name="rc_plist_get_list_store ()" link="RhythmCat-Playlist.html#rc-plist-get-list-store"/>
+    <function name="rc_plist_get_list_head ()" link="RhythmCat-Playlist.html#rc-plist-get-list-head"/>
+    <function name="rc_plist_list2_refresh ()" link="RhythmCat-Playlist.html#rc-plist-list2-refresh"/>
+    <function name="rc_plist_import_job_get_length ()" link="RhythmCat-Playlist.html#rc-plist-import-job-get-length"/>
+    <function name="rc_plist_import_job_cancel ()" link="RhythmCat-Playlist.html#rc-plist-import-job-cancel"/>
+    <function name="rc_plist_load_argument ()" link="RhythmCat-Playlist.html#rc-plist-load-argument"/>
+    <function name="rc_plist_load_uri_from_remote ()" link="RhythmCat-Playlist.html#rc-plist-load-uri-from-remote"/>
+    <function name="rc_gui_treeview_init ()" link="RhythmCat-gui-treeview.html#rc-gui-treeview-init"/>
+    <function name="rc_gui_list_tree_reset_list_store ()" link="RhythmCat-gui-treeview.html#rc-gui-list-tree-reset-list-store"/>
+    <function name="rc_gui_list1_popup_menu ()" link="RhythmCat-gui-treeview.html#rc-gui-list1-popup-menu"/>
+    <function name="rc_gui_list2_popup_menu ()" link="RhythmCat-gui-treeview.html#rc-gui-list2-popup-menu"/>
+    <function name="rc_gui_list2_button_release_event ()" link="RhythmCat-gui-treeview.html#rc-gui-list2-button-release-event"/>
+    <function name="rc_gui_list1_row_selected ()" link="RhythmCat-gui-treeview.html#rc-gui-list1-row-selected"/>
+    <function name="rc_gui_list2_row_activated ()" link="RhythmCat-gui-treeview.html#rc-gui-list2-row-activated"/>
+    <function name="rc_gui_select_list1 ()" link="RhythmCat-gui-treeview.html#rc-gui-select-list1"/>
+    <function name="rc_gui_select_list2 ()" link="RhythmCat-gui-treeview.html#rc-gui-select-list2"/>
+    <function name="rc_gui_list1_new_list ()" link="RhythmCat-gui-treeview.html#rc-gui-list1-new-list"/>
+    <function name="rc_gui_list1_delete_list ()" link="RhythmCat-gui-treeview.html#rc-gui-list1-delete-list"/>
+    <function name="rc_gui_list_model_inserted ()" link="RhythmCat-gui-treeview.html#rc-gui-list-model-inserted"/>
+    <function name="rc_gui_list1_get_index ()" link="RhythmCat-gui-treeview.html#rc-gui-list1-get-index"/>
+    <function name="rc_gui_list1_get_selected_index ()" link="RhythmCat-gui-treeview.html#rc-gui-list1-get-selected-index"/>
+    <function name="rc_gui_list2_dnd_data_received ()" link="RhythmCat-gui-treeview.html#rc-gui-list2-dnd-data-received"/>
+    <function name="rc_gui_list2_dnd_data_get ()" link="RhythmCat-gui-treeview.html#rc-gui-list2-dnd-data-get"/>
+    <function name="rc_gui_list2_dnd_motion ()" link="RhythmCat-gui-treeview.html#rc-gui-list2-dnd-motion"/>
+    <function name="rc_gui_list1_dnd_data_received ()" link="RhythmCat-gui-treeview.html#rc-gui-list1-dnd-data-received"/>
+    <function name="rc_gui_list1_dnd_data_get ()" link="RhythmCat-gui-treeview.html#rc-gui-list1-dnd-data-get"/>
+    <function name="rc_gui_list2_delete_lists ()" link="RhythmCat-gui-treeview.html#rc-gui-list2-delete-lists"/>
+    <function name="rc_gui_list2_select_all ()" link="RhythmCat-gui-treeview.html#rc-gui-list2-select-all"/>
+    <function name="rc_gui_list1_edited ()" link="RhythmCat-gui-treeview.html#rc-gui-list1-edited"/>
+    <function name="rc_gui_list1_rename_list ()" link="RhythmCat-gui-treeview.html#rc-gui-list1-rename-list"/>
+    <function name="RCGuiData" link="RhythmCat-GUI.html#RCGuiData"/>
+    <function name="rc_gui_get_data ()" link="RhythmCat-GUI.html#rc-gui-get-data"/>
+    <function name="rc_gui_init ()" link="RhythmCat-GUI.html#rc-gui-init"/>
+    <function name="rc_gui_quit_player ()" link="RhythmCat-GUI.html#rc-gui-quit-player"/>
+    <function name="rc_gui_music_info_set_data ()" link="RhythmCat-GUI.html#rc-gui-music-info-set-data"/>
+    <function name="rc_gui_time_label_set_text ()" link="RhythmCat-GUI.html#rc-gui-time-label-set-text"/>
+    <function name="rc_gui_set_play_button_state ()" link="RhythmCat-GUI.html#rc-gui-set-play-button-state"/>
+    <function name="rc_gui_seek_scaler_disable ()" link="RhythmCat-GUI.html#rc-gui-seek-scaler-disable"/>
+    <function name="rc_gui_seek_scaler_enable ()" link="RhythmCat-GUI.html#rc-gui-seek-scaler-enable"/>
+    <function name="rc_gui_set_volume ()" link="RhythmCat-GUI.html#rc-gui-set-volume"/>
+    <function name="rc_gui_set_player_mode ()" link="RhythmCat-GUI.html#rc-gui-set-player-mode"/>
+    <function name="rc_gui_set_cover_image_by_file ()" link="RhythmCat-GUI.html#rc-gui-set-cover-image-by-file"/>
+    <function name="rc_gui_set_cover_image_by_buf ()" link="RhythmCat-GUI.html#rc-gui-set-cover-image-by-buf"/>
+    <function name="rc_gui_status_task_set ()" link="RhythmCat-GUI.html#rc-gui-status-task-set"/>
+    <function name="rc_gui_status_progress_set_progress ()" link="RhythmCat-GUI.html#rc-gui-status-progress-set-progress"/>
+    <function name="rc_gui_view_add_page ()" link="RhythmCat-GUI.html#rc-gui-view-add-page"/>
+    <function name="rc_gui_view_remove_page ()" link="RhythmCat-GUI.html#rc-gui-view-remove-page"/>
+    <function name="rc_gui_mini_init ()" link="RhythmCat-Mini-Mode-GUI.html#rc-gui-mini-init"/>
+    <function name="rc_gui_mini_get_data ()" link="RhythmCat-Mini-Mode-GUI.html#rc-gui-mini-get-data"/>
+    <function name="rc_gui_mini_set_info_text ()" link="RhythmCat-Mini-Mode-GUI.html#rc-gui-mini-set-info-text"/>
+    <function name="rc_gui_mini_set_lyric_text ()" link="RhythmCat-Mini-Mode-GUI.html#rc-gui-mini-set-lyric-text"/>
+    <function name="rc_gui_mini_info_text_move ()" link="RhythmCat-Mini-Mode-GUI.html#rc-gui-mini-info-text-move"/>
+    <function name="rc_gui_mini_set_lyric_persent ()" link="RhythmCat-Mini-Mode-GUI.html#rc-gui-mini-set-lyric-persent"/>
+    <function name="rc_gui_mini_set_play_state ()" link="RhythmCat-Mini-Mode-GUI.html#rc-gui-mini-set-play-state"/>
+    <function name="rc_gui_mini_set_time_text ()" link="RhythmCat-Mini-Mode-GUI.html#rc-gui-mini-set-time-text"/>
+    <function name="rc_gui_mini_window_hide ()" link="RhythmCat-Mini-Mode-GUI.html#rc-gui-mini-window-hide"/>
+    <function name="rc_gui_mini_window_show ()" link="RhythmCat-Mini-Mode-GUI.html#rc-gui-mini-window-show"/>
+    <function name="rc_gui_mini_mini_mode_clicked ()" link="RhythmCat-Mini-Mode-GUI.html#rc-gui-mini-mini-mode-clicked"/>
+    <function name="rc_gui_mini_normal_mode_clicked ()" link="RhythmCat-Mini-Mode-GUI.html#rc-gui-mini-normal-mode-clicked"/>
+    <function name="rc_gui_create_setting_window ()" link="RhythmCat-gui-setting.html#rc-gui-create-setting-window"/>
+    <function name="rc_gui_create_setting_treeview ()" link="RhythmCat-gui-setting.html#rc-gui-create-setting-treeview"/>
+    <function name="rc_gui_close_setting_window ()" link="RhythmCat-gui-setting.html#rc-gui-close-setting-window"/>
+    <function name="rc_gui_setting_row_selected ()" link="RhythmCat-gui-setting.html#rc-gui-setting-row-selected"/>
+    <function name="rc_gui_setting_apply ()" link="RhythmCat-gui-setting.html#rc-gui-setting-apply"/>
+    <function name="rc_gui_setting_confirm ()" link="RhythmCat-gui-setting.html#rc-gui-setting-confirm"/>
+    <function name="rc_gui_create_setting_general ()" link="RhythmCat-gui-setting.html#rc-gui-create-setting-general"/>
+    <function name="rc_gui_create_setting_playlist ()" link="RhythmCat-gui-setting.html#rc-gui-create-setting-playlist"/>
+    <function name="rc_gui_create_setting_appearance ()" link="RhythmCat-gui-setting.html#rc-gui-create-setting-appearance"/>
+    <function name="rc_set_init ()" link="RhythmCat-Settings.html#rc-set-init"/>
+    <function name="rc_set_exit ()" link="RhythmCat-Settings.html#rc-set-exit"/>
+    <function name="rc_set_get_string ()" link="RhythmCat-Settings.html#rc-set-get-string"/>
+    <function name="rc_set_get_integer ()" link="RhythmCat-Settings.html#rc-set-get-integer"/>
+    <function name="rc_set_get_double ()" link="RhythmCat-Settings.html#rc-set-get-double"/>
+    <function name="rc_set_get_boolean ()" link="RhythmCat-Settings.html#rc-set-get-boolean"/>
+    <function name="rc_set_get_string_list ()" link="RhythmCat-Settings.html#rc-set-get-string-list"/>
+    <function name="rc_set_get_boolean_list ()" link="RhythmCat-Settings.html#rc-set-get-boolean-list"/>
+    <function name="rc_set_get_integer_list ()" link="RhythmCat-Settings.html#rc-set-get-integer-list"/>
+    <function name="rc_set_get_double_list ()" link="RhythmCat-Settings.html#rc-set-get-double-list"/>
+    <function name="rc_set_set_string ()" link="RhythmCat-Settings.html#rc-set-set-string"/>
+    <function name="rc_set_set_boolean ()" link="RhythmCat-Settings.html#rc-set-set-boolean"/>
+    <function name="rc_set_set_integer ()" link="RhythmCat-Settings.html#rc-set-set-integer"/>
+    <function name="rc_set_set_double ()" link="RhythmCat-Settings.html#rc-set-set-double"/>
+    <function name="rc_set_set_string_list ()" link="RhythmCat-Settings.html#rc-set-set-string-list"/>
+    <function name="rc_set_set_boolean_list ()" link="RhythmCat-Settings.html#rc-set-set-boolean-list"/>
+    <function name="rc_set_set_integer_list ()" link="RhythmCat-Settings.html#rc-set-set-integer-list"/>
+    <function name="rc_set_set_double_list ()" link="RhythmCat-Settings.html#rc-set-set-double-list"/>
+    <function name="rc_set_load_setting ()" link="RhythmCat-Settings.html#rc-set-load-setting"/>
+    <function name="rc_set_save_setting ()" link="RhythmCat-Settings.html#rc-set-save-setting"/>
+    <function name="rc_set_get_plugin_configure ()" link="RhythmCat-Settings.html#rc-set-get-plugin-configure"/>
+  </functions>
+</book>

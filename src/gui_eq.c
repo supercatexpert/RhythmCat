@@ -29,11 +29,16 @@
 #include "main.h"
 #include "settings.h"
 
+/* Custom struct type to store the data of EQ. */
+typedef struct RCEQData {
+    gchar *name;
+    gdouble value[10];
+}RCEQData;
+
 static RCGuiData *rc_ui;
 static GtkListStore *eq_liststore;
 static RCEQData eq_data[11];
 static RCGuiEQData rc_eq;
-
 
 /*
  * Set the equalizer when the value changed.

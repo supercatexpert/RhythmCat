@@ -1,0 +1,464 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+]>
+<refentry id="RhythmCat-GUI">
+<refmeta>
+<refentrytitle role="top_of_page" id="RhythmCat-GUI.top_of_page">GUI</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>
+  RHYTHMCAT Library
+</refmiscinfo>
+</refmeta>
+<refnamediv>
+<refname>GUI</refname>
+<refpurpose>The main UI of the player.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv id="RhythmCat-GUI.synopsis" role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>
+#include &lt;gui.h&gt;
+
+                    <link linkend="RCGuiData">RCGuiData</link>;
+<link linkend="RCGuiData"><returnvalue>RCGuiData</returnvalue></link> *         <link linkend="rc-gui-get-data">rc_gui_get_data</link>                     ();
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-gui-init">rc_gui_init</link>                         ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-quit-player">rc_gui_quit_player</link>                  ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-music-info-set-data">rc_gui_music_info_set_data</link>          (<parameter>const <link linkend="gchar"><type>gchar</type></link> *title</parameter>,
+                                                         <parameter>const <link linkend="gpointer"><type>gpointer</type></link> data</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-time-label-set-text">rc_gui_time_label_set_text</link>          (<parameter><link linkend="gint64"><type>gint64</type></link> time</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-set-play-button-state">rc_gui_set_play_button_state</link>        (<parameter><link linkend="gboolean"><type>gboolean</type></link> state</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-seek-scaler-disable">rc_gui_seek_scaler_disable</link>          ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-seek-scaler-enable">rc_gui_seek_scaler_enable</link>           ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-set-volume">rc_gui_set_volume</link>                   (<parameter><link linkend="gdouble"><type>gdouble</type></link> Param1</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-set-player-mode">rc_gui_set_player_mode</link>              ();
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-gui-set-cover-image-by-file">rc_gui_set_cover_image_by_file</link>      (<parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>);
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-gui-set-cover-image-by-buf">rc_gui_set_cover_image_by_buf</link>       (<parameter>const <link linkend="GstBuffer"><type>GstBuffer</type></link> *buf</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-status-task-set">rc_gui_status_task_set</link>              (<parameter><link linkend="guint"><type>guint</type></link> type</parameter>,
+                                                         <parameter><link linkend="guint"><type>guint</type></link> len</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-status-progress-set-progress">rc_gui_status_progress_set_progress</link> ();
+<link linkend="guint"><returnvalue>guint</returnvalue></link>               <link linkend="rc-gui-view-add-page">rc_gui_view_add_page</link>                (<parameter>const <link linkend="gchar"><type>gchar</type></link> *name</parameter>,
+                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *title</parameter>,
+                                                         <parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *widget</parameter>);
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-gui-view-remove-page">rc_gui_view_remove_page</link>             (<parameter><link linkend="guint"><type>guint</type></link> id</parameter>);
+</synopsis>
+</refsynopsisdiv>
+
+<refsect1 id="RhythmCat-GUI.description" role="desc">
+<title role="desc.title">Description</title>
+<para>
+Show the main UI of the player.
+</para>
+</refsect1>
+<refsect1 id="RhythmCat-GUI.details" role="details">
+<title role="details.title">Details</title>
+<refsect2 id="RCGuiData" role="struct">
+<title>RCGuiData</title>
+<indexterm zone="RCGuiData"><primary>RCGuiData</primary></indexterm>
+<programlisting>typedef struct {
+    GtkUIManager *main_ui;
+    GtkActionGroup *main_action_group;
+    GtkWidget *main_window;
+    GtkWidget *eq_vbox;
+    GtkWidget *plist_notebook;
+    GtkWidget *title_label, *artist_label, *album_label;
+    GtkWidget *time_label, *length_label, *info_label;
+    GtkWidget *album_image, *album_eventbox, *album_frame;
+    GtkWidget *control_images[4], *control_buttons[4];
+    GtkWidget *volume_button;
+    GtkWidget *time_scroll_bar;
+    GtkWidget *lrc_label, *lrc_viewport;
+    GtkWidget *list1_tree_view, *list2_tree_view;
+    GtkWidget *list1_scr_window, *list2_scr_window;
+    GtkWidget *status_hbox, *status_progress, *status_label;
+    GtkWidget *status_cancel_button;
+    GtkWidget *list_hpaned;
+    GtkTreeModel *list1_tree_model, *list2_tree_model;
+    GtkTreeSelection *list1_selection, *list2_selection;
+    GtkCellRenderer *renderer_text[5];
+    GtkCellRenderer *renderer_pixbuf[2];
+    GtkAdjustment *lrc_vport_adj;
+    guint main_window_width;
+    guint main_window_height;
+    guint status_task_length;
+    gboolean update_seek_scale_flag;
+    guint time_info_refresh_timeout;
+    GtkTreeRowReference *list1_selected_reference;
+    GdkPixbuf *no_cover_image;
+    GdkPixbuf *icon_image;
+    GtkStatusIcon *tray_icon;
+} RCGuiData;
+</programlisting>
+<para>
+Custom struct type to store the UI data.
+Please do not change the data in this struct.
+</para><variablelist role="struct">
+<varlistentry><term><link linkend="GtkUIManager"><type>GtkUIManager</type></link>&#160;*<structfield id="RCGuiData.main-ui">main_ui</structfield>;</term>
+<listitem><simpara>the GtkUIManager which manages the menus
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GtkActionGroup"><type>GtkActionGroup</type></link>&#160;*<structfield id="RCGuiData.main-action-group">main_action_group</structfield>;</term>
+<listitem><simpara>the action groups
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.main-window">main_window</structfield>;</term>
+<listitem><simpara>the main window
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.eq-vbox">eq_vbox</structfield>;</term>
+<listitem><simpara>the GtkBox which stores equalizer widgets
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.plist-notebook">plist_notebook</structfield>;</term>
+<listitem><simpara>the notebook which stores playlist widgets
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.title-label">title_label</structfield>;</term>
+<listitem><simpara>show the title text on the player window
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.artist-label">artist_label</structfield>;</term>
+<listitem><simpara>show the artist text on the player window
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.album-label">album_label</structfield>;</term>
+<listitem><simpara>show the album text on the player window
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.time-label">time_label</structfield>;</term>
+<listitem><simpara>show the time text on the player window
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.length-label">length_label</structfield>;</term>
+<listitem><simpara>show the time length text on the player window
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.info-label">info_label</structfield>;</term>
+<listitem><simpara>show the music information text on the player window
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.album-image">album_image</structfield>;</term>
+<listitem><simpara>show album image on the player window
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.album-eventbox">album_eventbox</structfield>;</term>
+<listitem><simpara>process the events on album image
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.album-frame">album_frame</structfield>;</term>
+<listitem><simpara>the frame of album image widget
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.control-images">control_images</structfield>[4];</term>
+<listitem><simpara>the image widgets of control buttons
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.control-buttons">control_buttons</structfield>[4];</term>
+<listitem><simpara>the button widgets of control buttons
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.volume-button">volume_button</structfield>;</term>
+<listitem><simpara>the volume control button
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.time-scroll-bar">time_scroll_bar</structfield>;</term>
+<listitem><simpara>the time scaler bar
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.lrc-label">lrc_label</structfield>;</term>
+<listitem><simpara>show lyric text on the player window
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.lrc-viewport">lrc_viewport</structfield>;</term>
+<listitem><simpara>the viewport which makes lyric text widget scrollable
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.list1-tree-view">list1_tree_view</structfield>;</term>
+<listitem><simpara>the list view of list1
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.list2-tree-view">list2_tree_view</structfield>;</term>
+<listitem><simpara>the list view of list2
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.list1-scr-window">list1_scr_window</structfield>;</term>
+<listitem><simpara>add scrollbars on list1
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.list2-scr-window">list2_scr_window</structfield>;</term>
+<listitem><simpara>add scrollbars on list2
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.status-hbox">status_hbox</structfield>;</term>
+<listitem><simpara>the GtkBox which stores status widgets
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.status-progress">status_progress</structfield>;</term>
+<listitem><simpara>show progress of status on the player window
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.status-label">status_label</structfield>;</term>
+<listitem><simpara>show status text on the player window
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.status-cancel-button">status_cancel_button</structfield>;</term>
+<listitem><simpara>the cancel button to cancel all working tasks
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.list-hpaned">list_hpaned</structfield>;</term>
+<listitem><simpara>the widget with two adjustable panes
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GtkTreeModel"><type>GtkTreeModel</type></link>&#160;*<structfield id="RCGuiData.list1-tree-model">list1_tree_model</structfield>;</term>
+<listitem><simpara>the GtkTreeModel of list1
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GtkTreeModel"><type>GtkTreeModel</type></link>&#160;*<structfield id="RCGuiData.list2-tree-model">list2_tree_model</structfield>;</term>
+<listitem><simpara>the GtkTreeModel of list2
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GtkTreeSelection"><type>GtkTreeSelection</type></link>&#160;*<structfield id="RCGuiData.list1-selection">list1_selection</structfield>;</term>
+<listitem><simpara>the GtkTreeSelection of list1
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GtkTreeSelection"><type>GtkTreeSelection</type></link>&#160;*<structfield id="RCGuiData.list2-selection">list2_selection</structfield>;</term>
+<listitem><simpara>the GtkTreeSelection of list2
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GtkCellRenderer"><type>GtkCellRenderer</type></link>&#160;*<structfield id="RCGuiData.renderer-text">renderer_text</structfield>[5];</term>
+<listitem><simpara>the text renderers of list1 &amp; list2
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GtkCellRenderer"><type>GtkCellRenderer</type></link>&#160;*<structfield id="RCGuiData.renderer-pixbuf">renderer_pixbuf</structfield>[2];</term>
+<listitem><simpara>the image renderers of list1 &amp; list2
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GtkAdjustment"><type>GtkAdjustment</type></link>&#160;*<structfield id="RCGuiData.lrc-vport-adj">lrc_vport_adj</structfield>;</term>
+<listitem><simpara>the GtkAdjustment object of lyric viewport
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="guint"><type>guint</type></link>&#160;<structfield id="RCGuiData.main-window-width">main_window_width</structfield>;</term>
+<listitem><simpara>the default width of main window
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="guint"><type>guint</type></link>&#160;<structfield id="RCGuiData.main-window-height">main_window_height</structfield>;</term>
+<listitem><simpara>the default height of main window
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="guint"><type>guint</type></link>&#160;<structfield id="RCGuiData.status-task-length">status_task_length</structfield>;</term>
+<listitem><simpara>the length of working task
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gboolean"><type>gboolean</type></link>&#160;<structfield id="RCGuiData.update-seek-scale-flag">update_seek_scale_flag</structfield>;</term>
+<listitem><simpara>whether the time scaler can be updated
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="guint"><type>guint</type></link>&#160;<structfield id="RCGuiData.time-info-refresh-timeout">time_info_refresh_timeout</structfield>;</term>
+<listitem><simpara>the ID of time information update timer
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GtkTreeRowReference"><type>GtkTreeRowReference</type></link>&#160;*<structfield id="RCGuiData.list1-selected-reference">list1_selected_reference</structfield>;</term>
+<listitem><simpara>the GtkTreeRowReference of selected item in list1
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GdkPixbuf"><type>GdkPixbuf</type></link>&#160;*<structfield id="RCGuiData.no-cover-image">no_cover_image</structfield>;</term>
+<listitem><simpara>the default image of cover image
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GdkPixbuf"><type>GdkPixbuf</type></link>&#160;*<structfield id="RCGuiData.icon-image">icon_image</structfield>;</term>
+<listitem><simpara>the icon of the player
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GtkStatusIcon"><type>GtkStatusIcon</type></link>&#160;*<structfield id="RCGuiData.tray-icon">tray_icon</structfield>;</term>
+<listitem><simpara>the icon shows on the system tray
+</simpara></listitem>
+</varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-gui-get-data" role="function">
+<title>rc_gui_get_data ()</title>
+<indexterm zone="rc-gui-get-data"><primary>rc_gui_get_data</primary></indexterm>
+<programlisting><link linkend="RCGuiData"><returnvalue>RCGuiData</returnvalue></link> *         rc_gui_get_data                     ();</programlisting>
+<para>
+Return the data of main UI structure.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The data of main UI structure.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-gui-init" role="function">
+<title>rc_gui_init ()</title>
+<indexterm zone="rc-gui-init"><primary>rc_gui_init</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rc_gui_init                         ();</programlisting>
+<para>
+Initialize the main window of the player.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> Whether the initiation succeeds.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-gui-quit-player" role="function">
+<title>rc_gui_quit_player ()</title>
+<indexterm zone="rc-gui-quit-player"><primary>rc_gui_quit_player</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_quit_player                  ();</programlisting>
+<para>
+Quit the player.
+</para></refsect2>
+<refsect2 id="rc-gui-music-info-set-data" role="function">
+<title>rc_gui_music_info_set_data ()</title>
+<indexterm zone="rc-gui-music-info-set-data"><primary>rc_gui_music_info_set_data</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_music_info_set_data          (<parameter>const <link linkend="gchar"><type>gchar</type></link> *title</parameter>,
+                                                         <parameter>const <link linkend="gpointer"><type>gpointer</type></link> data</parameter>);</programlisting>
+<para>
+Set the data in the information labels.
+</para><variablelist role="params">
+<varlistentry><term><parameter>title</parameter>&#160;:</term>
+<listitem><simpara>the title to set
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>data</parameter>&#160;:</term>
+<listitem><simpara>the metadata, the type should be RCMetaData (defined in tag.h)
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-gui-time-label-set-text" role="function">
+<title>rc_gui_time_label_set_text ()</title>
+<indexterm zone="rc-gui-time-label-set-text"><primary>rc_gui_time_label_set_text</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_time_label_set_text          (<parameter><link linkend="gint64"><type>gint64</type></link> time</parameter>);</programlisting>
+<para>
+Set time label of the player.
+</para><variablelist role="params">
+<varlistentry><term><parameter>time</parameter>&#160;:</term>
+<listitem><simpara>the time to set, in nanosecond.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-gui-set-play-button-state" role="function">
+<title>rc_gui_set_play_button_state ()</title>
+<indexterm zone="rc-gui-set-play-button-state"><primary>rc_gui_set_play_button_state</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_set_play_button_state        (<parameter><link linkend="gboolean"><type>gboolean</type></link> state</parameter>);</programlisting>
+<para>
+Set play button state.
+</para><variablelist role="params">
+<varlistentry><term><parameter>state</parameter>&#160;:</term>
+<listitem><simpara>the state of the play button, if it's TRUE, the image of the
+button is pause icon, else the image is play icon.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-gui-seek-scaler-disable" role="function">
+<title>rc_gui_seek_scaler_disable ()</title>
+<indexterm zone="rc-gui-seek-scaler-disable"><primary>rc_gui_seek_scaler_disable</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_seek_scaler_disable          ();</programlisting>
+<para>
+Disable the scaler bar and the time control menus.
+</para></refsect2>
+<refsect2 id="rc-gui-seek-scaler-enable" role="function">
+<title>rc_gui_seek_scaler_enable ()</title>
+<indexterm zone="rc-gui-seek-scaler-enable"><primary>rc_gui_seek_scaler_enable</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_seek_scaler_enable           ();</programlisting>
+<para>
+Enable the scaler bar and the time control menus.
+</para></refsect2>
+<refsect2 id="rc-gui-set-volume" role="function">
+<title>rc_gui_set_volume ()</title>
+<indexterm zone="rc-gui-set-volume"><primary>rc_gui_set_volume</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_set_volume                   (<parameter><link linkend="gdouble"><type>gdouble</type></link> Param1</parameter>);</programlisting>
+<para>
+Set the volume bar value.
+</para><variablelist role="params">
+<varlistentry><term><parameter>volume</parameter>&#160;:</term>
+<listitem><simpara>the volume to set, the value should be between 0.0 and 100.0
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-gui-set-player-mode" role="function">
+<title>rc_gui_set_player_mode ()</title>
+<indexterm zone="rc-gui-set-player-mode"><primary>rc_gui_set_player_mode</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_set_player_mode              ();</programlisting>
+<para>
+Set the player repeat mode and random mode (GUI Only).
+Only used when startup.
+</para></refsect2>
+<refsect2 id="rc-gui-set-cover-image-by-file" role="function">
+<title>rc_gui_set_cover_image_by_file ()</title>
+<indexterm zone="rc-gui-set-cover-image-by-file"><primary>rc_gui_set_cover_image_by_file</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rc_gui_set_cover_image_by_file      (<parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>);</programlisting>
+<para>
+Set the image of cover.
+</para><variablelist role="params">
+<varlistentry><term><parameter>filename</parameter>&#160;:</term>
+<listitem><simpara>the path of the cover image file
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> Whether the image is set.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-gui-set-cover-image-by-buf" role="function">
+<title>rc_gui_set_cover_image_by_buf ()</title>
+<indexterm zone="rc-gui-set-cover-image-by-buf"><primary>rc_gui_set_cover_image_by_buf</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rc_gui_set_cover_image_by_buf       (<parameter>const <link linkend="GstBuffer"><type>GstBuffer</type></link> *buf</parameter>);</programlisting>
+<para>
+Set the image of cover by GstBuffer.
+</para><variablelist role="params">
+<varlistentry><term><parameter>buf</parameter>&#160;:</term>
+<listitem><simpara>the GstBuffer which contains the cover image
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> Whether the image is set.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-gui-status-task-set" role="function">
+<title>rc_gui_status_task_set ()</title>
+<indexterm zone="rc-gui-status-task-set"><primary>rc_gui_status_task_set</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_status_task_set              (<parameter><link linkend="guint"><type>guint</type></link> type</parameter>,
+                                                         <parameter><link linkend="guint"><type>guint</type></link> len</parameter>);</programlisting>
+<para>
+Set the type and the length of tasks.
+</para><variablelist role="params">
+<varlistentry><term><parameter>type</parameter>&#160;:</term>
+<listitem><simpara>the task type: 1=Import, 2=Refresh others=None
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>len</parameter>&#160;:</term>
+<listitem><simpara>the length of the task
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-gui-status-progress-set-progress" role="function">
+<title>rc_gui_status_progress_set_progress ()</title>
+<indexterm zone="rc-gui-status-progress-set-progress"><primary>rc_gui_status_progress_set_progress</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_status_progress_set_progress ();</programlisting>
+<para>
+Set the remaining tasks for status progressbar.
+This function is usually used to refresh the work status.
+</para></refsect2>
+<refsect2 id="rc-gui-view-add-page" role="function">
+<title>rc_gui_view_add_page ()</title>
+<indexterm zone="rc-gui-view-add-page"><primary>rc_gui_view_add_page</primary></indexterm>
+<programlisting><link linkend="guint"><returnvalue>guint</returnvalue></link>               rc_gui_view_add_page                (<parameter>const <link linkend="gchar"><type>gchar</type></link> *name</parameter>,
+                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *title</parameter>,
+                                                         <parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *widget</parameter>);</programlisting>
+<para>
+Add new view page and menu to player.
+</para><variablelist role="params">
+<varlistentry><term><parameter>name</parameter>&#160;:</term>
+<listitem><simpara>the name of the menu to add
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>title</parameter>&#160;:</term>
+<listitem><simpara>the string which shows on the menu
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>widget</parameter>&#160;:</term>
+<listitem><simpara>the widget to add to the page 
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The unique ID of the added page.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-gui-view-remove-page" role="function">
+<title>rc_gui_view_remove_page ()</title>
+<indexterm zone="rc-gui-view-remove-page"><primary>rc_gui_view_remove_page</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rc_gui_view_remove_page             (<parameter><link linkend="guint"><type>guint</type></link> id</parameter>);</programlisting>
+<para>
+Remove a view page from player.
+</para><variablelist role="params">
+<varlistentry><term><parameter>id</parameter>&#160;:</term>
+<listitem><simpara>the unique ID of the page to remove
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> Whether this operation is succeeded.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+
+</refsect1>
+
+</refentry>

@@ -29,9 +29,25 @@
 #include "playlist.h"
 #include "debug.h"
 
+/**
+ * SECTION: settings
+ * @Short_description: Manage the settings of the player.
+ * @Title: Settings
+ * @Include: settings.h
+ *
+ * Manage the settings of player. Store settings in an ini-like configuration
+ * file.
+ */
+
 /* Variables */
 static GKeyFile *rc_configure = NULL;
 static GKeyFile *rc_plugin_configure = NULL;
+
+/**
+ * rc_set_init:
+ *
+ * Initialize and load the settings of the player.
+ */
 
 void rc_set_init()
 {
@@ -103,6 +119,12 @@ void rc_set_init()
     g_free(conf_file);
 }
 
+/**
+ * rc_set_exit:
+ *
+ * Free the settings when exits.
+ */
+
 void rc_set_exit()
 {
     gchar *conf_file;
@@ -112,11 +134,35 @@ void rc_set_exit()
     g_key_file_free(rc_configure);
 }
 
+/**
+ * rc_set_get_string:
+ * @group_name: a group name
+ * @key: a key
+ * @error: return location for a GError, or NULL
+ *
+ * Returns the string value associated with key under group_name.
+ *
+ * Returns: A newly allocated string or NULL if the specified key cannot
+ * be found.
+ */
+
 gchar *rc_set_get_string(const gchar *group_name, const gchar *key,
     GError **error)
 {
     return g_key_file_get_string(rc_configure, group_name, key, error);
 }
+
+/**
+ * rc_set_get_integer:
+ * @group_name: a group name
+ * @key: a key
+ * @error: return location for a GError, or NULL
+ *
+ * Returns the value associated with key under group_name as an integer.
+ *
+ * Returns: The value associated with the key as an integer, or 0
+ * if the key was not found or could not be parsed.
+ */
 
 gint rc_set_get_integer(const gchar *group_name, const gchar *key,
     GError **error)
@@ -124,17 +170,55 @@ gint rc_set_get_integer(const gchar *group_name, const gchar *key,
     return g_key_file_get_integer(rc_configure, group_name, key, error);
 }
 
+/**
+ * rc_set_get_double:
+ * @group_name: a group name
+ * @key: a key
+ * @error: return location for a GError, or NULL
+ *
+ * Returns the value associated with key under group_name as a double.
+ * If group_name is NULL, the start_group is used.
+ *
+ * Returns: The value associated with the key as a double, or 0.0
+ * if the key was not found or could not be parsed.
+ */
+
 gdouble rc_set_get_double(const gchar *group_name, const gchar *key,
     GError **error)
 {
     return g_key_file_get_double(rc_configure, group_name, key, error);
 }
 
-gint rc_set_get_boolean(const gchar *group_name, const gchar *key,
+/**
+ * rc_set_get_boolean:
+ * @group_name: a group name
+ * @key: a key
+ * @error: return location for a GError, or NULL
+ *
+ * Returns the value associated with key under group_name as a boolean.
+ *
+ * Returns: The value associated with the key as a boolean, or FALSE if the
+ * key was not found or could not be parsed.
+ */
+
+gboolean rc_set_get_boolean(const gchar *group_name, const gchar *key,
     GError **error)
 {
     return g_key_file_get_boolean(rc_configure, group_name, key, error);
 }
+
+/**
+ * rc_set_get_string_list:
+ * @group_name: a group name
+ * @key: a key
+ * @length: return location for the number of returned strings, or NULL
+ * @error: return location for a GError, or NULL
+ *
+ * Returns the values associated with key under group_name.
+ *
+ * Returns: A NULL-terminated string array or NULL if the specified key
+ * cannot be found. The array should be freed with g_strfreev().
+ */
 
 gchar **rc_set_get_string_list(const gchar *group_name, const gchar *key,
     gsize *length, GError **error)
@@ -143,12 +227,38 @@ gchar **rc_set_get_string_list(const gchar *group_name, const gchar *key,
         length, error);
 }
 
+/**
+ * rc_set_get_boolean_list:
+ * @group_name: a group name
+ * @key: a key
+ * @length: the number of booleans returned
+ * @error: return location for a GError, or NULL
+ *
+ * Returns the values associated with key under group_name as booleans.
+ *
+ * Returns: The values associated with the key as a list of booleans, or
+ * NULL if the key was not found or could not be parsed.
+ */
+
 gboolean *rc_set_get_boolean_list(const gchar *group_name, const gchar *key,
     gsize *length, GError **error)
 {
     return g_key_file_get_boolean_list(rc_configure, group_name, key,
         length, error);
 }
+
+/**
+ * rc_set_get_integer_list:
+ * @group_name: a group name
+ * @key: a key
+ * @length: the number of integers returned
+ * @error: return location for a GError, or NULL
+ *
+ * Returns the values associated with key under group_name as integers.
+ *
+ * Returns: The values associated with the key as a list of integers, or
+ * NULL if the key was not found or could not be parsed.
+ */
 
 gint *rc_set_get_integer_list(const gchar *group_name, const gchar *key,
     gsize *length, GError **error)
@@ -157,6 +267,19 @@ gint *rc_set_get_integer_list(const gchar *group_name, const gchar *key,
         length, error);
 }
 
+/**
+ * rc_set_get_double_list:
+ * @group_name: a group name
+ * @key: a key
+ * @length: the number of doubles returned
+ * @error: return location for a GError, or NULL
+ *
+ * Returns the values associated with key under group_name as doubles.
+ *
+ * Returns: The values associated with the key as a list of doubles, or
+ * NULL if the key was not found or could not be parsed.
+ */
+
 gdouble *rc_set_get_double_list(const gchar *group_name, const gchar *key,
     gsize *length, GError **error)
 {
@@ -164,22 +287,63 @@ gdouble *rc_set_get_double_list(const gchar *group_name, const gchar *key,
         length, error);
 }
 
+/**
+ * rc_set_set_string:
+ * @group_name: a group name
+ * @key: a key
+ * @string: a string
+ *
+ * Associates a new string value with key under group_name. If key cannot be
+ * found then it is created. If group_name cannot be found then it is created.
+ */
+
 void rc_set_set_string(const gchar *group_name, const gchar *key,
     const gchar *string)
 {
     g_key_file_set_string(rc_configure, group_name, key, string);
 }
 
+/**
+ * rc_set_set_boolean:
+ * @group_name: a group name
+ * @key: a key
+ * @value: TRUE or FALSE
+ *
+ * Associates a new boolean value with key under group_name. If key cannot be
+ * found then it is created. If group_name cannot be found then it is created.
+ */
+
 void rc_set_set_boolean(const gchar *group_name, const gchar *key,
     gboolean value)
 {
     g_key_file_set_boolean(rc_configure, group_name, key, value);
 }
+
+/**
+ * rc_set_set_integer:
+ * @group_name: a group name
+ * @key: a key
+ * @value: an integer value
+ *
+ * Associates a new integer value with key under group_name. If key cannot be
+ * found then it is created. If group_name cannot be found then it is created.
+ */
+
 void rc_set_set_integer(const gchar *group_name, const gchar *key,
     gint value)
 {
     g_key_file_set_integer(rc_configure, group_name, key, value);
 }
+
+/**
+ * rc_set_set_double:
+ * @group_name: a group name
+ * @key: a key
+ * @value: an double value
+ *
+ * Associates a new double value with key under group_name. If key cannot be
+ * found then it is created. If group_name cannot be found then it is created.
+ */
 
 void rc_set_set_double(const gchar *group_name, const gchar *key,
     gdouble value)
@@ -187,11 +351,33 @@ void rc_set_set_double(const gchar *group_name, const gchar *key,
     g_key_file_set_double(rc_configure, group_name, key, value);
 }
 
+/**
+ * rc_set_set_double:
+ * @group_name: a group name
+ * @key: a key
+ * @list: an array of string values
+ * @length: number of string values in list
+ *
+ * Associates a list of string values for key under group_name. If key cannot
+ * be found then it is created. If group_name cannot be found then it is created.
+ */
+
 void rc_set_set_string_list(const gchar *group_name, const gchar *key,
     const gchar * const list[], gsize length)
 {
     g_key_file_set_string_list(rc_configure, group_name, key, list, length);
 }
+
+/**
+ * rc_set_set_boolean_list:
+ * @group_name: a group name
+ * @key: a key
+ * @list: an array of boolean values
+ * @length: number of string values in list
+ *
+ * Associates a list of boolean values with key under group_name. If key cannot
+ * be found then it is created. If group_name is NULL, the start_group is used.
+ */
 
 void rc_set_set_boolean_list(const gchar *group_name, const gchar *key,
     gboolean list[], gsize length)
@@ -199,11 +385,33 @@ void rc_set_set_boolean_list(const gchar *group_name, const gchar *key,
     g_key_file_set_boolean_list(rc_configure, group_name, key, list, length);
 }
 
+/**
+ * rc_set_set_integer_list:
+ * @group_name: a group name
+ * @key: a key
+ * @list: an array of integer values
+ * @length: number of integer values in list
+ *
+ * Associates a list of integer values with key under group_name. If key cannot
+ * be found then it is created. If group_name is NULL, the start_group is used.
+ */
+
 void rc_set_set_integer_list(const gchar *group_name, const gchar *key,
     gint list[], gsize length)
 {
     g_key_file_set_integer_list(rc_configure, group_name, key, list, length);
 }
+
+/**
+ * rc_set_set_double_list:
+ * @group_name: a group name
+ * @key: a key
+ * @list: an array of double values
+ * @length: number of double values in list
+ *
+ * Associates a list of double values with key under group_name. If key cannot
+ * be found then it is created. If group_name is NULL, the start_group is used.
+ */
 
 void rc_set_set_double_list(const gchar *group_name, const gchar *key,
     gdouble list[], gsize length)
@@ -211,11 +419,27 @@ void rc_set_set_double_list(const gchar *group_name, const gchar *key,
     g_key_file_set_double_list(rc_configure, group_name, key, list, length);
 }
 
+/**
+ * rc_set_load_setting:
+ * @filename: the path of configuration file
+ *
+ * Read configuration from given file.
+ *
+ * Returns: Whether the configuration file is read.
+ */
+
 gboolean rc_set_load_setting(const gchar *filename)
 {
     return g_key_file_load_from_file(rc_configure, filename,
         G_KEY_FILE_NONE, NULL);
 }
+
+/**
+ * rc_set_save_setting:
+ * @filename: the path of configuration file
+ *
+ * Save configuration data to given file.
+ */
 
 void rc_set_save_setting(const gchar *filename)
 {
@@ -225,6 +449,14 @@ void rc_set_save_setting(const gchar *filename)
     g_file_set_contents(filename, conf_data, conf_data_length, NULL);
     if(conf_data!=NULL) g_free(conf_data);
 }
+
+/**
+ * rc_set_get_plugin_configure:
+ *
+ * Return the GKeyFile of plugin configuration.
+ *
+ * Returns: The GKeyFile of plugin configuration.
+ */
 
 GKeyFile *rc_set_get_plugin_configure()
 {

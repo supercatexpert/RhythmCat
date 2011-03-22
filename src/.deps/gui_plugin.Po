@@ -510,7 +510,26 @@ gui_plugin.o: gui_plugin.c gui_plugin.h /usr/include/glib-2.0/glib.h \
  /usr/include/locale.h /usr/include/bits/locale.h /usr/include/string.h \
  /usr/include/bits/string.h /usr/include/bits/string2.h plugin.h debug.h \
  /usr/include/unistd.h /usr/include/bits/posix_opt.h \
- /usr/include/bits/confname.h /usr/include/getopt.h
+ /usr/include/bits/confname.h /usr/include/getopt.h main.h \
+ /usr/include/dbus-1.0/dbus/dbus.h \
+ /usr/lib/dbus-1.0/include/dbus/dbus-arch-deps.h \
+ /usr/include/dbus-1.0/dbus/dbus-macros.h \
+ /usr/include/dbus-1.0/dbus/dbus-address.h \
+ /usr/include/dbus-1.0/dbus/dbus-types.h \
+ /usr/include/dbus-1.0/dbus/dbus-errors.h \
+ /usr/include/dbus-1.0/dbus/dbus-bus.h \
+ /usr/include/dbus-1.0/dbus/dbus-connection.h \
+ /usr/include/dbus-1.0/dbus/dbus-memory.h \
+ /usr/include/dbus-1.0/dbus/dbus-message.h \
+ /usr/include/dbus-1.0/dbus/dbus-shared.h \
+ /usr/include/dbus-1.0/dbus/dbus-misc.h \
+ /usr/include/dbus-1.0/dbus/dbus-pending-call.h \
+ /usr/include/dbus-1.0/dbus/dbus-protocol.h \
+ /usr/include/dbus-1.0/dbus/dbus-server.h \
+ /usr/include/dbus-1.0/dbus/dbus-signature.h \
+ /usr/include/dbus-1.0/dbus/dbus-threads.h \
+ /usr/include/dbus-1.0/dbus/dbus-glib.h \
+ /usr/include/dbus-1.0/dbus/dbus-gtype-specialized.h
 
 gui_plugin.h:
 
@@ -1719,3 +1738,43 @@ debug.h:
 /usr/include/bits/confname.h:
 
 /usr/include/getopt.h:
+
+main.h:
+
+/usr/include/dbus-1.0/dbus/dbus.h:
+
+/usr/lib/dbus-1.0/include/dbus/dbus-arch-deps.h:
+
+/usr/include/dbus-1.0/dbus/dbus-macros.h:
+
+/usr/include/dbus-1.0/dbus/dbus-address.h:
+
+/usr/include/dbus-1.0/dbus/dbus-types.h:
+
+/usr/include/dbus-1.0/dbus/dbus-errors.h:
+
+/usr/include/dbus-1.0/dbus/dbus-bus.h:
+
+/usr/include/dbus-1.0/dbus/dbus-connection.h:
+
+/usr/include/dbus-1.0/dbus/dbus-memory.h:
+
+/usr/include/dbus-1.0/dbus/dbus-message.h:
+
+/usr/include/dbus-1.0/dbus/dbus-shared.h:
+
+/usr/include/dbus-1.0/dbus/dbus-misc.h:
+
+/usr/include/dbus-1.0/dbus/dbus-pending-call.h:
+
+/usr/include/dbus-1.0/dbus/dbus-protocol.h:
+
+/usr/include/dbus-1.0/dbus/dbus-server.h:
+
+/usr/include/dbus-1.0/dbus/dbus-signature.h:
+
+/usr/include/dbus-1.0/dbus/dbus-threads.h:
+
+/usr/include/dbus-1.0/dbus/dbus-glib.h:
+
+/usr/include/dbus-1.0/dbus/dbus-gtype-specialized.h:

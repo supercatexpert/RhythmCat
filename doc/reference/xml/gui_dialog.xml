@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+]>
+<refentry id="RhythmCat-gui-dialog">
+<refmeta>
+<refentrytitle role="top_of_page" id="RhythmCat-gui-dialog.top_of_page">gui_dialog</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>
+  RHYTHMCAT Library
+</refmiscinfo>
+</refmeta>
+<refnamediv>
+<refname>gui_dialog</refname>
+<refpurpose></refpurpose>
+</refnamediv>
+
+<refsynopsisdiv id="RhythmCat-gui-dialog.synopsis" role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>#define             <link linkend="MAX-DIR-DEPTH:CAPS">MAX_DIR_DEPTH</link>
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-about-player">rc_gui_about_player</link>                 ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-show-message-dialog">rc_gui_show_message_dialog</link>          (<parameter><link linkend="GtkMessageType"><type>GtkMessageType</type></link> Param1</parameter>,
+                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *Param2</parameter>,
+                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *Param3</parameter>,
+                                                         <parameter>...</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-show-open-dialog">rc_gui_show_open_dialog</link>             (<parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *Param1</parameter>,
+                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param2</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-open-music-directory">rc_gui_open_music_directory</link>         (<parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *Param1</parameter>,
+                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param2</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-save-playlist-dialog">rc_gui_save_playlist_dialog</link>         (<parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *Param1</parameter>,
+                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param2</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-load-playlist-dialog">rc_gui_load_playlist_dialog</link>         (<parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *Param1</parameter>,
+                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param2</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-save-all-playlists-dialog">rc_gui_save_all_playlists_dialog</link>    (<parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *Param1</parameter>,
+                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param2</parameter>);
+</synopsis>
+</refsynopsisdiv>
+
+<refsect1 id="RhythmCat-gui-dialog.description" role="desc">
+<title role="desc.title">Description</title>
+
+</refsect1>
+<refsect1 id="RhythmCat-gui-dialog.details" role="details">
+<title role="details.title">Details</title>
+<refsect2 id="MAX-DIR-DEPTH:CAPS" role="macro">
+<title>MAX_DIR_DEPTH</title>
+<indexterm zone="MAX-DIR-DEPTH:CAPS"><primary>MAX_DIR_DEPTH</primary></indexterm>
+<programlisting>#define MAX_DIR_DEPTH 5
+</programlisting>
+</refsect2>
+<refsect2 id="rc-gui-about-player" role="function">
+<title>rc_gui_about_player ()</title>
+<indexterm zone="rc-gui-about-player"><primary>rc_gui_about_player</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_about_player                 ();</programlisting>
+</refsect2>
+<refsect2 id="rc-gui-show-message-dialog" role="function">
+<title>rc_gui_show_message_dialog ()</title>
+<indexterm zone="rc-gui-show-message-dialog"><primary>rc_gui_show_message_dialog</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_show_message_dialog          (<parameter><link linkend="GtkMessageType"><type>GtkMessageType</type></link> Param1</parameter>,
+                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *Param2</parameter>,
+                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *Param3</parameter>,
+                                                         <parameter>...</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="rc-gui-show-open-dialog" role="function">
+<title>rc_gui_show_open_dialog ()</title>
+<indexterm zone="rc-gui-show-open-dialog"><primary>rc_gui_show_open_dialog</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_show_open_dialog             (<parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *Param1</parameter>,
+                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param2</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="rc-gui-open-music-directory" role="function">
+<title>rc_gui_open_music_directory ()</title>
+<indexterm zone="rc-gui-open-music-directory"><primary>rc_gui_open_music_directory</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_open_music_directory         (<parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *Param1</parameter>,
+                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param2</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="rc-gui-save-playlist-dialog" role="function">
+<title>rc_gui_save_playlist_dialog ()</title>
+<indexterm zone="rc-gui-save-playlist-dialog"><primary>rc_gui_save_playlist_dialog</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_save_playlist_dialog         (<parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *Param1</parameter>,
+                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param2</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="rc-gui-load-playlist-dialog" role="function">
+<title>rc_gui_load_playlist_dialog ()</title>
+<indexterm zone="rc-gui-load-playlist-dialog"><primary>rc_gui_load_playlist_dialog</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_load_playlist_dialog         (<parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *Param1</parameter>,
+                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param2</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="rc-gui-save-all-playlists-dialog" role="function">
+<title>rc_gui_save_all_playlists_dialog ()</title>
+<indexterm zone="rc-gui-save-all-playlists-dialog"><primary>rc_gui_save_all_playlists_dialog</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_save_all_playlists_dialog    (<parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *Param1</parameter>,
+                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param2</parameter>);</programlisting>
+</refsect2>
+
+</refsect1>
+
+</refentry>

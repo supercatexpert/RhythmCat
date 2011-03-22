@@ -30,6 +30,16 @@
 #include "tag.h"
 #include "playlist.h"
 
+/**
+ * SECTION: msg
+ * @Short_description: Asynchronous message queue process among threads.
+ * @Title: Asynchronous Message Queue
+ * @Include: msg.h
+ *
+ * Process asynchronous message queue between GUI Thread (main thread)
+ * and other threads.
+ */
+
 typedef struct RCMsgAsyncQueueWatch
 {
     GSource source;
@@ -89,6 +99,20 @@ static GSourceFuncs rc_msg_async_queue_watch_funcs =
     rc_msg_async_queue_watch_finalize
 };
 
+/**
+ * rc_msg_async_queue_watch_new:
+ * @queue: the GAsyncQueue to watch
+ * @priority: the priority
+ * @callback: the callback function to execute when the queue changed
+ * @data: user data
+ * @notify: a function to call when data is no longer in use, or NULL
+ * @context: a GMainContext (if NULL, the default context will be used)
+ *
+ * Add new watch to the given GAsyncQueue.
+ *
+ * Returns: The GSource ID of the new watch.
+ */
+
 guint rc_msg_async_queue_watch_new(GAsyncQueue *queue, gint priority,
     RCMsgAsyncQueueWatchFunc callback, gpointer data, GDestroyNotify notify,
     GMainContext *context)
@@ -146,6 +170,13 @@ static void rc_msg_process_func(gpointer data, gpointer user_data)
     }
 }
 
+/**
+ * rc_msg_init:
+ *
+ * Initialize the default asynchronous message queue for the player. Can be
+ * used only once.
+ */
+
 void rc_msg_init()
 {
     GMainContext *context;
@@ -154,6 +185,14 @@ void rc_msg_init()
     rc_msg_async_queue_watch_new(msg_queue, G_PRIORITY_DEFAULT,
         rc_msg_process_func, NULL, NULL, context);
 }
+
+/**
+ * rc_msg_push:
+ * @type: the message type
+ * @data: the message data
+ * 
+ * Add new message to the default asynchronous message queue.
+ */
 
 void rc_msg_push(RCMsgType type, gpointer data)
 {

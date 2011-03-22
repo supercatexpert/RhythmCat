@@ -32,6 +32,32 @@
 #include <gtk/gtk.h>
 #include <gst/gst.h>
 
+/**
+ * RCGuiMiniData:
+ * @mini_window: the player window in mini mode
+ * @icon_eventbox: process the events on icon image
+ * @icon_image: show the icon of the player on the window
+ * @info_label: show music information on the window
+ * @info_viewport: the viewport which makes info text widget scrollable
+ * @control_buttons: the button widgets of player control buttons
+ * @control_images: the image widgets of player control buttons
+ * @window_buttons: the button widgets of window control buttons
+ * @window_images: the image widgets of window control buttons
+ * @volume_button: the volume control button
+ * @lrc_label: show lyric text on the window
+ * @lrc_viewport: the viewport which makes lyric text widget scrollable
+ * @time_label: show the time position on the window
+ * @resize_arrow: show an arrow on the window
+ * @resize_eventbox: process the resize events of the mini mode window
+ * @info_vport_adj: the GtkAdjustment object of information viewport
+ * @lrc_vport_adj: the GtkAdjustment object of lyric viewport
+ * @mini_window_width: the default width of the window
+ * @mini_window_height: the default height of the window
+ *
+ * Custom struct type to store the mini mode UI data.
+ * Please do not change the data in this struct.
+ */
+
 typedef struct RCGuiMiniData
 {
     GtkWidget *mini_window;
@@ -57,16 +83,16 @@ typedef struct RCGuiMiniData
 
 void rc_gui_mini_init();
 RCGuiMiniData *rc_gui_mini_get_data();
-void rc_gui_mini_set_info_text(const gchar *);
-void rc_gui_mini_set_lyric_text(const gchar *);
+void rc_gui_mini_set_info_text(const gchar *text);
+void rc_gui_mini_set_lyric_text(const gchar *text);
 void rc_gui_mini_info_text_move();
-void rc_gui_mini_set_lyric_persent(gdouble);
-void rc_gui_mini_set_play_state(gboolean);
-void rc_gui_mini_set_time_text(gint64);
-void rc_gui_mini_window_hide(GtkWidget *, gpointer);
-void rc_gui_mini_mini_mode_clicked(GtkWidget *, gpointer);
-void rc_gui_mini_window_show(GtkWidget *, gpointer);
-void rc_gui_mini_normal_mode_clicked(GtkWidget *, gpointer);
+void rc_gui_mini_set_lyric_persent(gdouble persent);
+void rc_gui_mini_set_play_state(gboolean state);
+void rc_gui_mini_set_time_text(gint64 pos);
+void rc_gui_mini_window_hide();
+void rc_gui_mini_window_show();
+void rc_gui_mini_mini_mode_clicked();
+void rc_gui_mini_normal_mode_clicked();
 
 #endif
 

@@ -30,6 +30,15 @@
 #include "settings.h"
 #include "playlist.h"
 
+/**
+ * SECTION: gui_mini
+ * @Short_description: The mini mode UI of the player.
+ * @Title: Mini Mode GUI
+ * @Include: gui_mini.h
+ *
+ * Show the mini mode of the player.
+ */
+
 static RCGuiMiniData rc_mini;
 static RCGuiData *rc_ui;
 
@@ -199,6 +208,12 @@ static gboolean rc_gui_mini_window_resize(GtkWidget *widget, GdkEvent *event,
     }
     return TRUE;
 }
+
+/**
+ * rc_gui_mini_init:
+ *
+ * Initialize the mini mode window of the player. Can be used only once.
+ */
 
 void rc_gui_mini_init()
 {
@@ -383,15 +398,37 @@ void rc_gui_mini_init()
         "MiniWindowY", NULL));
 }
 
+/**
+ * rc_gui_mini_get_data:
+ *
+ * Return the data of mini mode UI structure.
+ *
+ * Returns: The data of mini mode UI structure.
+ */
+
 RCGuiMiniData *rc_gui_mini_get_data()
 {
     return &rc_mini;
 }
 
+/**
+ * rc_gui_mini_set_info_text:
+ * @text: the text which shows on the information label
+ *
+ * Set the text of the information label.
+ */
+
 void rc_gui_mini_set_info_text(const gchar *text)
 {
     gtk_label_set_text(GTK_LABEL(rc_mini.info_label), text);
 }
+
+/**
+ * rc_gui_mini_set_lyric_text:
+ * @text: the lyric text which shows on the lyric label
+ *
+ * Set the lyric text of the lyric label.
+ */
 
 void rc_gui_mini_set_lyric_text(const gchar *text)
 {
@@ -399,12 +436,20 @@ void rc_gui_mini_set_lyric_text(const gchar *text)
     gtk_label_set_text(GTK_LABEL(rc_mini.lrc_label), text);
 }
 
+/**
+ * rc_gui_mini_info_text_move:
+ *
+ * Make the view of the information label move if the text inside is
+ * too loog.
+ */
+
 void rc_gui_mini_info_text_move()
 {
     static gdouble pos = 0.0;
     static gboolean dir = FALSE;
     gdouble info_vport_lower, info_vport_upper, info_vport_value;
     gdouble info_vport_range, info_vport_page_size;
+    if(!rc_set_get_boolean("Player", "MiniMode", NULL)) return;
     g_object_get(G_OBJECT(rc_mini.info_vport_adj), "page-size",
         &info_vport_page_size, "lower", &info_vport_lower, "upper",
         &info_vport_upper, NULL);
@@ -434,10 +479,19 @@ void rc_gui_mini_info_text_move()
     gtk_adjustment_set_value(rc_mini.info_vport_adj, info_vport_value);
 }
 
+/**
+ * rc_gui_mini_set_lyric_persent:
+ * @persent: the persent position of the lyric text
+ *
+ * Make the view of the lyric label move by given persent if the lyric text
+ * is too loog.
+ */
+
 void rc_gui_mini_set_lyric_persent(gdouble persent)
 {
     gdouble lrc_vport_lower, lrc_vport_upper, lrc_vport_value;
     gdouble lrc_vport_range, lrc_vport_page_size;
+    if(!rc_set_get_boolean("Player", "MiniMode", NULL)) return;
     g_object_get(G_OBJECT(rc_mini.lrc_vport_adj), "page-size",
         &lrc_vport_page_size, "lower", &lrc_vport_lower, "upper",
         &lrc_vport_upper, NULL);
@@ -449,6 +503,14 @@ void rc_gui_mini_set_lyric_persent(gdouble persent)
     gtk_adjustment_set_value(rc_mini.lrc_vport_adj, lrc_vport_value);
 }
 
+/**
+ * rc_gui_mini_set_play_state:
+ * @state: the state of the play button, if it's TRUE, the image of the
+ * button is pause icon, else the image is play icon.
+ *
+ * Set play button state.
+ */
+
 void rc_gui_mini_set_play_state(gboolean state)
 {
     if(state)
@@ -458,6 +520,13 @@ void rc_gui_mini_set_play_state(gboolean state)
         gtk_image_set_from_stock(GTK_IMAGE(rc_mini.control_images[0]),
             GTK_STOCK_MEDIA_PLAY, GTK_ICON_SIZE_MENU);
 }
+
+/**
+ * rc_gui_mini_set_time_text:
+ * @time: the time to set, in nanosecond.
+ *
+ * Set time label.
+ */
 
 void rc_gui_mini_set_time_text(gint64 pos)
 {
@@ -476,12 +545,24 @@ void rc_gui_mini_set_time_text(gint64 pos)
     gtk_label_set_text(GTK_LABEL(rc_mini.time_label), timestr);
 }
 
-void rc_gui_mini_window_hide(GtkWidget *widget, gpointer data)
+/**
+ * rc_gui_mini_window_hide:
+ *
+ * Hide the mini mode window.
+ */
+
+void rc_gui_mini_window_hide()
 {
     gtk_widget_hide(rc_mini.mini_window);
 }
 
-void rc_gui_mini_window_show(GtkWidget *widget, gpointer data)
+/**
+ * rc_gui_mini_window_show:
+ *
+ * Show the mini mode window.
+ */
+
+void rc_gui_mini_window_show()
 {
     gtk_widget_show(rc_mini.mini_window);
     gtk_window_move(GTK_WINDOW(rc_mini.mini_window), rc_set_get_integer(
@@ -489,7 +570,13 @@ void rc_gui_mini_window_show(GtkWidget *widget, gpointer data)
         "MiniWindowY", NULL));
 }
 
-void rc_gui_mini_mini_mode_clicked(GtkWidget *widget, gpointer data)
+/**
+ * rc_gui_mini_mini_mode_clicked:
+ *
+ * Enable mini mode.
+ */
+
+void rc_gui_mini_mini_mode_clicked()
 {
     rc_set_set_boolean("Player", "MiniMode", TRUE);
     gtk_widget_show(rc_mini.mini_window);
@@ -499,7 +586,13 @@ void rc_gui_mini_mini_mode_clicked(GtkWidget *widget, gpointer data)
         "MiniWindowY", NULL));
 }
 
-void rc_gui_mini_normal_mode_clicked(GtkWidget *widget, gpointer data)
+/**
+ * rc_gui_mini_normal_mode_clicked:
+ *
+ * Return to normal mode.
+ */
+
+void rc_gui_mini_normal_mode_clicked()
 {
     rc_set_set_boolean("Player", "MiniMode", FALSE);
     gtk_widget_hide(rc_mini.mini_window);

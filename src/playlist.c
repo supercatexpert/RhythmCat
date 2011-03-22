@@ -1,6 +1,6 @@
 /*
- * Play List
- * Load and manage the playlist.
+ * Playlist
+ * Manage the playlists.
  *
  * playlist.c
  * This file is part of <RhythmCat>
@@ -35,8 +35,25 @@
 #include "debug.h"
 #include "player.h"
 
-typedef struct RCPlistImportData
-{
+/**
+ * SECTION: playlist
+ * @Short_description: Manage the playlists.
+ * @Title: Playlist
+ * @Include: playlist.h
+ *
+ * Manage the playlists in the player and control all operations
+ * on playlists.
+ */
+
+/* Custom struct type to store playlist data */
+
+typedef struct RCPlistData {
+    GtkListStore *list_store;
+    GtkTreeRowReference *list1_reference;
+    GtkTreeRowReference *list2_reference;
+}RCPlistData;
+
+typedef struct RCPlistImportData {
     gchar *uri;
     gint list2_index;
     gboolean refresh_flag;
@@ -101,8 +118,12 @@ static gpointer rc_plist_import_job_func(gpointer data)
     return NULL;
 }
 
-/*
- * Initial playlist store list.
+/**
+ * rc_plist_init:
+ *
+ * Initialize playlists. Can be used only once.
+ *
+ * Returns: Whether the initiation succeeds.
  */
 
 gboolean rc_plist_init()
@@ -139,11 +160,13 @@ gboolean rc_plist_init()
     return TRUE;
 }
 
-/*
- * Uninitial playlist data.
+/**
+ * rc_plist_exit:
+ *
+ * Free all playlists data.
  */
 
-void rc_plist_uninit_playlist()
+void rc_plist_exit()
 {
     gint list_count = 0;
     plist_import_job_flag = FALSE;
@@ -158,8 +181,16 @@ void rc_plist_uninit_playlist()
     }
 }
 
-/*
- * Insert music data to playlist.
+/**
+ * rc_plist_insert_music:
+ * @uri: the URI of the music
+ * @list1_index: the index of the playlists to insert to
+ * @list2_index: the position where the music insert to, -1 to append to
+ * the last
+ *
+ * Import music by given URI to the playlist.
+ *
+ * Returns: Whether the insertion succeeds.
  */
 
 gboolean rc_plist_insert_music(const gchar *uri, gint list1_index,
@@ -178,8 +209,20 @@ gboolean rc_plist_insert_music(const gchar *uri, gint list1_index,
     return TRUE;
 }
 
-/*
+/**
+ * rc_plist_list2_insert_item:
+ * @uri: the URI of the item
+ * @title: the title of the item
+ * @artist: the artist of the item
+ * @album: the album of the item
+ * @length: the time length of the item
+ * @trackno: the track number of the item
+ * @store: the GtkListStore to insert to
+ * @list2_index: the position to insert to
+ *
  * Insert music to list2 by metadata.
+ * WARNING: This function is only used in insertion job, if you really
+ * want to insert a music, please use rc_plist_insert_music().
  */
 
 void rc_plist_list2_insert_item(const gchar *uri, const gchar *title,
@@ -191,11 +234,11 @@ void rc_plist_list2_insert_item(const gchar *uri, const gchar *title,
     gint time_min, time_sec;
     gchar *realname = NULL;
     gchar *fpathname = NULL;
-    gchar new_title[512];
+    gchar *new_title = NULL;
     gchar new_length[64];
     if(!GTK_IS_LIST_STORE(store)) return;
-    if(title[0]!='\0')
-        g_utf8_strncpy(new_title, title, 127);
+    if(title!=NULL && strlen(title)>0)
+        new_title = g_strdup(title);
     else
     {
         fpathname = g_filename_from_uri(uri, NULL, NULL);
@@ -206,11 +249,11 @@ void rc_plist_list2_insert_item(const gchar *uri, const gchar *title,
         }
         if(realname!=NULL)
         {
-            g_utf8_strncpy(new_title, realname, 127);
+            new_title = g_strdup(realname);
             g_free(realname);
         }
         else
-            g_utf8_strncpy(new_title, _("Unknown Title"), 127);
+            new_title = g_strdup(_("Unknown Title"));
     }
     seclength = length / GST_SECOND;
     time_min = seclength / 60;
@@ -223,10 +266,22 @@ void rc_plist_list2_insert_item(const gchar *uri, const gchar *title,
     gtk_list_store_set(store, &iter, PLIST2_URI, uri, PLIST2_STATE, NULL,
         PLIST2_TITLE, new_title, PLIST2_ARTIST, artist, PLIST2_ALBUM, album,
         PLIST2_LENGTH, new_length, PLIST2_TRACKNO, trackno, -1);
+    if(new_title!=NULL) g_free(new_title);
 }
 
-/*
- * Refresh list2 by metadata.
+/**
+ * rc_plist_list2_refresh_item:
+ * @uri: the URI of the item
+ * @title: the title of the item
+ * @artist: the artist of the item
+ * @album: the album of the item
+ * @length: the time length of the item
+ * @trackno: the track number of the item
+ * @reference: the path reference of the item
+ *
+ * Refresh the item in list2 by metadata.
+ * WARNING: This function is only used in refresh job, if you really
+ * want to refresh the playlist, please use rc_plist_list2_refresh().
  */
 
 void rc_plist_list2_refresh_item(const gchar *uri, const gchar *title,
@@ -240,7 +295,7 @@ void rc_plist_list2_refresh_item(const gchar *uri, const gchar *title,
     gint time_min, time_sec;
     gchar *realname = NULL;
     gchar *fpathname = NULL;
-    gchar new_title[512];
+    gchar *new_title = NULL;
     gchar new_length[64];
     if(!gtk_tree_row_reference_valid(reference))
     {
@@ -257,8 +312,8 @@ void rc_plist_list2_refresh_item(const gchar *uri, const gchar *title,
     gtk_tree_row_reference_free(reference);
     gtk_tree_model_get_iter(GTK_TREE_MODEL(pl_store), &iter, path);
     gtk_tree_path_free(path);
-    if(title[0]!='\0')
-        g_utf8_strncpy(new_title, title, 127);
+    if(title!=NULL && strlen(title)>0)
+        new_title = g_strdup(title);
     else
     {
         fpathname = g_filename_from_uri(uri, NULL, NULL);
@@ -269,11 +324,11 @@ void rc_plist_list2_refresh_item(const gchar *uri, const gchar *title,
         }
         if(realname!=NULL)
         {
-            g_utf8_strncpy(new_title, realname, 127);
+            new_title = g_strdup(realname);
             g_free(realname);
         }
         else
-            g_utf8_strncpy(new_title, _("Unknown Title"), 127);
+            new_title = g_strdup(_("Unknown Title"));
     }
     seclength = length / GST_SECOND;
     time_min = seclength / 60;
@@ -282,10 +337,15 @@ void rc_plist_list2_refresh_item(const gchar *uri, const gchar *title,
     gtk_list_store_set(pl_store, &iter, PLIST2_URI, uri, PLIST2_STATE, NULL,
         PLIST2_TITLE, new_title, PLIST2_ARTIST, artist, PLIST2_ALBUM, album,
         PLIST2_LENGTH, new_length, PLIST2_TRACKNO, trackno, -1);
+    if(new_title!=NULL) g_free(new_title);
 }
 
-/*
+/**
+ * rc_plist_list2_remove_item:
+ * @reference: the path reference of the item
+ *
  * Remove invalid item in list2.
+ * WARNING: This function is only used to remove invalid music item.
  */
 
 void rc_plist_list2_remove_item(GtkTreeRowReference *reference)
@@ -311,8 +371,14 @@ void rc_plist_list2_remove_item(GtkTreeRowReference *reference)
     gtk_list_store_remove(pl_store, &iter);
 }
 
-/*
- * Play music by given index.
+/**
+ * rc_plist_play_by_index:
+ * @list_index: the index of the playlist
+ * @music_index: the index of the music in the playlist
+ *
+ * Play music by given list1 index and list2 index.
+ *
+ * Returns: Whether the operation succeeds.
  */
 
 gboolean rc_plist_play_by_index(gint list_index, gint music_index)
@@ -324,8 +390,8 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
     gint time_min, time_sec;
     gint trackno = -1;
     gchar *list_uri = NULL;
-    gchar list_title[512];
-    gchar album_name[512];
+    gchar *list_title = NULL;
+    gchar *album_name = NULL;
     gchar list_timelen[64];
     gchar *music_dir = NULL, *lyric_dir = NULL, *image_dir = NULL;
     gchar *lyric_filename = NULL;
@@ -368,19 +434,15 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
         realname = rc_tag_get_name_from_fpath(fpathname);
     }
     if(strlen(mmd_new->title)>0)
-        g_utf8_strncpy(list_title, mmd_new->title, 127);
+        list_title = g_strdup(mmd_new->title);
     else
     {
         if(realname!=NULL)
-        {
-            g_utf8_strncpy(list_title, realname, 127);
-        }
+            list_title = g_strdup(realname);
         else
-        {
-            g_utf8_strncpy(list_title, _("Unknown title"), 127);
-        }
+            list_title = g_strdup(_("Unknown title"));
     }
-    g_utf8_strncpy(album_name, mmd_new->album, 127);
+    album_name = g_strdup(mmd_new->album);
     rc_core_set_uri(mmd_new->uri);
     rc_tag_set_playing_metadata(mmd_new);
     gtk_list_store_set(list_store, &iter, PLIST2_STATE, GTK_STOCK_MEDIA_PLAY,
@@ -418,9 +480,14 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
         list_store), path);
     gtk_tree_path_free(path);
     rc_tag_free(mmd_new);
+    if(list_title!=NULL) g_free(list_title);
     /* Search extra info for the music file in local filesystem. */
     rc_lrc_clean_data();
-    if(fpathname==NULL) return TRUE;
+    if(fpathname==NULL)
+    {
+        g_free(album_name);
+        return TRUE;
+    }
     music_dir = g_path_get_dirname(fpathname);
     g_free(fpathname);
     lyric_dir = g_strdup_printf("%s%cLyrics", rc_get_set_dir(), G_DIR_SEPARATOR);
@@ -462,11 +529,19 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
     }
     g_free(music_dir);
     g_free(realname);
+    g_free(album_name);
     return TRUE;
 }
 
-/*
- * Get the list indices of playing music.
+/**
+ * rc_plist_play_get_index:
+ * @index1: the index of the playlist
+ * @index2: the index of the music in the playlist
+ *
+ * Get the playlist index number and the music index number of playing
+ * music.
+ *
+ * Returns: Whether the indexes are set.
  */
 
 gboolean rc_plist_play_get_index(gint *index1, gint *index2)
@@ -494,8 +569,10 @@ gboolean rc_plist_play_get_index(gint *index1, gint *index2)
     return TRUE;
 }
 
-/*
- * Stop the music.
+/**
+ * rc_plist_stop:
+ *
+ * Clean the references data when the player stops.
  */
 
 void rc_plist_stop()
@@ -537,8 +614,12 @@ void rc_plist_stop()
     }
 }
 
-/*
- * Play next music.
+/**
+ * rc_plist_play_prev:
+ *
+ * Play the previous music in the playlist.
+ *
+ * Returns: Whether the operation succeeds.
  */
 
 gboolean rc_plist_play_prev()
@@ -569,11 +650,17 @@ gboolean rc_plist_play_prev()
     else return FALSE;
 }
 
-/*
- * Play next music.
+/**
+ * rc_plist_play_next:
+ * @flag: whether the operation is produced by player, if it is TRUE,
+ * the operation will effect by playing mode (repeat mode and random mode)
+ * 
+ * Play the next music in the playlist.
+ *
+ * Returns: Whether the operation succeeds.
  */
 
-gboolean rc_plist_play_next(gboolean next_list)
+gboolean rc_plist_play_next(gboolean flag)
 {
     GtkTreePath *path1, *path2;
     GtkTreeModel *model2;
@@ -584,7 +671,7 @@ gboolean rc_plist_play_next(gboolean next_list)
     gint i;
     repeat_mode = rc_set_get_integer("Player", "RepeatMode", NULL);
     random_mode = rc_set_get_integer("Player", "RandomMode", NULL);
-    if(random_mode==0 || !next_list)
+    if(random_mode==0 || !flag)
     {
         if(!gtk_tree_row_reference_valid(rc_plist.list1_reference))
             return FALSE;
@@ -602,7 +689,7 @@ gboolean rc_plist_play_next(gboolean next_list)
         gtk_tree_path_free(path2);
         list2_index++;
         rc_core_stop();
-        if(repeat_mode==1 && next_list)
+        if(repeat_mode==1 && flag)
         {
             if(rc_plist_play_by_index(list1_index, list2_index-1))
                 return rc_core_play();
@@ -614,7 +701,7 @@ gboolean rc_plist_play_next(gboolean next_list)
                 return rc_core_play();
             else return FALSE;
         }
-        if(!next_list)
+        if(!flag)
         {
             if(rc_plist_play_by_index(list1_index, list2_index-1))
                 return rc_core_play();
@@ -700,7 +787,11 @@ gboolean rc_plist_play_next(gboolean next_list)
     return FALSE;
 }
 
-/*
+/**
+ * rc_plist_set_play_mode:
+ * @repeat: the repeat mode
+ * @random: the random mode
+ *
  * Set the play mode of the player.
  */
 
@@ -717,7 +808,11 @@ void rc_plist_set_play_mode(gint repeat, gint random)
     rc_gui_set_player_mode();
 }
 
-/*
+/**
+ * rc_plist_get_play_mode:
+ * @repeat: return the repeat mode, can be NULL
+ * @random: return the random mdoe, can be NULL
+ * 
  * Get the play mode of the player.
  */
 
@@ -729,17 +824,21 @@ void rc_plist_get_play_mode(gint *repeat, gint *random)
         *random = rc_set_get_integer("Player", "RandomMode", NULL);
 }
 
-/*
- * Insert a new list into the list store.
+/**
+ * rc_plist_insert_list:
+ * @listname: the name of the new playlist
+ * @index: the position to insert, set to -1 to append to the last
+ *
+ * Insert a new playlist into the playlist.
+ *
+ * Returns: Whether the insertion succeeds.
  */
 
 gboolean rc_plist_insert_list(const gchar *listname, gint index)
 {
-    if(rc_plist.list_store==NULL) return FALSE;
+    if(rc_plist.list_store==NULL || listname==NULL) return FALSE;
     GtkListStore *pl_store = NULL;
     GtkTreeIter iter;
-    gchar new_name[512];
-    g_utf8_strncpy(new_name, listname, 127);
     pl_store = gtk_list_store_new(PLIST2_LAST, G_TYPE_STRING, G_TYPE_STRING,
         G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING,
         G_TYPE_INT);
@@ -748,12 +847,17 @@ gboolean rc_plist_insert_list(const gchar *listname, gint index)
     else
         gtk_list_store_append(rc_plist.list_store, &iter);
     gtk_list_store_set(rc_plist.list_store, &iter, PLIST1_STATE, NULL,
-        PLIST1_NAME, new_name, PLIST1_STORE, pl_store, -1);
+        PLIST1_NAME, listname, PLIST1_STORE, pl_store, -1);
     return TRUE;
 }
 
-/* 
- * Get the name of the list. (Free it after usage!)
+/**
+ * rc_plist_get_list1_name:
+ * @index: the index number of the playlist
+ *
+ * Return the name of the list.
+ *
+ * Returns: The name of the list, NULL if not found, free after usage.
  */
 
 gchar *rc_plist_get_list1_name(gint index)
@@ -767,13 +871,17 @@ gchar *rc_plist_get_list1_name(gint index)
         path))
         return NULL;
     gtk_tree_path_free(path);
-    gtk_tree_model_get(GTK_TREE_MODEL(rc_plist.list_store), &iter, PLIST1_NAME,
-        &name, -1);
+    gtk_tree_model_get(GTK_TREE_MODEL(rc_plist.list_store), &iter,
+        PLIST1_NAME, &name, -1);
     return name;
 }
 
-/*
- * Rename an exist list.
+/**
+ * rc_plist_set_list1_name:
+ * @index: the index of the playlist to rename
+ * @name: the new name
+ *
+ * Rename an exist playlist.
  */
 
 void rc_plist_set_list1_name(gint index, const gchar *name)
@@ -781,8 +889,7 @@ void rc_plist_set_list1_name(gint index, const gchar *name)
     GtkTreeIter iter;
     GtkTreePath *path;
     gchar *old_name;
-    gchar new_name[512];
-    if(index<0) return;
+    if(index<0 || name==NULL) return;
     path = gtk_tree_path_new_from_indices(index, -1);
     if(!gtk_tree_model_get_iter(GTK_TREE_MODEL(rc_plist.list_store), &iter,
         path))
@@ -791,8 +898,7 @@ void rc_plist_set_list1_name(gint index, const gchar *name)
     gtk_tree_model_get(GTK_TREE_MODEL(rc_plist.list_store), &iter, PLIST1_NAME,
         &old_name, -1);
     if(old_name==NULL) return;
-    g_utf8_strncpy(new_name, name, 127);
-    if(g_strcmp0(old_name, new_name)==0)
+    if(g_strcmp0(old_name, name)==0)
     {
         rc_debug_print("The list name is the same, there's no need to "
             "rename.\n");
@@ -800,11 +906,15 @@ void rc_plist_set_list1_name(gint index, const gchar *name)
         return;
     }
     g_free(old_name);
-    gtk_list_store_set(rc_plist.list_store, &iter, PLIST1_NAME, new_name, -1);
+    gtk_list_store_set(rc_plist.list_store, &iter, PLIST1_NAME, name, -1);
 }
 
-/*
- * Get the length of list1.
+/**
+ * rc_plist_get_list1_length:
+ *
+ * Return the length of playlists.
+ *
+ * Returns: The length of playlists.
  */
 
 gint rc_plist_get_list1_length()
@@ -813,8 +923,13 @@ gint rc_plist_get_list1_length()
         NULL);
 }
 
-/*
- * Get the length of list2.
+/**
+ * rc_plist_get_list2_length:
+ * @index: the index of the playlist
+ *
+ * Return the music number in the playlist.
+ *
+ * Returns: The music number in the playlist.
  */
 
 gint rc_plist_get_list2_length(gint index)
@@ -825,8 +940,13 @@ gint rc_plist_get_list2_length(gint index)
     return gtk_tree_model_iter_n_children(GTK_TREE_MODEL(pl_store), NULL);
 }
 
-/*
- * Remove a list by index.
+/**
+ * rc_plist_remove_list:
+ * @index: the index of the playlist to remove
+ *
+ * Remove a playlist by given index.
+ *
+ * Returns: Whether the operation succeeds.
  */
 
 gboolean rc_plist_remove_list(gint index)
@@ -848,8 +968,12 @@ gboolean rc_plist_remove_list(gint index)
     return gtk_list_store_remove(rc_plist.list_store, &iter);
 }
 
-/*
+/**
+ * rc_plist_load_playlist_setting:
+ *
  * Load playlists from file.
+ *
+ * Returns: Whether the operation succeeds.
  */
 
 gboolean rc_plist_load_playlist_setting()
@@ -994,8 +1118,12 @@ gboolean rc_plist_load_playlist_setting()
     else return FALSE;
 }
 
-/*
- * Save the playlist settings.
+/**
+ * rc_plist_save_playlist_setting:
+ *
+ * Save the playlist settings to file.
+ *
+ * Returns: Whether the operation succeeds.
  */
 
 gboolean rc_plist_save_playlist_setting()
@@ -1077,8 +1205,10 @@ gboolean rc_plist_save_playlist_setting()
     return TRUE;
 }
 
-/*
- * Build a default playlist if the data file do not exist.
+/**
+ * rc_plist_build_default_list:
+ *
+ * Make a default playlist.
  */
 
 void rc_plist_build_default_list()
@@ -1086,7 +1216,13 @@ void rc_plist_build_default_list()
     rc_plist_insert_list(default_list_name, 0);
 }
 
-/*
+/**
+ * rc_plist_plist_move2:
+ * @list_index: the index of the source playlist
+ * @from_paths: the GtkTreePaths to move
+ * @f_length: the length of the the GtkTreePaths
+ * @to_list_index: the index of the target playlist
+ *
  * Move item(s) in the playlist to another playlist.
  */
 
@@ -1182,8 +1318,12 @@ void rc_plist_plist_move2(gint list_index, GtkTreePath **from_paths,
     }
 }
 
-/*
- * Save the playlist.
+/**
+ * rc_plist_save_playlist:
+ * @s_filename: the path of the playlist file
+ * @index: the index of the playlist to save
+ * 
+ * Save the playlist to a file.
  */
 
 void rc_plist_save_playlist(const gchar *s_filename, gint index)
@@ -1235,8 +1375,12 @@ void rc_plist_save_playlist(const gchar *s_filename, gint index)
     fclose(fp);
 }
 
-/*
- * Load the playlist.
+/**
+ * rc_plist_load_playlist:
+ * @s_filename: the path of the playlist file
+ * @index: the index of the playlist to load
+ * 
+ * Load a playlist from a playlist file.
  */
 
 void rc_plist_load_playlist(const gchar *s_filename, gint index)
@@ -1304,8 +1448,13 @@ void rc_plist_load_playlist(const gchar *s_filename, gint index)
     g_free(file_list);
 }
 
-/*
- * Get the list store the playlist.
+/**
+ * rc_plist_get_list_store:
+ * @index: the index of the playlist
+ *
+ * Return the GtkListStore of the playlist by given index.
+ *
+ * Returns: The GtkListStore of the playlist.
  */
 
 GtkListStore *rc_plist_get_list_store(gint index)
@@ -1325,8 +1474,12 @@ GtkListStore *rc_plist_get_list_store(gint index)
     return pl_store;
 }
 
-/*
- * Get the list head.
+/**
+ * rc_plist_get_list_head:
+ *
+ * Return the GtkListStore of the playlists.
+ *
+ * Returns: The GtkListStore of the playlists.
  */
 
 GtkListStore *rc_plist_get_list_head()
@@ -1334,8 +1487,13 @@ GtkListStore *rc_plist_get_list_head()
     return rc_plist.list_store;
 }
 
-/*
- * Refresh the items in list2.
+/**
+ * rc_plist_list2_refresh:
+ * @list1_index: the index of the playlist to refresh
+ *
+ * Refresh the music information in the playlist.
+ *
+ * Returns: Whether the operation succeeds.
  */
 
 gboolean rc_plist_list2_refresh(gint list1_index)
@@ -1373,8 +1531,12 @@ gboolean rc_plist_list2_refresh(gint list1_index)
     return TRUE;
 }
 
-/*
- * Get the remain job number in the job queue.
+/**
+ * rc_plist_import_job_get_length:
+ *
+ * Return the remaining job length in the job queue.
+ *
+ * Returns: The remaining job length in the job queue.
  */
 
 gint rc_plist_import_job_get_length()
@@ -1383,8 +1545,10 @@ gint rc_plist_import_job_get_length()
         plist_import_thread_num;
 }
 
-/*
- * Cancel all jobs in the job queue.
+/**
+ * rc_plist_import_job_cancel:
+ *
+ * Cancel all remaining jobs in the job queue.
  */
 
 void rc_plist_import_job_cancel()
@@ -1404,8 +1568,11 @@ void rc_plist_import_job_cancel()
     }
 }
 
-/*
- * Load music from the argument list of application. 
+/**
+ * rc_plist_load_argument:
+ * @argv: the argument list
+ * 
+ * Import music from the given argument list.
  */
 
 void rc_plist_load_argument(char *argv[])
@@ -1454,8 +1621,13 @@ void rc_plist_load_argument(char *argv[])
     rc_gui_select_list1(list_index);
 }
 
-/*
- * Load music from remote.
+/**
+ * rc_plist_load_uri_from_remote:
+ * @uri: the URI of the music to import
+ *
+ * Import music from remote (e.g. D-Bus) by given URI.
+ *
+ * Returns: Whether the operation succeeds.
  */
 
 gboolean rc_plist_load_uri_from_remote(const gchar *uri)

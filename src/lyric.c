@@ -23,6 +23,15 @@
  * Boston, MA  02110-1301  USA
  */
 
+/**
+ * SECTION: lyric
+ * @Short_description: Process lyric data.
+ * @Title: Lyric
+ * @Include: lyric.h
+ *
+ * Process lyric texts, like reading lyric from LRC file, etc.
+ */
+
 #include "lyric.h"
 #include "settings.h"
 #include "main.h"
@@ -118,6 +127,15 @@ static void rc_lrc_add_line(gchar *line)
     g_slist_free(time_list);
     g_strfreev(line_data_array);
 }
+
+/**
+ * rc_lrc_red_from_file:
+ * @filename: the lyric file
+ *
+ * Read lyric data from given file.
+ *
+ * Returns: Whether the file is read successfully.
+ */
 
 gboolean rc_lrc_read_from_file(const gchar *filename)
 {
@@ -216,6 +234,12 @@ gboolean rc_lrc_read_from_file(const gchar *filename)
     return flag;
 }
 
+/**
+ * rc_lrc_clean_data:
+ *
+ * Clean the read lyric data from the player.
+ */
+
 void rc_lrc_clean_data()
 {
     lrc_num_of_targets = g_list_length(lrc_line_data);
@@ -238,15 +262,42 @@ void rc_lrc_clean_data()
     lrc_line_data = NULL;
 }
 
+/**
+ * rc_lrc_get_lrc_data:
+ *
+ * Return the processed lyric data in the player.
+ *
+ * Returns: The processed lyric data in the player, the data is stored
+ * in a GList, NULL if there is no lyric data.
+ */
+
 const GList *rc_lrc_get_lrc_data()
 {
     return lrc_line_data;
 }
 
+/**
+ * rc_lrc_get_text_data:
+ *
+ * Return the original lyric text in the player.
+ *
+ * Returns: The original lyric text in the player, NULL if there is no
+ * lyric text.
+ */
+
 const gchar *rc_lrc_get_text_data()
 {
     return lrc_text_data;
 }
+
+/**
+ * rc_lrc_get_line_by_time:
+ * @time: the time in nanosecond
+ *
+ * Return the lyric line data by given time.
+ *
+ * Returns: The lyric line data by given time, NULL if not found.
+ */
 
 const RCLyricData *rc_lrc_get_line_by_time(gint64 time)
 {
@@ -268,54 +319,4 @@ const RCLyricData *rc_lrc_get_line_by_time(gint64 time)
     return item;
 }
 
-void rc_lrc_set_text(const gchar *text)
-{
-    gboolean flag = TRUE;
-    gsize length = 0;
-    gint i = 0, j = 0;
-    gchar chr;
-    gchar *new_text = NULL;
-    gchar *line;
-    gchar *text_data;
-    gchar **text_data_array = NULL;
-    guint linenum = 0;
-    if(lrc_line_data!=NULL) rc_lrc_clean_data();
-    if(lrc_text_data!=NULL) g_free(lrc_text_data);
-    length = strlen(text);
-    new_text = g_malloc0(length * sizeof(gchar));
-    for(i=0;i<length;i++)
-    {
-        chr = text[i];
-        if(chr!='\r')
-        {
-            new_text[j] = chr;
-            j++;
-        }
-    }
-    lrc_text_data = new_text;
-    text_data = lrc_text_data;
-    text_data_array = g_strsplit(text_data, "\n", 0);
-    while(text_data_array[linenum]!=NULL)
-    {
-        line = text_data_array[linenum];
-        rc_lrc_add_line(line);
-        linenum++;
-    }
-    g_strfreev(text_data_array);
-    if(flag) rc_lrc_line_sort();
-}
-
-gboolean rc_lrc_save_lrc(const gchar *filename)
-{
-    gchar *new_filename = NULL;
-    if(g_str_has_suffix(filename, ".LRC") || 
-        g_str_has_suffix(filename, ".lrc"))
-        new_filename = g_strdup(filename);
-    else
-        new_filename = g_strdup_printf("%s.LRC", filename);
-    g_file_set_contents(new_filename, lrc_text_data, strlen(lrc_text_data),
-        NULL);
-    g_free(new_filename);
-    return TRUE;
-}
 

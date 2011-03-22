@@ -1,0 +1,958 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Playlist</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="index.html" title="RhythmCat Reference Manual">
+<link rel="up" href="ch01.html" title="[Insert title here]">
+<link rel="prev" href="RhythmCat-gui-style.html" title="gui_style">
+<link rel="next" href="RhythmCat-gui-treeview.html" title="gui_treeview">
+<meta name="generator" content="GTK-Doc V1.15 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="RhythmCat-gui-style.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">RhythmCat Reference Manual</th>
+<td><a accesskey="n" href="RhythmCat-gui-treeview.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#RhythmCat-Playlist.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#RhythmCat-Playlist.description" class="shortcut">Description</a>
+</td></tr>
+</table>
+<div class="refentry" title="Playlist">
+<a name="RhythmCat-Playlist"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="RhythmCat-Playlist.top_of_page"></a>Playlist</span></h2>
+<p>Playlist — Manage the playlists.</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv" title="Synopsis">
+<a name="RhythmCat-Playlist.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">
+#include &lt;playlist.h&gt;
+
+enum                <a class="link" href="RhythmCat-Playlist.html#RCPlist1Column" title="enum RCPlist1Column">RCPlist1Column</a>;
+enum                <a class="link" href="RhythmCat-Playlist.html#RCPlist2Column" title="enum RCPlist2Column">RCPlist2Column</a>;
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist.html#rc-plist-init" title="rc_plist_init ()">rc_plist_init</a>                       ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-exit" title="rc_plist_exit ()">rc_plist_exit</a>                       ();
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist.html#rc-plist-insert-list" title="rc_plist_insert_list ()">rc_plist_insert_list</a>                (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *listname</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist.html#rc-plist-insert-music" title="rc_plist_insert_music ()">rc_plist_insert_music</a>               (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list1_index</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list2_index</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-list2-insert-item" title="rc_plist_list2_insert_item ()">rc_plist_list2_insert_item</a>          (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>,
+                                                         <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *title</code></em>,
+                                                         <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *artist</code></em>,
+                                                         <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *album</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> length</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> trackno</code></em>,
+                                                         <em class="parameter"><code><a href="../gtk/GtkListStore.html"><span class="type">GtkListStore</span></a> *store</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list2_index</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-list2-refresh-item" title="rc_plist_list2_refresh_item ()">rc_plist_list2_refresh_item</a>         (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>,
+                                                         <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *title</code></em>,
+                                                         <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *artist</code></em>,
+                                                         <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *album</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> length</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> trackno</code></em>,
+                                                         <em class="parameter"><code><a href="../gtk/GtkTreeModel.html#GtkTreeRowReference"><span class="type">GtkTreeRowReference</span></a> *reference</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-list2-remove-item" title="rc_plist_list2_remove_item ()">rc_plist_list2_remove_item</a>          (<em class="parameter"><code><a href="../gtk/GtkTreeModel.html#GtkTreeRowReference"><span class="type">GtkTreeRowReference</span></a> *reference</code></em>);
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist.html#rc-plist-remove-list" title="rc_plist_remove_list ()">rc_plist_remove_list</a>                (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);
+<a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             <a class="link" href="RhythmCat-Playlist.html#rc-plist-get-list1-name" title="rc_plist_get_list1_name ()">rc_plist_get_list1_name</a>             (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);
+<a href="../glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-get-list1-length" title="rc_plist_get_list1_length ()">rc_plist_get_list1_length</a>           ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-set-list1-name" title="rc_plist_set_list1_name ()">rc_plist_set_list1_name</a>             (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>,
+                                                         <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);
+<a href="../glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-get-list2-length" title="rc_plist_get_list2_length ()">rc_plist_get_list2_length</a>           (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist.html#rc-plist-play-by-index" title="rc_plist_play_by_index ()">rc_plist_play_by_index</a>              (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list_index</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> music_index</code></em>);
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist.html#rc-plist-play-get-index" title="rc_plist_play_get_index ()">rc_plist_play_get_index</a>             (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *index1</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *index2</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-stop" title="rc_plist_stop ()">rc_plist_stop</a>                       ();
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist.html#rc-plist-play-prev" title="rc_plist_play_prev ()">rc_plist_play_prev</a>                  ();
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist.html#rc-plist-play-next" title="rc_plist_play_next ()">rc_plist_play_next</a>                  (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> flag</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-set-play-mode" title="rc_plist_set_play_mode ()">rc_plist_set_play_mode</a>              (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> repeat</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> random</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-get-play-mode" title="rc_plist_get_play_mode ()">rc_plist_get_play_mode</a>              (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *repeat</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *random</code></em>);
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist.html#rc-plist-load-playlist-setting" title="rc_plist_load_playlist_setting ()">rc_plist_load_playlist_setting</a>      ();
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist.html#rc-plist-save-playlist-setting" title="rc_plist_save_playlist_setting ()">rc_plist_save_playlist_setting</a>      ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-build-default-list" title="rc_plist_build_default_list ()">rc_plist_build_default_list</a>         ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-plist-move2" title="rc_plist_plist_move2 ()">rc_plist_plist_move2</a>                (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list_index</code></em>,
+                                                         <em class="parameter"><code><a href="../gtk/GtkTreeModel.html#GtkTreePath"><span class="type">GtkTreePath</span></a> **from_paths</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> f_length</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> to_list_index</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-save-playlist" title="rc_plist_save_playlist ()">rc_plist_save_playlist</a>              (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *s_filename</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-load-playlist" title="rc_plist_load_playlist ()">rc_plist_load_playlist</a>              (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *s_filename</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);
+<a href="../gtk/GtkListStore.html"><span class="returnvalue">GtkListStore</span></a> *      <a class="link" href="RhythmCat-Playlist.html#rc-plist-get-list-store" title="rc_plist_get_list_store ()">rc_plist_get_list_store</a>             (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);
+<a href="../gtk/GtkListStore.html"><span class="returnvalue">GtkListStore</span></a> *      <a class="link" href="RhythmCat-Playlist.html#rc-plist-get-list-head" title="rc_plist_get_list_head ()">rc_plist_get_list_head</a>              ();
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist.html#rc-plist-list2-refresh" title="rc_plist_list2_refresh ()">rc_plist_list2_refresh</a>              (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list1_index</code></em>);
+<a href="../glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-import-job-get-length" title="rc_plist_import_job_get_length ()">rc_plist_import_job_get_length</a>      ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-import-job-cancel" title="rc_plist_import_job_cancel ()">rc_plist_import_job_cancel</a>          ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-load-argument" title="rc_plist_load_argument ()">rc_plist_load_argument</a>              (<em class="parameter"><code><span class="type">char</span> *argv[]</code></em>);
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist.html#rc-plist-load-uri-from-remote" title="rc_plist_load_uri_from_remote ()">rc_plist_load_uri_from_remote</a>       (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);
+</pre>
+</div>
+<div class="refsect1" title="Description">
+<a name="RhythmCat-Playlist.description"></a><h2>Description</h2>
+<p>
+Manage the playlists in the player and control all operations
+on playlists.
+</p>
+</div>
+<div class="refsect1" title="Details">
+<a name="RhythmCat-Playlist.details"></a><h2>Details</h2>
+<div class="refsect2" title="enum RCPlist1Column">
+<a name="RCPlist1Column"></a><h3>enum RCPlist1Column</h3>
+<pre class="programlisting">typedef enum RCPlist1Column {
+    PLIST1_STATE = 0,
+    PLIST1_NAME = 1,
+    PLIST1_STORE = 2,
+    PLIST1_LAST = 3
+}RCPlist1Column;
+</pre>
+<p>
+The enum type to show the columns in ListStore1.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><a name="PLIST1-STATE:CAPS"></a><span class="term"><code class="literal">PLIST1_STATE</code></span></p></td>
+<td>the state image stock
+</td>
+</tr>
+<tr>
+<td><p><a name="PLIST1-NAME:CAPS"></a><span class="term"><code class="literal">PLIST1_NAME</code></span></p></td>
+<td>the list name
+</td>
+</tr>
+<tr>
+<td><p><a name="PLIST1-STORE:CAPS"></a><span class="term"><code class="literal">PLIST1_STORE</code></span></p></td>
+<td>the list store of list2
+</td>
+</tr>
+<tr>
+<td><p><a name="PLIST1-LAST:CAPS"></a><span class="term"><code class="literal">PLIST1_LAST</code></span></p></td>
+<td>the column number of list1
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="enum RCPlist2Column">
+<a name="RCPlist2Column"></a><h3>enum RCPlist2Column</h3>
+<pre class="programlisting">typedef enum RCPlist2Column {
+    PLIST2_URI = 0,
+    PLIST2_STATE = 1,
+    PLIST2_TITLE = 2,
+    PLIST2_ARTIST = 3,
+    PLIST2_ALBUM = 4,
+    PLIST2_LENGTH = 5,
+    PLIST2_TRACKNO = 6,
+    PLIST2_LAST = 7
+}RCPlist2Column;
+</pre>
+<p>
+The enum type to show the columns in ListStore2.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><a name="PLIST2-URI:CAPS"></a><span class="term"><code class="literal">PLIST2_URI</code></span></p></td>
+<td>the URI of the music
+</td>
+</tr>
+<tr>
+<td><p><a name="PLIST2-STATE:CAPS"></a><span class="term"><code class="literal">PLIST2_STATE</code></span></p></td>
+<td>the state of the music
+</td>
+</tr>
+<tr>
+<td><p><a name="PLIST2-TITLE:CAPS"></a><span class="term"><code class="literal">PLIST2_TITLE</code></span></p></td>
+<td>the title of the music
+</td>
+</tr>
+<tr>
+<td><p><a name="PLIST2-ARTIST:CAPS"></a><span class="term"><code class="literal">PLIST2_ARTIST</code></span></p></td>
+<td>the artist of the music
+</td>
+</tr>
+<tr>
+<td><p><a name="PLIST2-ALBUM:CAPS"></a><span class="term"><code class="literal">PLIST2_ALBUM</code></span></p></td>
+<td>the album of the music
+</td>
+</tr>
+<tr>
+<td><p><a name="PLIST2-LENGTH:CAPS"></a><span class="term"><code class="literal">PLIST2_LENGTH</code></span></p></td>
+<td>the time length of the music
+</td>
+</tr>
+<tr>
+<td><p><a name="PLIST2-TRACKNO:CAPS"></a><span class="term"><code class="literal">PLIST2_TRACKNO</code></span></p></td>
+<td>the track number of the music
+</td>
+</tr>
+<tr>
+<td><p><a name="PLIST2-LAST:CAPS"></a><span class="term"><code class="literal">PLIST2_LAST</code></span></p></td>
+<td>the column number of list2
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_plist_init ()">
+<a name="rc-plist-init"></a><h3>rc_plist_init ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plist_init                       ();</pre>
+<p>
+Initialize playlists.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> Whether the initiation succeeds.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_plist_exit ()">
+<a name="rc-plist-exit"></a><h3>rc_plist_exit ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_plist_exit                       ();</pre>
+<p>
+Free all playlists data.
+</p>
+</div>
+<hr>
+<div class="refsect2" title="rc_plist_insert_list ()">
+<a name="rc-plist-insert-list"></a><h3>rc_plist_insert_list ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plist_insert_list                (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *listname</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);</pre>
+<p>
+Insert a new playlist into the playlist.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>listname</code></em> :</span></p></td>
+<td>the name of the new playlist
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>index</code></em> :</span></p></td>
+<td>the position to insert, set to -1 to append to the last
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> Whether the insertion succeeds.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_plist_insert_music ()">
+<a name="rc-plist-insert-music"></a><h3>rc_plist_insert_music ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plist_insert_music               (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list1_index</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list2_index</code></em>);</pre>
+<p>
+Import music by given URI to the playlist.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>uri</code></em> :</span></p></td>
+<td>the URI of the music
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>list1_index</code></em> :</span></p></td>
+<td>the index of the playlists to insert to
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>list2_index</code></em> :</span></p></td>
+<td>the position where the music insert to, -1 to append to
+the last
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> Whether the insertion succeeds.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_plist_list2_insert_item ()">
+<a name="rc-plist-list2-insert-item"></a><h3>rc_plist_list2_insert_item ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_plist_list2_insert_item          (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>,
+                                                         <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *title</code></em>,
+                                                         <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *artist</code></em>,
+                                                         <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *album</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> length</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> trackno</code></em>,
+                                                         <em class="parameter"><code><a href="../gtk/GtkListStore.html"><span class="type">GtkListStore</span></a> *store</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list2_index</code></em>);</pre>
+<p>
+Insert music to list2 by metadata.
+WARNING: This function is only used in insertion job, if you really
+want to insert a music, please use <a class="link" href="RhythmCat-Playlist.html#rc-plist-insert-music" title="rc_plist_insert_music ()"><code class="function">rc_plist_insert_music()</code></a>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>uri</code></em> :</span></p></td>
+<td>the URI of the item
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>title</code></em> :</span></p></td>
+<td>the title of the item
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>artist</code></em> :</span></p></td>
+<td>the artist of the item
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>album</code></em> :</span></p></td>
+<td>the album of the item
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>length</code></em> :</span></p></td>
+<td>the time length of the item
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>trackno</code></em> :</span></p></td>
+<td>the track number of the item
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>store</code></em> :</span></p></td>
+<td>the GtkListStore to insert to
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>list2_index</code></em> :</span></p></td>
+<td>the position to insert to
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_plist_list2_refresh_item ()">
+<a name="rc-plist-list2-refresh-item"></a><h3>rc_plist_list2_refresh_item ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_plist_list2_refresh_item         (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>,
+                                                         <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *title</code></em>,
+                                                         <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *artist</code></em>,
+                                                         <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *album</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> length</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> trackno</code></em>,
+                                                         <em class="parameter"><code><a href="../gtk/GtkTreeModel.html#GtkTreeRowReference"><span class="type">GtkTreeRowReference</span></a> *reference</code></em>);</pre>
+<p>
+Refresh the item in list2 by metadata.
+WARNING: This function is only used in refresh job, if you really
+want to refresh the playlist, please use <a class="link" href="RhythmCat-Playlist.html#rc-plist-list2-refresh" title="rc_plist_list2_refresh ()"><code class="function">rc_plist_list2_refresh()</code></a>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>uri</code></em> :</span></p></td>
+<td>the URI of the item
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>title</code></em> :</span></p></td>
+<td>the title of the item
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>artist</code></em> :</span></p></td>
+<td>the artist of the item
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>album</code></em> :</span></p></td>
+<td>the album of the item
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>length</code></em> :</span></p></td>
+<td>the time length of the item
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>trackno</code></em> :</span></p></td>
+<td>the track number of the item
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>reference</code></em> :</span></p></td>
+<td>the path reference of the item
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_plist_list2_remove_item ()">
+<a name="rc-plist-list2-remove-item"></a><h3>rc_plist_list2_remove_item ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_plist_list2_remove_item          (<em class="parameter"><code><a href="../gtk/GtkTreeModel.html#GtkTreeRowReference"><span class="type">GtkTreeRowReference</span></a> *reference</code></em>);</pre>
+<p>
+Remove invalid item in list2.
+WARNING: This function is only used to remove invalid music item.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>reference</code></em> :</span></p></td>
+<td>the path reference of the item
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_plist_remove_list ()">
+<a name="rc-plist-remove-list"></a><h3>rc_plist_remove_list ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plist_remove_list                (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);</pre>
+<p>
+Remove a playlist by given index.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>index</code></em> :</span></p></td>
+<td>the index of the playlist to remove
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> Whether the operation succeeds.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_plist_get_list1_name ()">
+<a name="rc-plist-get-list1-name"></a><h3>rc_plist_get_list1_name ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             rc_plist_get_list1_name             (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);</pre>
+<p>
+Return the name of the list.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>index</code></em> :</span></p></td>
+<td>the index number of the playlist
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The name of the list, NULL if not found, free after usage.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_plist_get_list1_length ()">
+<a name="rc-plist-get-list1-length"></a><h3>rc_plist_get_list1_length ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                rc_plist_get_list1_length           ();</pre>
+<p>
+Return the length of playlists.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The length of playlists.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_plist_set_list1_name ()">
+<a name="rc-plist-set-list1-name"></a><h3>rc_plist_set_list1_name ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_plist_set_list1_name             (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>,
+                                                         <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);</pre>
+<p>
+Rename an exist playlist.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>index</code></em> :</span></p></td>
+<td>the index of the playlist to rename
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
+<td>the new name
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_plist_get_list2_length ()">
+<a name="rc-plist-get-list2-length"></a><h3>rc_plist_get_list2_length ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                rc_plist_get_list2_length           (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);</pre>
+<p>
+Return the music number in the playlist.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>index</code></em> :</span></p></td>
+<td>the index of the playlist
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The music number in the playlist.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_plist_play_by_index ()">
+<a name="rc-plist-play-by-index"></a><h3>rc_plist_play_by_index ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plist_play_by_index              (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list_index</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> music_index</code></em>);</pre>
+<p>
+Play music by given list1 index and list2 index.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>list_index</code></em> :</span></p></td>
+<td>the index of the playlist
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>music_index</code></em> :</span></p></td>
+<td>the index of the music in the playlist
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> Whether the operation succeeds.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_plist_play_get_index ()">
+<a name="rc-plist-play-get-index"></a><h3>rc_plist_play_get_index ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plist_play_get_index             (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *index1</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *index2</code></em>);</pre>
+<p>
+Get the playlist index number and the music index number of playing
+music.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>index1</code></em> :</span></p></td>
+<td>the index of the playlist
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>index2</code></em> :</span></p></td>
+<td>the index of the music in the playlist
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> Whether the indexes are set.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_plist_stop ()">
+<a name="rc-plist-stop"></a><h3>rc_plist_stop ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_plist_stop                       ();</pre>
+<p>
+Clean the references data when the player stops.
+</p>
+</div>
+<hr>
+<div class="refsect2" title="rc_plist_play_prev ()">
+<a name="rc-plist-play-prev"></a><h3>rc_plist_play_prev ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plist_play_prev                  ();</pre>
+<p>
+Play the previous music in the playlist.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> Whether the operation succeeds.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_plist_play_next ()">
+<a name="rc-plist-play-next"></a><h3>rc_plist_play_next ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plist_play_next                  (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> flag</code></em>);</pre>
+<p>
+Play the next music in the playlist.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>flag</code></em> :</span></p></td>
+<td>whether the operation is produced by player, if it is TRUE,
+the operation will effect by playing mode (repeat mode and random mode)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> Whether the operation succeeds.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_plist_set_play_mode ()">
+<a name="rc-plist-set-play-mode"></a><h3>rc_plist_set_play_mode ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_plist_set_play_mode              (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> repeat</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> random</code></em>);</pre>
+<p>
+Set the play mode of the player.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>repeat</code></em> :</span></p></td>
+<td>the repeat mode
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>random</code></em> :</span></p></td>
+<td>the random mode
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_plist_get_play_mode ()">
+<a name="rc-plist-get-play-mode"></a><h3>rc_plist_get_play_mode ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_plist_get_play_mode              (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *repeat</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *random</code></em>);</pre>
+<p>
+Get the play mode of the player.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>repeat</code></em> :</span></p></td>
+<td>return the repeat mode, can be NULL
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>random</code></em> :</span></p></td>
+<td>return the random mdoe, can be NULL
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_plist_load_playlist_setting ()">
+<a name="rc-plist-load-playlist-setting"></a><h3>rc_plist_load_playlist_setting ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plist_load_playlist_setting      ();</pre>
+<p>
+Load playlists from file.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> Whether the operation succeeds.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_plist_save_playlist_setting ()">
+<a name="rc-plist-save-playlist-setting"></a><h3>rc_plist_save_playlist_setting ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plist_save_playlist_setting      ();</pre>
+<p>
+Save the playlist settings to file.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> Whether the operation succeeds.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_plist_build_default_list ()">
+<a name="rc-plist-build-default-list"></a><h3>rc_plist_build_default_list ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_plist_build_default_list         ();</pre>
+<p>
+Make a default playlist.
+</p>
+</div>
+<hr>
+<div class="refsect2" title="rc_plist_plist_move2 ()">
+<a name="rc-plist-plist-move2"></a><h3>rc_plist_plist_move2 ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_plist_plist_move2                (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list_index</code></em>,
+                                                         <em class="parameter"><code><a href="../gtk/GtkTreeModel.html#GtkTreePath"><span class="type">GtkTreePath</span></a> **from_paths</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> f_length</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> to_list_index</code></em>);</pre>
+<p>
+Move item(s) in the playlist to another playlist.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>list_index</code></em> :</span></p></td>
+<td>the index of the source playlist
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>from_paths</code></em> :</span></p></td>
+<td>the GtkTreePaths to move
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>f_length</code></em> :</span></p></td>
+<td>the length of the the GtkTreePaths
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>to_list_index</code></em> :</span></p></td>
+<td>the index of the target playlist
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_plist_save_playlist ()">
+<a name="rc-plist-save-playlist"></a><h3>rc_plist_save_playlist ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_plist_save_playlist              (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *s_filename</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);</pre>
+<p>
+Save the playlist to a file.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>s_filename</code></em> :</span></p></td>
+<td>the path of the playlist file
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>index</code></em> :</span></p></td>
+<td>the index of the playlist to save
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_plist_load_playlist ()">
+<a name="rc-plist-load-playlist"></a><h3>rc_plist_load_playlist ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_plist_load_playlist              (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *s_filename</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);</pre>
+<p>
+Load a playlist from a playlist file.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>s_filename</code></em> :</span></p></td>
+<td>the path of the playlist file
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>index</code></em> :</span></p></td>
+<td>the index of the playlist to load
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_plist_get_list_store ()">
+<a name="rc-plist-get-list-store"></a><h3>rc_plist_get_list_store ()</h3>
+<pre class="programlisting"><a href="../gtk/GtkListStore.html"><span class="returnvalue">GtkListStore</span></a> *      rc_plist_get_list_store             (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);</pre>
+<p>
+Return the GtkListStore of the playlist by given index.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>index</code></em> :</span></p></td>
+<td>the index of the playlist
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The GtkListStore of the playlist.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_plist_get_list_head ()">
+<a name="rc-plist-get-list-head"></a><h3>rc_plist_get_list_head ()</h3>
+<pre class="programlisting"><a href="../gtk/GtkListStore.html"><span class="returnvalue">GtkListStore</span></a> *      rc_plist_get_list_head              ();</pre>
+<p>
+Return the GtkListStore of the playlists.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The GtkListStore of the playlists.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_plist_list2_refresh ()">
+<a name="rc-plist-list2-refresh"></a><h3>rc_plist_list2_refresh ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plist_list2_refresh              (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list1_index</code></em>);</pre>
+<p>
+Refresh the music information in the playlist.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>list1_index</code></em> :</span></p></td>
+<td>the index of the playlist to refresh
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> Whether the operation succeeds.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_plist_import_job_get_length ()">
+<a name="rc-plist-import-job-get-length"></a><h3>rc_plist_import_job_get_length ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                rc_plist_import_job_get_length      ();</pre>
+<p>
+Return the remaining job length in the job queue.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The remaining job length in the job queue.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_plist_import_job_cancel ()">
+<a name="rc-plist-import-job-cancel"></a><h3>rc_plist_import_job_cancel ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_plist_import_job_cancel          ();</pre>
+<p>
+Cancel all remaining jobs in the job queue.
+</p>
+</div>
+<hr>
+<div class="refsect2" title="rc_plist_load_argument ()">
+<a name="rc-plist-load-argument"></a><h3>rc_plist_load_argument ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_plist_load_argument              (<em class="parameter"><code><span class="type">char</span> *argv[]</code></em>);</pre>
+<p>
+Import music from the given argument list.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>argv</code></em> :</span></p></td>
+<td>the argument list
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_plist_load_uri_from_remote ()">
+<a name="rc-plist-load-uri-from-remote"></a><h3>rc_plist_load_uri_from_remote ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plist_load_uri_from_remote       (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);</pre>
+<p>
+Import music from remote (e.g. D-Bus) by given URI.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>uri</code></em> :</span></p></td>
+<td>the URI of the music to import
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> Whether the operation succeeds.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.15</div>
+</body>
+</html>

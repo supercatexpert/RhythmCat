@@ -30,12 +30,12 @@
 #include <glib.h>
 #include <glib/gprintf.h>
 
-#define DEBUG_MODE 0
+#define DEBUG_MODE FALSE
 
-int rc_debug_get_flag();
-void rc_debug_set_mode(int);
-gint rc_debug_print(const gchar *, ...);
-gint rc_debug_perror(const gchar *, ...);
+gboolean rc_debug_get_flag();
+void rc_debug_set_mode(gboolean mode);
+gint rc_debug_print(const gchar *format, ...);
+gint rc_debug_perror(const gchar *format, ...);
 
 #endif
 

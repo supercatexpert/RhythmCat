@@ -1,0 +1,185 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+]>
+<refentry id="RhythmCat-Asynchronous-Message-Queue">
+<refmeta>
+<refentrytitle role="top_of_page" id="RhythmCat-Asynchronous-Message-Queue.top_of_page">Asynchronous Message Queue</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>
+  RHYTHMCAT Library
+</refmiscinfo>
+</refmeta>
+<refnamediv>
+<refname>Asynchronous Message Queue</refname>
+<refpurpose>Asynchronous message queue process among threads.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv id="RhythmCat-Asynchronous-Message-Queue.synopsis" role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>
+#include &lt;msg.h&gt;
+
+<link linkend="void"><returnvalue>void</returnvalue></link>                (<link linkend="RCMsgAsyncQueueWatchFunc">*RCMsgAsyncQueueWatchFunc</link>)         (<parameter><link linkend="gpointer"><type>gpointer</type></link> item</parameter>,
+                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> data</parameter>);
+enum                <link linkend="RCMsgType">RCMsgType</link>;
+                    <link linkend="RCMsgData">RCMsgData</link>;
+<link linkend="guint"><returnvalue>guint</returnvalue></link>               <link linkend="rc-msg-async-queue-watch-new">rc_msg_async_queue_watch_new</link>        (<parameter><link linkend="GAsyncQueue"><type>GAsyncQueue</type></link> *queue</parameter>,
+                                                         <parameter><link linkend="gint"><type>gint</type></link> priority</parameter>,
+                                                         <parameter><link linkend="RCMsgAsyncQueueWatchFunc"><type>RCMsgAsyncQueueWatchFunc</type></link> callback</parameter>,
+                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> data</parameter>,
+                                                         <parameter><link linkend="GDestroyNotify"><type>GDestroyNotify</type></link> notify</parameter>,
+                                                         <parameter><link linkend="GMainContext"><type>GMainContext</type></link> *context</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-msg-init">rc_msg_init</link>                         ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-msg-push">rc_msg_push</link>                         (<parameter><link linkend="RCMsgType"><type>RCMsgType</type></link> type</parameter>,
+                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> data</parameter>);
+</synopsis>
+</refsynopsisdiv>
+
+<refsect1 id="RhythmCat-Asynchronous-Message-Queue.description" role="desc">
+<title role="desc.title">Description</title>
+<para>
+Process asynchronous message queue between GUI Thread (main thread)
+and other threads.
+</para>
+</refsect1>
+<refsect1 id="RhythmCat-Asynchronous-Message-Queue.details" role="details">
+<title role="details.title">Details</title>
+<refsect2 id="RCMsgAsyncQueueWatchFunc" role="function">
+<title>RCMsgAsyncQueueWatchFunc ()</title>
+<indexterm zone="RCMsgAsyncQueueWatchFunc"><primary>RCMsgAsyncQueueWatchFunc</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                (*RCMsgAsyncQueueWatchFunc)         (<parameter><link linkend="gpointer"><type>gpointer</type></link> item</parameter>,
+                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> data</parameter>);</programlisting>
+<para>
+The watch function type which executes when the message async 
+queue changed.
+</para><variablelist role="params">
+<varlistentry><term><parameter>item</parameter>&#160;:</term>
+<listitem><simpara>queue item
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>data</parameter>&#160;:</term>
+<listitem><simpara>user data
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="RCMsgType" role="enum">
+<title>enum RCMsgType</title>
+<indexterm zone="RCMsgType"><primary>RCMsgType</primary></indexterm>
+<programlisting>typedef enum RCMsgType {
+    MSG_TYPE_EMPTY = 0,
+    MSG_TYPE_TEST = 1,
+    MSG_TYPE_PL_INSERT = 2,
+    MSG_TYPE_PL_REFRESH = 3,
+    MSG_TYPE_PL_REMOVE = 4
+}RCMsgType;
+</programlisting>
+<para>
+Types of the message.
+</para><variablelist role="enum">
+<varlistentry id="MSG-TYPE-EMPTY:CAPS" role="constant">
+<term><literal>MSG_TYPE_EMPTY</literal></term>
+<listitem><simpara>empty message
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="MSG-TYPE-TEST:CAPS" role="constant">
+<term><literal>MSG_TYPE_TEST</literal></term>
+<listitem><simpara>test message
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="MSG-TYPE-PL-INSERT:CAPS" role="constant">
+<term><literal>MSG_TYPE_PL_INSERT</literal></term>
+<listitem><simpara>playlist insertion message
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="MSG-TYPE-PL-REFRESH:CAPS" role="constant">
+<term><literal>MSG_TYPE_PL_REFRESH</literal></term>
+<listitem><simpara>playlist refresh message
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="MSG-TYPE-PL-REMOVE:CAPS" role="constant">
+<term><literal>MSG_TYPE_PL_REMOVE</literal></term>
+<listitem><simpara>playlist remove message
+</simpara></listitem>
+</varlistentry>
+</variablelist></refsect2>
+<refsect2 id="RCMsgData" role="struct">
+<title>RCMsgData</title>
+<indexterm zone="RCMsgData"><primary>RCMsgData</primary></indexterm>
+<programlisting>typedef struct {
+    RCMsgType type;
+    gpointer data;
+} RCMsgData;
+</programlisting>
+<para>
+Custom struct to store message data.
+</para><variablelist role="struct">
+<varlistentry><term><link linkend="RCMsgType"><type>RCMsgType</type></link>&#160;<structfield id="RCMsgData.type">type</structfield>;</term>
+<listitem><simpara>message type
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gpointer"><type>gpointer</type></link>&#160;<structfield id="RCMsgData.data">data</structfield>;</term>
+<listitem><simpara>message data
+</simpara></listitem>
+</varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-msg-async-queue-watch-new" role="function">
+<title>rc_msg_async_queue_watch_new ()</title>
+<indexterm zone="rc-msg-async-queue-watch-new"><primary>rc_msg_async_queue_watch_new</primary></indexterm>
+<programlisting><link linkend="guint"><returnvalue>guint</returnvalue></link>               rc_msg_async_queue_watch_new        (<parameter><link linkend="GAsyncQueue"><type>GAsyncQueue</type></link> *queue</parameter>,
+                                                         <parameter><link linkend="gint"><type>gint</type></link> priority</parameter>,
+                                                         <parameter><link linkend="RCMsgAsyncQueueWatchFunc"><type>RCMsgAsyncQueueWatchFunc</type></link> callback</parameter>,
+                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> data</parameter>,
+                                                         <parameter><link linkend="GDestroyNotify"><type>GDestroyNotify</type></link> notify</parameter>,
+                                                         <parameter><link linkend="GMainContext"><type>GMainContext</type></link> *context</parameter>);</programlisting>
+<para>
+Add new watch to the given GAsyncQueue.
+</para><variablelist role="params">
+<varlistentry><term><parameter>queue</parameter>&#160;:</term>
+<listitem><simpara>the GAsyncQueue to watch
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>priority</parameter>&#160;:</term>
+<listitem><simpara>the priority
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>callback</parameter>&#160;:</term>
+<listitem><simpara>the callback function to execute when the queue changed
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>data</parameter>&#160;:</term>
+<listitem><simpara>user data
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>notify</parameter>&#160;:</term>
+<listitem><simpara>a function to call when data is no longer in use, or NULL
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>context</parameter>&#160;:</term>
+<listitem><simpara>a GMainContext (if NULL, the default context will be used)
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The GSource ID of the new watch.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-msg-init" role="function">
+<title>rc_msg_init ()</title>
+<indexterm zone="rc-msg-init"><primary>rc_msg_init</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_msg_init                         ();</programlisting>
+<para>
+Initialize the default asynchronous message queue for the player.
+</para></refsect2>
+<refsect2 id="rc-msg-push" role="function">
+<title>rc_msg_push ()</title>
+<indexterm zone="rc-msg-push"><primary>rc_msg_push</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_msg_push                         (<parameter><link linkend="RCMsgType"><type>RCMsgType</type></link> type</parameter>,
+                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> data</parameter>);</programlisting>
+<para>
+Add new message to the default asynchronous message queue.
+</para><variablelist role="params">
+<varlistentry><term><parameter>type</parameter>&#160;:</term>
+<listitem><simpara>the message type
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>data</parameter>&#160;:</term>
+<listitem><simpara>the message data
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+
+</refsect1>
+
+</refentry>

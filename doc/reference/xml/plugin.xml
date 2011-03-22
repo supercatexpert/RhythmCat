@@ -1,0 +1,150 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+]>
+<refentry id="RhythmCat-plugin">
+<refmeta>
+<refentrytitle role="top_of_page" id="RhythmCat-plugin.top_of_page">plugin</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>
+  RHYTHMCAT Library
+</refmiscinfo>
+</refmeta>
+<refnamediv>
+<refname>plugin</refname>
+<refpurpose></refpurpose>
+</refnamediv>
+
+<refsynopsisdiv id="RhythmCat-plugin.synopsis" role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>enum                <link linkend="RCPluginType">RCPluginType</link>;
+<link linkend="gint"><returnvalue>gint</returnvalue></link>                (<link linkend="module-init">*module_init</link>)                      ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                (<link linkend="module-exit">*module_exit</link>)                      ();
+const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       (<link linkend="module-get-group-name">*module_get_group_name</link>)            ();
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-plugin-init">rc_plugin_init</link>                      ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-plugin-exit">rc_plugin_exit</link>                      ();
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-plugin-search-dir">rc_plugin_search_dir</link>                (<parameter>const <link linkend="gchar"><type>gchar</type></link> *Param1</parameter>);
+const <link linkend="GSList"><returnvalue>GSList</returnvalue></link> *      <link linkend="rc-plugin-get-list">rc_plugin_get_list</link>                  ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-plugin-list-free">rc_plugin_list_free</link>                 ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-plugin-plugin-free">rc_plugin_plugin_free</link>               (<parameter><link linkend="RCPluginData"><type>RCPluginData</type></link> *Param1</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-plugin-module-free">rc_plugin_module_free</link>               (<parameter><link linkend="RCModuleData"><type>RCModuleData</type></link> *Param1</parameter>);
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-plugin-module-check-running">rc_plugin_module_check_running</link>      (<parameter>const <link linkend="gchar"><type>gchar</type></link> *Param1</parameter>);
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-plugin-load">rc_plugin_load</link>                      (<parameter>const <link linkend="gchar"><type>gchar</type></link> *Param1</parameter>,
+                                                         <parameter><link linkend="RCPluginData"><type>RCPluginData</type></link> **Param2</parameter>);
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-plugin-module-load">rc_plugin_module_load</link>               (<parameter>const <link linkend="gchar"><type>gchar</type></link> *Param1</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-plugin-module-close">rc_plugin_module_close</link>              (<parameter>const <link linkend="gchar"><type>gchar</type></link> *Param1</parameter>);
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-plugin-module-configure">rc_plugin_module_configure</link>          (<parameter>const <link linkend="gchar"><type>gchar</type></link> *Param1</parameter>);
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-plugin-python-load">rc_plugin_python_load</link>               (<parameter>const <link linkend="gchar"><type>gchar</type></link> *Param1</parameter>);
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-plugin-python-configure">rc_plugin_python_configure</link>          (<parameter>const <link linkend="gchar"><type>gchar</type></link> *Param1</parameter>);
+</synopsis>
+</refsynopsisdiv>
+
+<refsect1 id="RhythmCat-plugin.description" role="desc">
+<title role="desc.title">Description</title>
+
+</refsect1>
+<refsect1 id="RhythmCat-plugin.details" role="details">
+<title role="details.title">Details</title>
+<refsect2 id="RCPluginType" role="enum">
+<title>enum RCPluginType</title>
+<indexterm zone="RCPluginType"><primary>RCPluginType</primary></indexterm>
+<programlisting>typedef enum RCPluginType
+{
+    PLUGIN_TYPE_MODULE = 1,
+    PLUGIN_TYPE_PYTHON = 2
+}RCPluginType;
+</programlisting>
+</refsect2>
+<refsect2 id="module-init" role="function">
+<title>module_init ()</title>
+<indexterm zone="module-init"><primary>module_init</primary></indexterm>
+<programlisting><link linkend="gint"><returnvalue>gint</returnvalue></link>                (*module_init)                      ();</programlisting>
+</refsect2>
+<refsect2 id="module-exit" role="function">
+<title>module_exit ()</title>
+<indexterm zone="module-exit"><primary>module_exit</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                (*module_exit)                      ();</programlisting>
+</refsect2>
+<refsect2 id="module-get-group-name" role="function">
+<title>module_get_group_name ()</title>
+<indexterm zone="module-get-group-name"><primary>module_get_group_name</primary></indexterm>
+<programlisting>const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       (*module_get_group_name)            ();</programlisting>
+</refsect2>
+<refsect2 id="rc-plugin-init" role="function">
+<title>rc_plugin_init ()</title>
+<indexterm zone="rc-plugin-init"><primary>rc_plugin_init</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rc_plugin_init                      ();</programlisting>
+</refsect2>
+<refsect2 id="rc-plugin-exit" role="function">
+<title>rc_plugin_exit ()</title>
+<indexterm zone="rc-plugin-exit"><primary>rc_plugin_exit</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_plugin_exit                      ();</programlisting>
+</refsect2>
+<refsect2 id="rc-plugin-search-dir" role="function">
+<title>rc_plugin_search_dir ()</title>
+<indexterm zone="rc-plugin-search-dir"><primary>rc_plugin_search_dir</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rc_plugin_search_dir                (<parameter>const <link linkend="gchar"><type>gchar</type></link> *Param1</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="rc-plugin-get-list" role="function">
+<title>rc_plugin_get_list ()</title>
+<indexterm zone="rc-plugin-get-list"><primary>rc_plugin_get_list</primary></indexterm>
+<programlisting>const <link linkend="GSList"><returnvalue>GSList</returnvalue></link> *      rc_plugin_get_list                  ();</programlisting>
+</refsect2>
+<refsect2 id="rc-plugin-list-free" role="function">
+<title>rc_plugin_list_free ()</title>
+<indexterm zone="rc-plugin-list-free"><primary>rc_plugin_list_free</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_plugin_list_free                 ();</programlisting>
+</refsect2>
+<refsect2 id="rc-plugin-plugin-free" role="function">
+<title>rc_plugin_plugin_free ()</title>
+<indexterm zone="rc-plugin-plugin-free"><primary>rc_plugin_plugin_free</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_plugin_plugin_free               (<parameter><link linkend="RCPluginData"><type>RCPluginData</type></link> *Param1</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="rc-plugin-module-free" role="function">
+<title>rc_plugin_module_free ()</title>
+<indexterm zone="rc-plugin-module-free"><primary>rc_plugin_module_free</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_plugin_module_free               (<parameter><link linkend="RCModuleData"><type>RCModuleData</type></link> *Param1</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="rc-plugin-module-check-running" role="function">
+<title>rc_plugin_module_check_running ()</title>
+<indexterm zone="rc-plugin-module-check-running"><primary>rc_plugin_module_check_running</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rc_plugin_module_check_running      (<parameter>const <link linkend="gchar"><type>gchar</type></link> *Param1</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="rc-plugin-load" role="function">
+<title>rc_plugin_load ()</title>
+<indexterm zone="rc-plugin-load"><primary>rc_plugin_load</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rc_plugin_load                      (<parameter>const <link linkend="gchar"><type>gchar</type></link> *Param1</parameter>,
+                                                         <parameter><link linkend="RCPluginData"><type>RCPluginData</type></link> **Param2</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="rc-plugin-module-load" role="function">
+<title>rc_plugin_module_load ()</title>
+<indexterm zone="rc-plugin-module-load"><primary>rc_plugin_module_load</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rc_plugin_module_load               (<parameter>const <link linkend="gchar"><type>gchar</type></link> *Param1</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="rc-plugin-module-close" role="function">
+<title>rc_plugin_module_close ()</title>
+<indexterm zone="rc-plugin-module-close"><primary>rc_plugin_module_close</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_plugin_module_close              (<parameter>const <link linkend="gchar"><type>gchar</type></link> *Param1</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="rc-plugin-module-configure" role="function">
+<title>rc_plugin_module_configure ()</title>
+<indexterm zone="rc-plugin-module-configure"><primary>rc_plugin_module_configure</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rc_plugin_module_configure          (<parameter>const <link linkend="gchar"><type>gchar</type></link> *Param1</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="rc-plugin-python-load" role="function">
+<title>rc_plugin_python_load ()</title>
+<indexterm zone="rc-plugin-python-load"><primary>rc_plugin_python_load</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rc_plugin_python_load               (<parameter>const <link linkend="gchar"><type>gchar</type></link> *Param1</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="rc-plugin-python-configure" role="function">
+<title>rc_plugin_python_configure ()</title>
+<indexterm zone="rc-plugin-python-configure"><primary>rc_plugin_python_configure</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rc_plugin_python_configure          (<parameter>const <link linkend="gchar"><type>gchar</type></link> *Param1</parameter>);</programlisting>
+</refsect2>
+
+</refsect1>
+
+</refentry>

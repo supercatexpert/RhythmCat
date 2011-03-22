@@ -42,7 +42,7 @@ static gchar *rc_set_dir = NULL;
 static const gchar *rc_app_dir = NULL;
 static const gchar *rc_home_dir = NULL;
 static const gchar rc_program_name[] = "RhythmCat Music Player";
-static const gchar rc_build_num[] = "build 110320, alpha 1";
+static const gchar rc_build_num[] = "build 110322, alpha 1";
 static const gchar rc_ver_num[] = "1.0.0";
 static const gboolean rc_is_stable = FALSE;
 static const gchar rc_dbus_name[] = "org.supercat.RhythmCat";
@@ -104,7 +104,7 @@ void rc_init(int *argc, char **argv[])
         g_error_free(error);
         exit(1);
     }
-    if(debug_flag) rc_debug_set_mode(1);
+    if(debug_flag) rc_debug_set_mode(TRUE);
     rc_debug_print("\n***** RhythmCat DEBUG Messages *****\n");  
     rc_debug_print("DEBUG MODE Enabled!\n"); 
     rc_debug_print("Got home directory at: %s\n", rc_home_dir);
@@ -146,7 +146,7 @@ void rc_exit()
     rc_plist_save_playlist_setting();
     rc_core_exit();
     rc_set_exit();
-    rc_plist_uninit_playlist();
+    rc_plist_exit();
     gtk_main_quit();
 }
 

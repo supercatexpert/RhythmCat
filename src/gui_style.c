@@ -215,7 +215,6 @@ void rc_gui_style_init()
         GTK_SCROLLED_WINDOW(rc_ui->list1_scr_window)), 15, -1);
     gtk_widget_set_size_request(gtk_scrolled_window_get_vscrollbar(
         GTK_SCROLLED_WINDOW(rc_ui->list2_scr_window)), 15, -1);
-    rc_ui->style = gtk_style_copy(gtk_widget_get_style(rc_ui->main_window));
 }
 
 void rc_gui_style_refresh()

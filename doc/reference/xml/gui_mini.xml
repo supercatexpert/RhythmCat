@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+]>
+<refentry id="RhythmCat-Mini-Mode-GUI">
+<refmeta>
+<refentrytitle role="top_of_page" id="RhythmCat-Mini-Mode-GUI.top_of_page">Mini Mode GUI</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>
+  RHYTHMCAT Library
+</refmiscinfo>
+</refmeta>
+<refnamediv>
+<refname>Mini Mode GUI</refname>
+<refpurpose>The mini mode UI of the player.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv id="RhythmCat-Mini-Mode-GUI.synopsis" role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>
+#include &lt;gui_mini.h&gt;
+
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-mini-init">rc_gui_mini_init</link>                    ();
+<link linkend="RCGuiMiniData"><returnvalue>RCGuiMiniData</returnvalue></link> *     <link linkend="rc-gui-mini-get-data">rc_gui_mini_get_data</link>                ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-mini-set-info-text">rc_gui_mini_set_info_text</link>           (<parameter>const <link linkend="gchar"><type>gchar</type></link> *text</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-mini-set-lyric-text">rc_gui_mini_set_lyric_text</link>          (<parameter>const <link linkend="gchar"><type>gchar</type></link> *text</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-mini-info-text-move">rc_gui_mini_info_text_move</link>          ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-mini-set-lyric-persent">rc_gui_mini_set_lyric_persent</link>       (<parameter><link linkend="gdouble"><type>gdouble</type></link> persent</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-mini-set-play-state">rc_gui_mini_set_play_state</link>          (<parameter><link linkend="gboolean"><type>gboolean</type></link> state</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-mini-set-time-text">rc_gui_mini_set_time_text</link>           (<parameter><link linkend="gint64"><type>gint64</type></link> pos</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-mini-window-hide">rc_gui_mini_window_hide</link>             ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-mini-window-show">rc_gui_mini_window_show</link>             ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-mini-mini-mode-clicked">rc_gui_mini_mini_mode_clicked</link>       ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-mini-normal-mode-clicked">rc_gui_mini_normal_mode_clicked</link>     ();
+</synopsis>
+</refsynopsisdiv>
+
+<refsect1 id="RhythmCat-Mini-Mode-GUI.description" role="desc">
+<title role="desc.title">Description</title>
+<para>
+Show the mini mode of the player.
+</para>
+</refsect1>
+<refsect1 id="RhythmCat-Mini-Mode-GUI.details" role="details">
+<title role="details.title">Details</title>
+<refsect2 id="rc-gui-mini-init" role="function">
+<title>rc_gui_mini_init ()</title>
+<indexterm zone="rc-gui-mini-init"><primary>rc_gui_mini_init</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_mini_init                    ();</programlisting>
+<para>
+Initialize the mini mode window of the player.
+</para></refsect2>
+<refsect2 id="rc-gui-mini-get-data" role="function">
+<title>rc_gui_mini_get_data ()</title>
+<indexterm zone="rc-gui-mini-get-data"><primary>rc_gui_mini_get_data</primary></indexterm>
+<programlisting><link linkend="RCGuiMiniData"><returnvalue>RCGuiMiniData</returnvalue></link> *     rc_gui_mini_get_data                ();</programlisting>
+<para>
+Return the data of mini mode UI structure.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The data of mini mode UI structure.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-gui-mini-set-info-text" role="function">
+<title>rc_gui_mini_set_info_text ()</title>
+<indexterm zone="rc-gui-mini-set-info-text"><primary>rc_gui_mini_set_info_text</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_mini_set_info_text           (<parameter>const <link linkend="gchar"><type>gchar</type></link> *text</parameter>);</programlisting>
+<para>
+Set the text of the information label.
+</para><variablelist role="params">
+<varlistentry><term><parameter>text</parameter>&#160;:</term>
+<listitem><simpara>the text which shows on the information label
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-gui-mini-set-lyric-text" role="function">
+<title>rc_gui_mini_set_lyric_text ()</title>
+<indexterm zone="rc-gui-mini-set-lyric-text"><primary>rc_gui_mini_set_lyric_text</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_mini_set_lyric_text          (<parameter>const <link linkend="gchar"><type>gchar</type></link> *text</parameter>);</programlisting>
+<para>
+Set the lyric text of the lyric label.
+</para><variablelist role="params">
+<varlistentry><term><parameter>text</parameter>&#160;:</term>
+<listitem><simpara>the lyric text which shows on the lyric label
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-gui-mini-info-text-move" role="function">
+<title>rc_gui_mini_info_text_move ()</title>
+<indexterm zone="rc-gui-mini-info-text-move"><primary>rc_gui_mini_info_text_move</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_mini_info_text_move          ();</programlisting>
+<para>
+Make the view of the information label move if the text inside is
+too loog.
+</para></refsect2>
+<refsect2 id="rc-gui-mini-set-lyric-persent" role="function">
+<title>rc_gui_mini_set_lyric_persent ()</title>
+<indexterm zone="rc-gui-mini-set-lyric-persent"><primary>rc_gui_mini_set_lyric_persent</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_mini_set_lyric_persent       (<parameter><link linkend="gdouble"><type>gdouble</type></link> persent</parameter>);</programlisting>
+<para>
+Make the view of the lyric label move by given persent if the lyric text
+is too loog.
+</para><variablelist role="params">
+<varlistentry><term><parameter>persent</parameter>&#160;:</term>
+<listitem><simpara>the persent position of the lyric text
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-gui-mini-set-play-state" role="function">
+<title>rc_gui_mini_set_play_state ()</title>
+<indexterm zone="rc-gui-mini-set-play-state"><primary>rc_gui_mini_set_play_state</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_mini_set_play_state          (<parameter><link linkend="gboolean"><type>gboolean</type></link> state</parameter>);</programlisting>
+<para>
+Set play button state.
+</para><variablelist role="params">
+<varlistentry><term><parameter>state</parameter>&#160;:</term>
+<listitem><simpara>the state of the play button, if it's TRUE, the image of the
+button is pause icon, else the image is play icon.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-gui-mini-set-time-text" role="function">
+<title>rc_gui_mini_set_time_text ()</title>
+<indexterm zone="rc-gui-mini-set-time-text"><primary>rc_gui_mini_set_time_text</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_mini_set_time_text           (<parameter><link linkend="gint64"><type>gint64</type></link> pos</parameter>);</programlisting>
+<para>
+Set time label.
+</para><variablelist role="params">
+<varlistentry><term><parameter>time</parameter>&#160;:</term>
+<listitem><simpara>the time to set, in nanosecond.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-gui-mini-window-hide" role="function">
+<title>rc_gui_mini_window_hide ()</title>
+<indexterm zone="rc-gui-mini-window-hide"><primary>rc_gui_mini_window_hide</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_mini_window_hide             ();</programlisting>
+<para>
+Hide the mini mode window.
+</para></refsect2>
+<refsect2 id="rc-gui-mini-window-show" role="function">
+<title>rc_gui_mini_window_show ()</title>
+<indexterm zone="rc-gui-mini-window-show"><primary>rc_gui_mini_window_show</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_mini_window_show             ();</programlisting>
+<para>
+Show the mini mode window.
+</para></refsect2>
+<refsect2 id="rc-gui-mini-mini-mode-clicked" role="function">
+<title>rc_gui_mini_mini_mode_clicked ()</title>
+<indexterm zone="rc-gui-mini-mini-mode-clicked"><primary>rc_gui_mini_mini_mode_clicked</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_mini_mini_mode_clicked       ();</programlisting>
+<para>
+Enable mini mode.
+</para></refsect2>
+<refsect2 id="rc-gui-mini-normal-mode-clicked" role="function">
+<title>rc_gui_mini_normal_mode_clicked ()</title>
+<indexterm zone="rc-gui-mini-normal-mode-clicked"><primary>rc_gui_mini_normal_mode_clicked</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_mini_normal_mode_clicked     ();</programlisting>
+<para>
+Return to normal mode.
+</para></refsect2>
+
+</refsect1>
+
+</refentry>

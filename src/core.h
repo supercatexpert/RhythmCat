@@ -35,19 +35,20 @@
 #include <gst/pbutils/install-plugins.h>
 
 /**
- * RCCoreData: The data of the core.
- * @playbin: The playbin element
- * @audio_sink: The audio sink element
- * @eq_plugin: The equalizer element
- * @vol_plugin: The volume control element
- * @ver_major: The major version number of Gstreamer
- * @ver_minor: The minor version number of Gstreamer
- * @ver_micro: The micro version number of Gstreamer
- * @ver_nano: The nano version number of Gstreamer
+ * RCCoreData:
+ * @playbin: the playbin element
+ * @audio_sink: the audio sink element
+ * @eq_plugin: the equalizer element
+ * @vol_plugin: the volume control element
+ * @ver_major: the major version number of Gstreamer
+ * @ver_minor: the minor version number of Gstreamer
+ * @ver_micro: the micro version number of Gstreamer
+ * @ver_nano: the nano version number of Gstreamer
+ *
+ * The data of the core.
  */
 
-typedef struct RCCoreData
-{
+typedef struct RCCoreData {
     GstElement *playbin;
     GstElement *audio_sink;
     GstElement *eq_plugin;
@@ -62,18 +63,18 @@ typedef struct RCCoreData
 void rc_core_init();
 void rc_core_exit();
 RCCoreData *rc_core_get_data();
-void rc_core_set_uri(const gchar *);
+void rc_core_set_uri(const gchar *uri);
 gchar *rc_core_get_uri();
 gboolean rc_core_play();
 gboolean rc_core_pause();
 gboolean rc_core_stop();
-gboolean rc_core_set_volume(gdouble);
-gboolean rc_core_set_play_position(gint64);
-gboolean rc_core_set_play_position_by_persent(gdouble);
+gboolean rc_core_set_volume(gdouble volume);
+gboolean rc_core_set_play_position(gint64 time);
+gboolean rc_core_set_play_position_by_persent(gdouble persent);
 gint64 rc_core_get_play_position();
 gint64 rc_core_get_music_length();
 gdouble rc_core_get_volume();
-void rc_core_set_eq_effect(gdouble *);
+void rc_core_set_eq_effect(gdouble *fq);
 GstState rc_core_get_play_state();
 
 #endif

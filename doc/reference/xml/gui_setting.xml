@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+]>
+<refentry id="RhythmCat-gui-setting">
+<refmeta>
+<refentrytitle role="top_of_page" id="RhythmCat-gui-setting.top_of_page">gui_setting</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>
+  RHYTHMCAT Library
+</refmiscinfo>
+</refmeta>
+<refnamediv>
+<refname>gui_setting</refname>
+<refpurpose></refpurpose>
+</refnamediv>
+
+<refsynopsisdiv id="RhythmCat-gui-setting.synopsis" role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis><link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-create-setting-window">rc_gui_create_setting_window</link>        (<parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *Param1</parameter>,
+                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param2</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-create-setting-treeview">rc_gui_create_setting_treeview</link>      ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-close-setting-window">rc_gui_close_setting_window</link>         (<parameter><link linkend="GtkButton"><type>GtkButton</type></link> *Param1</parameter>,
+                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param2</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-setting-row-selected">rc_gui_setting_row_selected</link>         (<parameter><link linkend="GtkTreeView"><type>GtkTreeView</type></link> *Param1</parameter>,
+                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param2</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-setting-apply">rc_gui_setting_apply</link>                (<parameter><link linkend="GtkButton"><type>GtkButton</type></link> *Param1</parameter>,
+                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param2</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-setting-confirm">rc_gui_setting_confirm</link>              (<parameter><link linkend="GtkButton"><type>GtkButton</type></link> *Param1</parameter>,
+                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param2</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-create-setting-general">rc_gui_create_setting_general</link>       ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-create-setting-playlist">rc_gui_create_setting_playlist</link>      ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-create-setting-appearance">rc_gui_create_setting_appearance</link>    ();
+</synopsis>
+</refsynopsisdiv>
+
+<refsect1 id="RhythmCat-gui-setting.description" role="desc">
+<title role="desc.title">Description</title>
+
+</refsect1>
+<refsect1 id="RhythmCat-gui-setting.details" role="details">
+<title role="details.title">Details</title>
+<refsect2 id="rc-gui-create-setting-window" role="function">
+<title>rc_gui_create_setting_window ()</title>
+<indexterm zone="rc-gui-create-setting-window"><primary>rc_gui_create_setting_window</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_create_setting_window        (<parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *Param1</parameter>,
+                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param2</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="rc-gui-create-setting-treeview" role="function">
+<title>rc_gui_create_setting_treeview ()</title>
+<indexterm zone="rc-gui-create-setting-treeview"><primary>rc_gui_create_setting_treeview</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_create_setting_treeview      ();</programlisting>
+</refsect2>
+<refsect2 id="rc-gui-close-setting-window" role="function">
+<title>rc_gui_close_setting_window ()</title>
+<indexterm zone="rc-gui-close-setting-window"><primary>rc_gui_close_setting_window</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_close_setting_window         (<parameter><link linkend="GtkButton"><type>GtkButton</type></link> *Param1</parameter>,
+                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param2</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="rc-gui-setting-row-selected" role="function">
+<title>rc_gui_setting_row_selected ()</title>
+<indexterm zone="rc-gui-setting-row-selected"><primary>rc_gui_setting_row_selected</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_setting_row_selected         (<parameter><link linkend="GtkTreeView"><type>GtkTreeView</type></link> *Param1</parameter>,
+                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param2</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="rc-gui-setting-apply" role="function">
+<title>rc_gui_setting_apply ()</title>
+<indexterm zone="rc-gui-setting-apply"><primary>rc_gui_setting_apply</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_setting_apply                (<parameter><link linkend="GtkButton"><type>GtkButton</type></link> *Param1</parameter>,
+                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param2</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="rc-gui-setting-confirm" role="function">
+<title>rc_gui_setting_confirm ()</title>
+<indexterm zone="rc-gui-setting-confirm"><primary>rc_gui_setting_confirm</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_setting_confirm              (<parameter><link linkend="GtkButton"><type>GtkButton</type></link> *Param1</parameter>,
+                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param2</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="rc-gui-create-setting-general" role="function">
+<title>rc_gui_create_setting_general ()</title>
+<indexterm zone="rc-gui-create-setting-general"><primary>rc_gui_create_setting_general</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_create_setting_general       ();</programlisting>
+</refsect2>
+<refsect2 id="rc-gui-create-setting-playlist" role="function">
+<title>rc_gui_create_setting_playlist ()</title>
+<indexterm zone="rc-gui-create-setting-playlist"><primary>rc_gui_create_setting_playlist</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_create_setting_playlist      ();</programlisting>
+</refsect2>
+<refsect2 id="rc-gui-create-setting-appearance" role="function">
+<title>rc_gui_create_setting_appearance ()</title>
+<indexterm zone="rc-gui-create-setting-appearance"><primary>rc_gui_create_setting_appearance</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_create_setting_appearance    ();</programlisting>
+</refsect2>
+
+</refsect1>
+
+</refentry>

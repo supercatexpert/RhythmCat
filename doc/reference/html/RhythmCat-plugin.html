@@ -1,0 +1,167 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>plugin</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="index.html" title="RhythmCat Reference Manual">
+<link rel="up" href="ch01.html" title="[Insert title here]">
+<link rel="prev" href="ch01.html" title="[Insert title here]">
+<link rel="next" href="RhythmCat-Tag.html" title="Tag">
+<meta name="generator" content="GTK-Doc V1.15 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="ch01.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">RhythmCat Reference Manual</th>
+<td><a accesskey="n" href="RhythmCat-Tag.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#RhythmCat-plugin.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#RhythmCat-plugin.description" class="shortcut">Description</a>
+</td></tr>
+</table>
+<div class="refentry" title="plugin">
+<a name="RhythmCat-plugin"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="RhythmCat-plugin.top_of_page"></a>plugin</span></h2>
+<p>plugin</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv" title="Synopsis">
+<a name="RhythmCat-plugin.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">enum                <a class="link" href="RhythmCat-plugin.html#RCPluginType" title="enum RCPluginType">RCPluginType</a>;
+<a href="../glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                (<a class="link" href="RhythmCat-plugin.html#module-init" title="module_init ()">*module_init</a>)                      ();
+<span class="returnvalue">void</span>                (<a class="link" href="RhythmCat-plugin.html#module-exit" title="module_exit ()">*module_exit</a>)                      ();
+const <a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       (<a class="link" href="RhythmCat-plugin.html#module-get-group-name" title="module_get_group_name ()">*module_get_group_name</a>)            ();
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-plugin.html#rc-plugin-init" title="rc_plugin_init ()">rc_plugin_init</a>                      ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-plugin.html#rc-plugin-exit" title="rc_plugin_exit ()">rc_plugin_exit</a>                      ();
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-plugin.html#rc-plugin-search-dir" title="rc_plugin_search_dir ()">rc_plugin_search_dir</a>                (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *Param1</code></em>);
+const <a href="../glib/glib-Singly-Linked-Lists.html#GSList"><span class="returnvalue">GSList</span></a> *      <a class="link" href="RhythmCat-plugin.html#rc-plugin-get-list" title="rc_plugin_get_list ()">rc_plugin_get_list</a>                  ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-plugin.html#rc-plugin-list-free" title="rc_plugin_list_free ()">rc_plugin_list_free</a>                 ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-plugin.html#rc-plugin-plugin-free" title="rc_plugin_plugin_free ()">rc_plugin_plugin_free</a>               (<em class="parameter"><code><span class="type">RCPluginData</span> *Param1</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-plugin.html#rc-plugin-module-free" title="rc_plugin_module_free ()">rc_plugin_module_free</a>               (<em class="parameter"><code><span class="type">RCModuleData</span> *Param1</code></em>);
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-plugin.html#rc-plugin-module-check-running" title="rc_plugin_module_check_running ()">rc_plugin_module_check_running</a>      (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *Param1</code></em>);
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-plugin.html#rc-plugin-load" title="rc_plugin_load ()">rc_plugin_load</a>                      (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *Param1</code></em>,
+                                                         <em class="parameter"><code><span class="type">RCPluginData</span> **Param2</code></em>);
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-plugin.html#rc-plugin-module-load" title="rc_plugin_module_load ()">rc_plugin_module_load</a>               (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *Param1</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-plugin.html#rc-plugin-module-close" title="rc_plugin_module_close ()">rc_plugin_module_close</a>              (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *Param1</code></em>);
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-plugin.html#rc-plugin-module-configure" title="rc_plugin_module_configure ()">rc_plugin_module_configure</a>          (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *Param1</code></em>);
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-plugin.html#rc-plugin-python-load" title="rc_plugin_python_load ()">rc_plugin_python_load</a>               (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *Param1</code></em>);
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-plugin.html#rc-plugin-python-configure" title="rc_plugin_python_configure ()">rc_plugin_python_configure</a>          (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *Param1</code></em>);
+</pre>
+</div>
+<div class="refsect1" title="Description">
+<a name="RhythmCat-plugin.description"></a><h2>Description</h2>
+</div>
+<div class="refsect1" title="Details">
+<a name="RhythmCat-plugin.details"></a><h2>Details</h2>
+<div class="refsect2" title="enum RCPluginType">
+<a name="RCPluginType"></a><h3>enum RCPluginType</h3>
+<pre class="programlisting">typedef enum RCPluginType
+{
+    PLUGIN_TYPE_MODULE = 1,
+    PLUGIN_TYPE_PYTHON = 2
+}RCPluginType;
+</pre>
+</div>
+<hr>
+<div class="refsect2" title="module_init ()">
+<a name="module-init"></a><h3>module_init ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                (*module_init)                      ();</pre>
+</div>
+<hr>
+<div class="refsect2" title="module_exit ()">
+<a name="module-exit"></a><h3>module_exit ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                (*module_exit)                      ();</pre>
+</div>
+<hr>
+<div class="refsect2" title="module_get_group_name ()">
+<a name="module-get-group-name"></a><h3>module_get_group_name ()</h3>
+<pre class="programlisting">const <a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       (*module_get_group_name)            ();</pre>
+</div>
+<hr>
+<div class="refsect2" title="rc_plugin_init ()">
+<a name="rc-plugin-init"></a><h3>rc_plugin_init ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plugin_init                      ();</pre>
+</div>
+<hr>
+<div class="refsect2" title="rc_plugin_exit ()">
+<a name="rc-plugin-exit"></a><h3>rc_plugin_exit ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_plugin_exit                      ();</pre>
+</div>
+<hr>
+<div class="refsect2" title="rc_plugin_search_dir ()">
+<a name="rc-plugin-search-dir"></a><h3>rc_plugin_search_dir ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plugin_search_dir                (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *Param1</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2" title="rc_plugin_get_list ()">
+<a name="rc-plugin-get-list"></a><h3>rc_plugin_get_list ()</h3>
+<pre class="programlisting">const <a href="../glib/glib-Singly-Linked-Lists.html#GSList"><span class="returnvalue">GSList</span></a> *      rc_plugin_get_list                  ();</pre>
+</div>
+<hr>
+<div class="refsect2" title="rc_plugin_list_free ()">
+<a name="rc-plugin-list-free"></a><h3>rc_plugin_list_free ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_plugin_list_free                 ();</pre>
+</div>
+<hr>
+<div class="refsect2" title="rc_plugin_plugin_free ()">
+<a name="rc-plugin-plugin-free"></a><h3>rc_plugin_plugin_free ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_plugin_plugin_free               (<em class="parameter"><code><span class="type">RCPluginData</span> *Param1</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2" title="rc_plugin_module_free ()">
+<a name="rc-plugin-module-free"></a><h3>rc_plugin_module_free ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_plugin_module_free               (<em class="parameter"><code><span class="type">RCModuleData</span> *Param1</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2" title="rc_plugin_module_check_running ()">
+<a name="rc-plugin-module-check-running"></a><h3>rc_plugin_module_check_running ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plugin_module_check_running      (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *Param1</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2" title="rc_plugin_load ()">
+<a name="rc-plugin-load"></a><h3>rc_plugin_load ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plugin_load                      (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *Param1</code></em>,
+                                                         <em class="parameter"><code><span class="type">RCPluginData</span> **Param2</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2" title="rc_plugin_module_load ()">
+<a name="rc-plugin-module-load"></a><h3>rc_plugin_module_load ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plugin_module_load               (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *Param1</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2" title="rc_plugin_module_close ()">
+<a name="rc-plugin-module-close"></a><h3>rc_plugin_module_close ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_plugin_module_close              (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *Param1</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2" title="rc_plugin_module_configure ()">
+<a name="rc-plugin-module-configure"></a><h3>rc_plugin_module_configure ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plugin_module_configure          (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *Param1</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2" title="rc_plugin_python_load ()">
+<a name="rc-plugin-python-load"></a><h3>rc_plugin_python_load ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plugin_python_load               (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *Param1</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2" title="rc_plugin_python_configure ()">
+<a name="rc-plugin-python-configure"></a><h3>rc_plugin_python_configure ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plugin_python_configure          (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *Param1</code></em>);</pre>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.15</div>
+</body>
+</html>

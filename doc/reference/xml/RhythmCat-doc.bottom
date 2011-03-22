@@ -1,0 +1,16 @@
+    <xi:include href="xml/plugin.xml"/>
+    <xi:include href="xml/tag.xml"/>
+    <xi:include href="xml/lyric.xml"/>
+    <xi:include href="xml/gui_plugin.xml"/>
+    <xi:include href="xml/msg.xml"/>
+    <xi:include href="xml/debug.xml"/>
+    <xi:include href="xml/core.xml"/>
+    <xi:include href="xml/gui_dialog.xml"/>
+    <xi:include href="xml/gui_eq.xml"/>
+    <xi:include href="xml/gui_style.xml"/>
+    <xi:include href="xml/playlist.xml"/>
+    <xi:include href="xml/gui_treeview.xml"/>
+    <xi:include href="xml/gui.xml"/>
+    <xi:include href="xml/gui_mini.xml"/>
+    <xi:include href="xml/gui_setting.xml"/>
+    <xi:include href="xml/settings.xml"/>

@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+]>
+<refentry id="RhythmCat-gui-eq">
+<refmeta>
+<refentrytitle role="top_of_page" id="RhythmCat-gui-eq.top_of_page">gui_eq</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>
+  RHYTHMCAT Library
+</refmiscinfo>
+</refmeta>
+<refnamediv>
+<refname>gui_eq</refname>
+<refpurpose></refpurpose>
+</refnamediv>
+
+<refsynopsisdiv id="RhythmCat-gui-eq.synopsis" role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis><link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-init-eq-data">rc_gui_init_eq_data</link>                 ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-eq-init">rc_gui_eq_init</link>                      ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-create-equalizer">rc_gui_create_equalizer</link>             ();
+<link linkend="RCGuiEQData"><returnvalue>RCGuiEQData</returnvalue></link> *       <link linkend="rc-gui-eq-get-data">rc_gui_eq_get_data</link>                  ();
+</synopsis>
+</refsynopsisdiv>
+
+<refsect1 id="RhythmCat-gui-eq.description" role="desc">
+<title role="desc.title">Description</title>
+
+</refsect1>
+<refsect1 id="RhythmCat-gui-eq.details" role="details">
+<title role="details.title">Details</title>
+<refsect2 id="rc-gui-init-eq-data" role="function">
+<title>rc_gui_init_eq_data ()</title>
+<indexterm zone="rc-gui-init-eq-data"><primary>rc_gui_init_eq_data</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_init_eq_data                 ();</programlisting>
+</refsect2>
+<refsect2 id="rc-gui-eq-init" role="function">
+<title>rc_gui_eq_init ()</title>
+<indexterm zone="rc-gui-eq-init"><primary>rc_gui_eq_init</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_eq_init                      ();</programlisting>
+</refsect2>
+<refsect2 id="rc-gui-create-equalizer" role="function">
+<title>rc_gui_create_equalizer ()</title>
+<indexterm zone="rc-gui-create-equalizer"><primary>rc_gui_create_equalizer</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_create_equalizer             ();</programlisting>
+</refsect2>
+<refsect2 id="rc-gui-eq-get-data" role="function">
+<title>rc_gui_eq_get_data ()</title>
+<indexterm zone="rc-gui-eq-get-data"><primary>rc_gui_eq_get_data</primary></indexterm>
+<programlisting><link linkend="RCGuiEQData"><returnvalue>RCGuiEQData</returnvalue></link> *       rc_gui_eq_get_data                  ();</programlisting>
+</refsect2>
+
+</refsect1>
+
+</refentry>

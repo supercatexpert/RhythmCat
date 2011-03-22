@@ -35,10 +35,11 @@
 
 /**
  * SECTION: core
- * @Short_description: The core of the player
+ * @Short_description: The core of the player.
  * @Title: Core
+ * @Include: core.h
  *
- * The core of the player, it uses Gstreamer as backend to play audio files.
+ * The core part of the player, it uses Gstreamer as backend to play audio files.
  */
 
 static RCCoreData rc_core;
@@ -79,6 +80,7 @@ static gboolean rc_core_bus_call(GstBus *bus, GstMessage *msg, gpointer data)
     const GValue *magnitudes;
     const GValue *mag;
     gchar *debug;
+    GstState state;
     gchar *plugin_error_msg;
     GError *error;
     guint i;
@@ -92,6 +94,24 @@ static gboolean rc_core_bus_call(GstBus *bus, GstMessage *msg, gpointer data)
             rc_debug_print("CORE: Segment done!\n");
             break;
         case GST_MESSAGE_STATE_CHANGED:
+            if(gst_element_get_state(rc_core.playbin, &state, NULL,
+                GST_CLOCK_TIME_NONE)==GST_STATE_CHANGE_SUCCESS)
+            {
+                switch(state)
+                {
+                    case GST_STATE_PLAYING:
+                        rc_gui_set_play_button_state(TRUE);
+                        rc_gui_seek_scaler_enable();
+                        rc_player_object_signal_emit_simple("player-play");     
+                        break;
+                    case GST_STATE_PAUSED:
+                        rc_gui_set_play_button_state(FALSE);
+                        rc_player_object_signal_emit_simple("player-pause");
+                        break;
+                    default:
+                        break;
+                }
+            }
             break;
         case GST_MESSAGE_ERROR:
             gst_message_parse_error(msg, &error, &debug);
@@ -181,7 +201,7 @@ static gboolean rc_core_plugin_check()
 /**
  * rc_core_init:
  *
- * Initialize the core of the player. Can be load only once.
+ * Initialize the core of the player. Can be used only once.
  */
 
 void rc_core_init()
@@ -327,7 +347,7 @@ void rc_core_init()
 /**
  * rc_core_exit:
  *
- * Free the core when exit.
+ * Free the core when exits.
  */
 
 void rc_core_exit()
@@ -396,14 +416,8 @@ gboolean rc_core_play()
         flag = gst_element_set_state(rc_core.playbin, GST_STATE_NULL);
         if(!flag) return FALSE;
     }
-    if(state!=GST_STATE_PAUSED && state!=GST_STATE_PLAYING)
-        rc_player_object_signal_emit_simple("player-play");
-    else
-        rc_player_object_signal_emit_simple("player-continue");
     flag = gst_element_set_state(rc_core.playbin, GST_STATE_PLAYING);
     if(!flag) return FALSE;
-    rc_gui_set_play_button_state(TRUE);
-    rc_gui_seek_scaler_enable();
     return TRUE;
 }
 
@@ -420,8 +434,6 @@ gboolean rc_core_pause()
     gboolean flag = TRUE;
     flag = gst_element_set_state(rc_core.playbin, GST_STATE_PAUSED);
     if(!flag) return FALSE;
-    rc_gui_set_play_button_state(FALSE);
-    rc_player_object_signal_emit_simple("player-pause");
     return TRUE;
 }
 
@@ -443,7 +455,7 @@ gboolean rc_core_stop()
 
 /**
  * rc_core_set_volume:
- * @volume: the volume of the player, it should be between 0.0 to 100.0.
+ * @volume: the volume of the player, it should be between 0.0 and 100.0.
  *
  * Set the volume of player.
  */

@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+]>
+<refentry id="RhythmCat-gui-style">
+<refmeta>
+<refentrytitle role="top_of_page" id="RhythmCat-gui-style.top_of_page">gui_style</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>
+  RHYTHMCAT Library
+</refmiscinfo>
+</refmeta>
+<refnamediv>
+<refname>gui_style</refname>
+<refpurpose></refpurpose>
+</refnamediv>
+
+<refsynopsisdiv id="RhythmCat-gui-style.synopsis" role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis><link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-style-init">rc_gui_style_init</link>                   ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-style-refresh">rc_gui_style_refresh</link>                ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-style-set-color-style">rc_gui_style_set_color_style</link>        (<parameter>const <link linkend="RCGuiColorStyle"><type>RCGuiColorStyle</type></link> *Param1</parameter>);
+const <link linkend="RCGuiColorStyle"><returnvalue>RCGuiColorStyle</returnvalue></link> * <link linkend="rc-gui-style-get-color-style">rc_gui_style_get_color_style</link>    (<parameter><link linkend="gint"><type>gint</type></link> Param1</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-style-set-color-style-by-index">rc_gui_style_set_color_style_by_index</link>
+                                                        (<parameter><link linkend="gint"><type>gint</type></link> Param1</parameter>);
+</synopsis>
+</refsynopsisdiv>
+
+<refsect1 id="RhythmCat-gui-style.description" role="desc">
+<title role="desc.title">Description</title>
+
+</refsect1>
+<refsect1 id="RhythmCat-gui-style.details" role="details">
+<title role="details.title">Details</title>
+<refsect2 id="rc-gui-style-init" role="function">
+<title>rc_gui_style_init ()</title>
+<indexterm zone="rc-gui-style-init"><primary>rc_gui_style_init</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_style_init                   ();</programlisting>
+</refsect2>
+<refsect2 id="rc-gui-style-refresh" role="function">
+<title>rc_gui_style_refresh ()</title>
+<indexterm zone="rc-gui-style-refresh"><primary>rc_gui_style_refresh</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_style_refresh                ();</programlisting>
+</refsect2>
+<refsect2 id="rc-gui-style-set-color-style" role="function">
+<title>rc_gui_style_set_color_style ()</title>
+<indexterm zone="rc-gui-style-set-color-style"><primary>rc_gui_style_set_color_style</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_style_set_color_style        (<parameter>const <link linkend="RCGuiColorStyle"><type>RCGuiColorStyle</type></link> *Param1</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="rc-gui-style-get-color-style" role="function">
+<title>rc_gui_style_get_color_style ()</title>
+<indexterm zone="rc-gui-style-get-color-style"><primary>rc_gui_style_get_color_style</primary></indexterm>
+<programlisting>const <link linkend="RCGuiColorStyle"><returnvalue>RCGuiColorStyle</returnvalue></link> * rc_gui_style_get_color_style    (<parameter><link linkend="gint"><type>gint</type></link> Param1</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="rc-gui-style-set-color-style-by-index" role="function">
+<title>rc_gui_style_set_color_style_by_index ()</title>
+<indexterm zone="rc-gui-style-set-color-style-by-index"><primary>rc_gui_style_set_color_style_by_index</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_style_set_color_style_by_index
+                                                        (<parameter><link linkend="gint"><type>gint</type></link> Param1</parameter>);</programlisting>
+</refsect2>
+
+</refsect1>
+
+</refentry>

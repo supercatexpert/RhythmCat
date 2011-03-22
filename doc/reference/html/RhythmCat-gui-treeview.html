@@ -1,0 +1,290 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>gui_treeview</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="index.html" title="RhythmCat Reference Manual">
+<link rel="up" href="ch01.html" title="[Insert title here]">
+<link rel="prev" href="RhythmCat-Playlist.html" title="Playlist">
+<link rel="next" href="RhythmCat-GUI.html" title="GUI">
+<meta name="generator" content="GTK-Doc V1.15 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="RhythmCat-Playlist.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">RhythmCat Reference Manual</th>
+<td><a accesskey="n" href="RhythmCat-GUI.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#RhythmCat-gui-treeview.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#RhythmCat-gui-treeview.description" class="shortcut">Description</a>
+</td></tr>
+</table>
+<div class="refentry" title="gui_treeview">
+<a name="RhythmCat-gui-treeview"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="RhythmCat-gui-treeview.top_of_page"></a>gui_treeview</span></h2>
+<p>gui_treeview</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv" title="Synopsis">
+<a name="RhythmCat-gui-treeview.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis"><span class="returnvalue">void</span>                <a class="link" href="RhythmCat-gui-treeview.html#rc-gui-treeview-init" title="rc_gui_treeview_init ()">rc_gui_treeview_init</a>                ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-gui-treeview.html#rc-gui-list-tree-reset-list-store" title="rc_gui_list_tree_reset_list_store ()">rc_gui_list_tree_reset_list_store</a>   ();
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-gui-treeview.html#rc-gui-list1-popup-menu" title="rc_gui_list1_popup_menu ()">rc_gui_list1_popup_menu</a>             (<em class="parameter"><code><a href="../gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *Param1</code></em>,
+                                                         <em class="parameter"><code><a href="../gdk/gdk-Event-Structures.html#GdkEventButton"><span class="type">GdkEventButton</span></a> *Param2</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> Param3</code></em>);
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-gui-treeview.html#rc-gui-list2-popup-menu" title="rc_gui_list2_popup_menu ()">rc_gui_list2_popup_menu</a>             (<em class="parameter"><code><a href="../gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *Param1</code></em>,
+                                                         <em class="parameter"><code><a href="../gdk/gdk-Event-Structures.html#GdkEventButton"><span class="type">GdkEventButton</span></a> *Param2</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> Param3</code></em>);
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-gui-treeview.html#rc-gui-list2-button-release-event" title="rc_gui_list2_button_release_event ()">rc_gui_list2_button_release_event</a>   (<em class="parameter"><code><a href="../gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *Param1</code></em>,
+                                                         <em class="parameter"><code><a href="../gdk/gdk-Event-Structures.html#GdkEventButton"><span class="type">GdkEventButton</span></a> *Param2</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> Param3</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-gui-treeview.html#rc-gui-list1-row-selected" title="rc_gui_list1_row_selected ()">rc_gui_list1_row_selected</a>           (<em class="parameter"><code><a href="../gtk/GtkTreeView.html"><span class="type">GtkTreeView</span></a> *Param1</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> Param2</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-gui-treeview.html#rc-gui-list2-row-activated" title="rc_gui_list2_row_activated ()">rc_gui_list2_row_activated</a>          (<em class="parameter"><code><a href="../gtk/GtkTreeView.html"><span class="type">GtkTreeView</span></a> *Param1</code></em>,
+                                                         <em class="parameter"><code><a href="../gtk/GtkTreeModel.html#GtkTreePath"><span class="type">GtkTreePath</span></a> *Param2</code></em>,
+                                                         <em class="parameter"><code><a href="../gtk/GtkTreeViewColumn.html"><span class="type">GtkTreeViewColumn</span></a> *Param3</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> Param4</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-gui-treeview.html#rc-gui-select-list1" title="rc_gui_select_list1 ()">rc_gui_select_list1</a>                 (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> Param1</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-gui-treeview.html#rc-gui-select-list2" title="rc_gui_select_list2 ()">rc_gui_select_list2</a>                 (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> Param1</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-gui-treeview.html#rc-gui-list1-new-list" title="rc_gui_list1_new_list ()">rc_gui_list1_new_list</a>               (<em class="parameter"><code><a href="../gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *Param1</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> Param2</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-gui-treeview.html#rc-gui-list1-delete-list" title="rc_gui_list1_delete_list ()">rc_gui_list1_delete_list</a>            (<em class="parameter"><code><a href="../gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *Param1</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> Param2</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-gui-treeview.html#rc-gui-list-model-inserted" title="rc_gui_list_model_inserted ()">rc_gui_list_model_inserted</a>          (<em class="parameter"><code><a href="../gtk/GtkTreeModel.html"><span class="type">GtkTreeModel</span></a> *Param1</code></em>,
+                                                         <em class="parameter"><code><a href="../gtk/GtkTreeModel.html#GtkTreePath"><span class="type">GtkTreePath</span></a> *Param2</code></em>,
+                                                         <em class="parameter"><code><a href="../gtk/GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *Param3</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> Param4</code></em>);
+<a href="../glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="RhythmCat-gui-treeview.html#rc-gui-list1-get-index" title="rc_gui_list1_get_index ()">rc_gui_list1_get_index</a>              (<em class="parameter"><code><a href="../gtk/GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *Param1</code></em>);
+<a href="../glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="RhythmCat-gui-treeview.html#rc-gui-list1-get-selected-index" title="rc_gui_list1_get_selected_index ()">rc_gui_list1_get_selected_index</a>     ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-gui-treeview.html#rc-gui-list2-dnd-data-received" title="rc_gui_list2_dnd_data_received ()">rc_gui_list2_dnd_data_received</a>      (<em class="parameter"><code><a href="../gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *Param1</code></em>,
+                                                         <em class="parameter"><code><a href="../gdk/gdk-Drag-and-Drop.html#GdkDragContext"><span class="type">GdkDragContext</span></a> *Param2</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> Param3</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> Param4</code></em>,
+                                                         <em class="parameter"><code><a href="../gtk/GtkWidget.html#GtkSelectionData"><span class="type">GtkSelectionData</span></a> *Param5</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> Param6</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> Param7</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> Param8</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-gui-treeview.html#rc-gui-list2-dnd-data-get" title="rc_gui_list2_dnd_data_get ()">rc_gui_list2_dnd_data_get</a>           (<em class="parameter"><code><a href="../gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *Param1</code></em>,
+                                                         <em class="parameter"><code><a href="../gdk/gdk-Drag-and-Drop.html#GdkDragContext"><span class="type">GdkDragContext</span></a> *Param2</code></em>,
+                                                         <em class="parameter"><code><a href="../gtk/GtkWidget.html#GtkSelectionData"><span class="type">GtkSelectionData</span></a> *Param3</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> Param4</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> Param5</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> Param6</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-gui-treeview.html#rc-gui-list2-dnd-motion" title="rc_gui_list2_dnd_motion ()">rc_gui_list2_dnd_motion</a>             (<em class="parameter"><code><a href="../gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *Param1</code></em>,
+                                                         <em class="parameter"><code><a href="../gdk/gdk-Drag-and-Drop.html#GdkDragContext"><span class="type">GdkDragContext</span></a> *Param2</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> Param3</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> Param4</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> Param5</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> Param6</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-gui-treeview.html#rc-gui-list1-dnd-data-received" title="rc_gui_list1_dnd_data_received ()">rc_gui_list1_dnd_data_received</a>      (<em class="parameter"><code><a href="../gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *Param1</code></em>,
+                                                         <em class="parameter"><code><a href="../gdk/gdk-Drag-and-Drop.html#GdkDragContext"><span class="type">GdkDragContext</span></a> *Param2</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> Param3</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> Param4</code></em>,
+                                                         <em class="parameter"><code><a href="../gtk/GtkWidget.html#GtkSelectionData"><span class="type">GtkSelectionData</span></a> *Param5</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> Param6</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> Param7</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> Param8</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-gui-treeview.html#rc-gui-list1-dnd-data-get" title="rc_gui_list1_dnd_data_get ()">rc_gui_list1_dnd_data_get</a>           (<em class="parameter"><code><a href="../gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *Param1</code></em>,
+                                                         <em class="parameter"><code><a href="../gdk/gdk-Drag-and-Drop.html#GdkDragContext"><span class="type">GdkDragContext</span></a> *Param2</code></em>,
+                                                         <em class="parameter"><code><a href="../gtk/GtkWidget.html#GtkSelectionData"><span class="type">GtkSelectionData</span></a> *Param3</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> Param4</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> Param5</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> Param6</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-gui-treeview.html#rc-gui-list2-delete-lists" title="rc_gui_list2_delete_lists ()">rc_gui_list2_delete_lists</a>           (<em class="parameter"><code><a href="../gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *Param1</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> Param2</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-gui-treeview.html#rc-gui-list2-select-all" title="rc_gui_list2_select_all ()">rc_gui_list2_select_all</a>             (<em class="parameter"><code><a href="../gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *Param1</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> Param2</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-gui-treeview.html#rc-gui-list1-edited" title="rc_gui_list1_edited ()">rc_gui_list1_edited</a>                 (<em class="parameter"><code><a href="../gtk/GtkCellRendererText.html"><span class="type">GtkCellRendererText</span></a> *Param1</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *Param2</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *Param3</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> Param4</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-gui-treeview.html#rc-gui-list1-rename-list" title="rc_gui_list1_rename_list ()">rc_gui_list1_rename_list</a>            (<em class="parameter"><code><a href="../gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *Param1</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> Param2</code></em>);
+</pre>
+</div>
+<div class="refsect1" title="Description">
+<a name="RhythmCat-gui-treeview.description"></a><h2>Description</h2>
+</div>
+<div class="refsect1" title="Details">
+<a name="RhythmCat-gui-treeview.details"></a><h2>Details</h2>
+<div class="refsect2" title="rc_gui_treeview_init ()">
+<a name="rc-gui-treeview-init"></a><h3>rc_gui_treeview_init ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_treeview_init                ();</pre>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_list_tree_reset_list_store ()">
+<a name="rc-gui-list-tree-reset-list-store"></a><h3>rc_gui_list_tree_reset_list_store ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_list_tree_reset_list_store   ();</pre>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_list1_popup_menu ()">
+<a name="rc-gui-list1-popup-menu"></a><h3>rc_gui_list1_popup_menu ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_gui_list1_popup_menu             (<em class="parameter"><code><a href="../gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *Param1</code></em>,
+                                                         <em class="parameter"><code><a href="../gdk/gdk-Event-Structures.html#GdkEventButton"><span class="type">GdkEventButton</span></a> *Param2</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> Param3</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_list2_popup_menu ()">
+<a name="rc-gui-list2-popup-menu"></a><h3>rc_gui_list2_popup_menu ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_gui_list2_popup_menu             (<em class="parameter"><code><a href="../gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *Param1</code></em>,
+                                                         <em class="parameter"><code><a href="../gdk/gdk-Event-Structures.html#GdkEventButton"><span class="type">GdkEventButton</span></a> *Param2</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> Param3</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_list2_button_release_event ()">
+<a name="rc-gui-list2-button-release-event"></a><h3>rc_gui_list2_button_release_event ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_gui_list2_button_release_event   (<em class="parameter"><code><a href="../gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *Param1</code></em>,
+                                                         <em class="parameter"><code><a href="../gdk/gdk-Event-Structures.html#GdkEventButton"><span class="type">GdkEventButton</span></a> *Param2</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> Param3</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_list1_row_selected ()">
+<a name="rc-gui-list1-row-selected"></a><h3>rc_gui_list1_row_selected ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_list1_row_selected           (<em class="parameter"><code><a href="../gtk/GtkTreeView.html"><span class="type">GtkTreeView</span></a> *Param1</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> Param2</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_list2_row_activated ()">
+<a name="rc-gui-list2-row-activated"></a><h3>rc_gui_list2_row_activated ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_list2_row_activated          (<em class="parameter"><code><a href="../gtk/GtkTreeView.html"><span class="type">GtkTreeView</span></a> *Param1</code></em>,
+                                                         <em class="parameter"><code><a href="../gtk/GtkTreeModel.html#GtkTreePath"><span class="type">GtkTreePath</span></a> *Param2</code></em>,
+                                                         <em class="parameter"><code><a href="../gtk/GtkTreeViewColumn.html"><span class="type">GtkTreeViewColumn</span></a> *Param3</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> Param4</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_select_list1 ()">
+<a name="rc-gui-select-list1"></a><h3>rc_gui_select_list1 ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_select_list1                 (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> Param1</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_select_list2 ()">
+<a name="rc-gui-select-list2"></a><h3>rc_gui_select_list2 ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_select_list2                 (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> Param1</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_list1_new_list ()">
+<a name="rc-gui-list1-new-list"></a><h3>rc_gui_list1_new_list ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_list1_new_list               (<em class="parameter"><code><a href="../gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *Param1</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> Param2</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_list1_delete_list ()">
+<a name="rc-gui-list1-delete-list"></a><h3>rc_gui_list1_delete_list ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_list1_delete_list            (<em class="parameter"><code><a href="../gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *Param1</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> Param2</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_list_model_inserted ()">
+<a name="rc-gui-list-model-inserted"></a><h3>rc_gui_list_model_inserted ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_list_model_inserted          (<em class="parameter"><code><a href="../gtk/GtkTreeModel.html"><span class="type">GtkTreeModel</span></a> *Param1</code></em>,
+                                                         <em class="parameter"><code><a href="../gtk/GtkTreeModel.html#GtkTreePath"><span class="type">GtkTreePath</span></a> *Param2</code></em>,
+                                                         <em class="parameter"><code><a href="../gtk/GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *Param3</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> Param4</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_list1_get_index ()">
+<a name="rc-gui-list1-get-index"></a><h3>rc_gui_list1_get_index ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                rc_gui_list1_get_index              (<em class="parameter"><code><a href="../gtk/GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *Param1</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_list1_get_selected_index ()">
+<a name="rc-gui-list1-get-selected-index"></a><h3>rc_gui_list1_get_selected_index ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                rc_gui_list1_get_selected_index     ();</pre>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_list2_dnd_data_received ()">
+<a name="rc-gui-list2-dnd-data-received"></a><h3>rc_gui_list2_dnd_data_received ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_list2_dnd_data_received      (<em class="parameter"><code><a href="../gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *Param1</code></em>,
+                                                         <em class="parameter"><code><a href="../gdk/gdk-Drag-and-Drop.html#GdkDragContext"><span class="type">GdkDragContext</span></a> *Param2</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> Param3</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> Param4</code></em>,
+                                                         <em class="parameter"><code><a href="../gtk/GtkWidget.html#GtkSelectionData"><span class="type">GtkSelectionData</span></a> *Param5</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> Param6</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> Param7</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> Param8</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_list2_dnd_data_get ()">
+<a name="rc-gui-list2-dnd-data-get"></a><h3>rc_gui_list2_dnd_data_get ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_list2_dnd_data_get           (<em class="parameter"><code><a href="../gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *Param1</code></em>,
+                                                         <em class="parameter"><code><a href="../gdk/gdk-Drag-and-Drop.html#GdkDragContext"><span class="type">GdkDragContext</span></a> *Param2</code></em>,
+                                                         <em class="parameter"><code><a href="../gtk/GtkWidget.html#GtkSelectionData"><span class="type">GtkSelectionData</span></a> *Param3</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> Param4</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> Param5</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> Param6</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_list2_dnd_motion ()">
+<a name="rc-gui-list2-dnd-motion"></a><h3>rc_gui_list2_dnd_motion ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_list2_dnd_motion             (<em class="parameter"><code><a href="../gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *Param1</code></em>,
+                                                         <em class="parameter"><code><a href="../gdk/gdk-Drag-and-Drop.html#GdkDragContext"><span class="type">GdkDragContext</span></a> *Param2</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> Param3</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> Param4</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> Param5</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> Param6</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_list1_dnd_data_received ()">
+<a name="rc-gui-list1-dnd-data-received"></a><h3>rc_gui_list1_dnd_data_received ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_list1_dnd_data_received      (<em class="parameter"><code><a href="../gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *Param1</code></em>,
+                                                         <em class="parameter"><code><a href="../gdk/gdk-Drag-and-Drop.html#GdkDragContext"><span class="type">GdkDragContext</span></a> *Param2</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> Param3</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> Param4</code></em>,
+                                                         <em class="parameter"><code><a href="../gtk/GtkWidget.html#GtkSelectionData"><span class="type">GtkSelectionData</span></a> *Param5</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> Param6</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> Param7</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> Param8</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_list1_dnd_data_get ()">
+<a name="rc-gui-list1-dnd-data-get"></a><h3>rc_gui_list1_dnd_data_get ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_list1_dnd_data_get           (<em class="parameter"><code><a href="../gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *Param1</code></em>,
+                                                         <em class="parameter"><code><a href="../gdk/gdk-Drag-and-Drop.html#GdkDragContext"><span class="type">GdkDragContext</span></a> *Param2</code></em>,
+                                                         <em class="parameter"><code><a href="../gtk/GtkWidget.html#GtkSelectionData"><span class="type">GtkSelectionData</span></a> *Param3</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> Param4</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> Param5</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> Param6</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_list2_delete_lists ()">
+<a name="rc-gui-list2-delete-lists"></a><h3>rc_gui_list2_delete_lists ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_list2_delete_lists           (<em class="parameter"><code><a href="../gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *Param1</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> Param2</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_list2_select_all ()">
+<a name="rc-gui-list2-select-all"></a><h3>rc_gui_list2_select_all ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_list2_select_all             (<em class="parameter"><code><a href="../gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *Param1</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> Param2</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_list1_edited ()">
+<a name="rc-gui-list1-edited"></a><h3>rc_gui_list1_edited ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_list1_edited                 (<em class="parameter"><code><a href="../gtk/GtkCellRendererText.html"><span class="type">GtkCellRendererText</span></a> *Param1</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *Param2</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *Param3</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> Param4</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_list1_rename_list ()">
+<a name="rc-gui-list1-rename-list"></a><h3>rc_gui_list1_rename_list ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_list1_rename_list            (<em class="parameter"><code><a href="../gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *Param1</code></em>,
+                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> Param2</code></em>);</pre>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.15</div>
+</body>
+</html>

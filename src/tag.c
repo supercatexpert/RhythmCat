@@ -30,6 +30,15 @@
 #include "main.h"
 #include "debug.h"
 
+/**
+ * SECTION: tag
+ * @Short_description: Process the tags of the music.
+ * @Title: Tag
+ * @Include: tag.h
+ *
+ * Process the tags of the music, like metadata, etc.
+ */
+
 RCMusicMetaData playing_mmd = {0};
 
 typedef struct RCTagDecodedPadData
@@ -102,7 +111,8 @@ static gboolean rc_tag_bus_handler(GstBus *bus, GstMessage *message,
             {
                 if(tag_filetype!=NULL)
                 {
-                    g_utf8_strncpy(mmd->file_type, tag_filetype, 63);
+                    if(mmd->file_type!=NULL) g_free(mmd->file_type);
+                    mmd->file_type = g_strdup(tag_filetype);
                     g_free(tag_filetype);
                 }
             }
@@ -110,7 +120,8 @@ static gboolean rc_tag_bus_handler(GstBus *bus, GstMessage *message,
             {
                 if(tag_title!=NULL)
                 {
-                    g_utf8_strncpy(mmd->title, tag_title, 127);
+                    if(mmd->title!=NULL) g_free(mmd->title);
+                    mmd->title = g_strdup(tag_title);
                     g_free(tag_title);
                 }
             }
@@ -118,7 +129,8 @@ static gboolean rc_tag_bus_handler(GstBus *bus, GstMessage *message,
             {
                 if(tag_artist!=NULL)
                 {
-                    g_utf8_strncpy(mmd->artist, tag_artist, 127);
+                    if(mmd->artist!=NULL) g_free(mmd->artist);
+                    mmd->artist = g_strdup(tag_artist);
                     g_free(tag_artist);
                 }
             }
@@ -126,7 +138,8 @@ static gboolean rc_tag_bus_handler(GstBus *bus, GstMessage *message,
             {
                 if(tag_album!=NULL)
                 {
-                    g_utf8_strncpy(mmd->album, tag_album, 127);
+                    if(mmd->album!=NULL) g_free(mmd->album);
+                    mmd->album = g_strdup(tag_album);
                     g_free(tag_album);
                 }
             }
@@ -134,7 +147,8 @@ static gboolean rc_tag_bus_handler(GstBus *bus, GstMessage *message,
             {
                 if(tag_comment!=NULL)
                 {
-                    g_utf8_strncpy(mmd->comment, tag_comment, 127);
+                    if(mmd->comment!=NULL) g_free(mmd->comment);
+                    mmd->comment = g_strdup(tag_comment);
                     g_free(tag_comment);
                 }
             }
@@ -264,8 +278,14 @@ static void rc_tag_gst_new_decoded_pad_cb(GstElement *decodebin,
     if(cancel) gst_element_set_state(data->pipeline, GST_STATE_NULL);
 }
 
-/*
+/**
+ * rc_tag_read_metadata:
+ * @uri: the URI of the music file
+ *
  * Read tag (metadata) from given URI.
+ *
+ * Returns: The Metadata of the music, NULL if the file is not a music file,
+ * free after usage.
  */
 
 RCMusicMetaData *rc_tag_read_metadata(const gchar *uri)
@@ -396,19 +416,32 @@ RCMusicMetaData *rc_tag_read_metadata(const gchar *uri)
     return mmd;
 }
 
-/*
- * Free the metadata struct.
+/**
+ * rc_tag_free:
+ * @mmd: the metadata
+ *
+ * Free the memory allocated for metadata struct (RCMusicMetaData).
  */
 
 void rc_tag_free(RCMusicMetaData *mmd)
 {
+    if(mmd==NULL) return;
     if(mmd->uri!=NULL) g_free(mmd->uri);
     if(mmd->image!=NULL) gst_buffer_unref(mmd->image);
+    if(mmd->title!=NULL) g_free(mmd->title);
+    if(mmd->artist!=NULL) g_free(mmd->artist);
+    if(mmd->album!=NULL) g_free(mmd->album);
+    if(mmd->comment!=NULL) g_free(mmd->comment);
+    if(mmd->file_type!=NULL) g_free(mmd->file_type);
     g_free(mmd);
 }
 
-/*
+/**
+ * rc_tag_set_playing_metadata:
+ * @mmd: the metadata
+ *
  * Set playing metadata.
+ * Please do not use this function in plugins.
  */
 
 void rc_tag_set_playing_metadata(const RCMusicMetaData *mmd)
@@ -424,18 +457,48 @@ void rc_tag_set_playing_metadata(const RCMusicMetaData *mmd)
         playing_mmd.image = gst_buffer_copy(mmd->image);
     else
         playing_mmd.image = NULL;
+    if(mmd->title!=NULL)
+        playing_mmd.title = g_strdup(mmd->title);
+    else
+        playing_mmd.title = NULL;
+    if(mmd->artist!=NULL)
+        playing_mmd.artist = g_strdup(mmd->artist);
+    else
+        playing_mmd.title = NULL;
+    if(mmd->album!=NULL)
+        playing_mmd.album = g_strdup(mmd->album);
+    else
+        playing_mmd.album = NULL;
+    if(mmd->comment!=NULL)
+        playing_mmd.comment = g_strdup(mmd->comment);
+    else
+        playing_mmd.comment = NULL;
+    if(mmd->file_type!=NULL)
+        playing_mmd.file_type = g_strdup(mmd->file_type);
+    else
+        playing_mmd.file_type = NULL;
 }
 
-/*
- * Get playing metadata.
+/**
+ * rc_tag_get_playing_metadata:
+ *
+ * Return the metadata which the player is playing.
+ *
+ * Returns: The metadata which the player is playing.
  */
+
 const RCMusicMetaData *rc_tag_get_playing_metadata()
 {
     return &playing_mmd;
 }
 
-/*
- * Get the name from full path.
+/**
+ * rc_tag_get_name_from_fpath:
+ * @filename: the full path or file name
+ *
+ * Return the base-name without extension from a full path or file name.
+ *
+ * Returns: The base-name without extension.
  */
 
 gchar *rc_tag_get_name_from_fpath(const gchar *filename)
@@ -463,8 +526,16 @@ gchar *rc_tag_get_name_from_fpath(const gchar *filename)
     return realname;
 }
 
-/*
- * Find a file in the directory by extension name and sub-str.
+/**
+ * rc_tag_find_file:
+ * @dirname: the directory name
+ * @str: the prefix string of the file name
+ * @extname: the extenstion name of the file
+ *
+ * Find a file in the directory by extension name and prefix string.
+ *
+ * Returns: The file name which is found in the directory, NULL if not found,
+ * free after usage.
  */
 
 gchar *rc_tag_find_file(const gchar *dirname, const gchar *str,

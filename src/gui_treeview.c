@@ -828,16 +828,13 @@ void rc_gui_list1_edited(GtkCellRendererText *renderer, gchar *path_str,
 {
     GtkTreeIter iter;
     gint index = 0;
-    gchar new_name[512];
+    if(new_text==NULL || strlen(new_text)<=0) return;
     if(!gtk_tree_model_get_iter_from_string(rc_ui->list1_tree_model,
         &iter, path_str))
         return;
     index = rc_gui_list1_get_index(&iter);
     if(index<0) return;
-    if(*new_text==0) return;
-    bzero(new_name, 512 * sizeof(gchar));
-    g_utf8_strncpy(new_name, new_text, 120);
-    rc_plist_set_list1_name(index, new_name);
+    rc_plist_set_list1_name(index, new_text);
 }
 
 /*

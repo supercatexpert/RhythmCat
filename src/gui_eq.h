@@ -30,15 +30,7 @@
 #include <glib/gprintf.h>
 #include <gtk/gtk.h>
 
-/* Custom struct type to store the data of EQ. */
-typedef struct RCEQData
-{
-    gchar *name;
-    gdouble value[10];
-}RCEQData;
-
-typedef struct RCGuiEQData
-{
+typedef struct RCGuiEQData {
     GtkWidget *eq_combobox;
     GtkWidget *eq_scales[10];
     GtkWidget *eq_labels[10];

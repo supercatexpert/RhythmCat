@@ -45,12 +45,13 @@
  * SECTION: gui
  * @Short_description: The main UI of the player.
  * @Title: GUI
+ * @Include: gui.h
  *
  * Show the main UI of the player.
  */
 
-const guint img_cover_h = 160;
-const guint img_cover_w = 160;
+static const guint img_cover_h = 160;
+static const guint img_cover_w = 160;
 static RCGuiData rc_gui;
 static GSList *rc_gui_view_page_list = NULL;
 
@@ -69,7 +70,6 @@ static gboolean rc_gui_refresh_time_info(gpointer data)
 {
     gint64 pos = 0, len = 0;
     gdouble persent = 0.0;
-    gboolean sensitive = FALSE;
     GstState state;
     gdouble lrc_vport_lower, lrc_vport_upper, lrc_vport_value;
     gdouble lrc_vport_range, lrc_vport_page_size;
@@ -78,37 +78,36 @@ static gboolean rc_gui_refresh_time_info(gpointer data)
     pos = rc_core_get_play_position();
     len = rc_core_get_music_length();
     state = rc_core_get_play_state();
-    g_object_get(G_OBJECT(rc_gui.time_scroll_bar), "sensitive", &sensitive,
-        NULL);
-    if(rc_gui.update_seek_scale_flag)
+    rc_gui_mini_info_text_move();
+    switch(state)
     {
-        if(state==GST_STATE_PLAYING)
-        {
+        case GST_STATE_PLAYING:
             rc_gui_time_label_set_text(pos);
             rc_gui_mini_set_time_text(pos);
-            if(len!=0)
+            if(rc_gui.update_seek_scale_flag)
             {
-                persent = (gdouble)pos / len;
-                gtk_range_set_value(GTK_RANGE(rc_gui.time_scroll_bar),
-                    persent * 100);
+                if(len!=0)
+                {
+                    persent = (gdouble)pos / len;
+                    gtk_range_set_value(GTK_RANGE(rc_gui.time_scroll_bar),
+                        persent * 100);
+                }
             }
-        }
-        else if(state!=GST_STATE_PAUSED)
-        {
+            break;
+        case GST_STATE_PAUSED:
+            return TRUE;
+            break;
+        default:
             rc_gui_time_label_set_text(0);
             rc_gui_mini_set_time_text(-1);
             gtk_range_set_value(GTK_RANGE(rc_gui.time_scroll_bar), 0);
-        }
-    }
-    if(state!=GST_STATE_PLAYING && state!=GST_STATE_PAUSED)
-    {
-        if(text!=NULL)
-        {
-            gtk_label_set_text(GTK_LABEL(rc_gui.lrc_label), "");
-            rc_gui_mini_set_lyric_text("");
-            text = NULL;
-        }
-        return TRUE;
+            if(text!=NULL)
+            {
+                gtk_label_set_text(GTK_LABEL(rc_gui.lrc_label), "");
+                rc_gui_mini_set_lyric_text("");
+                text = NULL;
+            }
+            return TRUE;
     }
     lrc_data = rc_lrc_get_line_by_time(pos);
     if(lrc_data!=NULL)
@@ -144,7 +143,6 @@ static gboolean rc_gui_refresh_time_info(gpointer data)
             text = NULL;
         }
     }
-    rc_gui_mini_info_text_move();
     return TRUE;
 }
 
@@ -447,7 +445,7 @@ static void rc_gui_show_hide_window()
     if(visible)
     {
         if(rc_set_get_boolean("Player", "MiniMode", NULL))
-            rc_gui_mini_window_hide(NULL, NULL);
+            rc_gui_mini_window_hide();
         else
             gtk_widget_hide(GTK_WIDGET(rc_gui.main_window));
     }
@@ -455,7 +453,7 @@ static void rc_gui_show_hide_window()
     {
         if(rc_set_get_boolean("Player", "MiniMode", NULL))
         {
-            rc_gui_mini_window_show(NULL, NULL);
+            rc_gui_mini_window_show();
         }
         else
         {
@@ -487,7 +485,7 @@ static void rc_gui_window_deiconify(GtkAction *action)
 {
     if(rc_set_get_boolean("Player", "MiniMode", NULL))
     {
-        rc_gui_mini_window_show(NULL, NULL);
+        rc_gui_mini_window_show();
     }
     else
     {
@@ -1090,7 +1088,7 @@ static void rc_gui_signal_bind()
 /**
  * rc_gui_init:
  *
- * Initialize the main window of the player.
+ * Initialize the main window of the player. Can be used only once.
  *
  * Returns: Whether the initiation succeeds.
  */
@@ -1256,7 +1254,7 @@ gboolean rc_gui_init()
     }
     else
     {
-        rc_gui_mini_window_hide(NULL, NULL);
+        rc_gui_mini_window_hide();
         if(rc_set_get_boolean("Player", "AutoMinimize", NULL))
             gtk_window_iconify(GTK_WINDOW(rc_gui.main_window));
     }

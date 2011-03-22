@@ -1,0 +1,161 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Debug</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="index.html" title="RhythmCat Reference Manual">
+<link rel="up" href="ch01.html" title="[Insert title here]">
+<link rel="prev" href="RhythmCat-Asynchronous-Message-Queue.html" title="Asynchronous Message Queue">
+<link rel="next" href="RhythmCat-Core.html" title="Core">
+<meta name="generator" content="GTK-Doc V1.15 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="RhythmCat-Asynchronous-Message-Queue.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">RhythmCat Reference Manual</th>
+<td><a accesskey="n" href="RhythmCat-Core.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#RhythmCat-Debug.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#RhythmCat-Debug.description" class="shortcut">Description</a>
+</td></tr>
+</table>
+<div class="refentry" title="Debug">
+<a name="RhythmCat-Debug"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="RhythmCat-Debug.top_of_page"></a>Debug</span></h2>
+<p>Debug — Debug and print debug information.</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv" title="Synopsis">
+<a name="RhythmCat-Debug.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">
+#include &lt;debug.h&gt;
+
+#define             <a class="link" href="RhythmCat-Debug.html#DEBUG-MODE:CAPS" title="DEBUG_MODE">DEBUG_MODE</a>
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Debug.html#rc-debug-get-flag" title="rc_debug_get_flag ()">rc_debug_get_flag</a>                   ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Debug.html#rc-debug-set-mode" title="rc_debug_set_mode ()">rc_debug_set_mode</a>                   (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> mode</code></em>);
+<a href="../glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="RhythmCat-Debug.html#rc-debug-print" title="rc_debug_print ()">rc_debug_print</a>                      (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
+                                                         <em class="parameter"><code>...</code></em>);
+<a href="../glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="RhythmCat-Debug.html#rc-debug-perror" title="rc_debug_perror ()">rc_debug_perror</a>                     (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
+                                                         <em class="parameter"><code>...</code></em>);
+</pre>
+</div>
+<div class="refsect1" title="Description">
+<a name="RhythmCat-Debug.description"></a><h2>Description</h2>
+<p>
+Debug and print information of the working status of the player.
+</p>
+</div>
+<div class="refsect1" title="Details">
+<a name="RhythmCat-Debug.details"></a><h2>Details</h2>
+<div class="refsect2" title="DEBUG_MODE">
+<a name="DEBUG-MODE:CAPS"></a><h3>DEBUG_MODE</h3>
+<pre class="programlisting">#define DEBUG_MODE FALSE
+</pre>
+</div>
+<hr>
+<div class="refsect2" title="rc_debug_get_flag ()">
+<a name="rc-debug-get-flag"></a><h3>rc_debug_get_flag ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_debug_get_flag                   ();</pre>
+<p>
+Return the debug flag.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> Whether the debug flag is enabled.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_debug_set_mode ()">
+<a name="rc-debug-set-mode"></a><h3>rc_debug_set_mode ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_debug_set_mode                   (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> mode</code></em>);</pre>
+<p>
+Set the debug mode.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>mode</code></em> :</span></p></td>
+<td>the debug flag, set to TRUE to enable debug mode
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_debug_print ()">
+<a name="rc-debug-print"></a><h3>rc_debug_print ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                rc_debug_print                      (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
+                                                         <em class="parameter"><code>...</code></em>);</pre>
+<p>
+Print debug message when debug mode is enabled.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>format</code></em> :</span></p></td>
+<td>a standard <code class="function">printf()</code> format string
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>...</code></em> :</span></p></td>
+<td>the arguments to insert in the output
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>the number of bytes printed.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_debug_perror ()">
+<a name="rc-debug-perror"></a><h3>rc_debug_perror ()</h3>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                rc_debug_perror                     (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
+                                                         <em class="parameter"><code>...</code></em>);</pre>
+<p>
+Print error message on standard error (stderr).
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>format</code></em> :</span></p></td>
+<td>a standard <code class="function">printf()</code> format string
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>...</code></em> :</span></p></td>
+<td>the arguments to insert in the output
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>the number of bytes printed.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.15</div>
+</body>
+</html>

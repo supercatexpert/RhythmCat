@@ -27,6 +27,7 @@
 #include "gui.h"
 #include "plugin.h"
 #include "debug.h"
+#include "main.h"
 
 static GtkWidget *plugin_window = NULL;
 static GtkWidget *plugin_conf_button;
@@ -170,11 +171,16 @@ static guint rc_gui_plugin_load_info()
     const GSList *plugin_list, *list_foreach;
     gboolean running = FALSE;
     guint count = 0;
+    gchar *dir_name;
     GtkTreeIter iter;
     GtkListStore *plugin_list_store = GTK_LIST_STORE(plugin_list_model);
     RCPluginData *plugin_data = NULL;
     rc_plugin_list_free();
     rc_plugin_search_dir("plugins");
+    dir_name = g_strdup_printf("%s%cPlugins", rc_get_set_dir(),
+        G_DIR_SEPARATOR);
+    rc_plugin_search_dir(dir_name);
+    g_free(dir_name);
     plugin_list = rc_plugin_get_list();
     for(list_foreach=plugin_list;list_foreach!=NULL;
         list_foreach=g_slist_next(list_foreach))

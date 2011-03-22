@@ -25,19 +25,52 @@
 
 #include "debug.h"
 
-int debug_flag = DEBUG_MODE;
+/**
+ * SECTION: debug
+ * @Short_description: Debug and print debug information.
+ * @Title: Debug
+ * @Include: debug.h
+ *
+ * Debug and print information of the working status of the player.
+ */
 
 /* Set this flag to TRUE to enable debug mode. */
+gboolean debug_flag = DEBUG_MODE;
 
-int rc_debug_get_flag()
+/**
+ * rc_debug_get_flag:
+ *
+ * Return the debug flag.
+ *
+ * Returns: Whether the debug flag is enabled.
+ */
+
+gboolean rc_debug_get_flag()
 {
     return debug_flag;
 }
 
-void rc_debug_set_mode(int mode)
+/**
+ * rc_debug_set_mode:
+ * @mode: the debug flag, set to TRUE to enable debug mode
+ *
+ * Set the debug mode.
+ */
+
+void rc_debug_set_mode(gboolean mode)
 {
     debug_flag = mode;
 }
+
+/**
+ * rc_debug_print:
+ * @format: a standard printf() format string
+ * @...: the arguments to insert in the output
+ *
+ * Print debug message when debug mode is enabled.
+ *
+ * Returns:the number of bytes printed.
+ */
 
 gint rc_debug_print(const gchar *format, ...)
 {
@@ -48,6 +81,16 @@ gint rc_debug_print(const gchar *format, ...)
     result = g_vprintf(format, arg_ptr);
     return result;
 }
+
+/**
+ * rc_debug_perror:
+ * @format: a standard printf() format string
+ * @...: the arguments to insert in the output
+ *
+ * Print error message on standard error (stderr).
+ *
+ * Returns:the number of bytes printed.
+ */
 
 gint rc_debug_perror(const gchar *format, ...)
 {

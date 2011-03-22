@@ -30,22 +30,27 @@
 #include <string.h>
 #include <glib.h>
 
-/* Custom struct type to store the data of lyrics. */
-typedef struct RCLyricData
-{
+/**
+ * RCLyricData:
+ * @time: the start time of the lyric text
+ * @length: the time length of the lyric text
+ * @text: the lyric text
+ *
+ * Custom struct type to store the data of lyrics.
+ */
+
+typedef struct RCLyricData {
     guint64 time;
     guint64 length;
     gchar *text;
 }RCLyricData;
 
 /* Functions */
-gboolean rc_lrc_read_from_file(const gchar *);
+gboolean rc_lrc_read_from_file(const gchar *filename);
 void rc_lrc_clean_data();
 const GList *rc_lrc_get_lrc_data();
 const gchar *rc_lrc_get_text_data();
-const RCLyricData *rc_lrc_get_line_by_time(gint64);
-void rc_lrc_set_text(const gchar *);
-gboolean rc_lrc_save_lrc(const gchar *);
+const RCLyricData *rc_lrc_get_line_by_time(gint64 time);
 
 #endif
 
