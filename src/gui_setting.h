@@ -31,15 +31,7 @@
 #include <gtk/gtk.h>
 
 /* Functions */
-void rc_gui_create_setting_window(GtkWidget *, gpointer);
-void rc_gui_create_setting_treeview();
-void rc_gui_close_setting_window(GtkButton *, gpointer);
-void rc_gui_setting_row_selected(GtkTreeView *, gpointer);
-void rc_gui_setting_apply(GtkButton *, gpointer);
-void rc_gui_setting_confirm(GtkButton *, gpointer);
-void rc_gui_create_setting_general();
-void rc_gui_create_setting_playlist();
-void rc_gui_create_setting_appearance();
+void rc_gui_create_setting_window();
 
 #endif
 

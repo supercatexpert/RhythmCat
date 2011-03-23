@@ -4,39 +4,44 @@
 [
   <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
 ]>
-<refentry id="RhythmCat-gui-plugin">
+<refentry id="RhythmCat-Plugin-Configuration-UI">
 <refmeta>
-<refentrytitle role="top_of_page" id="RhythmCat-gui-plugin.top_of_page">gui_plugin</refentrytitle>
+<refentrytitle role="top_of_page" id="RhythmCat-Plugin-Configuration-UI.top_of_page">Plugin Configuration UI</refentrytitle>
 <manvolnum>3</manvolnum>
 <refmiscinfo>
   RHYTHMCAT Library
 </refmiscinfo>
 </refmeta>
 <refnamediv>
-<refname>gui_plugin</refname>
-<refpurpose></refpurpose>
+<refname>Plugin Configuration UI</refname>
+<refpurpose>The plugin configuration window of the player.</refpurpose>
 </refnamediv>
 
-<refsynopsisdiv id="RhythmCat-gui-plugin.synopsis" role="synopsis">
+<refsynopsisdiv id="RhythmCat-Plugin-Configuration-UI.synopsis" role="synopsis">
 <title role="synopsis.title">Synopsis</title>
 
-<synopsis><link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-plugin-window-create">rc_gui_plugin_window_create</link>         (<parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *Param1</parameter>,
-                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param2</parameter>);
+<synopsis>
+#include &lt;gui_plugin.h&gt;
+
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-plugin-window-create">rc_gui_plugin_window_create</link>         ();
 </synopsis>
 </refsynopsisdiv>
 
-<refsect1 id="RhythmCat-gui-plugin.description" role="desc">
+<refsect1 id="RhythmCat-Plugin-Configuration-UI.description" role="desc">
 <title role="desc.title">Description</title>
-
+<para>
+Show the plugin configuration window of the player.
+</para>
 </refsect1>
-<refsect1 id="RhythmCat-gui-plugin.details" role="details">
+<refsect1 id="RhythmCat-Plugin-Configuration-UI.details" role="details">
 <title role="details.title">Details</title>
 <refsect2 id="rc-gui-plugin-window-create" role="function">
 <title>rc_gui_plugin_window_create ()</title>
 <indexterm zone="rc-gui-plugin-window-create"><primary>rc_gui_plugin_window_create</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_plugin_window_create         (<parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *Param1</parameter>,
-                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param2</parameter>);</programlisting>
-</refsect2>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_plugin_window_create         ();</programlisting>
+<para>
+Show the plugin configuration window.
+</para></refsect2>
 
 </refsect1>
 

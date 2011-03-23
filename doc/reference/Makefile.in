@@ -127,7 +127,7 @@ SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
 USE_NLS = @USE_NLS@
-VERSION = @VERSION@
+VERSION = 1.0.0
 XGETTEXT = @XGETTEXT@
 XGETTEXT_015 = @XGETTEXT_015@
 XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
@@ -237,7 +237,7 @@ EXTRA_HFILES =
 
 # Header files to ignore when scanning. Use base file name, no paths
 # e.g. IGNORE_HFILES=gtkdebug.h gtkintl.h
-IGNORE_HFILES = shell_glue.h shell.h player.h main.h
+IGNORE_HFILES = shell_glue.h shell.h main.h
 
 # Images to copy into HTML directory.
 # e.g. HTML_IMAGES=$(top_srcdir)/gtk/stock-icons/stock_about_24.png
@@ -260,7 +260,7 @@ expand_content_files =
 GTKDOC_CFLAGS = -I@GLIB2_CFLAGS@ -I@GTK2_CFLAGS@ -I@GSTREAMER_CFLAGS@ \
     -I$(top_srcdir)/src
 
-GTKDOC_LIBS = @GLIB2_LIBS@ @GTK2_LIBS@
+GTKDOC_LIBS = @GLIB2_LIBS@ @GTK2_LIBS@ $(top_srcdir)/src/player_object.o
 @GTK_DOC_USE_LIBTOOL_FALSE@GTKDOC_CC = $(CC) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 @GTK_DOC_USE_LIBTOOL_TRUE@GTKDOC_CC = $(LIBTOOL) --tag=CC --mode=compile $(CC) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 @GTK_DOC_USE_LIBTOOL_FALSE@GTKDOC_LD = $(CC) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS)

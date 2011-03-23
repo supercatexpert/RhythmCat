@@ -55,7 +55,7 @@
  * @mini_window_height: the default height of the window
  *
  * Custom struct type to store the mini mode UI data.
- * Please do not change the data in this struct.
+ * Please do not change the data in this structure.
  */
 
 typedef struct RCGuiMiniData

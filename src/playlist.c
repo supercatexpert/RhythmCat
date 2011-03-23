@@ -31,9 +31,9 @@
 #include "tag.h"
 #include "msg.h"
 #include "lyric.h"
-#include "main.h"
-#include "debug.h"
 #include "player.h"
+#include "debug.h"
+#include "player_object.h"
 
 /**
  * SECTION: playlist
@@ -433,7 +433,7 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
     {
         realname = rc_tag_get_name_from_fpath(fpathname);
     }
-    if(strlen(mmd_new->title)>0)
+    if(mmd_new->title!=NULL && strlen(mmd_new->title)>0)
         list_title = g_strdup(mmd_new->title);
     else
     {
@@ -442,7 +442,8 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
         else
             list_title = g_strdup(_("Unknown title"));
     }
-    album_name = g_strdup(mmd_new->album);
+    if(mmd_new->album!=NULL)
+        album_name = g_strdup(mmd_new->album);
     rc_core_set_uri(mmd_new->uri);
     rc_tag_set_playing_metadata(mmd_new);
     gtk_list_store_set(list_store, &iter, PLIST2_STATE, GTK_STOCK_MEDIA_PLAY,
@@ -485,13 +486,14 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
     rc_lrc_clean_data();
     if(fpathname==NULL)
     {
-        g_free(album_name);
+        if(album_name!=NULL) g_free(album_name);
         return TRUE;
     }
     music_dir = g_path_get_dirname(fpathname);
     g_free(fpathname);
-    lyric_dir = g_strdup_printf("%s%cLyrics", rc_get_set_dir(), G_DIR_SEPARATOR);
-    image_dir = g_strdup_printf("%s%cAlbumImages", rc_get_set_dir(),
+    lyric_dir = g_strdup_printf("%s%cLyrics", rc_player_get_conf_dir(),
+        G_DIR_SEPARATOR);
+    image_dir = g_strdup_printf("%s%cAlbumImages", rc_player_get_conf_dir(),
         G_DIR_SEPARATOR);
     lyric_filename = rc_tag_find_file(music_dir, realname, ".LRC");
     if(lyric_filename==NULL)
@@ -510,7 +512,7 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
         rc_player_object_signal_emit_simple("lyric-not-found");
     }
     if(lyric_filename!=NULL) g_free(lyric_filename);
-    if(!image_flag)
+    if(!image_flag && album_name!=NULL)
     {
         cover_filename = rc_tag_find_file(music_dir, album_name,
             ".BMP|.JPG|.JPEG|.PNG");
@@ -529,7 +531,7 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
     }
     g_free(music_dir);
     g_free(realname);
-    g_free(album_name);
+    if(album_name!=NULL) g_free(album_name);
     return TRUE;
 }
 
@@ -978,7 +980,7 @@ gboolean rc_plist_remove_list(gint index)
 
 gboolean rc_plist_load_playlist_setting()
 {
-    const gchar *rc_set_dir = rc_get_set_dir();
+    const gchar *rc_set_dir = rc_player_get_conf_dir();
     GtkListStore *pl_store = NULL;
     gsize s_length;
     gchar bytechr = 0;
@@ -1128,7 +1130,7 @@ gboolean rc_plist_load_playlist_setting()
 
 gboolean rc_plist_save_playlist_setting()
 {
-    const gchar *rc_set_dir = rc_get_set_dir();
+    const gchar *rc_set_dir = rc_player_get_conf_dir();
     FILE *fp;
     GtkTreeIter iter_head, iter;
     GtkListStore *pl_store = NULL;

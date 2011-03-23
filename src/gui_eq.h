@@ -30,6 +30,20 @@
 #include <glib/gprintf.h>
 #include <gtk/gtk.h>
 
+/**
+ * RCGuiEQData:
+ * @eq_combobox: the combo-box
+ * @eq_scales: scalers
+ * @eq_labels: labels to show the frequencies
+ * @db_labels: labels to show the decibels
+ * @save_button: the button to save the equalizer style
+ * @import_button: the button to import the equalizer style
+ * 
+ *
+ * Custom structure type to store the equalizer UI data.
+ * Please do not change the data in this structure.
+ */
+
 typedef struct RCGuiEQData {
     GtkWidget *eq_combobox;
     GtkWidget *eq_scales[10];
@@ -39,9 +53,8 @@ typedef struct RCGuiEQData {
     GtkWidget *import_button;
 }RCGuiEQData;
 
-void rc_gui_init_eq_data();
+void rc_gui_eq_data_init();
 void rc_gui_eq_init();
-void rc_gui_create_equalizer();
 RCGuiEQData *rc_gui_eq_get_data();
 
 #endif

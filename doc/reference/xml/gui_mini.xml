@@ -4,20 +4,20 @@
 [
   <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
 ]>
-<refentry id="RhythmCat-Mini-Mode-GUI">
+<refentry id="RhythmCat-Mini-Mode-UI">
 <refmeta>
-<refentrytitle role="top_of_page" id="RhythmCat-Mini-Mode-GUI.top_of_page">Mini Mode GUI</refentrytitle>
+<refentrytitle role="top_of_page" id="RhythmCat-Mini-Mode-UI.top_of_page">Mini Mode UI</refentrytitle>
 <manvolnum>3</manvolnum>
 <refmiscinfo>
   RHYTHMCAT Library
 </refmiscinfo>
 </refmeta>
 <refnamediv>
-<refname>Mini Mode GUI</refname>
+<refname>Mini Mode UI</refname>
 <refpurpose>The mini mode UI of the player.</refpurpose>
 </refnamediv>
 
-<refsynopsisdiv id="RhythmCat-Mini-Mode-GUI.synopsis" role="synopsis">
+<refsynopsisdiv id="RhythmCat-Mini-Mode-UI.synopsis" role="synopsis">
 <title role="synopsis.title">Synopsis</title>
 
 <synopsis>
@@ -38,20 +38,20 @@
 </synopsis>
 </refsynopsisdiv>
 
-<refsect1 id="RhythmCat-Mini-Mode-GUI.description" role="desc">
+<refsect1 id="RhythmCat-Mini-Mode-UI.description" role="desc">
 <title role="desc.title">Description</title>
 <para>
 Show the mini mode of the player.
 </para>
 </refsect1>
-<refsect1 id="RhythmCat-Mini-Mode-GUI.details" role="details">
+<refsect1 id="RhythmCat-Mini-Mode-UI.details" role="details">
 <title role="details.title">Details</title>
 <refsect2 id="rc-gui-mini-init" role="function">
 <title>rc_gui_mini_init ()</title>
 <indexterm zone="rc-gui-mini-init"><primary>rc_gui_mini_init</primary></indexterm>
 <programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_mini_init                    ();</programlisting>
 <para>
-Initialize the mini mode window of the player.
+Initialize the mini mode window of the player. Can be used only once.
 </para></refsect2>
 <refsect2 id="rc-gui-mini-get-data" role="function">
 <title>rc_gui_mini_get_data ()</title>
@@ -124,7 +124,7 @@ button is pause icon, else the image is play icon.
 <para>
 Set time label.
 </para><variablelist role="params">
-<varlistentry><term><parameter>time</parameter>&#160;:</term>
+<varlistentry><term><parameter>pos</parameter>&#160;:</term>
 <listitem><simpara>the time to set, in nanosecond.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>

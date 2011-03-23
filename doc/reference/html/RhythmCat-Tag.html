@@ -4,21 +4,21 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Tag</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
-<link rel="home" href="index.html" title="RhythmCat Reference Manual">
-<link rel="up" href="ch01.html" title="[Insert title here]">
-<link rel="prev" href="RhythmCat-plugin.html" title="plugin">
-<link rel="next" href="RhythmCat-Lyric.html" title="Lyric">
+<link rel="home" href="index.html" title="RhythmCat Development Reference Manual">
+<link rel="up" href="ch01.html" title="Player Backend">
+<link rel="prev" href="RhythmCat-Core.html" title="Core">
+<link rel="next" href="RCPlayer.html" title="Player Object">
 <meta name="generator" content="GTK-Doc V1.15 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
 <tr valign="middle">
-<td><a accesskey="p" href="RhythmCat-plugin.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="p" href="RhythmCat-Core.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
 <td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
-<th width="100%" align="center">RhythmCat Reference Manual</th>
-<td><a accesskey="n" href="RhythmCat-Lyric.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+<th width="100%" align="center">RhythmCat Development Reference Manual</th>
+<td><a accesskey="n" href="RCPlayer.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
 <a href="#RhythmCat-Tag.synopsis" class="shortcut">Top</a>
@@ -41,14 +41,14 @@
 #include &lt;tag.h&gt;
 
                     <a class="link" href="RhythmCat-Tag.html#RCMusicMetaData" title="RCMusicMetaData">RCMusicMetaData</a>;
-<a class="link" href="RhythmCat-Tag.html#RCMusicMetaData" title="RCMusicMetaData"><span class="returnvalue">RCMusicMetaData</span></a> *   <a class="link" href="RhythmCat-Tag.html#rc-tag-read-metadata" title="rc_tag_read_metadata ()">rc_tag_read_metadata</a>                (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);
+<a class="link" href="RhythmCat-Tag.html#RCMusicMetaData" title="RCMusicMetaData"><span class="returnvalue">RCMusicMetaData</span></a> *   <a class="link" href="RhythmCat-Tag.html#rc-tag-read-metadata" title="rc_tag_read_metadata ()">rc_tag_read_metadata</a>                (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Tag.html#rc-tag-free" title="rc_tag_free ()">rc_tag_free</a>                         (<em class="parameter"><code><a class="link" href="RhythmCat-Tag.html#RCMusicMetaData" title="RCMusicMetaData"><span class="type">RCMusicMetaData</span></a> *mmd</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Tag.html#rc-tag-set-playing-metadata" title="rc_tag_set_playing_metadata ()">rc_tag_set_playing_metadata</a>         (<em class="parameter"><code>const <a class="link" href="RhythmCat-Tag.html#RCMusicMetaData" title="RCMusicMetaData"><span class="type">RCMusicMetaData</span></a> *mmd</code></em>);
 const <a class="link" href="RhythmCat-Tag.html#RCMusicMetaData" title="RCMusicMetaData"><span class="returnvalue">RCMusicMetaData</span></a> * <a class="link" href="RhythmCat-Tag.html#rc-tag-get-playing-metadata" title="rc_tag_get_playing_metadata ()">rc_tag_get_playing_metadata</a>     ();
-<a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             <a class="link" href="RhythmCat-Tag.html#rc-tag-get-name-from-fpath" title="rc_tag_get_name_from_fpath ()">rc_tag_get_name_from_fpath</a>          (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>);
-<a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             <a class="link" href="RhythmCat-Tag.html#rc-tag-find-file" title="rc_tag_find_file ()">rc_tag_find_file</a>                    (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *dirname</code></em>,
-                                                         <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *str</code></em>,
-                                                         <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *extname</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             <a class="link" href="RhythmCat-Tag.html#rc-tag-get-name-from-fpath" title="rc_tag_get_name_from_fpath ()">rc_tag_get_name_from_fpath</a>          (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             <a class="link" href="RhythmCat-Tag.html#rc-tag-find-file" title="rc_tag_find_file ()">rc_tag_find_file</a>                    (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *dirname</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *str</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *extname</code></em>);
 </pre>
 </div>
 <div class="refsect1" title="Description">
@@ -90,97 +90,97 @@ Custom struct type to store the music metadata.
 <col align="left" valign="top">
 <tbody>
 <tr>
-<td><p><span class="term"><a href="../glib/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> <em class="structfield"><code><a name="RCMusicMetaData.length"></a>length</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> <em class="structfield"><code><a name="RCMusicMetaData.length"></a>length</code></em>;</span></p></td>
 <td>the length of the music
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCMusicMetaData.uri"></a>uri</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCMusicMetaData.uri"></a>uri</code></em>;</span></p></td>
 <td>the URI of the music
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="../glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="RCMusicMetaData.tracknum"></a>tracknum</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="RCMusicMetaData.tracknum"></a>tracknum</code></em>;</span></p></td>
 <td>the track number of the music
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="../glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="RCMusicMetaData.bitrate"></a>bitrate</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="RCMusicMetaData.bitrate"></a>bitrate</code></em>;</span></p></td>
 <td>the bitrate of the music
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="RCMusicMetaData.samplerate"></a>samplerate</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="RCMusicMetaData.samplerate"></a>samplerate</code></em>;</span></p></td>
 <td>the sample rate of the music
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="RCMusicMetaData.channels"></a>channels</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="RCMusicMetaData.channels"></a>channels</code></em>;</span></p></td>
 <td>the channel number of the music
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="RCMusicMetaData.eos"></a>eos</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="RCMusicMetaData.eos"></a>eos</code></em>;</span></p></td>
 <td>the EOS signal
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="RCMusicMetaData.list2-index"></a>list2_index</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="RCMusicMetaData.list2-index"></a>list2_index</code></em>;</span></p></td>
 <td>the insert index in list2, only used in insert operation
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCMusicMetaData.title"></a>title</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCMusicMetaData.title"></a>title</code></em>;</span></p></td>
 <td>the title text of the music
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCMusicMetaData.artist"></a>artist</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCMusicMetaData.artist"></a>artist</code></em>;</span></p></td>
 <td>the artist text of the music
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCMusicMetaData.album"></a>album</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCMusicMetaData.album"></a>album</code></em>;</span></p></td>
 <td>the album text of the music
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCMusicMetaData.comment"></a>comment</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCMusicMetaData.comment"></a>comment</code></em>;</span></p></td>
 <td>the comment text of the music
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCMusicMetaData.file-type"></a>file_type</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCMusicMetaData.file-type"></a>file_type</code></em>;</span></p></td>
 <td>the file type of the music
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="../gstreamer-0.10/gstreamer-GstBuffer.html#GstBuffer"><span class="type">GstBuffer</span></a> *<em class="structfield"><code><a name="RCMusicMetaData.image"></a>image</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gstreamer-0.10/gstreamer-GstBuffer.html#GstBuffer"><span class="type">GstBuffer</span></a> *<em class="structfield"><code><a name="RCMusicMetaData.image"></a>image</code></em>;</span></p></td>
 <td>the GstBuffer which contains the cover image
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> <em class="structfield"><code><a name="RCMusicMetaData.audio-flag"></a>audio_flag</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> <em class="structfield"><code><a name="RCMusicMetaData.audio-flag"></a>audio_flag</code></em>;</span></p></td>
 <td>whether this file has audio
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> <em class="structfield"><code><a name="RCMusicMetaData.video-flag"></a>video_flag</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> <em class="structfield"><code><a name="RCMusicMetaData.video-flag"></a>video_flag</code></em>;</span></p></td>
 <td>whether this file has video
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="../gtk/GtkTreeModel.html#GtkTreeRowReference"><span class="type">GtkTreeRowReference</span></a> *<em class="structfield"><code><a name="RCMusicMetaData.reference"></a>reference</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html#GtkTreeRowReference"><span class="type">GtkTreeRowReference</span></a> *<em class="structfield"><code><a name="RCMusicMetaData.reference"></a>reference</code></em>;</span></p></td>
 <td>the GtkTreeRowReference, used in list2 refresh operation
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="../gtk/GtkListStore.html"><span class="type">GtkListStore</span></a> *<em class="structfield"><code><a name="RCMusicMetaData.store"></a>store</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkListStore.html"><span class="type">GtkListStore</span></a> *<em class="structfield"><code><a name="RCMusicMetaData.store"></a>store</code></em>;</span></p></td>
 <td>the GtkListStore, used in list2 refresh operation
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> <em class="structfield"><code><a name="RCMusicMetaData.user-data"></a>user_data</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> <em class="structfield"><code><a name="RCMusicMetaData.user-data"></a>user_data</code></em>;</span></p></td>
 <td>the user data
 </td>
 </tr>
@@ -190,7 +190,7 @@ Custom struct type to store the music metadata.
 <hr>
 <div class="refsect2" title="rc_tag_read_metadata ()">
 <a name="rc-tag-read-metadata"></a><h3>rc_tag_read_metadata ()</h3>
-<pre class="programlisting"><a class="link" href="RhythmCat-Tag.html#RCMusicMetaData" title="RCMusicMetaData"><span class="returnvalue">RCMusicMetaData</span></a> *   rc_tag_read_metadata                (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);</pre>
+<pre class="programlisting"><a class="link" href="RhythmCat-Tag.html#RCMusicMetaData" title="RCMusicMetaData"><span class="returnvalue">RCMusicMetaData</span></a> *   rc_tag_read_metadata                (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);</pre>
 <p>
 Read tag (metadata) from given URI.
 </p>
@@ -263,7 +263,7 @@ Return the metadata which the player is playing.
 <hr>
 <div class="refsect2" title="rc_tag_get_name_from_fpath ()">
 <a name="rc-tag-get-name-from-fpath"></a><h3>rc_tag_get_name_from_fpath ()</h3>
-<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             rc_tag_get_name_from_fpath          (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>);</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             rc_tag_get_name_from_fpath          (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>);</pre>
 <p>
 Return the base-name without extension from a full path or file name.
 </p>
@@ -286,9 +286,9 @@ Return the base-name without extension from a full path or file name.
 <hr>
 <div class="refsect2" title="rc_tag_find_file ()">
 <a name="rc-tag-find-file"></a><h3>rc_tag_find_file ()</h3>
-<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             rc_tag_find_file                    (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *dirname</code></em>,
-                                                         <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *str</code></em>,
-                                                         <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *extname</code></em>);</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             rc_tag_find_file                    (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *dirname</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *str</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *extname</code></em>);</pre>
 <p>
 Find a file in the directory by extension name and prefix string.
 </p>

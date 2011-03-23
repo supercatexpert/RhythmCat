@@ -107,7 +107,7 @@ The data of the core.
 <indexterm zone="rc-core-init"><primary>rc_core_init</primary></indexterm>
 <programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_core_init                        ();</programlisting>
 <para>
-Initialize the core of the player. Can be load only once.
+Initialize the core of the player. Can be used only once.
 </para></refsect2>
 <refsect2 id="rc-core-exit" role="function">
 <title>rc_core_exit ()</title>

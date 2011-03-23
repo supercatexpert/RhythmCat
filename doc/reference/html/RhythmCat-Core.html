@@ -4,21 +4,21 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Core</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
-<link rel="home" href="index.html" title="RhythmCat Reference Manual">
-<link rel="up" href="ch01.html" title="[Insert title here]">
-<link rel="prev" href="RhythmCat-Debug.html" title="Debug">
-<link rel="next" href="RhythmCat-gui-dialog.html" title="gui_dialog">
+<link rel="home" href="index.html" title="RhythmCat Development Reference Manual">
+<link rel="up" href="ch01.html" title="Player Backend">
+<link rel="prev" href="RhythmCat-Player.html" title="Player">
+<link rel="next" href="RhythmCat-Tag.html" title="Tag">
 <meta name="generator" content="GTK-Doc V1.15 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
 <tr valign="middle">
-<td><a accesskey="p" href="RhythmCat-Debug.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="p" href="RhythmCat-Player.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
 <td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
-<th width="100%" align="center">RhythmCat Reference Manual</th>
-<td><a accesskey="n" href="RhythmCat-gui-dialog.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+<th width="100%" align="center">RhythmCat Development Reference Manual</th>
+<td><a accesskey="n" href="RhythmCat-Tag.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
 <a href="#RhythmCat-Core.synopsis" class="shortcut">Top</a>
@@ -44,20 +44,20 @@
 <span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Core.html#rc-core-init" title="rc_core_init ()">rc_core_init</a>                        ();
 <span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Core.html#rc-core-exit" title="rc_core_exit ()">rc_core_exit</a>                        ();
 <a class="link" href="RhythmCat-Core.html#RCCoreData" title="RCCoreData"><span class="returnvalue">RCCoreData</span></a> *        <a class="link" href="RhythmCat-Core.html#rc-core-get-data" title="rc_core_get_data ()">rc_core_get_data</a>                    ();
-<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Core.html#rc-core-set-uri" title="rc_core_set_uri ()">rc_core_set_uri</a>                     (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);
-<a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             <a class="link" href="RhythmCat-Core.html#rc-core-get-uri" title="rc_core_get_uri ()">rc_core_get_uri</a>                     ();
-<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Core.html#rc-core-play" title="rc_core_play ()">rc_core_play</a>                        ();
-<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Core.html#rc-core-pause" title="rc_core_pause ()">rc_core_pause</a>                       ();
-<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Core.html#rc-core-stop" title="rc_core_stop ()">rc_core_stop</a>                        ();
-<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Core.html#rc-core-set-volume" title="rc_core_set_volume ()">rc_core_set_volume</a>                  (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> volume</code></em>);
-<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Core.html#rc-core-set-play-position" title="rc_core_set_play_position ()">rc_core_set_play_position</a>           (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> time</code></em>);
-<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Core.html#rc-core-set-play-position-by-persent" title="rc_core_set_play_position_by_persent ()">rc_core_set_play_position_by_persent</a>
-                                                        (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> persent</code></em>);
-<a href="../glib/glib-Basic-Types.html#gint64"><span class="returnvalue">gint64</span></a>              <a class="link" href="RhythmCat-Core.html#rc-core-get-play-position" title="rc_core_get_play_position ()">rc_core_get_play_position</a>           ();
-<a href="../glib/glib-Basic-Types.html#gint64"><span class="returnvalue">gint64</span></a>              <a class="link" href="RhythmCat-Core.html#rc-core-get-music-length" title="rc_core_get_music_length ()">rc_core_get_music_length</a>            ();
-<a href="../glib/glib-Basic-Types.html#gdouble"><span class="returnvalue">gdouble</span></a>             <a class="link" href="RhythmCat-Core.html#rc-core-get-volume" title="rc_core_get_volume ()">rc_core_get_volume</a>                  ();
-<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Core.html#rc-core-set-eq-effect" title="rc_core_set_eq_effect ()">rc_core_set_eq_effect</a>               (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> *fq</code></em>);
-<a href="../gstreamer-0.10/GstElement.html#GstState"><span class="returnvalue">GstState</span></a>            <a class="link" href="RhythmCat-Core.html#rc-core-get-play-state" title="rc_core_get_play_state ()">rc_core_get_play_state</a>              ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Core.html#rc-core-set-uri" title="rc_core_set_uri ()">rc_core_set_uri</a>                     (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             <a class="link" href="RhythmCat-Core.html#rc-core-get-uri" title="rc_core_get_uri ()">rc_core_get_uri</a>                     ();
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Core.html#rc-core-play" title="rc_core_play ()">rc_core_play</a>                        ();
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Core.html#rc-core-pause" title="rc_core_pause ()">rc_core_pause</a>                       ();
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Core.html#rc-core-stop" title="rc_core_stop ()">rc_core_stop</a>                        ();
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Core.html#rc-core-set-volume" title="rc_core_set_volume ()">rc_core_set_volume</a>                  (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> volume</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Core.html#rc-core-set-play-position" title="rc_core_set_play_position ()">rc_core_set_play_position</a>           (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> time</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Core.html#rc-core-set-play-position-by-persent" title="rc_core_set_play_position_by_persent ()">rc_core_set_play_position_by_persent</a>
+                                                        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> persent</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint64"><span class="returnvalue">gint64</span></a>              <a class="link" href="RhythmCat-Core.html#rc-core-get-play-position" title="rc_core_get_play_position ()">rc_core_get_play_position</a>           ();
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint64"><span class="returnvalue">gint64</span></a>              <a class="link" href="RhythmCat-Core.html#rc-core-get-music-length" title="rc_core_get_music_length ()">rc_core_get_music_length</a>            ();
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"><span class="returnvalue">gdouble</span></a>             <a class="link" href="RhythmCat-Core.html#rc-core-get-volume" title="rc_core_get_volume ()">rc_core_get_volume</a>                  ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Core.html#rc-core-set-eq-effect" title="rc_core_set_eq_effect ()">rc_core_set_eq_effect</a>               (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> *fq</code></em>);
+<a href="/usr/share/gtk-doc/html/gstreamer-0.10/GstElement.html#GstState"><span class="returnvalue">GstState</span></a>            <a class="link" href="RhythmCat-Core.html#rc-core-get-play-state" title="rc_core_get_play_state ()">rc_core_get_play_state</a>              ();
 </pre>
 </div>
 <div class="refsect1" title="Description">
@@ -88,42 +88,42 @@ The data of the core.
 <col align="left" valign="top">
 <tbody>
 <tr>
-<td><p><span class="term"><a href="../gstreamer-0.10/GstElement.html"><span class="type">GstElement</span></a> *<em class="structfield"><code><a name="RCCoreData.playbin"></a>playbin</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gstreamer-0.10/GstElement.html"><span class="type">GstElement</span></a> *<em class="structfield"><code><a name="RCCoreData.playbin"></a>playbin</code></em>;</span></p></td>
 <td>the playbin element
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="../gstreamer-0.10/GstElement.html"><span class="type">GstElement</span></a> *<em class="structfield"><code><a name="RCCoreData.audio-sink"></a>audio_sink</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gstreamer-0.10/GstElement.html"><span class="type">GstElement</span></a> *<em class="structfield"><code><a name="RCCoreData.audio-sink"></a>audio_sink</code></em>;</span></p></td>
 <td>the audio sink element
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="../gstreamer-0.10/GstElement.html"><span class="type">GstElement</span></a> *<em class="structfield"><code><a name="RCCoreData.eq-plugin"></a>eq_plugin</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gstreamer-0.10/GstElement.html"><span class="type">GstElement</span></a> *<em class="structfield"><code><a name="RCCoreData.eq-plugin"></a>eq_plugin</code></em>;</span></p></td>
 <td>the equalizer element
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="../gstreamer-0.10/GstElement.html"><span class="type">GstElement</span></a> *<em class="structfield"><code><a name="RCCoreData.vol-plugin"></a>vol_plugin</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gstreamer-0.10/GstElement.html"><span class="type">GstElement</span></a> *<em class="structfield"><code><a name="RCCoreData.vol-plugin"></a>vol_plugin</code></em>;</span></p></td>
 <td>the volume control element
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="../glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="RCCoreData.ver-major"></a>ver_major</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="RCCoreData.ver-major"></a>ver_major</code></em>;</span></p></td>
 <td>the major version number of Gstreamer
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="../glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="RCCoreData.ver-minor"></a>ver_minor</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="RCCoreData.ver-minor"></a>ver_minor</code></em>;</span></p></td>
 <td>the minor version number of Gstreamer
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="../glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="RCCoreData.ver-micro"></a>ver_micro</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="RCCoreData.ver-micro"></a>ver_micro</code></em>;</span></p></td>
 <td>the micro version number of Gstreamer
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="../glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="RCCoreData.ver-nano"></a>ver_nano</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="RCCoreData.ver-nano"></a>ver_nano</code></em>;</span></p></td>
 <td>the nano version number of Gstreamer
 </td>
 </tr>
@@ -135,7 +135,7 @@ The data of the core.
 <a name="rc-core-init"></a><h3>rc_core_init ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                rc_core_init                        ();</pre>
 <p>
-Initialize the core of the player. Can be load only once.
+Initialize the core of the player. Can be used only once.
 </p>
 </div>
 <hr>
@@ -165,7 +165,7 @@ Return the pointer of the core.
 <hr>
 <div class="refsect2" title="rc_core_set_uri ()">
 <a name="rc-core-set-uri"></a><h3>rc_core_set_uri ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                rc_core_set_uri                     (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);</pre>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_core_set_uri                     (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);</pre>
 <p>
 Set the URI to play.
 </p>
@@ -181,7 +181,7 @@ Set the URI to play.
 <hr>
 <div class="refsect2" title="rc_core_get_uri ()">
 <a name="rc-core-get-uri"></a><h3>rc_core_get_uri ()</h3>
-<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             rc_core_get_uri                     ();</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             rc_core_get_uri                     ();</pre>
 <p>
 Return the URI the core opened.
 </p>
@@ -197,7 +197,7 @@ Return the URI the core opened.
 <hr>
 <div class="refsect2" title="rc_core_play ()">
 <a name="rc-core-play"></a><h3>rc_core_play ()</h3>
-<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_core_play                        ();</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_core_play                        ();</pre>
 <p>
 Set the state of the core to playing.
 </p>
@@ -213,7 +213,7 @@ Set the state of the core to playing.
 <hr>
 <div class="refsect2" title="rc_core_pause ()">
 <a name="rc-core-pause"></a><h3>rc_core_pause ()</h3>
-<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_core_pause                       ();</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_core_pause                       ();</pre>
 <p>
 Set the core to pause state.
 </p>
@@ -229,7 +229,7 @@ Set the core to pause state.
 <hr>
 <div class="refsect2" title="rc_core_stop ()">
 <a name="rc-core-stop"></a><h3>rc_core_stop ()</h3>
-<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_core_stop                        ();</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_core_stop                        ();</pre>
 <p>
 Set the core to stop state.
 </p>
@@ -237,7 +237,7 @@ Set the core to stop state.
 <hr>
 <div class="refsect2" title="rc_core_set_volume ()">
 <a name="rc-core-set-volume"></a><h3>rc_core_set_volume ()</h3>
-<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_core_set_volume                  (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> volume</code></em>);</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_core_set_volume                  (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> volume</code></em>);</pre>
 <p>
 Set the volume of player.
 </p>
@@ -253,7 +253,7 @@ Set the volume of player.
 <hr>
 <div class="refsect2" title="rc_core_set_play_position ()">
 <a name="rc-core-set-play-position"></a><h3>rc_core_set_play_position ()</h3>
-<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_core_set_play_position           (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> time</code></em>);</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_core_set_play_position           (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> time</code></em>);</pre>
 <p>
 Set the position to go to (in nanosecond).
 Notice that this function can only be used when the state of the player is
@@ -278,8 +278,8 @@ playing or paused.
 <hr>
 <div class="refsect2" title="rc_core_set_play_position_by_persent ()">
 <a name="rc-core-set-play-position-by-persent"></a><h3>rc_core_set_play_position_by_persent ()</h3>
-<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_core_set_play_position_by_persent
-                                                        (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> persent</code></em>);</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_core_set_play_position_by_persent
+                                                        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> persent</code></em>);</pre>
 <p>
 Set the position to to go to in persent (0.0 - 1.0).
 </p>
@@ -302,7 +302,7 @@ Set the position to to go to in persent (0.0 - 1.0).
 <hr>
 <div class="refsect2" title="rc_core_get_play_position ()">
 <a name="rc-core-get-play-position"></a><h3>rc_core_get_play_position ()</h3>
-<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gint64"><span class="returnvalue">gint64</span></a>              rc_core_get_play_position           ();</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint64"><span class="returnvalue">gint64</span></a>              rc_core_get_play_position           ();</pre>
 <p>
 Return the playing position (in nanosecond).
 </p>
@@ -318,7 +318,7 @@ Return the playing position (in nanosecond).
 <hr>
 <div class="refsect2" title="rc_core_get_music_length ()">
 <a name="rc-core-get-music-length"></a><h3>rc_core_get_music_length ()</h3>
-<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gint64"><span class="returnvalue">gint64</span></a>              rc_core_get_music_length            ();</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint64"><span class="returnvalue">gint64</span></a>              rc_core_get_music_length            ();</pre>
 <p>
 Return the time length of the playing music (in nanosecond).
 </p>
@@ -334,7 +334,7 @@ Return the time length of the playing music (in nanosecond).
 <hr>
 <div class="refsect2" title="rc_core_get_volume ()">
 <a name="rc-core-get-volume"></a><h3>rc_core_get_volume ()</h3>
-<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gdouble"><span class="returnvalue">gdouble</span></a>             rc_core_get_volume                  ();</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"><span class="returnvalue">gdouble</span></a>             rc_core_get_volume                  ();</pre>
 <p>
 Return the volume of the player.
 </p>
@@ -350,7 +350,7 @@ Return the volume of the player.
 <hr>
 <div class="refsect2" title="rc_core_set_eq_effect ()">
 <a name="rc-core-set-eq-effect"></a><h3>rc_core_set_eq_effect ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                rc_core_set_eq_effect               (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> *fq</code></em>);</pre>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_core_set_eq_effect               (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> *fq</code></em>);</pre>
 <p>
 Set the EQ effect of the player.
 </p>
@@ -366,7 +366,7 @@ Set the EQ effect of the player.
 <hr>
 <div class="refsect2" title="rc_core_get_play_state ()">
 <a name="rc-core-get-play-state"></a><h3>rc_core_get_play_state ()</h3>
-<pre class="programlisting"><a href="../gstreamer-0.10/GstElement.html#GstState"><span class="returnvalue">GstState</span></a>            rc_core_get_play_state              ();</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gstreamer-0.10/GstElement.html#GstState"><span class="returnvalue">GstState</span></a>            rc_core_get_play_state              ();</pre>
 <p>
 Return the state of the core.
 </p>

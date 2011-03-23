@@ -192,7 +192,7 @@ The enum type to show the columns in ListStore2.
 <indexterm zone="rc-plist-init"><primary>rc_plist_init</primary></indexterm>
 <programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rc_plist_init                       ();</programlisting>
 <para>
-Initialize playlists.
+Initialize playlists. Can be used only once.
 </para><variablelist role="params">
 <varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> Whether the initiation succeeds.
 </simpara></listitem></varlistentry>

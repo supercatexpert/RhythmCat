@@ -1,0 +1,438 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Plugin Support</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="index.html" title="RhythmCat Development Reference Manual">
+<link rel="up" href="ch01.html" title="Player Backend">
+<link rel="prev" href="RhythmCat-Settings.html" title="Settings">
+<link rel="next" href="RhythmCat-Debug.html" title="Debug">
+<meta name="generator" content="GTK-Doc V1.15 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="RhythmCat-Settings.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">RhythmCat Development Reference Manual</th>
+<td><a accesskey="n" href="RhythmCat-Debug.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#RhythmCat-Plugin-Support.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#RhythmCat-Plugin-Support.description" class="shortcut">Description</a>
+</td></tr>
+</table>
+<div class="refentry" title="Plugin Support">
+<a name="RhythmCat-Plugin-Support"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="RhythmCat-Plugin-Support.top_of_page"></a>Plugin Support</span></h2>
+<p>Plugin Support — Plugin support of the player.</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv" title="Synopsis">
+<a name="RhythmCat-Plugin-Support.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">
+#include &lt;plugin.h&gt;
+
+enum                <a class="link" href="RhythmCat-Plugin-Support.html#RCPluginType" title="enum RCPluginType">RCPluginType</a>;
+                    <a class="link" href="RhythmCat-Plugin-Support.html#RCPluginConfData" title="RCPluginConfData">RCPluginConfData</a>;
+                    <a class="link" href="RhythmCat-Plugin-Support.html#RCModuleData" title="RCModuleData">RCModuleData</a>;
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Plugin-Support.html#rc-plugin-init" title="rc_plugin_init ()">rc_plugin_init</a>                      ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Plugin-Support.html#rc-plugin-exit" title="rc_plugin_exit ()">rc_plugin_exit</a>                      ();
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Plugin-Support.html#rc-plugin-search-dir" title="rc_plugin_search_dir ()">rc_plugin_search_dir</a>                (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *dirname</code></em>);
+const <a href="/usr/share/gtk-doc/html/glib/glib-Singly-Linked-Lists.html#GSList"><span class="returnvalue">GSList</span></a> *      <a class="link" href="RhythmCat-Plugin-Support.html#rc-plugin-get-list" title="rc_plugin_get_list ()">rc_plugin_get_list</a>                  ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Plugin-Support.html#rc-plugin-list-free" title="rc_plugin_list_free ()">rc_plugin_list_free</a>                 ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Plugin-Support.html#rc-plugin-conf-free" title="rc_plugin_conf_free ()">rc_plugin_conf_free</a>                 (<em class="parameter"><code><a class="link" href="RhythmCat-Plugin-Support.html#RCPluginConfData" title="RCPluginConfData"><span class="type">RCPluginConfData</span></a> *plugin_data</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Plugin-Support.html#rc-plugin-module-free" title="rc_plugin_module_free ()">rc_plugin_module_free</a>               (<em class="parameter"><code><a class="link" href="RhythmCat-Plugin-Support.html#RCModuleData" title="RCModuleData"><span class="type">RCModuleData</span></a> *module_data</code></em>);
+<a class="link" href="RhythmCat-Plugin-Support.html#RCPluginConfData" title="RCPluginConfData"><span class="returnvalue">RCPluginConfData</span></a> *  <a class="link" href="RhythmCat-Plugin-Support.html#rc-plugin-conf-load" title="rc_plugin_conf_load ()">rc_plugin_conf_load</a>                 (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Plugin-Support.html#rc-plugin-load" title="rc_plugin_load ()">rc_plugin_load</a>                      (<em class="parameter"><code><a class="link" href="RhythmCat-Plugin-Support.html#RCPluginType" title="enum RCPluginType"><span class="type">RCPluginType</span></a> type</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Plugin-Support.html#rc-plugin-configure" title="rc_plugin_configure ()">rc_plugin_configure</a>                 (<em class="parameter"><code><a class="link" href="RhythmCat-Plugin-Support.html#RCPluginType" title="enum RCPluginType"><span class="type">RCPluginType</span></a> type</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Plugin-Support.html#rc-plugin-close" title="rc_plugin_close ()">rc_plugin_close</a>                     (<em class="parameter"><code><a class="link" href="RhythmCat-Plugin-Support.html#RCPluginType" title="enum RCPluginType"><span class="type">RCPluginType</span></a> type</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Plugin-Support.html#rc-plugin-check-running" title="rc_plugin_check_running ()">rc_plugin_check_running</a>             (<em class="parameter"><code><a class="link" href="RhythmCat-Plugin-Support.html#RCPluginType" title="enum RCPluginType"><span class="type">RCPluginType</span></a> type</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *path</code></em>);
+</pre>
+</div>
+<div class="refsect1" title="Description">
+<a name="RhythmCat-Plugin-Support.description"></a><h2>Description</h2>
+<p>
+Plugin support of the player. It supports module type (usually it is
+a dynamic link library) plugin and the plugin written by Python.
+</p>
+</div>
+<div class="refsect1" title="Details">
+<a name="RhythmCat-Plugin-Support.details"></a><h2>Details</h2>
+<div class="refsect2" title="enum RCPluginType">
+<a name="RCPluginType"></a><h3>enum RCPluginType</h3>
+<pre class="programlisting">typedef enum RCPluginType {
+    PLUGIN_TYPE_MODULE = 1,
+    PLUGIN_TYPE_PYTHON = 2
+}RCPluginType;
+</pre>
+<p>
+The enum type to show the type of the plugin.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><a name="PLUGIN-TYPE-MODULE:CAPS"></a><span class="term"><code class="literal">PLUGIN_TYPE_MODULE</code></span></p></td>
+<td>the plugin is a module
+</td>
+</tr>
+<tr>
+<td><p><a name="PLUGIN-TYPE-PYTHON:CAPS"></a><span class="term"><code class="literal">PLUGIN_TYPE_PYTHON</code></span></p></td>
+<td>the plugin is a python program
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="RCPluginConfData">
+<a name="RCPluginConfData"></a><h3>RCPluginConfData</h3>
+<pre class="programlisting">typedef struct {
+    gchar *path;
+    gchar *name;
+    gchar *desc;
+    gchar *author;
+    gchar *version;
+    gchar *website;
+    RCPluginType type;
+} RCPluginConfData;
+</pre>
+<p>
+The plugin configuration data structure.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCPluginConfData.path"></a>path</code></em>;</span></p></td>
+<td>the path of the plugin file
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCPluginConfData.name"></a>name</code></em>;</span></p></td>
+<td>the name of the plugin
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCPluginConfData.desc"></a>desc</code></em>;</span></p></td>
+<td>the description of the plugin
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCPluginConfData.author"></a>author</code></em>;</span></p></td>
+<td>the author of the plugin
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCPluginConfData.version"></a>version</code></em>;</span></p></td>
+<td>the version of the plugin
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCPluginConfData.website"></a>website</code></em>;</span></p></td>
+<td>the website of the plugin
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a class="link" href="RhythmCat-Plugin-Support.html#RCPluginType" title="enum RCPluginType"><span class="type">RCPluginType</span></a> <em class="structfield"><code><a name="RCPluginConfData.type"></a>type</code></em>;</span></p></td>
+<td>the type of the plugin
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="RCModuleData">
+<a name="RCModuleData"></a><h3>RCModuleData</h3>
+<pre class="programlisting">typedef struct {
+    GModule *module;
+    gchar *path;
+    gint (*module_init)();
+    void (*module_exit)();
+    const gchar *(*module_get_group_name)();
+} RCModuleData;
+</pre>
+<p>
+The module-type plugin data structure.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Dynamic-Loading-of-Modules.html#GModule"><span class="type">GModule</span></a> *<em class="structfield"><code><a name="RCModuleData.module"></a>module</code></em>;</span></p></td>
+<td>the GModule
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCModuleData.path"></a>path</code></em>;</span></p></td>
+<td>the path of the module
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="structfield"><code><a name="RCModuleData.module-init"></a>module_init</code></em> ()</span></p></td>
+<td>the function pointer to initialize the module
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="structfield"><code><a name="RCModuleData.module-exit"></a>module_exit</code></em> ()</span></p></td>
+<td>the function pointer to close the module
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="structfield"><code><a name="RCModuleData.module-get-group-name"></a>module_get_group_name</code></em> ()</span></p></td>
+<td>get the group name of the module, used in
+plugin configuration file
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_plugin_init ()">
+<a name="rc-plugin-init"></a><h3>rc_plugin_init ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_plugin_init                      ();</pre>
+<p>
+Initialize the plugin support of the player. Can be used only once.
+</p>
+</div>
+<hr>
+<div class="refsect2" title="rc_plugin_exit ()">
+<a name="rc-plugin-exit"></a><h3>rc_plugin_exit ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_plugin_exit                      ();</pre>
+<p>
+Free and close all plugins when exits.
+</p>
+</div>
+<hr>
+<div class="refsect2" title="rc_plugin_search_dir ()">
+<a name="rc-plugin-search-dir"></a><h3>rc_plugin_search_dir ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plugin_search_dir                (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *dirname</code></em>);</pre>
+<p>
+Search all plugins in a directory. And save them in a list.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>dirname</code></em> :</span></p></td>
+<td>the path of the directory
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> Whether the directory has plugin.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_plugin_get_list ()">
+<a name="rc-plugin-get-list"></a><h3>rc_plugin_get_list ()</h3>
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glib/glib-Singly-Linked-Lists.html#GSList"><span class="returnvalue">GSList</span></a> *      rc_plugin_get_list                  ();</pre>
+<p>
+Return all plugins in the plugin list found before.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The plugin list found before.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_plugin_list_free ()">
+<a name="rc-plugin-list-free"></a><h3>rc_plugin_list_free ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_plugin_list_free                 ();</pre>
+<p>
+Free and clean the plugin list.
+</p>
+</div>
+<hr>
+<div class="refsect2" title="rc_plugin_conf_free ()">
+<a name="rc-plugin-conf-free"></a><h3>rc_plugin_conf_free ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_plugin_conf_free                 (<em class="parameter"><code><a class="link" href="RhythmCat-Plugin-Support.html#RCPluginConfData" title="RCPluginConfData"><span class="type">RCPluginConfData</span></a> *plugin_data</code></em>);</pre>
+<p>
+Free the plugin configure data.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>plugin_data</code></em> :</span></p></td>
+<td>the plugin configure data
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_plugin_module_free ()">
+<a name="rc-plugin-module-free"></a><h3>rc_plugin_module_free ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_plugin_module_free               (<em class="parameter"><code><a class="link" href="RhythmCat-Plugin-Support.html#RCModuleData" title="RCModuleData"><span class="type">RCModuleData</span></a> *module_data</code></em>);</pre>
+<p>
+Free the module data.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>module_data</code></em> :</span></p></td>
+<td>the module data
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_plugin_conf_load ()">
+<a name="rc-plugin-conf-load"></a><h3>rc_plugin_conf_load ()</h3>
+<pre class="programlisting"><a class="link" href="RhythmCat-Plugin-Support.html#RCPluginConfData" title="RCPluginConfData"><span class="returnvalue">RCPluginConfData</span></a> *  rc_plugin_conf_load                 (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>);</pre>
+<p>
+Open a configuration file.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>filename</code></em> :</span></p></td>
+<td>the configuration file to open
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The configuration data read from the file, NULL if error
+   happens.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_plugin_load ()">
+<a name="rc-plugin-load"></a><h3>rc_plugin_load ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plugin_load                      (<em class="parameter"><code><a class="link" href="RhythmCat-Plugin-Support.html#RCPluginType" title="enum RCPluginType"><span class="type">RCPluginType</span></a> type</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>);</pre>
+<p>
+Open and run the plugin.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>type</code></em> :</span></p></td>
+<td>the type of the plugin
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>filename</code></em> :</span></p></td>
+<td>the path of the plugin
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> Whether the operation succeeds.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_plugin_configure ()">
+<a name="rc-plugin-configure"></a><h3>rc_plugin_configure ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plugin_configure                 (<em class="parameter"><code><a class="link" href="RhythmCat-Plugin-Support.html#RCPluginType" title="enum RCPluginType"><span class="type">RCPluginType</span></a> type</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>);</pre>
+<p>
+Open and configure the plugin.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>type</code></em> :</span></p></td>
+<td>the type of the plugin
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>filename</code></em> :</span></p></td>
+<td>the path of the plugin
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> Whether the operation succeeds.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_plugin_close ()">
+<a name="rc-plugin-close"></a><h3>rc_plugin_close ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_plugin_close                     (<em class="parameter"><code><a class="link" href="RhythmCat-Plugin-Support.html#RCPluginType" title="enum RCPluginType"><span class="type">RCPluginType</span></a> type</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>);</pre>
+<p>
+Close the plugin.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>type</code></em> :</span></p></td>
+<td>the type of the plugin
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>filename</code></em> :</span></p></td>
+<td>the path of the plugin
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_plugin_check_running ()">
+<a name="rc-plugin-check-running"></a><h3>rc_plugin_check_running ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plugin_check_running             (<em class="parameter"><code><a class="link" href="RhythmCat-Plugin-Support.html#RCPluginType" title="enum RCPluginType"><span class="type">RCPluginType</span></a> type</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *path</code></em>);</pre>
+<p>
+Check if the plugin is running.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>type</code></em> :</span></p></td>
+<td>the type of the plugin
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>path</code></em> :</span></p></td>
+<td>the path of the plugin
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> Whether the plugin is running.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.15</div>
+</body>
+</html>

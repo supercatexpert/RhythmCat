@@ -1,0 +1,626 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Main UI</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="index.html" title="RhythmCat Development Reference Manual">
+<link rel="up" href="ch02.html" title="Player UI">
+<link rel="prev" href="ch02.html" title="Player UI">
+<link rel="next" href="RhythmCat-Dialogs.html" title="Dialogs">
+<meta name="generator" content="GTK-Doc V1.15 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="ch02.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="ch02.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">RhythmCat Development Reference Manual</th>
+<td><a accesskey="n" href="RhythmCat-Dialogs.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#RhythmCat-Main-UI.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#RhythmCat-Main-UI.description" class="shortcut">Description</a>
+</td></tr>
+</table>
+<div class="refentry" title="Main UI">
+<a name="RhythmCat-Main-UI"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="RhythmCat-Main-UI.top_of_page"></a>Main UI</span></h2>
+<p>Main UI — The main UI of the player.</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv" title="Synopsis">
+<a name="RhythmCat-Main-UI.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">
+#include &lt;gui.h&gt;
+
+                    <a class="link" href="RhythmCat-Main-UI.html#RCGuiData" title="RCGuiData">RCGuiData</a>;
+<a class="link" href="RhythmCat-Main-UI.html#RCGuiData" title="RCGuiData"><span class="returnvalue">RCGuiData</span></a> *         <a class="link" href="RhythmCat-Main-UI.html#rc-gui-get-data" title="rc_gui_get_data ()">rc_gui_get_data</a>                     ();
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Main-UI.html#rc-gui-init" title="rc_gui_init ()">rc_gui_init</a>                         ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Main-UI.html#rc-gui-quit-player" title="rc_gui_quit_player ()">rc_gui_quit_player</a>                  ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Main-UI.html#rc-gui-music-info-set-data" title="rc_gui_music_info_set_data ()">rc_gui_music_info_set_data</a>          (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *title</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Main-UI.html#rc-gui-time-label-set-text" title="rc_gui_time_label_set_text ()">rc_gui_time_label_set_text</a>          (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> time</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Main-UI.html#rc-gui-set-play-button-state" title="rc_gui_set_play_button_state ()">rc_gui_set_play_button_state</a>        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> state</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Main-UI.html#rc-gui-seek-scaler-disable" title="rc_gui_seek_scaler_disable ()">rc_gui_seek_scaler_disable</a>          ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Main-UI.html#rc-gui-seek-scaler-enable" title="rc_gui_seek_scaler_enable ()">rc_gui_seek_scaler_enable</a>           ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Main-UI.html#rc-gui-set-volume" title="rc_gui_set_volume ()">rc_gui_set_volume</a>                   (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> volume</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Main-UI.html#rc-gui-set-player-mode" title="rc_gui_set_player_mode ()">rc_gui_set_player_mode</a>              ();
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Main-UI.html#rc-gui-set-cover-image-by-file" title="rc_gui_set_cover_image_by_file ()">rc_gui_set_cover_image_by_file</a>      (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Main-UI.html#rc-gui-set-cover-image-by-buf" title="rc_gui_set_cover_image_by_buf ()">rc_gui_set_cover_image_by_buf</a>       (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/gstreamer-0.10/gstreamer-GstBuffer.html#GstBuffer"><span class="type">GstBuffer</span></a> *buf</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Main-UI.html#rc-gui-status-task-set" title="rc_gui_status_task_set ()">rc_gui_status_task_set</a>              (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> type</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> len</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Main-UI.html#rc-gui-status-progress-set-progress" title="rc_gui_status_progress_set_progress ()">rc_gui_status_progress_set_progress</a> ();
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               <a class="link" href="RhythmCat-Main-UI.html#rc-gui-view-add-page" title="rc_gui_view_add_page ()">rc_gui_view_add_page</a>                (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *title</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *widget</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Main-UI.html#rc-gui-view-remove-page" title="rc_gui_view_remove_page ()">rc_gui_view_remove_page</a>             (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> id</code></em>);
+</pre>
+</div>
+<div class="refsect1" title="Description">
+<a name="RhythmCat-Main-UI.description"></a><h2>Description</h2>
+<p>
+Show the main UI of the player.
+</p>
+</div>
+<div class="refsect1" title="Details">
+<a name="RhythmCat-Main-UI.details"></a><h2>Details</h2>
+<div class="refsect2" title="RCGuiData">
+<a name="RCGuiData"></a><h3>RCGuiData</h3>
+<pre class="programlisting">typedef struct {
+    GtkUIManager *main_ui;
+    GtkActionGroup *main_action_group;
+    GtkWidget *main_window;
+    GtkWidget *eq_vbox;
+    GtkWidget *plist_notebook;
+    GtkWidget *title_label, *artist_label, *album_label;
+    GtkWidget *time_label, *length_label, *info_label;
+    GtkWidget *album_image, *album_eventbox, *album_frame;
+    GtkWidget *control_images[4], *control_buttons[4];
+    GtkWidget *volume_button;
+    GtkWidget *time_scroll_bar;
+    GtkWidget *lrc_label, *lrc_viewport;
+    GtkWidget *list1_tree_view, *list2_tree_view;
+    GtkWidget *list1_scr_window, *list2_scr_window;
+    GtkWidget *status_hbox, *status_progress, *status_label;
+    GtkWidget *status_cancel_button;
+    GtkWidget *list_hpaned;
+    GtkTreeModel *list1_tree_model, *list2_tree_model;
+    GtkTreeSelection *list1_selection, *list2_selection;
+    GtkCellRenderer *renderer_text[5];
+    GtkCellRenderer *renderer_pixbuf[2];
+    GtkAdjustment *lrc_vport_adj;
+    guint main_window_width;
+    guint main_window_height;
+    guint status_task_length;
+    gboolean update_seek_scale_flag;
+    guint time_info_refresh_timeout;
+    GtkTreeRowReference *list1_selected_reference;
+    GdkPixbuf *no_cover_image;
+    GdkPixbuf *icon_image;
+    GtkStatusIcon *tray_icon;
+} RCGuiData;
+</pre>
+<p>
+Custom structure type to store the UI data.
+Please do not change the data in this structure.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkUIManager.html"><span class="type">GtkUIManager</span></a> *<em class="structfield"><code><a name="RCGuiData.main-ui"></a>main_ui</code></em>;</span></p></td>
+<td>the GtkUIManager which manages the menus
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkActionGroup.html"><span class="type">GtkActionGroup</span></a> *<em class="structfield"><code><a name="RCGuiData.main-action-group"></a>main_action_group</code></em>;</span></p></td>
+<td>the action groups
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.main-window"></a>main_window</code></em>;</span></p></td>
+<td>the main window
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.eq-vbox"></a>eq_vbox</code></em>;</span></p></td>
+<td>the GtkBox which stores equalizer widgets
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.plist-notebook"></a>plist_notebook</code></em>;</span></p></td>
+<td>the notebook which stores playlist widgets
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.title-label"></a>title_label</code></em>;</span></p></td>
+<td>show the title text on the player window
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.artist-label"></a>artist_label</code></em>;</span></p></td>
+<td>show the artist text on the player window
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.album-label"></a>album_label</code></em>;</span></p></td>
+<td>show the album text on the player window
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.time-label"></a>time_label</code></em>;</span></p></td>
+<td>show the time text on the player window
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.length-label"></a>length_label</code></em>;</span></p></td>
+<td>show the time length text on the player window
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.info-label"></a>info_label</code></em>;</span></p></td>
+<td>show the music information text on the player window
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.album-image"></a>album_image</code></em>;</span></p></td>
+<td>show album image on the player window
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.album-eventbox"></a>album_eventbox</code></em>;</span></p></td>
+<td>process the events on album image
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.album-frame"></a>album_frame</code></em>;</span></p></td>
+<td>the frame of album image widget
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.control-images"></a>control_images</code></em>[4];</span></p></td>
+<td>the image widgets of control buttons
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.control-buttons"></a>control_buttons</code></em>[4];</span></p></td>
+<td>the button widgets of control buttons
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.volume-button"></a>volume_button</code></em>;</span></p></td>
+<td>the volume control button
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.time-scroll-bar"></a>time_scroll_bar</code></em>;</span></p></td>
+<td>the time scaler bar
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.lrc-label"></a>lrc_label</code></em>;</span></p></td>
+<td>show lyric text on the player window
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.lrc-viewport"></a>lrc_viewport</code></em>;</span></p></td>
+<td>the viewport which makes lyric text widget scrollable
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.list1-tree-view"></a>list1_tree_view</code></em>;</span></p></td>
+<td>the list view of list1
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.list2-tree-view"></a>list2_tree_view</code></em>;</span></p></td>
+<td>the list view of list2
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.list1-scr-window"></a>list1_scr_window</code></em>;</span></p></td>
+<td>add scrollbars on list1
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.list2-scr-window"></a>list2_scr_window</code></em>;</span></p></td>
+<td>add scrollbars on list2
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.status-hbox"></a>status_hbox</code></em>;</span></p></td>
+<td>the GtkBox which stores status widgets
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.status-progress"></a>status_progress</code></em>;</span></p></td>
+<td>show progress of status on the player window
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.status-label"></a>status_label</code></em>;</span></p></td>
+<td>show status text on the player window
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.status-cancel-button"></a>status_cancel_button</code></em>;</span></p></td>
+<td>the cancel button to cancel all working tasks
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.list-hpaned"></a>list_hpaned</code></em>;</span></p></td>
+<td>the widget with two adjustable panes
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="type">GtkTreeModel</span></a> *<em class="structfield"><code><a name="RCGuiData.list1-tree-model"></a>list1_tree_model</code></em>;</span></p></td>
+<td>the GtkTreeModel of list1
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="type">GtkTreeModel</span></a> *<em class="structfield"><code><a name="RCGuiData.list2-tree-model"></a>list2_tree_model</code></em>;</span></p></td>
+<td>the GtkTreeModel of list2
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkTreeSelection.html"><span class="type">GtkTreeSelection</span></a> *<em class="structfield"><code><a name="RCGuiData.list1-selection"></a>list1_selection</code></em>;</span></p></td>
+<td>the GtkTreeSelection of list1
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkTreeSelection.html"><span class="type">GtkTreeSelection</span></a> *<em class="structfield"><code><a name="RCGuiData.list2-selection"></a>list2_selection</code></em>;</span></p></td>
+<td>the GtkTreeSelection of list2
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkCellRenderer.html"><span class="type">GtkCellRenderer</span></a> *<em class="structfield"><code><a name="RCGuiData.renderer-text"></a>renderer_text</code></em>[5];</span></p></td>
+<td>the text renderers of list1 &amp; list2
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkCellRenderer.html"><span class="type">GtkCellRenderer</span></a> *<em class="structfield"><code><a name="RCGuiData.renderer-pixbuf"></a>renderer_pixbuf</code></em>[2];</span></p></td>
+<td>the image renderers of list1 &amp; list2
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkAdjustment.html"><span class="type">GtkAdjustment</span></a> *<em class="structfield"><code><a name="RCGuiData.lrc-vport-adj"></a>lrc_vport_adj</code></em>;</span></p></td>
+<td>the GtkAdjustment object of lyric viewport
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="RCGuiData.main-window-width"></a>main_window_width</code></em>;</span></p></td>
+<td>the default width of main window
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="RCGuiData.main-window-height"></a>main_window_height</code></em>;</span></p></td>
+<td>the default height of main window
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="RCGuiData.status-task-length"></a>status_task_length</code></em>;</span></p></td>
+<td>the length of working task
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> <em class="structfield"><code><a name="RCGuiData.update-seek-scale-flag"></a>update_seek_scale_flag</code></em>;</span></p></td>
+<td>whether the time scaler can be updated
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="RCGuiData.time-info-refresh-timeout"></a>time_info_refresh_timeout</code></em>;</span></p></td>
+<td>the ID of time information update timer
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html#GtkTreeRowReference"><span class="type">GtkTreeRowReference</span></a> *<em class="structfield"><code><a name="RCGuiData.list1-selected-reference"></a>list1_selected_reference</code></em>;</span></p></td>
+<td>the GtkTreeRowReference of selected item in list1
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-gdk-pixbuf.html#GdkPixbuf"><span class="type">GdkPixbuf</span></a> *<em class="structfield"><code><a name="RCGuiData.no-cover-image"></a>no_cover_image</code></em>;</span></p></td>
+<td>the default image of cover image
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-gdk-pixbuf.html#GdkPixbuf"><span class="type">GdkPixbuf</span></a> *<em class="structfield"><code><a name="RCGuiData.icon-image"></a>icon_image</code></em>;</span></p></td>
+<td>the icon of the player
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkStatusIcon.html"><span class="type">GtkStatusIcon</span></a> *<em class="structfield"><code><a name="RCGuiData.tray-icon"></a>tray_icon</code></em>;</span></p></td>
+<td>the icon shows on the system tray
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_get_data ()">
+<a name="rc-gui-get-data"></a><h3>rc_gui_get_data ()</h3>
+<pre class="programlisting"><a class="link" href="RhythmCat-Main-UI.html#RCGuiData" title="RCGuiData"><span class="returnvalue">RCGuiData</span></a> *         rc_gui_get_data                     ();</pre>
+<p>
+Return the data of main UI structure.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The data of main UI structure.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_init ()">
+<a name="rc-gui-init"></a><h3>rc_gui_init ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_gui_init                         ();</pre>
+<p>
+Initialize the main window of the player. Can be used only once.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> Whether the initiation succeeds.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_quit_player ()">
+<a name="rc-gui-quit-player"></a><h3>rc_gui_quit_player ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_quit_player                  ();</pre>
+<p>
+Quit the player.
+</p>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_music_info_set_data ()">
+<a name="rc-gui-music-info-set-data"></a><h3>rc_gui_music_info_set_data ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_music_info_set_data          (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *title</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);</pre>
+<p>
+Set the data in the information labels.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>title</code></em> :</span></p></td>
+<td>the title to set
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>data</code></em> :</span></p></td>
+<td>the metadata, the type should be RCMetaData (defined in tag.h)
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_time_label_set_text ()">
+<a name="rc-gui-time-label-set-text"></a><h3>rc_gui_time_label_set_text ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_time_label_set_text          (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> time</code></em>);</pre>
+<p>
+Set time label of the player.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>time</code></em> :</span></p></td>
+<td>the time to set, in nanosecond.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_set_play_button_state ()">
+<a name="rc-gui-set-play-button-state"></a><h3>rc_gui_set_play_button_state ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_set_play_button_state        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> state</code></em>);</pre>
+<p>
+Set play button state.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>state</code></em> :</span></p></td>
+<td>the state of the play button, if it's TRUE, the image of the
+button is pause icon, else the image is play icon.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_seek_scaler_disable ()">
+<a name="rc-gui-seek-scaler-disable"></a><h3>rc_gui_seek_scaler_disable ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_seek_scaler_disable          ();</pre>
+<p>
+Disable the scaler bar and the time control menus.
+</p>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_seek_scaler_enable ()">
+<a name="rc-gui-seek-scaler-enable"></a><h3>rc_gui_seek_scaler_enable ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_seek_scaler_enable           ();</pre>
+<p>
+Enable the scaler bar and the time control menus.
+</p>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_set_volume ()">
+<a name="rc-gui-set-volume"></a><h3>rc_gui_set_volume ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_set_volume                   (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> volume</code></em>);</pre>
+<p>
+Set the volume bar value.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>volume</code></em> :</span></p></td>
+<td>the volume to set, the value should be between 0.0 and 100.0
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_set_player_mode ()">
+<a name="rc-gui-set-player-mode"></a><h3>rc_gui_set_player_mode ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_set_player_mode              ();</pre>
+<p>
+Set the player repeat mode and random mode (GUI Only).
+Only used when startup.
+</p>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_set_cover_image_by_file ()">
+<a name="rc-gui-set-cover-image-by-file"></a><h3>rc_gui_set_cover_image_by_file ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_gui_set_cover_image_by_file      (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>);</pre>
+<p>
+Set the image of cover.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>filename</code></em> :</span></p></td>
+<td>the path of the cover image file
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> Whether the image is set.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_set_cover_image_by_buf ()">
+<a name="rc-gui-set-cover-image-by-buf"></a><h3>rc_gui_set_cover_image_by_buf ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_gui_set_cover_image_by_buf       (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/gstreamer-0.10/gstreamer-GstBuffer.html#GstBuffer"><span class="type">GstBuffer</span></a> *buf</code></em>);</pre>
+<p>
+Set the image of cover by GstBuffer.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>buf</code></em> :</span></p></td>
+<td>the GstBuffer which contains the cover image
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> Whether the image is set.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_status_task_set ()">
+<a name="rc-gui-status-task-set"></a><h3>rc_gui_status_task_set ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_status_task_set              (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> type</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> len</code></em>);</pre>
+<p>
+Set the type and the length of tasks.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>type</code></em> :</span></p></td>
+<td>the task type: 1=Import, 2=Refresh others=None
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>len</code></em> :</span></p></td>
+<td>the length of the task
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_status_progress_set_progress ()">
+<a name="rc-gui-status-progress-set-progress"></a><h3>rc_gui_status_progress_set_progress ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_status_progress_set_progress ();</pre>
+<p>
+Set the remaining tasks for status progressbar.
+This function is usually used to refresh the work status.
+</p>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_view_add_page ()">
+<a name="rc-gui-view-add-page"></a><h3>rc_gui_view_add_page ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               rc_gui_view_add_page                (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *title</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *widget</code></em>);</pre>
+<p>
+Add new view page and menu to player.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
+<td>the name of the menu to add
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>title</code></em> :</span></p></td>
+<td>the string which shows on the menu
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>widget</code></em> :</span></p></td>
+<td>the widget to add to the page 
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The unique ID of the added page.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_view_remove_page ()">
+<a name="rc-gui-view-remove-page"></a><h3>rc_gui_view_remove_page ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_gui_view_remove_page             (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> id</code></em>);</pre>
+<p>
+Remove a view page from player.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>id</code></em> :</span></p></td>
+<td>the unique ID of the page to remove
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> Whether this operation is succeeded.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.15</div>
+</body>
+</html>

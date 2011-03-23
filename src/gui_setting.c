@@ -1,6 +1,6 @@
 /*
  * GUI Setting Dialog
- * Build the setting window of the player. 
+ * Show the settings window of the player. 
  *
  * gui_setting.c
  * This file is part of <RhythmCat>
@@ -26,8 +26,17 @@
 #include "gui_setting.h"
 #include "gui.h"
 #include "gui_style.h"
-#include "main.h"
+#include "player.h"
 #include "settings.h"
+
+/**
+ * SECTION: gui_setting
+ * @Short_description: The settings window of the player.
+ * @Title: Settings UI
+ * @Include: gui_setting.h
+ *
+ * Show the settings window of the player.
+ */
 
 /* Variables */
 static RCGuiData *rc_ui;
@@ -58,75 +67,7 @@ static void rc_gui_setting_destroy(GtkWidget *widget, gpointer data)
     setting_window = NULL;
 }
 
-/*
- * Create Setting Window.
- */
-
-void rc_gui_create_setting_window(GtkWidget *widget, gpointer data)
-{
-    GtkWidget *vbox1;
-    GtkWidget *hbox1, *hbox2;
-    gint i;
-    gboolean visible = FALSE;
-    if(setting_window!=NULL && GTK_IS_WINDOW(setting_window))
-    {
-        g_object_get(G_OBJECT(setting_window), "visible", &visible, NULL);
-        if(!visible) gtk_widget_show_all(setting_window);
-        return;
-    }
-    rc_ui = rc_gui_get_data();
-    setting_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-    setting_notebook = gtk_notebook_new();
-    vbox1 = gtk_vbox_new(FALSE, 2);
-    hbox1 = gtk_hbox_new(FALSE, 2);
-    hbox2 = gtk_hbutton_box_new();
-    gtk_button_box_set_layout(GTK_BUTTON_BOX(hbox2), GTK_BUTTONBOX_END);
-    rc_gui_create_setting_treeview();
-    gtk_window_set_type_hint(GTK_WINDOW(setting_window),
-        GDK_WINDOW_TYPE_HINT_DIALOG);
-    gtk_window_set_decorated(GTK_WINDOW(setting_window), TRUE);
-    gtk_window_set_transient_for(GTK_WINDOW(setting_window),
-        GTK_WINDOW(rc_ui->main_window));
-    gtk_widget_set_size_request(setting_window, -1, 300);
-    gtk_window_set_title(GTK_WINDOW(setting_window), _("Settings"));
-    gtk_window_set_position(GTK_WINDOW(setting_window),
-        GTK_WIN_POS_CENTER_ON_PARENT);
-    gtk_notebook_set_show_tabs(GTK_NOTEBOOK(setting_notebook), FALSE);
-    setting_cancel_button = gtk_button_new_from_stock(GTK_STOCK_CANCEL);
-    setting_apply_button = gtk_button_new_from_stock(GTK_STOCK_APPLY);
-    setting_ok_button = gtk_button_new_from_stock(GTK_STOCK_OK);
-    for(i=0;i<3;i++)
-    {
-        setting_nb_pages[i] = gtk_vbox_new(FALSE, 2);
-        gtk_notebook_append_page(GTK_NOTEBOOK(setting_notebook),
-            setting_nb_pages[i], NULL);
-    }
-    rc_gui_create_setting_general();
-    rc_gui_create_setting_playlist();
-    rc_gui_create_setting_appearance();
-    setting_changed = FALSE;
-    gtk_box_pack_start(GTK_BOX(hbox1), setting_treeview, FALSE, FALSE, 3);
-    gtk_box_pack_start(GTK_BOX(hbox1), setting_notebook, TRUE, TRUE, 3);
-    gtk_box_pack_end(GTK_BOX(hbox2), setting_ok_button, FALSE, FALSE, 4);
-    gtk_box_pack_end(GTK_BOX(hbox2), setting_apply_button, FALSE, FALSE, 4);
-    gtk_box_pack_end(GTK_BOX(hbox2), setting_cancel_button, FALSE, FALSE, 4);
-    gtk_box_pack_start(GTK_BOX(vbox1), hbox1, TRUE, TRUE, 5);
-    gtk_box_pack_start(GTK_BOX(vbox1), hbox2, FALSE, FALSE, 2);
-    gtk_container_add(GTK_CONTAINER(setting_window), vbox1);
-    g_signal_connect(G_OBJECT(setting_treeview), "cursor-changed",
-        G_CALLBACK(rc_gui_setting_row_selected),NULL);
-    g_signal_connect(G_OBJECT(setting_cancel_button), "clicked",
-        G_CALLBACK(rc_gui_close_setting_window), NULL);
-    g_signal_connect(G_OBJECT(setting_apply_button), "clicked",
-        G_CALLBACK(rc_gui_setting_apply), NULL);
-    g_signal_connect(G_OBJECT(setting_ok_button), "clicked",
-        G_CALLBACK(rc_gui_setting_confirm), NULL);
-    g_signal_connect(G_OBJECT(setting_window), "destroy",
-        G_CALLBACK(rc_gui_setting_destroy), NULL);
-    gtk_widget_show_all(setting_window);
-}
-
-void rc_gui_create_setting_treeview()
+static void rc_gui_create_setting_treeview()
 {
     GtkListStore *setting_tree_store;
     GtkTreeViewColumn *setting_tree_columns[2];
@@ -155,12 +96,12 @@ void rc_gui_create_setting_treeview()
     gtk_list_store_set(setting_tree_store, &iter, 1,  _("Appearance"), -1);
 }
 
-void rc_gui_close_setting_window(GtkButton *widget, gpointer data)
+static void rc_gui_close_setting_window(GtkButton *widget, gpointer data)
 {
     gtk_widget_destroy(setting_window);
 }
 
-void rc_gui_setting_row_selected(GtkTreeView *tree, gpointer data)
+static void rc_gui_setting_row_selected(GtkTreeView *tree, gpointer data)
 {
     GtkTreeIter iter;
     GtkTreePath *path = NULL;
@@ -181,7 +122,7 @@ void rc_gui_setting_row_selected(GtkTreeView *tree, gpointer data)
     gtk_notebook_set_current_page(GTK_NOTEBOOK(setting_notebook), index);
 }
 
-void rc_gui_setting_apply(GtkButton *widget, gpointer data)
+static void rc_gui_setting_apply(GtkButton *widget, gpointer data)
 {
     gchar *string;
     gint i;
@@ -225,13 +166,13 @@ void rc_gui_setting_apply(GtkButton *widget, gpointer data)
         rc_set_set_string("Appearance", "RCFile", "");
 }
 
-void rc_gui_setting_confirm(GtkButton *widget, gpointer data)
+static void rc_gui_setting_confirm(GtkButton *widget, gpointer data)
 {
     rc_gui_setting_apply(widget, data);
     rc_gui_close_setting_window(widget, data);
 }
 
-void rc_gui_create_setting_general()
+static void rc_gui_create_setting_general()
 {
     GtkWidget *general_label;
     GtkWidget *general_frame;
@@ -277,7 +218,7 @@ void rc_gui_create_setting_general()
         FALSE, FALSE, 0);
 }
 
-void rc_gui_create_setting_playlist()
+static void rc_gui_create_setting_playlist()
 {
     GtkWidget *playlist_label;
     GtkWidget *playlist_frame;
@@ -343,8 +284,7 @@ void rc_gui_create_setting_playlist()
         FALSE, FALSE, 0);
 }
 
-
-void rc_gui_create_setting_appearance()
+static void rc_gui_create_setting_appearance()
 {
     GtkWidget *theme_label;
     GtkWidget *theme_frame;
@@ -435,4 +375,74 @@ void rc_gui_create_setting_appearance()
         TRUE, TRUE, 0);
 }
 
+
+/**
+ * rc_gui_create_setting_window:
+ *
+ * Show a setting window.
+ */
+
+void rc_gui_create_setting_window()
+{
+    GtkWidget *vbox1;
+    GtkWidget *hbox1, *hbox2;
+    gint i;
+    gboolean visible = FALSE;
+    if(setting_window!=NULL && GTK_IS_WINDOW(setting_window))
+    {
+        g_object_get(G_OBJECT(setting_window), "visible", &visible, NULL);
+        if(!visible) gtk_widget_show_all(setting_window);
+        return;
+    }
+    rc_ui = rc_gui_get_data();
+    setting_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    setting_notebook = gtk_notebook_new();
+    vbox1 = gtk_vbox_new(FALSE, 2);
+    hbox1 = gtk_hbox_new(FALSE, 2);
+    hbox2 = gtk_hbutton_box_new();
+    gtk_button_box_set_layout(GTK_BUTTON_BOX(hbox2), GTK_BUTTONBOX_END);
+    rc_gui_create_setting_treeview();
+    gtk_window_set_type_hint(GTK_WINDOW(setting_window),
+        GDK_WINDOW_TYPE_HINT_DIALOG);
+    gtk_window_set_decorated(GTK_WINDOW(setting_window), TRUE);
+    gtk_window_set_transient_for(GTK_WINDOW(setting_window),
+        GTK_WINDOW(rc_ui->main_window));
+    gtk_widget_set_size_request(setting_window, -1, 300);
+    gtk_window_set_title(GTK_WINDOW(setting_window), _("Settings"));
+    gtk_window_set_position(GTK_WINDOW(setting_window),
+        GTK_WIN_POS_CENTER_ON_PARENT);
+    gtk_notebook_set_show_tabs(GTK_NOTEBOOK(setting_notebook), FALSE);
+    setting_cancel_button = gtk_button_new_from_stock(GTK_STOCK_CANCEL);
+    setting_apply_button = gtk_button_new_from_stock(GTK_STOCK_APPLY);
+    setting_ok_button = gtk_button_new_from_stock(GTK_STOCK_OK);
+    for(i=0;i<3;i++)
+    {
+        setting_nb_pages[i] = gtk_vbox_new(FALSE, 2);
+        gtk_notebook_append_page(GTK_NOTEBOOK(setting_notebook),
+            setting_nb_pages[i], NULL);
+    }
+    rc_gui_create_setting_general();
+    rc_gui_create_setting_playlist();
+    rc_gui_create_setting_appearance();
+    setting_changed = FALSE;
+    gtk_box_pack_start(GTK_BOX(hbox1), setting_treeview, FALSE, FALSE, 3);
+    gtk_box_pack_start(GTK_BOX(hbox1), setting_notebook, TRUE, TRUE, 3);
+    gtk_box_pack_end(GTK_BOX(hbox2), setting_ok_button, FALSE, FALSE, 4);
+    gtk_box_pack_end(GTK_BOX(hbox2), setting_apply_button, FALSE, FALSE, 4);
+    gtk_box_pack_end(GTK_BOX(hbox2), setting_cancel_button, FALSE, FALSE, 4);
+    gtk_box_pack_start(GTK_BOX(vbox1), hbox1, TRUE, TRUE, 5);
+    gtk_box_pack_start(GTK_BOX(vbox1), hbox2, FALSE, FALSE, 2);
+    gtk_container_add(GTK_CONTAINER(setting_window), vbox1);
+    g_signal_connect(G_OBJECT(setting_treeview), "cursor-changed",
+        G_CALLBACK(rc_gui_setting_row_selected),NULL);
+    g_signal_connect(G_OBJECT(setting_cancel_button), "clicked",
+        G_CALLBACK(rc_gui_close_setting_window), NULL);
+    g_signal_connect(G_OBJECT(setting_apply_button), "clicked",
+        G_CALLBACK(rc_gui_setting_apply), NULL);
+    g_signal_connect(G_OBJECT(setting_ok_button), "clicked",
+        G_CALLBACK(rc_gui_setting_confirm), NULL);
+    g_signal_connect(G_OBJECT(setting_window), "destroy",
+        G_CALLBACK(rc_gui_setting_destroy), NULL);
+    gtk_widget_show_all(setting_window);
+}
 

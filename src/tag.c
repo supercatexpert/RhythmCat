@@ -27,7 +27,7 @@
 
 #include "tag.h"
 #include "settings.h"
-#include "main.h"
+#include "player.h"
 #include "debug.h"
 
 /**
@@ -314,7 +314,7 @@ RCMusicMetaData *rc_tag_read_metadata(const gchar *uri)
     }
     if(rc_set_get_boolean("Metadata", "AutoEncodingDetect", NULL))
     {
-        locale = rc_get_locale();
+        locale = rc_player_get_locale();
         if(strncmp(locale, "zh_CN", 5)==0)
         {
             g_setenv("GST_ID3_TAG_ENCODING", "GB18030:UTF-8", TRUE);

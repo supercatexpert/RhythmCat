@@ -1,0 +1,216 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+]>
+<refentry id="RhythmCat-Player">
+<refmeta>
+<refentrytitle role="top_of_page" id="RhythmCat-Player.top_of_page">Player</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>
+  RHYTHMCAT Library
+</refmiscinfo>
+</refmeta>
+<refnamediv>
+<refname>Player</refname>
+<refpurpose>Manage the player information, and initialize the
+player.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv id="RhythmCat-Player.synopsis" role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>
+#include &lt;player.h&gt;
+
+#define             <link linkend="GETTEXT-PACKAGE:CAPS">GETTEXT_PACKAGE</link>
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-player-init">rc_player_init</link>                      (<parameter><link linkend="int"><type>int</type></link> *argc</parameter>,
+                                                         <parameter><link linkend="char"><type>char</type></link> **argv[]</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-player-main">rc_player_main</link>                      ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-player-exit">rc_player_exit</link>                      ();
+const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       <link linkend="rc-player-get-program-name">rc_player_get_program_name</link>          ();
+const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *const * <link linkend="rc-player-get-authors">rc_player_get_authors</link>              ();
+const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *const * <link linkend="rc-player-get-documenters">rc_player_get_documenters</link>          ();
+const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *const * <link linkend="rc-player-get-artists">rc_player_get_artists</link>              ();
+const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       <link linkend="rc-player-get-build-date">rc_player_get_build_date</link>            ();
+const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       <link linkend="rc-player-get-version">rc_player_get_version</link>               ();
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-player-get-stable-flag">rc_player_get_stable_flag</link>           ();
+const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       <link linkend="rc-player-get-conf-dir">rc_player_get_conf_dir</link>              ();
+const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       <link linkend="rc-player-get-data-dir">rc_player_get_data_dir</link>              ();
+const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       <link linkend="rc-player-get-home-dir">rc_player_get_home_dir</link>              ();
+const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       <link linkend="rc-player-get-locale">rc_player_get_locale</link>                ();
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-player-check-supported-format">rc_player_check_supported_format</link>    (<parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>);
+</synopsis>
+</refsynopsisdiv>
+
+<refsect1 id="RhythmCat-Player.description" role="desc">
+<title role="desc.title">Description</title>
+<para>
+Manage the player information, and initialize the player.
+</para>
+</refsect1>
+<refsect1 id="RhythmCat-Player.details" role="details">
+<title role="details.title">Details</title>
+<refsect2 id="GETTEXT-PACKAGE:CAPS" role="macro">
+<title>GETTEXT_PACKAGE</title>
+<indexterm zone="GETTEXT-PACKAGE:CAPS"><primary>GETTEXT_PACKAGE</primary></indexterm>
+<programlisting>#define GETTEXT_PACKAGE "RhythmCat"
+</programlisting>
+</refsect2>
+<refsect2 id="rc-player-init" role="function">
+<title>rc_player_init ()</title>
+<indexterm zone="rc-player-init"><primary>rc_player_init</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_player_init                      (<parameter><link linkend="int"><type>int</type></link> *argc</parameter>,
+                                                         <parameter><link linkend="char"><type>char</type></link> **argv[]</parameter>);</programlisting>
+<para>
+Initialize the player.
+</para><variablelist role="params">
+<varlistentry><term><parameter>argc</parameter>&#160;:</term>
+<listitem><simpara>address of the argc parameter of your <link linkend="main"><function>main()</function></link> function
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>argv</parameter>&#160;:</term>
+<listitem><simpara>address of the argv parameter of <link linkend="main"><function>main()</function></link>
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-player-main" role="function">
+<title>rc_player_main ()</title>
+<indexterm zone="rc-player-main"><primary>rc_player_main</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_player_main                      ();</programlisting>
+<para>
+Runs the main loop until <link linkend="rc-player-exit"><function>rc_player_exit()</function></link> is called.
+</para></refsect2>
+<refsect2 id="rc-player-exit" role="function">
+<title>rc_player_exit ()</title>
+<indexterm zone="rc-player-exit"><primary>rc_player_exit</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_player_exit                      ();</programlisting>
+<para>
+Exit the player.
+</para></refsect2>
+<refsect2 id="rc-player-get-program-name" role="function">
+<title>rc_player_get_program_name ()</title>
+<indexterm zone="rc-player-get-program-name"><primary>rc_player_get_program_name</primary></indexterm>
+<programlisting>const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       rc_player_get_program_name          ();</programlisting>
+<para>
+Return the name of the program.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The program name of the player, cannot be changed.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-player-get-authors" role="function">
+<title>rc_player_get_authors ()</title>
+<indexterm zone="rc-player-get-authors"><primary>rc_player_get_authors</primary></indexterm>
+<programlisting>const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *const * rc_player_get_authors              ();</programlisting>
+<para>
+Return the author information.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The string array of author information, cannot be changed.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-player-get-documenters" role="function">
+<title>rc_player_get_documenters ()</title>
+<indexterm zone="rc-player-get-documenters"><primary>rc_player_get_documenters</primary></indexterm>
+<programlisting>const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *const * rc_player_get_documenters          ();</programlisting>
+<para>
+Return the documenter information.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The string array of documenter information, cannot be changed.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-player-get-artists" role="function">
+<title>rc_player_get_artists ()</title>
+<indexterm zone="rc-player-get-artists"><primary>rc_player_get_artists</primary></indexterm>
+<programlisting>const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *const * rc_player_get_artists              ();</programlisting>
+<para>
+Return the artist information.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The string array of artist information, cannot be changed.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-player-get-build-date" role="function">
+<title>rc_player_get_build_date ()</title>
+<indexterm zone="rc-player-get-build-date"><primary>rc_player_get_build_date</primary></indexterm>
+<programlisting>const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       rc_player_get_build_date            ();</programlisting>
+<para>
+Return the build date.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The build date, cannot be changed.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-player-get-version" role="function">
+<title>rc_player_get_version ()</title>
+<indexterm zone="rc-player-get-version"><primary>rc_player_get_version</primary></indexterm>
+<programlisting>const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       rc_player_get_version               ();</programlisting>
+<para>
+Return the version information.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The version information, cannot be changed.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-player-get-stable-flag" role="function">
+<title>rc_player_get_stable_flag ()</title>
+<indexterm zone="rc-player-get-stable-flag"><primary>rc_player_get_stable_flag</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rc_player_get_stable_flag           ();</programlisting>
+<para>
+Return the stable flag.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> Whether the player is in a stable version.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-player-get-conf-dir" role="function">
+<title>rc_player_get_conf_dir ()</title>
+<indexterm zone="rc-player-get-conf-dir"><primary>rc_player_get_conf_dir</primary></indexterm>
+<programlisting>const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       rc_player_get_conf_dir              ();</programlisting>
+<para>
+Return the configure directory (~/.RhythmCat).
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The path of the configure directory. 
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-player-get-data-dir" role="function">
+<title>rc_player_get_data_dir ()</title>
+<indexterm zone="rc-player-get-data-dir"><primary>rc_player_get_data_dir</primary></indexterm>
+<programlisting>const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       rc_player_get_data_dir              ();</programlisting>
+<para>
+Return the program data directory.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The program data directory.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-player-get-home-dir" role="function">
+<title>rc_player_get_home_dir ()</title>
+<indexterm zone="rc-player-get-home-dir"><primary>rc_player_get_home_dir</primary></indexterm>
+<programlisting>const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       rc_player_get_home_dir              ();</programlisting>
+<para>
+Return the user home directory.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The user home directory.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-player-get-locale" role="function">
+<title>rc_player_get_locale ()</title>
+<indexterm zone="rc-player-get-locale"><primary>rc_player_get_locale</primary></indexterm>
+<programlisting>const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       rc_player_get_locale                ();</programlisting>
+<para>
+Return the locale information (e.g en_US).
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The locale information.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-player-check-supported-format" role="function">
+<title>rc_player_check_supported_format ()</title>
+<indexterm zone="rc-player-check-supported-format"><primary>rc_player_check_supported_format</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rc_player_check_supported_format    (<parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>);</programlisting>
+<para>
+Check whether the given file is supported by the player.
+</para><variablelist role="params">
+<varlistentry><term><parameter>filename</parameter>&#160;:</term>
+<listitem><simpara>the filename to check
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> Whether the file is supported.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+
+</refsect1>
+
+</refentry>

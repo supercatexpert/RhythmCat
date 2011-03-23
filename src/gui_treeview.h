@@ -33,36 +33,14 @@
 /* Functions */
 void rc_gui_treeview_init();
 void rc_gui_list_tree_reset_list_store();
-gboolean rc_gui_list1_popup_menu(GtkWidget *, GdkEventButton *, gpointer);
-gboolean rc_gui_list2_popup_menu(GtkWidget *, GdkEventButton *, gpointer);
-gboolean rc_gui_list2_button_release_event(GtkWidget *,
-    GdkEventButton *, gpointer);
-void rc_gui_list1_row_selected(GtkTreeView *, gpointer);
-void rc_gui_list2_row_activated(GtkTreeView *, GtkTreePath *, 
-    GtkTreeViewColumn *, gpointer);
-void rc_gui_select_list1(gint);
-void rc_gui_select_list2(gint);
-void rc_gui_list1_new_list(GtkWidget *, gpointer);
-void rc_gui_list1_delete_list(GtkWidget *, gpointer);
-void rc_gui_list_model_inserted(GtkTreeModel *, GtkTreePath *,
-    GtkTreeIter *, gpointer);
-gint rc_gui_list1_get_index(GtkTreeIter *);
+void rc_gui_select_list1(gint list_index);
+void rc_gui_select_list2(gint list_index);
+void rc_gui_list1_new_list();
+void rc_gui_list1_delete_list();
 gint rc_gui_list1_get_selected_index();
-void rc_gui_list2_dnd_data_received(GtkWidget *, GdkDragContext *, gint,
-    gint, GtkSelectionData *, guint, guint, gpointer);
-void rc_gui_list2_dnd_data_get(GtkWidget *, GdkDragContext *,
-    GtkSelectionData *, guint, guint, gpointer);
-void rc_gui_list2_dnd_motion(GtkWidget *, GdkDragContext *, gint, gint,
-    guint, gpointer);
-void rc_gui_list1_dnd_data_received(GtkWidget *, GdkDragContext *, gint,
-    gint, GtkSelectionData *, guint, guint, gpointer);
-void rc_gui_list1_dnd_data_get(GtkWidget *, GdkDragContext *,
-    GtkSelectionData *, guint, guint, gpointer);
-void rc_gui_list2_delete_lists(GtkWidget *, gpointer);
-void rc_gui_list2_select_all(GtkWidget *, gpointer);;
-void rc_gui_list1_edited(GtkCellRendererText *, gchar *, gchar *,
-    gpointer);
-void rc_gui_list1_rename_list(GtkWidget *, gpointer);
+void rc_gui_list2_delete_lists();
+void rc_gui_list2_select_all();
+void rc_gui_list1_rename_list();
 
 #endif
 

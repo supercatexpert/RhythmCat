@@ -29,6 +29,15 @@
 #include "core.h"
 #include "gui.h"
 
+/**
+ * SECTION: shell
+ * @Short_description: The shell object used in D-Bus communication.
+ * @Title: Shell
+ * @Include: shell.h
+ *
+ * The shell object used in D-Bus communication.
+ */
+
 G_DEFINE_TYPE(RCShell, rc_shell, G_TYPE_OBJECT)
 
 

@@ -1,29 +1,35 @@
 <ENUM>
 <NAME>RCPluginType</NAME>
-typedef enum RCPluginType
-{
+typedef enum RCPluginType {
     PLUGIN_TYPE_MODULE = 1,
     PLUGIN_TYPE_PYTHON = 2
 }RCPluginType;
 </ENUM>
-<USER_FUNCTION>
-<NAME>module_init</NAME>
-<RETURNS>gint </RETURNS>
-
-</USER_FUNCTION>
-<USER_FUNCTION>
-<NAME>module_exit</NAME>
-<RETURNS>void </RETURNS>
-
-</USER_FUNCTION>
-<USER_FUNCTION>
-<NAME>module_get_group_name</NAME>
-<RETURNS>const gchar *</RETURNS>
-
-</USER_FUNCTION>
+<STRUCT>
+<NAME>RCPluginConfData</NAME>
+typedef struct RCPluginConfData {
+    gchar *path;
+    gchar *name;
+    gchar *desc;
+    gchar *author;
+    gchar *version;
+    gchar *website;
+    RCPluginType type;
+}RCPluginConfData;
+</STRUCT>
+<STRUCT>
+<NAME>RCModuleData</NAME>
+typedef struct RCModuleData {
+    GModule *module;
+    gchar *path;
+    gint (*module_init)();
+    void (*module_exit)();
+    const gchar *(*module_get_group_name)();
+}RCModuleData;
+</STRUCT>
 <FUNCTION>
 <NAME>rc_plugin_init</NAME>
-<RETURNS>gboolean </RETURNS>
+<RETURNS>void </RETURNS>
  
 </FUNCTION>
 <FUNCTION>
@@ -34,7 +40,7 @@ typedef enum RCPluginType
 <FUNCTION>
 <NAME>rc_plugin_search_dir</NAME>
 <RETURNS>gboolean </RETURNS>
-const gchar * 
+const gchar *dirname 
 </FUNCTION>
 <FUNCTION>
 <NAME>rc_plugin_get_list</NAME>
@@ -47,49 +53,39 @@ const gchar *
  
 </FUNCTION>
 <FUNCTION>
-<NAME>rc_plugin_plugin_free</NAME>
+<NAME>rc_plugin_conf_free</NAME>
 <RETURNS>void </RETURNS>
-RCPluginData * 
+RCPluginConfData *plugin_data 
 </FUNCTION>
 <FUNCTION>
 <NAME>rc_plugin_module_free</NAME>
 <RETURNS>void </RETURNS>
-RCModuleData * 
+RCModuleData *module_data 
 </FUNCTION>
 <FUNCTION>
-<NAME>rc_plugin_module_check_running</NAME>
-<RETURNS>gboolean </RETURNS>
-const gchar * 
+<NAME>rc_plugin_conf_load</NAME>
+<RETURNS>RCPluginConfData *</RETURNS>
+const gchar *filename 
 </FUNCTION>
 <FUNCTION>
 <NAME>rc_plugin_load</NAME>
 <RETURNS>gboolean </RETURNS>
-const gchar *, RCPluginData ** 
+RCPluginType type, const gchar *filename 
 </FUNCTION>
 <FUNCTION>
-<NAME>rc_plugin_module_load</NAME>
+<NAME>rc_plugin_configure</NAME>
 <RETURNS>gboolean </RETURNS>
-const gchar * 
+RCPluginType type, const gchar *filename 
 </FUNCTION>
 <FUNCTION>
-<NAME>rc_plugin_module_close</NAME>
+<NAME>rc_plugin_close</NAME>
 <RETURNS>void </RETURNS>
-const gchar * 
+RCPluginType type, const gchar *filename 
 </FUNCTION>
 <FUNCTION>
-<NAME>rc_plugin_module_configure</NAME>
+<NAME>rc_plugin_check_running</NAME>
 <RETURNS>gboolean </RETURNS>
-const gchar * 
-</FUNCTION>
-<FUNCTION>
-<NAME>rc_plugin_python_load</NAME>
-<RETURNS>gboolean </RETURNS>
-const gchar * 
-</FUNCTION>
-<FUNCTION>
-<NAME>rc_plugin_python_configure</NAME>
-<RETURNS>gboolean </RETURNS>
-const gchar * 
+RCPluginType type, const gchar *path 
 </FUNCTION>
 <STRUCT>
 <NAME>RCMusicMetaData</NAME>
@@ -181,7 +177,7 @@ gint64 time
 <FUNCTION>
 <NAME>rc_gui_plugin_window_create</NAME>
 <RETURNS>void </RETURNS>
-GtkWidget *, gpointer 
+ 
 </FUNCTION>
 <USER_FUNCTION>
 <NAME>RCMsgAsyncQueueWatchFunc</NAME>
@@ -349,32 +345,32 @@ gdouble *fq
 <FUNCTION>
 <NAME>rc_gui_show_message_dialog</NAME>
 <RETURNS>void </RETURNS>
-GtkMessageType, const gchar *, const gchar *, ... 
+GtkMessageType type, const gchar *title, const gchar *format, ... 
 </FUNCTION>
 <FUNCTION>
 <NAME>rc_gui_show_open_dialog</NAME>
 <RETURNS>void </RETURNS>
-GtkWidget *, gpointer 
+ 
 </FUNCTION>
 <FUNCTION>
 <NAME>rc_gui_open_music_directory</NAME>
 <RETURNS>void </RETURNS>
-GtkWidget *, gpointer 
+ 
 </FUNCTION>
 <FUNCTION>
 <NAME>rc_gui_save_playlist_dialog</NAME>
 <RETURNS>void </RETURNS>
-GtkWidget *, gpointer 
+ 
 </FUNCTION>
 <FUNCTION>
 <NAME>rc_gui_load_playlist_dialog</NAME>
 <RETURNS>void </RETURNS>
-GtkWidget *, gpointer 
+ 
 </FUNCTION>
 <FUNCTION>
 <NAME>rc_gui_save_all_playlists_dialog</NAME>
 <RETURNS>void </RETURNS>
-GtkWidget *, gpointer 
+ 
 </FUNCTION>
 <STRUCT>
 <NAME>RCGuiEQData</NAME>
@@ -388,7 +384,7 @@ typedef struct RCGuiEQData {
 }RCGuiEQData;
 </STRUCT>
 <FUNCTION>
-<NAME>rc_gui_init_eq_data</NAME>
+<NAME>rc_gui_eq_data_init</NAME>
 <RETURNS>void </RETURNS>
  
 </FUNCTION>
@@ -398,15 +394,117 @@ typedef struct RCGuiEQData {
  
 </FUNCTION>
 <FUNCTION>
-<NAME>rc_gui_create_equalizer</NAME>
-<RETURNS>void </RETURNS>
- 
-</FUNCTION>
-<FUNCTION>
 <NAME>rc_gui_eq_get_data</NAME>
 <RETURNS>RCGuiEQData *</RETURNS>
  
 </FUNCTION>
+<MACRO>
+<NAME>RC_PLAYER_TYPE</NAME>
+#define RC_PLAYER_TYPE (rc_player_get_type())
+</MACRO>
+<MACRO>
+<NAME>RC_PLAYER</NAME>
+#define RC_PLAYER(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), RC_PLAYER_TYPE, \
+    RCPlayer))
+</MACRO>
+<MACRO>
+<NAME>RC_PLAYER_CLASS</NAME>
+#define RC_PLAYER_CLASS(k) (G_TYPE_CHECK_CLASS_CAST((k), RC_PLAYER_TYPE, \
+    RCPlayerClass))
+</MACRO>
+<MACRO>
+<NAME>RC_IS_PLAYER</NAME>
+#define RC_IS_PLAYER(o) (G_TYPE_CHECK_INSTANCE_TYPE((o), RC_PLAYER_TYPE))
+</MACRO>
+<MACRO>
+<NAME>RB_IS_PLAYER_CLASS</NAME>
+#define RB_IS_PLAYER_CLASS(k) (G_TYPE_CHECK_CLASS_TYPE((k), RC_PLAYER_TYPE))
+</MACRO>
+<MACRO>
+<NAME>RB_PLAYER_GET_CLASS</NAME>
+#define RB_PLAYER_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS((o), RC_PLAYER_TYPE, \
+    RCPlayerClass))
+</MACRO>
+<STRUCT>
+<NAME>RCPlayer</NAME>
+typedef struct RCPlayer {
+    GObject parent;
+}RCPlayer;
+</STRUCT>
+<STRUCT>
+<NAME>RCPlayerClass</NAME>
+typedef struct RCPlayerClass {
+    GObjectClass parent_class;
+    void (*player_play)();
+    void (*player_stop)();
+    void (*player_pause)();
+    void (*lyric_found)();
+    void (*lyric_not_found)();
+}RCPlayerClass;
+</STRUCT>
+<FUNCTION>
+<NAME>rc_player_get_type</NAME>
+<RETURNS>GType </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_player_new</NAME>
+<RETURNS>RCPlayer *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_player_object_init</NAME>
+<RETURNS>gboolean </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_player_object_get</NAME>
+<RETURNS>GObject *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_player_object_signal_emit_simple</NAME>
+<RETURNS>void </RETURNS>
+const char *name 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_player_object_signal_connect_simple</NAME>
+<RETURNS>gulong </RETURNS>
+const char *name, GCallback callback 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_player_object_signal_disconnect</NAME>
+<RETURNS>void </RETURNS>
+gulong id 
+</FUNCTION>
+<STRUCT>
+<NAME>RCGuiColorStyle</NAME>
+typedef struct RCGuiColorStyle {
+    gchar name[32];
+    GdkColor label_font_color;
+    GdkColor time_font_color;
+    GdkColor title_font_color;
+    GdkColor artist_font_color;
+    GdkColor album_font_color;
+    GdkColor info_font_color;
+    GdkColor length_font_color;
+    GdkColor lyric_font_color;
+    GdkColor window_bg_color;
+    GdkColor time_scalerbar_handle_normal_color;
+    GdkColor time_scalerbar_handle_prelight_color;
+    GdkColor time_scalerbar_handle_selected_color;
+    GdkColor button_bg_color;
+    GdkColor button_prelight_color;
+    GdkColor button_active_color;
+    GdkColor listview_base_normal_color;
+    GdkColor listview_base_selected_color;
+    GdkColor listview_base_active_color;
+    GdkColor listview_font_normal_color;
+    GdkColor listview_font_selected_color;
+    GdkColor listview_font_active_color;
+    GdkColor listview_scrbar_color;
+}RCGuiColorStyle;
+</STRUCT>
 <FUNCTION>
 <NAME>rc_gui_style_init</NAME>
 <RETURNS>void </RETURNS>
@@ -420,17 +518,17 @@ typedef struct RCGuiEQData {
 <FUNCTION>
 <NAME>rc_gui_style_set_color_style</NAME>
 <RETURNS>void </RETURNS>
-const RCGuiColorStyle * 
+const RCGuiColorStyle *style_data 
 </FUNCTION>
 <FUNCTION>
 <NAME>rc_gui_style_get_color_style</NAME>
 <RETURNS>const RCGuiColorStyle *</RETURNS>
-gint 
+gint index 
 </FUNCTION>
 <FUNCTION>
 <NAME>rc_gui_style_set_color_style_by_index</NAME>
 <RETURNS>void </RETURNS>
-gint 
+gint index 
 </FUNCTION>
 <ENUM>
 <NAME>RCPlist1Column</NAME>
@@ -625,59 +723,24 @@ const gchar *uri
  
 </FUNCTION>
 <FUNCTION>
-<NAME>rc_gui_list1_popup_menu</NAME>
-<RETURNS>gboolean </RETURNS>
-GtkWidget *, GdkEventButton *, gpointer 
-</FUNCTION>
-<FUNCTION>
-<NAME>rc_gui_list2_popup_menu</NAME>
-<RETURNS>gboolean </RETURNS>
-GtkWidget *, GdkEventButton *, gpointer 
-</FUNCTION>
-<FUNCTION>
-<NAME>rc_gui_list2_button_release_event</NAME>
-<RETURNS>gboolean </RETURNS>
-GtkWidget *, GdkEventButton *, gpointer 
-</FUNCTION>
-<FUNCTION>
-<NAME>rc_gui_list1_row_selected</NAME>
-<RETURNS>void </RETURNS>
-GtkTreeView *, gpointer 
-</FUNCTION>
-<FUNCTION>
-<NAME>rc_gui_list2_row_activated</NAME>
-<RETURNS>void </RETURNS>
-GtkTreeView *, GtkTreePath *, GtkTreeViewColumn *, gpointer 
-</FUNCTION>
-<FUNCTION>
 <NAME>rc_gui_select_list1</NAME>
 <RETURNS>void </RETURNS>
-gint 
+gint list_index 
 </FUNCTION>
 <FUNCTION>
 <NAME>rc_gui_select_list2</NAME>
 <RETURNS>void </RETURNS>
-gint 
+gint list_index 
 </FUNCTION>
 <FUNCTION>
 <NAME>rc_gui_list1_new_list</NAME>
 <RETURNS>void </RETURNS>
-GtkWidget *, gpointer 
+ 
 </FUNCTION>
 <FUNCTION>
 <NAME>rc_gui_list1_delete_list</NAME>
 <RETURNS>void </RETURNS>
-GtkWidget *, gpointer 
-</FUNCTION>
-<FUNCTION>
-<NAME>rc_gui_list_model_inserted</NAME>
-<RETURNS>void </RETURNS>
-GtkTreeModel *, GtkTreePath *, GtkTreeIter *, gpointer 
-</FUNCTION>
-<FUNCTION>
-<NAME>rc_gui_list1_get_index</NAME>
-<RETURNS>gint </RETURNS>
-GtkTreeIter * 
+ 
 </FUNCTION>
 <FUNCTION>
 <NAME>rc_gui_list1_get_selected_index</NAME>
@@ -685,49 +748,19 @@ GtkTreeIter *
  
 </FUNCTION>
 <FUNCTION>
-<NAME>rc_gui_list2_dnd_data_received</NAME>
-<RETURNS>void </RETURNS>
-GtkWidget *, GdkDragContext *, gint, gint, GtkSelectionData *, guint, guint, gpointer 
-</FUNCTION>
-<FUNCTION>
-<NAME>rc_gui_list2_dnd_data_get</NAME>
-<RETURNS>void </RETURNS>
-GtkWidget *, GdkDragContext *, GtkSelectionData *, guint, guint, gpointer 
-</FUNCTION>
-<FUNCTION>
-<NAME>rc_gui_list2_dnd_motion</NAME>
-<RETURNS>void </RETURNS>
-GtkWidget *, GdkDragContext *, gint, gint, guint, gpointer 
-</FUNCTION>
-<FUNCTION>
-<NAME>rc_gui_list1_dnd_data_received</NAME>
-<RETURNS>void </RETURNS>
-GtkWidget *, GdkDragContext *, gint, gint, GtkSelectionData *, guint, guint, gpointer 
-</FUNCTION>
-<FUNCTION>
-<NAME>rc_gui_list1_dnd_data_get</NAME>
-<RETURNS>void </RETURNS>
-GtkWidget *, GdkDragContext *, GtkSelectionData *, guint, guint, gpointer 
-</FUNCTION>
-<FUNCTION>
 <NAME>rc_gui_list2_delete_lists</NAME>
 <RETURNS>void </RETURNS>
-GtkWidget *, gpointer 
+ 
 </FUNCTION>
 <FUNCTION>
 <NAME>rc_gui_list2_select_all</NAME>
 <RETURNS>void </RETURNS>
-GtkWidget *, gpointer 
-</FUNCTION>
-<FUNCTION>
-<NAME>rc_gui_list1_edited</NAME>
-<RETURNS>void </RETURNS>
-GtkCellRendererText *, gchar *, gchar *, gpointer 
+ 
 </FUNCTION>
 <FUNCTION>
 <NAME>rc_gui_list1_rename_list</NAME>
 <RETURNS>void </RETURNS>
-GtkWidget *, gpointer 
+ 
 </FUNCTION>
 <STRUCT>
 <NAME>RCGuiData</NAME>
@@ -808,7 +841,7 @@ gboolean state
 <FUNCTION>
 <NAME>rc_gui_set_volume</NAME>
 <RETURNS>void </RETURNS>
-gdouble 
+gdouble volume 
 </FUNCTION>
 <FUNCTION>
 <NAME>rc_gui_set_player_mode</NAME>
@@ -908,47 +941,86 @@ gint64 pos
 <FUNCTION>
 <NAME>rc_gui_create_setting_window</NAME>
 <RETURNS>void </RETURNS>
-GtkWidget *, gpointer 
+ 
+</FUNCTION>
+<MACRO>
+<NAME>GETTEXT_PACKAGE</NAME>
+#define GETTEXT_PACKAGE "RhythmCat"
+</MACRO>
+<FUNCTION>
+<NAME>rc_player_init</NAME>
+<RETURNS>void </RETURNS>
+int *argc, char **argv[] 
 </FUNCTION>
 <FUNCTION>
-<NAME>rc_gui_create_setting_treeview</NAME>
+<NAME>rc_player_main</NAME>
 <RETURNS>void </RETURNS>
  
 </FUNCTION>
 <FUNCTION>
-<NAME>rc_gui_close_setting_window</NAME>
-<RETURNS>void </RETURNS>
-GtkButton *, gpointer 
-</FUNCTION>
-<FUNCTION>
-<NAME>rc_gui_setting_row_selected</NAME>
-<RETURNS>void </RETURNS>
-GtkTreeView *, gpointer 
-</FUNCTION>
-<FUNCTION>
-<NAME>rc_gui_setting_apply</NAME>
-<RETURNS>void </RETURNS>
-GtkButton *, gpointer 
-</FUNCTION>
-<FUNCTION>
-<NAME>rc_gui_setting_confirm</NAME>
-<RETURNS>void </RETURNS>
-GtkButton *, gpointer 
-</FUNCTION>
-<FUNCTION>
-<NAME>rc_gui_create_setting_general</NAME>
+<NAME>rc_player_exit</NAME>
 <RETURNS>void </RETURNS>
  
 </FUNCTION>
 <FUNCTION>
-<NAME>rc_gui_create_setting_playlist</NAME>
-<RETURNS>void </RETURNS>
+<NAME>rc_player_get_program_name</NAME>
+<RETURNS>const gchar *</RETURNS>
  
 </FUNCTION>
 <FUNCTION>
-<NAME>rc_gui_create_setting_appearance</NAME>
-<RETURNS>void </RETURNS>
+<NAME>rc_player_get_authors</NAME>
+<RETURNS>const gchar *const *</RETURNS>
  
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_player_get_documenters</NAME>
+<RETURNS>const gchar *const *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_player_get_artists</NAME>
+<RETURNS>const gchar *const *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_player_get_build_date</NAME>
+<RETURNS>const gchar *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_player_get_version</NAME>
+<RETURNS>const gchar *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_player_get_stable_flag</NAME>
+<RETURNS>gboolean </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_player_get_conf_dir</NAME>
+<RETURNS>const gchar *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_player_get_data_dir</NAME>
+<RETURNS>const gchar *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_player_get_home_dir</NAME>
+<RETURNS>const gchar *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_player_get_locale</NAME>
+<RETURNS>const gchar *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_player_check_supported_format</NAME>
+<RETURNS>gboolean </RETURNS>
+const gchar *filename 
 </FUNCTION>
 <FUNCTION>
 <NAME>rc_set_init</NAME>

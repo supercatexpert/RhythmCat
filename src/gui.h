@@ -81,8 +81,8 @@
  * @icon_image: the icon of the player
  * @tray_icon: the icon shows on the system tray
  *
- * Custom struct type to store the UI data.
- * Please do not change the data in this struct.
+ * Custom structure type to store the UI data.
+ * Please do not change the data in this structure.
  */
 
 typedef struct RCGuiData {
@@ -128,7 +128,7 @@ void rc_gui_time_label_set_text(gint64 time);
 void rc_gui_set_play_button_state(gboolean state);
 void rc_gui_seek_scaler_disable();
 void rc_gui_seek_scaler_enable();
-void rc_gui_set_volume(gdouble);
+void rc_gui_set_volume(gdouble volume);
 void rc_gui_set_player_mode();
 gboolean rc_gui_set_cover_image_by_file(const gchar *filename);
 gboolean rc_gui_set_cover_image_by_buf(const GstBuffer *buf);

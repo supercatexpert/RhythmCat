@@ -31,17 +31,23 @@
 #include <gtk/gtk.h>
 #include <glib/gstdio.h>
 
+/**
+ * MAX_DIR_DEPTH:
+ *
+ * Maximum search depth while searching the music files in a directory.
+ */
+
 #define MAX_DIR_DEPTH 5
 
 /* Functions */
 void rc_gui_about_player();
-void rc_gui_show_message_dialog(GtkMessageType, const gchar *, const gchar *,
-    ...);
-void rc_gui_show_open_dialog(GtkWidget *, gpointer);
-void rc_gui_open_music_directory(GtkWidget *, gpointer);
-void rc_gui_save_playlist_dialog(GtkWidget *, gpointer);
-void rc_gui_load_playlist_dialog(GtkWidget *, gpointer);
-void rc_gui_save_all_playlists_dialog(GtkWidget *, gpointer);
+void rc_gui_show_message_dialog(GtkMessageType type, const gchar *title,
+    const gchar *format, ...);
+void rc_gui_show_open_dialog();
+void rc_gui_open_music_directory();
+void rc_gui_save_playlist_dialog();
+void rc_gui_load_playlist_dialog();
+void rc_gui_save_all_playlists_dialog();
 
 #endif
 

@@ -4,20 +4,20 @@
 [
   <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
 ]>
-<refentry id="RhythmCat-GUI">
+<refentry id="RhythmCat-Main-UI">
 <refmeta>
-<refentrytitle role="top_of_page" id="RhythmCat-GUI.top_of_page">GUI</refentrytitle>
+<refentrytitle role="top_of_page" id="RhythmCat-Main-UI.top_of_page">Main UI</refentrytitle>
 <manvolnum>3</manvolnum>
 <refmiscinfo>
   RHYTHMCAT Library
 </refmiscinfo>
 </refmeta>
 <refnamediv>
-<refname>GUI</refname>
+<refname>Main UI</refname>
 <refpurpose>The main UI of the player.</refpurpose>
 </refnamediv>
 
-<refsynopsisdiv id="RhythmCat-GUI.synopsis" role="synopsis">
+<refsynopsisdiv id="RhythmCat-Main-UI.synopsis" role="synopsis">
 <title role="synopsis.title">Synopsis</title>
 
 <synopsis>
@@ -33,7 +33,7 @@
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-set-play-button-state">rc_gui_set_play_button_state</link>        (<parameter><link linkend="gboolean"><type>gboolean</type></link> state</parameter>);
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-seek-scaler-disable">rc_gui_seek_scaler_disable</link>          ();
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-seek-scaler-enable">rc_gui_seek_scaler_enable</link>           ();
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-set-volume">rc_gui_set_volume</link>                   (<parameter><link linkend="gdouble"><type>gdouble</type></link> Param1</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-set-volume">rc_gui_set_volume</link>                   (<parameter><link linkend="gdouble"><type>gdouble</type></link> volume</parameter>);
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-set-player-mode">rc_gui_set_player_mode</link>              ();
 <link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-gui-set-cover-image-by-file">rc_gui_set_cover_image_by_file</link>      (<parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>);
 <link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-gui-set-cover-image-by-buf">rc_gui_set_cover_image_by_buf</link>       (<parameter>const <link linkend="GstBuffer"><type>GstBuffer</type></link> *buf</parameter>);
@@ -47,13 +47,13 @@
 </synopsis>
 </refsynopsisdiv>
 
-<refsect1 id="RhythmCat-GUI.description" role="desc">
+<refsect1 id="RhythmCat-Main-UI.description" role="desc">
 <title role="desc.title">Description</title>
 <para>
 Show the main UI of the player.
 </para>
 </refsect1>
-<refsect1 id="RhythmCat-GUI.details" role="details">
+<refsect1 id="RhythmCat-Main-UI.details" role="details">
 <title role="details.title">Details</title>
 <refsect2 id="RCGuiData" role="struct">
 <title>RCGuiData</title>
@@ -93,8 +93,8 @@ Show the main UI of the player.
 } RCGuiData;
 </programlisting>
 <para>
-Custom struct type to store the UI data.
-Please do not change the data in this struct.
+Custom structure type to store the UI data.
+Please do not change the data in this structure.
 </para><variablelist role="struct">
 <varlistentry><term><link linkend="GtkUIManager"><type>GtkUIManager</type></link>&#160;*<structfield id="RCGuiData.main-ui">main_ui</structfield>;</term>
 <listitem><simpara>the GtkUIManager which manages the menus
@@ -292,7 +292,7 @@ Return the data of main UI structure.
 <indexterm zone="rc-gui-init"><primary>rc_gui_init</primary></indexterm>
 <programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rc_gui_init                         ();</programlisting>
 <para>
-Initialize the main window of the player.
+Initialize the main window of the player. Can be used only once.
 </para><variablelist role="params">
 <varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> Whether the initiation succeeds.
 </simpara></listitem></varlistentry>
@@ -359,7 +359,7 @@ Enable the scaler bar and the time control menus.
 <refsect2 id="rc-gui-set-volume" role="function">
 <title>rc_gui_set_volume ()</title>
 <indexterm zone="rc-gui-set-volume"><primary>rc_gui_set_volume</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_set_volume                   (<parameter><link linkend="gdouble"><type>gdouble</type></link> Param1</parameter>);</programlisting>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_set_volume                   (<parameter><link linkend="gdouble"><type>gdouble</type></link> volume</parameter>);</programlisting>
 <para>
 Set the volume bar value.
 </para><variablelist role="params">

@@ -4,269 +4,127 @@
 [
   <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
 ]>
-<refentry id="RhythmCat-gui-treeview">
+<refentry id="RhythmCat-Playlist-Views-UI">
 <refmeta>
-<refentrytitle role="top_of_page" id="RhythmCat-gui-treeview.top_of_page">gui_treeview</refentrytitle>
+<refentrytitle role="top_of_page" id="RhythmCat-Playlist-Views-UI.top_of_page">Playlist Views UI</refentrytitle>
 <manvolnum>3</manvolnum>
 <refmiscinfo>
   RHYTHMCAT Library
 </refmiscinfo>
 </refmeta>
 <refnamediv>
-<refname>gui_treeview</refname>
-<refpurpose></refpurpose>
+<refname>Playlist Views UI</refname>
+<refpurpose>The playlist views of the player.</refpurpose>
 </refnamediv>
 
-<refsynopsisdiv id="RhythmCat-gui-treeview.synopsis" role="synopsis">
+<refsynopsisdiv id="RhythmCat-Playlist-Views-UI.synopsis" role="synopsis">
 <title role="synopsis.title">Synopsis</title>
 
-<synopsis><link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-treeview-init">rc_gui_treeview_init</link>                ();
+<synopsis>
+#include &lt;gui_treeview.h&gt;
+
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-treeview-init">rc_gui_treeview_init</link>                ();
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-list-tree-reset-list-store">rc_gui_list_tree_reset_list_store</link>   ();
-<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-gui-list1-popup-menu">rc_gui_list1_popup_menu</link>             (<parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *Param1</parameter>,
-                                                         <parameter><link linkend="GdkEventButton"><type>GdkEventButton</type></link> *Param2</parameter>,
-                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param3</parameter>);
-<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-gui-list2-popup-menu">rc_gui_list2_popup_menu</link>             (<parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *Param1</parameter>,
-                                                         <parameter><link linkend="GdkEventButton"><type>GdkEventButton</type></link> *Param2</parameter>,
-                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param3</parameter>);
-<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-gui-list2-button-release-event">rc_gui_list2_button_release_event</link>   (<parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *Param1</parameter>,
-                                                         <parameter><link linkend="GdkEventButton"><type>GdkEventButton</type></link> *Param2</parameter>,
-                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param3</parameter>);
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-list1-row-selected">rc_gui_list1_row_selected</link>           (<parameter><link linkend="GtkTreeView"><type>GtkTreeView</type></link> *Param1</parameter>,
-                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param2</parameter>);
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-list2-row-activated">rc_gui_list2_row_activated</link>          (<parameter><link linkend="GtkTreeView"><type>GtkTreeView</type></link> *Param1</parameter>,
-                                                         <parameter><link linkend="GtkTreePath"><type>GtkTreePath</type></link> *Param2</parameter>,
-                                                         <parameter><link linkend="GtkTreeViewColumn"><type>GtkTreeViewColumn</type></link> *Param3</parameter>,
-                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param4</parameter>);
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-select-list1">rc_gui_select_list1</link>                 (<parameter><link linkend="gint"><type>gint</type></link> Param1</parameter>);
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-select-list2">rc_gui_select_list2</link>                 (<parameter><link linkend="gint"><type>gint</type></link> Param1</parameter>);
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-list1-new-list">rc_gui_list1_new_list</link>               (<parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *Param1</parameter>,
-                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param2</parameter>);
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-list1-delete-list">rc_gui_list1_delete_list</link>            (<parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *Param1</parameter>,
-                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param2</parameter>);
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-list-model-inserted">rc_gui_list_model_inserted</link>          (<parameter><link linkend="GtkTreeModel"><type>GtkTreeModel</type></link> *Param1</parameter>,
-                                                         <parameter><link linkend="GtkTreePath"><type>GtkTreePath</type></link> *Param2</parameter>,
-                                                         <parameter><link linkend="GtkTreeIter"><type>GtkTreeIter</type></link> *Param3</parameter>,
-                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param4</parameter>);
-<link linkend="gint"><returnvalue>gint</returnvalue></link>                <link linkend="rc-gui-list1-get-index">rc_gui_list1_get_index</link>              (<parameter><link linkend="GtkTreeIter"><type>GtkTreeIter</type></link> *Param1</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-select-list1">rc_gui_select_list1</link>                 (<parameter><link linkend="gint"><type>gint</type></link> list_index</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-select-list2">rc_gui_select_list2</link>                 (<parameter><link linkend="gint"><type>gint</type></link> list_index</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-list1-new-list">rc_gui_list1_new_list</link>               ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-list1-delete-list">rc_gui_list1_delete_list</link>            ();
 <link linkend="gint"><returnvalue>gint</returnvalue></link>                <link linkend="rc-gui-list1-get-selected-index">rc_gui_list1_get_selected_index</link>     ();
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-list2-dnd-data-received">rc_gui_list2_dnd_data_received</link>      (<parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *Param1</parameter>,
-                                                         <parameter><link linkend="GdkDragContext"><type>GdkDragContext</type></link> *Param2</parameter>,
-                                                         <parameter><link linkend="gint"><type>gint</type></link> Param3</parameter>,
-                                                         <parameter><link linkend="gint"><type>gint</type></link> Param4</parameter>,
-                                                         <parameter><link linkend="GtkSelectionData"><type>GtkSelectionData</type></link> *Param5</parameter>,
-                                                         <parameter><link linkend="guint"><type>guint</type></link> Param6</parameter>,
-                                                         <parameter><link linkend="guint"><type>guint</type></link> Param7</parameter>,
-                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param8</parameter>);
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-list2-dnd-data-get">rc_gui_list2_dnd_data_get</link>           (<parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *Param1</parameter>,
-                                                         <parameter><link linkend="GdkDragContext"><type>GdkDragContext</type></link> *Param2</parameter>,
-                                                         <parameter><link linkend="GtkSelectionData"><type>GtkSelectionData</type></link> *Param3</parameter>,
-                                                         <parameter><link linkend="guint"><type>guint</type></link> Param4</parameter>,
-                                                         <parameter><link linkend="guint"><type>guint</type></link> Param5</parameter>,
-                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param6</parameter>);
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-list2-dnd-motion">rc_gui_list2_dnd_motion</link>             (<parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *Param1</parameter>,
-                                                         <parameter><link linkend="GdkDragContext"><type>GdkDragContext</type></link> *Param2</parameter>,
-                                                         <parameter><link linkend="gint"><type>gint</type></link> Param3</parameter>,
-                                                         <parameter><link linkend="gint"><type>gint</type></link> Param4</parameter>,
-                                                         <parameter><link linkend="guint"><type>guint</type></link> Param5</parameter>,
-                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param6</parameter>);
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-list1-dnd-data-received">rc_gui_list1_dnd_data_received</link>      (<parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *Param1</parameter>,
-                                                         <parameter><link linkend="GdkDragContext"><type>GdkDragContext</type></link> *Param2</parameter>,
-                                                         <parameter><link linkend="gint"><type>gint</type></link> Param3</parameter>,
-                                                         <parameter><link linkend="gint"><type>gint</type></link> Param4</parameter>,
-                                                         <parameter><link linkend="GtkSelectionData"><type>GtkSelectionData</type></link> *Param5</parameter>,
-                                                         <parameter><link linkend="guint"><type>guint</type></link> Param6</parameter>,
-                                                         <parameter><link linkend="guint"><type>guint</type></link> Param7</parameter>,
-                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param8</parameter>);
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-list1-dnd-data-get">rc_gui_list1_dnd_data_get</link>           (<parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *Param1</parameter>,
-                                                         <parameter><link linkend="GdkDragContext"><type>GdkDragContext</type></link> *Param2</parameter>,
-                                                         <parameter><link linkend="GtkSelectionData"><type>GtkSelectionData</type></link> *Param3</parameter>,
-                                                         <parameter><link linkend="guint"><type>guint</type></link> Param4</parameter>,
-                                                         <parameter><link linkend="guint"><type>guint</type></link> Param5</parameter>,
-                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param6</parameter>);
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-list2-delete-lists">rc_gui_list2_delete_lists</link>           (<parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *Param1</parameter>,
-                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param2</parameter>);
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-list2-select-all">rc_gui_list2_select_all</link>             (<parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *Param1</parameter>,
-                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param2</parameter>);
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-list1-edited">rc_gui_list1_edited</link>                 (<parameter><link linkend="GtkCellRendererText"><type>GtkCellRendererText</type></link> *Param1</parameter>,
-                                                         <parameter><link linkend="gchar"><type>gchar</type></link> *Param2</parameter>,
-                                                         <parameter><link linkend="gchar"><type>gchar</type></link> *Param3</parameter>,
-                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param4</parameter>);
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-list1-rename-list">rc_gui_list1_rename_list</link>            (<parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *Param1</parameter>,
-                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param2</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-list2-delete-lists">rc_gui_list2_delete_lists</link>           ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-list2-select-all">rc_gui_list2_select_all</link>             ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-list1-rename-list">rc_gui_list1_rename_list</link>            ();
 </synopsis>
 </refsynopsisdiv>
 
-<refsect1 id="RhythmCat-gui-treeview.description" role="desc">
+<refsect1 id="RhythmCat-Playlist-Views-UI.description" role="desc">
 <title role="desc.title">Description</title>
-
+<para>
+Show the playlist views in the player.
+</para>
 </refsect1>
-<refsect1 id="RhythmCat-gui-treeview.details" role="details">
+<refsect1 id="RhythmCat-Playlist-Views-UI.details" role="details">
 <title role="details.title">Details</title>
 <refsect2 id="rc-gui-treeview-init" role="function">
 <title>rc_gui_treeview_init ()</title>
 <indexterm zone="rc-gui-treeview-init"><primary>rc_gui_treeview_init</primary></indexterm>
 <programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_treeview_init                ();</programlisting>
-</refsect2>
+<para>
+Initialize the tree views in the main window. Can be used only once.
+</para></refsect2>
 <refsect2 id="rc-gui-list-tree-reset-list-store" role="function">
 <title>rc_gui_list_tree_reset_list_store ()</title>
 <indexterm zone="rc-gui-list-tree-reset-list-store"><primary>rc_gui_list_tree_reset_list_store</primary></indexterm>
 <programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_list_tree_reset_list_store   ();</programlisting>
-</refsect2>
-<refsect2 id="rc-gui-list1-popup-menu" role="function">
-<title>rc_gui_list1_popup_menu ()</title>
-<indexterm zone="rc-gui-list1-popup-menu"><primary>rc_gui_list1_popup_menu</primary></indexterm>
-<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rc_gui_list1_popup_menu             (<parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *Param1</parameter>,
-                                                         <parameter><link linkend="GdkEventButton"><type>GdkEventButton</type></link> *Param2</parameter>,
-                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param3</parameter>);</programlisting>
-</refsect2>
-<refsect2 id="rc-gui-list2-popup-menu" role="function">
-<title>rc_gui_list2_popup_menu ()</title>
-<indexterm zone="rc-gui-list2-popup-menu"><primary>rc_gui_list2_popup_menu</primary></indexterm>
-<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rc_gui_list2_popup_menu             (<parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *Param1</parameter>,
-                                                         <parameter><link linkend="GdkEventButton"><type>GdkEventButton</type></link> *Param2</parameter>,
-                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param3</parameter>);</programlisting>
-</refsect2>
-<refsect2 id="rc-gui-list2-button-release-event" role="function">
-<title>rc_gui_list2_button_release_event ()</title>
-<indexterm zone="rc-gui-list2-button-release-event"><primary>rc_gui_list2_button_release_event</primary></indexterm>
-<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rc_gui_list2_button_release_event   (<parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *Param1</parameter>,
-                                                         <parameter><link linkend="GdkEventButton"><type>GdkEventButton</type></link> *Param2</parameter>,
-                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param3</parameter>);</programlisting>
-</refsect2>
-<refsect2 id="rc-gui-list1-row-selected" role="function">
-<title>rc_gui_list1_row_selected ()</title>
-<indexterm zone="rc-gui-list1-row-selected"><primary>rc_gui_list1_row_selected</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_list1_row_selected           (<parameter><link linkend="GtkTreeView"><type>GtkTreeView</type></link> *Param1</parameter>,
-                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param2</parameter>);</programlisting>
-</refsect2>
-<refsect2 id="rc-gui-list2-row-activated" role="function">
-<title>rc_gui_list2_row_activated ()</title>
-<indexterm zone="rc-gui-list2-row-activated"><primary>rc_gui_list2_row_activated</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_list2_row_activated          (<parameter><link linkend="GtkTreeView"><type>GtkTreeView</type></link> *Param1</parameter>,
-                                                         <parameter><link linkend="GtkTreePath"><type>GtkTreePath</type></link> *Param2</parameter>,
-                                                         <parameter><link linkend="GtkTreeViewColumn"><type>GtkTreeViewColumn</type></link> *Param3</parameter>,
-                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param4</parameter>);</programlisting>
-</refsect2>
+<para>
+Reset the playlist views.
+</para></refsect2>
 <refsect2 id="rc-gui-select-list1" role="function">
 <title>rc_gui_select_list1 ()</title>
 <indexterm zone="rc-gui-select-list1"><primary>rc_gui_select_list1</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_select_list1                 (<parameter><link linkend="gint"><type>gint</type></link> Param1</parameter>);</programlisting>
-</refsect2>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_select_list1                 (<parameter><link linkend="gint"><type>gint</type></link> list_index</parameter>);</programlisting>
+<para>
+Make the cursor select one item in the playlist by index.
+</para><variablelist role="params">
+<varlistentry><term><parameter>list_index</parameter>&#160;:</term>
+<listitem><simpara>the index of the item
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
 <refsect2 id="rc-gui-select-list2" role="function">
 <title>rc_gui_select_list2 ()</title>
 <indexterm zone="rc-gui-select-list2"><primary>rc_gui_select_list2</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_select_list2                 (<parameter><link linkend="gint"><type>gint</type></link> Param1</parameter>);</programlisting>
-</refsect2>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_select_list2                 (<parameter><link linkend="gint"><type>gint</type></link> list_index</parameter>);</programlisting>
+<para>
+Make the cursor select one music in the playlist.
+</para><variablelist role="params">
+<varlistentry><term><parameter>list_index</parameter>&#160;:</term>
+<listitem><simpara>the index of the item
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
 <refsect2 id="rc-gui-list1-new-list" role="function">
 <title>rc_gui_list1_new_list ()</title>
 <indexterm zone="rc-gui-list1-new-list"><primary>rc_gui_list1_new_list</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_list1_new_list               (<parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *Param1</parameter>,
-                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param2</parameter>);</programlisting>
-</refsect2>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_list1_new_list               ();</programlisting>
+<para>
+Create a new list with the name the user inputs.
+</para></refsect2>
 <refsect2 id="rc-gui-list1-delete-list" role="function">
 <title>rc_gui_list1_delete_list ()</title>
 <indexterm zone="rc-gui-list1-delete-list"><primary>rc_gui_list1_delete_list</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_list1_delete_list            (<parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *Param1</parameter>,
-                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param2</parameter>);</programlisting>
-</refsect2>
-<refsect2 id="rc-gui-list-model-inserted" role="function">
-<title>rc_gui_list_model_inserted ()</title>
-<indexterm zone="rc-gui-list-model-inserted"><primary>rc_gui_list_model_inserted</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_list_model_inserted          (<parameter><link linkend="GtkTreeModel"><type>GtkTreeModel</type></link> *Param1</parameter>,
-                                                         <parameter><link linkend="GtkTreePath"><type>GtkTreePath</type></link> *Param2</parameter>,
-                                                         <parameter><link linkend="GtkTreeIter"><type>GtkTreeIter</type></link> *Param3</parameter>,
-                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param4</parameter>);</programlisting>
-</refsect2>
-<refsect2 id="rc-gui-list1-get-index" role="function">
-<title>rc_gui_list1_get_index ()</title>
-<indexterm zone="rc-gui-list1-get-index"><primary>rc_gui_list1_get_index</primary></indexterm>
-<programlisting><link linkend="gint"><returnvalue>gint</returnvalue></link>                rc_gui_list1_get_index              (<parameter><link linkend="GtkTreeIter"><type>GtkTreeIter</type></link> *Param1</parameter>);</programlisting>
-</refsect2>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_list1_delete_list            ();</programlisting>
+<para>
+Delete the playlist the user selected.
+</para></refsect2>
 <refsect2 id="rc-gui-list1-get-selected-index" role="function">
 <title>rc_gui_list1_get_selected_index ()</title>
 <indexterm zone="rc-gui-list1-get-selected-index"><primary>rc_gui_list1_get_selected_index</primary></indexterm>
 <programlisting><link linkend="gint"><returnvalue>gint</returnvalue></link>                rc_gui_list1_get_selected_index     ();</programlisting>
-</refsect2>
-<refsect2 id="rc-gui-list2-dnd-data-received" role="function">
-<title>rc_gui_list2_dnd_data_received ()</title>
-<indexterm zone="rc-gui-list2-dnd-data-received"><primary>rc_gui_list2_dnd_data_received</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_list2_dnd_data_received      (<parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *Param1</parameter>,
-                                                         <parameter><link linkend="GdkDragContext"><type>GdkDragContext</type></link> *Param2</parameter>,
-                                                         <parameter><link linkend="gint"><type>gint</type></link> Param3</parameter>,
-                                                         <parameter><link linkend="gint"><type>gint</type></link> Param4</parameter>,
-                                                         <parameter><link linkend="GtkSelectionData"><type>GtkSelectionData</type></link> *Param5</parameter>,
-                                                         <parameter><link linkend="guint"><type>guint</type></link> Param6</parameter>,
-                                                         <parameter><link linkend="guint"><type>guint</type></link> Param7</parameter>,
-                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param8</parameter>);</programlisting>
-</refsect2>
-<refsect2 id="rc-gui-list2-dnd-data-get" role="function">
-<title>rc_gui_list2_dnd_data_get ()</title>
-<indexterm zone="rc-gui-list2-dnd-data-get"><primary>rc_gui_list2_dnd_data_get</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_list2_dnd_data_get           (<parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *Param1</parameter>,
-                                                         <parameter><link linkend="GdkDragContext"><type>GdkDragContext</type></link> *Param2</parameter>,
-                                                         <parameter><link linkend="GtkSelectionData"><type>GtkSelectionData</type></link> *Param3</parameter>,
-                                                         <parameter><link linkend="guint"><type>guint</type></link> Param4</parameter>,
-                                                         <parameter><link linkend="guint"><type>guint</type></link> Param5</parameter>,
-                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param6</parameter>);</programlisting>
-</refsect2>
-<refsect2 id="rc-gui-list2-dnd-motion" role="function">
-<title>rc_gui_list2_dnd_motion ()</title>
-<indexterm zone="rc-gui-list2-dnd-motion"><primary>rc_gui_list2_dnd_motion</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_list2_dnd_motion             (<parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *Param1</parameter>,
-                                                         <parameter><link linkend="GdkDragContext"><type>GdkDragContext</type></link> *Param2</parameter>,
-                                                         <parameter><link linkend="gint"><type>gint</type></link> Param3</parameter>,
-                                                         <parameter><link linkend="gint"><type>gint</type></link> Param4</parameter>,
-                                                         <parameter><link linkend="guint"><type>guint</type></link> Param5</parameter>,
-                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param6</parameter>);</programlisting>
-</refsect2>
-<refsect2 id="rc-gui-list1-dnd-data-received" role="function">
-<title>rc_gui_list1_dnd_data_received ()</title>
-<indexterm zone="rc-gui-list1-dnd-data-received"><primary>rc_gui_list1_dnd_data_received</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_list1_dnd_data_received      (<parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *Param1</parameter>,
-                                                         <parameter><link linkend="GdkDragContext"><type>GdkDragContext</type></link> *Param2</parameter>,
-                                                         <parameter><link linkend="gint"><type>gint</type></link> Param3</parameter>,
-                                                         <parameter><link linkend="gint"><type>gint</type></link> Param4</parameter>,
-                                                         <parameter><link linkend="GtkSelectionData"><type>GtkSelectionData</type></link> *Param5</parameter>,
-                                                         <parameter><link linkend="guint"><type>guint</type></link> Param6</parameter>,
-                                                         <parameter><link linkend="guint"><type>guint</type></link> Param7</parameter>,
-                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param8</parameter>);</programlisting>
-</refsect2>
-<refsect2 id="rc-gui-list1-dnd-data-get" role="function">
-<title>rc_gui_list1_dnd_data_get ()</title>
-<indexterm zone="rc-gui-list1-dnd-data-get"><primary>rc_gui_list1_dnd_data_get</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_list1_dnd_data_get           (<parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *Param1</parameter>,
-                                                         <parameter><link linkend="GdkDragContext"><type>GdkDragContext</type></link> *Param2</parameter>,
-                                                         <parameter><link linkend="GtkSelectionData"><type>GtkSelectionData</type></link> *Param3</parameter>,
-                                                         <parameter><link linkend="guint"><type>guint</type></link> Param4</parameter>,
-                                                         <parameter><link linkend="guint"><type>guint</type></link> Param5</parameter>,
-                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param6</parameter>);</programlisting>
-</refsect2>
+<para>
+Return the index of the selected playlist.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The index of the selected playlist.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
 <refsect2 id="rc-gui-list2-delete-lists" role="function">
 <title>rc_gui_list2_delete_lists ()</title>
 <indexterm zone="rc-gui-list2-delete-lists"><primary>rc_gui_list2_delete_lists</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_list2_delete_lists           (<parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *Param1</parameter>,
-                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param2</parameter>);</programlisting>
-</refsect2>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_list2_delete_lists           ();</programlisting>
+<para>
+Delete the selected item(s) in the playlist.
+</para></refsect2>
 <refsect2 id="rc-gui-list2-select-all" role="function">
 <title>rc_gui_list2_select_all ()</title>
 <indexterm zone="rc-gui-list2-select-all"><primary>rc_gui_list2_select_all</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_list2_select_all             (<parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *Param1</parameter>,
-                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param2</parameter>);</programlisting>
-</refsect2>
-<refsect2 id="rc-gui-list1-edited" role="function">
-<title>rc_gui_list1_edited ()</title>
-<indexterm zone="rc-gui-list1-edited"><primary>rc_gui_list1_edited</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_list1_edited                 (<parameter><link linkend="GtkCellRendererText"><type>GtkCellRendererText</type></link> *Param1</parameter>,
-                                                         <parameter><link linkend="gchar"><type>gchar</type></link> *Param2</parameter>,
-                                                         <parameter><link linkend="gchar"><type>gchar</type></link> *Param3</parameter>,
-                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param4</parameter>);</programlisting>
-</refsect2>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_list2_select_all             ();</programlisting>
+<para>
+Select all items in the playlist.
+</para></refsect2>
 <refsect2 id="rc-gui-list1-rename-list" role="function">
 <title>rc_gui_list1_rename_list ()</title>
 <indexterm zone="rc-gui-list1-rename-list"><primary>rc_gui_list1_rename_list</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_list1_rename_list            (<parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *Param1</parameter>,
-                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> Param2</parameter>);</programlisting>
-</refsect2>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_list1_rename_list            ();</programlisting>
+<para>
+Rename a list (make the name of the selected playlist editable).
+</para></refsect2>
 
 </refsect1>
 

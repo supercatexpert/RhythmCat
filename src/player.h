@@ -1,5 +1,5 @@
 /*
- * Player Class Declaration
+ * Player Declaration
  *
  * player.h
  * This file is part of <RhythmCat>
@@ -26,44 +26,32 @@
 #define HAVE_PLAYER_H
 
 #include <stdlib.h>
+#include <string.h>
 #include <glib.h>
-#include <glib-object.h>
-#include <gst/gst.h>
+#include <glib/gprintf.h>
 #include <gtk/gtk.h>
+#include <gst/gst.h>
+#include <dbus/dbus.h>
+#include <dbus/dbus-glib.h>
+#include <limits.h>
 
-#define RC_PLAYER_TYPE (rc_player_get_type())
-#define RC_PLAYER(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), RC_PLAYER_TYPE, \
-    RCPlayer))
+#define GETTEXT_PACKAGE "RhythmCat"
 
-typedef struct _RCPlayer RCPlayer;
-typedef struct _RCPlayerClass RCPlayerClass;
-
-struct _RCPlayer
-{
-    GObject parent;
-    gint dummy;
-};
-
-struct _RCPlayerClass
-{
-    GObjectClass parent_class;
-    void (*object_born)();
-    void (*player_play)();
-    void (*player_stop)();
-    void (*player_pause)();
-    void (*player_continue)();
-    void (*lyric_found)();
-    void (*lyric_not_found)();
-};
-
-GType rc_player_get_type();
-RCPlayer *rc_player_new();
-
-gboolean rc_player_object_init();
-GObject *rc_player_object_get();
-void rc_player_object_signal_emit_simple(const char *);
-gulong rc_player_object_signal_connect_simple(const char *, GCallback);
-void rc_player_object_signal_disconnect(gulong);
+void rc_player_init(int *argc, char **argv[]);
+void rc_player_main();
+void rc_player_exit();
+const gchar *rc_player_get_program_name();
+const gchar *const *rc_player_get_authors();
+const gchar *const *rc_player_get_documenters();
+const gchar *const *rc_player_get_artists();
+const gchar *rc_player_get_build_date();
+const gchar *rc_player_get_version();
+gboolean rc_player_get_stable_flag();
+const gchar *rc_player_get_conf_dir();
+const gchar *rc_player_get_data_dir();
+const gchar *rc_player_get_home_dir();
+const gchar *rc_player_get_locale();
+gboolean rc_player_check_supported_format(const gchar *filename);
 
 #endif
 

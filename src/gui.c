@@ -28,7 +28,7 @@
 #include "tag.h"
 #include "playlist.h"
 #include "settings.h"
-#include "main.h"
+#include "player.h"
 #include "lyric.h"
 #include "debug.h"
 #include "gui_treeview.h"
@@ -44,7 +44,7 @@
 /**
  * SECTION: gui
  * @Short_description: The main UI of the player.
- * @Title: GUI
+ * @Title: Main UI
  * @Include: gui.h
  *
  * Show the main UI of the player.
@@ -846,7 +846,7 @@ RCGuiData *rc_gui_get_data()
 
 void rc_gui_quit_player()
 {
-    rc_exit();
+    rc_player_exit();
 }
 
 /*
@@ -1038,31 +1038,8 @@ static void rc_gui_signal_bind()
         G_CALLBACK(rc_gui_seek_scale_value_changed), NULL);
     g_signal_connect(G_OBJECT(rc_gui.volume_button), "value-changed",
         G_CALLBACK(rc_gui_adjust_volume), NULL);
-    g_signal_connect(G_OBJECT(rc_gui.list1_tree_view), "cursor-changed",
-        G_CALLBACK(rc_gui_list1_row_selected), NULL);
-    g_signal_connect(G_OBJECT(rc_gui.list2_tree_view), "row-activated",
-        G_CALLBACK(rc_gui_list2_row_activated), NULL);
     g_signal_connect(G_OBJECT(rc_gui.list2_selection), "changed",
         G_CALLBACK(rc_gui_set_list2_menu), NULL);
-    g_signal_connect(G_OBJECT(rc_gui.list2_tree_view),
-        "button-press-event", G_CALLBACK(rc_gui_list2_popup_menu), NULL);
-    g_signal_connect(G_OBJECT(rc_gui.list2_tree_view),
-        "button-release-event",
-        G_CALLBACK(rc_gui_list2_button_release_event), NULL);
-    g_signal_connect(G_OBJECT(rc_gui.list1_tree_view),
-        "button-release-event", G_CALLBACK(rc_gui_list1_popup_menu), NULL);
-    g_signal_connect(G_OBJECT(rc_gui.list2_tree_view),
-        "drag_data_received", G_CALLBACK(rc_gui_list2_dnd_data_received),
-        NULL);
-    g_signal_connect(G_OBJECT(rc_gui.list2_tree_view), "drag-data-get",
-        G_CALLBACK(rc_gui_list2_dnd_data_get), NULL);
-    g_signal_connect(G_OBJECT(rc_gui.list2_tree_view), "drag-motion",
-        G_CALLBACK(rc_gui_list2_dnd_motion), NULL);
-    g_signal_connect(G_OBJECT(rc_gui.list1_tree_view), 
-        "drag-data-received", G_CALLBACK(rc_gui_list1_dnd_data_received),
-        NULL);
-    g_signal_connect(G_OBJECT(rc_gui.list1_tree_view), "drag-data-get",
-        G_CALLBACK(rc_gui_list1_dnd_data_get), NULL);
     g_signal_connect(G_OBJECT(rc_gui.control_buttons[0]), "clicked",
         G_CALLBACK(rc_gui_prev_button_clicked), NULL);
     g_signal_connect(G_OBJECT(rc_gui.control_buttons[1]), "clicked",
@@ -1100,7 +1077,6 @@ gboolean rc_gui_init()
     GError *error = NULL;
     if(init) return FALSE;
     init = TRUE;
-    textdomain(GETTEXT_PACKAGE);
     GdkGeometry main_window_hints;
     GtkAdjustment *position_adjustment;
     gint i = 0;
@@ -1137,12 +1113,12 @@ gboolean rc_gui_init()
     rc_gui.lrc_vport_adj = gtk_viewport_get_hadjustment(GTK_VIEWPORT(
         rc_gui.lrc_viewport));
     g_object_set(G_OBJECT(rc_gui.tray_icon), "has-tooltip", TRUE,
-        "tooltip-text", rc_get_program_name(), NULL);
+        "tooltip-text", rc_player_get_program_name(), NULL);
     gtk_viewport_set_shadow_type(GTK_VIEWPORT(rc_gui.lrc_viewport),
         GTK_SHADOW_NONE);
     gtk_notebook_set_show_border(GTK_NOTEBOOK(rc_gui.plist_notebook), FALSE);
     gtk_window_set_title(GTK_WINDOW(rc_gui.main_window),
-        rc_get_program_name());
+        rc_player_get_program_name());
     gtk_window_set_icon(GTK_WINDOW(rc_gui.main_window),
         rc_gui.icon_image);
     gtk_window_set_position(GTK_WINDOW(rc_gui.main_window),
@@ -1368,20 +1344,21 @@ void rc_gui_music_info_set_data(const gchar *title, const gpointer data)
     gtk_label_set_text(GTK_LABEL(rc_gui.info_label), music_info);
     if(title!=NULL && strlen(title)>0)
     {
-        if(rc_get_stable())
-            g_snprintf(title_info, 500, "%s - %s", rc_get_program_name(),
-                title);
+        if(rc_player_get_stable_flag())
+            g_snprintf(title_info, 500, "%s - %s",
+                rc_player_get_program_name(), title);
         else
-            g_snprintf(title_info, 500, "%s %s - %s", rc_get_program_name(),
-                rc_get_build_num(), title);
+            g_snprintf(title_info, 500, "%s build %s - %s",
+                rc_player_get_program_name(), rc_player_get_build_date(),
+                title);
     }
     else
     {
-        if(rc_get_stable())
-            g_snprintf(title_info, 500, "%s", rc_get_program_name());
+        if(rc_player_get_stable_flag())
+            g_snprintf(title_info, 500, "%s", rc_player_get_program_name());
         else
-            g_snprintf(title_info, 500, "%s %s", rc_get_program_name(),
-                rc_get_build_num());
+            g_snprintf(title_info, 500, "%s build %s", 
+                rc_player_get_program_name(), rc_player_get_build_date());
     }
     gtk_window_set_title(GTK_WINDOW(rc_gui.main_window), title_info);
     if(title!=NULL && strlen(title)>0 && mmd!=NULL)

@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Playlist Views UI</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="index.html" title="RhythmCat Development Reference Manual">
+<link rel="up" href="ch02.html" title="Player UI">
+<link rel="prev" href="RhythmCat-UI-Styles-and-Themes.html" title="UI Styles and Themes">
+<link rel="next" href="RhythmCat-Mini-Mode-UI.html" title="Mini Mode UI">
+<meta name="generator" content="GTK-Doc V1.15 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="RhythmCat-UI-Styles-and-Themes.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="ch02.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">RhythmCat Development Reference Manual</th>
+<td><a accesskey="n" href="RhythmCat-Mini-Mode-UI.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#RhythmCat-Playlist-Views-UI.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#RhythmCat-Playlist-Views-UI.description" class="shortcut">Description</a>
+</td></tr>
+</table>
+<div class="refentry" title="Playlist Views UI">
+<a name="RhythmCat-Playlist-Views-UI"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="RhythmCat-Playlist-Views-UI.top_of_page"></a>Playlist Views UI</span></h2>
+<p>Playlist Views UI — The playlist views of the player.</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv" title="Synopsis">
+<a name="RhythmCat-Playlist-Views-UI.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">
+#include &lt;gui_treeview.h&gt;
+
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist-Views-UI.html#rc-gui-treeview-init" title="rc_gui_treeview_init ()">rc_gui_treeview_init</a>                ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist-Views-UI.html#rc-gui-list-tree-reset-list-store" title="rc_gui_list_tree_reset_list_store ()">rc_gui_list_tree_reset_list_store</a>   ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist-Views-UI.html#rc-gui-select-list1" title="rc_gui_select_list1 ()">rc_gui_select_list1</a>                 (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list_index</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist-Views-UI.html#rc-gui-select-list2" title="rc_gui_select_list2 ()">rc_gui_select_list2</a>                 (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list_index</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist-Views-UI.html#rc-gui-list1-new-list" title="rc_gui_list1_new_list ()">rc_gui_list1_new_list</a>               ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist-Views-UI.html#rc-gui-list1-delete-list" title="rc_gui_list1_delete_list ()">rc_gui_list1_delete_list</a>            ();
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="RhythmCat-Playlist-Views-UI.html#rc-gui-list1-get-selected-index" title="rc_gui_list1_get_selected_index ()">rc_gui_list1_get_selected_index</a>     ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist-Views-UI.html#rc-gui-list2-delete-lists" title="rc_gui_list2_delete_lists ()">rc_gui_list2_delete_lists</a>           ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist-Views-UI.html#rc-gui-list2-select-all" title="rc_gui_list2_select_all ()">rc_gui_list2_select_all</a>             ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist-Views-UI.html#rc-gui-list1-rename-list" title="rc_gui_list1_rename_list ()">rc_gui_list1_rename_list</a>            ();
+</pre>
+</div>
+<div class="refsect1" title="Description">
+<a name="RhythmCat-Playlist-Views-UI.description"></a><h2>Description</h2>
+<p>
+Show the playlist views in the player.
+</p>
+</div>
+<div class="refsect1" title="Details">
+<a name="RhythmCat-Playlist-Views-UI.details"></a><h2>Details</h2>
+<div class="refsect2" title="rc_gui_treeview_init ()">
+<a name="rc-gui-treeview-init"></a><h3>rc_gui_treeview_init ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_treeview_init                ();</pre>
+<p>
+Initialize the tree views in the main window. Can be used only once.
+</p>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_list_tree_reset_list_store ()">
+<a name="rc-gui-list-tree-reset-list-store"></a><h3>rc_gui_list_tree_reset_list_store ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_list_tree_reset_list_store   ();</pre>
+<p>
+Reset the playlist views.
+</p>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_select_list1 ()">
+<a name="rc-gui-select-list1"></a><h3>rc_gui_select_list1 ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_select_list1                 (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list_index</code></em>);</pre>
+<p>
+Make the cursor select one item in the playlist by index.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>list_index</code></em> :</span></p></td>
+<td>the index of the item
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_select_list2 ()">
+<a name="rc-gui-select-list2"></a><h3>rc_gui_select_list2 ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_select_list2                 (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list_index</code></em>);</pre>
+<p>
+Make the cursor select one music in the playlist.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>list_index</code></em> :</span></p></td>
+<td>the index of the item
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_list1_new_list ()">
+<a name="rc-gui-list1-new-list"></a><h3>rc_gui_list1_new_list ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_list1_new_list               ();</pre>
+<p>
+Create a new list with the name the user inputs.
+</p>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_list1_delete_list ()">
+<a name="rc-gui-list1-delete-list"></a><h3>rc_gui_list1_delete_list ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_list1_delete_list            ();</pre>
+<p>
+Delete the playlist the user selected.
+</p>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_list1_get_selected_index ()">
+<a name="rc-gui-list1-get-selected-index"></a><h3>rc_gui_list1_get_selected_index ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                rc_gui_list1_get_selected_index     ();</pre>
+<p>
+Return the index of the selected playlist.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The index of the selected playlist.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_list2_delete_lists ()">
+<a name="rc-gui-list2-delete-lists"></a><h3>rc_gui_list2_delete_lists ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_list2_delete_lists           ();</pre>
+<p>
+Delete the selected item(s) in the playlist.
+</p>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_list2_select_all ()">
+<a name="rc-gui-list2-select-all"></a><h3>rc_gui_list2_select_all ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_list2_select_all             ();</pre>
+<p>
+Select all items in the playlist.
+</p>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_list1_rename_list ()">
+<a name="rc-gui-list1-rename-list"></a><h3>rc_gui_list1_rename_list ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_list1_rename_list            ();</pre>
+<p>
+Rename a list (make the name of the selected playlist editable).
+</p>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.15</div>
+</body>
+</html>

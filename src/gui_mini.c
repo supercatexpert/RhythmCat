@@ -26,14 +26,14 @@
 #include "gui_mini.h"
 #include "core.h"
 #include "gui.h"
-#include "main.h"
 #include "settings.h"
 #include "playlist.h"
+#include "player.h"
 
 /**
  * SECTION: gui_mini
  * @Short_description: The mini mode UI of the player.
- * @Title: Mini Mode GUI
+ * @Title: Mini Mode UI
  * @Include: gui_mini.h
  *
  * Show the mini mode of the player.
@@ -44,7 +44,7 @@ static RCGuiData *rc_ui;
 
 static void rc_gui_mini_window_close(GtkWidget *widget, gpointer data)
 {
-    rc_exit();
+    rc_player_exit();
 }
 
 static gboolean rc_gui_mini_window_drag(GtkWidget *widget, GdkEvent *event,
@@ -523,7 +523,7 @@ void rc_gui_mini_set_play_state(gboolean state)
 
 /**
  * rc_gui_mini_set_time_text:
- * @time: the time to set, in nanosecond.
+ * @pos: the time to set, in nanosecond.
  *
  * Set time label.
  */

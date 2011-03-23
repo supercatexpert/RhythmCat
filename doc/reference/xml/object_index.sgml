@@ -10,5 +10,8 @@
 <colspec colwidth="1*"/>
 <colspec colwidth="1*"/>
 <tbody>
-<row><entry> </entry></row>
+<row>
+<entry><link linkend="GObject">GObject</link></entry>
+<entry><link linkend="RCPlayer">RCPlayer</link></entry>
+</row>
 </tbody></tgroup></informaltable>

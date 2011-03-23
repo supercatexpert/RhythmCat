@@ -4,21 +4,21 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Playlist</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
-<link rel="home" href="index.html" title="RhythmCat Reference Manual">
-<link rel="up" href="ch01.html" title="[Insert title here]">
-<link rel="prev" href="RhythmCat-gui-style.html" title="gui_style">
-<link rel="next" href="RhythmCat-gui-treeview.html" title="gui_treeview">
+<link rel="home" href="index.html" title="RhythmCat Development Reference Manual">
+<link rel="up" href="ch01.html" title="Player Backend">
+<link rel="prev" href="RhythmCat-Asynchronous-Message-Queue.html" title="Asynchronous Message Queue">
+<link rel="next" href="RhythmCat-Settings.html" title="Settings">
 <meta name="generator" content="GTK-Doc V1.15 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
 <tr valign="middle">
-<td><a accesskey="p" href="RhythmCat-gui-style.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="p" href="RhythmCat-Asynchronous-Message-Queue.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
 <td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
-<th width="100%" align="center">RhythmCat Reference Manual</th>
-<td><a accesskey="n" href="RhythmCat-gui-treeview.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+<th width="100%" align="center">RhythmCat Development Reference Manual</th>
+<td><a accesskey="n" href="RhythmCat-Settings.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
 <a href="#RhythmCat-Playlist.synopsis" class="shortcut">Top</a>
@@ -42,64 +42,64 @@
 
 enum                <a class="link" href="RhythmCat-Playlist.html#RCPlist1Column" title="enum RCPlist1Column">RCPlist1Column</a>;
 enum                <a class="link" href="RhythmCat-Playlist.html#RCPlist2Column" title="enum RCPlist2Column">RCPlist2Column</a>;
-<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist.html#rc-plist-init" title="rc_plist_init ()">rc_plist_init</a>                       ();
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist.html#rc-plist-init" title="rc_plist_init ()">rc_plist_init</a>                       ();
 <span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-exit" title="rc_plist_exit ()">rc_plist_exit</a>                       ();
-<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist.html#rc-plist-insert-list" title="rc_plist_insert_list ()">rc_plist_insert_list</a>                (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *listname</code></em>,
-                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);
-<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist.html#rc-plist-insert-music" title="rc_plist_insert_music ()">rc_plist_insert_music</a>               (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>,
-                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list1_index</code></em>,
-                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list2_index</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-list2-insert-item" title="rc_plist_list2_insert_item ()">rc_plist_list2_insert_item</a>          (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>,
-                                                         <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *title</code></em>,
-                                                         <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *artist</code></em>,
-                                                         <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *album</code></em>,
-                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> length</code></em>,
-                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> trackno</code></em>,
-                                                         <em class="parameter"><code><a href="../gtk/GtkListStore.html"><span class="type">GtkListStore</span></a> *store</code></em>,
-                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list2_index</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-list2-refresh-item" title="rc_plist_list2_refresh_item ()">rc_plist_list2_refresh_item</a>         (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>,
-                                                         <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *title</code></em>,
-                                                         <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *artist</code></em>,
-                                                         <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *album</code></em>,
-                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> length</code></em>,
-                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> trackno</code></em>,
-                                                         <em class="parameter"><code><a href="../gtk/GtkTreeModel.html#GtkTreeRowReference"><span class="type">GtkTreeRowReference</span></a> *reference</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-list2-remove-item" title="rc_plist_list2_remove_item ()">rc_plist_list2_remove_item</a>          (<em class="parameter"><code><a href="../gtk/GtkTreeModel.html#GtkTreeRowReference"><span class="type">GtkTreeRowReference</span></a> *reference</code></em>);
-<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist.html#rc-plist-remove-list" title="rc_plist_remove_list ()">rc_plist_remove_list</a>                (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);
-<a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             <a class="link" href="RhythmCat-Playlist.html#rc-plist-get-list1-name" title="rc_plist_get_list1_name ()">rc_plist_get_list1_name</a>             (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);
-<a href="../glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-get-list1-length" title="rc_plist_get_list1_length ()">rc_plist_get_list1_length</a>           ();
-<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-set-list1-name" title="rc_plist_set_list1_name ()">rc_plist_set_list1_name</a>             (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>,
-                                                         <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);
-<a href="../glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-get-list2-length" title="rc_plist_get_list2_length ()">rc_plist_get_list2_length</a>           (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);
-<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist.html#rc-plist-play-by-index" title="rc_plist_play_by_index ()">rc_plist_play_by_index</a>              (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list_index</code></em>,
-                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> music_index</code></em>);
-<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist.html#rc-plist-play-get-index" title="rc_plist_play_get_index ()">rc_plist_play_get_index</a>             (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *index1</code></em>,
-                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *index2</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist.html#rc-plist-insert-list" title="rc_plist_insert_list ()">rc_plist_insert_list</a>                (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *listname</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist.html#rc-plist-insert-music" title="rc_plist_insert_music ()">rc_plist_insert_music</a>               (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list1_index</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list2_index</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-list2-insert-item" title="rc_plist_list2_insert_item ()">rc_plist_list2_insert_item</a>          (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *title</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *artist</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *album</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> length</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> trackno</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkListStore.html"><span class="type">GtkListStore</span></a> *store</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list2_index</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-list2-refresh-item" title="rc_plist_list2_refresh_item ()">rc_plist_list2_refresh_item</a>         (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *title</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *artist</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *album</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> length</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> trackno</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html#GtkTreeRowReference"><span class="type">GtkTreeRowReference</span></a> *reference</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-list2-remove-item" title="rc_plist_list2_remove_item ()">rc_plist_list2_remove_item</a>          (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html#GtkTreeRowReference"><span class="type">GtkTreeRowReference</span></a> *reference</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist.html#rc-plist-remove-list" title="rc_plist_remove_list ()">rc_plist_remove_list</a>                (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             <a class="link" href="RhythmCat-Playlist.html#rc-plist-get-list1-name" title="rc_plist_get_list1_name ()">rc_plist_get_list1_name</a>             (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-get-list1-length" title="rc_plist_get_list1_length ()">rc_plist_get_list1_length</a>           ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-set-list1-name" title="rc_plist_set_list1_name ()">rc_plist_set_list1_name</a>             (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-get-list2-length" title="rc_plist_get_list2_length ()">rc_plist_get_list2_length</a>           (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist.html#rc-plist-play-by-index" title="rc_plist_play_by_index ()">rc_plist_play_by_index</a>              (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list_index</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> music_index</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist.html#rc-plist-play-get-index" title="rc_plist_play_get_index ()">rc_plist_play_get_index</a>             (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *index1</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *index2</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-stop" title="rc_plist_stop ()">rc_plist_stop</a>                       ();
-<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist.html#rc-plist-play-prev" title="rc_plist_play_prev ()">rc_plist_play_prev</a>                  ();
-<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist.html#rc-plist-play-next" title="rc_plist_play_next ()">rc_plist_play_next</a>                  (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> flag</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-set-play-mode" title="rc_plist_set_play_mode ()">rc_plist_set_play_mode</a>              (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> repeat</code></em>,
-                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> random</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-get-play-mode" title="rc_plist_get_play_mode ()">rc_plist_get_play_mode</a>              (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *repeat</code></em>,
-                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *random</code></em>);
-<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist.html#rc-plist-load-playlist-setting" title="rc_plist_load_playlist_setting ()">rc_plist_load_playlist_setting</a>      ();
-<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist.html#rc-plist-save-playlist-setting" title="rc_plist_save_playlist_setting ()">rc_plist_save_playlist_setting</a>      ();
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist.html#rc-plist-play-prev" title="rc_plist_play_prev ()">rc_plist_play_prev</a>                  ();
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist.html#rc-plist-play-next" title="rc_plist_play_next ()">rc_plist_play_next</a>                  (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> flag</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-set-play-mode" title="rc_plist_set_play_mode ()">rc_plist_set_play_mode</a>              (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> repeat</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> random</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-get-play-mode" title="rc_plist_get_play_mode ()">rc_plist_get_play_mode</a>              (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *repeat</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *random</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist.html#rc-plist-load-playlist-setting" title="rc_plist_load_playlist_setting ()">rc_plist_load_playlist_setting</a>      ();
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist.html#rc-plist-save-playlist-setting" title="rc_plist_save_playlist_setting ()">rc_plist_save_playlist_setting</a>      ();
 <span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-build-default-list" title="rc_plist_build_default_list ()">rc_plist_build_default_list</a>         ();
-<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-plist-move2" title="rc_plist_plist_move2 ()">rc_plist_plist_move2</a>                (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list_index</code></em>,
-                                                         <em class="parameter"><code><a href="../gtk/GtkTreeModel.html#GtkTreePath"><span class="type">GtkTreePath</span></a> **from_paths</code></em>,
-                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> f_length</code></em>,
-                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> to_list_index</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-save-playlist" title="rc_plist_save_playlist ()">rc_plist_save_playlist</a>              (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *s_filename</code></em>,
-                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-load-playlist" title="rc_plist_load_playlist ()">rc_plist_load_playlist</a>              (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *s_filename</code></em>,
-                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);
-<a href="../gtk/GtkListStore.html"><span class="returnvalue">GtkListStore</span></a> *      <a class="link" href="RhythmCat-Playlist.html#rc-plist-get-list-store" title="rc_plist_get_list_store ()">rc_plist_get_list_store</a>             (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);
-<a href="../gtk/GtkListStore.html"><span class="returnvalue">GtkListStore</span></a> *      <a class="link" href="RhythmCat-Playlist.html#rc-plist-get-list-head" title="rc_plist_get_list_head ()">rc_plist_get_list_head</a>              ();
-<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist.html#rc-plist-list2-refresh" title="rc_plist_list2_refresh ()">rc_plist_list2_refresh</a>              (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list1_index</code></em>);
-<a href="../glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-import-job-get-length" title="rc_plist_import_job_get_length ()">rc_plist_import_job_get_length</a>      ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-plist-move2" title="rc_plist_plist_move2 ()">rc_plist_plist_move2</a>                (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list_index</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html#GtkTreePath"><span class="type">GtkTreePath</span></a> **from_paths</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> f_length</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> to_list_index</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-save-playlist" title="rc_plist_save_playlist ()">rc_plist_save_playlist</a>              (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *s_filename</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-load-playlist" title="rc_plist_load_playlist ()">rc_plist_load_playlist</a>              (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *s_filename</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);
+<a href="/usr/share/gtk-doc/html/gtk/GtkListStore.html"><span class="returnvalue">GtkListStore</span></a> *      <a class="link" href="RhythmCat-Playlist.html#rc-plist-get-list-store" title="rc_plist_get_list_store ()">rc_plist_get_list_store</a>             (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);
+<a href="/usr/share/gtk-doc/html/gtk/GtkListStore.html"><span class="returnvalue">GtkListStore</span></a> *      <a class="link" href="RhythmCat-Playlist.html#rc-plist-get-list-head" title="rc_plist_get_list_head ()">rc_plist_get_list_head</a>              ();
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist.html#rc-plist-list2-refresh" title="rc_plist_list2_refresh ()">rc_plist_list2_refresh</a>              (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list1_index</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-import-job-get-length" title="rc_plist_import_job_get_length ()">rc_plist_import_job_get_length</a>      ();
 <span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-import-job-cancel" title="rc_plist_import_job_cancel ()">rc_plist_import_job_cancel</a>          ();
 <span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-load-argument" title="rc_plist_load_argument ()">rc_plist_load_argument</a>              (<em class="parameter"><code><span class="type">char</span> *argv[]</code></em>);
-<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist.html#rc-plist-load-uri-from-remote" title="rc_plist_load_uri_from_remote ()">rc_plist_load_uri_from_remote</a>       (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist.html#rc-plist-load-uri-from-remote" title="rc_plist_load_uri_from_remote ()">rc_plist_load_uri_from_remote</a>       (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);
 </pre>
 </div>
 <div class="refsect1" title="Description">
@@ -215,9 +215,9 @@ The enum type to show the columns in ListStore2.
 <hr>
 <div class="refsect2" title="rc_plist_init ()">
 <a name="rc-plist-init"></a><h3>rc_plist_init ()</h3>
-<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plist_init                       ();</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plist_init                       ();</pre>
 <p>
-Initialize playlists.
+Initialize playlists. Can be used only once.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -239,8 +239,8 @@ Free all playlists data.
 <hr>
 <div class="refsect2" title="rc_plist_insert_list ()">
 <a name="rc-plist-insert-list"></a><h3>rc_plist_insert_list ()</h3>
-<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plist_insert_list                (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *listname</code></em>,
-                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plist_insert_list                (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *listname</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);</pre>
 <p>
 Insert a new playlist into the playlist.
 </p>
@@ -268,9 +268,9 @@ Insert a new playlist into the playlist.
 <hr>
 <div class="refsect2" title="rc_plist_insert_music ()">
 <a name="rc-plist-insert-music"></a><h3>rc_plist_insert_music ()</h3>
-<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plist_insert_music               (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>,
-                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list1_index</code></em>,
-                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list2_index</code></em>);</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plist_insert_music               (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list1_index</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list2_index</code></em>);</pre>
 <p>
 Import music by given URI to the playlist.
 </p>
@@ -304,14 +304,14 @@ the last
 <hr>
 <div class="refsect2" title="rc_plist_list2_insert_item ()">
 <a name="rc-plist-list2-insert-item"></a><h3>rc_plist_list2_insert_item ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                rc_plist_list2_insert_item          (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>,
-                                                         <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *title</code></em>,
-                                                         <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *artist</code></em>,
-                                                         <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *album</code></em>,
-                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> length</code></em>,
-                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> trackno</code></em>,
-                                                         <em class="parameter"><code><a href="../gtk/GtkListStore.html"><span class="type">GtkListStore</span></a> *store</code></em>,
-                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list2_index</code></em>);</pre>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_plist_list2_insert_item          (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *title</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *artist</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *album</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> length</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> trackno</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkListStore.html"><span class="type">GtkListStore</span></a> *store</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list2_index</code></em>);</pre>
 <p>
 Insert music to list2 by metadata.
 WARNING: This function is only used in insertion job, if you really
@@ -366,13 +366,13 @@ want to insert a music, please use <a class="link" href="RhythmCat-Playlist.html
 <hr>
 <div class="refsect2" title="rc_plist_list2_refresh_item ()">
 <a name="rc-plist-list2-refresh-item"></a><h3>rc_plist_list2_refresh_item ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                rc_plist_list2_refresh_item         (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>,
-                                                         <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *title</code></em>,
-                                                         <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *artist</code></em>,
-                                                         <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *album</code></em>,
-                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> length</code></em>,
-                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> trackno</code></em>,
-                                                         <em class="parameter"><code><a href="../gtk/GtkTreeModel.html#GtkTreeRowReference"><span class="type">GtkTreeRowReference</span></a> *reference</code></em>);</pre>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_plist_list2_refresh_item         (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *title</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *artist</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *album</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> length</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> trackno</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html#GtkTreeRowReference"><span class="type">GtkTreeRowReference</span></a> *reference</code></em>);</pre>
 <p>
 Refresh the item in list2 by metadata.
 WARNING: This function is only used in refresh job, if you really
@@ -422,7 +422,7 @@ want to refresh the playlist, please use <a class="link" href="RhythmCat-Playlis
 <hr>
 <div class="refsect2" title="rc_plist_list2_remove_item ()">
 <a name="rc-plist-list2-remove-item"></a><h3>rc_plist_list2_remove_item ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                rc_plist_list2_remove_item          (<em class="parameter"><code><a href="../gtk/GtkTreeModel.html#GtkTreeRowReference"><span class="type">GtkTreeRowReference</span></a> *reference</code></em>);</pre>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_plist_list2_remove_item          (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html#GtkTreeRowReference"><span class="type">GtkTreeRowReference</span></a> *reference</code></em>);</pre>
 <p>
 Remove invalid item in list2.
 WARNING: This function is only used to remove invalid music item.
@@ -439,7 +439,7 @@ WARNING: This function is only used to remove invalid music item.
 <hr>
 <div class="refsect2" title="rc_plist_remove_list ()">
 <a name="rc-plist-remove-list"></a><h3>rc_plist_remove_list ()</h3>
-<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plist_remove_list                (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plist_remove_list                (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);</pre>
 <p>
 Remove a playlist by given index.
 </p>
@@ -462,7 +462,7 @@ Remove a playlist by given index.
 <hr>
 <div class="refsect2" title="rc_plist_get_list1_name ()">
 <a name="rc-plist-get-list1-name"></a><h3>rc_plist_get_list1_name ()</h3>
-<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             rc_plist_get_list1_name             (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             rc_plist_get_list1_name             (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);</pre>
 <p>
 Return the name of the list.
 </p>
@@ -485,7 +485,7 @@ Return the name of the list.
 <hr>
 <div class="refsect2" title="rc_plist_get_list1_length ()">
 <a name="rc-plist-get-list1-length"></a><h3>rc_plist_get_list1_length ()</h3>
-<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                rc_plist_get_list1_length           ();</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                rc_plist_get_list1_length           ();</pre>
 <p>
 Return the length of playlists.
 </p>
@@ -501,8 +501,8 @@ Return the length of playlists.
 <hr>
 <div class="refsect2" title="rc_plist_set_list1_name ()">
 <a name="rc-plist-set-list1-name"></a><h3>rc_plist_set_list1_name ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                rc_plist_set_list1_name             (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>,
-                                                         <em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);</pre>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_plist_set_list1_name             (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);</pre>
 <p>
 Rename an exist playlist.
 </p>
@@ -525,7 +525,7 @@ Rename an exist playlist.
 <hr>
 <div class="refsect2" title="rc_plist_get_list2_length ()">
 <a name="rc-plist-get-list2-length"></a><h3>rc_plist_get_list2_length ()</h3>
-<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                rc_plist_get_list2_length           (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                rc_plist_get_list2_length           (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);</pre>
 <p>
 Return the music number in the playlist.
 </p>
@@ -548,8 +548,8 @@ Return the music number in the playlist.
 <hr>
 <div class="refsect2" title="rc_plist_play_by_index ()">
 <a name="rc-plist-play-by-index"></a><h3>rc_plist_play_by_index ()</h3>
-<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plist_play_by_index              (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list_index</code></em>,
-                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> music_index</code></em>);</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plist_play_by_index              (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list_index</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> music_index</code></em>);</pre>
 <p>
 Play music by given list1 index and list2 index.
 </p>
@@ -577,8 +577,8 @@ Play music by given list1 index and list2 index.
 <hr>
 <div class="refsect2" title="rc_plist_play_get_index ()">
 <a name="rc-plist-play-get-index"></a><h3>rc_plist_play_get_index ()</h3>
-<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plist_play_get_index             (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *index1</code></em>,
-                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *index2</code></em>);</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plist_play_get_index             (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *index1</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *index2</code></em>);</pre>
 <p>
 Get the playlist index number and the music index number of playing
 music.
@@ -615,7 +615,7 @@ Clean the references data when the player stops.
 <hr>
 <div class="refsect2" title="rc_plist_play_prev ()">
 <a name="rc-plist-play-prev"></a><h3>rc_plist_play_prev ()</h3>
-<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plist_play_prev                  ();</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plist_play_prev                  ();</pre>
 <p>
 Play the previous music in the playlist.
 </p>
@@ -631,7 +631,7 @@ Play the previous music in the playlist.
 <hr>
 <div class="refsect2" title="rc_plist_play_next ()">
 <a name="rc-plist-play-next"></a><h3>rc_plist_play_next ()</h3>
-<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plist_play_next                  (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> flag</code></em>);</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plist_play_next                  (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> flag</code></em>);</pre>
 <p>
 Play the next music in the playlist.
 </p>
@@ -655,8 +655,8 @@ the operation will effect by playing mode (repeat mode and random mode)
 <hr>
 <div class="refsect2" title="rc_plist_set_play_mode ()">
 <a name="rc-plist-set-play-mode"></a><h3>rc_plist_set_play_mode ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                rc_plist_set_play_mode              (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> repeat</code></em>,
-                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> random</code></em>);</pre>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_plist_set_play_mode              (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> repeat</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> random</code></em>);</pre>
 <p>
 Set the play mode of the player.
 </p>
@@ -679,8 +679,8 @@ Set the play mode of the player.
 <hr>
 <div class="refsect2" title="rc_plist_get_play_mode ()">
 <a name="rc-plist-get-play-mode"></a><h3>rc_plist_get_play_mode ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                rc_plist_get_play_mode              (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *repeat</code></em>,
-                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *random</code></em>);</pre>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_plist_get_play_mode              (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *repeat</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *random</code></em>);</pre>
 <p>
 Get the play mode of the player.
 </p>
@@ -703,7 +703,7 @@ Get the play mode of the player.
 <hr>
 <div class="refsect2" title="rc_plist_load_playlist_setting ()">
 <a name="rc-plist-load-playlist-setting"></a><h3>rc_plist_load_playlist_setting ()</h3>
-<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plist_load_playlist_setting      ();</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plist_load_playlist_setting      ();</pre>
 <p>
 Load playlists from file.
 </p>
@@ -719,7 +719,7 @@ Load playlists from file.
 <hr>
 <div class="refsect2" title="rc_plist_save_playlist_setting ()">
 <a name="rc-plist-save-playlist-setting"></a><h3>rc_plist_save_playlist_setting ()</h3>
-<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plist_save_playlist_setting      ();</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plist_save_playlist_setting      ();</pre>
 <p>
 Save the playlist settings to file.
 </p>
@@ -743,10 +743,10 @@ Make a default playlist.
 <hr>
 <div class="refsect2" title="rc_plist_plist_move2 ()">
 <a name="rc-plist-plist-move2"></a><h3>rc_plist_plist_move2 ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                rc_plist_plist_move2                (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list_index</code></em>,
-                                                         <em class="parameter"><code><a href="../gtk/GtkTreeModel.html#GtkTreePath"><span class="type">GtkTreePath</span></a> **from_paths</code></em>,
-                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> f_length</code></em>,
-                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> to_list_index</code></em>);</pre>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_plist_plist_move2                (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list_index</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html#GtkTreePath"><span class="type">GtkTreePath</span></a> **from_paths</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> f_length</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> to_list_index</code></em>);</pre>
 <p>
 Move item(s) in the playlist to another playlist.
 </p>
@@ -779,8 +779,8 @@ Move item(s) in the playlist to another playlist.
 <hr>
 <div class="refsect2" title="rc_plist_save_playlist ()">
 <a name="rc-plist-save-playlist"></a><h3>rc_plist_save_playlist ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                rc_plist_save_playlist              (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *s_filename</code></em>,
-                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);</pre>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_plist_save_playlist              (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *s_filename</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);</pre>
 <p>
 Save the playlist to a file.
 </p>
@@ -803,8 +803,8 @@ Save the playlist to a file.
 <hr>
 <div class="refsect2" title="rc_plist_load_playlist ()">
 <a name="rc-plist-load-playlist"></a><h3>rc_plist_load_playlist ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                rc_plist_load_playlist              (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *s_filename</code></em>,
-                                                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);</pre>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_plist_load_playlist              (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *s_filename</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);</pre>
 <p>
 Load a playlist from a playlist file.
 </p>
@@ -827,7 +827,7 @@ Load a playlist from a playlist file.
 <hr>
 <div class="refsect2" title="rc_plist_get_list_store ()">
 <a name="rc-plist-get-list-store"></a><h3>rc_plist_get_list_store ()</h3>
-<pre class="programlisting"><a href="../gtk/GtkListStore.html"><span class="returnvalue">GtkListStore</span></a> *      rc_plist_get_list_store             (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gtk/GtkListStore.html"><span class="returnvalue">GtkListStore</span></a> *      rc_plist_get_list_store             (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);</pre>
 <p>
 Return the GtkListStore of the playlist by given index.
 </p>
@@ -850,7 +850,7 @@ Return the GtkListStore of the playlist by given index.
 <hr>
 <div class="refsect2" title="rc_plist_get_list_head ()">
 <a name="rc-plist-get-list-head"></a><h3>rc_plist_get_list_head ()</h3>
-<pre class="programlisting"><a href="../gtk/GtkListStore.html"><span class="returnvalue">GtkListStore</span></a> *      rc_plist_get_list_head              ();</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gtk/GtkListStore.html"><span class="returnvalue">GtkListStore</span></a> *      rc_plist_get_list_head              ();</pre>
 <p>
 Return the GtkListStore of the playlists.
 </p>
@@ -866,7 +866,7 @@ Return the GtkListStore of the playlists.
 <hr>
 <div class="refsect2" title="rc_plist_list2_refresh ()">
 <a name="rc-plist-list2-refresh"></a><h3>rc_plist_list2_refresh ()</h3>
-<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plist_list2_refresh              (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list1_index</code></em>);</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plist_list2_refresh              (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list1_index</code></em>);</pre>
 <p>
 Refresh the music information in the playlist.
 </p>
@@ -889,7 +889,7 @@ Refresh the music information in the playlist.
 <hr>
 <div class="refsect2" title="rc_plist_import_job_get_length ()">
 <a name="rc-plist-import-job-get-length"></a><h3>rc_plist_import_job_get_length ()</h3>
-<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                rc_plist_import_job_get_length      ();</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                rc_plist_import_job_get_length      ();</pre>
 <p>
 Return the remaining job length in the job queue.
 </p>
@@ -929,7 +929,7 @@ Import music from the given argument list.
 <hr>
 <div class="refsect2" title="rc_plist_load_uri_from_remote ()">
 <a name="rc-plist-load-uri-from-remote"></a><h3>rc_plist_load_uri_from_remote ()</h3>
-<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plist_load_uri_from_remote       (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plist_load_uri_from_remote       (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);</pre>
 <p>
 Import music from remote (e.g. D-Bus) by given URI.
 </p>

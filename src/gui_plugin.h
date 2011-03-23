@@ -28,7 +28,7 @@
 #include <glib.h>
 #include <gtk/gtk.h>
 
-void rc_gui_plugin_window_create(GtkWidget *, gpointer);
+void rc_gui_plugin_window_create();
 
 #endif
 

@@ -4,21 +4,21 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Debug</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
-<link rel="home" href="index.html" title="RhythmCat Reference Manual">
-<link rel="up" href="ch01.html" title="[Insert title here]">
-<link rel="prev" href="RhythmCat-Asynchronous-Message-Queue.html" title="Asynchronous Message Queue">
-<link rel="next" href="RhythmCat-Core.html" title="Core">
+<link rel="home" href="index.html" title="RhythmCat Development Reference Manual">
+<link rel="up" href="ch01.html" title="Player Backend">
+<link rel="prev" href="RhythmCat-Plugin-Support.html" title="Plugin Support">
+<link rel="next" href="ch02.html" title="Player UI">
 <meta name="generator" content="GTK-Doc V1.15 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
 <tr valign="middle">
-<td><a accesskey="p" href="RhythmCat-Asynchronous-Message-Queue.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="p" href="RhythmCat-Plugin-Support.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
 <td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
-<th width="100%" align="center">RhythmCat Reference Manual</th>
-<td><a accesskey="n" href="RhythmCat-Core.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+<th width="100%" align="center">RhythmCat Development Reference Manual</th>
+<td><a accesskey="n" href="ch02.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
 <a href="#RhythmCat-Debug.synopsis" class="shortcut">Top</a>
@@ -41,11 +41,11 @@
 #include &lt;debug.h&gt;
 
 #define             <a class="link" href="RhythmCat-Debug.html#DEBUG-MODE:CAPS" title="DEBUG_MODE">DEBUG_MODE</a>
-<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Debug.html#rc-debug-get-flag" title="rc_debug_get_flag ()">rc_debug_get_flag</a>                   ();
-<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Debug.html#rc-debug-set-mode" title="rc_debug_set_mode ()">rc_debug_set_mode</a>                   (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> mode</code></em>);
-<a href="../glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="RhythmCat-Debug.html#rc-debug-print" title="rc_debug_print ()">rc_debug_print</a>                      (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Debug.html#rc-debug-get-flag" title="rc_debug_get_flag ()">rc_debug_get_flag</a>                   ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Debug.html#rc-debug-set-mode" title="rc_debug_set_mode ()">rc_debug_set_mode</a>                   (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> mode</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="RhythmCat-Debug.html#rc-debug-print" title="rc_debug_print ()">rc_debug_print</a>                      (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
                                                          <em class="parameter"><code>...</code></em>);
-<a href="../glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="RhythmCat-Debug.html#rc-debug-perror" title="rc_debug_perror ()">rc_debug_perror</a>                     (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="RhythmCat-Debug.html#rc-debug-perror" title="rc_debug_perror ()">rc_debug_perror</a>                     (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
                                                          <em class="parameter"><code>...</code></em>);
 </pre>
 </div>
@@ -65,7 +65,7 @@ Debug and print information of the working status of the player.
 <hr>
 <div class="refsect2" title="rc_debug_get_flag ()">
 <a name="rc-debug-get-flag"></a><h3>rc_debug_get_flag ()</h3>
-<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_debug_get_flag                   ();</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_debug_get_flag                   ();</pre>
 <p>
 Return the debug flag.
 </p>
@@ -81,7 +81,7 @@ Return the debug flag.
 <hr>
 <div class="refsect2" title="rc_debug_set_mode ()">
 <a name="rc-debug-set-mode"></a><h3>rc_debug_set_mode ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                rc_debug_set_mode                   (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> mode</code></em>);</pre>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_debug_set_mode                   (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> mode</code></em>);</pre>
 <p>
 Set the debug mode.
 </p>
@@ -97,7 +97,7 @@ Set the debug mode.
 <hr>
 <div class="refsect2" title="rc_debug_print ()">
 <a name="rc-debug-print"></a><h3>rc_debug_print ()</h3>
-<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                rc_debug_print                      (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                rc_debug_print                      (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
                                                          <em class="parameter"><code>...</code></em>);</pre>
 <p>
 Print debug message when debug mode is enabled.
@@ -126,7 +126,7 @@ Print debug message when debug mode is enabled.
 <hr>
 <div class="refsect2" title="rc_debug_perror ()">
 <a name="rc-debug-perror"></a><h3>rc_debug_perror ()</h3>
-<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                rc_debug_perror                     (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                rc_debug_perror                     (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
                                                          <em class="parameter"><code>...</code></em>);</pre>
 <p>
 Print error message on standard error (stderr).

@@ -1,8 +1,8 @@
 /*
  * Player
- * The Class of the player.
+ * Manage the player information, and initialize the player.
  *
- * signal.c
+ * player.c
  * This file is part of <RhythmCat>
  *
  * Copyright (C) 2010 - SuperCat, license: GPL v3
@@ -24,116 +24,492 @@
  */
 
 #include "player.h"
+#include "core.h"
+#include "gui.h"
+#include "playlist.h"
+#include "settings.h"
+#include "shell.h"
+#include "plugin.h"
 #include "debug.h"
+#include "msg.h"
+#include "shell_glue.h"
+#include "player_object.h"
+#include "gui_eq.h"
+#include "gui_treeview.h"
+#include "gui_style.h"
 
-static GObject *player_object = NULL;
+/**
+ * SECTION: player
+ * @Short_description: Manage the player information, and initialize the
+ * player.
+ * @Title: Player
+ * @Include: player.h
+ *
+ * Manage the player information, and initialize the player.
+ */
 
-enum
+#define PACKAGE "RhythmCat"
+
+#ifndef LOCALEDIR
+#define LOCALEDIR "locale"
+#endif
+
+static const gchar rc_player_program_name[] = "RhythmCat Music Player";
+static const gchar rc_player_build_date[] = "110323";
+static const gchar rc_player_version[] = "1.0.0 alpha 1";
+static const gboolean rc_player_stable_flag = FALSE;
+static const gchar *rc_player_support_formatx = "(.FLAC|.OGG|.MP3|.WMA|.WAV|"
+    ".OGA|.OGM|.APE|.AAC|.AC3|.MIDI|.MP2|.MID)$";
+static GRegex *rc_player_support_format_regex = NULL;
+static const gchar rc_player_dbus_name[] = "org.supercat.RhythmCat";
+static const gchar rc_player_dbus_path_shell[] =
+    "/org/supercat/RhythmCat/Shell";
+static const gchar rc_player_dbus_interface_shell[] =
+    "org.supercat.RhythmCat.Shell";
+static const gchar const *rc_player_authors[] = {"SuperCat", "Mr. Zhu", NULL};
+static const gchar const *rc_player_documenters[] = {"SuperCat", NULL};
+static const gchar const *rc_player_artists[] = {"SuperCat", NULL};
+static gboolean rc_player_debug_flag = FALSE;
+static char **rc_player_remaining_args = NULL;
+static gchar *rc_player_conf_dir = NULL;
+static const gchar *rc_player_data_dir = NULL;
+static const gchar *rc_player_home_dir = NULL;
+static const gchar *rc_player_locale = NULL; 
+
+static gchar *rc_player_get_program_data_dir()
 {
-    OBJECT_BORN,
-    PLAYER_PLAY,
-    PLAYER_STOP,
-    PLAYER_PAUSE,
-    PLAYER_CONTINUE,
-    LYRIC_FOUND,
-    LYRIC_NOT_FOUND,
-    LAST_SIGNAL
-};
-
-static gint object_signals[LAST_SIGNAL] = {0};
-
-static void rc_player_object_born()
-{
-    rc_debug_print("Player: Object was born!\n"); 
-}
-
-static void rc_player_init(RCPlayer *player)
-{
-}
-
-static void rc_player_class_init(RCPlayerClass *class)
-{
-    object_signals[OBJECT_BORN] = g_signal_new("object-born", RC_PLAYER_TYPE,
-        G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCPlayerClass, object_born),
-        NULL, NULL, g_cclosure_marshal_VOID__VOID,
-        G_TYPE_NONE, 0, NULL);
-    object_signals[PLAYER_PLAY] = g_signal_new("player-play", RC_PLAYER_TYPE,
-        G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCPlayerClass, player_play),
-        NULL, NULL, g_cclosure_marshal_VOID__VOID,
-        G_TYPE_NONE, 0, NULL);
-    object_signals[PLAYER_STOP] = g_signal_new("player-stop", RC_PLAYER_TYPE,
-        G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCPlayerClass, player_stop),
-        NULL, NULL, g_cclosure_marshal_VOID__VOID,
-        G_TYPE_NONE, 0, NULL);
-    object_signals[PLAYER_PAUSE] = g_signal_new("player-pause",
-        RC_PLAYER_TYPE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCPlayerClass,
-        player_pause), NULL, NULL, g_cclosure_marshal_VOID__VOID,
-        G_TYPE_NONE, 0, NULL);
-    object_signals[PLAYER_CONTINUE] = g_signal_new("player-continue",
-        RC_PLAYER_TYPE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCPlayerClass,
-        player_continue), NULL, NULL, g_cclosure_marshal_VOID__VOID,
-        G_TYPE_NONE, 0, NULL);
-    object_signals[LYRIC_FOUND] = g_signal_new("lyric-found",
-        RC_PLAYER_TYPE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCPlayerClass,
-        lyric_found), NULL, NULL, g_cclosure_marshal_VOID__VOID,
-        G_TYPE_NONE, 0, NULL);
-    object_signals[LYRIC_NOT_FOUND] = g_signal_new("lyric-not-found",
-        RC_PLAYER_TYPE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCPlayerClass,
-        lyric_not_found), NULL, NULL, g_cclosure_marshal_VOID__VOID,
-        G_TYPE_NONE, 0, NULL);
-}
-
-GType rc_player_get_type()
-{
-    static GType player_type = 0;
-    static const GTypeInfo rc_player_info = {sizeof(RCPlayerClass), NULL, NULL,
-        (GClassInitFunc)rc_player_class_init, NULL, NULL, sizeof(RCPlayer),
-        0, (GInstanceInitFunc)rc_player_init};
-    if(!player_type)
+    gchar *data_dir = NULL;
+    gchar *bin_dir = NULL;
+    gchar *exec_path = NULL;
+    char full_path[PATH_MAX];
+    exec_path = g_file_read_link("/proc/self/exe", NULL);
+    if(exec_path!=NULL)
     {
-        player_type = g_type_register_static(G_TYPE_OBJECT, "RCPlayer",
-            &rc_player_info, 0);
+        bin_dir = g_path_get_dirname(exec_path);
+        g_free(exec_path);
     }
-    return player_type;
+    if(bin_dir!=NULL)
+    {
+        data_dir = g_strdup_printf("%s%c..%cshare%cRhythmCat", bin_dir,
+            G_DIR_SEPARATOR, G_DIR_SEPARATOR, G_DIR_SEPARATOR);
+        if(!g_file_test(data_dir, G_FILE_TEST_IS_DIR))
+        {
+            g_free(data_dir);
+            data_dir = g_strdup(bin_dir);
+        }
+        g_free(bin_dir);
+    }
+    if(data_dir==NULL)
+    {
+        if(realpath(data_dir, full_path)!=NULL)
+            data_dir = g_strdup(full_path);
+    }
+    if(data_dir==NULL)
+    {
+        if(g_file_test("/usr/share/RhythmCat", G_FILE_TEST_IS_DIR))
+            data_dir = g_strdup("/usr/share/RhythmCat");
+        else if(g_file_test("/usr/local/share/RhythmCat", G_FILE_TEST_IS_DIR))
+            data_dir = g_strdup("/usr/local/share/RhythmCat");
+        else if(g_file_test("/opt/share/RhythmCat", G_FILE_TEST_IS_DIR))
+            data_dir = g_strdup("/opt/local/share/RhythmCat");
+        else if(g_file_test("/opt/RhythmCat/share/RhythmCat",
+            G_FILE_TEST_IS_DIR))
+            data_dir = g_strdup("/opt/RhythmCat/share/RhythmCat");
+        else
+            data_dir = g_get_current_dir();
+    }
+    return data_dir;
 }
 
-RCPlayer *rc_player_new()
+static gboolean rc_player_dbus_init(gchar **remaining_args)
 {
-    RCPlayer *player;
-    player = g_object_new(RC_PLAYER_TYPE, NULL);
-    g_signal_connect(player, "object-born", G_CALLBACK(rc_player_object_born),
-        NULL);
-    g_signal_emit_by_name(player, "object-born", G_TYPE_NONE);
-    return player;
-}
+    DBusGConnection *session_bus;
+    DBusGProxy *bus_proxy;
+    DBusGProxy *shell_proxy;
+    GError *error = NULL;
+    guint request_name_reply;
+    gint flags = 0;
+    gint i = 0;
+    GObject *rc_shell_info = NULL;
+    gboolean activated = FALSE;
+    session_bus = dbus_g_bus_get(DBUS_BUS_SESSION, &error);
+    if(session_bus==NULL)
+    {
+        g_printerr("CRITIAL: Failed to open connection to bus: %s\n",
+            error->message);
+        g_error_free(error);
+        return FALSE;
+    }
+    bus_proxy = dbus_g_proxy_new_for_name(session_bus, DBUS_SERVICE_DBUS,
+        DBUS_PATH_DBUS, DBUS_INTERFACE_DBUS);
+    if(!dbus_g_proxy_call(bus_proxy, "RequestName", &error, G_TYPE_STRING,
+        rc_player_dbus_name, G_TYPE_UINT, flags, G_TYPE_INVALID, G_TYPE_UINT,
+        &request_name_reply, G_TYPE_INVALID))
+    {
+        g_warning("Failed to invoke RequestName: %s", error->message);
+        g_error_free(error);
+    }
+    g_object_unref(bus_proxy);
+    if(request_name_reply == DBUS_REQUEST_NAME_REPLY_PRIMARY_OWNER
+        || request_name_reply == DBUS_REQUEST_NAME_REPLY_ALREADY_OWNER)
+        activated = FALSE;
+    else if (request_name_reply == DBUS_REQUEST_NAME_REPLY_EXISTS
+        || request_name_reply == DBUS_REQUEST_NAME_REPLY_IN_QUEUE)
+        activated = TRUE;
+    else
+    {
+        g_warning("Got unhandled reply %u from RequestName",
+            request_name_reply);
+        activated = FALSE;
+    }
+    if(!activated)
+    {
+        rc_debug_print("Running in the first instance.\n");
+        shell_proxy = dbus_g_proxy_new_for_name(session_bus,
+            rc_player_dbus_name, rc_player_dbus_path_shell,
+            rc_player_dbus_interface_shell);
+        if(shell_proxy==NULL)
+        {
+            g_warning("Couldn't create proxy for RhythmCat Shell: %s",
+                error->message);
+            g_error_free(error);
+        }
+        else
+        {
+            dbus_g_object_type_install_info(RC_SHELL_TYPE,
+                &dbus_glib_rc_shell_object_info);
+            /* Regist RC-Shell to dbus. */
+            rc_shell_info = g_object_new(RC_SHELL_TYPE, NULL);
+            dbus_g_connection_register_g_object(session_bus, 
+                rc_player_dbus_path_shell, G_OBJECT(rc_shell_info));
+        }
+        g_object_unref(shell_proxy);
 
-gboolean rc_player_object_init()
-{
-    player_object = G_OBJECT(rc_player_new());
-    if(player_object==NULL) return FALSE;
+    }
+    else if(session_bus!=NULL)
+    {
+        g_warning("Another instance is already running! The program will send"
+            " the arguments to the first instance, then kill itself.\n");
+        /* Send arguments to the first instance below. */
+        shell_proxy = dbus_g_proxy_new_for_name_owner(session_bus,
+            rc_player_dbus_name, rc_player_dbus_path_shell,
+            rc_player_dbus_interface_shell, &error);
+        if(shell_proxy==NULL)
+        {
+            g_warning("Couldn't create proxy for RhythmCat Shell: %s",
+                error->message);
+            g_error_free(error);
+        }
+        else
+        {
+            if(remaining_args!=NULL)
+            {
+                for(i=0;remaining_args[i]!=NULL;i++)
+                {
+                    dbus_g_proxy_call(shell_proxy, "LoadURI", &error,
+                        G_TYPE_STRING, remaining_args[i], G_TYPE_INVALID, 
+                        G_TYPE_INVALID);
+                    if(error!=NULL) g_error_free(error);
+                }
+            }
+            g_object_unref(G_OBJECT(shell_proxy));
+        }
+        /* Selfdestruct */
+        exit(0);
+    }
     return TRUE;
 }
 
-GObject *rc_player_object_get()
+/**
+ * rc_player_init:
+ * @argc: address of the argc parameter of your main() function
+ * @argv: address of the argv parameter of main()
+ *
+ * Initialize the player.
+ */
+
+void rc_player_init(int *argc, char **argv[])
 {
-    return player_object;
+    static GOptionEntry options[] =
+    {
+        {"debug", 'd', 0, G_OPTION_ARG_NONE, &rc_player_debug_flag,
+            N_("Enable debug mode"), NULL},
+        {G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_STRING_ARRAY,
+            &rc_player_remaining_args, NULL, N_("[URI...]")},
+        {NULL}
+    };
+    const gchar *homedir = g_getenv("HOME");
+    gchar *locale_dir = NULL;
+    GError *error = NULL;
+    /* Enable this to enable memory leak check. */
+    /*
+    g_slice_set_config(G_SLICE_CONFIG_ALWAYS_MALLOC, TRUE);
+    */
+    g_set_application_name("RhythmCat");
+    if(homedir==NULL) homedir = g_get_home_dir();
+    rc_player_home_dir = homedir;
+    rc_player_conf_dir = g_strdup_printf("%s%c.RhythmCat", homedir,
+        G_DIR_SEPARATOR);
+    rc_player_data_dir = rc_player_get_program_data_dir();
+    if(rc_player_data_dir!=NULL)
+        rc_player_locale = g_strdup_printf("%s%c..%clocale",
+            rc_player_data_dir, G_DIR_SEPARATOR, G_DIR_SEPARATOR);
+    srand((unsigned)time(0));
+    g_mkdir_with_parents(rc_player_conf_dir, 0700);
+    if(!g_thread_supported()) g_thread_init(NULL);
+    gdk_threads_init();
+    g_type_init();
+    dbus_g_thread_init();
+    /* Arguments/Options process. */
+    if(!gtk_init_with_args(argc, argv, NULL, options, GETTEXT_PACKAGE, &error))
+    {
+        g_printf(_("%s\nRun '%s --help' to see a full list of available "
+            "command line options.\n"), error->message, (*argv)[0]);
+        g_error_free(error);
+        exit(1);
+    }
+    if(rc_player_debug_flag) rc_debug_set_mode(TRUE);
+    rc_debug_print("\n***** RhythmCat DEBUG Messages *****\n");  
+    rc_debug_print("DEBUG MODE Enabled!\n"); 
+    rc_debug_print("Got home directory at: %s\n", rc_player_home_dir);
+    rc_debug_print("Got data directory at: %s\n", rc_player_data_dir);
+    rc_debug_print("Starting RhythmCat, version: %s\n", rc_player_version);
+    if(!rc_player_stable_flag)
+        rc_debug_print("This program is under testing, report bugs to me"
+            " if you find any.\n");
+    rc_player_support_format_regex = g_regex_new(rc_player_support_formatx,
+        G_REGEX_CASELESS, G_REGEX_MATCH_ANCHORED, &error);
+    if(error!=NULL) g_error_free(error);
+    if(locale_dir==NULL)
+        bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
+    else
+    {
+        bindtextdomain(GETTEXT_PACKAGE, locale_dir);
+        g_free(locale_dir);
+    }
+    bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
+    textdomain(GETTEXT_PACKAGE);
+    rc_player_locale = g_strdup(setlocale(LC_ALL, NULL));
+    rc_set_init();
+    gst_init(argc, argv);
+    rc_player_dbus_init(rc_player_remaining_args);
+    rc_gui_init();
+    rc_core_init();
+    rc_gui_eq_data_init();
+    rc_gui_eq_init();
+    rc_gui_style_refresh();
+    rc_gui_style_init();
+    rc_msg_init();
+    rc_plist_init();
+    rc_player_object_init();
+    rc_plist_load_argument(rc_player_remaining_args);
+    rc_plugin_init();
+    if(rc_plist_get_list2_length(0)>0)
+    {
+        rc_gui_select_list2(0);
+        if(rc_set_get_boolean("Player", "AutoPlay", NULL))
+        {
+            if(rc_set_get_boolean("Player", "LoadLastPosition", NULL))
+            {
+                rc_plist_play_by_index(
+                    rc_set_get_integer("Playlist", "LastList", NULL),
+                    rc_set_get_integer("Playlist", "LastPosition", NULL));
+            }
+            else
+            {
+                rc_plist_play_by_index(0, 0);
+            }
+            rc_core_play();
+        }
+    }
 }
 
-void rc_player_object_signal_emit_simple(const char *name)
+/**
+ * rc_player_main:
+ *
+ * Runs the main loop until rc_player_exit() is called.
+ */
+
+void rc_player_main()
 {
-    if(player_object==NULL) return;
-    g_signal_emit_by_name(player_object, name, G_TYPE_NONE);
+    gtk_main();
 }
 
-gulong rc_player_object_signal_connect_simple(const char *name,
-    GCallback callback)
+/**
+ * rc_player_exit:
+ *
+ * Exit the player.
+ */
+
+void rc_player_exit()
 {
-    if(player_object==NULL) return 0;
-    return g_signal_connect(player_object, name, callback, NULL);
+    rc_plugin_exit();
+    rc_plist_save_playlist_setting();
+    rc_core_exit();
+    rc_set_exit();
+    rc_plist_exit();
+    gtk_main_quit();
 }
 
-void rc_player_object_signal_disconnect(gulong id)
+/**
+ * rc_player_get_program_name:
+ *
+ * Return the name of the program.
+ *
+ * Returns: The program name of the player, cannot be changed.
+ */
+
+const gchar *rc_player_get_program_name()
 {
-    g_signal_handler_disconnect(player_object, id);
+    return rc_player_program_name;
 }
+
+/**
+ * rc_player_get_authors:
+ *
+ * Return the author information.
+ *
+ * Returns: The string array of author information, cannot be changed.
+ */
+
+const gchar *const *rc_player_get_authors()
+{
+    return rc_player_authors;
+}
+
+/**
+ * rc_player_get_documenters:
+ *
+ * Return the documenter information.
+ *
+ * Returns: The string array of documenter information, cannot be changed.
+ */
+
+const gchar *const *rc_player_get_documenters()
+{
+    return rc_player_documenters;
+}
+
+/**
+ * rc_player_get_artists:
+ *
+ * Return the artist information.
+ *
+ * Returns: The string array of artist information, cannot be changed.
+ */
+
+const gchar *const *rc_player_get_artists()
+{
+    return rc_player_artists;
+}
+
+/**
+ * rc_player_get_build_date:
+ *
+ * Return the build date.
+ *
+ * Returns: The build date, cannot be changed.
+ */
+
+const gchar *rc_player_get_build_date()
+{
+    return rc_player_build_date;
+}
+
+/**
+ * rc_player_get_version:
+ *
+ * Return the version information.
+ *
+ * Returns: The version information, cannot be changed.
+ */
+
+const gchar *rc_player_get_version()
+{
+    return rc_player_version;
+}
+
+/**
+ * rc_player_get_stable_flag:
+ *
+ * Return the stable flag.
+ *
+ * Returns: Whether the player is in a stable version.
+ */
+
+gboolean rc_player_get_stable_flag()
+{
+    return rc_player_stable_flag;
+}
+
+/**
+ * rc_player_get_conf_dir:
+ *
+ * Return the configure directory (~/.RhythmCat).
+ *
+ * Returns: The path of the configure directory. 
+ */
+
+const gchar *rc_player_get_conf_dir()
+{
+    return rc_player_conf_dir;
+}
+
+/**
+ * rc_player_get_data_dir:
+ *
+ * Return the program data directory.
+ *
+ * Returns: The program data directory.
+ */
+
+const gchar *rc_player_get_data_dir()
+{
+    return rc_player_data_dir;
+}
+
+/**
+ * rc_player_get_home_dir:
+ *
+ * Return the user home directory.
+ *
+ * Returns: The user home directory.
+ */
+
+const gchar *rc_player_get_home_dir()
+{
+    return rc_player_home_dir;
+}
+
+/**
+ * rc_player_get_locale:
+ *
+ * Return the locale information (e.g en_US).
+ *
+ * Returns: The locale information.
+ */
+
+const gchar *rc_player_get_locale()
+{
+    return rc_player_locale;
+}
+
+/**
+ * rc_player_check_supported_format:
+ * @filename: the filename to check
+ * 
+ * Check whether the given file is supported by the player.
+ *
+ * Returns: Whether the file is supported.
+ */
+
+gboolean rc_player_check_supported_format(const gchar *filename)
+{
+    return g_regex_match_simple(rc_player_support_formatx, filename,
+        G_REGEX_CASELESS, 0);
+}
+
+
+
+
 

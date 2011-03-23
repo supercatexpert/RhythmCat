@@ -25,7 +25,7 @@
 
 #include "settings.h"
 #include "core.h"
-#include "main.h"
+#include "player.h"
 #include "playlist.h"
 #include "debug.h"
 
@@ -81,7 +81,7 @@ void rc_set_init()
     rc_set_set_integer("Appearance", "ColorStyle", 1);
     rc_set_set_string("Appearance", "RCFile", "");
     rc_set_set_boolean("Metadata", "AutoEncodingDetect", TRUE);
-    locale = rc_get_locale();
+    locale = rc_player_get_locale();
     if(strncmp(locale, "zh_CN", 5)==0)
     {
         rc_set_set_string("Metadata", "TagExEncoding", "GB18030:UTF-8");
@@ -97,18 +97,13 @@ void rc_set_init()
         rc_set_set_string("Metadata", "TagExEncoding", "ShiftJIS:UTF-8");
         rc_set_set_string("Metadata", "LRCExEncoding", "ShiftJIS");
     }
-    /* Load system setting. */
-    conf_file = g_strdup_printf("%s%cconf%csetting.conf", rc_get_app_dir(), 
-        G_DIR_SEPARATOR, G_DIR_SEPARATOR);
-    rc_set_load_setting(conf_file);
-    g_free(conf_file);
     /* Load user setting. */
     conf_file = g_strdup_printf("%s%c.RhythmCat%csetting.conf",
-        rc_get_home_dir(), G_DIR_SEPARATOR, G_DIR_SEPARATOR);
+        rc_player_get_home_dir(), G_DIR_SEPARATOR, G_DIR_SEPARATOR);
     rc_set_load_setting(conf_file);
     g_free(conf_file);
     /* Load plugin setting. */
-    conf_file = g_strdup_printf("%s%cplugins.conf", rc_get_set_dir(),
+    conf_file = g_strdup_printf("%s%cplugins.conf", rc_player_get_conf_dir(),
         G_DIR_SEPARATOR);
     if(!g_key_file_load_from_file(rc_plugin_configure, conf_file,
         G_KEY_FILE_NONE, NULL))
@@ -129,7 +124,7 @@ void rc_set_exit()
 {
     gchar *conf_file;
     conf_file = g_strdup_printf("%s%c.RhythmCat%csetting.conf",
-        rc_get_home_dir(), G_DIR_SEPARATOR, G_DIR_SEPARATOR);
+        rc_player_get_home_dir(), G_DIR_SEPARATOR, G_DIR_SEPARATOR);
     rc_set_save_setting(conf_file);
     g_key_file_free(rc_configure);
 }
@@ -352,7 +347,7 @@ void rc_set_set_double(const gchar *group_name, const gchar *key,
 }
 
 /**
- * rc_set_set_double:
+ * rc_set_set_string_list:
  * @group_name: a group name
  * @key: a key
  * @list: an array of string values

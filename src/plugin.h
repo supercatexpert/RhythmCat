@@ -31,25 +31,55 @@
 #include <gtk/gtk.h>
 #include <gst/gst.h>
 
-typedef enum RCPluginType
-{
+/**
+ * RCPluginType:
+ * @PLUGIN_TYPE_MODULE: the plugin is a module
+ * @PLUGIN_TYPE_PYTHON: the plugin is a python program
+ *
+ * The enum type to show the type of the plugin.
+ */
+
+typedef enum RCPluginType {
     PLUGIN_TYPE_MODULE = 1,
     PLUGIN_TYPE_PYTHON = 2
 }RCPluginType;
 
-typedef struct RCPluginData
-{
-    gchar *path;
-    gchar name[48];
-    gchar desc[256];
-    gchar author[64];
-    gchar version[24];
-    gchar website[96];
-    RCPluginType type;
-}RCPluginData;
+/**
+ * RCPluginConfData:
+ * @path: the path of the plugin file
+ * @name: the name of the plugin
+ * @desc: the description of the plugin
+ * @author: the author of the plugin
+ * @version: the version of the plugin
+ * @website: the website of the plugin
+ * @type: the type of the plugin
+ *
+ * The plugin configuration data structure.
+ */
 
-typedef struct RCModuleData
-{
+typedef struct RCPluginConfData {
+    gchar *path;
+    gchar *name;
+    gchar *desc;
+    gchar *author;
+    gchar *version;
+    gchar *website;
+    RCPluginType type;
+}RCPluginConfData;
+
+/**
+ * RCModuleData:
+ * @module: the GModule
+ * @path: the path of the module
+ * @module_init: the function pointer to initialize the module
+ * @module_exit: the function pointer to close the module
+ * @module_get_group_name: get the group name of the module, used in
+ * plugin configuration file
+ *
+ * The module-type plugin data structure.
+ */
+
+typedef struct RCModuleData {
     GModule *module;
     gchar *path;
     gint (*module_init)();
@@ -58,20 +88,18 @@ typedef struct RCModuleData
 }RCModuleData;
 
 /* Function */
-gboolean rc_plugin_init();
+void rc_plugin_init();
 void rc_plugin_exit();
-gboolean rc_plugin_search_dir(const gchar *);
+gboolean rc_plugin_search_dir(const gchar *dirname);
 const GSList *rc_plugin_get_list();
 void rc_plugin_list_free();
-void rc_plugin_plugin_free(RCPluginData *);
-void rc_plugin_module_free(RCModuleData *);
-gboolean rc_plugin_module_check_running(const gchar *);
-gboolean rc_plugin_load(const gchar *, RCPluginData **);
-gboolean rc_plugin_module_load(const gchar *);
-void rc_plugin_module_close(const gchar *);
-gboolean rc_plugin_module_configure(const gchar *);
-gboolean rc_plugin_python_load(const gchar *);
-gboolean rc_plugin_python_configure(const gchar *);
+void rc_plugin_conf_free(RCPluginConfData *plugin_data);
+void rc_plugin_module_free(RCModuleData *module_data);
+RCPluginConfData *rc_plugin_conf_load(const gchar *filename);
+gboolean rc_plugin_load(RCPluginType type, const gchar *filename);
+gboolean rc_plugin_configure(RCPluginType type, const gchar *filename);
+void rc_plugin_close(RCPluginType type, const gchar *filename);
+gboolean rc_plugin_check_running(RCPluginType type, const gchar *path);
 
 #endif
 

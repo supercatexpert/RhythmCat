@@ -34,35 +34,37 @@
 #include <dbus/dbus.h>
 #include <dbus/dbus-glib.h>
 
-typedef struct RCShell
-{
+typedef struct RCShell {
     GObject parent;
 }RCShell;
 
-typedef struct RCShellClass
-{
+typedef struct RCShellClass {
     GObjectClass parent;
 }RCShellClass;
 
 #define RC_SHELL_TYPE (rc_shell_get_type())
 
 GType rc_shell_get_type(void);
-gboolean rc_shell_load_uri(RCShell *, const gchar *, GError **);
-gboolean rc_shell_play(RCShell *, GError **);
-gboolean rc_shell_pause(RCShell *, GError **);
-gboolean rc_shell_stop(RCShell *, GError **);
-gboolean rc_shell_prev(RCShell *, GError **);
-gboolean rc_shell_next(RCShell *, GError **);
-gboolean rc_shell_get_state(RCShell *, gint *, GError **);
-gboolean rc_shell_get_position(RCShell *, gint64 *, GError **);
-gboolean rc_shell_set_position(RCShell *, gint64, GError **);
-gboolean rc_shell_get_duration(RCShell *, gint64 *, GError **);
-gboolean rc_shell_get_volume(RCShell *, gdouble *, GError **);
-gboolean rc_shell_set_volume(RCShell *, gdouble, GError **);
-gboolean rc_shell_get_repeat_mode(RCShell *, gint *, GError **);
-gboolean rc_shell_set_repeat_mode(RCShell *, gint, GError **);
-gboolean rc_shell_get_random_mode(RCShell *, gint *, GError **);
-gboolean rc_shell_set_random_mode(RCShell *, gint, GError **);
+gboolean rc_shell_load_uri(RCShell *shell, const gchar *uri, GError **error);
+gboolean rc_shell_play(RCShell *shell, GError **error);
+gboolean rc_shell_pause(RCShell *shell, GError **error);
+gboolean rc_shell_stop(RCShell *shell, GError **error);
+gboolean rc_shell_prev(RCShell *shell, GError **error);
+gboolean rc_shell_next(RCShell *shell, GError **error);
+gboolean rc_shell_get_state(RCShell *shell, gint *state, GError **error);
+gboolean rc_shell_get_position(RCShell *shell, gint64 *pos, GError **error);
+gboolean rc_shell_set_position(RCShell *shell, gint64 pos, GError **error);
+gboolean rc_shell_get_duration(RCShell *shell, gint64 *dura, GError **error);
+gboolean rc_shell_get_volume(RCShell *shell, gdouble *vol, GError **error);
+gboolean rc_shell_set_volume(RCShell *shell, gdouble vol, GError **error);
+gboolean rc_shell_get_repeat_mode(RCShell *shell, gint *repeat,
+    GError **error);
+gboolean rc_shell_set_repeat_mode(RCShell *shell, gint repeat,
+    GError **error);
+gboolean rc_shell_get_random_mode(RCShell *shell, gint *random,
+    GError **error);
+gboolean rc_shell_set_random_mode(RCShell *shell, gint random,
+    GError **error);
 
 #endif
 

@@ -27,7 +27,16 @@
 #include "gui.h"
 #include "plugin.h"
 #include "debug.h"
-#include "main.h"
+#include "player.h"
+
+/**
+ * SECTION: gui_plugin
+ * @Short_description: The plugin configuration window of the player.
+ * @Title: Plugin Configuration UI
+ * @Include: gui_plugin.h
+ *
+ * Show the plugin configuration window of the player.
+ */
 
 static GtkWidget *plugin_window = NULL;
 static GtkWidget *plugin_conf_button;
@@ -57,10 +66,7 @@ static void rc_gui_plugin_list_toggled(GtkCellRendererToggle *renderer,
     if(state==0)
     {
         /* Enable the plugin */
-        if(type==PLUGIN_TYPE_MODULE)
-            flag = rc_plugin_module_load(plugin_path);
-        else if(type==PLUGIN_TYPE_PYTHON)
-            ;
+        flag = rc_plugin_load(type, plugin_path);
         gtk_list_store_set(GTK_LIST_STORE(plugin_list_model), &iter,
             0, flag, -1);
         if(!flag)
@@ -70,10 +76,7 @@ static void rc_gui_plugin_list_toggled(GtkCellRendererToggle *renderer,
     else
     {
         /* Disable the plugin */
-        if(type==PLUGIN_TYPE_MODULE)
-            rc_plugin_module_close(plugin_path);
-        else if(type==PLUGIN_TYPE_PYTHON)
-            ;
+        rc_plugin_close(type, plugin_path);
         gtk_list_store_set(GTK_LIST_STORE(plugin_list_model), &iter,
             0, FALSE, -1);
     }
@@ -92,17 +95,7 @@ static void rc_gui_plugin_configure(GtkWidget *widget, gpointer data)
         gtk_tree_model_get(plugin_list_model, &iter, 1, &path, 7, &type, -1);
         if(path!=NULL)
         {
-            switch(type)
-            {
-                case PLUGIN_TYPE_MODULE:
-                    rc_plugin_module_configure(path);
-                    break;
-                case PLUGIN_TYPE_PYTHON:
-                    g_printf("Configure Python!\n");
-                    break;
-                default:
-                    g_printf("Unknown type!\n");
-            }
+            rc_plugin_configure(type, path);
             g_free(path);
         }
     }
@@ -174,10 +167,10 @@ static guint rc_gui_plugin_load_info()
     gchar *dir_name;
     GtkTreeIter iter;
     GtkListStore *plugin_list_store = GTK_LIST_STORE(plugin_list_model);
-    RCPluginData *plugin_data = NULL;
+    RCPluginConfData *plugin_data = NULL;
     rc_plugin_list_free();
     rc_plugin_search_dir("plugins");
-    dir_name = g_strdup_printf("%s%cPlugins", rc_get_set_dir(),
+    dir_name = g_strdup_printf("%s%cPlugins", rc_player_get_conf_dir(),
         G_DIR_SEPARATOR);
     rc_plugin_search_dir(dir_name);
     g_free(dir_name);
@@ -188,9 +181,8 @@ static guint rc_gui_plugin_load_info()
         plugin_data = list_foreach->data;
         if(plugin_data==NULL) continue;
         gtk_list_store_append(plugin_list_store, &iter);
-        if(plugin_data->type==PLUGIN_TYPE_MODULE)
-            running = rc_plugin_module_check_running(plugin_data->path);
-        else running = FALSE;
+        running = rc_plugin_check_running(plugin_data->type,
+            plugin_data->path);
         gtk_list_store_set(plugin_list_store, &iter, 0, running, 1,
             plugin_data->path,2, plugin_data->name, 3, plugin_data->version,
             4, plugin_data->desc, 5, plugin_data->author, 6,
@@ -210,7 +202,13 @@ static void rc_gui_plugin_window_destroy(GtkWidget *widget, gpointer data)
     plugin_window = NULL;
 }
 
-void rc_gui_plugin_window_create(GtkWidget *widget, gpointer data)
+/**
+ * rc_gui_plugin_window_create:
+ *
+ * Show the plugin configuration window.
+ */
+
+void rc_gui_plugin_window_create()
 {
     gboolean visible = FALSE;
     GtkWidget *vbox1, *vbox2;

@@ -26,8 +26,17 @@
 #include "gui_eq.h"
 #include "core.h"
 #include "gui.h"
-#include "main.h"
 #include "settings.h"
+#include "player.h"
+
+/**
+ * SECTION: gui_eq
+ * @Short_description: The equalizer of the player.
+ * @Title: Equalizer UI
+ * @Include: gui_eq.h
+ *
+ * Show the equalizer of the player.
+ */
 
 /* Custom struct type to store the data of EQ. */
 typedef struct RCEQData {
@@ -97,7 +106,7 @@ static void rc_gui_eq_load_setting(GtkButton *button, gpointer data)
         GTK_STOCK_OPEN,GTK_RESPONSE_ACCEPT,GTK_STOCK_CANCEL,
         GTK_RESPONSE_CANCEL,NULL);
     gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(file_chooser),
-        rc_get_home_dir());
+        rc_player_get_home_dir());
     gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(file_chooser), file_filter1);
     result = gtk_dialog_run(GTK_DIALOG(file_chooser));
     switch(result)
@@ -159,7 +168,7 @@ static void rc_gui_eq_save_setting(GtkButton *button, gpointer data)
         GTK_STOCK_SAVE,GTK_RESPONSE_ACCEPT,GTK_STOCK_CANCEL,
         GTK_RESPONSE_CANCEL,NULL);
     gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(file_chooser),
-        rc_get_home_dir());
+        rc_player_get_home_dir());
     gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(file_chooser), file_filter1);
     gtk_file_chooser_set_do_overwrite_confirmation(
         GTK_FILE_CHOOSER(file_chooser), TRUE);
@@ -204,11 +213,13 @@ static gboolean rc_gui_eq_set_by_user(GtkRange *range, GtkScrollType scroll,
     return FALSE;
 }
 
-/*
- * Initialize EQ data.
+/**
+ * rc_gui_eq_data_init:
+ *
+ * Initialize the equalizer data. Can be used only once.
  */
 
-void rc_gui_init_eq_data()
+void rc_gui_eq_data_init()
 {
     static gboolean init = FALSE;
     if(init) return;
@@ -259,8 +270,10 @@ void rc_gui_init_eq_data()
         rc_core_set_eq_effect(eq_data[10].value);
 }
 
-/*
- * Equalizer (GUI Part) initialize.
+/**
+ * rc_gui_eq_init:
+ *
+ * Initialize the equalizer UI. Can be used only once.
  */
 
 void rc_gui_eq_init()
@@ -381,8 +394,12 @@ void rc_gui_eq_init()
         G_CALLBACK(rc_gui_eq_combobox_changed), NULL);
 }
 
-/*
- * Get the UI Data of Equalizer
+/**
+ * rc_gui_eq_get_data:
+ *
+ * Return the UI Data of the equalizer.
+ *
+ * Returns: the UI data of the equalizer.
  */
 
 RCGuiEQData *rc_gui_eq_get_data()

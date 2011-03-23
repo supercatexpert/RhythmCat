@@ -162,7 +162,8 @@ Add new watch to the given GAsyncQueue.
 <indexterm zone="rc-msg-init"><primary>rc_msg_init</primary></indexterm>
 <programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_msg_init                         ();</programlisting>
 <para>
-Initialize the default asynchronous message queue for the player.
+Initialize the default asynchronous message queue for the player. Can be
+used only once.
 </para></refsect2>
 <refsect2 id="rc-msg-push" role="function">
 <title>rc_msg_push ()</title>

@@ -1,0 +1,146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Equalizer UI</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="index.html" title="RhythmCat Development Reference Manual">
+<link rel="up" href="ch02.html" title="Player UI">
+<link rel="prev" href="RhythmCat-Dialogs.html" title="Dialogs">
+<link rel="next" href="RhythmCat-UI-Styles-and-Themes.html" title="UI Styles and Themes">
+<meta name="generator" content="GTK-Doc V1.15 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="RhythmCat-Dialogs.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="ch02.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">RhythmCat Development Reference Manual</th>
+<td><a accesskey="n" href="RhythmCat-UI-Styles-and-Themes.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#RhythmCat-Equalizer-UI.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#RhythmCat-Equalizer-UI.description" class="shortcut">Description</a>
+</td></tr>
+</table>
+<div class="refentry" title="Equalizer UI">
+<a name="RhythmCat-Equalizer-UI"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="RhythmCat-Equalizer-UI.top_of_page"></a>Equalizer UI</span></h2>
+<p>Equalizer UI — The equalizer of the player.</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv" title="Synopsis">
+<a name="RhythmCat-Equalizer-UI.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">
+#include &lt;gui_eq.h&gt;
+
+                    <a class="link" href="RhythmCat-Equalizer-UI.html#RCGuiEQData" title="RCGuiEQData">RCGuiEQData</a>;
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Equalizer-UI.html#rc-gui-eq-data-init" title="rc_gui_eq_data_init ()">rc_gui_eq_data_init</a>                 ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Equalizer-UI.html#rc-gui-eq-init" title="rc_gui_eq_init ()">rc_gui_eq_init</a>                      ();
+<a class="link" href="RhythmCat-Equalizer-UI.html#RCGuiEQData" title="RCGuiEQData"><span class="returnvalue">RCGuiEQData</span></a> *       <a class="link" href="RhythmCat-Equalizer-UI.html#rc-gui-eq-get-data" title="rc_gui_eq_get_data ()">rc_gui_eq_get_data</a>                  ();
+</pre>
+</div>
+<div class="refsect1" title="Description">
+<a name="RhythmCat-Equalizer-UI.description"></a><h2>Description</h2>
+<p>
+Show the equalizer of the player.
+</p>
+</div>
+<div class="refsect1" title="Details">
+<a name="RhythmCat-Equalizer-UI.details"></a><h2>Details</h2>
+<div class="refsect2" title="RCGuiEQData">
+<a name="RCGuiEQData"></a><h3>RCGuiEQData</h3>
+<pre class="programlisting">typedef struct {
+    GtkWidget *eq_combobox;
+    GtkWidget *eq_scales[10];
+    GtkWidget *eq_labels[10];
+    GtkWidget *db_labels[3];
+    GtkWidget *save_button;
+    GtkWidget *import_button;
+} RCGuiEQData;
+</pre>
+<p>
+Custom structure type to store the equalizer UI data.
+Please do not change the data in this structure.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiEQData.eq-combobox"></a>eq_combobox</code></em>;</span></p></td>
+<td>the combo-box
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiEQData.eq-scales"></a>eq_scales</code></em>[10];</span></p></td>
+<td>scalers
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiEQData.eq-labels"></a>eq_labels</code></em>[10];</span></p></td>
+<td>labels to show the frequencies
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiEQData.db-labels"></a>db_labels</code></em>[3];</span></p></td>
+<td>labels to show the decibels
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiEQData.save-button"></a>save_button</code></em>;</span></p></td>
+<td>the button to save the equalizer style
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiEQData.import-button"></a>import_button</code></em>;</span></p></td>
+<td>the button to import the equalizer style
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_eq_data_init ()">
+<a name="rc-gui-eq-data-init"></a><h3>rc_gui_eq_data_init ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_eq_data_init                 ();</pre>
+<p>
+Initialize the equalizer data. Can be used only once.
+</p>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_eq_init ()">
+<a name="rc-gui-eq-init"></a><h3>rc_gui_eq_init ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_eq_init                      ();</pre>
+<p>
+Initialize the equalizer UI. Can be used only once.
+</p>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_eq_get_data ()">
+<a name="rc-gui-eq-get-data"></a><h3>rc_gui_eq_get_data ()</h3>
+<pre class="programlisting"><a class="link" href="RhythmCat-Equalizer-UI.html#RCGuiEQData" title="RCGuiEQData"><span class="returnvalue">RCGuiEQData</span></a> *       rc_gui_eq_get_data                  ();</pre>
+<p>
+Return the UI Data of the equalizer.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> the UI data of the equalizer.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.15</div>
+</body>
+</html>

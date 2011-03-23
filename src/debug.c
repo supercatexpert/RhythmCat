@@ -65,7 +65,7 @@ void rc_debug_set_mode(gboolean mode)
 /**
  * rc_debug_print:
  * @format: a standard printf() format string
- * @...: the arguments to insert in the output
+ * @Varargs: the arguments to insert in the output
  *
  * Print debug message when debug mode is enabled.
  *
@@ -85,7 +85,7 @@ gint rc_debug_print(const gchar *format, ...)
 /**
  * rc_debug_perror:
  * @format: a standard printf() format string
- * @...: the arguments to insert in the output
+ * @Varargs: the arguments to insert in the output
  *
  * Print error message on standard error (stderr).
  *

@@ -4,55 +4,105 @@
 [
   <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
 ]>
-<refentry id="RhythmCat-gui-eq">
+<refentry id="RhythmCat-Equalizer-UI">
 <refmeta>
-<refentrytitle role="top_of_page" id="RhythmCat-gui-eq.top_of_page">gui_eq</refentrytitle>
+<refentrytitle role="top_of_page" id="RhythmCat-Equalizer-UI.top_of_page">Equalizer UI</refentrytitle>
 <manvolnum>3</manvolnum>
 <refmiscinfo>
   RHYTHMCAT Library
 </refmiscinfo>
 </refmeta>
 <refnamediv>
-<refname>gui_eq</refname>
-<refpurpose></refpurpose>
+<refname>Equalizer UI</refname>
+<refpurpose>The equalizer of the player.</refpurpose>
 </refnamediv>
 
-<refsynopsisdiv id="RhythmCat-gui-eq.synopsis" role="synopsis">
+<refsynopsisdiv id="RhythmCat-Equalizer-UI.synopsis" role="synopsis">
 <title role="synopsis.title">Synopsis</title>
 
-<synopsis><link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-init-eq-data">rc_gui_init_eq_data</link>                 ();
+<synopsis>
+#include &lt;gui_eq.h&gt;
+
+                    <link linkend="RCGuiEQData">RCGuiEQData</link>;
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-eq-data-init">rc_gui_eq_data_init</link>                 ();
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-eq-init">rc_gui_eq_init</link>                      ();
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-create-equalizer">rc_gui_create_equalizer</link>             ();
 <link linkend="RCGuiEQData"><returnvalue>RCGuiEQData</returnvalue></link> *       <link linkend="rc-gui-eq-get-data">rc_gui_eq_get_data</link>                  ();
 </synopsis>
 </refsynopsisdiv>
 
-<refsect1 id="RhythmCat-gui-eq.description" role="desc">
+<refsect1 id="RhythmCat-Equalizer-UI.description" role="desc">
 <title role="desc.title">Description</title>
-
+<para>
+Show the equalizer of the player.
+</para>
 </refsect1>
-<refsect1 id="RhythmCat-gui-eq.details" role="details">
+<refsect1 id="RhythmCat-Equalizer-UI.details" role="details">
 <title role="details.title">Details</title>
-<refsect2 id="rc-gui-init-eq-data" role="function">
-<title>rc_gui_init_eq_data ()</title>
-<indexterm zone="rc-gui-init-eq-data"><primary>rc_gui_init_eq_data</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_init_eq_data                 ();</programlisting>
-</refsect2>
+<refsect2 id="RCGuiEQData" role="struct">
+<title>RCGuiEQData</title>
+<indexterm zone="RCGuiEQData"><primary>RCGuiEQData</primary></indexterm>
+<programlisting>typedef struct {
+    GtkWidget *eq_combobox;
+    GtkWidget *eq_scales[10];
+    GtkWidget *eq_labels[10];
+    GtkWidget *db_labels[3];
+    GtkWidget *save_button;
+    GtkWidget *import_button;
+} RCGuiEQData;
+</programlisting>
+<para>
+Custom structure type to store the equalizer UI data.
+Please do not change the data in this structure.
+</para><variablelist role="struct">
+<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiEQData.eq-combobox">eq_combobox</structfield>;</term>
+<listitem><simpara>the combo-box
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiEQData.eq-scales">eq_scales</structfield>[10];</term>
+<listitem><simpara>scalers
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiEQData.eq-labels">eq_labels</structfield>[10];</term>
+<listitem><simpara>labels to show the frequencies
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiEQData.db-labels">db_labels</structfield>[3];</term>
+<listitem><simpara>labels to show the decibels
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiEQData.save-button">save_button</structfield>;</term>
+<listitem><simpara>the button to save the equalizer style
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiEQData.import-button">import_button</structfield>;</term>
+<listitem><simpara>the button to import the equalizer style
+</simpara></listitem>
+</varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-gui-eq-data-init" role="function">
+<title>rc_gui_eq_data_init ()</title>
+<indexterm zone="rc-gui-eq-data-init"><primary>rc_gui_eq_data_init</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_eq_data_init                 ();</programlisting>
+<para>
+Initialize the equalizer data. Can be used only once.
+</para></refsect2>
 <refsect2 id="rc-gui-eq-init" role="function">
 <title>rc_gui_eq_init ()</title>
 <indexterm zone="rc-gui-eq-init"><primary>rc_gui_eq_init</primary></indexterm>
 <programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_eq_init                      ();</programlisting>
-</refsect2>
-<refsect2 id="rc-gui-create-equalizer" role="function">
-<title>rc_gui_create_equalizer ()</title>
-<indexterm zone="rc-gui-create-equalizer"><primary>rc_gui_create_equalizer</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_create_equalizer             ();</programlisting>
-</refsect2>
+<para>
+Initialize the equalizer UI. Can be used only once.
+</para></refsect2>
 <refsect2 id="rc-gui-eq-get-data" role="function">
 <title>rc_gui_eq_get_data ()</title>
 <indexterm zone="rc-gui-eq-get-data"><primary>rc_gui_eq_get_data</primary></indexterm>
 <programlisting><link linkend="RCGuiEQData"><returnvalue>RCGuiEQData</returnvalue></link> *       rc_gui_eq_get_data                  ();</programlisting>
-</refsect2>
+<para>
+Return the UI Data of the equalizer.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> the UI data of the equalizer.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
 
 </refsect1>
 

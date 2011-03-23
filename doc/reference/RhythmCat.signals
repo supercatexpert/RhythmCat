@@ -1,0 +1,35 @@
+<SIGNAL>
+<NAME>RCPlayer::lyric-found</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>f</FLAGS>
+RCPlayer *rcplayer
+</SIGNAL>
+
+<SIGNAL>
+<NAME>RCPlayer::lyric-not-found</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>f</FLAGS>
+RCPlayer *rcplayer
+</SIGNAL>
+
+<SIGNAL>
+<NAME>RCPlayer::player-pause</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>f</FLAGS>
+RCPlayer *rcplayer
+</SIGNAL>
+
+<SIGNAL>
+<NAME>RCPlayer::player-play</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>f</FLAGS>
+RCPlayer *rcplayer
+</SIGNAL>
+
+<SIGNAL>
+<NAME>RCPlayer::player-stop</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>f</FLAGS>
+RCPlayer *rcplayer
+</SIGNAL>
+

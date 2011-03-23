@@ -31,7 +31,7 @@
 #include "settings.h"
 #include "debug.h"
 #include "gui_eq.h"
-#include "player.h"
+#include "player_object.h"
 
 /**
  * SECTION: core

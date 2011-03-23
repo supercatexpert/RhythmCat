@@ -370,6 +370,27 @@ found then it is created. If group_name cannot be found then it is created.
                                                          <parameter>const <link linkend="gchar"><type>gchar</type></link> *key</parameter>,
                                                          <parameter><link linkend="gdouble"><type>gdouble</type></link> value</parameter>);</programlisting>
 <para>
+Associates a new double value with key under group_name. If key cannot be
+found then it is created. If group_name cannot be found then it is created.
+</para><variablelist role="params">
+<varlistentry><term><parameter>group_name</parameter>&#160;:</term>
+<listitem><simpara>a group name
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>key</parameter>&#160;:</term>
+<listitem><simpara>a key
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>value</parameter>&#160;:</term>
+<listitem><simpara>an double value
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-set-set-string-list" role="function">
+<title>rc_set_set_string_list ()</title>
+<indexterm zone="rc-set-set-string-list"><primary>rc_set_set_string_list</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_set_set_string_list              (<parameter>const <link linkend="gchar"><type>gchar</type></link> *group_name</parameter>,
+                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *key</parameter>,
+                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> * const list[]</parameter>,
+                                                         <parameter><link linkend="gsize"><type>gsize</type></link> length</parameter>);</programlisting>
+<para>
 Associates a list of string values for key under group_name. If key cannot
 be found then it is created. If group_name cannot be found then it is created.
 </para><variablelist role="params">
@@ -386,14 +407,6 @@ be found then it is created. If group_name cannot be found then it is created.
 <listitem><simpara>number of string values in list
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
-<refsect2 id="rc-set-set-string-list" role="function">
-<title>rc_set_set_string_list ()</title>
-<indexterm zone="rc-set-set-string-list"><primary>rc_set_set_string_list</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_set_set_string_list              (<parameter>const <link linkend="gchar"><type>gchar</type></link> *group_name</parameter>,
-                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *key</parameter>,
-                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> * const list[]</parameter>,
-                                                         <parameter><link linkend="gsize"><type>gsize</type></link> length</parameter>);</programlisting>
-</refsect2>
 <refsect2 id="rc-set-set-boolean-list" role="function">
 <title>rc_set_set_boolean_list ()</title>
 <indexterm zone="rc-set-set-boolean-list"><primary>rc_set_set_boolean_list</primary></indexterm>

@@ -69,7 +69,15 @@ Custom struct type to store the data of lyrics.
 <title>rc_lrc_read_from_file ()</title>
 <indexterm zone="rc-lrc-read-from-file"><primary>rc_lrc_read_from_file</primary></indexterm>
 <programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rc_lrc_read_from_file               (<parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>);</programlisting>
-</refsect2>
+<para>
+Read lyric data from given file.
+</para><variablelist role="params">
+<varlistentry><term><parameter>filename</parameter>&#160;:</term>
+<listitem><simpara>the lyric file
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> Whether the file is read successfully.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
 <refsect2 id="rc-lrc-clean-data" role="function">
 <title>rc_lrc_clean_data ()</title>
 <indexterm zone="rc-lrc-clean-data"><primary>rc_lrc_clean_data</primary></indexterm>

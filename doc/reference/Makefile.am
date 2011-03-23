@@ -10,6 +10,7 @@ AUTOMAKE_OPTIONS = 1.6
 
 # The name of the module, e.g. 'glib'.
 DOC_MODULE=RhythmCat
+VERSION=1.0.0
 
 # Uncomment for versioned docs and specify the version of the module, e.g. '2'.
 DOC_MODULE_VERSION=1.0.0
@@ -56,7 +57,7 @@ EXTRA_HFILES=
 
 # Header files to ignore when scanning. Use base file name, no paths
 # e.g. IGNORE_HFILES=gtkdebug.h gtkintl.h
-IGNORE_HFILES=shell_glue.h shell.h player.h main.h
+IGNORE_HFILES=shell_glue.h shell.h main.h
 
 # Images to copy into HTML directory.
 # e.g. HTML_IMAGES=$(top_srcdir)/gtk/stock-icons/stock_about_24.png
@@ -78,7 +79,7 @@ expand_content_files=
 # e.g. GTKDOC_LIBS=$(top_builddir)/gtk/$(gtktargetlib)
 GTKDOC_CFLAGS=-I@GLIB2_CFLAGS@ -I@GTK2_CFLAGS@ -I@GSTREAMER_CFLAGS@ \
     -I$(top_srcdir)/src
-GTKDOC_LIBS=@GLIB2_LIBS@ @GTK2_LIBS@
+GTKDOC_LIBS=@GLIB2_LIBS@ @GTK2_LIBS@ $(top_srcdir)/src/player_object.o
 
 # This includes the standard gtk-doc make rules, copied by gtkdocize.
 include $(top_srcdir)/gtk-doc.make

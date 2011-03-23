@@ -34,7 +34,7 @@
 
 #include "lyric.h"
 #include "settings.h"
-#include "main.h"
+#include "player.h"
 
 /* Variables */
 static GList *lrc_line_data = NULL;
@@ -129,7 +129,7 @@ static void rc_lrc_add_line(gchar *line)
 }
 
 /**
- * rc_lrc_red_from_file:
+ * rc_lrc_read_from_file:
  * @filename: the lyric file
  *
  * Read lyric data from given file.
@@ -167,7 +167,7 @@ gboolean rc_lrc_read_from_file(const gchar *filename)
     }
     if(rc_set_get_boolean("Metadata", "AutoEncodingDetect", NULL))
     {
-        locale = rc_get_locale();
+        locale = rc_player_get_locale();
         if(strncmp(locale, "zh_CN", 5)==0)
         {
             ex_encoding = g_strdup("GB18030");

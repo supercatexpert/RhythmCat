@@ -29,6 +29,15 @@
 #include "gui_eq.h"
 #include "settings.h"
 
+/**
+ * SECTION: gui_style
+ * @Short_description: Set the styles and themes of the player window.
+ * @Title: UI Styles and Themes
+ * @Include: gui_style.h
+ *
+ * Set the styles and themes of the player window.
+ */
+
 #define GUI_STYLE_NUM 3
 
 static RCGuiColorStyle color_style[GUI_STYLE_NUM];
@@ -117,6 +126,12 @@ static void rc_gui_style_data_init()
     gdk_color_parse("#F0F0F0", &color_style[2].listview_font_active_color);
     gdk_color_parse("#E3EDF1", &color_style[2].listview_scrbar_color);
 }
+
+/**
+ * rc_gui_style_init:
+ *
+ * Initialize the theme style of the player window. Can be used only once.
+ */
 
 void rc_gui_style_init()
 {
@@ -217,6 +232,12 @@ void rc_gui_style_init()
         GTK_SCROLLED_WINDOW(rc_ui->list2_scr_window)), 15, -1);
 }
 
+/**
+ * rc_gui_style_refresh:
+ *
+ * Apply the style configuration in the player settings.
+ */
+
 void rc_gui_style_refresh()
 {
     gchar *string;
@@ -225,6 +246,13 @@ void rc_gui_style_refresh()
     gtk_rc_parse(string);
     g_free(string);
 }
+
+/**
+ * rc_gui_style_set_color_style:
+ * @style_data: the color style data to set
+ *
+ * Set the color style of the player by given data.
+ */
 
 void rc_gui_style_set_color_style(const RCGuiColorStyle *style_data)
 {
@@ -610,11 +638,28 @@ void rc_gui_style_set_color_style(const RCGuiColorStyle *style_data)
     gtk_widget_queue_draw(rc_mini->mini_window);
 }
 
+/**
+ * rc_gui_style_get_color_style:
+ * @index: the index number of the color style
+ *
+ * Return the embeded color style in the player by given index.
+ *
+ * Returns: The color style data.
+ */
+
 const RCGuiColorStyle *rc_gui_style_get_color_style(gint index)
 {
     if(index<0 || index>=GUI_STYLE_NUM) return NULL;
     return &color_style[index];
 }
+
+/**
+ * rc_gui_style_set_color_style_by_index:
+ * @index: the index number of the color style
+ *
+ * Set the color style of the player to the embeded color style
+ * in the player by given index.
+ */
 
 void rc_gui_style_set_color_style_by_index(gint index)
 {

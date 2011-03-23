@@ -28,13 +28,26 @@
 #include "core.h"
 #include "tag.h"
 #include "playlist.h"
-#include "main.h"
 #include "debug.h"
 #include "settings.h"
 #include "gui_treeview.h"
+#include "player.h"
 
-/* Variables */
-GtkWidget *metadata_entry[9];
+/**
+ * SECTION: gui_dialog
+ * @Short_description: Dialogs in the player.
+ * @Title: Dialogs
+ * @Include: gui.h
+ *
+ * Show dialogs in the player.
+ */
+
+static gboolean rc_gui_music_file_filter(const GtkFileFilterInfo *info,
+    gpointer data)
+{
+    gboolean flag = rc_player_check_supported_format(info->display_name);
+    return flag;
+}
 
 static void rc_gui_open_music_dir_recu(const gchar *dir_name, gint depth)
 {
@@ -59,7 +72,7 @@ static void rc_gui_open_music_dir_recu(const gchar *dir_name, gint depth)
             g_free(full_file_name);
             continue;
         }
-        music_file_flag = rc_is_mfile_supported(full_file_name);
+        music_file_flag = rc_player_check_supported_format(full_file_name);
         if(music_file_flag)
         {
             uri = g_filename_to_uri(full_file_name, NULL, NULL);
@@ -78,8 +91,10 @@ static void rc_gui_open_music_dir_recu(const gchar *dir_name, gint depth)
     g_dir_close(dir);          
 }
 
-/*
- * Show the information about this player.
+/**
+ * rc_gui_about_player:
+ *
+ * Show the about information of this player.
  */
 
 void rc_gui_about_player()
@@ -88,15 +103,15 @@ void rc_gui_about_player()
     RCGuiData *rc_ui = rc_gui_get_data();
     about_dialog = gtk_about_dialog_new();
     gtk_about_dialog_set_authors(GTK_ABOUT_DIALOG(about_dialog),
-        (const gchar **)rc_get_authors());
+        (const gchar **)rc_player_get_authors());
     gtk_about_dialog_set_documenters(GTK_ABOUT_DIALOG(about_dialog),
-        (const gchar **)rc_get_documenters());
+        (const gchar **)rc_player_get_documenters());
     gtk_about_dialog_set_artists(GTK_ABOUT_DIALOG(about_dialog),
-        (const gchar **)rc_get_artists());
+        (const gchar **)rc_player_get_artists());
     gtk_about_dialog_set_program_name(GTK_ABOUT_DIALOG(about_dialog),
-        rc_get_program_name());
+        rc_player_get_program_name());
     gtk_about_dialog_set_version(GTK_ABOUT_DIALOG(about_dialog),
-        rc_get_ver_num());
+        rc_player_get_version());
     gtk_about_dialog_set_logo(GTK_ABOUT_DIALOG(about_dialog),
         rc_ui->icon_image);
     gtk_about_dialog_set_comments(GTK_ABOUT_DIALOG(about_dialog),
@@ -109,8 +124,14 @@ void rc_gui_about_player()
     gtk_widget_destroy(about_dialog);  
 }
 
-/*
- * Show message dialog for player.
+/**
+ * rc_gui_show_message_dialog:
+ * @type: type of message
+ * @title: title of the message
+ * @format: printf()-style format string, or NULL, allow-none
+ * @Varargs: arguments for @format
+ *
+ * Show message dialog in the player.
  */
 
 void rc_gui_show_message_dialog(GtkMessageType type, const gchar *title,
@@ -128,18 +149,18 @@ void rc_gui_show_message_dialog(GtkMessageType type, const gchar *title,
     gtk_widget_destroy(dialog);
 }
 
-/*
- * Open or append music from files.
+/**
+ * rc_gui_show_open_dialog:
+ *
+ * Show a music import dialog for importing music files.
  */
 
-void rc_gui_show_open_dialog(GtkWidget *widget, gpointer data)
+void rc_gui_show_open_dialog()
 {
-    const gchar *const *support_format_glub = NULL;
     RCGuiData *rc_ui = rc_gui_get_data();
     GtkWidget *file_chooser;
     GtkFileFilter *file_filter1;
     gint result = 0;
-    gint count = 0;
     gint list1_selected_index;
     GSList *filelist = NULL;
     const GSList *filelist_foreach = NULL;
@@ -149,19 +170,15 @@ void rc_gui_show_open_dialog(GtkWidget *widget, gpointer data)
     file_filter1 = gtk_file_filter_new();
     gtk_file_filter_set_name(file_filter1,
         _("All supported music files(*.FLAC;*.OGG;*.MP3;*.WAV;*.WMA...)"));
-    support_format_glub = rc_get_mfile_support_glob();
-    for(count=0;support_format_glub[count]!=NULL;count++)
-    {
-        gtk_file_filter_add_pattern(file_filter1, support_format_glub[count]);
-    }
-    count = 0;
+    gtk_file_filter_add_custom(file_filter1, GTK_FILE_FILTER_DISPLAY_NAME,
+        rc_gui_music_file_filter, NULL, NULL);
     dialog_title = _("Select the music you want to add...");
     file_chooser = gtk_file_chooser_dialog_new(dialog_title,
         GTK_WINDOW(rc_ui->main_window),GTK_FILE_CHOOSER_ACTION_OPEN,
         GTK_STOCK_OPEN,GTK_RESPONSE_ACCEPT,GTK_STOCK_CANCEL,
         GTK_RESPONSE_CANCEL,NULL);
     gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(file_chooser),
-        rc_get_home_dir());
+        rc_player_get_home_dir());
     gtk_file_chooser_set_select_multiple(GTK_FILE_CHOOSER(file_chooser),TRUE);
     gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(file_chooser), file_filter1);
     result = gtk_dialog_run(GTK_DIALOG(file_chooser));
@@ -190,11 +207,14 @@ void rc_gui_show_open_dialog(GtkWidget *widget, gpointer data)
     gtk_widget_destroy(file_chooser);
 }
 
-/*
- * Open music from directory.
+
+/**
+ * rc_gui_open_music_directory:
+ *
+ * Show a music import dialog for importing all music files in a directory.
  */
 
-void rc_gui_open_music_directory(GtkWidget *widget, gpointer data)
+void rc_gui_open_music_directory()
 {
     GtkWidget *file_chooser;
     RCGuiData *rc_ui = rc_gui_get_data();
@@ -207,7 +227,7 @@ void rc_gui_open_music_directory(GtkWidget *widget, gpointer data)
         GTK_STOCK_OPEN,GTK_RESPONSE_ACCEPT,GTK_STOCK_CANCEL,
         GTK_RESPONSE_CANCEL,NULL);
     gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(file_chooser),
-        rc_get_home_dir());
+        rc_player_get_home_dir());
     result = gtk_dialog_run(GTK_DIALOG(file_chooser));
     switch(result)
     {
@@ -226,11 +246,14 @@ void rc_gui_open_music_directory(GtkWidget *widget, gpointer data)
     gtk_widget_destroy(file_chooser);
 }
 
-/*
- * Export the selected playlist.
+/**
+ * rc_gui_save_playlist_dialog:
+ *
+ * Show a playlist export dialog for exporting the selected playlist
+ * to a playlist file (M3U Format).
  */
 
-void rc_gui_save_playlist_dialog(GtkWidget *widget, gpointer data)
+void rc_gui_save_playlist_dialog()
 {
     RCGuiData *rc_ui = rc_gui_get_data();
     GtkWidget *file_chooser;
@@ -247,7 +270,7 @@ void rc_gui_save_playlist_dialog(GtkWidget *widget, gpointer data)
         GTK_STOCK_SAVE,GTK_RESPONSE_ACCEPT,GTK_STOCK_CANCEL,
         GTK_RESPONSE_CANCEL,NULL);
     gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(file_chooser),
-        rc_get_home_dir());
+        rc_player_get_home_dir());
     gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(file_chooser), file_filter1);
     gtk_file_chooser_set_do_overwrite_confirmation(
         GTK_FILE_CHOOSER(file_chooser), TRUE);
@@ -268,11 +291,15 @@ void rc_gui_save_playlist_dialog(GtkWidget *widget, gpointer data)
     gtk_widget_destroy(file_chooser);
 }
 
-/*
- * Export the selected playlist.
+
+/**
+ * rc_gui_load_playlist_dialog:
+ *
+ * Show a playlist import dialog for importing all music files in the
+ * playlist file.
  */
 
-void rc_gui_load_playlist_dialog(GtkWidget *widget, gpointer data)
+void rc_gui_load_playlist_dialog()
 {
     RCGuiData *rc_ui = rc_gui_get_data();
     GtkWidget *file_chooser;
@@ -289,7 +316,7 @@ void rc_gui_load_playlist_dialog(GtkWidget *widget, gpointer data)
         GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT, GTK_STOCK_CANCEL,
         GTK_RESPONSE_CANCEL, NULL);
     gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(file_chooser),
-        rc_get_home_dir());
+        rc_player_get_home_dir());
     gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(file_chooser), file_filter1);
     result = gtk_dialog_run(GTK_DIALOG(file_chooser));
     switch(result)
@@ -308,11 +335,14 @@ void rc_gui_load_playlist_dialog(GtkWidget *widget, gpointer data)
     gtk_widget_destroy(file_chooser);
 }
 
-/*
- * Export all playlists dialog.
+/**
+ * rc_gui_save_all_playlists_dialog:
+ *
+ * Show a playlist export dialog for exporting all playlists in the player
+ * to playlist files, then putting these files into the given directory.
  */
 
-void rc_gui_save_all_playlists_dialog(GtkWidget *widget, gpointer data)
+void rc_gui_save_all_playlists_dialog()
 {
     GtkWidget *file_chooser;
     RCGuiData *rc_ui = rc_gui_get_data();
@@ -329,7 +359,7 @@ void rc_gui_save_all_playlists_dialog(GtkWidget *widget, gpointer data)
         GTK_STOCK_SAVE,GTK_RESPONSE_ACCEPT, GTK_STOCK_CANCEL,
         GTK_RESPONSE_CANCEL, NULL);
     gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(file_chooser),
-        rc_get_home_dir());
+        rc_player_get_home_dir());
     result = gtk_dialog_run(GTK_DIALOG(file_chooser));
     switch(result)
     {

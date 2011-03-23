@@ -6,34 +6,40 @@
 ]>
 <book id="index">
   <bookinfo>
-    <title>RhythmCat Reference Manual</title>
+    <title>RhythmCat Development Reference Manual</title>
     <releaseinfo>
-      for RhythmCat [VERSION].
+      for RhythmCat 1.0.0.
       The latest version of this documentation can be found on-line at
-      <ulink role="online-location" url="http://[SERVER]/RhythmCat/index.html">http://[SERVER]/RhythmCat/</ulink>.
+      <ulink role="online-location" url="http://code.google.com/p/rhythmcat">http://code.google.com/p/rhythmcat</ulink>.
     </releaseinfo>
   </bookinfo>
 
   <chapter>
-    <title>[Insert title here]</title>
-        <xi:include href="xml/plugin.xml"/>
-    <xi:include href="xml/tag.xml"/>
-    <xi:include href="xml/lyric.xml"/>
-    <xi:include href="xml/gui_plugin.xml"/>
-    <xi:include href="xml/msg.xml"/>
-    <xi:include href="xml/debug.xml"/>
+    <title>Player Backend</title>
+    <xi:include href="xml/player.xml"/>
     <xi:include href="xml/core.xml"/>
+    <xi:include href="xml/tag.xml"/>
+    <xi:include href="xml/player_object.xml"/>
+    <xi:include href="xml/lyric.xml"/>
+    <xi:include href="xml/msg.xml"/>
+    <xi:include href="xml/playlist.xml"/>
+    <xi:include href="xml/settings.xml"/>
+    <xi:include href="xml/plugin.xml"/>
+    <xi:include href="xml/debug.xml"/>
+  </chapter>
+
+  <chapter>
+    <title>Player UI</title>
+    <xi:include href="xml/gui.xml"/>
     <xi:include href="xml/gui_dialog.xml"/>
     <xi:include href="xml/gui_eq.xml"/>
     <xi:include href="xml/gui_style.xml"/>
-    <xi:include href="xml/playlist.xml"/>
     <xi:include href="xml/gui_treeview.xml"/>
-    <xi:include href="xml/gui.xml"/>
     <xi:include href="xml/gui_mini.xml"/>
     <xi:include href="xml/gui_setting.xml"/>
-    <xi:include href="xml/settings.xml"/>
-
+    <xi:include href="xml/gui_plugin.xml"/>
   </chapter>
+
   <chapter id="object-tree">
     <title>Object Hierarchy</title>
      <xi:include href="xml/tree_index.sgml"/>
