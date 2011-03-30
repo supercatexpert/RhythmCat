@@ -1,4 +1,4 @@
-SUBDIRS = conf images
+SUBDIRS = images
 
 EXTRA_DIST = 
 

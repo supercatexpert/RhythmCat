@@ -1,3 +1,3 @@
-EXTRA_DIST = About.PNG ICON.PNG NoCover.PNG RhythmCat.PNG
+EXTRA_DIST = RhythmCat_128x128.PNG RhythmCat_256x256.PNG
 imagedir = ${datadir}/RhythmCat/images
-image_DATA = About.PNG ICON.PNG NoCover.PNG RhythmCat.PNG
+image_DATA = RhythmCat_128x128.PNG RhythmCat_256x256.PNG

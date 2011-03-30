@@ -35,55 +35,49 @@
 #include "lyric.h"
 #include "settings.h"
 #include "player.h"
+#include "core.h"
 
 /* Variables */
-static GList *lrc_line_data = NULL;
+static RCLyricData **lrc_line_array = NULL;
+static gsize lrc_line_length = 0;
+static const RCLyricData *lrc_line_now = NULL;
 static gchar *lrc_text_data = NULL;
-static guint64 lrc_num_of_targets = 0;
-static gchar *ex_encoding = NULL;
+static guint lyric_timer_id = 0;
 
-static gint rc_lrc_time_compare(const RCLyricData *a, const RCLyricData *b)
+static gint rc_lrc_time_compare(gconstpointer *a, gconstpointer *b,
+    gpointer data)
 {
-    if(a->time > b->time) return 1;
-    if(a->time == b->time) return 0;
-    if(a->time < b->time) return -1;
+    if((*(RCLyricData **)a)->time > (*(RCLyricData **)b)->time)
+        return 1;
+    else if((*(RCLyricData **)a)->time == (*(RCLyricData **)b)->time)
+        return 0;
+    else
+        return -1;
     return 0;
-}
-
-static void rc_lrc_line_sort()
-{
-    if(lrc_line_data==NULL) return;
-    lrc_line_data = g_list_sort(lrc_line_data, (GCompareFunc)rc_lrc_time_compare);
 }
 
 static void rc_lrc_add_length()
 {
-    const GList *line_foreach;
-    const GList *line_next;
-    RCLyricData *item, *item_next;
-    for(line_foreach=lrc_line_data;line_foreach!=NULL;
-        line_foreach=g_list_next(line_foreach))
+    gsize i = 0;
+    if(lrc_line_array==NULL || lrc_line_length==0) return;
+    for(i=0;i<lrc_line_length-1;i++)
     {
-        item = line_foreach->data;
-        line_next = g_list_next(line_foreach);
-        if(line_next!=NULL)
-        {
-            item_next = line_next->data;
-            item->length = item_next->time - item->time;
-        }
-        else item->length = -1;
+        lrc_line_array[i]->length = lrc_line_array[i+1]->time -
+            lrc_line_array[i]->time;
+        lrc_line_array[i]->index = i;
     }
+    lrc_line_array[i]->index = i;
 }
 
-static void rc_lrc_add_line(gchar *line)
+static GSList *rc_lrc_add_line(GSList *list, gchar *line)
 {
     gchar **line_data_array = NULL;
     gint i = 0;
     guint sptnum = 0;
     guint tagnum = 0;
     gchar *splitstr = NULL;
-    int minute = 0;
-    double second = 0.0;
+    gint minute = 0;
+    gdouble second = 0.0;
     guint64 *time = 0;
     gchar *text = NULL;
     GSList *time_list = NULL;
@@ -119,13 +113,54 @@ static void rc_lrc_add_line(gchar *line)
                 lrc_data->text = g_strdup(text);
             else
                 lrc_data->text = g_strdup("");
-            lrc_line_data = g_list_append(lrc_line_data, lrc_data);
+            lrc_data->length = -1;
+            list = g_slist_append(list, lrc_data);
             if(time!=NULL) g_free(time);
             time_foreach = g_slist_next(time_foreach);
         }
     }
     g_slist_free(time_list);
     g_strfreev(line_data_array);
+    return list;
+}
+
+static gboolean rc_lrc_watch_timer(gpointer data)
+{
+    GstState state;
+    gint64 pos;
+    if(lrc_line_array==NULL) return TRUE;
+    state = rc_core_get_play_state();
+    if(state!=GST_STATE_PLAYING && state!=GST_STATE_PAUSED)
+    {
+        lrc_line_now = NULL;
+        return TRUE;
+    }
+    pos = rc_core_get_play_position();
+    lrc_line_now = rc_lrc_get_line_by_time(pos);
+    return TRUE;
+}
+
+/**
+ * rc_lrc_init:
+ *
+ * Initialize the lyric watch timer.
+ */
+
+void rc_lrc_init()
+{
+    lyric_timer_id = g_timeout_add(100, (GSourceFunc)(rc_lrc_watch_timer),
+        NULL);
+}
+
+/**
+ * rc_lrc_exit:
+ *
+ * Remove the lyric watch timer.
+ */
+
+void rc_lrc_exit()
+{
+    g_source_remove(lyric_timer_id);
 }
 
 /**
@@ -150,8 +185,11 @@ gboolean rc_lrc_read_from_file(const gchar *filename)
     gchar *text_data;
     gchar **text_data_array = NULL;
     guint linenum = 0;
+    gchar *ex_encoding = NULL;
     const gchar *locale;
-    if(lrc_line_data!=NULL) rc_lrc_clean_data();
+    GSList *lyric_line_list = NULL;
+    GSList *lyric_list_foreach;
+    if(lrc_line_array!=NULL) rc_lrc_clean_data();
     if(lrc_text_data!=NULL) g_free(lrc_text_data);
     flag = g_file_get_contents(filename, &lrc_text_data, &length, NULL);
     if(!flag)
@@ -222,14 +260,24 @@ gboolean rc_lrc_read_from_file(const gchar *filename)
     lrc_text_data = new_text;
     text_data = lrc_text_data;
     text_data_array = g_strsplit(text_data, "\n", 0);
-    while(text_data_array[linenum]!=NULL)
+    for(linenum=0;text_data_array[linenum]!=NULL;linenum++)
     {
         line = text_data_array[linenum];
-        rc_lrc_add_line(line);
-        linenum++;
+        lyric_line_list = rc_lrc_add_line(lyric_line_list, line);
     }
     g_strfreev(text_data_array);
-    rc_lrc_line_sort();
+    if(lyric_line_list==NULL) return FALSE;
+    lrc_line_length = g_slist_length(lyric_line_list);
+    lrc_line_array = g_malloc(sizeof(RCLyricData *) * (lrc_line_length+1));
+    lrc_line_array[lrc_line_length] = NULL;
+    for(lyric_list_foreach=lyric_line_list, i=0;lyric_list_foreach!=NULL;
+        lyric_list_foreach=g_slist_next(lyric_list_foreach), i++)
+    {
+        lrc_line_array[i] = lyric_list_foreach->data;
+    }
+    g_slist_free(lyric_line_list);
+    g_qsort_with_data(lrc_line_array, lrc_line_length, sizeof(RCLyricData *),
+        (GCompareDataFunc)rc_lrc_time_compare, NULL);
     rc_lrc_add_length();
     return flag;
 }
@@ -242,38 +290,50 @@ gboolean rc_lrc_read_from_file(const gchar *filename)
 
 void rc_lrc_clean_data()
 {
-    lrc_num_of_targets = g_list_length(lrc_line_data);
-    guint i;
-    RCLyricData *item;
-    GList *list_foreach = lrc_line_data;
-    for(i=0;i<lrc_num_of_targets;i++)
+    gsize i;
+    if(lrc_line_array==NULL) return;
+    lrc_line_now = NULL;
+    for(i=0;i<lrc_line_length;i++)
     {
-        item = g_list_nth_data(list_foreach, 0);
-        if(item!=NULL)
+        if(lrc_line_array[i]!=NULL)
         {
-            if(item->text!=NULL) g_free(item->text);
-            g_free(item);
+            if(lrc_line_array[i]->text!=NULL)
+                g_free(lrc_line_array[i]->text);
+            g_free(lrc_line_array[i]);
         }
-        list_foreach = g_list_next(list_foreach);
     }
-    g_list_free(lrc_line_data);
+    g_free(lrc_line_array);
     if(lrc_text_data!=NULL) g_free(lrc_text_data);
     lrc_text_data = NULL;
-    lrc_line_data = NULL;
+    lrc_line_array = NULL;
+    lrc_line_length = 0;
 }
 
 /**
  * rc_lrc_get_lrc_data:
  *
- * Return the processed lyric data in the player.
+ * Return the processed lyric array in the player.
  *
- * Returns: The processed lyric data in the player, the data is stored
- * in a GList, NULL if there is no lyric data.
+ * Returns: The processed lyric array in the player, the data is stored
+ * in an array, NULL if there is no lyric data.
  */
 
-const GList *rc_lrc_get_lrc_data()
+const RCLyricData **rc_lrc_get_lrc_data()
 {
-    return lrc_line_data;
+    return (const RCLyricData **)lrc_line_array;
+}
+
+/**
+ * rc_lrc_get_lrc_length:
+ *
+ * Return the length of the lyric array.
+ *
+ * Returns: The length of the lyric array.
+ */
+
+gsize rc_lrc_get_lrc_length()
+{
+    return lrc_line_length;
 }
 
 /**
@@ -301,22 +361,41 @@ const gchar *rc_lrc_get_text_data()
 
 const RCLyricData *rc_lrc_get_line_by_time(gint64 time)
 {
-    GList *list_foreach;
-    RCLyricData *item = NULL, *tmp = NULL;
-    if(lrc_line_data==NULL) return NULL;
-    item = lrc_line_data->data;
+    gint64 lyric_time = 0L;
+    if(lrc_line_array==NULL) return NULL;
     time = time / GST_MSECOND / 10;
-    for(list_foreach=lrc_line_data;list_foreach!=NULL;
-        list_foreach=g_list_next(list_foreach))
+    gsize low = 0;
+    gsize high = lrc_line_length - 1;
+    gsize mid = 0;
+    while(low < (high-1))
     {
-        tmp = list_foreach->data;
-        if(tmp!=NULL)
-        {
-            if(tmp->time>time) break; 
-        }
-        item = tmp;
+        mid = (low + high) / 2;
+        lyric_time = lrc_line_array[mid]->time;
+        if(lyric_time == time)
+            return lrc_line_array[mid];
+        else if(lyric_time < time)
+            low = mid;
+        else
+            high = mid;
     }
-    return item;
+    if(lrc_line_array[high]->time <= time)
+        return lrc_line_array[high];
+    else if(lrc_line_array[low]->time > time)
+        return NULL;
+    else
+        return lrc_line_array[low];
 }
 
+/**
+ * rc_lrc_get_line_now:
+ *
+ * Return the lyric line data while the player is playing.
+ *
+ * Returns: The lyric line data the player is playing.
+ */
+
+const RCLyricData *rc_lrc_get_line_now()
+{
+    return lrc_line_now;
+}
 

@@ -26,5 +26,12 @@
           Automatic encoding detect by system locale settings.
           Automatic remove the invalid music item.
 
+2011-03-23  SuperCat    <supercatexpert@gmail.com>
+
+        Added mini mode.
+        Added some comments to make Gtk-Doc docuemnt.
+        Development reference manual has been made.
+        Provide more interfaces to D-Bus.
+        
  
 

@@ -90,6 +90,17 @@ static void rc_player_class_init(RCPlayerClass *class)
         G_TYPE_NONE, 0, NULL);
 
     /**
+     * RCPlayer::player-continue:
+     *
+     * Emitted after the player paused.
+     */
+
+    object_signals[PLAYER_CONTINUE] = g_signal_new("player-continue",
+        RC_PLAYER_TYPE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCPlayerClass,
+        player_continue), NULL, NULL, g_cclosure_marshal_VOID__VOID,
+        G_TYPE_NONE, 0, NULL);
+
+    /**
      * RCPlayer::lyric-found:
      *
      * Emitted when the lyric is found at the moment the player

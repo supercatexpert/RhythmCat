@@ -32,6 +32,7 @@
 #include "plugin.h"
 #include "debug.h"
 #include "msg.h"
+#include "lyric.h"
 #include "shell_glue.h"
 #include "player_object.h"
 #include "gui_eq.h"
@@ -55,7 +56,7 @@
 #endif
 
 static const gchar rc_player_program_name[] = "RhythmCat Music Player";
-static const gchar rc_player_build_date[] = "110323";
+static const gchar rc_player_build_date[] = "110330";
 static const gchar rc_player_version[] = "1.0.0 alpha 1";
 static const gboolean rc_player_stable_flag = FALSE;
 static const gchar *rc_player_support_formatx = "(.FLAC|.OGG|.MP3|.WMA|.WAV|"
@@ -301,6 +302,7 @@ void rc_player_init(int *argc, char **argv[])
     rc_gui_style_init();
     rc_msg_init();
     rc_plist_init();
+    rc_lrc_init();
     rc_player_object_init();
     rc_plist_load_argument(rc_player_remaining_args);
     rc_plugin_init();
@@ -344,6 +346,7 @@ void rc_player_main()
 void rc_player_exit()
 {
     rc_plugin_exit();
+    rc_lrc_exit();
     rc_plist_save_playlist_setting();
     rc_core_exit();
     rc_set_exit();

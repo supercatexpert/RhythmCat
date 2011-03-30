@@ -6,7 +6,7 @@ OBJS=${SRCS:.c=.o}
 
 LIBS=glib-2.0 gtk+-2.0 gstreamer-0.10
 
-CFLAGS=`pkg-config --cflags ${LIBS}` -Wall -O2 -fPIC -I../../
+CFLAGS=`pkg-config --cflags ${LIBS}` -Wall -O2 -fPIC -I../../src/
 LDFLAGS=`pkg-config --libs ${LIBS}` -Wall -O2 -shared -fPIC
 
 all: ${PLUGIN_NAME}

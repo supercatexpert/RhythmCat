@@ -448,6 +448,11 @@ void rc_tag_set_playing_metadata(const RCMusicMetaData *mmd)
 {
     if(playing_mmd.uri!=NULL) g_free(playing_mmd.uri);
     if(playing_mmd.image!=NULL) gst_buffer_unref(playing_mmd.image);
+    if(playing_mmd.title!=NULL) g_free(playing_mmd.title);
+    if(playing_mmd.artist!=NULL) g_free(playing_mmd.artist);
+    if(playing_mmd.album!=NULL) g_free(playing_mmd.album);
+    if(playing_mmd.comment!=NULL) g_free(playing_mmd.comment);
+    if(playing_mmd.file_type!=NULL) g_free(playing_mmd.file_type);
     memcpy(&playing_mmd, mmd, sizeof(RCMusicMetaData));
     if(mmd->uri!=NULL)
         playing_mmd.uri = g_strdup(mmd->uri);
@@ -464,7 +469,7 @@ void rc_tag_set_playing_metadata(const RCMusicMetaData *mmd)
     if(mmd->artist!=NULL)
         playing_mmd.artist = g_strdup(mmd->artist);
     else
-        playing_mmd.title = NULL;
+        playing_mmd.artist = NULL;
     if(mmd->album!=NULL)
         playing_mmd.album = g_strdup(mmd->album);
     else

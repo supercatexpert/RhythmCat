@@ -1,12 +1,12 @@
 CC=gcc
-PLUGIN_NAME=desklrc.so
+PLUGIN_NAME=notify.so
 INCS=
-SRCS=desklrc.c
+SRCS=notify.c
 OBJS=${SRCS:.c=.o}
 
-LIBS=glib-2.0 gtk+-2.0 gstreamer-0.10
+LIBS=glib-2.0 gtk+-2.0 gstreamer-0.10 libnotify
 
-CFLAGS=`pkg-config --cflags ${LIBS}` -Wall -O2 -fPIC -I../../src
+CFLAGS=`pkg-config --cflags ${LIBS}` -Wall -O2 -fPIC -I../../src/
 LDFLAGS=`pkg-config --libs ${LIBS}` -Wall -O2 -shared -fPIC
 
 all: ${PLUGIN_NAME}

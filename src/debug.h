@@ -30,7 +30,9 @@
 #include <glib.h>
 #include <glib/gprintf.h>
 
+#ifndef DEBUG_MODE
 #define DEBUG_MODE FALSE
+#endif
 
 gboolean rc_debug_get_flag();
 void rc_debug_set_mode(gboolean mode);

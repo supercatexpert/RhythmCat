@@ -143,7 +143,7 @@ void rc_gui_show_message_dialog(GtkMessageType type, const gchar *title,
     va_start(arg_ptr, format);
     dialog = gtk_message_dialog_new(GTK_WINDOW(rc_ui->main_window),
         GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT, type,
-        GTK_BUTTONS_CLOSE, title, format, arg_ptr);
+        GTK_BUTTONS_CLOSE, format, arg_ptr);
     gtk_window_set_title(GTK_WINDOW(dialog), title);
     gtk_dialog_run(GTK_DIALOG(dialog));
     gtk_widget_destroy(dialog);

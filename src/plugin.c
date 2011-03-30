@@ -26,6 +26,7 @@
 #include "plugin.h"
 #include "core.h"
 #include "gui.h"
+#include "gui_dialog.h"
 #include "playlist.h"
 #include "debug.h"
 #include "settings.h"
@@ -38,12 +39,37 @@
  * @Include: plugin.h
  *
  * Plugin support of the player. It supports module type (usually it is
- * a dynamic link library) plugin and the plugin written by Python.
+ * a dynamic link library) plugin.
  */
+
+/*
+ * The module-type plugin data structure.
+ */
+
+typedef struct RCModuleData {
+    GModule *module;
+    gchar *path;
+    gboolean resident;
+    const RCPluginModuleData *data;
+    gint (*module_init)();
+    void (*module_exit)();
+    const RCPluginModuleData *(*module_data)();
+}RCModuleData;
 
 static GSList *plugin_list = NULL;
 static GSList *module_list = NULL;
 static GKeyFile *plugin_configure = NULL;
+
+/*
+ * Free the module-plugin data.
+ */
+
+static void rc_plugin_module_free(RCModuleData *module_data)
+{
+    if(module_data==NULL) return;
+    g_free(module_data->path);
+    g_free(module_data);
+}
 
 /**
  * rc_plugin_init:
@@ -101,14 +127,13 @@ void rc_plugin_exit()
         list_foreach=g_slist_next(list_foreach))
     {
         module_data = list_foreach->data;
-        group_name = module_data->module_get_group_name();
+        group_name = module_data->data->group_name;
         g_key_file_set_string(plugin_configure, group_name, "File",
             module_data->path);
         g_key_file_set_integer(plugin_configure, group_name, "Type",
             PLUGIN_TYPE_MODULE);
-        g_key_file_set_boolean(plugin_configure, group_name, "Enabled",
-            TRUE);
         module_data->module_exit();
+        g_module_close(module_data->module);
         rc_plugin_module_free(module_data);
     }
     /* Save plugin configure data */
@@ -218,21 +243,6 @@ void rc_plugin_conf_free(RCPluginConfData *plugin_data)
     g_free(plugin_data);
 }
 
-/**
- * rc_plugin_module_free:
- * @module_data: the module data
- *
- * Free the module data.
- */
-
-void rc_plugin_module_free(RCModuleData *module_data)
-{
-    if(module_data==NULL) return;
-    g_free(module_data->path);
-    g_module_close(module_data->module);
-    g_free(module_data);
-}
-
 static gboolean rc_plugin_module_check_running(const gchar *path)
 {
     const GSList *list_foreach = NULL;
@@ -246,6 +256,21 @@ static gboolean rc_plugin_module_check_running(const gchar *path)
             return TRUE;
     }
     return FALSE;
+}
+
+static RCModuleData *rc_plugin_module_get_running(const gchar *path)
+{
+    const GSList *list_foreach = NULL;
+    RCModuleData *module_data;
+    if(module_list==NULL) return FALSE;
+    for(list_foreach=module_list;list_foreach!=NULL;
+        list_foreach=g_slist_next(list_foreach))
+    {
+        module_data = list_foreach->data;
+        if(g_strcmp0(module_data->path, path)==0)
+            return module_data;
+    }
+    return NULL;
 }
 
 /**
@@ -301,10 +326,6 @@ RCPluginConfData *rc_plugin_conf_load(const gchar *filename)
     if(g_strcmp0(plugin_type, "Module")==0)
     {
         plugin_typenum = PLUGIN_TYPE_MODULE;
-    }
-    else if(g_strcmp0(plugin_type, "Python")==0)
-    {
-        plugin_typenum = PLUGIN_TYPE_PYTHON;
     }
     else goto error_out;
     plugin_data = g_malloc0(sizeof(RCPluginConfData));
@@ -364,6 +385,8 @@ static gboolean rc_plugin_module_load(const gchar *filename)
     GModule *module;
     RCModuleData *module_data;
     gint retval = 0;
+    if(rc_plugin_module_check_running(filename))
+        return FALSE;
     module = g_module_open(filename, G_MODULE_BIND_LAZY);
     if(module==NULL) return FALSE;
     module_data = g_malloc0(sizeof(RCModuleData));
@@ -381,8 +404,8 @@ static gboolean rc_plugin_module_load(const gchar *filename)
         g_module_close(module);
         return FALSE;
     }
-    if(!g_module_symbol(module, "rc_plugin_module_get_group_name",
-        (gpointer *)&module_data->module_get_group_name))
+    if(!g_module_symbol(module, "rc_plugin_module_data",
+        (gpointer *)&module_data->module_data))
     {
         g_free(module_data);
         g_module_close(module);
@@ -397,7 +420,11 @@ static gboolean rc_plugin_module_load(const gchar *filename)
         return FALSE;
     }
     module_data->path = g_strdup(filename);
+    module_data->data = module_data->module_data();
+    module_data->resident = module_data->data->resident;
     module_list = g_slist_append(module_list, module_data);
+    g_key_file_set_boolean(plugin_configure,
+        module_data->data->group_name, "Enabled", TRUE);
     return TRUE;
 }
 
@@ -412,10 +439,18 @@ static void rc_plugin_module_close(const gchar *filename)
         module_data = list_foreach->data;
         if(g_strcmp0(module_data->path, filename)==0)
         {
-            group_name = module_data->module_get_group_name();
+            group_name = module_data->data->group_name;
             g_key_file_set_boolean(plugin_configure, group_name, "Enabled",
                 FALSE);
+            if(module_data->resident)
+            {
+                rc_gui_show_message_dialog(GTK_MESSAGE_INFO, _("Plugin Info"),
+                    _("This plugin is resident, you should restart the player"
+                    " to disable it."));
+                break;
+            }
             module_data->module_exit();
+            g_module_close(module_data->module);
             rc_plugin_module_free(module_data);
             module_list = g_slist_delete_link(module_list, list_foreach);
             break;
@@ -440,9 +475,6 @@ gboolean rc_plugin_load(RCPluginType type, const gchar *filename)
         case PLUGIN_TYPE_MODULE:
             return rc_plugin_module_load(filename);
             break;
-        case PLUGIN_TYPE_PYTHON:
-            //return rc_plugin_python_load(filename);
-            break;
         default:
             rc_debug_perror("Plugin-ERROR: Unknown plugin type!\n");
     }
@@ -463,21 +495,24 @@ gboolean rc_plugin_configure(RCPluginType type, const gchar *filename)
 {
     gboolean flag = FALSE;
     GModule *module = NULL;
+    RCModuleData *module_data = NULL;
     void (*module_configure)();
     switch(type)
     {
         case PLUGIN_TYPE_MODULE:
-            module = g_module_open(filename, G_MODULE_BIND_LAZY);
+            module_data = rc_plugin_module_get_running(filename);
+            if(module_data!=NULL)
+                module = module_data->module;
+            if(module==NULL)
+                module = g_module_open(filename, G_MODULE_BIND_LAZY);
             if(module==NULL) return FALSE;
             flag = g_module_symbol(module, "rc_plugin_module_configure",
                 (gpointer *)&module_configure);
             if(flag)
                 module_configure();
-            g_module_close(module);
+            if(module_data==NULL)
+                g_module_close(module);
             return flag;
-            break;
-        case PLUGIN_TYPE_PYTHON:
-            g_printf("Python plugin configure!\n");
             break;
         default:
             rc_debug_perror("Plugin-ERROR: Unknown plugin type!\n");
@@ -500,9 +535,6 @@ void rc_plugin_close(RCPluginType type, const gchar *filename)
         case PLUGIN_TYPE_MODULE:
             rc_plugin_module_close(filename);
             break;
-        case PLUGIN_TYPE_PYTHON:
-            //rc_plugin_python_close(filename);
-            break;
         default:
             rc_debug_perror("Plugin-ERROR: Unknown plugin type!\n");
     }
@@ -524,9 +556,6 @@ gboolean rc_plugin_check_running(RCPluginType type, const gchar *path)
     {
         case PLUGIN_TYPE_MODULE:
             return rc_plugin_module_check_running(path);
-            break;
-        case PLUGIN_TYPE_PYTHON:
-            //return rc_plugin_python_check_running(path);
             break;
         default:
             rc_debug_perror("Plugin-ERROR: Unknown plugin type!\n");

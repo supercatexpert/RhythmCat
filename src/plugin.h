@@ -34,14 +34,12 @@
 /**
  * RCPluginType:
  * @PLUGIN_TYPE_MODULE: the plugin is a module
- * @PLUGIN_TYPE_PYTHON: the plugin is a python program
  *
  * The enum type to show the type of the plugin.
  */
 
 typedef enum RCPluginType {
     PLUGIN_TYPE_MODULE = 1,
-    PLUGIN_TYPE_PYTHON = 2
 }RCPluginType;
 
 /**
@@ -68,24 +66,17 @@ typedef struct RCPluginConfData {
 }RCPluginConfData;
 
 /**
- * RCModuleData:
- * @module: the GModule
- * @path: the path of the module
- * @module_init: the function pointer to initialize the module
- * @module_exit: the function pointer to close the module
- * @module_get_group_name: get the group name of the module, used in
- * plugin configuration file
+ * RCPluginModuleData:
+ * @group_name: the group name used in plugin configure file
+ * @resident: whether the plugin can be removed while the player is running
  *
- * The module-type plugin data structure.
+ * The data structure of module.
  */
 
-typedef struct RCModuleData {
-    GModule *module;
-    gchar *path;
-    gint (*module_init)();
-    void (*module_exit)();
-    const gchar *(*module_get_group_name)();
-}RCModuleData;
+typedef struct RCPluginModuleData {
+    gchar *group_name;
+    gboolean resident;
+}RCPluginModuleData;
 
 /* Function */
 void rc_plugin_init();
@@ -94,7 +85,6 @@ gboolean rc_plugin_search_dir(const gchar *dirname);
 const GSList *rc_plugin_get_list();
 void rc_plugin_list_free();
 void rc_plugin_conf_free(RCPluginConfData *plugin_data);
-void rc_plugin_module_free(RCModuleData *module_data);
 RCPluginConfData *rc_plugin_conf_load(const gchar *filename);
 gboolean rc_plugin_load(RCPluginType type, const gchar *filename);
 gboolean rc_plugin_configure(RCPluginType type, const gchar *filename);

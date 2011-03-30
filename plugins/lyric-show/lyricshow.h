@@ -31,24 +31,32 @@
 #include <glib/gi18n.h>
 #include <gdk/gdk.h>
 #include <gtk/gtk.h>
+#include "plugin.h"
+#include "lyric.h"
+#include "core.h"
+#include "gui.h"
+#include "debug.h"
+#include "player_object.h"
+#include "settings.h"
 
 typedef struct _GuiLrcData
 {
+    GtkWidget *lrc_swindow;
     GtkWidget *lrc_scene;
     GtkWidget *lrc_scrwin;
-    guint64 lrc_line_length;
-    gint64 lrc_line_num;
-    gint64 lrc_time_delay;
-    const GList *lyric_data;
-    const GList *lyric_line;
-    const gchar *lyric_text;
     gchar *lyric_font;
+    gint64 lrc_time_delay;
     guint lyric_line_ds;
-    double background[4];
-    double text_color[4];
-    double text_hilight[4];
+    guint drag_to_linenum;
+    guint drag_from_linenum;
+    gint drag_height;
+    gdouble background[4];
+    gdouble text_color[4];
+    gdouble text_hilight[4];
     gboolean lyric_flag;
-    gboolean lyric_new_flag;
+    gboolean drag_flag;
+    gboolean drag_action;
+    gboolean single_window_flag;
 }GuiLrcData;
 
 const gchar *g_module_check_init(GModule *);
@@ -57,12 +65,13 @@ void g_module_unload(GModule *);
 gint rc_plugin_module_init();
 void rc_plugin_module_exit();
 void rc_plugin_module_configure();
-const gchar *rc_plugin_module_get_group_name();
+const RCPluginModuleData *rc_plugin_module_data();
 
 void rc_plugin_lrcshow_init();
 GuiLrcData *rc_plugin_lrcshow_get_data();
 void rc_plugin_lrcshow_draw_bg();
 void rc_plugin_lrcshow_show();
+gboolean rc_plugin_lrcshow_drag(GtkWidget *, GdkEvent *, gpointer);
 gboolean rc_plugin_lrcshow_expose(GtkWidget *, gpointer);
 gboolean rc_plugin_lrcshow_update(gpointer);
 void rc_plugin_lrcshow_enable();

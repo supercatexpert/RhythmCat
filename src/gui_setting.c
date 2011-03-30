@@ -194,7 +194,7 @@ static void rc_gui_create_setting_general()
         _("Minimize the window if the _close button is clicked"));
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(setting_at_ply_checkbox),
         rc_set_get_boolean("Player", "AutoPlay", NULL));
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(setting_ld_last_checkbox ),
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(setting_ld_last_checkbox),
         rc_set_get_boolean("Player", "LoadLastPosition", NULL));
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(setting_min_tray_checkbox),
         rc_set_get_boolean("Player", "MinimizeToTray", NULL));

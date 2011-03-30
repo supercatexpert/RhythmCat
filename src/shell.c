@@ -52,13 +52,21 @@ static void rc_shell_class_init(RCShellClass *class)
 gboolean rc_shell_load_uri(RCShell *shell, const gchar *uri, GError **error)
 {
     if(uri==NULL) return FALSE;
-    rc_debug_print("SHELL: Load URI from remote: %s\n", uri);
+    rc_debug_print("Shell: Load URI from remote: %s\n", uri);
     return rc_plist_load_uri_from_remote(uri);
 }
 
 gboolean rc_shell_play(RCShell *shell, GError **error)
 {
-    return rc_core_play();
+    gint list1_index = 0, list2_index = 0;
+    gboolean flag = FALSE;;
+    GstState state = rc_core_get_play_state();
+    if(state==GST_STATE_PLAYING) return TRUE;
+    rc_plist_play_get_index(&list1_index, &list2_index);
+    if(rc_core_get_play_state()!=GST_STATE_PAUSED)
+        rc_plist_play_by_index(list1_index, list2_index);
+    flag = rc_core_play();
+    return flag;
 }
 
 gboolean rc_shell_pause(RCShell *shell, GError **error)

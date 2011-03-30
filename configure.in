@@ -1,7 +1,7 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ([2.67])
+AC_PREREQ([2.61])
 AC_INIT([RhythmCat], [1.0.0], [http://code.google.com/p/rhythmcat/issues/list])
 AM_INIT_AUTOMAKE(RhythmCat, 1.0.0)
 AC_CONFIG_SRCDIR([src/main.c])
@@ -47,8 +47,13 @@ GETTEXT_PACKAGE=RhythmCat
 AM_GNU_GETTEXT_VERSION([0.18.1])
 AM_GNU_GETTEXT([external])
 
+# Checks for features
+AC_ARG_ENABLE(debug, [  --enable-debug          enable debug mode], \
+    enable_debug=yes,)
+AM_CONDITIONAL(DEBUG_MODE, test "x$enable_debug" = "xyes")
+
 AC_OUTPUT([Makefile po/Makefile.in po/Makefile src/Makefile data/Makefile \
-    doc/Makefile doc/reference/Makefile data/conf/Makefile data/images/Makefile])
+    doc/Makefile doc/reference/Makefile data/images/Makefile])
 
 AC_CONFIG_MACRO_DIR(m4)
 

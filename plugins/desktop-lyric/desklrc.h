@@ -30,6 +30,13 @@
 #include <glib/gprintf.h>
 #include <gtk/gtk.h>
 #include <stdlib.h>
+#include "core.h"
+#include "gui.h"
+#include "lyric.h"
+#include "debug.h"
+#include "player_object.h"
+#include "plugin.h"
+#include "settings.h"
 
 const gchar *g_module_check_init(GModule *);
 void g_module_unload(GModule *);
@@ -40,20 +47,16 @@ void rc_plugin_module_configure();
 const gchar *rc_plugin_module_get_group_name();
 
 void rc_plugin_desklrc_init();
-gboolean rc_plugin_desklrc_get_composited(GtkWidget *, GdkEventExpose *,
-    gpointer);
 gboolean rc_plugin_desklrc_update(GtkWidget *, GdkEventExpose *, gpointer);
 gboolean rc_plugin_desklrc_show(GtkWidget *, GdkEventExpose *, gpointer);
 gboolean rc_plugin_desklrc_drag(GtkWidget *, GdkEvent *, gpointer);
 gboolean rc_plugin_desklrc_expose_handler(GtkWidget *, GdkEventExpose *,
     gpointer);
 void rc_plugin_desklrc_enable(gboolean);
-void rc_plugin_desklrc_get_pos(gint *, gint *);
 void rc_plugin_desklrc_set_movable(gboolean);
 void rc_plugin_desklrc_set_font(const gchar *);
-void rc_plugin_desklrc_set_color(const gdouble *, const gdouble *, 
-    const gdouble *, const gdouble *);
-void rc_plugin_desklrc_set_pos(gint, gint);
+void rc_plugin_desklrc_load_conf();
+void rc_plugin_desklrc_save_conf();
 
 #endif
 

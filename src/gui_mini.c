@@ -247,19 +247,19 @@ void rc_gui_mini_init()
     rc_mini.resize_arrow = gtk_arrow_new(GTK_ARROW_RIGHT, GTK_SHADOW_NONE);
     rc_mini.resize_eventbox = gtk_event_box_new();
     rc_mini.control_images[0] = gtk_image_new_from_stock(GTK_STOCK_MEDIA_PLAY,
-        GTK_ICON_SIZE_MENU);
+        GTK_ICON_SIZE_LARGE_TOOLBAR);
     rc_mini.control_images[1] = gtk_image_new_from_stock(GTK_STOCK_MEDIA_STOP,
-        GTK_ICON_SIZE_MENU);
+        GTK_ICON_SIZE_LARGE_TOOLBAR);
     rc_mini.control_images[2] = gtk_image_new_from_stock(
-        GTK_STOCK_MEDIA_PREVIOUS, GTK_ICON_SIZE_MENU);
+        GTK_STOCK_MEDIA_PREVIOUS, GTK_ICON_SIZE_LARGE_TOOLBAR);
     rc_mini.control_images[3] = gtk_image_new_from_stock(GTK_STOCK_MEDIA_NEXT,
-        GTK_ICON_SIZE_MENU);
+        GTK_ICON_SIZE_LARGE_TOOLBAR);
     rc_mini.window_bimages[0] = gtk_image_new_from_stock(GTK_STOCK_GOTO_TOP,
-        GTK_ICON_SIZE_MENU);
+        GTK_ICON_SIZE_LARGE_TOOLBAR);
     rc_mini.window_bimages[1] = gtk_image_new_from_stock(GTK_STOCK_GOTO_BOTTOM,
-        GTK_ICON_SIZE_MENU);
+        GTK_ICON_SIZE_LARGE_TOOLBAR);
     rc_mini.window_bimages[2] = gtk_image_new_from_stock(GTK_STOCK_CLOSE,
-        GTK_ICON_SIZE_MENU);
+        GTK_ICON_SIZE_LARGE_TOOLBAR);
     for(i=0;i<4;i++)
     {
         gtk_image_set_pixel_size(GTK_IMAGE(rc_mini.control_images[i]), 16);
@@ -314,7 +314,7 @@ void rc_gui_mini_init()
         GTK_SHADOW_NONE);
     gtk_button_set_relief(GTK_BUTTON(rc_mini.volume_button), GTK_RELIEF_NONE);
     g_object_set(G_OBJECT(rc_mini.volume_button), "size",
-        GTK_ICON_SIZE_MENU, NULL);
+        GTK_ICON_SIZE_LARGE_TOOLBAR, NULL);
     gtk_event_box_set_above_child(GTK_EVENT_BOX(rc_mini.resize_eventbox), TRUE);
     gtk_misc_set_alignment(GTK_MISC(rc_mini.info_label), 0.0, 0.5);
     gtk_misc_set_alignment(GTK_MISC(rc_mini.lrc_label), 0.0, 0.5);

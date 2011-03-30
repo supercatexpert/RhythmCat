@@ -109,7 +109,7 @@ static gboolean rc_gui_refresh_time_info(gpointer data)
             }
             return TRUE;
     }
-    lrc_data = rc_lrc_get_line_by_time(pos);
+    lrc_data = rc_lrc_get_line_now();
     if(lrc_data!=NULL)
     {
         if(text!=lrc_data->text)
@@ -496,6 +496,19 @@ static void rc_gui_window_deiconify(GtkAction *action)
     }
 }
 
+/*
+ * Switch between normal mode and mini mode.
+ */
+
+static void rc_gui_window_mode_switch()
+{
+    if(rc_set_get_boolean("Player", "MiniMode", NULL))
+        rc_gui_mini_normal_mode_clicked();
+    else
+        rc_gui_mini_mini_mode_clicked();
+    rc_gui_window_deiconify(NULL);   
+}
+
 
 static GtkActionEntry rc_menu_entries[] =
 {
@@ -662,6 +675,10 @@ static GtkActionEntry rc_menu_entries[] =
       "S_how Player", NULL,
       "Show the window of player",
       G_CALLBACK(rc_gui_window_deiconify) },
+    { "TrayModeSwitch", NULL,
+      "_Mode Switch", NULL,
+      "Switch between normal mode and mini mode",
+      G_CALLBACK(rc_gui_window_mode_switch) },
     { "TrayAbout", GTK_STOCK_ABOUT,
       "_About", NULL,
       "About this player",
@@ -818,6 +835,7 @@ static const gchar *rc_ui_info =
     "    <menuitem action='TrayNext'/>"
     "    <separator/>"
     "    <menuitem action='TrayShowPlayer'/>"
+    "    <menuitem action='TrayModeSwitch'/>"
     "    <menuitem action='TrayAlwaysOnTop'/>"
     "    <menuitem action='TrayAbout'/>"
     "    <separator/>"
@@ -1128,6 +1146,8 @@ gboolean rc_gui_init()
     gtk_window_set_geometry_hints(GTK_WINDOW(rc_gui.main_window), 
         GTK_WIDGET(rc_gui.main_window), &main_window_hints, GDK_HINT_MIN_SIZE);
     gtk_widget_set_name(rc_gui.main_window, "RCMainWindow");
+    g_object_set(gtk_settings_get_default(), "gtk-icon-sizes", 
+        "gtk-small-toolbar=16,16:gtk-large-toolbar=16,16", NULL);
     gtk_misc_set_alignment(GTK_MISC(rc_gui.lrc_label), 0.0, 0.5);
     gtk_misc_set_alignment(GTK_MISC(rc_gui.title_label), 0.0, 0.5);
     gtk_misc_set_alignment(GTK_MISC(rc_gui.artist_label), 0.0, 0.5);
@@ -1152,16 +1172,16 @@ gboolean rc_gui_init()
     gtk_widget_set_name(rc_gui.volume_button, "RCVolumeButton");
     gtk_button_set_relief(GTK_BUTTON(rc_gui.volume_button), GTK_RELIEF_NONE);
     g_object_set(G_OBJECT(rc_gui.volume_button), "size",
-        GTK_ICON_SIZE_MENU, NULL);
+        GTK_ICON_SIZE_SMALL_TOOLBAR, NULL);
     rc_gui.status_cancel_button = gtk_button_new_with_mnemonic(_("Cancel"));
     rc_gui.control_images[0] = gtk_image_new_from_stock(
-        GTK_STOCK_MEDIA_PREVIOUS, GTK_ICON_SIZE_MENU);
+        GTK_STOCK_MEDIA_PREVIOUS, GTK_ICON_SIZE_SMALL_TOOLBAR);
     rc_gui.control_images[1] = gtk_image_new_from_stock(GTK_STOCK_MEDIA_PLAY,
-        GTK_ICON_SIZE_MENU);
+        GTK_ICON_SIZE_SMALL_TOOLBAR);
     rc_gui.control_images[2] = gtk_image_new_from_stock(GTK_STOCK_MEDIA_STOP,
-        GTK_ICON_SIZE_MENU);
+        GTK_ICON_SIZE_SMALL_TOOLBAR);
     rc_gui.control_images[3] = gtk_image_new_from_stock(GTK_STOCK_MEDIA_NEXT,
-        GTK_ICON_SIZE_MENU);
+        GTK_ICON_SIZE_SMALL_TOOLBAR);
     for(i=0;i<4;i++)
     {
         gtk_image_set_pixel_size(GTK_IMAGE(rc_gui.control_images[i]), 16);

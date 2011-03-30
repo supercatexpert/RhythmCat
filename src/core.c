@@ -43,6 +43,7 @@
  */
 
 static RCCoreData rc_core;
+static gboolean playing_flag = FALSE;
 static guint spect_bands = 30;
 static gdouble magnitude[30];
 static const gint audio_freq = 48000;
@@ -102,11 +103,22 @@ static gboolean rc_core_bus_call(GstBus *bus, GstMessage *msg, gpointer data)
                     case GST_STATE_PLAYING:
                         rc_gui_set_play_button_state(TRUE);
                         rc_gui_seek_scaler_enable();
-                        rc_player_object_signal_emit_simple("player-play");     
+                        if(playing_flag)
+                        {
+                            rc_player_object_signal_emit_simple(
+                                "player-continue");
+                        }
+                        else
+                        {
+                            rc_player_object_signal_emit_simple(
+                                "player-play");
+                        }
+                        playing_flag = TRUE;
                         break;
                     case GST_STATE_PAUSED:
                         rc_gui_set_play_button_state(FALSE);
                         rc_player_object_signal_emit_simple("player-pause");
+                        playing_flag = TRUE;
                         break;
                     default:
                         break;
@@ -450,6 +462,7 @@ gboolean rc_core_stop()
     rc_gui_set_play_button_state(FALSE);
     rc_gui_seek_scaler_disable();
     rc_player_object_signal_emit_simple("player-stop");
+    playing_flag = FALSE;
     return TRUE;
 }
 

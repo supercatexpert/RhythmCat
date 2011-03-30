@@ -48,6 +48,7 @@ typedef struct RCPlayer {
  * @player_play: the function to call when the player starts playing
  * @player_stop: the function to call when the player stopped
  * @player_pause: the function to call when the player paused
+ * @player_continue: the function to call when the player continues playing
  * @lyric_found: the function to call when the lyric data is found
  * @lyric_not_found: the function to call when the lyric data is not found
  *
@@ -59,6 +60,7 @@ typedef struct RCPlayerClass {
     void (*player_play)();
     void (*player_stop)();
     void (*player_pause)();
+    void (*player_continue)();
     void (*lyric_found)();
     void (*lyric_not_found)();
 }RCPlayerClass;

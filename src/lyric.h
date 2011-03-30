@@ -34,23 +34,29 @@
  * RCLyricData:
  * @time: the start time of the lyric text
  * @length: the time length of the lyric text
+ * @index: the line index number of the lyric text
  * @text: the lyric text
  *
  * Custom struct type to store the data of lyrics.
  */
 
 typedef struct RCLyricData {
-    guint64 time;
-    guint64 length;
+    gint64 time;
+    gint64 length;
+    guint index;
     gchar *text;
 }RCLyricData;
 
 /* Functions */
+void rc_lrc_init();
+void rc_lrc_exit();
 gboolean rc_lrc_read_from_file(const gchar *filename);
 void rc_lrc_clean_data();
-const GList *rc_lrc_get_lrc_data();
+const RCLyricData **rc_lrc_get_lrc_data();
+gsize rc_lrc_get_lrc_length();
 const gchar *rc_lrc_get_text_data();
 const RCLyricData *rc_lrc_get_line_by_time(gint64 time);
+const RCLyricData *rc_lrc_get_line_now();
 
 #endif
 
