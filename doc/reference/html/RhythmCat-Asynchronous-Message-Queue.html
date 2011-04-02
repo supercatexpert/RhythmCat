@@ -1,0 +1,255 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Asynchronous Message Queue</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="index.html" title="RhythmCat Music Player Development Reference Manual">
+<link rel="up" href="ch01.html" title="Player Backend">
+<link rel="prev" href="RhythmCat-Lyric.html" title="Lyric">
+<link rel="next" href="RhythmCat-Playlist.html" title="Playlist">
+<meta name="generator" content="GTK-Doc V1.15 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="RhythmCat-Lyric.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">RhythmCat Music Player Development Reference Manual</th>
+<td><a accesskey="n" href="RhythmCat-Playlist.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#RhythmCat-Asynchronous-Message-Queue.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#RhythmCat-Asynchronous-Message-Queue.description" class="shortcut">Description</a>
+</td></tr>
+</table>
+<div class="refentry" title="Asynchronous Message Queue">
+<a name="RhythmCat-Asynchronous-Message-Queue"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="RhythmCat-Asynchronous-Message-Queue.top_of_page"></a>Asynchronous Message Queue</span></h2>
+<p>Asynchronous Message Queue — Asynchronous message queue process among threads.</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv" title="Synopsis">
+<a name="RhythmCat-Asynchronous-Message-Queue.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">
+#include &lt;msg.h&gt;
+
+<span class="returnvalue">void</span>                (<a class="link" href="RhythmCat-Asynchronous-Message-Queue.html#RCMsgAsyncQueueWatchFunc" title="RCMsgAsyncQueueWatchFunc ()">*RCMsgAsyncQueueWatchFunc</a>)         (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> item</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);
+enum                <a class="link" href="RhythmCat-Asynchronous-Message-Queue.html#RCMsgType" title="enum RCMsgType">RCMsgType</a>;
+                    <a class="link" href="RhythmCat-Asynchronous-Message-Queue.html#RCMsgData" title="RCMsgData">RCMsgData</a>;
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               <a class="link" href="RhythmCat-Asynchronous-Message-Queue.html#rc-msg-async-queue-watch-new" title="rc_msg_async_queue_watch_new ()">rc_msg_async_queue_watch_new</a>        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Asynchronous-Queues.html#GAsyncQueue"><span class="type">GAsyncQueue</span></a> *queue</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> priority</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RhythmCat-Asynchronous-Message-Queue.html#RCMsgAsyncQueueWatchFunc" title="RCMsgAsyncQueueWatchFunc ()"><span class="type">RCMsgAsyncQueueWatchFunc</span></a> callback</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> notify</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-The-Main-Event-Loop.html#GMainContext"><span class="type">GMainContext</span></a> *context</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Asynchronous-Message-Queue.html#rc-msg-init" title="rc_msg_init ()">rc_msg_init</a>                         ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Asynchronous-Message-Queue.html#rc-msg-push" title="rc_msg_push ()">rc_msg_push</a>                         (<em class="parameter"><code><a class="link" href="RhythmCat-Asynchronous-Message-Queue.html#RCMsgType" title="enum RCMsgType"><span class="type">RCMsgType</span></a> type</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);
+</pre>
+</div>
+<div class="refsect1" title="Description">
+<a name="RhythmCat-Asynchronous-Message-Queue.description"></a><h2>Description</h2>
+<p>
+Process asynchronous message queue between GUI Thread (main thread)
+and other threads.
+</p>
+</div>
+<div class="refsect1" title="Details">
+<a name="RhythmCat-Asynchronous-Message-Queue.details"></a><h2>Details</h2>
+<div class="refsect2" title="RCMsgAsyncQueueWatchFunc ()">
+<a name="RCMsgAsyncQueueWatchFunc"></a><h3>RCMsgAsyncQueueWatchFunc ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                (*RCMsgAsyncQueueWatchFunc)         (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> item</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);</pre>
+<p>
+The watch function type which executes when the message async 
+queue changed.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>item</code></em> :</span></p></td>
+<td>queue item
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>data</code></em> :</span></p></td>
+<td>user data
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="enum RCMsgType">
+<a name="RCMsgType"></a><h3>enum RCMsgType</h3>
+<pre class="programlisting">typedef enum RCMsgType {
+    MSG_TYPE_EMPTY = 0,
+    MSG_TYPE_TEST = 1,
+    MSG_TYPE_PL_INSERT = 2,
+    MSG_TYPE_PL_REFRESH = 3,
+    MSG_TYPE_PL_REMOVE = 4
+}RCMsgType;
+</pre>
+<p>
+Types of the message.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><a name="MSG-TYPE-EMPTY:CAPS"></a><span class="term"><code class="literal">MSG_TYPE_EMPTY</code></span></p></td>
+<td>empty message
+</td>
+</tr>
+<tr>
+<td><p><a name="MSG-TYPE-TEST:CAPS"></a><span class="term"><code class="literal">MSG_TYPE_TEST</code></span></p></td>
+<td>test message
+</td>
+</tr>
+<tr>
+<td><p><a name="MSG-TYPE-PL-INSERT:CAPS"></a><span class="term"><code class="literal">MSG_TYPE_PL_INSERT</code></span></p></td>
+<td>playlist insertion message
+</td>
+</tr>
+<tr>
+<td><p><a name="MSG-TYPE-PL-REFRESH:CAPS"></a><span class="term"><code class="literal">MSG_TYPE_PL_REFRESH</code></span></p></td>
+<td>playlist refresh message
+</td>
+</tr>
+<tr>
+<td><p><a name="MSG-TYPE-PL-REMOVE:CAPS"></a><span class="term"><code class="literal">MSG_TYPE_PL_REMOVE</code></span></p></td>
+<td>playlist remove message
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="RCMsgData">
+<a name="RCMsgData"></a><h3>RCMsgData</h3>
+<pre class="programlisting">typedef struct {
+    RCMsgType type;
+    gpointer data;
+} RCMsgData;
+</pre>
+<p>
+Custom struct to store message data.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><a class="link" href="RhythmCat-Asynchronous-Message-Queue.html#RCMsgType" title="enum RCMsgType"><span class="type">RCMsgType</span></a> <em class="structfield"><code><a name="RCMsgData.type"></a>type</code></em>;</span></p></td>
+<td>message type
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> <em class="structfield"><code><a name="RCMsgData.data"></a>data</code></em>;</span></p></td>
+<td>message data
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_msg_async_queue_watch_new ()">
+<a name="rc-msg-async-queue-watch-new"></a><h3>rc_msg_async_queue_watch_new ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               rc_msg_async_queue_watch_new        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Asynchronous-Queues.html#GAsyncQueue"><span class="type">GAsyncQueue</span></a> *queue</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> priority</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RhythmCat-Asynchronous-Message-Queue.html#RCMsgAsyncQueueWatchFunc" title="RCMsgAsyncQueueWatchFunc ()"><span class="type">RCMsgAsyncQueueWatchFunc</span></a> callback</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> notify</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-The-Main-Event-Loop.html#GMainContext"><span class="type">GMainContext</span></a> *context</code></em>);</pre>
+<p>
+Add new watch to the given GAsyncQueue.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>queue</code></em> :</span></p></td>
+<td>the GAsyncQueue to watch
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>priority</code></em> :</span></p></td>
+<td>the priority
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>callback</code></em> :</span></p></td>
+<td>the callback function to execute when the queue changed
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>data</code></em> :</span></p></td>
+<td>user data
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>notify</code></em> :</span></p></td>
+<td>a function to call when data is no longer in use, or NULL
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>context</code></em> :</span></p></td>
+<td>a GMainContext (if NULL, the default context will be used)
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The GSource ID of the new watch.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_msg_init ()">
+<a name="rc-msg-init"></a><h3>rc_msg_init ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_msg_init                         ();</pre>
+<p>
+Initialize the default asynchronous message queue for the player. Can be
+used only once.
+</p>
+</div>
+<hr>
+<div class="refsect2" title="rc_msg_push ()">
+<a name="rc-msg-push"></a><h3>rc_msg_push ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_msg_push                         (<em class="parameter"><code><a class="link" href="RhythmCat-Asynchronous-Message-Queue.html#RCMsgType" title="enum RCMsgType"><span class="type">RCMsgType</span></a> type</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);</pre>
+<p>
+Add new message to the default asynchronous message queue.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>type</code></em> :</span></p></td>
+<td>the message type
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>data</code></em> :</span></p></td>
+<td>the message data
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.15</div>
+</body>
+</html>

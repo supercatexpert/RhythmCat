@@ -1,0 +1,4 @@
+GObject
+  RCPlayer
+GInterface
+  GTypePlugin

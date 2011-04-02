@@ -275,7 +275,7 @@ void rc_plugin_lrcshow_draw_bg()
     cairo_t *cr;
     cr = gdk_cairo_create(gtk_widget_get_window(rc_glrc.lrc_scene));
     cairo_set_source_rgba(cr, rc_glrc.background[0], rc_glrc.background[1], 
-        rc_glrc.background[2],rc_glrc.background[3]);
+        rc_glrc.background[2], rc_glrc.background[3]);
     cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
     cairo_paint(cr);
     cairo_destroy(cr);
@@ -286,7 +286,7 @@ void rc_plugin_lrcshow_show()
     static gint width = 400, height = 100;
     gboolean visible = TRUE;
     GstState state;
-    gsize i = 0;
+    gint i = 0;
     guint64 playing_time = 0;
     gint lrc_line_num_now = -1;
     gchar *text;
@@ -334,7 +334,7 @@ void rc_plugin_lrcshow_show()
     pango_font_description_free(desc);
     pango_layout_get_size(layout, &t_width, &t_height);
     lrc_height = (gdouble)t_height / PANGO_SCALE;
-    cairo_set_operator(lrc_cr, CAIRO_OPERATOR_SOURCE);
+    cairo_set_operator(lrc_cr, CAIRO_OPERATOR_OVER);
     cairo_set_source_rgba(lrc_cr, rc_glrc.text_color[0], 
         rc_glrc.text_color[1], rc_glrc.text_color[2], rc_glrc.text_color[3]);
     state = rc_core_get_play_state();
@@ -447,7 +447,10 @@ gboolean rc_plugin_lrcshow_drag(GtkWidget *widget, GdkEvent *event,
                 rc_glrc.drag_action = TRUE;
                 sy = event->button.y;
                 lrc_data_now = rc_lrc_get_line_now();
-                rc_glrc.drag_from_linenum = lrc_data_now->index;
+                if(lrc_data_now!=NULL)
+                    rc_glrc.drag_from_linenum = lrc_data_now->index;
+                else
+                    rc_glrc.drag_from_linenum = -1;
                 break;
             case GDK_BUTTON_RELEASE:
                 cursor = gdk_cursor_new(GDK_ARROW);

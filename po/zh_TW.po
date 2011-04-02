@@ -1,15 +1,14 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# RhythmCat Music Player Translation file.
+# Copyright (C) YEAR 2011 SuperCat
+# This file is distributed under the same license as the RhythmCat package.
+# SuperCat <supercatexpert@gmail.com>, 2011.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: RhythmCat 1.0.0\n"
 "Report-Msgid-Bugs-To: http://code.google.com/p/rhythmcat/issues/list\n"
-"POT-Creation-Date: 2011-03-20 20:41+0800\n"
-"PO-Revision-Date: 2011-03-20 19:33+0800\n"
+"POT-Creation-Date: 2011-04-02 17:55+0800\n"
+"PO-Revision-Date: 2011-04-02 21:18+0800\n"
 "Last-Translator: SuperCat <supercatexpert@gmail.com>\n"
 "Language-Team: SuperCat <supercatexpert@gmail.com>\n"
 "Language: zh_TW\n"
@@ -17,345 +16,692 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/core.c:214 src/core.c:251
+#: src/core.c:246 src/core.c:283
 msgid "Effect plugins are missing!"
-msgstr ""
+msgstr "找不到效果插件!"
 
-#: src/core.c:214 src/core.c:251
+#: src/core.c:246 src/core.c:283
 msgid "Some effect plugins are missing, effects are not available now!"
-msgstr ""
+msgstr "一些效果插件不存在，特效將無法使用!"
 
-#: src/core.c:221
+#: src/core.c:253
 msgid "Critical Error!"
-msgstr ""
+msgstr "致命錯誤!"
 
-#: src/core.c:222
+#: src/core.c:254
 msgid "Failed to make playbin/playbin2 element!"
-msgstr ""
+msgstr "無法啟動playbin/playbin2元件"
 
-#: src/core.c:279
+#: src/core.c:311
 msgid "Link elements error!"
-msgstr ""
+msgstr "連接元件時錯誤!"
 
-#: src/core.c:279
+#: src/core.c:311
 msgid "Cannot link effect elements, effects are not available now!"
-msgstr ""
+msgstr "無法連接效果元件，特效將無法使用!"
 
-#: src/gui.c:635 src/gui.c:637
+#: src/gui.c:515
+msgid "_File"
+msgstr "檔案(_F)"
+
+#: src/gui.c:516
+msgid "_Edit"
+msgstr "編輯(_E)"
+
+#: src/gui.c:517
+msgid "_View"
+msgstr "視圖(_V)"
+
+#: src/gui.c:518
+msgid "_Control"
+msgstr "控制(_C)"
+
+#: src/gui.c:519
+msgid "_Help"
+msgstr "幫助(_H)"
+
+#: src/gui.c:520
+msgid "_Repeat"
+msgstr "重複播放(_R)"
+
+#: src/gui.c:521
+msgid "Ran_dom"
+msgstr "隨機播放(_D)"
+
+#: src/gui.c:523 src/gui.c:623
+msgid "_New Playlist"
+msgstr "新建播放列表(_N)"
+
+#: src/gui.c:524 src/gui.c:624
+msgid "Create a new playlist"
+msgstr "新建一個播放列表"
+
+#: src/gui.c:527 src/gui.c:639
+msgid "Import _Music"
+msgstr "導入音樂(_M)"
+
+#: src/gui.c:528 src/gui.c:640
+msgid "Import music file"
+msgstr "導入音樂檔"
+
+#: src/gui.c:531 src/gui.c:643
+msgid "Import _Playlist"
+msgstr "導入播放列表(_P)"
+
+#: src/gui.c:532 src/gui.c:644
+msgid "Import music from playlist"
+msgstr "從播放列表中導入音樂"
+
+#: src/gui.c:535
+msgid "Import _Folder"
+msgstr "導入檔夾(_F)"
+
+#: src/gui.c:536
+msgid "Import all music from folder"
+msgstr "從檔夾中導入全部音樂"
+
+#: src/gui.c:539
+msgid "_Export Playlist"
+msgstr "導出播放列表(_E)"
+
+#: src/gui.c:540 src/gui.c:636
+msgid "Export music to a playlist"
+msgstr "導出當前播放列表"
+
+#: src/gui.c:543
+msgid "Export _All Playlists"
+msgstr "導出全部播放列表(_A)"
+
+#: src/gui.c:544
+msgid "Export all playlists to a folder"
+msgstr "導出全部播放列表到一個目錄"
+
+#: src/gui.c:547 src/gui.c:687
+msgid "_Quit"
+msgstr "退出(_Q)"
+
+#: src/gui.c:548 src/gui.c:688
+msgid "Quit this player"
+msgstr "退出播放器"
+
+#: src/gui.c:551 src/gui.c:627
+msgid "Re_name Playlist"
+msgstr "重命名播放列表(_N)"
+
+#: src/gui.c:552
+msgid "Rename the playlist"
+msgstr "重命名播放列表"
+
+#: src/gui.c:555 src/gui.c:631
+#, fuzzy
+msgid "R_emove Playlist"
+msgstr "移除播放列表"
+
+#: src/gui.c:556 src/gui.c:632
+msgid "Remove the playlist"
+msgstr "移除播放列表"
+
+#: src/gui.c:559
+msgid "_Remove Music"
+msgstr "移除音樂(_R)"
+
+#: src/gui.c:560 src/gui.c:652
+msgid "Remove music from playlist"
+msgstr "從播放列表中移除音樂"
+
+#: src/gui.c:563 src/gui.c:647
+msgid "Select _All"
+msgstr "全選(_A)"
+
+#: src/gui.c:564 src/gui.c:648
+msgid "Select all music in the playlist"
+msgstr "選擇播放列表中的全部音樂"
+
+#: src/gui.c:567 src/gui.c:655
+msgid "Re_fresh Playlist"
+msgstr "刷新播放列表(_F)"
+
+#: src/gui.c:568 src/gui.c:656
+msgid "Refresh music information in the playlist"
+msgstr "刷新播放列表中音樂的資訊"
+
+#: src/gui.c:571
+msgid "Plu_gins"
+msgstr "插件(_G)"
+
+#: src/gui.c:572
+msgid "Configure plugins"
+msgstr "設置插件"
+
+#: src/gui.c:575
+msgid "_Preferences"
+msgstr "首選項(_P)"
+
+#: src/gui.c:576
+msgid "Configure the player"
+msgstr "配置播放器"
+
+#: src/gui.c:579
+msgid "_Mini Mode"
+msgstr "迷你模式(_M)"
+
+#: src/gui.c:580
+#, fuzzy
+msgid "Enable mini mode"
+msgstr "啟用迷你模式"
+
+#: src/gui.c:583 src/gui.c:659
+msgid "_Play/Pause"
+msgstr "播放/暫停(_P)"
+
+#: src/gui.c:584 src/gui.c:660
+msgid "Play or pause the music"
+msgstr "播放或者暫停當前音樂"
+
+#: src/gui.c:587 src/gui.c:663
+msgid "_Stop"
+msgstr "停止(_S)"
+
+#: src/gui.c:588 src/gui.c:664
+msgid "Stop the music"
+msgstr "停止播放"
+
+#: src/gui.c:591 src/gui.c:667
+msgid "Pre_vious"
+msgstr "上一首(_V)"
+
+#: src/gui.c:592 src/gui.c:668
+msgid "Play previous music"
+msgstr "播放上一首音樂"
+
+#: src/gui.c:595 src/gui.c:671
+#, fuzzy
+msgid "_Next"
+msgstr "下一首"
+
+#: src/gui.c:596 src/gui.c:672
+msgid "Play next music"
+msgstr "播放下一首音樂"
+
+#: src/gui.c:599
+msgid "_Backward"
+msgstr "後退(_B)"
+
+#: src/gui.c:600
+msgid "Backward 5 seconds"
+msgstr "後退5秒"
+
+#: src/gui.c:603
+msgid "_Forward"
+msgstr "前進(_F)"
+
+#: src/gui.c:604
+msgid "Forward 5 seconds"
+msgstr "前進5秒"
+
+#: src/gui.c:607
+msgid "_Increase Volume"
+msgstr "升高音量(_I)"
+
+#: src/gui.c:608
+msgid "Increase the volume"
+msgstr "升高音量"
+
+#: src/gui.c:611
+msgid "_Decrease Volume"
+msgstr "降低音量(_D)"
+
+#: src/gui.c:612
+msgid "Decrease the volume"
+msgstr "降低音量"
+
+#: src/gui.c:615
+msgid "_Contents"
+msgstr "目錄(_C)"
+
+#: src/gui.c:616
+msgid "Get help contents"
+msgstr "獲取幫助資訊"
+
+#: src/gui.c:619 src/gui.c:683
+msgid "_About"
+msgstr "關於(_A)"
+
+#: src/gui.c:620 src/gui.c:684
+msgid "About this player"
+msgstr "關於這個播放器"
+
+#: src/gui.c:628
+#, fuzzy
+msgid "Raname the playlist"
+msgstr "重命名播放列表"
+
+#: src/gui.c:635
+msgid "E_xport Playlist"
+msgstr "導出播放列表(_X)"
+
+#: src/gui.c:651
+msgid "R_emove Music"
+msgstr "移除音樂(_E)"
+
+#: src/gui.c:675
+msgid "S_how Player"
+msgstr "顯示播放器(_H)"
+
+#: src/gui.c:676
+msgid "Show the window of player"
+msgstr "顯示播放器窗口"
+
+#: src/gui.c:679
+msgid "_Mode Switch"
+msgstr "模式切換(_M)"
+
+#: src/gui.c:680
+msgid "Switch between normal mode and mini mode"
+msgstr "在完整模式和迷你模式間切換"
+
+#: src/gui.c:697
+msgid "_Playlists"
+msgstr "播放列表(_P)"
+
+#: src/gui.c:698
+msgid "Show playlists"
+msgstr "顯示播放列表"
+
+#: src/gui.c:700
+msgid "_Equalizer"
+msgstr "均衡器(_E)"
+
+#: src/gui.c:701
+msgid "Show equalizer"
+msgstr "顯示均衡器"
+
+#: src/gui.c:709
+msgid "_No Repeat"
+msgstr "不重複(_N)"
+
+#: src/gui.c:710
+msgid "No repeat"
+msgstr "不重複"
+
+#: src/gui.c:712
+msgid "Single _Music Repeat"
+msgstr "單首迴圈(_M)"
+
+#: src/gui.c:713
+msgid "Repeat playing single music"
+msgstr "重複播放單首音樂"
+
+#: src/gui.c:715
+msgid "Single _Playlist Repeat"
+msgstr "單播放列表迴圈(_P)"
+
+#: src/gui.c:716
+msgid "Repeat playing single playlist"
+msgstr "重複播放當前播放列表"
+
+#: src/gui.c:718
+msgid "_All Playlists Repeat"
+msgstr "全部播放列表迴圈(_A)"
+
+#: src/gui.c:719
+msgid "Repeat playing all playlists"
+msgstr "迴圈播放全部的播放列表"
+
+#: src/gui.c:727
+msgid "_No Random"
+msgstr "不隨機(_N)"
+
+#: src/gui.c:728
+msgid "No random playing"
+msgstr "不隨機播放"
+
+#: src/gui.c:730
+msgid "_Single Playlist Random"
+msgstr "單播放列表隨機播放"
+
+#: src/gui.c:731
+msgid "Random playing a music in the playlist"
+msgstr "隨機播放當前播放列表內的音樂"
+
+#: src/gui.c:733
+msgid "_All Playlists Random"
+msgstr "所有播放列表隨機播放"
+
+#: src/gui.c:734
+msgid "Random playing a music in all playlists"
+msgstr "隨機播放全部播放列表內的音樂"
+
+#: src/gui.c:742 src/gui.c:746
+msgid "Always On _Top"
+msgstr "總在最上"
+
+#: src/gui.c:743 src/gui.c:747
+msgid "Always on top"
+msgstr "總是處於所有窗口的最上方"
+
+#: src/gui.c:993 src/gui.c:995
 msgid "Playlists"
-msgstr ""
+msgstr "播放列表"
 
-#: src/gui.c:636
+#: src/gui.c:994
 msgid "Equalizer"
-msgstr ""
+msgstr "均衡器"
 
-#: src/gui.c:840
+#: src/gui.c:1176
 msgid "Cancel"
-msgstr ""
+msgstr "取消"
 
-#: src/gui.c:1065
+#: src/gui.c:1323
 msgid "Unknown Format"
-msgstr ""
+msgstr "未知格式"
 
-#: src/gui.c:1069
+#: src/gui.c:1327
 #, c-format
 msgid "%d kbps "
-msgstr ""
+msgstr "%d 千比特/秒"
 
-#: src/gui.c:1073
+#: src/gui.c:1331
 #, c-format
 msgid "%d Hz "
-msgstr ""
+msgstr "%d Hz"
 
-#: src/gui.c:1080
+#: src/gui.c:1338
 msgid "Mono"
-msgstr ""
+msgstr "單聲道"
 
-#: src/gui.c:1084
+#: src/gui.c:1342
 msgid "Stereo"
-msgstr ""
+msgstr "Stereo"
 
-#: src/gui.c:1088
+#: src/gui.c:1346
 #, c-format
 msgid "%d channels"
-msgstr ""
+msgstr "%d 聲道"
 
-#: src/gui.c:1095 src/playlist.c:213 src/playlist.c:276
+#: src/gui.c:1353 src/playlist.c:256 src/playlist.c:331 src/playlist.c:443
 msgid "Unknown Title"
-msgstr ""
+msgstr "未知標題"
 
-#: src/gui.c:1099
+#: src/gui.c:1357
 msgid "Unknown Artist"
-msgstr ""
+msgstr "未知藝術家"
 
-#: src/gui.c:1103
+#: src/gui.c:1361
 msgid "Unknown Album"
-msgstr ""
+msgstr "未知專輯"
 
-#: src/gui.c:1611
+#: src/gui.c:1644
 msgid "Importing..."
-msgstr ""
+msgstr "導入中……"
 
-#: src/gui.c:1615
+#: src/gui.c:1648
 msgid "Refreshing..."
-msgstr ""
+msgstr "正在刷新……"
 
-#: src/gui_dialog.c:103
+#: src/gui_dialog.c:118
 msgid "A music player based on GTK+ 2.0 & Gstreamer 0.10"
-msgstr ""
+msgstr "一個基於GTK+ 2.0和Gstreamer 0.10的音樂播放器"
 
-#: src/gui_dialog.c:151
+#: src/gui_dialog.c:172
 msgid "All supported music files(*.FLAC;*.OGG;*.MP3;*.WAV;*.WMA...)"
-msgstr ""
+msgstr "所有支持的格式(*.FLAC;*.OGG;*.MP3;*.WAV;*.WMA...)"
 
-#: src/gui_dialog.c:158
+#: src/gui_dialog.c:175
 msgid "Select the music you want to add..."
-msgstr ""
+msgstr "選擇需要添加的音樂"
 
-#: src/gui_dialog.c:205
+#: src/gui_dialog.c:225
 msgid "Select the directory you want to import..."
-msgstr ""
+msgstr "選擇需要導入的目錄"
 
-#: src/gui_dialog.c:242 src/gui_dialog.c:284
+#: src/gui_dialog.c:265 src/gui_dialog.c:311
 msgid "M3U Playlist(*.M3U, *.m3u)"
-msgstr ""
+msgstr "M3U 播放列表(*.M3U, *.m3u)"
 
-#: src/gui_dialog.c:245
+#: src/gui_dialog.c:268
 msgid "Save the playlist..."
-msgstr ""
+msgstr "保存到播放列表……"
 
-#: src/gui_dialog.c:287
+#: src/gui_dialog.c:314
 msgid "Load the playlist..."
-msgstr ""
+msgstr "從播放列表載入……"
 
-#: src/gui_dialog.c:327
+#: src/gui_dialog.c:357
 msgid "Select the directory you want to store the playlists..."
-msgstr ""
+msgstr "選擇保存播放列表的目錄"
 
-#: src/gui_eq.c:87 src/gui_eq.c:149
+#: src/gui_eq.c:101 src/gui_eq.c:163
 msgid "EQ Setting File(*.EQF, *.eqf)"
-msgstr ""
+msgstr "均衡器設置檔(*.EQF, *.eqf)"
 
-#: src/gui_eq.c:90
+#: src/gui_eq.c:104
 msgid "Load Equalizer Setting..."
-msgstr ""
+msgstr "載入均衡器設定"
 
-#: src/gui_eq.c:152
+#: src/gui_eq.c:166
 msgid "Save Equalizer Setting..."
-msgstr ""
+msgstr "保存均衡器設定"
 
-#: src/gui_eq.c:227
+#: src/gui_eq.c:243
 msgid "Disabled"
-msgstr ""
+msgstr "禁用"
 
-#: src/gui_eq.c:228
+#: src/gui_eq.c:244
 msgid "Pop"
-msgstr ""
+msgstr "流行"
 
-#: src/gui_eq.c:229
+#: src/gui_eq.c:245
 msgid "Rock"
-msgstr ""
+msgstr "搖滾"
 
-#: src/gui_eq.c:230
+#: src/gui_eq.c:246
 msgid "Metal"
-msgstr ""
+msgstr "金屬"
 
-#: src/gui_eq.c:231
+#: src/gui_eq.c:247
 msgid "Dance"
-msgstr ""
+msgstr "舞曲"
 
-#: src/gui_eq.c:232
+#: src/gui_eq.c:248
 msgid "Electronic"
-msgstr ""
+msgstr "電子樂"
 
-#: src/gui_eq.c:233
+#: src/gui_eq.c:249
 msgid "Jazz"
-msgstr ""
+msgstr "爵士"
 
-#: src/gui_eq.c:234
+#: src/gui_eq.c:250
 msgid "Classical"
-msgstr ""
+msgstr "古典"
 
-#: src/gui_eq.c:235
+#: src/gui_eq.c:251
 msgid "Blues"
-msgstr ""
+msgstr "布魯斯"
 
-#: src/gui_eq.c:236
+#: src/gui_eq.c:252
 msgid "Vocal"
-msgstr ""
+msgstr "語音"
 
-#: src/gui_eq.c:237
+#: src/gui_eq.c:253
 msgid "Custom"
-msgstr ""
+msgstr "自定義"
 
-#: src/gui_eq.c:289
+#: src/gui_eq.c:307
 msgid "_Save"
-msgstr ""
+msgstr "保存(_S)"
 
-#: src/gui_eq.c:290
+#: src/gui_eq.c:308
 msgid "_Open"
-msgstr ""
+msgstr "打開(_O)"
 
-#: src/gui_plugin.c:155
+#: src/gui_plugin.c:149
 msgid "Enabled"
-msgstr ""
+msgstr "啟用"
 
-#: src/gui_plugin.c:157
+#: src/gui_plugin.c:151
 msgid "Plugin"
-msgstr ""
+msgstr "插件"
 
-#: src/gui_plugin.c:226
+#: src/gui_plugin.c:230
 msgid "Configure Plugins"
-msgstr ""
+msgstr "插件設置"
 
-#: src/gui_plugin.c:242
+#: src/gui_plugin.c:246
 msgid "C_onfigure"
-msgstr ""
+msgstr "設置(_O)"
 
-#: src/gui_plugin.c:243
+#: src/gui_plugin.c:247
 msgid "_Close"
-msgstr ""
-
-#: src/gui_plugin.c:249
-msgid "<b>Description:</b>"
-msgstr ""
-
-#: src/gui_plugin.c:251
-msgid "<b>Author:</b>"
-msgstr ""
+msgstr "(關閉_C)"
 
 #: src/gui_plugin.c:253
+msgid "<b>Description:</b>"
+msgstr "<b>描述:</b>"
+
+#: src/gui_plugin.c:255
+msgid "<b>Author:</b>"
+msgstr "<b>作者:</b>"
+
+#: src/gui_plugin.c:257
 msgid "<b>Site:</b>"
-msgstr ""
+msgstr "<b>網站:</b>"
 
-#: src/gui_setting.c:91
-msgid "Settings"
-msgstr ""
-
-#: src/gui_setting.c:151
+#: src/gui_setting.c:92
 msgid "General"
-msgstr ""
+msgstr "常規"
 
-#: src/gui_setting.c:153
+#: src/gui_setting.c:94
 msgid "Playlist"
-msgstr ""
+msgstr "播放列表"
 
-#: src/gui_setting.c:155
+#: src/gui_setting.c:96
 msgid "Appearance"
-msgstr ""
+msgstr "外觀"
 
-#: src/gui_setting.c:240
+#: src/gui_setting.c:181
 msgid "<b>General</b>"
-msgstr ""
+msgstr "<b>常規</b>"
 
-#: src/gui_setting.c:245
+#: src/gui_setting.c:186
 msgid "Auto _play on startup"
-msgstr ""
+msgstr "啟動時自動開始播放(_P)"
 
-#: src/gui_setting.c:247
+#: src/gui_setting.c:188
 msgid "_Load the last playing position"
-msgstr ""
+msgstr "載入上次播放的音樂(_L)"
 
-#: src/gui_setting.c:249
+#: src/gui_setting.c:190
 msgid "Minimize to _tray"
-msgstr ""
+msgstr "最小化到系統託盤(_T)"
 
-#: src/gui_setting.c:251
+#: src/gui_setting.c:192
 msgid "Auto _minimize when startup"
-msgstr ""
+msgstr "啟動時自動最小化(_M)"
 
-#: src/gui_setting.c:253
+#: src/gui_setting.c:194
 msgid "Minimize the window if the _close button is clicked"
-msgstr ""
+msgstr "當點擊關閉按鈕時，最小化窗口(_C)"
 
-#: src/gui_setting.c:291
+#: src/gui_setting.c:232
 msgid "<b>Playlist</b>"
-msgstr ""
+msgstr "<b>播放列表</b>"
 
-#: src/gui_setting.c:296
+#: src/gui_setting.c:237
 msgid "<b>Metadata</b>"
-msgstr ""
+msgstr "<b>元數據</b>"
 
-#: src/gui_setting.c:300
+#: src/gui_setting.c:241
 msgid "ID3 Tag fallback character encodings"
-msgstr ""
+msgstr "ID3標籤備選編碼"
 
-#: src/gui_setting.c:301
+#: src/gui_setting.c:242
 msgid "Lyric text fallback character encodings"
-msgstr ""
+msgstr "歌詞文本備選編碼"
 
-#: src/gui_setting.c:303
+#: src/gui_setting.c:244
 msgid "Auto _remove invalid music file"
-msgstr ""
+msgstr "自動移除失效的音樂檔"
 
-#: src/gui_setting.c:321
+#: src/gui_setting.c:262
 msgid "_Auto encoding detect (use system language settings)"
-msgstr ""
+msgstr "自動探測編碼(使用系統語言設置)"
 
-#: src/gui_setting.c:365
+#: src/gui_setting.c:305
 msgid "<b>Color Style</b>"
-msgstr ""
+msgstr "<b>色彩風格</b>"
 
-#: src/gui_setting.c:379
+#: src/gui_setting.c:319
 msgid "<b>Theme</b>"
-msgstr ""
+msgstr "<b>主題</b>"
 
-#: src/gui_setting.c:384
+#: src/gui_setting.c:324
 msgid "Use _System GTK2+ RC Theme"
-msgstr ""
+msgstr "使用系統GTK2+ RC主題(_S)"
 
-#: src/gui_setting.c:387
+#: src/gui_setting.c:327
 msgid "Use _Custom GTK2+ RC Theme"
-msgstr ""
+msgstr "使用自定義GTK2+ RC主題(_C)"
 
-#: src/gui_setting.c:389
+#: src/gui_setting.c:329
 msgid "Please select a GTK2+ RC File"
-msgstr ""
+msgstr "請選擇一個GTK2+ RC檔"
 
-#: src/gui_setting.c:391
+#: src/gui_setting.c:331
 msgid "None"
-msgstr ""
+msgstr "無"
 
-#: src/gui_setting.c:413
+#: src/gui_setting.c:353
 msgid "GTK2+ RC File (gtkrc)"
-msgstr ""
+msgstr "GTK2+ RC檔 (gtkrc)"
 
-#: src/gui_setting.c:416
+#: src/gui_setting.c:356
 msgid "Use color style"
-msgstr ""
+msgstr "使用色彩主題"
 
-#: src/gui_treeview.c:158
+#: src/gui_setting.c:411
+msgid "Settings"
+msgstr "設定"
+
+#: src/gui_treeview.c:644
 msgid "Title"
-msgstr ""
+msgstr "標題"
 
-#: src/gui_treeview.c:160
+#: src/gui_treeview.c:646
 msgid "Length"
-msgstr ""
+msgstr "長度"
 
-#: src/gui_treeview.c:412
+#: src/gui_treeview.c:784
 #, c-format
 msgid "Playlist %d"
-msgstr ""
+msgstr "播放列表 %d"
 
-#: src/main.c:75
+#: src/player.c:237
+#, fuzzy
 msgid "Enable debug mode"
-msgstr ""
+msgstr "啟用迷你模式"
 
-#: src/main.c:77
+#: src/player.c:239
 msgid "[URI...]"
 msgstr ""
 
-#: src/main.c:102
+#: src/player.c:267
 #, c-format
 msgid ""
 "%s\n"
 "Run '%s --help' to see a full list of available command line options.\n"
 msgstr ""
+"%s\n"
+"運行 '%s --help' 來查看全部的可用命令行參數列表。\n"
 
-#: src/playlist.c:116
+#: src/playlist.c:137
 msgid "Default Playlist"
-msgstr ""
+msgstr "默認播放列表"
 
-#: src/playlist.c:380
-msgid "Unknown title"
-msgstr ""
+#: src/plugin.c:447
+msgid "Plugin Info"
+msgstr "插件資訊"
+
+#: src/plugin.c:448
+msgid "This plugin is resident, you should restart the player to disable it."
+msgstr "該插件是常駐的，你需要重啟播放器來禁用它。"

@@ -42,8 +42,12 @@ AC_TYPE_PID_T
 AC_FUNC_FORK
 AC_CHECK_FUNCS([bzero memset realpath strrchr strstr])
 
-dnl Add the languages which your application supports to po/LINGUAS
+# Add the languages which your application supports to po/LINGUAS
 GETTEXT_PACKAGE=RhythmCat
+AC_SUBST(GETTEXT_PACKAGE)
+AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", \
+    [Define to the Gettext package name])
+AM_GLIB_GNU_GETTEXT
 AM_GNU_GETTEXT_VERSION([0.18.1])
 AM_GNU_GETTEXT([external])
 

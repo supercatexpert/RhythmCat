@@ -1,0 +1,18 @@
+Source: rhythmcat
+Section: main/sound
+Priority: extra
+Maintainer: SuperCat <supercatexpert@gmail.com>
+Build-Depends: debhelper (>= 7.0.50~), autotools-dev, libgtk2.0-dev(>= 2.14), libgstreamer0.10-dev, libdbus-glib-1-dev, libgstreamer-plugins-base0.10-dev
+Standards-Version: 3.8.4
+Homepage: <http://code.google.com/p/rhythmcat>
+#Vcs-Git: git://git.debian.org/collab-maint/rhythmcat.git
+#Vcs-Browser: http://git.debian.org/?p=collab-maint/rhythmcat.git;a=summary
+
+Package: rhythmcat
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: RhythmCat Music Player
+ RhythmCat Music Player is a music player which can be
+ running under Linux. It can be used as a normal music 
+ player, and it can also show lyrics in the player 
+ window, it can extend its functions by plugins...

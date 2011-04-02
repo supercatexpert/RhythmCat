@@ -43,12 +43,7 @@ DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	$(top_srcdir)/gtk-doc.make
 subdir = doc/reference
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/m4/gettext.m4 \
-	$(top_srcdir)/m4/gtk-doc.m4 $(top_srcdir)/m4/iconv.m4 \
-	$(top_srcdir)/m4/lib-ld.m4 $(top_srcdir)/m4/lib-link.m4 \
-	$(top_srcdir)/m4/lib-prefix.m4 $(top_srcdir)/m4/nls.m4 \
-	$(top_srcdir)/m4/po.m4 $(top_srcdir)/m4/progtest.m4 \
-	$(top_srcdir)/configure.in
+am__aclocal_m4_deps = $(top_srcdir)/configure.in
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -64,12 +59,15 @@ AUTOCONF = ${SHELL} /home/supercat/Project/RhythmCat/Sources/missing --run autoc
 AUTOHEADER = ${SHELL} /home/supercat/Project/RhythmCat/Sources/missing --run autoheader
 AUTOMAKE = ${SHELL} /home/supercat/Project/RhythmCat/Sources/missing --run automake-1.11
 AWK = gawk
+CATALOGS =  zh_CN.gmo zh_TW.gmo ja_JP.gmo
+CATOBJEXT = .gmo
 CC = gcc
 CCDEPMODE = depmode=gcc3
 CFLAGS = -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"
 CPP = gcc -E
 CPPFLAGS = 
 CYGPATH_W = echo
+DATADIRNAME = share
 DBUSBINDINGTOOL = /usr/bin/dbus-binding-tool
 DBUS_GLIB_CFLAGS = -pthread -I/usr/include/dbus-1.0 -I/usr/lib/dbus-1.0/include -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include  
 DBUS_GLIB_LIBS = -pthread -ldbus-glib-1 -ldbus-1 -lpthread -lgobject-2.0 -lgthread-2.0 -lrt -lglib-2.0  
@@ -81,8 +79,10 @@ ECHO_T =
 EGREP = /bin/grep -E
 EXEEXT = 
 GETTEXT_MACRO_VERSION = 0.18
+GETTEXT_PACKAGE = RhythmCat
 GLIB2_CFLAGS = -pthread -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include  
 GLIB2_LIBS = -pthread -Wl,--export-dynamic -lgio-2.0 -lgobject-2.0 -lgmodule-2.0 -lgthread-2.0 -lrt -lglib-2.0  
+GMOFILES =  zh_CN.gmo zh_TW.gmo ja_JP.gmo
 GMSGFMT = /usr/bin/msgfmt
 GMSGFMT_015 = /usr/bin/msgfmt
 GREP = /bin/grep
@@ -99,6 +99,7 @@ INSTALL_DATA = ${INSTALL} -m 644
 INSTALL_PROGRAM = ${INSTALL}
 INSTALL_SCRIPT = ${INSTALL}
 INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
+INSTOBJEXT = .mo
 INTLLIBS = 
 INTL_MACOSX_LIBS = 
 LDFLAGS = 
@@ -112,8 +113,10 @@ LTLIBINTL =
 LTLIBOBJS = 
 MAKEINFO = ${SHELL} /home/supercat/Project/RhythmCat/Sources/missing --run makeinfo
 MKDIR_P = /bin/mkdir -p
+MKINSTALLDIRS = ./mkinstalldirs
 MSGFMT = /usr/bin/msgfmt
 MSGFMT_015 = /usr/bin/msgfmt
+MSGFMT_OPTS = -c
 MSGMERGE = /usr/bin/msgmerge
 OBJEXT = o
 PACKAGE = RhythmCat
@@ -127,7 +130,10 @@ PATH_SEPARATOR = :
 PKG_CONFIG = /usr/bin/pkg-config
 PKG_CONFIG_LIBDIR = 
 PKG_CONFIG_PATH = 
+POFILES =  zh_CN.po zh_TW.po ja_JP.po
 POSUB = po
+PO_IN_DATADIR_FALSE = 
+PO_IN_DATADIR_TRUE = 
 SET_MAKE = 
 SHELL = /bin/bash
 STRIP = 
@@ -175,7 +181,7 @@ mandir = ${datarootdir}/man
 mkdir_p = /bin/mkdir -p
 oldincludedir = /usr/include
 pdfdir = ${docdir}
-prefix = /opt/amd64/RhythmCat
+prefix = /usr
 program_transform_name = s,x,x,
 psdir = ${docdir}
 sbindir = ${exec_prefix}/sbin
@@ -250,12 +256,12 @@ HTML_IMAGES =
 
 # Extra SGML files that are included by $(DOC_MAIN_SGML_FILE).
 # e.g. content_files=running.sgml building.sgml changes-2.0.sgml
-content_files = 
+content_files = plugin-programming.xml
 
 # SGML files where gtk-doc abbrevations (#GtkWidget) are expanded
 # These files must be listed here *and* in content_files
 # e.g. expand_content_files=running.sgml
-expand_content_files = 
+expand_content_files = plugin-programming.xml
 
 # CFLAGS and LDFLAGS for compiling gtkdoc-scangobj with your library.
 # Only needed if you are using gtkdoc-scangobj to dynamically query widget
@@ -304,10 +310,10 @@ REPORT_FILES = \
 	$(DOC_MODULE)-unused.txt
 
 CLEANFILES = $(SCANOBJ_FILES) $(REPORT_FILES) $(DOC_STAMPS)
-#HTML_BUILD_STAMP = 
-HTML_BUILD_STAMP = html-build.stamp
+##HTML_BUILD_STAMP = 
+#HTML_BUILD_STAMP = html-build.stamp
 #PDF_BUILD_STAMP = 
-PDF_BUILD_STAMP = pdf-build.stamp
+##PDF_BUILD_STAMP = pdf-build.stamp
 all: all-am
 
 .SUFFIXES:
@@ -494,8 +500,8 @@ uninstall-am: uninstall-local
 	uninstall-local
 
 
-all-local: $(HTML_BUILD_STAMP) $(PDF_BUILD_STAMP)
-#all-local:
+#all-local: $(HTML_BUILD_STAMP) $(PDF_BUILD_STAMP)
+all-local:
 
 docs: $(HTML_BUILD_STAMP) $(PDF_BUILD_STAMP)
 
@@ -625,10 +631,10 @@ uninstall-local:
 #
 # Require gtk-doc when making dist
 #
-dist-check-gtkdoc:
 #dist-check-gtkdoc:
-#	@echo "*** gtk-doc must be installed and enabled in order to make dist"
-#	@false
+dist-check-gtkdoc:
+	@echo "*** gtk-doc must be installed and enabled in order to make dist"
+	@false
 
 dist-hook: dist-check-gtkdoc dist-hook-local
 	mkdir $(distdir)/html

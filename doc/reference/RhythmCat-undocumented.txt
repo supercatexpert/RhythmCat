@@ -1,0 +1,12 @@
+98% symbol docs coverage.
+240 symbols documented.
+0 symbols incomplete.
+4 not documented.
+
+
+DEBUG_MODE
+GETTEXT_PACKAGE
+RCPlayer
+RC_PLAYER_TYPE
+
+

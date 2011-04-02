@@ -1,0 +1,271 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+]>
+<refentry id="RhythmCat-Core">
+<refmeta>
+<refentrytitle role="top_of_page" id="RhythmCat-Core.top_of_page">Core</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>
+  RHYTHMCAT Library
+</refmiscinfo>
+</refmeta>
+<refnamediv>
+<refname>Core</refname>
+<refpurpose>The core of the player.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv id="RhythmCat-Core.synopsis" role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>
+#include &lt;core.h&gt;
+
+                    <link linkend="RCCoreData">RCCoreData</link>;
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-core-init">rc_core_init</link>                        ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-core-exit">rc_core_exit</link>                        ();
+<link linkend="RCCoreData"><returnvalue>RCCoreData</returnvalue></link> *        <link linkend="rc-core-get-data">rc_core_get_data</link>                    ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-core-set-uri">rc_core_set_uri</link>                     (<parameter>const <link linkend="gchar"><type>gchar</type></link> *uri</parameter>);
+<link linkend="gchar"><returnvalue>gchar</returnvalue></link> *             <link linkend="rc-core-get-uri">rc_core_get_uri</link>                     ();
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-core-play">rc_core_play</link>                        ();
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-core-pause">rc_core_pause</link>                       ();
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-core-stop">rc_core_stop</link>                        ();
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-core-set-volume">rc_core_set_volume</link>                  (<parameter><link linkend="gdouble"><type>gdouble</type></link> volume</parameter>);
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-core-set-play-position">rc_core_set_play_position</link>           (<parameter><link linkend="gint64"><type>gint64</type></link> time</parameter>);
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-core-set-play-position-by-persent">rc_core_set_play_position_by_persent</link>
+                                                        (<parameter><link linkend="gdouble"><type>gdouble</type></link> persent</parameter>);
+<link linkend="gint64"><returnvalue>gint64</returnvalue></link>              <link linkend="rc-core-get-play-position">rc_core_get_play_position</link>           ();
+<link linkend="gint64"><returnvalue>gint64</returnvalue></link>              <link linkend="rc-core-get-music-length">rc_core_get_music_length</link>            ();
+<link linkend="gdouble"><returnvalue>gdouble</returnvalue></link>             <link linkend="rc-core-get-volume">rc_core_get_volume</link>                  ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-core-set-eq-effect">rc_core_set_eq_effect</link>               (<parameter><link linkend="gdouble"><type>gdouble</type></link> *fq</parameter>);
+<link linkend="GstState"><returnvalue>GstState</returnvalue></link>            <link linkend="rc-core-get-play-state">rc_core_get_play_state</link>              ();
+</synopsis>
+</refsynopsisdiv>
+
+<refsect1 id="RhythmCat-Core.description" role="desc">
+<title role="desc.title">Description</title>
+<para>
+The core part of the player, it uses Gstreamer as backend to play audio files.
+</para>
+</refsect1>
+<refsect1 id="RhythmCat-Core.details" role="details">
+<title role="details.title">Details</title>
+<refsect2 id="RCCoreData" role="struct">
+<title>RCCoreData</title>
+<indexterm zone="RCCoreData"><primary>RCCoreData</primary></indexterm>
+<programlisting>typedef struct {
+    GstElement *playbin;
+    GstElement *audio_sink;
+    GstElement *eq_plugin;
+    GstElement *vol_plugin;
+    guint ver_major;
+    guint ver_minor;
+    guint ver_micro;
+    guint ver_nano;
+} RCCoreData;
+</programlisting>
+<para>
+The data of the core.
+</para><variablelist role="struct">
+<varlistentry><term><link linkend="GstElement"><type>GstElement</type></link>&#160;*<structfield id="RCCoreData.playbin">playbin</structfield>;</term>
+<listitem><simpara>the playbin element
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GstElement"><type>GstElement</type></link>&#160;*<structfield id="RCCoreData.audio-sink">audio_sink</structfield>;</term>
+<listitem><simpara>the audio sink element
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GstElement"><type>GstElement</type></link>&#160;*<structfield id="RCCoreData.eq-plugin">eq_plugin</structfield>;</term>
+<listitem><simpara>the equalizer element
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GstElement"><type>GstElement</type></link>&#160;*<structfield id="RCCoreData.vol-plugin">vol_plugin</structfield>;</term>
+<listitem><simpara>the volume control element
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="guint"><type>guint</type></link>&#160;<structfield id="RCCoreData.ver-major">ver_major</structfield>;</term>
+<listitem><simpara>the major version number of Gstreamer
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="guint"><type>guint</type></link>&#160;<structfield id="RCCoreData.ver-minor">ver_minor</structfield>;</term>
+<listitem><simpara>the minor version number of Gstreamer
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="guint"><type>guint</type></link>&#160;<structfield id="RCCoreData.ver-micro">ver_micro</structfield>;</term>
+<listitem><simpara>the micro version number of Gstreamer
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="guint"><type>guint</type></link>&#160;<structfield id="RCCoreData.ver-nano">ver_nano</structfield>;</term>
+<listitem><simpara>the nano version number of Gstreamer
+</simpara></listitem>
+</varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-core-init" role="function">
+<title>rc_core_init ()</title>
+<indexterm zone="rc-core-init"><primary>rc_core_init</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_core_init                        ();</programlisting>
+<para>
+Initialize the core of the player. Can be used only once.
+</para></refsect2>
+<refsect2 id="rc-core-exit" role="function">
+<title>rc_core_exit ()</title>
+<indexterm zone="rc-core-exit"><primary>rc_core_exit</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_core_exit                        ();</programlisting>
+<para>
+Free the core when exits.
+</para></refsect2>
+<refsect2 id="rc-core-get-data" role="function">
+<title>rc_core_get_data ()</title>
+<indexterm zone="rc-core-get-data"><primary>rc_core_get_data</primary></indexterm>
+<programlisting><link linkend="RCCoreData"><returnvalue>RCCoreData</returnvalue></link> *        rc_core_get_data                    ();</programlisting>
+<para>
+Return the pointer of the core.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The pointer to the data structure of the core.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-core-set-uri" role="function">
+<title>rc_core_set_uri ()</title>
+<indexterm zone="rc-core-set-uri"><primary>rc_core_set_uri</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_core_set_uri                     (<parameter>const <link linkend="gchar"><type>gchar</type></link> *uri</parameter>);</programlisting>
+<para>
+Set the URI to play.
+</para><variablelist role="params">
+<varlistentry><term><parameter>uri</parameter>&#160;:</term>
+<listitem><simpara>the URI to play
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-core-get-uri" role="function">
+<title>rc_core_get_uri ()</title>
+<indexterm zone="rc-core-get-uri"><primary>rc_core_get_uri</primary></indexterm>
+<programlisting><link linkend="gchar"><returnvalue>gchar</returnvalue></link> *             rc_core_get_uri                     ();</programlisting>
+<para>
+Return the URI the core opened.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The URI the core opened, free after usage.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-core-play" role="function">
+<title>rc_core_play ()</title>
+<indexterm zone="rc-core-play"><primary>rc_core_play</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rc_core_play                        ();</programlisting>
+<para>
+Set the state of the core to playing.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> Whether the state is set to playing successfully.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-core-pause" role="function">
+<title>rc_core_pause ()</title>
+<indexterm zone="rc-core-pause"><primary>rc_core_pause</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rc_core_pause                       ();</programlisting>
+<para>
+Set the core to pause state.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> Whether the state is set to paused successfully.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-core-stop" role="function">
+<title>rc_core_stop ()</title>
+<indexterm zone="rc-core-stop"><primary>rc_core_stop</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rc_core_stop                        ();</programlisting>
+<para>
+Set the core to stop state.
+</para></refsect2>
+<refsect2 id="rc-core-set-volume" role="function">
+<title>rc_core_set_volume ()</title>
+<indexterm zone="rc-core-set-volume"><primary>rc_core_set_volume</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rc_core_set_volume                  (<parameter><link linkend="gdouble"><type>gdouble</type></link> volume</parameter>);</programlisting>
+<para>
+Set the volume of player.
+</para><variablelist role="params">
+<varlistentry><term><parameter>volume</parameter>&#160;:</term>
+<listitem><simpara>the volume of the player, it should be between 0.0 and 100.0.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-core-set-play-position" role="function">
+<title>rc_core_set_play_position ()</title>
+<indexterm zone="rc-core-set-play-position"><primary>rc_core_set_play_position</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rc_core_set_play_position           (<parameter><link linkend="gint64"><type>gint64</type></link> time</parameter>);</programlisting>
+<para>
+Set the position to go to (in nanosecond).
+Notice that this function can only be used when the state of the player is
+playing or paused.
+</para><variablelist role="params">
+<varlistentry><term><parameter>time</parameter>&#160;:</term>
+<listitem><simpara>the position to go to
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> Whether the time is valid.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-core-set-play-position-by-persent" role="function">
+<title>rc_core_set_play_position_by_persent ()</title>
+<indexterm zone="rc-core-set-play-position-by-persent"><primary>rc_core_set_play_position_by_persent</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rc_core_set_play_position_by_persent
+                                                        (<parameter><link linkend="gdouble"><type>gdouble</type></link> persent</parameter>);</programlisting>
+<para>
+Set the position to to go to in persent (0.0 - 1.0).
+</para><variablelist role="params">
+<varlistentry><term><parameter>persent</parameter>&#160;:</term>
+<listitem><simpara>the position (in persent, from 0.0 to 1.0) to go to
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> Whether the persent is valid.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-core-get-play-position" role="function">
+<title>rc_core_get_play_position ()</title>
+<indexterm zone="rc-core-get-play-position"><primary>rc_core_get_play_position</primary></indexterm>
+<programlisting><link linkend="gint64"><returnvalue>gint64</returnvalue></link>              rc_core_get_play_position           ();</programlisting>
+<para>
+Return the playing position (in nanosecond).
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The playing position (in nanosecond).
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-core-get-music-length" role="function">
+<title>rc_core_get_music_length ()</title>
+<indexterm zone="rc-core-get-music-length"><primary>rc_core_get_music_length</primary></indexterm>
+<programlisting><link linkend="gint64"><returnvalue>gint64</returnvalue></link>              rc_core_get_music_length            ();</programlisting>
+<para>
+Return the time length of the playing music (in nanosecond).
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The time length of the playing music (in nanosecond).
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-core-get-volume" role="function">
+<title>rc_core_get_volume ()</title>
+<indexterm zone="rc-core-get-volume"><primary>rc_core_get_volume</primary></indexterm>
+<programlisting><link linkend="gdouble"><returnvalue>gdouble</returnvalue></link>             rc_core_get_volume                  ();</programlisting>
+<para>
+Return the volume of the player.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The volume of the player.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-core-set-eq-effect" role="function">
+<title>rc_core_set_eq_effect ()</title>
+<indexterm zone="rc-core-set-eq-effect"><primary>rc_core_set_eq_effect</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_core_set_eq_effect               (<parameter><link linkend="gdouble"><type>gdouble</type></link> *fq</parameter>);</programlisting>
+<para>
+Set the EQ effect of the player.
+</para><variablelist role="params">
+<varlistentry><term><parameter>fq</parameter>&#160;:</term>
+<listitem><simpara>an array (10 elements) of the gain for the frequency bands
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-core-get-play-state" role="function">
+<title>rc_core_get_play_state ()</title>
+<indexterm zone="rc-core-get-play-state"><primary>rc_core_get_play_state</primary></indexterm>
+<programlisting><link linkend="GstState"><returnvalue>GstState</returnvalue></link>            rc_core_get_play_state              ();</programlisting>
+<para>
+Return the state of the core.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The state of the core.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+
+</refsect1>
+
+</refentry>

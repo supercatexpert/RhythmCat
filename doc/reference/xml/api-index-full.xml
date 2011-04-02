@@ -1,0 +1,228 @@
+<?xml version="1.0"?>
+<!DOCTYPE indexdiv PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+]>
+<indexdiv>
+<indexdiv><title>C</title>
+<indexentry><primaryie linkends="RCCoreData"><link linkend="RCCoreData">RCCoreData</link>, struct in <link linkend="RhythmCat-Core">Core</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-core-exit"><link linkend="rc-core-exit">rc_core_exit</link>, function in <link linkend="RhythmCat-Core">Core</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-core-get-data"><link linkend="rc-core-get-data">rc_core_get_data</link>, function in <link linkend="RhythmCat-Core">Core</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-core-get-music-length"><link linkend="rc-core-get-music-length">rc_core_get_music_length</link>, function in <link linkend="RhythmCat-Core">Core</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-core-get-play-position"><link linkend="rc-core-get-play-position">rc_core_get_play_position</link>, function in <link linkend="RhythmCat-Core">Core</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-core-get-play-state"><link linkend="rc-core-get-play-state">rc_core_get_play_state</link>, function in <link linkend="RhythmCat-Core">Core</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-core-get-uri"><link linkend="rc-core-get-uri">rc_core_get_uri</link>, function in <link linkend="RhythmCat-Core">Core</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-core-get-volume"><link linkend="rc-core-get-volume">rc_core_get_volume</link>, function in <link linkend="RhythmCat-Core">Core</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-core-init"><link linkend="rc-core-init">rc_core_init</link>, function in <link linkend="RhythmCat-Core">Core</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-core-pause"><link linkend="rc-core-pause">rc_core_pause</link>, function in <link linkend="RhythmCat-Core">Core</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-core-play"><link linkend="rc-core-play">rc_core_play</link>, function in <link linkend="RhythmCat-Core">Core</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-core-set-eq-effect"><link linkend="rc-core-set-eq-effect">rc_core_set_eq_effect</link>, function in <link linkend="RhythmCat-Core">Core</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-core-set-play-position"><link linkend="rc-core-set-play-position">rc_core_set_play_position</link>, function in <link linkend="RhythmCat-Core">Core</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-core-set-play-position-by-persent"><link linkend="rc-core-set-play-position-by-persent">rc_core_set_play_position_by_persent</link>, function in <link linkend="RhythmCat-Core">Core</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-core-set-uri"><link linkend="rc-core-set-uri">rc_core_set_uri</link>, function in <link linkend="RhythmCat-Core">Core</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-core-set-volume"><link linkend="rc-core-set-volume">rc_core_set_volume</link>, function in <link linkend="RhythmCat-Core">Core</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-core-stop"><link linkend="rc-core-stop">rc_core_stop</link>, function in <link linkend="RhythmCat-Core">Core</link></primaryie></indexentry>
+</indexdiv>
+<indexdiv><title>D</title>
+<indexentry><primaryie linkends="rc-debug-get-flag"><link linkend="rc-debug-get-flag">rc_debug_get_flag</link>, function in <link linkend="RhythmCat-Debug">Debug</link></primaryie></indexentry>
+<indexentry><primaryie linkends="DEBUG-MODE:CAPS"><link linkend="DEBUG-MODE:CAPS">DEBUG_MODE</link>, macro in <link linkend="RhythmCat-Debug">Debug</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-debug-perror"><link linkend="rc-debug-perror">rc_debug_perror</link>, function in <link linkend="RhythmCat-Debug">Debug</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-debug-print"><link linkend="rc-debug-print">rc_debug_print</link>, function in <link linkend="RhythmCat-Debug">Debug</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-debug-set-mode"><link linkend="rc-debug-set-mode">rc_debug_set_mode</link>, function in <link linkend="RhythmCat-Debug">Debug</link></primaryie></indexentry>
+</indexdiv>
+<indexdiv><title>G</title>
+<indexentry><primaryie linkends="GETTEXT-PACKAGE:CAPS"><link linkend="GETTEXT-PACKAGE:CAPS">GETTEXT_PACKAGE</link>, macro in <link linkend="RhythmCat-Player">Player</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCGuiColorStyle"><link linkend="RCGuiColorStyle">RCGuiColorStyle</link>, struct in <link linkend="RhythmCat-UI-Styles-and-Themes">UI Styles and Themes</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCGuiData"><link linkend="RCGuiData">RCGuiData</link>, struct in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCGuiEQData"><link linkend="RCGuiEQData">RCGuiEQData</link>, struct in <link linkend="RhythmCat-Equalizer-UI">Equalizer UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-about-player"><link linkend="rc-gui-about-player">rc_gui_about_player</link>, function in <link linkend="RhythmCat-Dialogs">Dialogs</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-create-setting-window"><link linkend="rc-gui-create-setting-window">rc_gui_create_setting_window</link>, function in <link linkend="RhythmCat-Settings-UI">Settings UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-eq-data-init"><link linkend="rc-gui-eq-data-init">rc_gui_eq_data_init</link>, function in <link linkend="RhythmCat-Equalizer-UI">Equalizer UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-eq-get-data"><link linkend="rc-gui-eq-get-data">rc_gui_eq_get_data</link>, function in <link linkend="RhythmCat-Equalizer-UI">Equalizer UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-eq-init"><link linkend="rc-gui-eq-init">rc_gui_eq_init</link>, function in <link linkend="RhythmCat-Equalizer-UI">Equalizer UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-get-data"><link linkend="rc-gui-get-data">rc_gui_get_data</link>, function in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-init"><link linkend="rc-gui-init">rc_gui_init</link>, function in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-list1-delete-list"><link linkend="rc-gui-list1-delete-list">rc_gui_list1_delete_list</link>, function in <link linkend="RhythmCat-Playlist-Views-UI">Playlist Views UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-list1-get-selected-index"><link linkend="rc-gui-list1-get-selected-index">rc_gui_list1_get_selected_index</link>, function in <link linkend="RhythmCat-Playlist-Views-UI">Playlist Views UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-list1-new-list"><link linkend="rc-gui-list1-new-list">rc_gui_list1_new_list</link>, function in <link linkend="RhythmCat-Playlist-Views-UI">Playlist Views UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-list1-rename-list"><link linkend="rc-gui-list1-rename-list">rc_gui_list1_rename_list</link>, function in <link linkend="RhythmCat-Playlist-Views-UI">Playlist Views UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-list2-delete-lists"><link linkend="rc-gui-list2-delete-lists">rc_gui_list2_delete_lists</link>, function in <link linkend="RhythmCat-Playlist-Views-UI">Playlist Views UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-list2-select-all"><link linkend="rc-gui-list2-select-all">rc_gui_list2_select_all</link>, function in <link linkend="RhythmCat-Playlist-Views-UI">Playlist Views UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-list-tree-reset-list-store"><link linkend="rc-gui-list-tree-reset-list-store">rc_gui_list_tree_reset_list_store</link>, function in <link linkend="RhythmCat-Playlist-Views-UI">Playlist Views UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-load-playlist-dialog"><link linkend="rc-gui-load-playlist-dialog">rc_gui_load_playlist_dialog</link>, function in <link linkend="RhythmCat-Dialogs">Dialogs</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-mini-get-data"><link linkend="rc-gui-mini-get-data">rc_gui_mini_get_data</link>, function in <link linkend="RhythmCat-Mini-Mode-UI">Mini Mode UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-mini-info-text-move"><link linkend="rc-gui-mini-info-text-move">rc_gui_mini_info_text_move</link>, function in <link linkend="RhythmCat-Mini-Mode-UI">Mini Mode UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-mini-init"><link linkend="rc-gui-mini-init">rc_gui_mini_init</link>, function in <link linkend="RhythmCat-Mini-Mode-UI">Mini Mode UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-mini-mini-mode-clicked"><link linkend="rc-gui-mini-mini-mode-clicked">rc_gui_mini_mini_mode_clicked</link>, function in <link linkend="RhythmCat-Mini-Mode-UI">Mini Mode UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-mini-normal-mode-clicked"><link linkend="rc-gui-mini-normal-mode-clicked">rc_gui_mini_normal_mode_clicked</link>, function in <link linkend="RhythmCat-Mini-Mode-UI">Mini Mode UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-mini-set-info-text"><link linkend="rc-gui-mini-set-info-text">rc_gui_mini_set_info_text</link>, function in <link linkend="RhythmCat-Mini-Mode-UI">Mini Mode UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-mini-set-lyric-persent"><link linkend="rc-gui-mini-set-lyric-persent">rc_gui_mini_set_lyric_persent</link>, function in <link linkend="RhythmCat-Mini-Mode-UI">Mini Mode UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-mini-set-lyric-text"><link linkend="rc-gui-mini-set-lyric-text">rc_gui_mini_set_lyric_text</link>, function in <link linkend="RhythmCat-Mini-Mode-UI">Mini Mode UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-mini-set-play-state"><link linkend="rc-gui-mini-set-play-state">rc_gui_mini_set_play_state</link>, function in <link linkend="RhythmCat-Mini-Mode-UI">Mini Mode UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-mini-set-time-text"><link linkend="rc-gui-mini-set-time-text">rc_gui_mini_set_time_text</link>, function in <link linkend="RhythmCat-Mini-Mode-UI">Mini Mode UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-mini-window-hide"><link linkend="rc-gui-mini-window-hide">rc_gui_mini_window_hide</link>, function in <link linkend="RhythmCat-Mini-Mode-UI">Mini Mode UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-mini-window-show"><link linkend="rc-gui-mini-window-show">rc_gui_mini_window_show</link>, function in <link linkend="RhythmCat-Mini-Mode-UI">Mini Mode UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-music-info-set-data"><link linkend="rc-gui-music-info-set-data">rc_gui_music_info_set_data</link>, function in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-open-music-directory"><link linkend="rc-gui-open-music-directory">rc_gui_open_music_directory</link>, function in <link linkend="RhythmCat-Dialogs">Dialogs</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-plugin-window-create"><link linkend="rc-gui-plugin-window-create">rc_gui_plugin_window_create</link>, function in <link linkend="RhythmCat-Plugin-Configuration-UI">Plugin Configuration UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-quit-player"><link linkend="rc-gui-quit-player">rc_gui_quit_player</link>, function in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-save-all-playlists-dialog"><link linkend="rc-gui-save-all-playlists-dialog">rc_gui_save_all_playlists_dialog</link>, function in <link linkend="RhythmCat-Dialogs">Dialogs</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-save-playlist-dialog"><link linkend="rc-gui-save-playlist-dialog">rc_gui_save_playlist_dialog</link>, function in <link linkend="RhythmCat-Dialogs">Dialogs</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-seek-scaler-disable"><link linkend="rc-gui-seek-scaler-disable">rc_gui_seek_scaler_disable</link>, function in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-seek-scaler-enable"><link linkend="rc-gui-seek-scaler-enable">rc_gui_seek_scaler_enable</link>, function in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-select-list1"><link linkend="rc-gui-select-list1">rc_gui_select_list1</link>, function in <link linkend="RhythmCat-Playlist-Views-UI">Playlist Views UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-select-list2"><link linkend="rc-gui-select-list2">rc_gui_select_list2</link>, function in <link linkend="RhythmCat-Playlist-Views-UI">Playlist Views UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-set-cover-image-by-buf"><link linkend="rc-gui-set-cover-image-by-buf">rc_gui_set_cover_image_by_buf</link>, function in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-set-cover-image-by-file"><link linkend="rc-gui-set-cover-image-by-file">rc_gui_set_cover_image_by_file</link>, function in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-set-player-mode"><link linkend="rc-gui-set-player-mode">rc_gui_set_player_mode</link>, function in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-set-play-button-state"><link linkend="rc-gui-set-play-button-state">rc_gui_set_play_button_state</link>, function in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-set-volume"><link linkend="rc-gui-set-volume">rc_gui_set_volume</link>, function in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-show-message-dialog"><link linkend="rc-gui-show-message-dialog">rc_gui_show_message_dialog</link>, function in <link linkend="RhythmCat-Dialogs">Dialogs</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-show-open-dialog"><link linkend="rc-gui-show-open-dialog">rc_gui_show_open_dialog</link>, function in <link linkend="RhythmCat-Dialogs">Dialogs</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-status-progress-set-progress"><link linkend="rc-gui-status-progress-set-progress">rc_gui_status_progress_set_progress</link>, function in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-status-task-set"><link linkend="rc-gui-status-task-set">rc_gui_status_task_set</link>, function in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-style-get-color-style"><link linkend="rc-gui-style-get-color-style">rc_gui_style_get_color_style</link>, function in <link linkend="RhythmCat-UI-Styles-and-Themes">UI Styles and Themes</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-style-init"><link linkend="rc-gui-style-init">rc_gui_style_init</link>, function in <link linkend="RhythmCat-UI-Styles-and-Themes">UI Styles and Themes</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-style-refresh"><link linkend="rc-gui-style-refresh">rc_gui_style_refresh</link>, function in <link linkend="RhythmCat-UI-Styles-and-Themes">UI Styles and Themes</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-style-set-color-style"><link linkend="rc-gui-style-set-color-style">rc_gui_style_set_color_style</link>, function in <link linkend="RhythmCat-UI-Styles-and-Themes">UI Styles and Themes</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-style-set-color-style-by-index"><link linkend="rc-gui-style-set-color-style-by-index">rc_gui_style_set_color_style_by_index</link>, function in <link linkend="RhythmCat-UI-Styles-and-Themes">UI Styles and Themes</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-time-label-set-text"><link linkend="rc-gui-time-label-set-text">rc_gui_time_label_set_text</link>, function in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-treeview-init"><link linkend="rc-gui-treeview-init">rc_gui_treeview_init</link>, function in <link linkend="RhythmCat-Playlist-Views-UI">Playlist Views UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-view-add-page"><link linkend="rc-gui-view-add-page">rc_gui_view_add_page</link>, function in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-view-remove-page"><link linkend="rc-gui-view-remove-page">rc_gui_view_remove_page</link>, function in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
+</indexdiv>
+<indexdiv><title>L</title>
+<indexentry><primaryie linkends="rc-lrc-clean-data"><link linkend="rc-lrc-clean-data">rc_lrc_clean_data</link>, function in <link linkend="RhythmCat-Lyric">Lyric</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-lrc-exit"><link linkend="rc-lrc-exit">rc_lrc_exit</link>, function in <link linkend="RhythmCat-Lyric">Lyric</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-lrc-get-line-by-time"><link linkend="rc-lrc-get-line-by-time">rc_lrc_get_line_by_time</link>, function in <link linkend="RhythmCat-Lyric">Lyric</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-lrc-get-line-now"><link linkend="rc-lrc-get-line-now">rc_lrc_get_line_now</link>, function in <link linkend="RhythmCat-Lyric">Lyric</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-lrc-get-lrc-data"><link linkend="rc-lrc-get-lrc-data">rc_lrc_get_lrc_data</link>, function in <link linkend="RhythmCat-Lyric">Lyric</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-lrc-get-lrc-length"><link linkend="rc-lrc-get-lrc-length">rc_lrc_get_lrc_length</link>, function in <link linkend="RhythmCat-Lyric">Lyric</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-lrc-get-text-data"><link linkend="rc-lrc-get-text-data">rc_lrc_get_text_data</link>, function in <link linkend="RhythmCat-Lyric">Lyric</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-lrc-init"><link linkend="rc-lrc-init">rc_lrc_init</link>, function in <link linkend="RhythmCat-Lyric">Lyric</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-lrc-read-from-file"><link linkend="rc-lrc-read-from-file">rc_lrc_read_from_file</link>, function in <link linkend="RhythmCat-Lyric">Lyric</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLyricData"><link linkend="RCLyricData">RCLyricData</link>, struct in <link linkend="RhythmCat-Lyric">Lyric</link></primaryie></indexentry>
+</indexdiv>
+<indexdiv><title>M</title>
+<indexentry><primaryie linkends="MAX-DIR-DEPTH:CAPS"><link linkend="MAX-DIR-DEPTH:CAPS">MAX_DIR_DEPTH</link>, macro in <link linkend="RhythmCat-Dialogs">Dialogs</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCMsgAsyncQueueWatchFunc"><link linkend="RCMsgAsyncQueueWatchFunc">RCMsgAsyncQueueWatchFunc</link>, user_function in <link linkend="RhythmCat-Asynchronous-Message-Queue">Asynchronous Message Queue</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCMsgData"><link linkend="RCMsgData">RCMsgData</link>, struct in <link linkend="RhythmCat-Asynchronous-Message-Queue">Asynchronous Message Queue</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCMsgType"><link linkend="RCMsgType">RCMsgType</link>, enum in <link linkend="RhythmCat-Asynchronous-Message-Queue">Asynchronous Message Queue</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-msg-async-queue-watch-new"><link linkend="rc-msg-async-queue-watch-new">rc_msg_async_queue_watch_new</link>, function in <link linkend="RhythmCat-Asynchronous-Message-Queue">Asynchronous Message Queue</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-msg-init"><link linkend="rc-msg-init">rc_msg_init</link>, function in <link linkend="RhythmCat-Asynchronous-Message-Queue">Asynchronous Message Queue</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-msg-push"><link linkend="rc-msg-push">rc_msg_push</link>, function in <link linkend="RhythmCat-Asynchronous-Message-Queue">Asynchronous Message Queue</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCMusicMetaData"><link linkend="RCMusicMetaData">RCMusicMetaData</link>, struct in <link linkend="RhythmCat-Tag">Tag</link></primaryie></indexentry>
+</indexdiv>
+<indexdiv><title>P</title>
+<indexentry><primaryie linkends="RCPlayer-struct"><link linkend="RCPlayer-struct">RCPlayer</link>, struct in <link linkend="RCPlayer">RCPlayer</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCPlayer-lyric-found"><link linkend="RCPlayer-lyric-found">RCPlayer::lyric-found</link>, object signal in <link linkend="RCPlayer">RCPlayer</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCPlayer-lyric-not-found"><link linkend="RCPlayer-lyric-not-found">RCPlayer::lyric-not-found</link>, object signal in <link linkend="RCPlayer">RCPlayer</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCPlayer-player-continue"><link linkend="RCPlayer-player-continue">RCPlayer::player-continue</link>, object signal in <link linkend="RCPlayer">RCPlayer</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCPlayer-player-pause"><link linkend="RCPlayer-player-pause">RCPlayer::player-pause</link>, object signal in <link linkend="RCPlayer">RCPlayer</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCPlayer-player-play"><link linkend="RCPlayer-player-play">RCPlayer::player-play</link>, object signal in <link linkend="RCPlayer">RCPlayer</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCPlayer-player-stop"><link linkend="RCPlayer-player-stop">RCPlayer::player-stop</link>, object signal in <link linkend="RCPlayer">RCPlayer</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCPlayerClass"><link linkend="RCPlayerClass">RCPlayerClass</link>, struct in <link linkend="RCPlayer">RCPlayer</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-player-check-supported-format"><link linkend="rc-player-check-supported-format">rc_player_check_supported_format</link>, function in <link linkend="RhythmCat-Player">Player</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-player-exit"><link linkend="rc-player-exit">rc_player_exit</link>, function in <link linkend="RhythmCat-Player">Player</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-player-get-artists"><link linkend="rc-player-get-artists">rc_player_get_artists</link>, function in <link linkend="RhythmCat-Player">Player</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-player-get-authors"><link linkend="rc-player-get-authors">rc_player_get_authors</link>, function in <link linkend="RhythmCat-Player">Player</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-player-get-build-date"><link linkend="rc-player-get-build-date">rc_player_get_build_date</link>, function in <link linkend="RhythmCat-Player">Player</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-player-get-conf-dir"><link linkend="rc-player-get-conf-dir">rc_player_get_conf_dir</link>, function in <link linkend="RhythmCat-Player">Player</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-player-get-data-dir"><link linkend="rc-player-get-data-dir">rc_player_get_data_dir</link>, function in <link linkend="RhythmCat-Player">Player</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-player-get-documenters"><link linkend="rc-player-get-documenters">rc_player_get_documenters</link>, function in <link linkend="RhythmCat-Player">Player</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-player-get-home-dir"><link linkend="rc-player-get-home-dir">rc_player_get_home_dir</link>, function in <link linkend="RhythmCat-Player">Player</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-player-get-locale"><link linkend="rc-player-get-locale">rc_player_get_locale</link>, function in <link linkend="RhythmCat-Player">Player</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-player-get-program-name"><link linkend="rc-player-get-program-name">rc_player_get_program_name</link>, function in <link linkend="RhythmCat-Player">Player</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-player-get-stable-flag"><link linkend="rc-player-get-stable-flag">rc_player_get_stable_flag</link>, function in <link linkend="RhythmCat-Player">Player</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-player-get-version"><link linkend="rc-player-get-version">rc_player_get_version</link>, function in <link linkend="RhythmCat-Player">Player</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-player-init"><link linkend="rc-player-init">rc_player_init</link>, function in <link linkend="RhythmCat-Player">Player</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-player-main"><link linkend="rc-player-main">rc_player_main</link>, function in <link linkend="RhythmCat-Player">Player</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-player-new"><link linkend="rc-player-new">rc_player_new</link>, function in <link linkend="RCPlayer">RCPlayer</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-player-object-get"><link linkend="rc-player-object-get">rc_player_object_get</link>, function in <link linkend="RCPlayer">RCPlayer</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-player-object-init"><link linkend="rc-player-object-init">rc_player_object_init</link>, function in <link linkend="RCPlayer">RCPlayer</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-player-object-signal-connect-simple"><link linkend="rc-player-object-signal-connect-simple">rc_player_object_signal_connect_simple</link>, function in <link linkend="RCPlayer">RCPlayer</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-player-object-signal-disconnect"><link linkend="rc-player-object-signal-disconnect">rc_player_object_signal_disconnect</link>, function in <link linkend="RCPlayer">RCPlayer</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-player-object-signal-emit-simple"><link linkend="rc-player-object-signal-emit-simple">rc_player_object_signal_emit_simple</link>, function in <link linkend="RCPlayer">RCPlayer</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RC-PLAYER-TYPE:CAPS"><link linkend="RC-PLAYER-TYPE:CAPS">RC_PLAYER_TYPE</link>, macro in <link linkend="RCPlayer">RCPlayer</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCPlist1Column"><link linkend="RCPlist1Column">RCPlist1Column</link>, enum in <link linkend="RhythmCat-Playlist">Playlist</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCPlist2Column"><link linkend="RCPlist2Column">RCPlist2Column</link>, enum in <link linkend="RhythmCat-Playlist">Playlist</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plist-build-default-list"><link linkend="rc-plist-build-default-list">rc_plist_build_default_list</link>, function in <link linkend="RhythmCat-Playlist">Playlist</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plist-exit"><link linkend="rc-plist-exit">rc_plist_exit</link>, function in <link linkend="RhythmCat-Playlist">Playlist</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plist-get-list1-length"><link linkend="rc-plist-get-list1-length">rc_plist_get_list1_length</link>, function in <link linkend="RhythmCat-Playlist">Playlist</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plist-get-list1-name"><link linkend="rc-plist-get-list1-name">rc_plist_get_list1_name</link>, function in <link linkend="RhythmCat-Playlist">Playlist</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plist-get-list2-length"><link linkend="rc-plist-get-list2-length">rc_plist_get_list2_length</link>, function in <link linkend="RhythmCat-Playlist">Playlist</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plist-get-list-head"><link linkend="rc-plist-get-list-head">rc_plist_get_list_head</link>, function in <link linkend="RhythmCat-Playlist">Playlist</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plist-get-list-store"><link linkend="rc-plist-get-list-store">rc_plist_get_list_store</link>, function in <link linkend="RhythmCat-Playlist">Playlist</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plist-get-play-mode"><link linkend="rc-plist-get-play-mode">rc_plist_get_play_mode</link>, function in <link linkend="RhythmCat-Playlist">Playlist</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plist-import-job-cancel"><link linkend="rc-plist-import-job-cancel">rc_plist_import_job_cancel</link>, function in <link linkend="RhythmCat-Playlist">Playlist</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plist-import-job-get-length"><link linkend="rc-plist-import-job-get-length">rc_plist_import_job_get_length</link>, function in <link linkend="RhythmCat-Playlist">Playlist</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plist-init"><link linkend="rc-plist-init">rc_plist_init</link>, function in <link linkend="RhythmCat-Playlist">Playlist</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plist-insert-list"><link linkend="rc-plist-insert-list">rc_plist_insert_list</link>, function in <link linkend="RhythmCat-Playlist">Playlist</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plist-insert-music"><link linkend="rc-plist-insert-music">rc_plist_insert_music</link>, function in <link linkend="RhythmCat-Playlist">Playlist</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plist-list2-insert-item"><link linkend="rc-plist-list2-insert-item">rc_plist_list2_insert_item</link>, function in <link linkend="RhythmCat-Playlist">Playlist</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plist-list2-refresh"><link linkend="rc-plist-list2-refresh">rc_plist_list2_refresh</link>, function in <link linkend="RhythmCat-Playlist">Playlist</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plist-list2-refresh-item"><link linkend="rc-plist-list2-refresh-item">rc_plist_list2_refresh_item</link>, function in <link linkend="RhythmCat-Playlist">Playlist</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plist-list2-remove-item"><link linkend="rc-plist-list2-remove-item">rc_plist_list2_remove_item</link>, function in <link linkend="RhythmCat-Playlist">Playlist</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plist-load-argument"><link linkend="rc-plist-load-argument">rc_plist_load_argument</link>, function in <link linkend="RhythmCat-Playlist">Playlist</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plist-load-playlist"><link linkend="rc-plist-load-playlist">rc_plist_load_playlist</link>, function in <link linkend="RhythmCat-Playlist">Playlist</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plist-load-playlist-setting"><link linkend="rc-plist-load-playlist-setting">rc_plist_load_playlist_setting</link>, function in <link linkend="RhythmCat-Playlist">Playlist</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plist-load-uri-from-remote"><link linkend="rc-plist-load-uri-from-remote">rc_plist_load_uri_from_remote</link>, function in <link linkend="RhythmCat-Playlist">Playlist</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plist-play-by-index"><link linkend="rc-plist-play-by-index">rc_plist_play_by_index</link>, function in <link linkend="RhythmCat-Playlist">Playlist</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plist-play-get-index"><link linkend="rc-plist-play-get-index">rc_plist_play_get_index</link>, function in <link linkend="RhythmCat-Playlist">Playlist</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plist-play-next"><link linkend="rc-plist-play-next">rc_plist_play_next</link>, function in <link linkend="RhythmCat-Playlist">Playlist</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plist-play-prev"><link linkend="rc-plist-play-prev">rc_plist_play_prev</link>, function in <link linkend="RhythmCat-Playlist">Playlist</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plist-plist-move2"><link linkend="rc-plist-plist-move2">rc_plist_plist_move2</link>, function in <link linkend="RhythmCat-Playlist">Playlist</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plist-remove-list"><link linkend="rc-plist-remove-list">rc_plist_remove_list</link>, function in <link linkend="RhythmCat-Playlist">Playlist</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plist-save-playlist"><link linkend="rc-plist-save-playlist">rc_plist_save_playlist</link>, function in <link linkend="RhythmCat-Playlist">Playlist</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plist-save-playlist-setting"><link linkend="rc-plist-save-playlist-setting">rc_plist_save_playlist_setting</link>, function in <link linkend="RhythmCat-Playlist">Playlist</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plist-set-list1-name"><link linkend="rc-plist-set-list1-name">rc_plist_set_list1_name</link>, function in <link linkend="RhythmCat-Playlist">Playlist</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plist-set-play-mode"><link linkend="rc-plist-set-play-mode">rc_plist_set_play_mode</link>, function in <link linkend="RhythmCat-Playlist">Playlist</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plist-stop"><link linkend="rc-plist-stop">rc_plist_stop</link>, function in <link linkend="RhythmCat-Playlist">Playlist</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCPluginConfData"><link linkend="RCPluginConfData">RCPluginConfData</link>, struct in <link linkend="RhythmCat-Plugin-Support">Plugin Support</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCPluginModuleData"><link linkend="RCPluginModuleData">RCPluginModuleData</link>, struct in <link linkend="RhythmCat-Plugin-Support">Plugin Support</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCPluginType"><link linkend="RCPluginType">RCPluginType</link>, enum in <link linkend="RhythmCat-Plugin-Support">Plugin Support</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plugin-check-running"><link linkend="rc-plugin-check-running">rc_plugin_check_running</link>, function in <link linkend="RhythmCat-Plugin-Support">Plugin Support</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plugin-close"><link linkend="rc-plugin-close">rc_plugin_close</link>, function in <link linkend="RhythmCat-Plugin-Support">Plugin Support</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plugin-configure"><link linkend="rc-plugin-configure">rc_plugin_configure</link>, function in <link linkend="RhythmCat-Plugin-Support">Plugin Support</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plugin-conf-free"><link linkend="rc-plugin-conf-free">rc_plugin_conf_free</link>, function in <link linkend="RhythmCat-Plugin-Support">Plugin Support</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plugin-conf-load"><link linkend="rc-plugin-conf-load">rc_plugin_conf_load</link>, function in <link linkend="RhythmCat-Plugin-Support">Plugin Support</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plugin-exit"><link linkend="rc-plugin-exit">rc_plugin_exit</link>, function in <link linkend="RhythmCat-Plugin-Support">Plugin Support</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plugin-get-list"><link linkend="rc-plugin-get-list">rc_plugin_get_list</link>, function in <link linkend="RhythmCat-Plugin-Support">Plugin Support</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plugin-init"><link linkend="rc-plugin-init">rc_plugin_init</link>, function in <link linkend="RhythmCat-Plugin-Support">Plugin Support</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plugin-list-free"><link linkend="rc-plugin-list-free">rc_plugin_list_free</link>, function in <link linkend="RhythmCat-Plugin-Support">Plugin Support</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plugin-load"><link linkend="rc-plugin-load">rc_plugin_load</link>, function in <link linkend="RhythmCat-Plugin-Support">Plugin Support</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plugin-search-dir"><link linkend="rc-plugin-search-dir">rc_plugin_search_dir</link>, function in <link linkend="RhythmCat-Plugin-Support">Plugin Support</link></primaryie></indexentry>
+</indexdiv>
+<indexdiv><title>S</title>
+<indexentry><primaryie linkends="rc-set-exit"><link linkend="rc-set-exit">rc_set_exit</link>, function in <link linkend="RhythmCat-Settings">Settings</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-set-get-boolean"><link linkend="rc-set-get-boolean">rc_set_get_boolean</link>, function in <link linkend="RhythmCat-Settings">Settings</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-set-get-boolean-list"><link linkend="rc-set-get-boolean-list">rc_set_get_boolean_list</link>, function in <link linkend="RhythmCat-Settings">Settings</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-set-get-double"><link linkend="rc-set-get-double">rc_set_get_double</link>, function in <link linkend="RhythmCat-Settings">Settings</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-set-get-double-list"><link linkend="rc-set-get-double-list">rc_set_get_double_list</link>, function in <link linkend="RhythmCat-Settings">Settings</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-set-get-integer"><link linkend="rc-set-get-integer">rc_set_get_integer</link>, function in <link linkend="RhythmCat-Settings">Settings</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-set-get-integer-list"><link linkend="rc-set-get-integer-list">rc_set_get_integer_list</link>, function in <link linkend="RhythmCat-Settings">Settings</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-set-get-plugin-configure"><link linkend="rc-set-get-plugin-configure">rc_set_get_plugin_configure</link>, function in <link linkend="RhythmCat-Settings">Settings</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-set-get-string"><link linkend="rc-set-get-string">rc_set_get_string</link>, function in <link linkend="RhythmCat-Settings">Settings</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-set-get-string-list"><link linkend="rc-set-get-string-list">rc_set_get_string_list</link>, function in <link linkend="RhythmCat-Settings">Settings</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-set-init"><link linkend="rc-set-init">rc_set_init</link>, function in <link linkend="RhythmCat-Settings">Settings</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-set-load-setting"><link linkend="rc-set-load-setting">rc_set_load_setting</link>, function in <link linkend="RhythmCat-Settings">Settings</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-set-save-setting"><link linkend="rc-set-save-setting">rc_set_save_setting</link>, function in <link linkend="RhythmCat-Settings">Settings</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-set-set-boolean"><link linkend="rc-set-set-boolean">rc_set_set_boolean</link>, function in <link linkend="RhythmCat-Settings">Settings</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-set-set-boolean-list"><link linkend="rc-set-set-boolean-list">rc_set_set_boolean_list</link>, function in <link linkend="RhythmCat-Settings">Settings</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-set-set-double"><link linkend="rc-set-set-double">rc_set_set_double</link>, function in <link linkend="RhythmCat-Settings">Settings</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-set-set-double-list"><link linkend="rc-set-set-double-list">rc_set_set_double_list</link>, function in <link linkend="RhythmCat-Settings">Settings</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-set-set-integer"><link linkend="rc-set-set-integer">rc_set_set_integer</link>, function in <link linkend="RhythmCat-Settings">Settings</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-set-set-integer-list"><link linkend="rc-set-set-integer-list">rc_set_set_integer_list</link>, function in <link linkend="RhythmCat-Settings">Settings</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-set-set-string"><link linkend="rc-set-set-string">rc_set_set_string</link>, function in <link linkend="RhythmCat-Settings">Settings</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-set-set-string-list"><link linkend="rc-set-set-string-list">rc_set_set_string_list</link>, function in <link linkend="RhythmCat-Settings">Settings</link></primaryie></indexentry>
+</indexdiv>
+<indexdiv><title>T</title>
+<indexentry><primaryie linkends="rc-tag-find-file"><link linkend="rc-tag-find-file">rc_tag_find_file</link>, function in <link linkend="RhythmCat-Tag">Tag</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-tag-free"><link linkend="rc-tag-free">rc_tag_free</link>, function in <link linkend="RhythmCat-Tag">Tag</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-tag-get-name-from-fpath"><link linkend="rc-tag-get-name-from-fpath">rc_tag_get_name_from_fpath</link>, function in <link linkend="RhythmCat-Tag">Tag</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-tag-get-playing-metadata"><link linkend="rc-tag-get-playing-metadata">rc_tag_get_playing_metadata</link>, function in <link linkend="RhythmCat-Tag">Tag</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-tag-read-metadata"><link linkend="rc-tag-read-metadata">rc_tag_read_metadata</link>, function in <link linkend="RhythmCat-Tag">Tag</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-tag-set-playing-metadata"><link linkend="rc-tag-set-playing-metadata">rc_tag_set_playing_metadata</link>, function in <link linkend="RhythmCat-Tag">Tag</link></primaryie></indexentry>
+</indexdiv>
+</indexdiv>

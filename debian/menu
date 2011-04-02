@@ -1,0 +1,5 @@
+?package(rhythmcat):needs="X11" \
+  section="Applications/Sound" \
+  title="RhythmCat Music Player" \
+  command="/usr/bin/RhythmCat" \
+  icon="/usr/share/RhythmCat/images/RhythmCat_128x128.PNG"

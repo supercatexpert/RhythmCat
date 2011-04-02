@@ -1,0 +1,169 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+]>
+<refentry id="RhythmCat-Lyric">
+<refmeta>
+<refentrytitle role="top_of_page" id="RhythmCat-Lyric.top_of_page">Lyric</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>
+  RHYTHMCAT Library
+</refmiscinfo>
+</refmeta>
+<refnamediv>
+<refname>Lyric</refname>
+<refpurpose>Process lyric data.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv id="RhythmCat-Lyric.synopsis" role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>
+#include &lt;lyric.h&gt;
+
+                    <link linkend="RCLyricData">RCLyricData</link>;
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-lrc-init">rc_lrc_init</link>                         ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-lrc-exit">rc_lrc_exit</link>                         ();
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-lrc-read-from-file">rc_lrc_read_from_file</link>               (<parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-lrc-clean-data">rc_lrc_clean_data</link>                   ();
+const <link linkend="RCLyricData"><returnvalue>RCLyricData</returnvalue></link> ** <link linkend="rc-lrc-get-lrc-data">rc_lrc_get_lrc_data</link>                ();
+<link linkend="gsize"><returnvalue>gsize</returnvalue></link>               <link linkend="rc-lrc-get-lrc-length">rc_lrc_get_lrc_length</link>               ();
+const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       <link linkend="rc-lrc-get-text-data">rc_lrc_get_text_data</link>                ();
+const <link linkend="RCLyricData"><returnvalue>RCLyricData</returnvalue></link> * <link linkend="rc-lrc-get-line-by-time">rc_lrc_get_line_by_time</link>             (<parameter><link linkend="gint64"><type>gint64</type></link> time</parameter>);
+const <link linkend="RCLyricData"><returnvalue>RCLyricData</returnvalue></link> * <link linkend="rc-lrc-get-line-now">rc_lrc_get_line_now</link>                 ();
+</synopsis>
+</refsynopsisdiv>
+
+<refsect1 id="RhythmCat-Lyric.description" role="desc">
+<title role="desc.title">Description</title>
+<para>
+Process lyric texts, like reading lyric from LRC file, etc.
+</para>
+</refsect1>
+<refsect1 id="RhythmCat-Lyric.details" role="details">
+<title role="details.title">Details</title>
+<refsect2 id="RCLyricData" role="struct">
+<title>RCLyricData</title>
+<indexterm zone="RCLyricData"><primary>RCLyricData</primary></indexterm>
+<programlisting>typedef struct {
+    gint64 time;
+    gint64 length;
+    guint index;
+    gchar *text;
+} RCLyricData;
+</programlisting>
+<para>
+Custom struct type to store the data of lyrics.
+</para><variablelist role="struct">
+<varlistentry><term><link linkend="gint64"><type>gint64</type></link>&#160;<structfield id="RCLyricData.time">time</structfield>;</term>
+<listitem><simpara>the start time of the lyric text
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gint64"><type>gint64</type></link>&#160;<structfield id="RCLyricData.length">length</structfield>;</term>
+<listitem><simpara>the time length of the lyric text
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="guint"><type>guint</type></link>&#160;<structfield id="RCLyricData.index">index</structfield>;</term>
+<listitem><simpara>the line index number of the lyric text
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gchar"><type>gchar</type></link>&#160;*<structfield id="RCLyricData.text">text</structfield>;</term>
+<listitem><simpara>the lyric text
+</simpara></listitem>
+</varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-lrc-init" role="function">
+<title>rc_lrc_init ()</title>
+<indexterm zone="rc-lrc-init"><primary>rc_lrc_init</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_lrc_init                         ();</programlisting>
+<para>
+Initialize the lyric watch timer.
+</para></refsect2>
+<refsect2 id="rc-lrc-exit" role="function">
+<title>rc_lrc_exit ()</title>
+<indexterm zone="rc-lrc-exit"><primary>rc_lrc_exit</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_lrc_exit                         ();</programlisting>
+<para>
+Remove the lyric watch timer.
+</para></refsect2>
+<refsect2 id="rc-lrc-read-from-file" role="function">
+<title>rc_lrc_read_from_file ()</title>
+<indexterm zone="rc-lrc-read-from-file"><primary>rc_lrc_read_from_file</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rc_lrc_read_from_file               (<parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>);</programlisting>
+<para>
+Read lyric data from given file.
+</para><variablelist role="params">
+<varlistentry><term><parameter>filename</parameter>&#160;:</term>
+<listitem><simpara>the lyric file
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> Whether the file is read successfully.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-lrc-clean-data" role="function">
+<title>rc_lrc_clean_data ()</title>
+<indexterm zone="rc-lrc-clean-data"><primary>rc_lrc_clean_data</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_lrc_clean_data                   ();</programlisting>
+<para>
+Clean the read lyric data from the player.
+</para></refsect2>
+<refsect2 id="rc-lrc-get-lrc-data" role="function">
+<title>rc_lrc_get_lrc_data ()</title>
+<indexterm zone="rc-lrc-get-lrc-data"><primary>rc_lrc_get_lrc_data</primary></indexterm>
+<programlisting>const <link linkend="RCLyricData"><returnvalue>RCLyricData</returnvalue></link> ** rc_lrc_get_lrc_data                ();</programlisting>
+<para>
+Return the processed lyric array in the player.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The processed lyric array in the player, the data is stored
+in an array, NULL if there is no lyric data.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-lrc-get-lrc-length" role="function">
+<title>rc_lrc_get_lrc_length ()</title>
+<indexterm zone="rc-lrc-get-lrc-length"><primary>rc_lrc_get_lrc_length</primary></indexterm>
+<programlisting><link linkend="gsize"><returnvalue>gsize</returnvalue></link>               rc_lrc_get_lrc_length               ();</programlisting>
+<para>
+Return the length of the lyric array.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The length of the lyric array.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-lrc-get-text-data" role="function">
+<title>rc_lrc_get_text_data ()</title>
+<indexterm zone="rc-lrc-get-text-data"><primary>rc_lrc_get_text_data</primary></indexterm>
+<programlisting>const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       rc_lrc_get_text_data                ();</programlisting>
+<para>
+Return the original lyric text in the player.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The original lyric text in the player, NULL if there is no
+lyric text.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-lrc-get-line-by-time" role="function">
+<title>rc_lrc_get_line_by_time ()</title>
+<indexterm zone="rc-lrc-get-line-by-time"><primary>rc_lrc_get_line_by_time</primary></indexterm>
+<programlisting>const <link linkend="RCLyricData"><returnvalue>RCLyricData</returnvalue></link> * rc_lrc_get_line_by_time             (<parameter><link linkend="gint64"><type>gint64</type></link> time</parameter>);</programlisting>
+<para>
+Return the lyric line data by given time.
+</para><variablelist role="params">
+<varlistentry><term><parameter>time</parameter>&#160;:</term>
+<listitem><simpara>the time in nanosecond
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The lyric line data by given time, NULL if not found.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-lrc-get-line-now" role="function">
+<title>rc_lrc_get_line_now ()</title>
+<indexterm zone="rc-lrc-get-line-now"><primary>rc_lrc_get_line_now</primary></indexterm>
+<programlisting>const <link linkend="RCLyricData"><returnvalue>RCLyricData</returnvalue></link> * rc_lrc_get_line_now                 ();</programlisting>
+<para>
+Return the lyric line data while the player is playing.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The lyric line data the player is playing.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+
+</refsect1>
+
+</refentry>

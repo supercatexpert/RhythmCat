@@ -47,8 +47,8 @@ typedef struct _GuiLrcData
     gchar *lyric_font;
     gint64 lrc_time_delay;
     guint lyric_line_ds;
-    guint drag_to_linenum;
-    guint drag_from_linenum;
+    gint drag_to_linenum;
+    gint drag_from_linenum;
     gint drag_height;
     gdouble background[4];
     gdouble text_color[4];

@@ -6,7 +6,7 @@
 ]>
 <book id="index">
   <bookinfo>
-    <title>RhythmCat Development Reference Manual</title>
+    <title>RhythmCat Music Player Development Reference Manual</title>
     <releaseinfo>
       for RhythmCat 1.0.0.
       The latest version of this documentation can be found on-line at
@@ -14,36 +14,53 @@
     </releaseinfo>
   </bookinfo>
 
-  <chapter>
-    <title>Player Backend</title>
-    <xi:include href="xml/player.xml"/>
-    <xi:include href="xml/core.xml"/>
-    <xi:include href="xml/tag.xml"/>
-    <xi:include href="xml/player_object.xml"/>
-    <xi:include href="xml/lyric.xml"/>
-    <xi:include href="xml/msg.xml"/>
-    <xi:include href="xml/playlist.xml"/>
-    <xi:include href="xml/settings.xml"/>
-    <xi:include href="xml/plugin.xml"/>
-    <xi:include href="xml/debug.xml"/>
-  </chapter>
+  <part id="RhythmCatRef">
+    <title>RhythmCat Music Player Reference</title>
 
-  <chapter>
-    <title>Player UI</title>
-    <xi:include href="xml/gui.xml"/>
-    <xi:include href="xml/gui_dialog.xml"/>
-    <xi:include href="xml/gui_eq.xml"/>
-    <xi:include href="xml/gui_style.xml"/>
-    <xi:include href="xml/gui_treeview.xml"/>
-    <xi:include href="xml/gui_mini.xml"/>
-    <xi:include href="xml/gui_setting.xml"/>
-    <xi:include href="xml/gui_plugin.xml"/>
-  </chapter>
+    <chapter>
+      <title>Player Backend</title>
+      <xi:include href="xml/player.xml"/>
+      <xi:include href="xml/core.xml"/>
+      <xi:include href="xml/tag.xml"/>
+      <xi:include href="xml/player_object.xml"/>
+      <xi:include href="xml/lyric.xml"/>
+      <xi:include href="xml/msg.xml"/>
+      <xi:include href="xml/playlist.xml"/>
+      <xi:include href="xml/settings.xml"/>
+      <xi:include href="xml/plugin.xml"/>
+      <xi:include href="xml/debug.xml"/>
+    </chapter>
+
+    <chapter>
+      <title>Player UI</title>
+      <xi:include href="xml/gui.xml"/>
+      <xi:include href="xml/gui_dialog.xml"/>
+      <xi:include href="xml/gui_eq.xml"/>
+      <xi:include href="xml/gui_style.xml"/>
+      <xi:include href="xml/gui_treeview.xml"/>
+      <xi:include href="xml/gui_mini.xml"/>
+      <xi:include href="xml/gui_setting.xml"/>
+      <xi:include href="xml/gui_plugin.xml"/>
+    </chapter>
+
+  </part>
+
+  <part id="PluginProgMan">
+    <title>Plugin Programming Manual</title>
+    <partintro>
+      <para>
+        This part describes how to write a plugin for RhythmCat Music
+        Player.
+      </para>
+    </partintro>
+    <xi:include href="xml/plugin-programming.xml"/>
+  </part>
 
   <chapter id="object-tree">
     <title>Object Hierarchy</title>
      <xi:include href="xml/tree_index.sgml"/>
   </chapter>
+
   <index id="api-index-full">
     <title>API Index</title>
     <xi:include href="xml/api-index-full.xml"><xi:fallback /></xi:include>

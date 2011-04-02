@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+]>
+<refentry id="RhythmCat-Settings-UI">
+<refmeta>
+<refentrytitle role="top_of_page" id="RhythmCat-Settings-UI.top_of_page">Settings UI</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>
+  RHYTHMCAT Library
+</refmiscinfo>
+</refmeta>
+<refnamediv>
+<refname>Settings UI</refname>
+<refpurpose>The settings window of the player.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv id="RhythmCat-Settings-UI.synopsis" role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>
+#include &lt;gui_setting.h&gt;
+
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-create-setting-window">rc_gui_create_setting_window</link>        ();
+</synopsis>
+</refsynopsisdiv>
+
+<refsect1 id="RhythmCat-Settings-UI.description" role="desc">
+<title role="desc.title">Description</title>
+<para>
+Show the settings window of the player.
+</para>
+</refsect1>
+<refsect1 id="RhythmCat-Settings-UI.details" role="details">
+<title role="details.title">Details</title>
+<refsect2 id="rc-gui-create-setting-window" role="function">
+<title>rc_gui_create_setting_window ()</title>
+<indexterm zone="rc-gui-create-setting-window"><primary>rc_gui_create_setting_window</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_create_setting_window        ();</programlisting>
+<para>
+Show a setting window.
+</para></refsect2>
+
+</refsect1>
+
+</refentry>

@@ -1,0 +1,306 @@
+<?xml version="1.0"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" [
+<!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+]>
+<chapter id="PluginProgramming">
+  <title>Plugin Programming Manual</title>
+  <para>
+    RhythmCat Music Player uses plugin support system to expand its functions
+    and features. This manual can help you implement a plugin for the player.
+  </para>
+
+  <refsect2>
+    <title>Introduction</title>
+    <para>
+      The plugin used in the player now is module, it is usually a shared-object
+      (on Linux) or a dynamic linked library (on Windows). When the player loads
+      the plugin, it will load it into memory, then execute the initialize function
+      in the module. GLib provides the feature "Dynamic Loading of Modules", which
+      is called "GModule" in the library. This player uses this feature to provide
+      plugin support.
+    </para>
+  </refsect2>
+
+  <refsect2>
+    <title>Preparation</title>
+    <para>
+      Before you prepare to write the plugin, you should install development
+      environment. GLib 2.0, GTK+ 2.0 and Gstreamer 0.10 and their development
+      packages, and the other libraries you needed in your plugin are
+      necessary to install.
+    </para>
+  </refsect2>
+
+  <refsect2>
+    <title>Implement a simple plugin</title>
+    <para>
+      The plugin needs the libraries to work, so you should include the header
+      files. You can include them by the codes below:
+      <programlisting>
+#include &lt;glib.h&gt;
+#include &lt;gst/gst.h&gt;
+#include &lt;gtk/gtk.h&gt;
+#include "plugin.h"
+      </programlisting>
+    </para>
+    <para>
+      The interfaces/functions needed by the player in your plugin are
+      g_module_check_init(), g_module_unload(), rc_plugin_module_init(),
+      rc_plugin_module_exit(), rc_plugin_module_data(), and
+      rc_plugin_module_configure() is optional. Once the plugin is loaded,
+      g_module_check_init() will be called automatically, you can write the
+      codes you want to initialize the configuration data in the function. If
+      the plugin is about to exit, g_module_unload() will be called
+      automatically, you can write the codes in the function to free all memory
+      you have allocated. When the player is about to enable the plugin,
+      rc_plugin_module_init() will be called, you can finish the function to
+      implement your plugin. When the player tries to disable the plugin,
+      rc_plugin_module_exit() will be called, you can finish the function to
+      exit from your plugin. The player also needs some information about the
+      plugin, it will call rc_plugin_module_data() to get the data, you should
+      finish it by returning the information of your plugin. The definition of
+      these functions are:
+      <programlisting>
+/* Necessary */
+const gchar *g_module_check_init(GModule *module);
+void g_module_unload(GModule *module);
+gint rc_plugin_module_init();
+void rc_plugin_module_exit();
+const RCPluginModuleData *rc_plugin_module_data();
+/* Optional */
+void rc_plugin_module_configure();
+      </programlisting>
+      The definition of type #RCPluginModuleData is in header file
+      <filename>"plugin.h"</filename>:
+      <programlisting>
+typedef struct RCPluginModuleData {
+    gchar *group_name;
+    gboolean resident;
+}RCPluginModuleData;
+      </programlisting>
+      The element group_name is used in the configuration file, the player
+      needs it the get the configuration data of the plugin by the group name,
+      it should be unique, or the configuration data may conflict with other
+      plugins. The element resident decides whether the plugin can be removed
+      while the player is running, set it to TRUE to prevent the player from
+      removing it.
+    </para>
+    <para>
+      If the plugin needs configuration, the function rc_plugin_module_configure()
+      should be implemented. It will be called when the user tries to
+      configure the plugin. You can show a configure dialog to make the user
+      configure the features in the plugin. If you need to load/save the
+      configuration data, you should use the function
+      rc_set_get_plugin_configure() (in header file
+      <filename>"settings.h"</filename>), it will return the GKeyFile pointer of
+      the plugin configuration data. You can read/write your configuration by
+      using "Key-value file parser" in GLib. Notice that you should only
+      read/write the configuration which is related to your plugin (by the
+      group name).
+    </para>
+    <para>
+      Here is an example plugin implemented below:
+    </para>
+    <example>
+      <title>The example plugin</title>
+      <programlisting>
+#include &lt;glib.h&gt;
+#include &lt;glib/gprintf.h&gt;
+#include &lt;gst/gst.h&gt;
+#include &lt;gtk/gtk.h&gt;
+#include "plugin.h"
+
+static RCPluginModuleData plugin_module_data =
+{
+    "ExamplePlugin", /* group_name */
+    FALSE /* resident */
+};
+
+static GKeyFile *keyfile = NULL;
+
+const gchar *g_module_check_init(GModule *module)
+{
+    g_printf("ExamplePlugin: Plugin loaded successfully!\n");
+    keyfile = rc_set_get_plugin_configure();
+
+    /* Change configuration data like below: */
+    /* Save configuration string "HelloData" to key "TestString". */
+    g_key_file_set_string(keyfile, plugin_module_data.group_name, 
+        "TestString", "HelloData");
+    /* If you want to set other data types, please see the GKeyFile section
+       in GLib. */
+
+    /* Implement more initialize functions here. */
+
+    return NULL;
+    /* If there is no error, return NULL, else return the error string. */
+}
+
+void g_module_unload(GModule *module)
+{
+    g_printf("ExamplePlugin: Plugin unloaded!\n");
+    /* Do some cleaning work here. */
+}
+
+gint rc_plugin_module_init()
+{
+    g_printf("ExamplePlugin: Plugin is running!\n");
+
+    /* Get configuration data like below: */
+    /* Load configration string from key "TestString". */
+    gchar *string = g_key_file_get_string(keyfile, 
+        plugin_module_data.group_name, "TestString", NULL);
+    g_printf("TestString=%s\n", string); /* Show the string. */
+    g_free(string); /* Remember to free pointer after usage. */
+
+    /* Implement plugin features here. */
+
+    return 0;
+    /* If there is no error, return 0, else return the error code. */
+}
+
+void rc_plugin_module_exit()
+{
+    g_printf("ExamplePlugin: Plugin is not running now!\n");
+    /* Disable all features of the plugin, and do some cleanning work. */
+}
+
+void rc_plugin_module_configure()
+{
+    /* Show configure dialog if necessary. */
+}
+
+const RCPluginModuleData *rc_plugin_module_data()
+{
+    return &amp;plugin_module_data;
+}
+      </programlisting>
+    </example>
+  </refsect2>
+
+  <refsect2>
+    <title>How to compile the plugin</title>
+    <para>
+       The plugin is a module, so you have to compile it into a library. On
+       Linux, it is shared-object(.so). It is recommended to write a Makefile
+       to compile the plugin, or use autoconf/automake.
+    </para>
+    <para>
+       Here is the Makefile of the example plugin mentioned above (the source
+       file name is example.c).
+    </para>
+    <programlisting>
+CC=gcc
+PLUGIN_NAME=example.so
+INCS=
+SRCS=example.c
+OBJS=${SRCS:.c=.o}
+
+LIBS=glib-2.0 gtk+-2.0 gstreamer-0.10
+
+CFLAGS=`pkg-config --cflags ${LIBS}` -Wall -O2 -fPIC -I../../src/
+LDFLAGS=`pkg-config --libs ${LIBS}` -Wall -O2 -shared -fPIC
+
+all: ${PLUGIN_NAME}
+
+${PLUGIN_NAME}:${OBJS}
+	${CC} -o ${PLUGIN_NAME} ${OBJS} ${LDFLAGS}
+
+${OBJS}:${INCS}
+
+.c.o:
+	${CC} -c $&lt; ${CFLAGS}
+
+clean:
+	rm -f *.o ${PLUGIN_NAME}
+
+rebuild: clean all
+    </programlisting>
+    <para>
+      This Makefile will produce shared-object example.so when it is executed.
+    </para>
+  </refsect2>
+
+  <refsect2>
+    <title>Write a plugin description file</title>
+    <para>
+      Except the library file, the player also needs the description file to
+      get necessary information about the plugin. You need to write a
+      description file to make your plugin usable by the player.
+    </para>
+    <para>
+      Here is the description file of the example plugin mentioned above.
+    </para>
+    <example>
+      <title>The description file of the example plugin</title>
+      <programlisting>
+[RC Plugin] # The group name must be "RC Plugin".
+Type=Module # Must be "Module" now.
+File=example.so # The filename of the plugin library file.
+Name=Example Plugin # The name of the plugin
+Description=This is an example plugin. # The description of the plugin.
+Authors=SuperCat &lt;supercatexpert@gmail.com&gt; # The author information.
+Version=0.1 # The version
+Website=http://code.google.com/p/rhythmcat # The website.
+      </programlisting>
+    </example>
+    <para>
+    </para>
+  </refsect2>
+
+  <refsect2>
+    <title>Make your custom plugin work</title>
+    <para>
+      Now you may have implemented the plugin, then you should put the files
+      into the right directory. The player needs two files to make the plugin
+      work, one is the library file, the other is the description file, and
+      put them into a director. The directory which contains the two files
+      should be named with the filename of the description file (without
+      extension name), and then put it into the plugin directory. There are
+      two places where you can put the plugin directory, one is under
+      $APP_DIR/plugins/ ($APP_DIR is the directory where the program data is),
+      the other is under ~/.RhythmCat/Plugins/. The plugin directory may be
+      descripted like this:
+    </para>
+    <programlisting>
+ExamplePlugin
+----ExamplePlugin.conf # The description file.
+----example.so # The plugin library file.
+    </programlisting>
+    <para>
+      Then put directory "ExamplePlugin" into $APP_DIR/plugins/ or
+      ~/.RhythmCat/Plugins/
+    </para>
+  </refsect2>
+
+  <refsect2>
+    <title>Catch signals in the player</title>
+    <para>
+      Sometimes we need signals to know the working state of the player. When
+      the player starts to play, or being stopped, it will emit signals. The
+      way to catch these signals is to connect the signals to the callback
+      functions you implemented. If you want to use signals, you should include
+      header file <filename>"player_object.h"</filename> first, then you can
+      connect the signals to your callback functions by using
+      rc_player_object_signal_connect_simple(). The signal names are provided in
+      object #RCPlayer. This function will return the signal ID, and when you
+      uninitialize your plugin, please remember remove the signal first, by using
+      function rc_player_object_signal_disconnect().
+    </para>
+  </refsect2>
+
+  <refsect2>
+    <title>About this manual</title>
+    <para>
+      This manual helps you to make a usable plugin for RhythmCat Music Player.
+      If you have any questions or problems, please leave issues on the project
+      <ulink url='http://code.google.com/p/rhythmcat'>homepage</ulink>, or send
+      an e-mail to <ulink url='mailto:supercatexpert@gmail.com'>me</ulink>. I
+      also have implemented some plugins for the player, you can view the
+      source codes of them for reference.
+    </para>
+  </refsect2>
+
+</chapter>
+

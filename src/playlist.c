@@ -440,11 +440,12 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
         if(realname!=NULL)
             list_title = g_strdup(realname);
         else
-            list_title = g_strdup(_("Unknown title"));
+            list_title = g_strdup(_("Unknown Title"));
     }
     if(mmd_new->album!=NULL)
         album_name = g_strdup(mmd_new->album);
     rc_core_set_uri(mmd_new->uri);
+    rc_gui_set_cover_image_by_file(NULL);
     rc_tag_set_playing_metadata(mmd_new);
     gtk_list_store_set(list_store, &iter, PLIST2_STATE, GTK_STOCK_MEDIA_PLAY,
         PLIST2_TITLE, list_title, PLIST2_ARTIST, mmd_new->artist, PLIST2_ALBUM,
@@ -526,8 +527,6 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
             rc_debug_print("Plist: Found cover image file: %s.\n",
                 cover_filename);
         }
-        else
-            rc_gui_set_cover_image_by_file(NULL);
     }
     g_free(music_dir);
     g_free(realname);

@@ -3,9 +3,9 @@
 Categories=GTK;Audio;Player;
 Comment=RhythmCat Music Player
 GenericName=Music Player
-Icon=RhythmCat.PNG
+Icon=RhythmCat_128x128.PNG
 Name=RhythmCat
 Exec=RhythmCat
 StartupNotify=false
 Type=Application
-Name[en_US]=RhythmCat
+Name[en_US]=RhythmCat Music Player

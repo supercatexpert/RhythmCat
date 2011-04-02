@@ -1,0 +1,424 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Plugin Programming Manual</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="index.html" title="RhythmCat Music Player Development Reference Manual">
+<link rel="up" href="PluginProgMan.html" title="Part II. Plugin Programming Manual">
+<link rel="prev" href="PluginProgMan.html" title="Part II. Plugin Programming Manual">
+<link rel="next" href="object-tree.html" title="Object Hierarchy">
+<meta name="generator" content="GTK-Doc V1.15 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2"><tr valign="middle">
+<td><a accesskey="p" href="PluginProgMan.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="PluginProgMan.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">RhythmCat Music Player Development Reference Manual</th>
+<td><a accesskey="n" href="object-tree.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr></table>
+<div class="chapter" title="Plugin Programming Manual">
+<div class="titlepage"><div><div><h2 class="title">
+<a name="PluginProgramming"></a>Plugin Programming Manual</h2></div></div></div>
+<p>
+    RhythmCat Music Player uses plugin support system to expand its functions
+    and features. This manual can help you implement a plugin for the player.
+  </p>
+<div class="refsect2" title="Introduction">
+<a name="id606313"></a><h3>Introduction</h3>
+<p>
+      The plugin used in the player now is module, it is usually a shared-object
+      (on Linux) or a dynamic linked library (on Windows). When the player loads
+      the plugin, it will load it into memory, then execute the initialize function
+      in the module. GLib provides the feature "Dynamic Loading of Modules", which
+      is called "GModule" in the library. This player uses this feature to provide
+      plugin support.
+    </p>
+</div>
+<hr>
+<div class="refsect2" title="Preparation">
+<a name="id565682"></a><h3>Preparation</h3>
+<p>
+      Before you prepare to write the plugin, you should install development
+      environment. GLib 2.0, GTK+ 2.0 and Gstreamer 0.10 and their development
+      packages, and the other libraries you needed in your plugin are
+      necessary to install.
+    </p>
+</div>
+<hr>
+<div class="refsect2" title="Implement a simple plugin">
+<a name="id592981"></a><h3>Implement a simple plugin</h3>
+<p>
+      The plugin needs the libraries to work, so you should include the header
+      files. You can include them by the codes below:
+      </p>
+<pre class="programlisting">
+#include &lt;glib.h&gt;
+#include &lt;gst/gst.h&gt;
+#include &lt;gtk/gtk.h&gt;
+#include "plugin.h"
+      </pre>
+<p>
+    </p>
+<p>
+      The interfaces/functions needed by the player in your plugin are
+      <code class="function">g_module_check_init()</code>, <code class="function">g_module_unload()</code>, <code class="function">rc_plugin_module_init()</code>,
+      <code class="function">rc_plugin_module_exit()</code>, <code class="function">rc_plugin_module_data()</code>, and
+      <code class="function">rc_plugin_module_configure()</code> is optional. Once the plugin is loaded,
+      <code class="function">g_module_check_init()</code> will be called automatically, you can write the
+      codes you want to initialize the configuration data in the function. If
+      the plugin is about to exit, <code class="function">g_module_unload()</code> will be called
+      automatically, you can write the codes in the function to free all memory
+      you have allocated. When the player is about to enable the plugin,
+      <code class="function">rc_plugin_module_init()</code> will be called, you can finish the function to
+      implement your plugin. When the player tries to disable the plugin,
+      <code class="function">rc_plugin_module_exit()</code> will be called, you can finish the function to
+      exit from your plugin. The player also needs some information about the
+      plugin, it will call <code class="function">rc_plugin_module_data()</code> to get the data, you should
+      finish it by returning the information of your plugin. The definition of
+      these functions are:
+      </p>
+<pre class="programlisting">
+/* Necessary */
+const gchar *g_module_check_init(GModule *module);
+void g_module_unload(GModule *module);
+gint rc_plugin_module_init();
+void rc_plugin_module_exit();
+const RCPluginModuleData *rc_plugin_module_data();
+/* Optional */
+void rc_plugin_module_configure();
+      </pre>
+<p>
+      The definition of type <a class="link" href="RhythmCat-Plugin-Support.html#RCPluginModuleData" title="RCPluginModuleData"><span class="type">RCPluginModuleData</span></a> is in header file
+      <code class="filename">"plugin.h"</code>:
+      </p>
+<pre class="programlisting">
+typedef struct RCPluginModuleData {
+    gchar *group_name;
+    gboolean resident;
+}RCPluginModuleData;
+      </pre>
+<p>
+      The element group_name is used in the configuration file, the player
+      needs it the get the configuration data of the plugin by the group name,
+      it should be unique, or the configuration data may conflict with other
+      plugins. The element resident decides whether the plugin can be removed
+      while the player is running, set it to TRUE to prevent the player from
+      removing it.
+    </p>
+<p>
+      If the plugin needs configuration, the function <code class="function">rc_plugin_module_configure()</code>
+      should be implemented. It will be called when the user tries to
+      configure the plugin. You can show a configure dialog to make the user
+      configure the features in the plugin. If you need to load/save the
+      configuration data, you should use the function
+      <a class="link" href="RhythmCat-Settings.html#rc-set-get-plugin-configure" title="rc_set_get_plugin_configure ()"><code class="function">rc_set_get_plugin_configure()</code></a> (in header file
+      <code class="filename">"settings.h"</code>), it will return the GKeyFile pointer of
+      the plugin configuration data. You can read/write your configuration by
+      using "Key-value file parser" in GLib. Notice that you should only
+      read/write the configuration which is related to your plugin (by the
+      group name).
+    </p>
+<p>
+      Here is an example plugin implemented below:
+    </p>
+<div class="example">
+<a name="id559947"></a><p class="title"><b>Example 1. The example plugin</b></p>
+<div class="example-contents">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70</pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="preproc">#include &lt;glib.h&gt;</span>
+<span class="preproc">#include &lt;glib/gprintf.h&gt;</span>
+<span class="preproc">#include &lt;gst/gst.h&gt;</span>
+<span class="preproc">#include &lt;gtk/gtk.h&gt;</span>
+<span class="preproc">#include</span> <span class="gtkdoc dstr">&quot;plugin.h&quot;</span><span class="preproc"></span>
+
+<span class="gtkdoc kwb">static</span> RCPluginModuleData plugin_module_data <span class="symbol">=</span>
+<span class="symbol">{</span>
+    <span class="string">&quot;ExamplePlugin&quot;</span><span class="symbol">,</span> <span class="comment">/* group_name */</span>
+    FALSE <span class="comment">/* resident */</span>
+<span class="symbol">};</span>
+
+<span class="gtkdoc kwb">static</span> GKeyFile <span class="symbol">*</span>keyfile <span class="symbol">=</span> NULL<span class="symbol">;</span>
+
+<span class="gtkdoc kwb">const</span> gchar <span class="symbol">*</span><span class="function">g_module_check_init</span><span class="symbol">(</span>GModule <span class="symbol">*</span>module<span class="symbol">)</span>
+<span class="symbol">{</span>
+    <span class="function"><a href="/usr/share/gtk-doc/html/glib/glib-String-Utility-Functions.html#g-printf">g_printf</a></span><span class="symbol">(</span><span class="string">&quot;ExamplePlugin: Plugin loaded successfully!</span><span class="gtkdoc esc">\n</span><span class="string">&quot;</span><span class="symbol">);</span>
+    keyfile <span class="symbol">=</span> <span class="function"><a href="RhythmCat-Settings.html#rc-set-get-plugin-configure">rc_set_get_plugin_configure</a></span><span class="symbol">();</span>
+
+    <span class="comment">/* Change configuration data like below: */</span>
+    <span class="comment">/* Save configuration string &quot;HelloData&quot; to key &quot;TestString&quot;. */</span>
+    <span class="function"><a href="/usr/share/gtk-doc/html/glib/glib-Key-value-file-parser.html#g-key-file-set-string">g_key_file_set_string</a></span><span class="symbol">(</span>keyfile<span class="symbol">,</span> plugin_module_data<span class="symbol">.</span>group_name<span class="symbol">,</span> 
+        <span class="string">&quot;TestString&quot;</span><span class="symbol">,</span> <span class="string">&quot;HelloData&quot;</span><span class="symbol">);</span>
+    <span class="comment">/* If you want to set other data types, please see the GKeyFile section</span>
+<span class="comment">       in GLib. */</span>
+
+    <span class="comment">/* Implement more initialize functions here. */</span>
+
+    <span class="keyword">return</span> NULL<span class="symbol">;</span>
+    <span class="comment">/* If there is no error, return NULL, else return the error string. */</span>
+<span class="symbol">}</span>
+
+<span class="gtkdoc kwb">void</span> <span class="function">g_module_unload</span><span class="symbol">(</span>GModule <span class="symbol">*</span>module<span class="symbol">)</span>
+<span class="symbol">{</span>
+    <span class="function"><a href="/usr/share/gtk-doc/html/glib/glib-String-Utility-Functions.html#g-printf">g_printf</a></span><span class="symbol">(</span><span class="string">&quot;ExamplePlugin: Plugin unloaded!</span><span class="gtkdoc esc">\n</span><span class="string">&quot;</span><span class="symbol">);</span>
+    <span class="comment">/* Do some cleaning work here. */</span>
+<span class="symbol">}</span>
+
+gint <span class="function">rc_plugin_module_init</span><span class="symbol">()</span>
+<span class="symbol">{</span>
+    <span class="function"><a href="/usr/share/gtk-doc/html/glib/glib-String-Utility-Functions.html#g-printf">g_printf</a></span><span class="symbol">(</span><span class="string">&quot;ExamplePlugin: Plugin is running!</span><span class="gtkdoc esc">\n</span><span class="string">&quot;</span><span class="symbol">);</span>
+
+    <span class="comment">/* Get configuration data like below: */</span>
+    <span class="comment">/* Load configration string from key &quot;TestString&quot;. */</span>
+    gchar <span class="symbol">*</span>string <span class="symbol">=</span> <span class="function"><a href="/usr/share/gtk-doc/html/glib/glib-Key-value-file-parser.html#g-key-file-get-string">g_key_file_get_string</a></span><span class="symbol">(</span>keyfile<span class="symbol">,</span> 
+        plugin_module_data<span class="symbol">.</span>group_name<span class="symbol">,</span> <span class="string">&quot;TestString&quot;</span><span class="symbol">,</span> NULL<span class="symbol">);</span>
+    <span class="function"><a href="/usr/share/gtk-doc/html/glib/glib-String-Utility-Functions.html#g-printf">g_printf</a></span><span class="symbol">(</span><span class="string">&quot;TestString=%s</span><span class="gtkdoc esc">\n</span><span class="string">&quot;</span><span class="symbol">,</span> string<span class="symbol">);</span> <span class="comment">/* Show the string. */</span>
+    <span class="function"><a href="/usr/share/gtk-doc/html/glib/glib-Memory-Allocation.html#g-free">g_free</a></span><span class="symbol">(</span>string<span class="symbol">);</span> <span class="comment">/* Remember to free pointer after usage. */</span>
+
+    <span class="comment">/* Implement plugin features here. */</span>
+
+    <span class="keyword">return</span> <span class="number">0</span><span class="symbol">;</span>
+    <span class="comment">/* If there is no error, return 0, else return the error code. */</span>
+<span class="symbol">}</span>
+
+<span class="gtkdoc kwb">void</span> <span class="function">rc_plugin_module_exit</span><span class="symbol">()</span>
+<span class="symbol">{</span>
+    <span class="function"><a href="/usr/share/gtk-doc/html/glib/glib-String-Utility-Functions.html#g-printf">g_printf</a></span><span class="symbol">(</span><span class="string">&quot;ExamplePlugin: Plugin is not running now!</span><span class="gtkdoc esc">\n</span><span class="string">&quot;</span><span class="symbol">);</span>
+    <span class="comment">/* Disable all features of the plugin, and do some cleanning work. */</span>
+<span class="symbol">}</span>
+
+<span class="gtkdoc kwb">void</span> <span class="function">rc_plugin_module_configure</span><span class="symbol">()</span>
+<span class="symbol">{</span>
+    <span class="comment">/* Show configure dialog if necessary. */</span>
+<span class="symbol">}</span>
+
+<span class="gtkdoc kwb">const</span> RCPluginModuleData <span class="symbol">*</span><span class="function">rc_plugin_module_data</span><span class="symbol">()</span>
+<span class="symbol">{</span>
+    <span class="keyword">return</span> <span class="symbol">&amp;</span>plugin_module_data<span class="symbol">;</span>
+<span class="symbol">}</span></pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+</div>
+<br class="example-break">
+</div>
+<hr>
+<div class="refsect2" title="How to compile the plugin">
+<a name="id605024"></a><h3>How to compile the plugin</h3>
+<p>
+       The plugin is a module, so you have to compile it into a library. On
+       Linux, it is shared-object(.so). It is recommended to write a Makefile
+       to compile the plugin, or use autoconf/automake.
+    </p>
+<p>
+       Here is the Makefile of the example plugin mentioned above (the source
+       file name is example.c).
+    </p>
+<pre class="programlisting">
+CC=gcc
+PLUGIN_NAME=example.so
+INCS=
+SRCS=example.c
+OBJS=${SRCS:.c=.o}
+
+LIBS=glib-2.0 gtk+-2.0 gstreamer-0.10
+
+CFLAGS=`pkg-config --cflags ${LIBS}` -Wall -O2 -fPIC -I../../src/
+LDFLAGS=`pkg-config --libs ${LIBS}` -Wall -O2 -shared -fPIC
+
+all: ${PLUGIN_NAME}
+
+${PLUGIN_NAME}:${OBJS}
+	${CC} -o ${PLUGIN_NAME} ${OBJS} ${LDFLAGS}
+
+${OBJS}:${INCS}
+
+.c.o:
+	${CC} -c $&lt; ${CFLAGS}
+
+clean:
+	rm -f *.o ${PLUGIN_NAME}
+
+rebuild: clean all
+    </pre>
+<p>
+      This Makefile will produce shared-object example.so when it is executed.
+    </p>
+</div>
+<hr>
+<div class="refsect2" title="Write a plugin description file">
+<a name="id587623"></a><h3>Write a plugin description file</h3>
+<p>
+      Except the library file, the player also needs the description file to
+      get necessary information about the plugin. You need to write a
+      description file to make your plugin usable by the player.
+    </p>
+<p>
+      Here is the description file of the example plugin mentioned above.
+    </p>
+<div class="example">
+<a name="id578478"></a><p class="title"><b>Example 2. The description file of the example plugin</b></p>
+<div class="example-contents">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="symbol">[</span>RC Plugin<span class="symbol">]</span> <span class="preproc"># The group name must be</span> <span class="gtkdoc dstr">&quot;RC Plugin&quot;</span><span class="preproc">.</span>
+Type<span class="symbol">=</span>Module <span class="preproc"># Must be</span> <span class="gtkdoc dstr">&quot;Module&quot;</span><span class="preproc"> now.</span>
+File<span class="symbol">=</span>example<span class="symbol">.</span>so <span class="preproc"># The filename of the plugin library file.</span>
+Name<span class="symbol">=</span>Example Plugin <span class="preproc"># The name of the plugin</span>
+Description<span class="symbol">=</span>This is an example plugin<span class="symbol">.</span> <span class="preproc"># The description of the plugin.</span>
+Authors<span class="symbol">=</span>SuperCat <span class="symbol">&lt;</span>supercatexpert&#64;gmail<span class="symbol">.</span>com<span class="symbol">&gt;</span> <span class="preproc"># The author information.</span>
+Version<span class="symbol">=</span><span class="number">0.1</span> <span class="preproc"># The version</span>
+Website<span class="symbol">=</span>http<span class="symbol">:</span><span class="gtkdoc slc">//code.google.com/p/rhythmcat # The website.</span></pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+</div>
+<br class="example-break"><p>
+    </p>
+</div>
+<hr>
+<div class="refsect2" title="Make your custom plugin work">
+<a name="id576008"></a><h3>Make your custom plugin work</h3>
+<p>
+      Now you may have implemented the plugin, then you should put the files
+      into the right directory. The player needs two files to make the plugin
+      work, one is the library file, the other is the description file, and
+      put them into a director. The directory which contains the two files
+      should be named with the filename of the description file (without
+      extension name), and then put it into the plugin directory. There are
+      two places where you can put the plugin directory, one is under
+      $APP_DIR/plugins/ ($APP_DIR is the directory where the program data is),
+      the other is under ~/.RhythmCat/Plugins/. The plugin directory may be
+      descripted like this:
+    </p>
+<pre class="programlisting">
+ExamplePlugin
+----ExamplePlugin.conf # The description file.
+----example.so # The plugin library file.
+    </pre>
+<p>
+      Then put directory "ExamplePlugin" into $APP_DIR/plugins/ or
+      ~/.RhythmCat/Plugins/
+    </p>
+</div>
+<hr>
+<div class="refsect2" title="Catch signals in the player">
+<a name="id585427"></a><h3>Catch signals in the player</h3>
+<p>
+      Sometimes we need signals to know the working state of the player. When
+      the player starts to play, or being stopped, it will emit signals. The
+      way to catch these signals is to connect the signals to the callback
+      functions you implemented. If you want to use signals, you should include
+      header file <code class="filename">"player_object.h"</code> first, then you can
+      connect the signals to your callback functions by using
+      <a class="link" href="RCPlayer.html#rc-player-object-signal-connect-simple" title="rc_player_object_signal_connect_simple ()"><code class="function">rc_player_object_signal_connect_simple()</code></a>. The signal names are provided in
+      object <a class="link" href="RCPlayer.html" title="Player Object"><span class="type">RCPlayer</span></a>. This function will return the signal ID, and when you
+      uninitialize your plugin, please remember remove the signal first, by using
+      function <a class="link" href="RCPlayer.html#rc-player-object-signal-disconnect" title="rc_player_object_signal_disconnect ()"><code class="function">rc_player_object_signal_disconnect()</code></a>.
+    </p>
+</div>
+<hr>
+<div class="refsect2" title="About this manual">
+<a name="id582824"></a><h3>About this manual</h3>
+<p>
+      This manual helps you to make a usable plugin for RhythmCat Music Player.
+      If you have any questions or problems, please leave issues on the project
+      <a class="ulink" href="http://code.google.com/p/rhythmcat" target="_top">homepage</a>, or send
+      an e-mail to <a class="ulink" href="mailto:supercatexpert@gmail.com" target="_top">me</a>. I
+      also have implemented some plugins for the player, you can view the
+      source codes of them for reference.
+    </p>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.15</div>
+</body>
+</html>

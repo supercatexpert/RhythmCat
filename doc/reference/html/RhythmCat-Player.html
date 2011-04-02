@@ -1,0 +1,321 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Player</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="index.html" title="RhythmCat Music Player Development Reference Manual">
+<link rel="up" href="ch01.html" title="Player Backend">
+<link rel="prev" href="ch01.html" title="Player Backend">
+<link rel="next" href="RhythmCat-Core.html" title="Core">
+<meta name="generator" content="GTK-Doc V1.15 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="ch01.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">RhythmCat Music Player Development Reference Manual</th>
+<td><a accesskey="n" href="RhythmCat-Core.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#RhythmCat-Player.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#RhythmCat-Player.description" class="shortcut">Description</a>
+</td></tr>
+</table>
+<div class="refentry" title="Player">
+<a name="RhythmCat-Player"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="RhythmCat-Player.top_of_page"></a>Player</span></h2>
+<p>Player — Manage the player information, and initialize the
+player.</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv" title="Synopsis">
+<a name="RhythmCat-Player.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">
+#include &lt;player.h&gt;
+
+#define             <a class="link" href="RhythmCat-Player.html#GETTEXT-PACKAGE:CAPS" title="GETTEXT_PACKAGE">GETTEXT_PACKAGE</a>
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Player.html#rc-player-init" title="rc_player_init ()">rc_player_init</a>                      (<em class="parameter"><code><span class="type">int</span> *argc</code></em>,
+                                                         <em class="parameter"><code><span class="type">char</span> **argv[]</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Player.html#rc-player-main" title="rc_player_main ()">rc_player_main</a>                      ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Player.html#rc-player-exit" title="rc_player_exit ()">rc_player_exit</a>                      ();
+const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="RhythmCat-Player.html#rc-player-get-program-name" title="rc_player_get_program_name ()">rc_player_get_program_name</a>          ();
+const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *const * <a class="link" href="RhythmCat-Player.html#rc-player-get-authors" title="rc_player_get_authors ()">rc_player_get_authors</a>              ();
+const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *const * <a class="link" href="RhythmCat-Player.html#rc-player-get-documenters" title="rc_player_get_documenters ()">rc_player_get_documenters</a>          ();
+const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *const * <a class="link" href="RhythmCat-Player.html#rc-player-get-artists" title="rc_player_get_artists ()">rc_player_get_artists</a>              ();
+const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="RhythmCat-Player.html#rc-player-get-build-date" title="rc_player_get_build_date ()">rc_player_get_build_date</a>            ();
+const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="RhythmCat-Player.html#rc-player-get-version" title="rc_player_get_version ()">rc_player_get_version</a>               ();
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Player.html#rc-player-get-stable-flag" title="rc_player_get_stable_flag ()">rc_player_get_stable_flag</a>           ();
+const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="RhythmCat-Player.html#rc-player-get-conf-dir" title="rc_player_get_conf_dir ()">rc_player_get_conf_dir</a>              ();
+const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="RhythmCat-Player.html#rc-player-get-data-dir" title="rc_player_get_data_dir ()">rc_player_get_data_dir</a>              ();
+const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="RhythmCat-Player.html#rc-player-get-home-dir" title="rc_player_get_home_dir ()">rc_player_get_home_dir</a>              ();
+const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="RhythmCat-Player.html#rc-player-get-locale" title="rc_player_get_locale ()">rc_player_get_locale</a>                ();
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Player.html#rc-player-check-supported-format" title="rc_player_check_supported_format ()">rc_player_check_supported_format</a>    (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>);
+</pre>
+</div>
+<div class="refsect1" title="Description">
+<a name="RhythmCat-Player.description"></a><h2>Description</h2>
+<p>
+Manage the player information, and initialize the player.
+</p>
+</div>
+<div class="refsect1" title="Details">
+<a name="RhythmCat-Player.details"></a><h2>Details</h2>
+<div class="refsect2" title="GETTEXT_PACKAGE">
+<a name="GETTEXT-PACKAGE:CAPS"></a><h3>GETTEXT_PACKAGE</h3>
+<pre class="programlisting">#define GETTEXT_PACKAGE "RhythmCat"
+</pre>
+</div>
+<hr>
+<div class="refsect2" title="rc_player_init ()">
+<a name="rc-player-init"></a><h3>rc_player_init ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_player_init                      (<em class="parameter"><code><span class="type">int</span> *argc</code></em>,
+                                                         <em class="parameter"><code><span class="type">char</span> **argv[]</code></em>);</pre>
+<p>
+Initialize the player.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>argc</code></em> :</span></p></td>
+<td>address of the argc parameter of your <code class="function">main()</code> function
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>argv</code></em> :</span></p></td>
+<td>address of the argv parameter of <code class="function">main()</code>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_player_main ()">
+<a name="rc-player-main"></a><h3>rc_player_main ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_player_main                      ();</pre>
+<p>
+Runs the main loop until <a class="link" href="RhythmCat-Player.html#rc-player-exit" title="rc_player_exit ()"><code class="function">rc_player_exit()</code></a> is called.
+</p>
+</div>
+<hr>
+<div class="refsect2" title="rc_player_exit ()">
+<a name="rc-player-exit"></a><h3>rc_player_exit ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_player_exit                      ();</pre>
+<p>
+Exit the player.
+</p>
+</div>
+<hr>
+<div class="refsect2" title="rc_player_get_program_name ()">
+<a name="rc-player-get-program-name"></a><h3>rc_player_get_program_name ()</h3>
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       rc_player_get_program_name          ();</pre>
+<p>
+Return the name of the program.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The program name of the player, cannot be changed.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_player_get_authors ()">
+<a name="rc-player-get-authors"></a><h3>rc_player_get_authors ()</h3>
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *const * rc_player_get_authors              ();</pre>
+<p>
+Return the author information.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The string array of author information, cannot be changed.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_player_get_documenters ()">
+<a name="rc-player-get-documenters"></a><h3>rc_player_get_documenters ()</h3>
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *const * rc_player_get_documenters          ();</pre>
+<p>
+Return the documenter information.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The string array of documenter information, cannot be changed.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_player_get_artists ()">
+<a name="rc-player-get-artists"></a><h3>rc_player_get_artists ()</h3>
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *const * rc_player_get_artists              ();</pre>
+<p>
+Return the artist information.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The string array of artist information, cannot be changed.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_player_get_build_date ()">
+<a name="rc-player-get-build-date"></a><h3>rc_player_get_build_date ()</h3>
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       rc_player_get_build_date            ();</pre>
+<p>
+Return the build date.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The build date, cannot be changed.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_player_get_version ()">
+<a name="rc-player-get-version"></a><h3>rc_player_get_version ()</h3>
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       rc_player_get_version               ();</pre>
+<p>
+Return the version information.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The version information, cannot be changed.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_player_get_stable_flag ()">
+<a name="rc-player-get-stable-flag"></a><h3>rc_player_get_stable_flag ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_player_get_stable_flag           ();</pre>
+<p>
+Return the stable flag.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> Whether the player is in a stable version.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_player_get_conf_dir ()">
+<a name="rc-player-get-conf-dir"></a><h3>rc_player_get_conf_dir ()</h3>
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       rc_player_get_conf_dir              ();</pre>
+<p>
+Return the configure directory (~/.RhythmCat).
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The path of the configure directory. 
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_player_get_data_dir ()">
+<a name="rc-player-get-data-dir"></a><h3>rc_player_get_data_dir ()</h3>
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       rc_player_get_data_dir              ();</pre>
+<p>
+Return the program data directory.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The program data directory.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_player_get_home_dir ()">
+<a name="rc-player-get-home-dir"></a><h3>rc_player_get_home_dir ()</h3>
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       rc_player_get_home_dir              ();</pre>
+<p>
+Return the user home directory.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The user home directory.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_player_get_locale ()">
+<a name="rc-player-get-locale"></a><h3>rc_player_get_locale ()</h3>
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       rc_player_get_locale                ();</pre>
+<p>
+Return the locale information (e.g en_US).
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The locale information.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_player_check_supported_format ()">
+<a name="rc-player-check-supported-format"></a><h3>rc_player_check_supported_format ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_player_check_supported_format    (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>);</pre>
+<p>
+Check whether the given file is supported by the player.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>filename</code></em> :</span></p></td>
+<td>the filename to check
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> Whether the file is supported.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.15</div>
+</body>
+</html>
