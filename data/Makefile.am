@@ -5,7 +5,7 @@ EXTRA_DIST =
 RhythmCat_uninstalldir = ${datadir}/RhythmCat
 
 # Rule to update the icon cache after installing the icon
-gtk_update_icon_cache = gtk-update-icon-cache -f -t $(datadir)/icons
+gtk_update_icon_cache = gtk-update-icon-cache -f -t $(datadir)/RhythmCat/images
 
 install-data-hook: update-icon-cache
 uninstall-hook: update-icon-cache

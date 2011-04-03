@@ -3,7 +3,7 @@
 Categories=GTK;Audio;Player;
 Comment=RhythmCat Music Player
 GenericName=Music Player
-Icon=RhythmCat_Icon.xpm
+Icon=/usr/share/RhythmCat/images/RhythmCat_128x128.PNG
 Name=RhythmCat
 Exec=RhythmCat
 StartupNotify=false

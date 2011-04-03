@@ -43,31 +43,31 @@ msgstr ""
 
 #: src/gui.c:515
 msgid "_File"
-msgstr ""
+msgstr "ファイル(_F)"
 
 #: src/gui.c:516
 msgid "_Edit"
-msgstr ""
+msgstr "編集(_E)"
 
 #: src/gui.c:517
 msgid "_View"
-msgstr ""
+msgstr "表示(_V)"
 
 #: src/gui.c:518
 msgid "_Control"
-msgstr ""
+msgstr "コントロール(_C)"
 
 #: src/gui.c:519
 msgid "_Help"
-msgstr ""
+msgstr "ヘルプ(_H)"
 
 #: src/gui.c:520
 msgid "_Repeat"
-msgstr ""
+msgstr "リピート(_R)"
 
 #: src/gui.c:521
 msgid "Ran_dom"
-msgstr ""
+msgstr "ランダム(_D)"
 
 #: src/gui.c:523 src/gui.c:623
 msgid "_New Playlist"
@@ -88,7 +88,7 @@ msgstr "ファイルのインポート(_M)"
 
 #: src/gui.c:531 src/gui.c:643
 msgid "Import _Playlist"
-msgstr "プレイリストのインポート"
+msgstr "プレイリストのインポート(_P)"
 
 #: src/gui.c:532 src/gui.c:644
 #, fuzzy
@@ -97,15 +97,15 @@ msgstr "プレイリストのインポート"
 
 #: src/gui.c:535
 msgid "Import _Folder"
-msgstr "フォルダのインポート"
+msgstr "フォルダのインポート(_F)"
 
 #: src/gui.c:536
 msgid "Import all music from folder"
-msgstr ""
+msgstr "フォルダのインポート"
 
 #: src/gui.c:539
 msgid "_Export Playlist"
-msgstr "プレイリストのエクスポート"
+msgstr "プレイリストのエクスポート(_E)"
 
 #: src/gui.c:540 src/gui.c:636
 #, fuzzy
@@ -114,7 +114,7 @@ msgstr "プレイリストのエクスポート"
 
 #: src/gui.c:543
 msgid "Export _All Playlists"
-msgstr "全てのプレイリストのエクスポート"
+msgstr "全てのプレイリストのエクスポート(_A)"
 
 #: src/gui.c:544
 #, fuzzy
@@ -128,11 +128,11 @@ msgstr "終了(_Q)"
 #: src/gui.c:548 src/gui.c:688
 #, fuzzy
 msgid "Quit this player"
-msgstr "このプレーヤの情報"
+msgstr "終了"
 
 #: src/gui.c:551 src/gui.c:627
 msgid "Re_name Playlist"
-msgstr "プレイリストの名前の変更"
+msgstr "プレイリストの名前の変更(_N)"
 
 #: src/gui.c:552
 #, fuzzy
@@ -142,55 +142,55 @@ msgstr "プレイリストの名前の変更"
 #: src/gui.c:555 src/gui.c:631
 #, fuzzy
 msgid "R_emove Playlist"
-msgstr "プレイリストの名前の変更"
+msgstr "プレイリストの削除(_E)"
 
 #: src/gui.c:556 src/gui.c:632
 #, fuzzy
 msgid "Remove the playlist"
-msgstr "プレイリストの名前の変更"
+msgstr "プレイリストの削除"
 
 #: src/gui.c:559
 #, fuzzy
 msgid "_Remove Music"
-msgstr "ファイルのインポート(_M)"
+msgstr "プレイリストから削除します(_R)"
 
 #: src/gui.c:560 src/gui.c:652
 msgid "Remove music from playlist"
-msgstr ""
+msgstr "プレイリストから削除します"
 
 #: src/gui.c:563 src/gui.c:647
 msgid "Select _All"
-msgstr ""
+msgstr "すべて選択(_A)"
 
 #: src/gui.c:564 src/gui.c:648
 msgid "Select all music in the playlist"
-msgstr ""
+msgstr "すべて選択"
 
 #: src/gui.c:567 src/gui.c:655
 #, fuzzy
 msgid "Re_fresh Playlist"
-msgstr "プレイリストの名前の変更"
+msgstr "プレイリストのリフレッシュ"
 
 #: src/gui.c:568 src/gui.c:656
 msgid "Refresh music information in the playlist"
-msgstr ""
+msgstr "プレイリストをリフレッシュする"
 
 #: src/gui.c:571
 msgid "Plu_gins"
-msgstr ""
+msgstr "プラグイン(_G)"
 
 #: src/gui.c:572
 msgid "Configure plugins"
-msgstr ""
+msgstr "プラグインの設定"
 
 #: src/gui.c:575
 msgid "_Preferences"
-msgstr ""
+msgstr "設定(_P)"
 
 #: src/gui.c:576
 #, fuzzy
 msgid "Configure the player"
-msgstr "このプレーヤの情報"
+msgstr "このプレーヤを設定する"
 
 #: src/gui.c:579
 msgid "_Mini Mode"
@@ -207,7 +207,7 @@ msgstr "再生/ポース(_P)"
 
 #: src/gui.c:584 src/gui.c:660
 msgid "Play or pause the music"
-msgstr ""
+msgstr "再生/ポース"
 
 #: src/gui.c:587 src/gui.c:663
 msgid "_Stop"
@@ -215,7 +215,7 @@ msgstr "停止(_S)"
 
 #: src/gui.c:588 src/gui.c:664
 msgid "Stop the music"
-msgstr ""
+msgstr "停止"
 
 #: src/gui.c:591 src/gui.c:667
 msgid "Pre_vious"
@@ -223,7 +223,7 @@ msgstr "前へ(_V)"
 
 #: src/gui.c:592 src/gui.c:668
 msgid "Play previous music"
-msgstr ""
+msgstr "前へ"
 
 #: src/gui.c:595 src/gui.c:671
 msgid "_Next"
@@ -231,7 +231,7 @@ msgstr "次へ(_N)"
 
 #: src/gui.c:596 src/gui.c:672
 msgid "Play next music"
-msgstr ""
+msgstr "次へ"
 
 #: src/gui.c:599
 msgid "_Backward"
@@ -271,7 +271,7 @@ msgstr "目次(_C)"
 
 #: src/gui.c:616
 msgid "Get help contents"
-msgstr ""
+msgstr "目次"
 
 #: src/gui.c:619 src/gui.c:683
 msgid "_About"
@@ -306,11 +306,11 @@ msgstr ""
 
 #: src/gui.c:679
 msgid "_Mode Switch"
-msgstr ""
+msgstr "モードスウィッチ"
 
 #: src/gui.c:680
 msgid "Switch between normal mode and mini mode"
-msgstr ""
+msgstr "モードスウィッチ"
 
 #: src/gui.c:697
 #, fuzzy
@@ -324,7 +324,7 @@ msgstr "新しいプレイリスト(_N)"
 
 #: src/gui.c:700
 msgid "_Equalizer"
-msgstr ""
+msgstr "イコライザー(_E)"
 
 #: src/gui.c:701
 msgid "Show equalizer"
@@ -332,11 +332,11 @@ msgstr ""
 
 #: src/gui.c:709
 msgid "_No Repeat"
-msgstr ""
+msgstr "リピートしない(_N)"
 
 #: src/gui.c:710
 msgid "No repeat"
-msgstr ""
+msgstr "リピートしない"
 
 #: src/gui.c:712
 msgid "Single _Music Repeat"
@@ -357,24 +357,24 @@ msgstr ""
 #: src/gui.c:718
 #, fuzzy
 msgid "_All Playlists Repeat"
-msgstr "全てのプレイリストのエクスポート"
+msgstr "全てのプレイリストのリピート(_A)"
 
 #: src/gui.c:719
 msgid "Repeat playing all playlists"
-msgstr ""
+msgstr "全てのプレイリストのリピート"
 
 #: src/gui.c:727
 msgid "_No Random"
-msgstr ""
+msgstr "ランダムしない"
 
 #: src/gui.c:728
 msgid "No random playing"
-msgstr ""
+msgstr "ランダムしない"
 
 #: src/gui.c:730
 #, fuzzy
 msgid "_Single Playlist Random"
-msgstr "プレイリストの名前の変更"
+msgstr ""
 
 #: src/gui.c:731
 msgid "Random playing a music in the playlist"
@@ -383,7 +383,7 @@ msgstr ""
 #: src/gui.c:733
 #, fuzzy
 msgid "_All Playlists Random"
-msgstr "全てのプレイリストのエクスポート"
+msgstr ""
 
 #: src/gui.c:734
 msgid "Random playing a music in all playlists"
@@ -399,19 +399,19 @@ msgstr ""
 
 #: src/gui.c:993 src/gui.c:995
 msgid "Playlists"
-msgstr ""
+msgstr "プレイリスト"
 
 #: src/gui.c:994
 msgid "Equalizer"
-msgstr ""
+msgstr "イコライザー"
 
 #: src/gui.c:1176
 msgid "Cancel"
-msgstr ""
+msgstr "取り消し"
 
 #: src/gui.c:1323
 msgid "Unknown Format"
-msgstr ""
+msgstr "不明なフォーマット"
 
 #: src/gui.c:1327
 #, c-format
@@ -425,11 +425,11 @@ msgstr ""
 
 #: src/gui.c:1338
 msgid "Mono"
-msgstr ""
+msgstr "モノ"
 
 #: src/gui.c:1342
 msgid "Stereo"
-msgstr ""
+msgstr "ステレオ"
 
 #: src/gui.c:1346
 #, c-format
@@ -438,23 +438,23 @@ msgstr ""
 
 #: src/gui.c:1353 src/playlist.c:256 src/playlist.c:331 src/playlist.c:443
 msgid "Unknown Title"
-msgstr ""
+msgstr "不明なタイトル"
 
 #: src/gui.c:1357
 msgid "Unknown Artist"
-msgstr ""
+msgstr "不明なアーティスト"
 
 #: src/gui.c:1361
 msgid "Unknown Album"
-msgstr ""
+msgstr "不明なアルバム"
 
 #: src/gui.c:1644
 msgid "Importing..."
-msgstr ""
+msgstr "インポート中"
 
 #: src/gui.c:1648
 msgid "Refreshing..."
-msgstr ""
+msgstr "リフレシュ中"
 
 #: src/gui_dialog.c:118
 msgid "A music player based on GTK+ 2.0 & Gstreamer 0.10"
