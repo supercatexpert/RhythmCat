@@ -57,7 +57,8 @@ AC_ARG_ENABLE(debug, [  --enable-debug          enable debug mode], \
 AM_CONDITIONAL(DEBUG_MODE, test "x$enable_debug" = "xyes")
 
 AC_OUTPUT([Makefile po/Makefile.in po/Makefile src/Makefile data/Makefile \
-    doc/Makefile doc/reference/Makefile data/images/Makefile])
+    doc/Makefile doc/reference/Makefile data/images/Makefile
+    data/icons/Makefile])
 
 AC_CONFIG_MACRO_DIR(m4)
 

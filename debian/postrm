@@ -1,5 +1,25 @@
 #!/bin/sh
-# filename: postinst/postrm
+# postinst script for rhythmcat
+#
+# see: dh_installdeb(1)
+
+set -e
+
+case "$1" in
+    configure)
+    ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
 if test -x /usr/bin/update-menus; then
-update-menus
+    update-menus
 fi
+
+exit 0

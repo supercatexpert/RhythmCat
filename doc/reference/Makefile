@@ -181,7 +181,7 @@ mandir = ${datarootdir}/man
 mkdir_p = /bin/mkdir -p
 oldincludedir = /usr/include
 pdfdir = ${docdir}
-prefix = /usr
+prefix = /opt/amd64/RhythmCat
 program_transform_name = s,x,x,
 psdir = ${docdir}
 sbindir = ${exec_prefix}/sbin
@@ -310,10 +310,10 @@ REPORT_FILES = \
 	$(DOC_MODULE)-unused.txt
 
 CLEANFILES = $(SCANOBJ_FILES) $(REPORT_FILES) $(DOC_STAMPS)
-##HTML_BUILD_STAMP = 
-#HTML_BUILD_STAMP = html-build.stamp
-#PDF_BUILD_STAMP = 
-##PDF_BUILD_STAMP = pdf-build.stamp
+#HTML_BUILD_STAMP = 
+HTML_BUILD_STAMP = html-build.stamp
+PDF_BUILD_STAMP = 
+#PDF_BUILD_STAMP = pdf-build.stamp
 all: all-am
 
 .SUFFIXES:
@@ -500,8 +500,8 @@ uninstall-am: uninstall-local
 	uninstall-local
 
 
-#all-local: $(HTML_BUILD_STAMP) $(PDF_BUILD_STAMP)
-all-local:
+all-local: $(HTML_BUILD_STAMP) $(PDF_BUILD_STAMP)
+#all-local:
 
 docs: $(HTML_BUILD_STAMP) $(PDF_BUILD_STAMP)
 
@@ -631,10 +631,10 @@ uninstall-local:
 #
 # Require gtk-doc when making dist
 #
-#dist-check-gtkdoc:
 dist-check-gtkdoc:
-	@echo "*** gtk-doc must be installed and enabled in order to make dist"
-	@false
+#dist-check-gtkdoc:
+#	@echo "*** gtk-doc must be installed and enabled in order to make dist"
+#	@false
 
 dist-hook: dist-check-gtkdoc dist-hook-local
 	mkdir $(distdir)/html

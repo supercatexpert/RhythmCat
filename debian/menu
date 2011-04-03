@@ -2,4 +2,4 @@
   section="Applications/Sound" \
   title="RhythmCat Music Player" \
   command="/usr/bin/RhythmCat" \
-  icon="/usr/share/RhythmCat/images/RhythmCat_128x128.PNG"
+  icon="/usr/share/RhythmCat/icons/RhythmCat_Icon.xpm"
