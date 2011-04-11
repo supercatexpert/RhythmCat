@@ -79,6 +79,7 @@ gint rc_plist_get_list1_length();
 void rc_plist_set_list1_name(gint index, const gchar *name);
 gint rc_plist_get_list2_length(gint index);
 gboolean rc_plist_play_by_index(gint list_index, gint music_index);
+gboolean rc_plist_play_by_uri(const gchar *uri);
 gboolean rc_plist_play_get_index(gint *index1, gint *index2);
 void rc_plist_stop();
 gboolean rc_plist_play_prev();

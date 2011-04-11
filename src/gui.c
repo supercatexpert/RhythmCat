@@ -62,6 +62,18 @@ typedef struct RCGuiViewPageData
     GtkAction *action;
 }RCGuiViewPageData;
 
+typedef enum
+{
+    RC_UI_CTRL_PREV,
+    RC_UI_CTRL_PLAY,
+    RC_UI_CTRL_STOP,
+    RC_UI_CTRL_NEXT,
+    RC_UI_CTRL_OPEN,
+    RC_UI_CTRL_LIST,
+    RC_UI_CTRL_EQ,
+    RC_UI_CTRL_MINI
+}RCGuiControlType;
+
 /*
  * Refresh the information label.
  */
@@ -342,6 +354,28 @@ static void rc_gui_view_menu_clicked(GtkAction *action, GtkRadioAction *current)
             }
         }
     }
+}
+
+/*
+ * Process the click event of the playlist button.
+ */
+
+static void rc_gui_plist_button_clicked()
+{
+    gtk_radio_action_set_current_value(GTK_RADIO_ACTION(
+        gtk_ui_manager_get_action(rc_gui.main_ui,
+        "/RCMenuBar/ViewMenu/ViewPlaylist")), 0);
+}
+
+/*
+ * Process the click event of the equalizer button.
+ */
+
+static void rc_gui_eq_button_clicked()
+{
+    gtk_radio_action_set_current_value(GTK_RADIO_ACTION(
+        gtk_ui_manager_get_action(rc_gui.main_ui,
+        "/RCMenuBar/ViewMenu/ViewEqualizer")), 1);
 }
 
 /*
@@ -941,13 +975,11 @@ static void rc_gui_layout_init()
     GtkWidget *main_vbox, *player_vbox;
     GtkWidget *hbox1, *hbox2, *hbox3, *hbox4, *hbox5;
     GtkWidget *vbox1, *vbox2, *vbox3;
-    GtkWidget *control_button_hbox;
     GtkWidget *playlists_label, *eq_label;
     GtkWidget *pls_label;
     GtkWidget *playlist_frame;
     GtkWidget *vol_hbox;
-    GtkWidget *control_buttons_hbox;
-    GtkWidget *control_hbox, *info_label_hbox;
+    GtkWidget *info_label_hbox;
     GtkWidget *playlist_vbox, *playlist_ctrl_hbox;
     GtkWidget *album_frame;
     gint i = 0;
@@ -965,7 +997,6 @@ static void rc_gui_layout_init()
     vbox3 = gtk_vbox_new(FALSE, 0);
     vol_hbox = gtk_hbox_new(FALSE, 2);
     rc_gui.status_hbox = gtk_hbox_new(FALSE, 2);
-    control_button_hbox = gtk_hbox_new(FALSE, 1);
     playlist_ctrl_hbox = gtk_hbox_new(TRUE, 1);
     rc_gui.list1_scr_window = gtk_scrolled_window_new(NULL, NULL);
     rc_gui.list2_scr_window = gtk_scrolled_window_new(NULL, NULL);
@@ -975,8 +1006,7 @@ static void rc_gui_layout_init()
         rc_gui.list2_scr_window), GTK_POLICY_NEVER,GTK_POLICY_AUTOMATIC);
     gtk_widget_set_name(rc_gui.list1_scr_window, "RCListScrolledWindow");
     gtk_widget_set_name(rc_gui.list2_scr_window, "RCListScrolledWindow");
-    control_buttons_hbox = gtk_hbox_new(FALSE, 0);
-    control_hbox = gtk_hbox_new(FALSE, 1);
+    rc_gui.control_buttons_bar = gtk_toolbar_new();
     info_label_hbox = gtk_hbox_new(FALSE, 20);
     rc_gui.list_hpaned = gtk_hpaned_new();
     gtk_widget_set_name(rc_gui.list_hpaned, "RCListHPaned");
@@ -985,9 +1015,14 @@ static void rc_gui_layout_init()
         rc_gui.list1_tree_view);
     gtk_container_add(GTK_CONTAINER(rc_gui.list2_scr_window),
         rc_gui.list2_tree_view);
-    for(i=0;i<4;i++)
-        gtk_box_pack_start(GTK_BOX(control_button_hbox), 
-            rc_gui.control_buttons[i], FALSE, FALSE, 0);
+    gtk_toolbar_set_style(GTK_TOOLBAR(rc_gui.control_buttons_bar),
+        GTK_TOOLBAR_ICONS);
+    gtk_toolbar_set_icon_size(GTK_TOOLBAR(rc_gui.control_buttons_bar),
+        GTK_ICON_SIZE_SMALL_TOOLBAR);
+    gtk_widget_set_name(rc_gui.control_buttons_bar, "RCControlBar");
+    for(i=0;i<8;i++)
+        gtk_toolbar_insert(GTK_TOOLBAR(rc_gui.control_buttons_bar), 
+            GTK_TOOL_ITEM(rc_gui.control_buttons[i]), -1);
     album_frame = gtk_frame_new(NULL);
     playlist_frame = gtk_frame_new(NULL);
     playlists_label = gtk_label_new(_("Playlists"));
@@ -1015,7 +1050,8 @@ static void rc_gui_layout_init()
     gtk_container_add(GTK_CONTAINER(album_frame), rc_gui.album_eventbox);
     gtk_container_add(GTK_CONTAINER(rc_gui.album_eventbox),
         rc_gui.album_image);
-    gtk_box_pack_start(GTK_BOX(hbox2), control_button_hbox, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(hbox2), rc_gui.control_buttons_bar, TRUE,
+        TRUE, 0);
     gtk_box_pack_end(GTK_BOX(hbox2), rc_gui.volume_button, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(hbox5), vbox1, TRUE, TRUE, 0);
     gtk_box_pack_start(GTK_BOX(hbox5), vbox2, FALSE, FALSE, 0);
@@ -1058,14 +1094,22 @@ static void rc_gui_signal_bind()
         G_CALLBACK(rc_gui_adjust_volume), NULL);
     g_signal_connect(G_OBJECT(rc_gui.list2_selection), "changed",
         G_CALLBACK(rc_gui_set_list2_menu), NULL);
-    g_signal_connect(G_OBJECT(rc_gui.control_buttons[0]), "clicked",
-        G_CALLBACK(rc_gui_prev_button_clicked), NULL);
-    g_signal_connect(G_OBJECT(rc_gui.control_buttons[1]), "clicked",
-        G_CALLBACK(rc_gui_play_button_clicked), NULL);
-    g_signal_connect(G_OBJECT(rc_gui.control_buttons[2]), "clicked",
-        G_CALLBACK(rc_gui_stop_button_clicked), NULL);
-    g_signal_connect(G_OBJECT(rc_gui.control_buttons[3]), "clicked",
-        G_CALLBACK(rc_gui_next_button_clicked), NULL);
+    g_signal_connect(G_OBJECT(rc_gui.control_buttons[RC_UI_CTRL_PREV]),
+        "clicked", G_CALLBACK(rc_gui_prev_button_clicked), NULL);
+    g_signal_connect(G_OBJECT(rc_gui.control_buttons[RC_UI_CTRL_PLAY]),
+        "clicked", G_CALLBACK(rc_gui_play_button_clicked), NULL);
+    g_signal_connect(G_OBJECT(rc_gui.control_buttons[RC_UI_CTRL_STOP]),
+        "clicked", G_CALLBACK(rc_gui_stop_button_clicked), NULL);
+    g_signal_connect(G_OBJECT(rc_gui.control_buttons[RC_UI_CTRL_NEXT]),
+        "clicked", G_CALLBACK(rc_gui_next_button_clicked), NULL);
+    g_signal_connect(G_OBJECT(rc_gui.control_buttons[RC_UI_CTRL_OPEN]),
+        "clicked", G_CALLBACK(rc_gui_show_open_dialog), NULL);
+    g_signal_connect(G_OBJECT(rc_gui.control_buttons[RC_UI_CTRL_LIST]),
+        "clicked", G_CALLBACK(rc_gui_plist_button_clicked), NULL);
+    g_signal_connect(G_OBJECT(rc_gui.control_buttons[RC_UI_CTRL_EQ]),
+        "clicked", G_CALLBACK(rc_gui_eq_button_clicked), NULL);
+    g_signal_connect(G_OBJECT(rc_gui.control_buttons[RC_UI_CTRL_MINI]),
+        "clicked", G_CALLBACK(rc_gui_mini_mini_mode_clicked), NULL);
     g_signal_connect(G_OBJECT(rc_gui.status_cancel_button), "clicked",
         G_CALLBACK(rc_gui_import_cancel_button_clicked), NULL);
     g_signal_connect(GTK_STATUS_ICON(rc_gui.tray_icon), "activate", 
@@ -1174,22 +1218,24 @@ gboolean rc_gui_init()
     g_object_set(G_OBJECT(rc_gui.volume_button), "size",
         GTK_ICON_SIZE_SMALL_TOOLBAR, NULL);
     rc_gui.status_cancel_button = gtk_button_new_with_mnemonic(_("Cancel"));
-    rc_gui.control_images[0] = gtk_image_new_from_stock(
-        GTK_STOCK_MEDIA_PREVIOUS, GTK_ICON_SIZE_SMALL_TOOLBAR);
-    rc_gui.control_images[1] = gtk_image_new_from_stock(GTK_STOCK_MEDIA_PLAY,
-        GTK_ICON_SIZE_SMALL_TOOLBAR);
-    rc_gui.control_images[2] = gtk_image_new_from_stock(GTK_STOCK_MEDIA_STOP,
-        GTK_ICON_SIZE_SMALL_TOOLBAR);
-    rc_gui.control_images[3] = gtk_image_new_from_stock(GTK_STOCK_MEDIA_NEXT,
-        GTK_ICON_SIZE_SMALL_TOOLBAR);
-    for(i=0;i<4;i++)
+    rc_gui.control_buttons[RC_UI_CTRL_PREV] = GTK_WIDGET(
+        gtk_tool_button_new_from_stock(GTK_STOCK_MEDIA_PREVIOUS));
+    rc_gui.control_buttons[RC_UI_CTRL_PLAY] = GTK_WIDGET(
+        gtk_tool_button_new_from_stock(GTK_STOCK_MEDIA_PLAY));
+    rc_gui.control_buttons[RC_UI_CTRL_STOP] = GTK_WIDGET(
+        gtk_tool_button_new_from_stock(GTK_STOCK_MEDIA_STOP));
+    rc_gui.control_buttons[RC_UI_CTRL_NEXT] = GTK_WIDGET(
+        gtk_tool_button_new_from_stock(GTK_STOCK_MEDIA_NEXT));
+    rc_gui.control_buttons[RC_UI_CTRL_OPEN] = GTK_WIDGET(
+        gtk_tool_button_new_from_stock(GTK_STOCK_OPEN));
+    rc_gui.control_buttons[RC_UI_CTRL_LIST] = GTK_WIDGET(
+        gtk_tool_button_new_from_stock(GTK_STOCK_JUSTIFY_FILL));
+    rc_gui.control_buttons[RC_UI_CTRL_EQ] = GTK_WIDGET(
+        gtk_tool_button_new_from_stock(GTK_STOCK_PROPERTIES));
+    rc_gui.control_buttons[RC_UI_CTRL_MINI] = GTK_WIDGET(
+        gtk_tool_button_new_from_stock(GTK_STOCK_GOTO_BOTTOM));
+    for(i=0;i<8;i++)
     {
-        gtk_image_set_pixel_size(GTK_IMAGE(rc_gui.control_images[i]), 16);
-        rc_gui.control_buttons[i] = gtk_button_new();
-        gtk_button_set_relief(GTK_BUTTON(rc_gui.control_buttons[i]),
-            GTK_RELIEF_NONE);
-        gtk_container_add(GTK_CONTAINER(rc_gui.control_buttons[i]),
-            rc_gui.control_images[i]);
         gtk_widget_set_name(rc_gui.control_buttons[i], "RCControlButton");
         g_object_set(rc_gui.control_buttons[i], "can-focus", FALSE, NULL);
     }
@@ -1275,16 +1321,16 @@ void rc_gui_set_play_button_state(gboolean state)
 {
     if(state)
     {
-        gtk_image_set_from_stock(GTK_IMAGE(rc_gui.control_images[1]),
-            GTK_STOCK_MEDIA_PAUSE, GTK_ICON_SIZE_MENU);
+        gtk_tool_button_set_stock_id(GTK_TOOL_BUTTON(
+            rc_gui.control_buttons[RC_UI_CTRL_PLAY]), GTK_STOCK_MEDIA_PAUSE);
         g_object_set(G_OBJECT(gtk_ui_manager_get_action(rc_gui.main_ui,
             "/RCMenuBar/ControlMenu/ControlPlay")), "stock-id",
             GTK_STOCK_MEDIA_PAUSE, NULL);
     }
     else
     {
-        gtk_image_set_from_stock(GTK_IMAGE(rc_gui.control_images[1]),
-            GTK_STOCK_MEDIA_PLAY, GTK_ICON_SIZE_MENU);
+        gtk_tool_button_set_stock_id(GTK_TOOL_BUTTON(
+            rc_gui.control_buttons[RC_UI_CTRL_PLAY]), GTK_STOCK_MEDIA_PLAY);
         g_object_set(G_OBJECT(gtk_ui_manager_get_action(rc_gui.main_ui,
             "/RCMenuBar/ControlMenu/ControlPlay")), "stock-id",
             GTK_STOCK_MEDIA_PLAY, NULL);
@@ -1778,5 +1824,18 @@ gboolean rc_gui_view_remove_page(guint id)
         }
     }
     return FALSE;
+}
+
+/**
+ * rc_gui_get_tray_icon:
+ *
+ * Return the tray icon.
+ *
+ * Returns: The tray icon.
+ */
+
+GtkStatusIcon *rc_gui_get_tray_icon()
+{
+    return rc_gui.tray_icon;
 }
 

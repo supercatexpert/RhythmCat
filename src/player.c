@@ -56,8 +56,8 @@
 #endif
 
 static const gchar rc_player_program_name[] = "RhythmCat Music Player";
-static const gchar rc_player_build_date[] = "110402";
-static const gchar rc_player_version[] = "1.0.0 alpha 1";
+static const gchar rc_player_build_date[] = "110411";
+static const gchar rc_player_version[] = "1.0.0 alpha 2";
 static const gboolean rc_player_stable_flag = FALSE;
 static const gchar *rc_player_support_formatx = "(.FLAC|.OGG|.MP3|.WMA|.WAV|"
     ".OGA|.OGM|.APE|.AAC|.AC3|.MIDI|.MP2|.MID)$";
@@ -261,6 +261,18 @@ void rc_player_init(int *argc, char **argv[])
     gdk_threads_init();
     g_type_init();
     dbus_g_thread_init();
+    if(locale_dir==NULL)
+        bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
+    else
+    {
+        bindtextdomain(GETTEXT_PACKAGE, locale_dir);
+        g_free(locale_dir);
+    }
+    bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
+    textdomain(GETTEXT_PACKAGE);
+    rc_player_locale = g_strdup(setlocale(LC_ALL, NULL));
+    rc_set_init();
+    rc_gui_style_refresh();
     /* Arguments/Options process. */
     if(!gtk_init_with_args(argc, argv, NULL, options, GETTEXT_PACKAGE, &error))
     {
@@ -281,24 +293,12 @@ void rc_player_init(int *argc, char **argv[])
     rc_player_support_format_regex = g_regex_new(rc_player_support_formatx,
         G_REGEX_CASELESS, G_REGEX_MATCH_ANCHORED, &error);
     if(error!=NULL) g_error_free(error);
-    if(locale_dir==NULL)
-        bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
-    else
-    {
-        bindtextdomain(GETTEXT_PACKAGE, locale_dir);
-        g_free(locale_dir);
-    }
-    bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
-    textdomain(GETTEXT_PACKAGE);
-    rc_player_locale = g_strdup(setlocale(LC_ALL, NULL));
-    rc_set_init();
     gst_init(argc, argv);
     rc_player_dbus_init(rc_player_remaining_args);
     rc_gui_init();
     rc_core_init();
     rc_gui_eq_data_init();
     rc_gui_eq_init();
-    rc_gui_style_refresh();
     rc_gui_style_init();
     rc_msg_init();
     rc_plist_init();

@@ -133,6 +133,7 @@
 <ANCHOR id="rc-plist-set-list1-name" href="RhythmCat/RhythmCat-Playlist.html#rc-plist-set-list1-name">
 <ANCHOR id="rc-plist-get-list2-length" href="RhythmCat/RhythmCat-Playlist.html#rc-plist-get-list2-length">
 <ANCHOR id="rc-plist-play-by-index" href="RhythmCat/RhythmCat-Playlist.html#rc-plist-play-by-index">
+<ANCHOR id="rc-plist-play-by-uri" href="RhythmCat/RhythmCat-Playlist.html#rc-plist-play-by-uri">
 <ANCHOR id="rc-plist-play-get-index" href="RhythmCat/RhythmCat-Playlist.html#rc-plist-play-get-index">
 <ANCHOR id="rc-plist-stop" href="RhythmCat/RhythmCat-Playlist.html#rc-plist-stop">
 <ANCHOR id="rc-plist-play-prev" href="RhythmCat/RhythmCat-Playlist.html#rc-plist-play-prev">
@@ -226,6 +227,7 @@
 <ANCHOR id="rc-gui-status-progress-set-progress" href="RhythmCat/RhythmCat-Main-UI.html#rc-gui-status-progress-set-progress">
 <ANCHOR id="rc-gui-view-add-page" href="RhythmCat/RhythmCat-Main-UI.html#rc-gui-view-add-page">
 <ANCHOR id="rc-gui-view-remove-page" href="RhythmCat/RhythmCat-Main-UI.html#rc-gui-view-remove-page">
+<ANCHOR id="rc-gui-get-tray-icon" href="RhythmCat/RhythmCat-Main-UI.html#rc-gui-get-tray-icon">
 <ANCHOR id="RhythmCat-Dialogs" href="RhythmCat/RhythmCat-Dialogs.html">
 <ANCHOR id="RhythmCat-Dialogs.synopsis" href="RhythmCat/RhythmCat-Dialogs.html#RhythmCat-Dialogs.synopsis">
 <ANCHOR id="RhythmCat-Dialogs.description" href="RhythmCat/RhythmCat-Dialogs.html#RhythmCat-Dialogs.description">

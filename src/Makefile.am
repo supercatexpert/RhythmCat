@@ -9,12 +9,20 @@ RhythmCat_SOURCES = core.c lyric.c playlist.c tag.c settings.c plugin.c \
     gui_treeview.c gui_style.c gui_dialog.c gui_eq.c gui_plugin.c \
     gui_mini.c main.c        
 
-INCLUDES = @GLIB2_CFLAGS@ @DBUS_GLIB_CFLAGS@ @GTK2_CFLAGS@ @GSTREAMER_CFLAGS@ \
+INCLUDES = @GLIB2_CFLAGS@ @DBUS_GLIB_CFLAGS@ @GSTREAMER_CFLAGS@ \
     -DLOCALEDIR=\"$(localedir)\"
+
+RhythmCat_LDADD = @GLIB2_LIBS@ @DBUS_GLIB_LIBS@ @GSTREAMER_LIBS@
 
 if DEBUG_MODE
     INCLUDES += -DDEBUG_MODE=1
 endif
 
-RhythmCat_LDADD = @GLIB2_LIBS@ @DBUS_GLIB_LIBS@ @GTK2_LIBS@ @GSTREAMER_LIBS@
+if USE_GTK3
+    INCLUDES += @GTK3_CFLAGS@
+    RhythmCat_LDADD += @GTK3_LIBS@
+else
+    INCLUDES += @GTK2_CFLAGS@
+    RhythmCat_LDADD += @GTK2_LIBS@
+endif
 

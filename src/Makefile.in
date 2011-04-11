@@ -36,6 +36,10 @@ build_triplet = @build@
 host_triplet = @host@
 bin_PROGRAMS = RhythmCat$(EXEEXT)
 @DEBUG_MODE_TRUE@am__append_1 = -DDEBUG_MODE=1
+@USE_GTK3_TRUE@am__append_2 = @GTK3_CFLAGS@
+@USE_GTK3_TRUE@am__append_3 = @GTK3_LIBS@
+@USE_GTK3_FALSE@am__append_4 = @GTK2_CFLAGS@
+@USE_GTK3_FALSE@am__append_5 = @GTK2_LIBS@
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -56,7 +60,8 @@ am_RhythmCat_OBJECTS = core.$(OBJEXT) lyric.$(OBJEXT) \
 	gui_style.$(OBJEXT) gui_dialog.$(OBJEXT) gui_eq.$(OBJEXT) \
 	gui_plugin.$(OBJEXT) gui_mini.$(OBJEXT) main.$(OBJEXT)
 RhythmCat_OBJECTS = $(am_RhythmCat_OBJECTS)
-RhythmCat_DEPENDENCIES =
+am__DEPENDENCIES_1 =
+RhythmCat_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -107,6 +112,8 @@ GSTREAMER_CFLAGS = @GSTREAMER_CFLAGS@
 GSTREAMER_LIBS = @GSTREAMER_LIBS@
 GTK2_CFLAGS = @GTK2_CFLAGS@
 GTK2_LIBS = @GTK2_LIBS@
+GTK3_CFLAGS = @GTK3_CFLAGS@
+GTK3_LIBS = @GTK3_LIBS@
 GTKDOC_CHECK = @GTKDOC_CHECK@
 GTKDOC_MKPDF = @GTKDOC_MKPDF@
 GTKDOC_REBASE = @GTKDOC_REBASE@
@@ -214,10 +221,11 @@ RhythmCat_SOURCES = core.c lyric.c playlist.c tag.c settings.c plugin.c \
     gui_treeview.c gui_style.c gui_dialog.c gui_eq.c gui_plugin.c \
     gui_mini.c main.c        
 
-INCLUDES = @GLIB2_CFLAGS@ @DBUS_GLIB_CFLAGS@ @GTK2_CFLAGS@ \
-	@GSTREAMER_CFLAGS@ -DLOCALEDIR=\"$(localedir)\" \
-	$(am__append_1)
-RhythmCat_LDADD = @GLIB2_LIBS@ @DBUS_GLIB_LIBS@ @GTK2_LIBS@ @GSTREAMER_LIBS@
+INCLUDES = @GLIB2_CFLAGS@ @DBUS_GLIB_CFLAGS@ @GSTREAMER_CFLAGS@ \
+	-DLOCALEDIR=\"$(localedir)\" $(am__append_1) $(am__append_2) \
+	$(am__append_4)
+RhythmCat_LDADD = @GLIB2_LIBS@ @DBUS_GLIB_LIBS@ @GSTREAMER_LIBS@ \
+	$(am__append_3) $(am__append_5)
 all: all-am
 
 .SUFFIXES:

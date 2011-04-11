@@ -106,7 +106,7 @@ static gboolean rc_plugin_notify_init()
     rc_ui = rc_gui_get_data();
     notify = notify_notification_new_with_status_icon("Welcome to RhythmCat",
         "Welcome to RhythmCat, the music player with plug-in support!", NULL,
-        rc_ui->tray_icon);
+        rc_gui_get_tray_icon());
     if(notify==NULL) return FALSE;
     notify_notification_set_timeout(notify, 5000);
     notify_notification_set_image_from_pixbuf(notify, rc_ui->icon_image);

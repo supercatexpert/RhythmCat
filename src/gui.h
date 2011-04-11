@@ -49,7 +49,7 @@
  * @album_image: show album image on the player window
  * @album_eventbox: process the events on album image
  * @album_frame: the frame of album image widget
- * @control_images: the image widgets of control buttons
+ * @control_buttons_bar: the toolbar contains control buttons
  * @control_buttons: the button widgets of control buttons
  * @volume_button: the volume control button
  * @time_scroll_bar: the time scaler bar
@@ -94,7 +94,8 @@ typedef struct RCGuiData {
     GtkWidget *title_label, *artist_label, *album_label;
     GtkWidget *time_label, *length_label, *info_label;
     GtkWidget *album_image, *album_eventbox, *album_frame;
-    GtkWidget *control_images[4], *control_buttons[4];
+    GtkWidget *control_buttons_bar;
+    GtkWidget *control_buttons[8];
     GtkWidget *volume_button;
     GtkWidget *time_scroll_bar;
     GtkWidget *lrc_label, *lrc_viewport;
@@ -137,6 +138,7 @@ void rc_gui_status_progress_set_progress();
 guint rc_gui_view_add_page(const gchar *name, const gchar *title,
     GtkWidget *widget);
 gboolean rc_gui_view_remove_page(guint id);
+GtkStatusIcon *rc_gui_get_tray_icon();
 
 #endif
 

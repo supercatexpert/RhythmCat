@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RhythmCat 1.0.0\n"
 "Report-Msgid-Bugs-To: http://code.google.com/p/rhythmcat/issues/list\n"
-"POT-Creation-Date: 2011-04-02 17:55+0800\n"
+"POT-Creation-Date: 2011-04-11 23:20+0800\n"
 "PO-Revision-Date: 2011-04-02 16:51+0800\n"
 "Last-Translator: SuperCat <supercatexpert@gmail.com>\n"
 "Language-Team: SuperCat <supercatexpert@gmail.com>\n"
@@ -40,398 +40,399 @@ msgstr ""
 msgid "Cannot link effect elements, effects are not available now!"
 msgstr ""
 
-#: src/gui.c:515
+#: src/gui.c:549
 msgid "_File"
 msgstr ""
 
-#: src/gui.c:516
+#: src/gui.c:550
 msgid "_Edit"
 msgstr ""
 
-#: src/gui.c:517
+#: src/gui.c:551
 msgid "_View"
 msgstr ""
 
-#: src/gui.c:518
+#: src/gui.c:552
 msgid "_Control"
 msgstr ""
 
-#: src/gui.c:519
+#: src/gui.c:553
 msgid "_Help"
 msgstr ""
 
-#: src/gui.c:520
+#: src/gui.c:554
 msgid "_Repeat"
 msgstr ""
 
-#: src/gui.c:521
+#: src/gui.c:555
 msgid "Ran_dom"
 msgstr ""
 
-#: src/gui.c:523 src/gui.c:623
+#: src/gui.c:557 src/gui.c:657
 msgid "_New Playlist"
 msgstr ""
 
-#: src/gui.c:524 src/gui.c:624
+#: src/gui.c:558 src/gui.c:658
 msgid "Create a new playlist"
 msgstr ""
 
-#: src/gui.c:527 src/gui.c:639
+#: src/gui.c:561 src/gui.c:673
 msgid "Import _Music"
 msgstr ""
 
-#: src/gui.c:528 src/gui.c:640
+#: src/gui.c:562 src/gui.c:674
 msgid "Import music file"
 msgstr ""
 
-#: src/gui.c:531 src/gui.c:643
+#: src/gui.c:565 src/gui.c:677
 msgid "Import _Playlist"
 msgstr ""
 
-#: src/gui.c:532 src/gui.c:644
+#: src/gui.c:566 src/gui.c:678
 msgid "Import music from playlist"
 msgstr ""
 
-#: src/gui.c:535
+#: src/gui.c:569
 msgid "Import _Folder"
 msgstr ""
 
-#: src/gui.c:536
+#: src/gui.c:570
 msgid "Import all music from folder"
 msgstr ""
 
-#: src/gui.c:539
+#: src/gui.c:573
 msgid "_Export Playlist"
 msgstr ""
 
-#: src/gui.c:540 src/gui.c:636
+#: src/gui.c:574 src/gui.c:670
 msgid "Export music to a playlist"
 msgstr ""
 
-#: src/gui.c:543
+#: src/gui.c:577
 msgid "Export _All Playlists"
 msgstr ""
 
-#: src/gui.c:544
+#: src/gui.c:578
 msgid "Export all playlists to a folder"
 msgstr ""
 
-#: src/gui.c:547 src/gui.c:687
+#: src/gui.c:581 src/gui.c:721
 msgid "_Quit"
 msgstr ""
 
-#: src/gui.c:548 src/gui.c:688
+#: src/gui.c:582 src/gui.c:722
 msgid "Quit this player"
 msgstr ""
 
-#: src/gui.c:551 src/gui.c:627
+#: src/gui.c:585 src/gui.c:661
 msgid "Re_name Playlist"
 msgstr ""
 
-#: src/gui.c:552
+#: src/gui.c:586
 msgid "Rename the playlist"
 msgstr ""
 
-#: src/gui.c:555 src/gui.c:631
+#: src/gui.c:589 src/gui.c:665
 msgid "R_emove Playlist"
 msgstr ""
 
-#: src/gui.c:556 src/gui.c:632
+#: src/gui.c:590 src/gui.c:666
 msgid "Remove the playlist"
 msgstr ""
 
-#: src/gui.c:559
+#: src/gui.c:593
 msgid "_Remove Music"
 msgstr ""
 
-#: src/gui.c:560 src/gui.c:652
+#: src/gui.c:594 src/gui.c:686
 msgid "Remove music from playlist"
 msgstr ""
 
-#: src/gui.c:563 src/gui.c:647
+#: src/gui.c:597 src/gui.c:681
 msgid "Select _All"
 msgstr ""
 
-#: src/gui.c:564 src/gui.c:648
+#: src/gui.c:598 src/gui.c:682
 msgid "Select all music in the playlist"
 msgstr ""
 
-#: src/gui.c:567 src/gui.c:655
+#: src/gui.c:601 src/gui.c:689
 msgid "Re_fresh Playlist"
 msgstr ""
 
-#: src/gui.c:568 src/gui.c:656
+#: src/gui.c:602 src/gui.c:690
 msgid "Refresh music information in the playlist"
 msgstr ""
 
-#: src/gui.c:571
+#: src/gui.c:605
 msgid "Plu_gins"
 msgstr ""
 
-#: src/gui.c:572
+#: src/gui.c:606
 msgid "Configure plugins"
 msgstr ""
 
-#: src/gui.c:575
+#: src/gui.c:609
 msgid "_Preferences"
 msgstr ""
 
-#: src/gui.c:576
+#: src/gui.c:610
 msgid "Configure the player"
 msgstr ""
 
-#: src/gui.c:579
+#: src/gui.c:613
 msgid "_Mini Mode"
 msgstr ""
 
-#: src/gui.c:580
+#: src/gui.c:614
 msgid "Enable mini mode"
 msgstr ""
 
-#: src/gui.c:583 src/gui.c:659
+#: src/gui.c:617 src/gui.c:693
 msgid "_Play/Pause"
 msgstr ""
 
-#: src/gui.c:584 src/gui.c:660
+#: src/gui.c:618 src/gui.c:694
 msgid "Play or pause the music"
 msgstr ""
 
-#: src/gui.c:587 src/gui.c:663
+#: src/gui.c:621 src/gui.c:697
 msgid "_Stop"
 msgstr ""
 
-#: src/gui.c:588 src/gui.c:664
+#: src/gui.c:622 src/gui.c:698
 msgid "Stop the music"
 msgstr ""
 
-#: src/gui.c:591 src/gui.c:667
+#: src/gui.c:625 src/gui.c:701
 msgid "Pre_vious"
 msgstr ""
 
-#: src/gui.c:592 src/gui.c:668
+#: src/gui.c:626 src/gui.c:702
 msgid "Play previous music"
 msgstr ""
 
-#: src/gui.c:595 src/gui.c:671
+#: src/gui.c:629 src/gui.c:705
 msgid "_Next"
 msgstr ""
 
-#: src/gui.c:596 src/gui.c:672
+#: src/gui.c:630 src/gui.c:706
 msgid "Play next music"
 msgstr ""
 
-#: src/gui.c:599
+#: src/gui.c:633
 msgid "_Backward"
 msgstr ""
 
-#: src/gui.c:600
+#: src/gui.c:634
 msgid "Backward 5 seconds"
 msgstr ""
 
-#: src/gui.c:603
+#: src/gui.c:637
 msgid "_Forward"
 msgstr ""
 
-#: src/gui.c:604
+#: src/gui.c:638
 msgid "Forward 5 seconds"
 msgstr ""
 
-#: src/gui.c:607
+#: src/gui.c:641
 msgid "_Increase Volume"
 msgstr ""
 
-#: src/gui.c:608
+#: src/gui.c:642
 msgid "Increase the volume"
 msgstr ""
 
-#: src/gui.c:611
+#: src/gui.c:645
 msgid "_Decrease Volume"
 msgstr ""
 
-#: src/gui.c:612
+#: src/gui.c:646
 msgid "Decrease the volume"
 msgstr ""
 
-#: src/gui.c:615
+#: src/gui.c:649
 msgid "_Contents"
 msgstr ""
 
-#: src/gui.c:616
+#: src/gui.c:650
 msgid "Get help contents"
 msgstr ""
 
-#: src/gui.c:619 src/gui.c:683
+#: src/gui.c:653 src/gui.c:717
 msgid "_About"
 msgstr ""
 
-#: src/gui.c:620 src/gui.c:684
+#: src/gui.c:654 src/gui.c:718
 msgid "About this player"
 msgstr ""
 
-#: src/gui.c:628
+#: src/gui.c:662
 msgid "Raname the playlist"
 msgstr ""
 
-#: src/gui.c:635
+#: src/gui.c:669
 msgid "E_xport Playlist"
 msgstr ""
 
-#: src/gui.c:651
+#: src/gui.c:685
 msgid "R_emove Music"
 msgstr ""
 
-#: src/gui.c:675
+#: src/gui.c:709
 msgid "S_how Player"
 msgstr ""
 
-#: src/gui.c:676
+#: src/gui.c:710
 msgid "Show the window of player"
 msgstr ""
 
-#: src/gui.c:679
+#: src/gui.c:713
 msgid "_Mode Switch"
 msgstr ""
 
-#: src/gui.c:680
+#: src/gui.c:714
 msgid "Switch between normal mode and mini mode"
 msgstr ""
 
-#: src/gui.c:697
+#: src/gui.c:731
 msgid "_Playlists"
 msgstr ""
 
-#: src/gui.c:698
+#: src/gui.c:732
 msgid "Show playlists"
 msgstr ""
 
-#: src/gui.c:700
+#: src/gui.c:734
 msgid "_Equalizer"
 msgstr ""
 
-#: src/gui.c:701
+#: src/gui.c:735
 msgid "Show equalizer"
 msgstr ""
 
-#: src/gui.c:709
+#: src/gui.c:743
 msgid "_No Repeat"
 msgstr ""
 
-#: src/gui.c:710
+#: src/gui.c:744
 msgid "No repeat"
 msgstr ""
 
-#: src/gui.c:712
+#: src/gui.c:746
 msgid "Single _Music Repeat"
 msgstr ""
 
-#: src/gui.c:713
+#: src/gui.c:747
 msgid "Repeat playing single music"
 msgstr ""
 
-#: src/gui.c:715
+#: src/gui.c:749
 msgid "Single _Playlist Repeat"
 msgstr ""
 
-#: src/gui.c:716
+#: src/gui.c:750
 msgid "Repeat playing single playlist"
 msgstr ""
 
-#: src/gui.c:718
+#: src/gui.c:752
 msgid "_All Playlists Repeat"
 msgstr ""
 
-#: src/gui.c:719
+#: src/gui.c:753
 msgid "Repeat playing all playlists"
 msgstr ""
 
-#: src/gui.c:727
+#: src/gui.c:761
 msgid "_No Random"
 msgstr ""
 
-#: src/gui.c:728
+#: src/gui.c:762
 msgid "No random playing"
 msgstr ""
 
-#: src/gui.c:730
+#: src/gui.c:764
 msgid "_Single Playlist Random"
 msgstr ""
 
-#: src/gui.c:731
+#: src/gui.c:765
 msgid "Random playing a music in the playlist"
 msgstr ""
 
-#: src/gui.c:733
+#: src/gui.c:767
 msgid "_All Playlists Random"
 msgstr ""
 
-#: src/gui.c:734
+#: src/gui.c:768
 msgid "Random playing a music in all playlists"
 msgstr ""
 
-#: src/gui.c:742 src/gui.c:746
+#: src/gui.c:776 src/gui.c:780
 msgid "Always On _Top"
 msgstr ""
 
-#: src/gui.c:743 src/gui.c:747
+#: src/gui.c:777 src/gui.c:781
 msgid "Always on top"
 msgstr ""
 
-#: src/gui.c:993 src/gui.c:995
+#: src/gui.c:1028 src/gui.c:1030
 msgid "Playlists"
 msgstr ""
 
-#: src/gui.c:994
+#: src/gui.c:1029
 msgid "Equalizer"
 msgstr ""
 
-#: src/gui.c:1176
+#: src/gui.c:1220
 msgid "Cancel"
 msgstr ""
 
-#: src/gui.c:1323
+#: src/gui.c:1369
 msgid "Unknown Format"
 msgstr ""
 
-#: src/gui.c:1327
+#: src/gui.c:1373
 #, c-format
 msgid "%d kbps "
 msgstr ""
 
-#: src/gui.c:1331
+#: src/gui.c:1377
 #, c-format
 msgid "%d Hz "
 msgstr ""
 
-#: src/gui.c:1338
+#: src/gui.c:1384
 msgid "Mono"
 msgstr ""
 
-#: src/gui.c:1342
+#: src/gui.c:1388
 msgid "Stereo"
 msgstr ""
 
-#: src/gui.c:1346
+#: src/gui.c:1392
 #, c-format
 msgid "%d channels"
 msgstr ""
 
-#: src/gui.c:1353 src/playlist.c:256 src/playlist.c:331 src/playlist.c:443
+#: src/gui.c:1399 src/playlist.c:256 src/playlist.c:331 src/playlist.c:443
+#: src/playlist.c:576
 msgid "Unknown Title"
 msgstr ""
 
-#: src/gui.c:1357
+#: src/gui.c:1403
 msgid "Unknown Artist"
 msgstr ""
 
-#: src/gui.c:1361
+#: src/gui.c:1407
 msgid "Unknown Album"
 msgstr ""
 
-#: src/gui.c:1644
+#: src/gui.c:1690
 msgid "Importing..."
 msgstr ""
 
-#: src/gui.c:1648
+#: src/gui.c:1694
 msgid "Refreshing..."
 msgstr ""
 
@@ -680,7 +681,7 @@ msgstr ""
 msgid "[URI...]"
 msgstr ""
 
-#: src/player.c:267
+#: src/player.c:279
 #, c-format
 msgid ""
 "%s\n"

@@ -119,6 +119,7 @@
     <keyword type="function" name="rc_plist_set_list1_name ()" link="RhythmCat-Playlist.html#rc-plist-set-list1-name"/>
     <keyword type="function" name="rc_plist_get_list2_length ()" link="RhythmCat-Playlist.html#rc-plist-get-list2-length"/>
     <keyword type="function" name="rc_plist_play_by_index ()" link="RhythmCat-Playlist.html#rc-plist-play-by-index"/>
+    <keyword type="function" name="rc_plist_play_by_uri ()" link="RhythmCat-Playlist.html#rc-plist-play-by-uri"/>
     <keyword type="function" name="rc_plist_play_get_index ()" link="RhythmCat-Playlist.html#rc-plist-play-get-index"/>
     <keyword type="function" name="rc_plist_stop ()" link="RhythmCat-Playlist.html#rc-plist-stop"/>
     <keyword type="function" name="rc_plist_play_prev ()" link="RhythmCat-Playlist.html#rc-plist-play-prev"/>
@@ -195,6 +196,7 @@
     <keyword type="function" name="rc_gui_status_progress_set_progress ()" link="RhythmCat-Main-UI.html#rc-gui-status-progress-set-progress"/>
     <keyword type="function" name="rc_gui_view_add_page ()" link="RhythmCat-Main-UI.html#rc-gui-view-add-page"/>
     <keyword type="function" name="rc_gui_view_remove_page ()" link="RhythmCat-Main-UI.html#rc-gui-view-remove-page"/>
+    <keyword type="function" name="rc_gui_get_tray_icon ()" link="RhythmCat-Main-UI.html#rc-gui-get-tray-icon"/>
     <keyword type="macro" name="MAX_DIR_DEPTH" link="RhythmCat-Dialogs.html#MAX-DIR-DEPTH:CAPS"/>
     <keyword type="function" name="rc_gui_about_player ()" link="RhythmCat-Dialogs.html#rc-gui-about-player"/>
     <keyword type="function" name="rc_gui_show_message_dialog ()" link="RhythmCat-Dialogs.html#rc-gui-show-message-dialog"/>
@@ -237,14 +239,14 @@
     <keyword type="function" name="rc_gui_mini_normal_mode_clicked ()" link="RhythmCat-Mini-Mode-UI.html#rc-gui-mini-normal-mode-clicked"/>
     <keyword type="function" name="rc_gui_create_setting_window ()" link="RhythmCat-Settings-UI.html#rc-gui-create-setting-window"/>
     <keyword type="function" name="rc_gui_plugin_window_create ()" link="RhythmCat-Plugin-Configuration-UI.html#rc-gui-plugin-window-create"/>
-    <keyword type="" name="Introduction" link="PluginProgramming.html#id606313"/>
-    <keyword type="" name="Preparation" link="PluginProgramming.html#id565682"/>
-    <keyword type="" name="Implement a simple plugin" link="PluginProgramming.html#id592981"/>
-    <keyword type="" name="How to compile the plugin" link="PluginProgramming.html#id605024"/>
-    <keyword type="" name="Write a plugin description file" link="PluginProgramming.html#id587623"/>
-    <keyword type="" name="Make your custom plugin work" link="PluginProgramming.html#id576008"/>
-    <keyword type="" name="Catch signals in the player" link="PluginProgramming.html#id585427"/>
-    <keyword type="" name="About this manual" link="PluginProgramming.html#id582824"/>
+    <keyword type="" name="Introduction" link="PluginProgramming.html#id414777"/>
+    <keyword type="" name="Preparation" link="PluginProgramming.html#id400952"/>
+    <keyword type="" name="Implement a simple plugin" link="PluginProgramming.html#id403434"/>
+    <keyword type="" name="How to compile the plugin" link="PluginProgramming.html#id378213"/>
+    <keyword type="" name="Write a plugin description file" link="PluginProgramming.html#id392796"/>
+    <keyword type="" name="Make your custom plugin work" link="PluginProgramming.html#id417649"/>
+    <keyword type="" name="Catch signals in the player" link="PluginProgramming.html#id372560"/>
+    <keyword type="" name="About this manual" link="PluginProgramming.html#id398069"/>
     <keyword type="constant" name="MSG_TYPE_EMPTY" link="RhythmCat-Asynchronous-Message-Queue.html#MSG-TYPE-EMPTY:CAPS"/>
     <keyword type="constant" name="MSG_TYPE_TEST" link="RhythmCat-Asynchronous-Message-Queue.html#MSG-TYPE-TEST:CAPS"/>
     <keyword type="constant" name="MSG_TYPE_PL_INSERT" link="RhythmCat-Asynchronous-Message-Queue.html#MSG-TYPE-PL-INSERT:CAPS"/>

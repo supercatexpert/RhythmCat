@@ -535,6 +535,123 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
 }
 
 /**
+ * rc_plist_play_by_uri:
+ * @uri: the URI to play
+ *
+ * Play music by given URI.
+ *
+ * Returns: Whether the operation succeeds.
+ */
+
+gboolean rc_plist_play_by_uri(const gchar *uri)
+{
+    gchar *list_title = NULL;
+    gchar *album_name = NULL;
+    gchar *music_dir = NULL, *lyric_dir = NULL, *image_dir = NULL;
+    gchar *lyric_filename = NULL;
+    gchar *cover_filename = NULL;
+    gchar *fpathname = NULL;
+    gchar *realname = NULL;
+    RCMusicMetaData *mmd_new = NULL;
+    gboolean image_flag = FALSE;
+    if(uri==NULL) return FALSE;
+    mmd_new = rc_tag_read_metadata(uri);
+    if(mmd_new==NULL || !mmd_new->audio_flag)
+    {
+        rc_debug_perror("Plist-ERROR: Cannot open the music!\n");
+        return FALSE;
+    }
+    fpathname = g_filename_from_uri(mmd_new->uri, NULL, NULL);
+    if(fpathname!=NULL)
+    {
+        realname = rc_tag_get_name_from_fpath(fpathname);
+    }
+    if(mmd_new->title!=NULL && strlen(mmd_new->title)>0)
+        list_title = g_strdup(mmd_new->title);
+    else
+    {
+        if(realname!=NULL)
+            list_title = g_strdup(realname);
+        else
+            list_title = g_strdup(_("Unknown Title"));
+    }
+    if(mmd_new->album!=NULL)
+        album_name = g_strdup(mmd_new->album);
+    rc_core_set_uri(mmd_new->uri);
+    rc_gui_set_cover_image_by_file(NULL);
+    rc_tag_set_playing_metadata(mmd_new);
+    if(rc_plist.list1_reference!=NULL)
+    {
+        gtk_tree_row_reference_free(rc_plist.list1_reference);
+        rc_plist.list1_reference = NULL;
+    }
+    if(rc_plist.list2_reference!=NULL)
+    {
+        gtk_tree_row_reference_free(rc_plist.list2_reference);
+        rc_plist.list2_reference = NULL;
+    }
+    rc_debug_print("Plist: Play music file: %s\n", mmd_new->uri);
+    rc_gui_music_info_set_data(list_title, mmd_new);
+    if(mmd_new->image!=NULL)
+    {
+        image_flag = TRUE;
+        rc_debug_print("Plist: Found cover image in tag!\n");
+    }
+
+    rc_tag_free(mmd_new);
+    if(list_title!=NULL) g_free(list_title);
+    /* Search extra info for the music file in local filesystem. */
+    rc_lrc_clean_data();
+    if(fpathname==NULL)
+    {
+        if(album_name!=NULL) g_free(album_name);
+        return TRUE;
+    }
+    music_dir = g_path_get_dirname(fpathname);
+    g_free(fpathname);
+    lyric_dir = g_strdup_printf("%s%cLyrics", rc_player_get_conf_dir(),
+        G_DIR_SEPARATOR);
+    image_dir = g_strdup_printf("%s%cAlbumImages", rc_player_get_conf_dir(),
+        G_DIR_SEPARATOR);
+    lyric_filename = rc_tag_find_file(music_dir, realname, ".LRC");
+    if(lyric_filename==NULL)
+        lyric_filename = rc_tag_find_file(lyric_dir, realname, ".LRC");
+    g_free(lyric_dir);
+    if(lyric_filename!=NULL && rc_lrc_read_from_file(lyric_filename))
+    {
+        rc_debug_print("Plist: Found lyric file: %s, enable the lyric show.\n",
+            lyric_filename);
+        rc_player_object_signal_emit_simple("lyric-found");
+    }
+    else
+    {
+        rc_debug_print("Plist: Not found lyric file, disable the lyric "
+            "show.\n");
+        rc_player_object_signal_emit_simple("lyric-not-found");
+    }
+    if(lyric_filename!=NULL) g_free(lyric_filename);
+    if(!image_flag && album_name!=NULL)
+    {
+        cover_filename = rc_tag_find_file(music_dir, album_name,
+            ".BMP|.JPG|.JPEG|.PNG");
+        if(cover_filename==NULL)
+            cover_filename = rc_tag_find_file(image_dir, album_name,
+                ".BMP|.JPG|.JPEG|.PNG");
+        g_free(image_dir);
+        if(cover_filename!=NULL && rc_gui_set_cover_image_by_file(
+            cover_filename))
+        {
+            rc_debug_print("Plist: Found cover image file: %s.\n",
+                cover_filename);
+        }
+    }
+    g_free(music_dir);
+    g_free(realname);
+    if(album_name!=NULL) g_free(album_name);
+    return TRUE;
+}
+
+/**
  * rc_plist_play_get_index:
  * @index1: the index of the playlist
  * @index2: the index of the music in the playlist
@@ -964,7 +1081,6 @@ gboolean rc_plist_remove_list(gint index)
     gtk_tree_model_get(GTK_TREE_MODEL(rc_plist.list_store), &iter,
         PLIST1_STORE, &pl_store, -1);
     if(pl_store==NULL) return FALSE;
-    gtk_list_store_clear(pl_store);
     g_object_unref(pl_store);
     return gtk_list_store_remove(rc_plist.list_store, &iter);
 }

@@ -154,6 +154,7 @@ rc_plist_get_list1_length
 rc_plist_set_list1_name
 rc_plist_get_list2_length
 rc_plist_play_by_index
+rc_plist_play_by_uri
 rc_plist_play_get_index
 rc_plist_stop
 rc_plist_play_prev
@@ -208,6 +209,7 @@ rc_gui_status_task_set
 rc_gui_status_progress_set_progress
 rc_gui_view_add_page
 rc_gui_view_remove_page
+rc_gui_get_tray_icon
 </SECTION>
 
 <SECTION>

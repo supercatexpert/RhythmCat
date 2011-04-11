@@ -408,7 +408,8 @@ void rc_plugin_lrcshow_show()
             0.8);
         cairo_line_to(lrc_cr, width, height / 2);
         cairo_stroke(lrc_cr);
-        time_passed = lrc_data_array[lrc_line_num_now]->time / 100;
+        if(lrc_line_num_now>=0 && lrc_line_num_now<lrc_data_length)
+            time_passed = lrc_data_array[lrc_line_num_now]->time / 100;
         text = g_strdup_printf("%02d:%02d", (gint)time_passed/60,
             (gint)time_passed%60);
         pango_layout_set_text(layout, text, -1);

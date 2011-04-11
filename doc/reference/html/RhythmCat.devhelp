@@ -119,6 +119,7 @@
     <function name="rc_plist_set_list1_name ()" link="RhythmCat-Playlist.html#rc-plist-set-list1-name"/>
     <function name="rc_plist_get_list2_length ()" link="RhythmCat-Playlist.html#rc-plist-get-list2-length"/>
     <function name="rc_plist_play_by_index ()" link="RhythmCat-Playlist.html#rc-plist-play-by-index"/>
+    <function name="rc_plist_play_by_uri ()" link="RhythmCat-Playlist.html#rc-plist-play-by-uri"/>
     <function name="rc_plist_play_get_index ()" link="RhythmCat-Playlist.html#rc-plist-play-get-index"/>
     <function name="rc_plist_stop ()" link="RhythmCat-Playlist.html#rc-plist-stop"/>
     <function name="rc_plist_play_prev ()" link="RhythmCat-Playlist.html#rc-plist-play-prev"/>
@@ -195,6 +196,7 @@
     <function name="rc_gui_status_progress_set_progress ()" link="RhythmCat-Main-UI.html#rc-gui-status-progress-set-progress"/>
     <function name="rc_gui_view_add_page ()" link="RhythmCat-Main-UI.html#rc-gui-view-add-page"/>
     <function name="rc_gui_view_remove_page ()" link="RhythmCat-Main-UI.html#rc-gui-view-remove-page"/>
+    <function name="rc_gui_get_tray_icon ()" link="RhythmCat-Main-UI.html#rc-gui-get-tray-icon"/>
     <function name="MAX_DIR_DEPTH" link="RhythmCat-Dialogs.html#MAX-DIR-DEPTH:CAPS"/>
     <function name="rc_gui_about_player ()" link="RhythmCat-Dialogs.html#rc-gui-about-player"/>
     <function name="rc_gui_show_message_dialog ()" link="RhythmCat-Dialogs.html#rc-gui-show-message-dialog"/>
@@ -237,13 +239,13 @@
     <function name="rc_gui_mini_normal_mode_clicked ()" link="RhythmCat-Mini-Mode-UI.html#rc-gui-mini-normal-mode-clicked"/>
     <function name="rc_gui_create_setting_window ()" link="RhythmCat-Settings-UI.html#rc-gui-create-setting-window"/>
     <function name="rc_gui_plugin_window_create ()" link="RhythmCat-Plugin-Configuration-UI.html#rc-gui-plugin-window-create"/>
-    <function name="Introduction" link="PluginProgramming.html#id606313"/>
-    <function name="Preparation" link="PluginProgramming.html#id565682"/>
-    <function name="Implement a simple plugin" link="PluginProgramming.html#id592981"/>
-    <function name="How to compile the plugin" link="PluginProgramming.html#id605024"/>
-    <function name="Write a plugin description file" link="PluginProgramming.html#id587623"/>
-    <function name="Make your custom plugin work" link="PluginProgramming.html#id576008"/>
-    <function name="Catch signals in the player" link="PluginProgramming.html#id585427"/>
-    <function name="About this manual" link="PluginProgramming.html#id582824"/>
+    <function name="Introduction" link="PluginProgramming.html#id414777"/>
+    <function name="Preparation" link="PluginProgramming.html#id400952"/>
+    <function name="Implement a simple plugin" link="PluginProgramming.html#id403434"/>
+    <function name="How to compile the plugin" link="PluginProgramming.html#id378213"/>
+    <function name="Write a plugin description file" link="PluginProgramming.html#id392796"/>
+    <function name="Make your custom plugin work" link="PluginProgramming.html#id417649"/>
+    <function name="Catch signals in the player" link="PluginProgramming.html#id372560"/>
+    <function name="About this manual" link="PluginProgramming.html#id398069"/>
   </functions>
 </book>

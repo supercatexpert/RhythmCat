@@ -56,6 +56,7 @@ enum                <link linkend="RCPlist2Column">RCPlist2Column</link>;
 <link linkend="gint"><returnvalue>gint</returnvalue></link>                <link linkend="rc-plist-get-list2-length">rc_plist_get_list2_length</link>           (<parameter><link linkend="gint"><type>gint</type></link> index</parameter>);
 <link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-plist-play-by-index">rc_plist_play_by_index</link>              (<parameter><link linkend="gint"><type>gint</type></link> list_index</parameter>,
                                                          <parameter><link linkend="gint"><type>gint</type></link> music_index</parameter>);
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-plist-play-by-uri">rc_plist_play_by_uri</link>                (<parameter>const <link linkend="gchar"><type>gchar</type></link> *uri</parameter>);
 <link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-plist-play-get-index">rc_plist_play_get_index</link>             (<parameter><link linkend="gint"><type>gint</type></link> *index1</parameter>,
                                                          <parameter><link linkend="gint"><type>gint</type></link> *index2</parameter>);
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-plist-stop">rc_plist_stop</link>                       ();
@@ -410,6 +411,19 @@ Play music by given list1 index and list2 index.
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>music_index</parameter>&#160;:</term>
 <listitem><simpara>the index of the music in the playlist
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> Whether the operation succeeds.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-plist-play-by-uri" role="function">
+<title>rc_plist_play_by_uri ()</title>
+<indexterm zone="rc-plist-play-by-uri"><primary>rc_plist_play_by_uri</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rc_plist_play_by_uri                (<parameter>const <link linkend="gchar"><type>gchar</type></link> *uri</parameter>);</programlisting>
+<para>
+Play music by given URI.
+</para><variablelist role="params">
+<varlistentry><term><parameter>uri</parameter>&#160;:</term>
+<listitem><simpara>the URI to play
 </simpara></listitem></varlistentry>
 <varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> Whether the operation succeeds.
 </simpara></listitem></varlistentry>

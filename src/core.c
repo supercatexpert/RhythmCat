@@ -444,7 +444,9 @@ gboolean rc_core_play()
 gboolean rc_core_pause()
 {
     gboolean flag = TRUE;
+    gint64 pos = rc_core_get_play_position();
     flag = gst_element_set_state(rc_core.playbin, GST_STATE_PAUSED);
+    if(pos>0) rc_core_set_play_position(pos);
     if(!flag) return FALSE;
     return TRUE;
 }

@@ -73,6 +73,7 @@ enum                <a class="link" href="RhythmCat-Playlist.html#RCPlist2Column
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-get-list2-length" title="rc_plist_get_list2_length ()">rc_plist_get_list2_length</a>           (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist.html#rc-plist-play-by-index" title="rc_plist_play_by_index ()">rc_plist_play_by_index</a>              (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list_index</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> music_index</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist.html#rc-plist-play-by-uri" title="rc_plist_play_by_uri ()">rc_plist_play_by_uri</a>                (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist.html#rc-plist-play-get-index" title="rc_plist_play_get_index ()">rc_plist_play_get_index</a>             (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *index1</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *index2</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-stop" title="rc_plist_stop ()">rc_plist_stop</a>                       ();
@@ -564,6 +565,29 @@ Play music by given list1 index and list2 index.
 <tr>
 <td><p><span class="term"><em class="parameter"><code>music_index</code></em> :</span></p></td>
 <td>the index of the music in the playlist
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> Whether the operation succeeds.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_plist_play_by_uri ()">
+<a name="rc-plist-play-by-uri"></a><h3>rc_plist_play_by_uri ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plist_play_by_uri                (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);</pre>
+<p>
+Play music by given URI.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>uri</code></em> :</span></p></td>
+<td>the URI to play
 </td>
 </tr>
 <tr>

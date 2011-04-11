@@ -68,7 +68,7 @@ static gboolean rc_gui_mini_window_drag(GtkWidget *widget, GdkEvent *event,
                 drag_flag = TRUE;
                 cursor = gdk_cursor_new(GDK_HAND1);
                 gdk_window_set_cursor(window, cursor);
-                gdk_cursor_destroy(cursor);
+                gdk_cursor_unref(cursor);
                 break;
             }
             case GDK_BUTTON_RELEASE:
@@ -76,7 +76,7 @@ static gboolean rc_gui_mini_window_drag(GtkWidget *widget, GdkEvent *event,
                 drag_flag = FALSE;
                 cursor = gdk_cursor_new(GDK_ARROW);
                 gdk_window_set_cursor(window, cursor);
-                gdk_cursor_destroy(cursor);
+                gdk_cursor_unref(cursor);
                 break;
             }
             case GDK_MOTION_NOTIFY:
@@ -178,7 +178,7 @@ static gboolean rc_gui_mini_window_resize(GtkWidget *widget, GdkEvent *event,
                 resize_flag = TRUE;
                 cursor = gdk_cursor_new(GDK_RIGHT_SIDE);
                 gdk_window_set_cursor(window, cursor);
-                gdk_cursor_destroy(cursor);
+                gdk_cursor_unref(cursor);
                 break;
             }
             case GDK_BUTTON_RELEASE:
@@ -186,7 +186,7 @@ static gboolean rc_gui_mini_window_resize(GtkWidget *widget, GdkEvent *event,
                 resize_flag = FALSE;
                 cursor = gdk_cursor_new(GDK_ARROW);
                 gdk_window_set_cursor(window, cursor);
-                gdk_cursor_destroy(cursor);
+                gdk_cursor_unref(cursor);
                 break;
             }
             case GDK_MOTION_NOTIFY:

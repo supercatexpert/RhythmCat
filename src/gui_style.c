@@ -298,7 +298,7 @@ void rc_gui_style_set_color_style(const RCGuiColorStyle *style_data)
         gtk_widget_modify_base(rc_ui->time_scroll_bar, GTK_STATE_NORMAL,
             NULL);
         gtk_widget_modify_bg(rc_ui->list_hpaned, GTK_STATE_PRELIGHT, NULL);
-        for(i=0;i<4;i++)
+        for(i=0;i<8;i++)
         {
             gtk_widget_modify_bg(rc_ui->control_buttons[i], GTK_STATE_NORMAL,
                 NULL);
@@ -484,13 +484,16 @@ void rc_gui_style_set_color_style(const RCGuiColorStyle *style_data)
         &style_data->window_bg_color);
     gtk_widget_modify_bg(rc_ui->list_hpaned, GTK_STATE_PRELIGHT,
         &style_data->listview_scrbar_color);
-    for(i=0;i<4;i++)
+    for(i=0;i<8;i++)
     {
-        gtk_widget_modify_bg(rc_ui->control_buttons[i], GTK_STATE_NORMAL,
+        gtk_widget_modify_bg(gtk_bin_get_child(GTK_BIN(
+            rc_ui->control_buttons[i])), GTK_STATE_NORMAL,
             &style_data->window_bg_color);
-        gtk_widget_modify_bg(rc_ui->control_buttons[i], GTK_STATE_ACTIVE,
+        gtk_widget_modify_bg(gtk_bin_get_child(GTK_BIN(
+            rc_ui->control_buttons[i])), GTK_STATE_ACTIVE,
             &style_data->button_active_color);
-        gtk_widget_modify_bg(rc_ui->control_buttons[i], GTK_STATE_PRELIGHT,
+        gtk_widget_modify_bg(gtk_bin_get_child(GTK_BIN(
+            rc_ui->control_buttons[i])), GTK_STATE_PRELIGHT,
             &style_data->button_prelight_color);
     }
     gtk_widget_modify_bg(rc_ui->volume_button, GTK_STATE_NORMAL,

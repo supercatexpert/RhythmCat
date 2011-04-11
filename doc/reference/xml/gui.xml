@@ -44,6 +44,7 @@
                                                          <parameter>const <link linkend="gchar"><type>gchar</type></link> *title</parameter>,
                                                          <parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *widget</parameter>);
 <link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-gui-view-remove-page">rc_gui_view_remove_page</link>             (<parameter><link linkend="guint"><type>guint</type></link> id</parameter>);
+<link linkend="GtkStatusIcon"><returnvalue>GtkStatusIcon</returnvalue></link> *     <link linkend="rc-gui-get-tray-icon">rc_gui_get_tray_icon</link>                ();
 </synopsis>
 </refsynopsisdiv>
 
@@ -67,7 +68,8 @@ Show the main UI of the player.
     GtkWidget *title_label, *artist_label, *album_label;
     GtkWidget *time_label, *length_label, *info_label;
     GtkWidget *album_image, *album_eventbox, *album_frame;
-    GtkWidget *control_images[4], *control_buttons[4];
+    GtkWidget *control_buttons_bar;
+    GtkWidget *control_buttons[8];
     GtkWidget *volume_button;
     GtkWidget *time_scroll_bar;
     GtkWidget *lrc_label, *lrc_viewport;
@@ -152,11 +154,11 @@ Please do not change the data in this structure.
 <listitem><simpara>the frame of album image widget
 </simpara></listitem>
 </varlistentry>
-<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.control-images">control_images</structfield>[4];</term>
-<listitem><simpara>the image widgets of control buttons
+<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.control-buttons-bar">control_buttons_bar</structfield>;</term>
+<listitem><simpara>the toolbar contains control buttons
 </simpara></listitem>
 </varlistentry>
-<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.control-buttons">control_buttons</structfield>[4];</term>
+<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.control-buttons">control_buttons</structfield>[8];</term>
 <listitem><simpara>the button widgets of control buttons
 </simpara></listitem>
 </varlistentry>
@@ -456,6 +458,16 @@ Remove a view page from player.
 <listitem><simpara>the unique ID of the page to remove
 </simpara></listitem></varlistentry>
 <varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> Whether this operation is succeeded.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-gui-get-tray-icon" role="function">
+<title>rc_gui_get_tray_icon ()</title>
+<indexterm zone="rc-gui-get-tray-icon"><primary>rc_gui_get_tray_icon</primary></indexterm>
+<programlisting><link linkend="GtkStatusIcon"><returnvalue>GtkStatusIcon</returnvalue></link> *     rc_gui_get_tray_icon                ();</programlisting>
+<para>
+Return the tray icon.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The tray icon.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 

@@ -61,6 +61,7 @@
                                                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *title</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *widget</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Main-UI.html#rc-gui-view-remove-page" title="rc_gui_view_remove_page ()">rc_gui_view_remove_page</a>             (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> id</code></em>);
+<a href="/usr/share/gtk-doc/html/gtk/GtkStatusIcon.html"><span class="returnvalue">GtkStatusIcon</span></a> *     <a class="link" href="RhythmCat-Main-UI.html#rc-gui-get-tray-icon" title="rc_gui_get_tray_icon ()">rc_gui_get_tray_icon</a>                ();
 </pre>
 </div>
 <div class="refsect1" title="Description">
@@ -82,7 +83,8 @@ Show the main UI of the player.
     GtkWidget *title_label, *artist_label, *album_label;
     GtkWidget *time_label, *length_label, *info_label;
     GtkWidget *album_image, *album_eventbox, *album_frame;
-    GtkWidget *control_images[4], *control_buttons[4];
+    GtkWidget *control_buttons_bar;
+    GtkWidget *control_buttons[8];
     GtkWidget *volume_button;
     GtkWidget *time_scroll_bar;
     GtkWidget *lrc_label, *lrc_viewport;
@@ -185,12 +187,12 @@ Please do not change the data in this structure.
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.control-images"></a>control_images</code></em>[4];</span></p></td>
-<td>the image widgets of control buttons
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.control-buttons-bar"></a>control_buttons_bar</code></em>;</span></p></td>
+<td>the toolbar contains control buttons
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.control-buttons"></a>control_buttons</code></em>[4];</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.control-buttons"></a>control_buttons</code></em>[8];</span></p></td>
 <td>the button widgets of control buttons
 </td>
 </tr>
@@ -615,6 +617,22 @@ Remove a view page from player.
 </td>
 </tr>
 </tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_get_tray_icon ()">
+<a name="rc-gui-get-tray-icon"></a><h3>rc_gui_get_tray_icon ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gtk/GtkStatusIcon.html"><span class="returnvalue">GtkStatusIcon</span></a> *     rc_gui_get_tray_icon                ();</pre>
+<p>
+Return the tray icon.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The tray icon.
+</td>
+</tr></tbody>
 </table></div>
 </div>
 </div>
