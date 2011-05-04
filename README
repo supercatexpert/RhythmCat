@@ -11,7 +11,7 @@ Developing platform:
 Operating System: Debian Squeeze/6.0 for AMD64
 Compiler: gcc 4.4.5
 Programming Language: C
-Dependent Libraries: GTK+-2.0(>=2.14) Gstreamer-0.10 
+Dependent Libraries: GTK+-2.0(>=2.20) Gstreamer-0.10 
                      Gstreamer-plugins-base-0.10 Gstreamer-plugins-good-0.10
 
 Developing stage:
@@ -78,7 +78,7 @@ RhythmCat 是一个可以在Linux平台下工作的音乐播放器。它可以�
 操作系统: Debian Squeeze/6.0 for AMD64
 编译器: gcc 4.4.5
 编程语言: C
-依赖的库: GTK+-2.0(>=2.14) Gstreamer-0.10 Gstreamer-plugins-base-0.10
+依赖的库: GTK+-2.0(>=2.20) Gstreamer-0.10 Gstreamer-plugins-base-0.10
          Gstreamer-plugins-good-0.10
 开发阶段:
 

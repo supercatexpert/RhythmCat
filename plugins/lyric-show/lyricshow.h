@@ -43,7 +43,6 @@ typedef struct _GuiLrcData
 {
     GtkWidget *lrc_swindow;
     GtkWidget *lrc_scene;
-    GtkWidget *lrc_scrwin;
     gchar *lyric_font;
     gint64 lrc_time_delay;
     guint lyric_line_ds;

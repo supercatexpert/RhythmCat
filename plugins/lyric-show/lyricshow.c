@@ -63,6 +63,12 @@ static void rc_plugin_lrcshow_stop()
 
 gint rc_plugin_module_init()
 {
+    if(gtk_major_version!=2 || gtk_minor_version<20)
+    {
+        rc_debug_perror("DeskLRC-ERROR: This plugin need GTK+ 2.20 or "
+            "newer version, somehow it doesn't work on GTK+ 3.0.\n");
+        return 1;
+    }
     rc_plugin_lrcshow_init();
     lyric_found_signal = rc_player_object_signal_connect_simple(
         "lyric-found", G_CALLBACK(rc_plugin_lrcshow_lyric_found));
@@ -77,7 +83,6 @@ void rc_plugin_module_exit()
     g_source_remove(timeout_id);
     rc_player_object_signal_disconnect(lyric_found_signal);
     rc_player_object_signal_disconnect(lyric_stop_signal);
-    gtk_widget_destroy(rc_glrc.lrc_scrwin);
     gtk_widget_destroy(rc_glrc.lrc_swindow);
     if(id>0) rc_gui_view_remove_page(id);
     g_free(rc_glrc.lyric_font);
@@ -194,10 +199,13 @@ static void rc_plugin_lrc_show_set_single_mode(gboolean flag)
     if(flag)
     {
         if(id>0)
+        {
+            g_object_ref(G_OBJECT(rc_glrc.lrc_scene));
             rc_gui_view_remove_page(id);
+        }
         id = 0;
         gtk_container_add(GTK_CONTAINER(rc_glrc.lrc_swindow),
-            rc_glrc.lrc_scrwin);
+            rc_glrc.lrc_scene);
         gtk_widget_show_all(rc_glrc.lrc_swindow);  
     }
     else
@@ -205,14 +213,14 @@ static void rc_plugin_lrc_show_set_single_mode(gboolean flag)
         gtk_widget_hide(rc_glrc.lrc_swindow);
         if(gtk_bin_get_child(GTK_BIN(rc_glrc.lrc_swindow)))
         {
-            g_object_ref(G_OBJECT(rc_glrc.lrc_scrwin));
+            g_object_ref(G_OBJECT(rc_glrc.lrc_scene));
             gtk_container_remove(GTK_CONTAINER(rc_glrc.lrc_swindow),
-                rc_glrc.lrc_scrwin);
+                rc_glrc.lrc_scene);
         }
         if(id==0)
             id = rc_gui_view_add_page("ViewPageLyric", "_Lyric Show",
-                rc_glrc.lrc_scrwin);
-        gtk_widget_show_all(rc_glrc.lrc_scrwin);
+                rc_glrc.lrc_scene);
+        gtk_widget_show_all(rc_glrc.lrc_scene);
     }
 }
 
@@ -240,12 +248,7 @@ void rc_plugin_lrcshow_init()
     rc_plugin_lrcshow_load_conf();
     rc_glrc.lrc_swindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     rc_glrc.lrc_scene = gtk_drawing_area_new();
-    rc_glrc.lrc_scrwin = gtk_scrolled_window_new(NULL, NULL);
     gtk_widget_set_size_request(rc_glrc.lrc_swindow, 300, 400);
-    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(rc_glrc.lrc_scrwin),
-        GTK_POLICY_NEVER, GTK_POLICY_NEVER);
-    gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(
-        rc_glrc.lrc_scrwin), rc_glrc.lrc_scene);
     gtk_widget_add_events(rc_glrc.lrc_scene, GDK_BUTTON_PRESS_MASK |
         GDK_BUTTON_RELEASE_MASK | GDK_BUTTON_MOTION_MASK |
         GDK_POINTER_MOTION_HINT_MASK);
@@ -304,8 +307,7 @@ void rc_plugin_lrcshow_show()
     PangoLayout *layout;
     PangoFontDescription *desc;
     GdkWindow *lrc_window;
-    GtkAdjustment *hadj, *vadj;
-    gdouble h_value, v_value;
+    GtkAllocation allocation;
     if(!GTK_IS_WIDGET(rc_glrc.lrc_scene)) return;
     lrc_window = gtk_widget_get_window(rc_glrc.lrc_scene);
     if(!GDK_IS_WINDOW(lrc_window)) return;
@@ -318,15 +320,10 @@ void rc_plugin_lrcshow_show()
     rc_glrc.text_color[3] = 1.0;
     rc_glrc.text_hilight[3] = 1.0;
     rc_glrc.background[3] = 1.0;
+    gtk_widget_get_allocation(rc_glrc.lrc_scene, &allocation);
     lrc_cr = gdk_cairo_create(lrc_window);
-    hadj = gtk_scrolled_window_get_hadjustment(GTK_SCROLLED_WINDOW(
-        rc_glrc.lrc_scrwin));
-    vadj = gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(
-        rc_glrc.lrc_scrwin));
-    g_object_get(G_OBJECT(hadj), "page-size", &h_value, NULL);
-    g_object_get(G_OBJECT(vadj), "page-size", &v_value, NULL);
-    width = (gint)h_value;
-    height = (gint)v_value;
+    width = allocation.width;
+    height = allocation.height;
     layout = pango_cairo_create_layout(lrc_cr);
     pango_layout_set_text(layout, "Font size test!", -1);
     desc = pango_font_description_from_string(rc_glrc.lyric_font);

@@ -490,34 +490,6 @@ const char *name, GCallback callback
 <RETURNS>void </RETURNS>
 gulong id 
 </FUNCTION>
-<STRUCT>
-<NAME>RCGuiColorStyle</NAME>
-typedef struct RCGuiColorStyle {
-    gchar name[32];
-    GdkColor label_font_color;
-    GdkColor time_font_color;
-    GdkColor title_font_color;
-    GdkColor artist_font_color;
-    GdkColor album_font_color;
-    GdkColor info_font_color;
-    GdkColor length_font_color;
-    GdkColor lyric_font_color;
-    GdkColor window_bg_color;
-    GdkColor time_scalerbar_handle_normal_color;
-    GdkColor time_scalerbar_handle_prelight_color;
-    GdkColor time_scalerbar_handle_selected_color;
-    GdkColor button_bg_color;
-    GdkColor button_prelight_color;
-    GdkColor button_active_color;
-    GdkColor listview_base_normal_color;
-    GdkColor listview_base_selected_color;
-    GdkColor listview_base_active_color;
-    GdkColor listview_font_normal_color;
-    GdkColor listview_font_selected_color;
-    GdkColor listview_font_active_color;
-    GdkColor listview_scrbar_color;
-}RCGuiColorStyle;
-</STRUCT>
 <FUNCTION>
 <NAME>rc_gui_style_init</NAME>
 <RETURNS>void </RETURNS>
@@ -529,19 +501,9 @@ typedef struct RCGuiColorStyle {
  
 </FUNCTION>
 <FUNCTION>
-<NAME>rc_gui_style_set_color_style</NAME>
-<RETURNS>void </RETURNS>
-const RCGuiColorStyle *style_data 
-</FUNCTION>
-<FUNCTION>
-<NAME>rc_gui_style_get_color_style</NAME>
-<RETURNS>const RCGuiColorStyle *</RETURNS>
-gint index 
-</FUNCTION>
-<FUNCTION>
-<NAME>rc_gui_style_set_color_style_by_index</NAME>
-<RETURNS>void </RETURNS>
-gint index 
+<NAME>rc_gui_style_path_search</NAME>
+<RETURNS>GSList *</RETURNS>
+ 
 </FUNCTION>
 <ENUM>
 <NAME>RCPlist1Column</NAME>
@@ -791,21 +753,19 @@ typedef struct RCGuiData {
     GtkWidget *title_label, *artist_label, *album_label;
     GtkWidget *time_label, *length_label, *info_label;
     GtkWidget *album_image, *album_eventbox, *album_frame;
-    GtkWidget *control_buttons_bar;
+    GtkWidget *control_images[8];
     GtkWidget *control_buttons[8];
     GtkWidget *volume_button;
     GtkWidget *time_scroll_bar;
-    GtkWidget *lrc_label, *lrc_viewport;
+    GtkWidget *lrc_label, *lrc_fixed;
     GtkWidget *list1_tree_view, *list2_tree_view;
     GtkWidget *list1_scr_window, *list2_scr_window;
-    GtkWidget *status_hbox, *status_progress, *status_label;
-    GtkWidget *status_cancel_button;
+    GtkWidget *status_infobar, *status_progress, *status_label;
     GtkWidget *list_hpaned;
     GtkTreeModel *list1_tree_model, *list2_tree_model;
     GtkTreeSelection *list1_selection, *list2_selection;
     GtkCellRenderer *renderer_text[5];
     GtkCellRenderer *renderer_pixbuf[2];
-    GtkAdjustment *lrc_vport_adj;
     guint main_window_width;
     guint main_window_height;
     guint status_task_length;

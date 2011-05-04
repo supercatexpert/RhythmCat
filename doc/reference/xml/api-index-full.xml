@@ -33,7 +33,6 @@
 </indexdiv>
 <indexdiv><title>G</title>
 <indexentry><primaryie linkends="GETTEXT-PACKAGE:CAPS"><link linkend="GETTEXT-PACKAGE:CAPS">GETTEXT_PACKAGE</link>, macro in <link linkend="RhythmCat-Player">Player</link></primaryie></indexentry>
-<indexentry><primaryie linkends="RCGuiColorStyle"><link linkend="RCGuiColorStyle">RCGuiColorStyle</link>, struct in <link linkend="RhythmCat-UI-Styles-and-Themes">UI Styles and Themes</link></primaryie></indexentry>
 <indexentry><primaryie linkends="RCGuiData"><link linkend="RCGuiData">RCGuiData</link>, struct in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="RCGuiEQData"><link linkend="RCGuiEQData">RCGuiEQData</link>, struct in <link linkend="RhythmCat-Equalizer-UI">Equalizer UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-about-player"><link linkend="rc-gui-about-player">rc_gui_about_player</link>, function in <link linkend="RhythmCat-Dialogs">Dialogs</link></primaryie></indexentry>
@@ -83,11 +82,9 @@
 <indexentry><primaryie linkends="rc-gui-show-open-dialog"><link linkend="rc-gui-show-open-dialog">rc_gui_show_open_dialog</link>, function in <link linkend="RhythmCat-Dialogs">Dialogs</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-status-progress-set-progress"><link linkend="rc-gui-status-progress-set-progress">rc_gui_status_progress_set_progress</link>, function in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-status-task-set"><link linkend="rc-gui-status-task-set">rc_gui_status_task_set</link>, function in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
-<indexentry><primaryie linkends="rc-gui-style-get-color-style"><link linkend="rc-gui-style-get-color-style">rc_gui_style_get_color_style</link>, function in <link linkend="RhythmCat-UI-Styles-and-Themes">UI Styles and Themes</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-style-init"><link linkend="rc-gui-style-init">rc_gui_style_init</link>, function in <link linkend="RhythmCat-UI-Styles-and-Themes">UI Styles and Themes</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-style-path-search"><link linkend="rc-gui-style-path-search">rc_gui_style_path_search</link>, function in <link linkend="RhythmCat-UI-Styles-and-Themes">UI Styles and Themes</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-style-refresh"><link linkend="rc-gui-style-refresh">rc_gui_style_refresh</link>, function in <link linkend="RhythmCat-UI-Styles-and-Themes">UI Styles and Themes</link></primaryie></indexentry>
-<indexentry><primaryie linkends="rc-gui-style-set-color-style"><link linkend="rc-gui-style-set-color-style">rc_gui_style_set_color_style</link>, function in <link linkend="RhythmCat-UI-Styles-and-Themes">UI Styles and Themes</link></primaryie></indexentry>
-<indexentry><primaryie linkends="rc-gui-style-set-color-style-by-index"><link linkend="rc-gui-style-set-color-style-by-index">rc_gui_style_set_color_style_by_index</link>, function in <link linkend="RhythmCat-UI-Styles-and-Themes">UI Styles and Themes</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-time-label-set-text"><link linkend="rc-gui-time-label-set-text">rc_gui_time_label_set_text</link>, function in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-treeview-init"><link linkend="rc-gui-treeview-init">rc_gui_treeview_init</link>, function in <link linkend="RhythmCat-Playlist-Views-UI">Playlist Views UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-view-add-page"><link linkend="rc-gui-view-add-page">rc_gui_view_add_page</link>, function in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>

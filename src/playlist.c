@@ -492,10 +492,9 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
     }
     music_dir = g_path_get_dirname(fpathname);
     g_free(fpathname);
-    lyric_dir = g_strdup_printf("%s%cLyrics", rc_player_get_conf_dir(),
-        G_DIR_SEPARATOR);
-    image_dir = g_strdup_printf("%s%cAlbumImages", rc_player_get_conf_dir(),
-        G_DIR_SEPARATOR);
+    lyric_dir = g_build_filename(rc_player_get_conf_dir(), "Lyrics", NULL);
+    image_dir = g_build_filename(rc_player_get_conf_dir(), "AlbumImages",
+        NULL);
     lyric_filename = rc_tag_find_file(music_dir, realname, ".LRC");
     if(lyric_filename==NULL)
         lyric_filename = rc_tag_find_file(lyric_dir, realname, ".LRC");
@@ -609,10 +608,9 @@ gboolean rc_plist_play_by_uri(const gchar *uri)
     }
     music_dir = g_path_get_dirname(fpathname);
     g_free(fpathname);
-    lyric_dir = g_strdup_printf("%s%cLyrics", rc_player_get_conf_dir(),
-        G_DIR_SEPARATOR);
-    image_dir = g_strdup_printf("%s%cAlbumImages", rc_player_get_conf_dir(),
-        G_DIR_SEPARATOR);
+    lyric_dir = g_build_filename(rc_player_get_conf_dir(), "Lyrics", NULL);
+    image_dir = g_build_filename(rc_player_get_conf_dir(), "AlbumImages",
+        NULL);
     lyric_filename = rc_tag_find_file(music_dir, realname, ".LRC");
     if(lyric_filename==NULL)
         lyric_filename = rc_tag_find_file(lyric_dir, realname, ".LRC");

@@ -49,20 +49,19 @@
  * @album_image: show album image on the player window
  * @album_eventbox: process the events on album image
  * @album_frame: the frame of album image widget
- * @control_buttons_bar: the toolbar contains control buttons
+ * @control_images: the images of control buttons
  * @control_buttons: the button widgets of control buttons
  * @volume_button: the volume control button
  * @time_scroll_bar: the time scaler bar
  * @lrc_label: show lyric text on the player window
- * @lrc_viewport: the viewport which makes lyric text widget scrollable
+ * @lrc_fixed: the fixed container makes lyric text widget scrollable
  * @list1_tree_view: the list view of list1
  * @list2_tree_view: the list view of list2
  * @list1_scr_window: add scrollbars on list1
  * @list2_scr_window: add scrollbars on list2
- * @status_hbox: the GtkBox which stores status widgets
+ * @status_infobar: the GtkBox which stores status widgets
  * @status_progress: show progress of status on the player window
  * @status_label: show status text on the player window
- * @status_cancel_button: the cancel button to cancel all working tasks
  * @list_hpaned: the widget with two adjustable panes
  * @list1_tree_model: the GtkTreeModel of list1
  * @list2_tree_model: the GtkTreeModel of list2
@@ -94,21 +93,19 @@ typedef struct RCGuiData {
     GtkWidget *title_label, *artist_label, *album_label;
     GtkWidget *time_label, *length_label, *info_label;
     GtkWidget *album_image, *album_eventbox, *album_frame;
-    GtkWidget *control_buttons_bar;
+    GtkWidget *control_images[8];
     GtkWidget *control_buttons[8];
     GtkWidget *volume_button;
     GtkWidget *time_scroll_bar;
-    GtkWidget *lrc_label, *lrc_viewport;
+    GtkWidget *lrc_label, *lrc_fixed;
     GtkWidget *list1_tree_view, *list2_tree_view;
     GtkWidget *list1_scr_window, *list2_scr_window;
-    GtkWidget *status_hbox, *status_progress, *status_label;
-    GtkWidget *status_cancel_button;
+    GtkWidget *status_infobar, *status_progress, *status_label;
     GtkWidget *list_hpaned;
     GtkTreeModel *list1_tree_model, *list2_tree_model;
     GtkTreeSelection *list1_selection, *list2_selection;
     GtkCellRenderer *renderer_text[5];
     GtkCellRenderer *renderer_pixbuf[2];
-    GtkAdjustment *lrc_vport_adj;
     guint main_window_width;
     guint main_window_height;
     guint status_task_length;

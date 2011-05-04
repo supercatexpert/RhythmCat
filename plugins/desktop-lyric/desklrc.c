@@ -45,6 +45,7 @@ static gint osd_lryic_width = 1000;
 static gint osd_lyric_pos[2] = {100, 50};
 static gboolean osd_lyric_movable = TRUE;
 static gboolean osd_lyric_centered = FALSE;
+static gboolean osd_lyric_two_line = TRUE;
 static gulong lyric_found_signal, lyric_stop_signal;
 static gulong lyric_refresh_timeout;
 
@@ -72,6 +73,20 @@ static void rc_plugin_desklrc_stop()
 
 gint rc_plugin_module_init()
 {
+    GdkScreen *screen;
+    screen = gdk_screen_get_default();
+    if(gtk_major_version!=2 || gtk_minor_version<20)
+    {
+        rc_debug_perror("DeskLRC-ERROR: This plugin need GTK+ 2.20 or "
+            "newer version, somehow it doesn't work on GTK+ 3.0.\n");
+        return 1;
+    }
+    if(!gdk_screen_is_composited(screen))
+    {
+        rc_debug_perror("DeskLRC-ERROR: This plugin need composition support "
+            "to work! Please check if your window manager support it.\n");
+        return 2;
+    }
     rc_plugin_desklrc_init();
     lyric_found_signal = rc_player_object_signal_connect_simple(
         "lyric-found", G_CALLBACK(rc_plugin_desklrc_lyric_found));
@@ -279,6 +294,8 @@ void rc_plugin_desklrc_init()
     rc_plugin_desklrc_set_movable(osd_lyric_movable);
     if(rc_lrc_get_lrc_data()!=NULL && rc_lrc_get_lrc_length()>0)
         rc_plugin_desklrc_enable(TRUE);
+    else
+        rc_plugin_desklrc_enable(FALSE);
     rc_debug_print("DeskLRC: Plugin has been loaded sucessfully\n");
 }
 
@@ -287,7 +304,6 @@ gboolean rc_plugin_desklrc_show(GtkWidget *widget, GdkEventExpose *event,
 {
     const RCLyricData *lyric_data = NULL;
     PangoFontDescription *font_desc;
-    PangoFontDescription *desc;
     PangoLayout *layout;
     cairo_pattern_t *pat;
     gchar *text;
@@ -303,10 +319,15 @@ gboolean rc_plugin_desklrc_show(GtkWidget *widget, GdkEventExpose *event,
     gint desklrc_time = 0;
     gint time_temp = 0;
     lyric_data = rc_lrc_get_line_now();
-    if(lyric_data==NULL) return TRUE;
-    cr = gdk_cairo_create(desklrc_window->window);
-    gdk_drawable_get_size(desklrc_window->window, &window_width,
-        &window_height);
+    if(lyric_data!=NULL)
+        text = lyric_data->text;
+    else if(!desklrc_flag)
+        text = "RhythmCat Music Player";
+    else
+        text = "";
+    cr = gdk_cairo_create(gtk_widget_get_window(desklrc_window));
+    gdk_drawable_get_size(gtk_widget_get_window(desklrc_window),
+        &window_width, &window_height);
     y = window_height;
     if(lyrics_notify)
     {
@@ -328,24 +349,25 @@ gboolean rc_plugin_desklrc_show(GtkWidget *widget, GdkEventExpose *event,
     }
     width = window_width;
     height = window_height;
-    text = lyric_data->text;
     font_desc = pango_font_description_from_string(desklrc_font);
     lh = pango_font_description_get_size(font_desc) / PANGO_SCALE;
     layout = pango_cairo_create_layout(cr);
     pango_layout_set_text(layout, text, -1); 
-    desc = pango_font_description_from_string(desklrc_font);
-    pango_layout_set_font_description(layout, desc);
+    pango_layout_set_font_description(layout, font_desc);
     pango_font_description_free(font_desc);
-    pango_font_description_free(desc);
     pango_layout_get_size(layout, &width, &lrc_height);
     width = width / PANGO_SCALE + 20;
-    if(lyric_data->length>0)
-        desklrc_time = lyric_data->length;
-    else
-        desklrc_time = rc_core_get_music_length() / (10*GST_MSECOND) -
+    if(lyric_data!=NULL)
+    {
+        if(lyric_data->length>0)
+            desklrc_time = lyric_data->length;
+        else
+            desklrc_time = rc_core_get_music_length() / (10*GST_MSECOND) -
+                lyric_data->time;
+
+        time_temp = rc_core_get_play_position() / (10*GST_MSECOND) -
             lyric_data->time;
-    time_temp = rc_core_get_play_position() / (10*GST_MSECOND) -
-        lyric_data->time;
+    }
     if(width>window_width)
     {
         x = ((gdouble)time_temp / desklrc_time) *
@@ -414,6 +436,7 @@ gboolean rc_plugin_desklrc_drag(GtkWidget *widget, GdkEvent *event,
     static gint desklrc_move_x = 0;
     static gint desklrc_move_y = 0;
     static gboolean lyrics_drag = FALSE;
+    GdkWindow *window = gtk_widget_get_window(desklrc_window);
     if(!osd_lyric_movable) return FALSE;
     GdkCursor *cursor = NULL;
     gint x, y;
@@ -427,7 +450,7 @@ gboolean rc_plugin_desklrc_drag(GtkWidget *widget, GdkEvent *event,
                 desklrc_move_y = event->button.y;
                 lyrics_drag = TRUE;
                 cursor = gdk_cursor_new(GDK_HAND1);
-                gdk_window_set_cursor(widget->window, cursor);
+                gdk_window_set_cursor(window, cursor);
                 gdk_cursor_destroy(cursor);
                 break;
             }
@@ -435,7 +458,7 @@ gboolean rc_plugin_desklrc_drag(GtkWidget *widget, GdkEvent *event,
             {
                 lyrics_drag = FALSE;
                 cursor = gdk_cursor_new(GDK_ARROW);
-                gdk_window_set_cursor(widget->window, cursor);
+                gdk_window_set_cursor(window, cursor);
                 gdk_cursor_destroy(cursor);
                 break;
             }
@@ -443,11 +466,12 @@ gboolean rc_plugin_desklrc_drag(GtkWidget *widget, GdkEvent *event,
             {
                 if(lyrics_drag)
                 {
-                    gtk_window_get_position(GTK_WINDOW(widget), &x, &y);
-                    gtk_window_move(GTK_WINDOW(widget), x + event->button.x 
-                        - desklrc_move_x, y + event->button.y -
-                        desklrc_move_y);
-                    gtk_window_get_position(GTK_WINDOW(widget),
+                    gtk_window_get_position(GTK_WINDOW(desklrc_window),
+                        &x, &y);
+                    gtk_window_move(GTK_WINDOW(desklrc_window), x +
+                        event->button.x - desklrc_move_x, y + 
+                        event->button.y - desklrc_move_y);
+                    gtk_window_get_position(GTK_WINDOW(desklrc_window),
                         &(osd_lyric_pos[0]), &(osd_lyric_pos[1]));
                 }
             }	
@@ -478,14 +502,12 @@ gboolean rc_plugin_desklrc_expose_handler(GtkWidget *widget,
     GdkEventExpose *event, gpointer data)
 {
     cairo_t *cr;
-    gint width, height;
-    cr = gdk_cairo_create(desklrc_window->window);
-    gdk_drawable_get_size(desklrc_window->window, &width, &height);
+    cr = gdk_cairo_create(gtk_widget_get_window(desklrc_window));
     cairo_set_source_rgba(cr, 1.0, 1.0, 1.0, 0.0);
     cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
     cairo_paint(cr);
     cairo_destroy(cr);
-    rc_plugin_desklrc_show(widget,event,data);
+    rc_plugin_desklrc_show(widget, event, data);
     return FALSE;
 }
 
@@ -493,11 +515,11 @@ gboolean rc_plugin_desklrc_update(GtkWidget *widget, GdkEventExpose *event,
     gpointer data)
 {
     gint width, height;
-    gdk_drawable_get_size(desklrc_window->window, &width, &height);
+    gdk_drawable_get_size(gtk_widget_get_window(desklrc_window), &width,
+        &height);
     if(osd_lryic_width!=width)
         gtk_window_resize(GTK_WINDOW(desklrc_window), osd_lryic_width,
             height);
-    if(rc_lrc_get_lrc_data()==NULL) return TRUE;
     gtk_widget_queue_draw(desklrc_window);
     return TRUE;   
 }
@@ -508,15 +530,15 @@ void rc_plugin_desklrc_enable(gboolean flag)
     if(flag)
     {
         desklrc_flag = TRUE;
-        if(GTK_WIDGET_MAPPED(desklrc_window))
+        if(gtk_widget_get_mapped(desklrc_window))
             gtk_widget_unmap(desklrc_window);       
-        if(GTK_WIDGET_REALIZED(desklrc_window))
+        if(gtk_widget_get_realized(desklrc_window))
         {
             gtk_widget_unrealize(desklrc_window);
             gtk_widget_realize(desklrc_window);
         }
         gtk_widget_show(desklrc_window);
-        if(!GTK_WIDGET_MAPPED(desklrc_window))
+        if(!gtk_widget_get_mapped(desklrc_window))
             gtk_widget_map(desklrc_window);
         gtk_window_move(GTK_WINDOW(desklrc_window), 
             osd_lyric_pos[0], osd_lyric_pos[1]);
@@ -524,7 +546,7 @@ void rc_plugin_desklrc_enable(gboolean flag)
     else
     {
         desklrc_flag = FALSE;
-        gtk_widget_hide(desklrc_window);
+        gtk_widget_queue_draw(desklrc_window);
     }
 }
 
@@ -532,17 +554,14 @@ void rc_plugin_desklrc_set_movable(gboolean movable)
 {
     GdkRegion *region;
     osd_lyric_movable = movable;
+    GdkWindow *window = gtk_widget_get_window(desklrc_window);
     if(movable)
-    {
-        gdk_window_input_shape_combine_mask(desklrc_window->window, NULL,
-            0, 0);
-    }
+        gdk_window_input_shape_combine_mask(window, NULL, 0, 0);
     else
     {
         region = gdk_region_new();
-        gdk_window_input_shape_combine_region(desklrc_window->window, region,
-            0, 0);
-        gdk_region_destroy (region);
+        gdk_window_input_shape_combine_region(window, region, 0, 0);
+        gdk_region_destroy(region);
     }
 }
 

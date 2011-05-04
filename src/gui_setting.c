@@ -45,7 +45,6 @@ static GtkWidget *setting_treeview;
 static GtkWidget *setting_notebook;
 static GtkWidget *setting_nb_pages[3];
 static GtkWidget *setting_ok_button;
-static GtkWidget *setting_apply_button;
 static GtkWidget *setting_cancel_button;
 static GtkWidget *setting_at_ply_checkbox; /* Autoplay */
 static GtkWidget *setting_ld_last_checkbox; /* Load the last position */
@@ -56,9 +55,8 @@ static GtkWidget *setting_at_min_checkbox; /* Auto minimize when start-up */
 static GtkWidget *setting_at_cln_checkbox; /* Auto clean invalid music file */
 static GtkWidget *setting_pl_enc_entry; /* Tag Encoding */
 static GtkWidget *setting_lr_enc_entry; /* Lyric Encoding */
-static GtkWidget *setting_ap_grf_button; /* RC Style File button */
-static GtkWidget *setting_ap_grf_radio[2]; /* RC Style Radio button */
-static GtkWidget *setting_ap_cl_combobox; /* Color Style Combobox */
+static GtkWidget *setting_ap_sty_combobox; /* Style Combobox */
+static GtkWidget *setting_ap_sty_image; /* Style Preview Image */
 static GtkTreeModel *setting_tree_model;
 static gboolean setting_changed = FALSE;
 
@@ -125,7 +123,8 @@ static void rc_gui_setting_row_selected(GtkTreeView *tree, gpointer data)
 static void rc_gui_setting_apply(GtkButton *widget, gpointer data)
 {
     gchar *string;
-    gint i;
+    GtkTreeIter iter;
+    GtkTreeModel *model;
     rc_set_set_boolean("Player", "AutoPlay",
         gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
         setting_at_ply_checkbox)));
@@ -151,24 +150,24 @@ static void rc_gui_setting_apply(GtkButton *widget, gpointer data)
         GTK_ENTRY(setting_pl_enc_entry)));
     rc_set_set_string("Metadata", "LRCExEncoding", gtk_entry_get_text(
         GTK_ENTRY(setting_lr_enc_entry)));
-    i = gtk_combo_box_get_active(GTK_COMBO_BOX(setting_ap_cl_combobox));
-    rc_set_set_integer("Appearance", "ColorStyle", i);
-    rc_gui_style_set_color_style_by_index(i);
-    if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
-        setting_ap_grf_radio[1])))
+    if(gtk_combo_box_get_active_iter(GTK_COMBO_BOX(setting_ap_sty_combobox),
+        &iter))
     {
-        string = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(
-            setting_ap_grf_button));
-        rc_set_set_string("Appearance", "RCFile", string);
-        g_free(string);
+        model = gtk_combo_box_get_model(GTK_COMBO_BOX(
+            setting_ap_sty_combobox));
+        if(model!=NULL)
+        {
+            gtk_tree_model_get(model, &iter, 2, &string, -1);
+            if(string!=NULL)
+            {
+                rc_set_set_string("Appearance", "StylePath", string);
+                g_free(string);
+            }
+            else
+                rc_set_set_string("Appearance", "StylePath", "");
+        }
+        rc_gui_style_refresh();
     }
-    else
-        rc_set_set_string("Appearance", "RCFile", "");
-}
-
-static void rc_gui_setting_confirm(GtkButton *widget, gpointer data)
-{
-    rc_gui_setting_apply(widget, data);
     rc_gui_close_setting_window(widget, data);
 }
 
@@ -284,95 +283,127 @@ static void rc_gui_create_setting_playlist()
         FALSE, FALSE, 0);
 }
 
+static void rc_gui_show_theme_image()
+{
+    GtkTreeModel *model;
+    GtkTreeIter iter;
+    gchar *style_path;
+    gchar *preview_file;
+    GdkPixbuf *pixbuf, *preview_pixbuf;
+    model = gtk_combo_box_get_model(GTK_COMBO_BOX(setting_ap_sty_combobox));
+    if(model==NULL) return;
+    if(gtk_combo_box_get_active_iter(GTK_COMBO_BOX(setting_ap_sty_combobox),
+        &iter))
+    {
+        gtk_tree_model_get(model, &iter, 2, &style_path, -1);
+        if(style_path==NULL || strlen(style_path)==0)
+        {
+            if(style_path!=NULL) g_free(style_path);
+            gtk_image_clear(GTK_IMAGE(setting_ap_sty_image));
+            return;
+        }
+        preview_file = g_build_filename(style_path, "preview.jpg", NULL);
+        if(style_path!=NULL) g_free(style_path);
+        if(g_file_test(preview_file, G_FILE_TEST_IS_REGULAR))
+        {
+            pixbuf = gdk_pixbuf_new_from_file(preview_file, NULL);
+            if(pixbuf!=NULL)
+            {
+                preview_pixbuf = gdk_pixbuf_scale_simple(pixbuf, 200, 150,
+                    GDK_INTERP_HYPER);
+                g_object_unref(pixbuf);
+                if(preview_pixbuf!=NULL)
+                {
+                    gtk_image_set_from_pixbuf(GTK_IMAGE(setting_ap_sty_image),
+                        preview_pixbuf);
+                    g_object_unref(preview_pixbuf);
+                }
+            }
+        }
+        else
+            gtk_image_clear(GTK_IMAGE(setting_ap_sty_image));
+        g_free(preview_file);
+    }
+}
+
 static void rc_gui_create_setting_appearance()
 {
-    GtkWidget *theme_label;
-    GtkWidget *theme_frame;
-    GtkWidget *color_style_label, *color_style_frame;
-    GtkWidget *vbox1, *hbox1;
-    GtkWidget *vbox2, *hbox2;
+    GtkWidget *theme_label, *preview_label;
+    GtkWidget *theme_frame, *preview_frame;
+    GtkWidget *vbox2;
     GtkWidget *label1;
     gchar *string;
     GtkCellRenderer *renderer = NULL;
     GtkListStore *store;
     GtkTreeIter iter;
-    guint i = 0;
-    const RCGuiColorStyle *color_style;
-    GtkFileFilter *filter = gtk_file_filter_new();
-    gtk_file_filter_add_pattern(filter, "gtkrc");
-    color_style_label = gtk_label_new("");
-    gtk_label_set_markup(GTK_LABEL(color_style_label),
-        _("<b>Color Style</b>"));
-    color_style_frame = gtk_frame_new(NULL);
-    gtk_frame_set_label_widget(GTK_FRAME(color_style_frame),
-        color_style_label);
-    gtk_frame_set_shadow_type(GTK_FRAME(color_style_frame), GTK_SHADOW_NONE);
-    store = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_INT);
-    renderer = gtk_cell_renderer_text_new();
-    setting_ap_cl_combobox = gtk_combo_box_new_with_model(
-        GTK_TREE_MODEL(store));
-    gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(setting_ap_cl_combobox),
-        renderer, TRUE);
-    gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(setting_ap_cl_combobox),
-        renderer, "text", 0, NULL);
+    GSList *theme_list = NULL;
+    const GSList *list_foreach = NULL;
+    gint i = 1;
+    gchar *style_path = NULL;
+    gchar *style_name = NULL;
+    gint theme_no = 0;
+    theme_list = rc_gui_style_path_search();
     theme_label = gtk_label_new("");
+    preview_label = gtk_label_new("");
     gtk_label_set_markup(GTK_LABEL(theme_label), _("<b>Theme</b>"));
+    gtk_label_set_markup(GTK_LABEL(preview_label), _("<b>Preview</b>"));
     theme_frame = gtk_frame_new(NULL);
+    preview_frame = gtk_frame_new(NULL);
     gtk_frame_set_label_widget(GTK_FRAME(theme_frame), theme_label);
+    gtk_frame_set_label_widget(GTK_FRAME(preview_frame), preview_label);
     gtk_frame_set_shadow_type(GTK_FRAME(theme_frame), GTK_SHADOW_NONE);
-    setting_ap_grf_radio[0] = gtk_radio_button_new_with_mnemonic(NULL,
-        _("Use _System GTK2+ RC Theme"));
-    setting_ap_grf_radio[1] = gtk_radio_button_new_with_mnemonic_from_widget(
-        GTK_RADIO_BUTTON(setting_ap_grf_radio[0]),
-        _("Use _Custom GTK2+ RC Theme"));
-    setting_ap_grf_button = gtk_file_chooser_button_new(
-        _("Please select a GTK2+ RC File"), GTK_FILE_CHOOSER_ACTION_OPEN);
+    gtk_frame_set_shadow_type(GTK_FRAME(preview_frame), GTK_SHADOW_NONE);
+    setting_ap_sty_image = gtk_image_new();
+    store = gtk_list_store_new(3, G_TYPE_STRING, G_TYPE_INT, G_TYPE_STRING);
+    renderer = gtk_cell_renderer_text_new();
+    setting_ap_sty_combobox = gtk_combo_box_new_with_model(
+        GTK_TREE_MODEL(store));
+    gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(setting_ap_sty_combobox),
+        renderer, TRUE);
+    gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(setting_ap_sty_combobox),
+        renderer, "text", 0, NULL);
+    string = rc_set_get_string("Appearance", "StylePath", NULL);
     gtk_list_store_append(store, &iter);
-    gtk_list_store_set(store, &iter, 0, _("None"), 1, 0, -1);
-    while((color_style=rc_gui_style_get_color_style(i))!=NULL)
+    gtk_list_store_set(store, &iter, 0, _("None"), 1, 0, 2, NULL, -1);
+    for(list_foreach=theme_list;list_foreach!=NULL;list_foreach=
+        g_slist_next(list_foreach))
     {
-        gtk_list_store_append(store, &iter);
-        gtk_list_store_set(store, &iter, 0, color_style->name, 1,
-            i+1, -1);
-        i++;
-    }
-    gtk_combo_box_set_active(GTK_COMBO_BOX(setting_ap_cl_combobox),
-        rc_set_get_integer("Appearance", "ColorStyle", NULL));
-    string = rc_set_get_string("Appearance", "RCFile", NULL);
-    if(string!=NULL)
-    {
-        if(strlen(string)>0)
+        style_path = list_foreach->data;
+        if(style_path!=NULL)
         {
-            gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(
-                setting_ap_grf_button), string);
-            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(
-                setting_ap_grf_radio[1]), TRUE);
+            style_name = g_path_get_basename(style_path);
+            if(string!=NULL && g_strcmp0(string, style_path)==0)
+                theme_no = i;
+            gtk_list_store_append(store, &iter);
+            gtk_list_store_set(store, &iter, 0, style_name, 1, 0, 2,
+                style_path, -1);
+            i++;
+            g_free(style_name);
         }
-        g_free(string);
+        g_free(list_foreach->data);
     }
-    gtk_file_filter_set_name(filter, _("GTK2+ RC File (gtkrc)"));
-    gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(setting_ap_grf_button),
-        filter);
-    label1 = gtk_label_new(_("Use color style"));
-    vbox1 = gtk_vbox_new(FALSE, 2);
-    hbox1 = gtk_hbox_new(FALSE, 2);
+    g_slist_free(theme_list);
+    g_free(string);
+    gtk_combo_box_set_active(GTK_COMBO_BOX(setting_ap_sty_combobox),
+        theme_no);
+    rc_gui_show_theme_image();
+    label1 = gtk_label_new(_("Please notice that you should restart the "
+        "player if you have disabled the style or the style does not work "
+        "properly."));
+    gtk_label_set_line_wrap(GTK_LABEL(label1), TRUE);
     vbox2 = gtk_vbox_new(FALSE, 2);
-    hbox2 = gtk_hbox_new(FALSE, 2);
-    gtk_box_pack_start(GTK_BOX(hbox1), label1, FALSE, FALSE, 10);
-    gtk_box_pack_start(GTK_BOX(hbox1), setting_ap_cl_combobox, TRUE, TRUE, 0);
-    gtk_box_pack_start(GTK_BOX(vbox1), hbox1, FALSE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(hbox2), setting_ap_grf_radio[1], FALSE,
+    gtk_box_pack_start(GTK_BOX(vbox2), setting_ap_sty_combobox, FALSE,
         FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(hbox2), setting_ap_grf_button, TRUE, TRUE, 0);
-    gtk_box_pack_start(GTK_BOX(vbox2), setting_ap_grf_radio[0], FALSE,
-        FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(vbox2), hbox2, FALSE, FALSE, 0);
-    gtk_container_add(GTK_CONTAINER(color_style_frame), vbox1);
     gtk_container_add(GTK_CONTAINER(theme_frame), vbox2);
-    gtk_box_pack_start(GTK_BOX(setting_nb_pages[2]), color_style_frame,
+    gtk_container_add(GTK_CONTAINER(preview_frame), setting_ap_sty_image);
+    gtk_box_pack_end(GTK_BOX(setting_nb_pages[2]), label1,
         FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(setting_nb_pages[2]), theme_frame,
+        FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(setting_nb_pages[2]), preview_frame,
         TRUE, TRUE, 0);
+    g_signal_connect(G_OBJECT(setting_ap_sty_combobox), "changed",
+        G_CALLBACK(rc_gui_show_theme_image), NULL);
 }
 
 
@@ -413,7 +444,6 @@ void rc_gui_create_setting_window()
         GTK_WIN_POS_CENTER_ON_PARENT);
     gtk_notebook_set_show_tabs(GTK_NOTEBOOK(setting_notebook), FALSE);
     setting_cancel_button = gtk_button_new_from_stock(GTK_STOCK_CANCEL);
-    setting_apply_button = gtk_button_new_from_stock(GTK_STOCK_APPLY);
     setting_ok_button = gtk_button_new_from_stock(GTK_STOCK_OK);
     for(i=0;i<3;i++)
     {
@@ -428,7 +458,6 @@ void rc_gui_create_setting_window()
     gtk_box_pack_start(GTK_BOX(hbox1), setting_treeview, FALSE, FALSE, 3);
     gtk_box_pack_start(GTK_BOX(hbox1), setting_notebook, TRUE, TRUE, 3);
     gtk_box_pack_end(GTK_BOX(hbox2), setting_ok_button, FALSE, FALSE, 4);
-    gtk_box_pack_end(GTK_BOX(hbox2), setting_apply_button, FALSE, FALSE, 4);
     gtk_box_pack_end(GTK_BOX(hbox2), setting_cancel_button, FALSE, FALSE, 4);
     gtk_box_pack_start(GTK_BOX(vbox1), hbox1, TRUE, TRUE, 5);
     gtk_box_pack_start(GTK_BOX(vbox1), hbox2, FALSE, FALSE, 2);
@@ -437,10 +466,8 @@ void rc_gui_create_setting_window()
         G_CALLBACK(rc_gui_setting_row_selected),NULL);
     g_signal_connect(G_OBJECT(setting_cancel_button), "clicked",
         G_CALLBACK(rc_gui_close_setting_window), NULL);
-    g_signal_connect(G_OBJECT(setting_apply_button), "clicked",
-        G_CALLBACK(rc_gui_setting_apply), NULL);
     g_signal_connect(G_OBJECT(setting_ok_button), "clicked",
-        G_CALLBACK(rc_gui_setting_confirm), NULL);
+        G_CALLBACK(rc_gui_setting_apply), NULL);
     g_signal_connect(G_OBJECT(setting_window), "destroy",
         G_CALLBACK(rc_gui_setting_destroy), NULL);
     gtk_widget_show_all(setting_window);

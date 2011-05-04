@@ -78,8 +78,7 @@ void rc_set_init()
     rc_set_set_double("Player", "Volume", 1.0);
     rc_set_set_integer("Player", "EQStyle", 0);
     rc_set_set_double_list("Player", "EQ", eq_array, 10);
-    rc_set_set_integer("Appearance", "ColorStyle", 1);
-    rc_set_set_string("Appearance", "RCFile", "");
+    rc_set_set_string("Appearance", "StylePath", "");
     rc_set_set_boolean("Metadata", "AutoEncodingDetect", TRUE);
     locale = rc_player_get_locale();
     if(strncmp(locale, "zh_CN", 5)==0)
@@ -98,13 +97,13 @@ void rc_set_init()
         rc_set_set_string("Metadata", "LRCExEncoding", "ShiftJIS");
     }
     /* Load user setting. */
-    conf_file = g_strdup_printf("%s%c.RhythmCat%csetting.conf",
-        rc_player_get_home_dir(), G_DIR_SEPARATOR, G_DIR_SEPARATOR);
+    conf_file = g_build_filename(rc_player_get_conf_dir(), "setting.conf",
+        NULL);
     rc_set_load_setting(conf_file);
     g_free(conf_file);
     /* Load plugin setting. */
-    conf_file = g_strdup_printf("%s%cplugins.conf", rc_player_get_conf_dir(),
-        G_DIR_SEPARATOR);
+    conf_file = g_build_filename(rc_player_get_conf_dir(), "plugins.conf", 
+        NULL);
     if(!g_key_file_load_from_file(rc_plugin_configure, conf_file,
         G_KEY_FILE_NONE, NULL))
     {
@@ -123,8 +122,8 @@ void rc_set_init()
 void rc_set_exit()
 {
     gchar *conf_file;
-    conf_file = g_strdup_printf("%s%c.RhythmCat%csetting.conf",
-        rc_player_get_home_dir(), G_DIR_SEPARATOR, G_DIR_SEPARATOR);
+    conf_file = g_build_filename(rc_player_get_conf_dir(), "setting.conf",
+        NULL);
     rc_set_save_setting(conf_file);
     g_key_file_free(rc_configure);
 }

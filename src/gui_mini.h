@@ -38,14 +38,14 @@
  * @icon_eventbox: process the events on icon image
  * @icon_image: show the icon of the player on the window
  * @info_label: show music information on the window
- * @info_viewport: the viewport which makes info text widget scrollable
+ * @info_fixed: the fixed container makes info text widget scrollable
  * @control_buttons: the button widgets of player control buttons
  * @control_images: the image widgets of player control buttons
  * @window_buttons: the button widgets of window control buttons
  * @window_images: the image widgets of window control buttons
  * @volume_button: the volume control button
  * @lrc_label: show lyric text on the window
- * @lrc_viewport: the viewport which makes lyric text widget scrollable
+ * @lrc_fixed: the fixed container which makes lyric text widget scrollable
  * @time_label: show the time position on the window
  * @resize_arrow: show an arrow on the window
  * @resize_eventbox: process the resize events of the mini mode window
@@ -64,14 +64,14 @@ typedef struct RCGuiMiniData
     GtkWidget *icon_eventbox;
     GtkWidget *icon_image;
     GtkWidget *info_label;
-    GtkWidget *info_viewport;
+    GtkWidget *info_fixed;
     GtkWidget *control_buttons[4];
     GtkWidget *control_images[4];
     GtkWidget *window_buttons[3];
     GtkWidget *window_bimages[3];
     GtkWidget *volume_button;
     GtkWidget *lrc_label;
-    GtkWidget *lrc_viewport;
+    GtkWidget *lrc_fixed;
     GtkWidget *time_label;
     GtkWidget *resize_arrow;
     GtkWidget *resize_eventbox;

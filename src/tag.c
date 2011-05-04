@@ -563,8 +563,7 @@ gchar *rc_tag_find_file(const gchar *dirname, const gchar *str,
         {
             if(g_str_has_prefix(fname_foreach, str))
             {
-                rfilename = g_strdup_printf("%s%c%s", dirname,
-                    G_DIR_SEPARATOR, fname_foreach);
+                rfilename = g_build_filename(dirname, fname_foreach, NULL);
                 break;
             }
         }

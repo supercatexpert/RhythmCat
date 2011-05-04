@@ -56,7 +56,7 @@
 #endif
 
 static const gchar rc_player_program_name[] = "RhythmCat Music Player";
-static const gchar rc_player_build_date[] = "110411";
+static const gchar rc_player_build_date[] = "110504";
 static const gchar rc_player_version[] = "1.0.0 alpha 2";
 static const gboolean rc_player_stable_flag = FALSE;
 static const gchar *rc_player_support_formatx = "(.FLAC|.OGG|.MP3|.WMA|.WAV|"
@@ -91,8 +91,8 @@ static gchar *rc_player_get_program_data_dir()
     }
     if(bin_dir!=NULL)
     {
-        data_dir = g_strdup_printf("%s%c..%cshare%cRhythmCat", bin_dir,
-            G_DIR_SEPARATOR, G_DIR_SEPARATOR, G_DIR_SEPARATOR);
+        data_dir = g_build_filename(bin_dir, "..", "share", "RhythmCat",
+            NULL);
         if(!g_file_test(data_dir, G_FILE_TEST_IS_DIR))
         {
             g_free(data_dir);
@@ -241,6 +241,7 @@ void rc_player_init(int *argc, char **argv[])
     };
     const gchar *homedir = g_getenv("HOME");
     gchar *locale_dir = NULL;
+    gchar *string = NULL;
     GError *error = NULL;
     /* Enable this to enable memory leak check. */
     /*
@@ -249,14 +250,25 @@ void rc_player_init(int *argc, char **argv[])
     g_set_application_name("RhythmCat");
     if(homedir==NULL) homedir = g_get_home_dir();
     rc_player_home_dir = homedir;
-    rc_player_conf_dir = g_strdup_printf("%s%c.RhythmCat", homedir,
-        G_DIR_SEPARATOR);
+    rc_player_conf_dir = g_build_filename(homedir, ".RhythmCat", NULL);
     rc_player_data_dir = rc_player_get_program_data_dir();
     if(rc_player_data_dir!=NULL)
-        rc_player_locale = g_strdup_printf("%s%c..%clocale",
-            rc_player_data_dir, G_DIR_SEPARATOR, G_DIR_SEPARATOR);
+        rc_player_locale = g_build_filename(rc_player_data_dir, "..",
+            "locale", NULL);
     srand((unsigned)time(0));
     g_mkdir_with_parents(rc_player_conf_dir, 0700);
+    string = g_build_filename(rc_player_conf_dir, "AlbumImages", NULL);
+    g_mkdir_with_parents(string, 0700);
+    g_free(string);
+    string = g_build_filename(rc_player_conf_dir, "Plugins", NULL);
+    g_mkdir_with_parents(string, 0700);
+    g_free(string);
+    string = g_build_filename(rc_player_conf_dir, "Lyrics", NULL);
+    g_mkdir_with_parents(string, 0700);
+    g_free(string);
+    string = g_build_filename(rc_player_conf_dir, "Themes", NULL);
+    g_mkdir_with_parents(string, 0700);
+    g_free(string);
     if(!g_thread_supported()) g_thread_init(NULL);
     gdk_threads_init();
     g_type_init();
@@ -272,7 +284,6 @@ void rc_player_init(int *argc, char **argv[])
     textdomain(GETTEXT_PACKAGE);
     rc_player_locale = g_strdup(setlocale(LC_ALL, NULL));
     rc_set_init();
-    rc_gui_style_refresh();
     /* Arguments/Options process. */
     if(!gtk_init_with_args(argc, argv, NULL, options, GETTEXT_PACKAGE, &error))
     {
@@ -295,6 +306,7 @@ void rc_player_init(int *argc, char **argv[])
     if(error!=NULL) g_error_free(error);
     gst_init(argc, argv);
     rc_player_dbus_init(rc_player_remaining_args);
+    rc_gui_style_refresh();
     rc_gui_init();
     rc_core_init();
     rc_gui_eq_data_init();

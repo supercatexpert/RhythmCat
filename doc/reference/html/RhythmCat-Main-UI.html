@@ -83,21 +83,19 @@ Show the main UI of the player.
     GtkWidget *title_label, *artist_label, *album_label;
     GtkWidget *time_label, *length_label, *info_label;
     GtkWidget *album_image, *album_eventbox, *album_frame;
-    GtkWidget *control_buttons_bar;
+    GtkWidget *control_images[8];
     GtkWidget *control_buttons[8];
     GtkWidget *volume_button;
     GtkWidget *time_scroll_bar;
-    GtkWidget *lrc_label, *lrc_viewport;
+    GtkWidget *lrc_label, *lrc_fixed;
     GtkWidget *list1_tree_view, *list2_tree_view;
     GtkWidget *list1_scr_window, *list2_scr_window;
-    GtkWidget *status_hbox, *status_progress, *status_label;
-    GtkWidget *status_cancel_button;
+    GtkWidget *status_infobar, *status_progress, *status_label;
     GtkWidget *list_hpaned;
     GtkTreeModel *list1_tree_model, *list2_tree_model;
     GtkTreeSelection *list1_selection, *list2_selection;
     GtkCellRenderer *renderer_text[5];
     GtkCellRenderer *renderer_pixbuf[2];
-    GtkAdjustment *lrc_vport_adj;
     guint main_window_width;
     guint main_window_height;
     guint status_task_length;
@@ -187,8 +185,8 @@ Please do not change the data in this structure.
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.control-buttons-bar"></a>control_buttons_bar</code></em>;</span></p></td>
-<td>the toolbar contains control buttons
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.control-images"></a>control_images</code></em>[8];</span></p></td>
+<td>the images of control buttons
 </td>
 </tr>
 <tr>
@@ -212,8 +210,8 @@ Please do not change the data in this structure.
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.lrc-viewport"></a>lrc_viewport</code></em>;</span></p></td>
-<td>the viewport which makes lyric text widget scrollable
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.lrc-fixed"></a>lrc_fixed</code></em>;</span></p></td>
+<td>the fixed container makes lyric text widget scrollable
 </td>
 </tr>
 <tr>
@@ -237,7 +235,7 @@ Please do not change the data in this structure.
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.status-hbox"></a>status_hbox</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.status-infobar"></a>status_infobar</code></em>;</span></p></td>
 <td>the GtkBox which stores status widgets
 </td>
 </tr>
@@ -249,11 +247,6 @@ Please do not change the data in this structure.
 <tr>
 <td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.status-label"></a>status_label</code></em>;</span></p></td>
 <td>show status text on the player window
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.status-cancel-button"></a>status_cancel_button</code></em>;</span></p></td>
-<td>the cancel button to cancel all working tasks
 </td>
 </tr>
 <tr>
@@ -289,11 +282,6 @@ Please do not change the data in this structure.
 <tr>
 <td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkCellRenderer.html"><span class="type">GtkCellRenderer</span></a> *<em class="structfield"><code><a name="RCGuiData.renderer-pixbuf"></a>renderer_pixbuf</code></em>[2];</span></p></td>
 <td>the image renderers of list1 &amp; list2
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkAdjustment.html"><span class="type">GtkAdjustment</span></a> *<em class="structfield"><code><a name="RCGuiData.lrc-vport-adj"></a>lrc_vport_adj</code></em>;</span></p></td>
-<td>the GtkAdjustment object of lyric viewport
 </td>
 </tr>
 <tr>

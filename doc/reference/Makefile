@@ -43,7 +43,12 @@ DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	$(top_srcdir)/gtk-doc.make
 subdir = doc/reference
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/configure.in
+am__aclocal_m4_deps = $(top_srcdir)/m4/gettext.m4 \
+	$(top_srcdir)/m4/gtk-doc.m4 $(top_srcdir)/m4/iconv.m4 \
+	$(top_srcdir)/m4/lib-ld.m4 $(top_srcdir)/m4/lib-link.m4 \
+	$(top_srcdir)/m4/lib-prefix.m4 $(top_srcdir)/m4/nls.m4 \
+	$(top_srcdir)/m4/po.m4 $(top_srcdir)/m4/progtest.m4 \
+	$(top_srcdir)/configure.in
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -63,7 +68,7 @@ CATALOGS =  zh_CN.gmo zh_TW.gmo ja_JP.gmo
 CATOBJEXT = .gmo
 CC = gcc
 CCDEPMODE = depmode=gcc3
-CFLAGS = -Wall -O2 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"
+CFLAGS = -Wall -O3 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"
 CPP = gcc -E
 CPPFLAGS = 
 CYGPATH_W = echo
@@ -314,8 +319,8 @@ REPORT_FILES = \
 CLEANFILES = $(SCANOBJ_FILES) $(REPORT_FILES) $(DOC_STAMPS)
 #HTML_BUILD_STAMP = 
 HTML_BUILD_STAMP = html-build.stamp
-#PDF_BUILD_STAMP = 
-PDF_BUILD_STAMP = pdf-build.stamp
+PDF_BUILD_STAMP = 
+#PDF_BUILD_STAMP = pdf-build.stamp
 all: all-am
 
 .SUFFIXES:

@@ -28,6 +28,8 @@
 #include "gui_mini.h"
 #include "gui_eq.h"
 #include "settings.h"
+#include "player.h"
+#include "debug.h"
 
 /**
  * SECTION: gui_style
@@ -38,94 +40,7 @@
  * Set the styles and themes of the player window.
  */
 
-#define GUI_STYLE_NUM 3
-
-static RCGuiColorStyle color_style[GUI_STYLE_NUM];
-
-static void rc_gui_style_data_init()
-{
-    /* Color style "Monochrome" */
-    strncpy(color_style[0].name, "Monochrome", 31);
-    gdk_color_parse("#F0F0F0", &color_style[0].label_font_color);
-    gdk_color_parse("#F0F0F0", &color_style[0].title_font_color);
-    gdk_color_parse("#F0F0F0", &color_style[0].artist_font_color);
-    gdk_color_parse("#F0F0F0", &color_style[0].album_font_color);
-    gdk_color_parse("#F0F0F0", &color_style[0].info_font_color);
-    gdk_color_parse("#F0F0F0", &color_style[0].length_font_color);
-    gdk_color_parse("#F0F0F0", &color_style[0].lyric_font_color);
-    gdk_color_parse("#6CD02F", &color_style[0].time_font_color);
-    gdk_color_parse("#282828", &color_style[0].window_bg_color);
-    gdk_color_parse("#707070",
-        &color_style[0].time_scalerbar_handle_normal_color);
-    gdk_color_parse("#909090",
-        &color_style[0].time_scalerbar_handle_prelight_color);
-    gdk_color_parse("#33A8E5",
-        &color_style[0].time_scalerbar_handle_selected_color);
-    gdk_color_parse("#404040", &color_style[0].button_bg_color);
-    gdk_color_parse("#707070", &color_style[0].button_prelight_color);
-    gdk_color_parse("#505050", &color_style[0].button_active_color);
-    gdk_color_parse("#282828", &color_style[0].listview_base_normal_color);
-    gdk_color_parse("#A0A0A0", &color_style[0].listview_base_selected_color);
-    gdk_color_parse("#A0A0A0", &color_style[0].listview_base_active_color);
-    gdk_color_parse("#F0F0F0", &color_style[0].listview_font_normal_color);
-    gdk_color_parse("#F0F0F0", &color_style[0].listview_font_selected_color);
-    gdk_color_parse("#F0F0F0", &color_style[0].listview_font_active_color);
-    gdk_color_parse("#707070", &color_style[0].listview_scrbar_color);
-    /* Color style "Noble" */
-    strncpy(color_style[1].name, "Noble", 31);
-    gdk_color_parse("#F0F0F0", &color_style[1].label_font_color);
-    gdk_color_parse("#F0F0F0", &color_style[1].title_font_color);
-    gdk_color_parse("#F0F0F0", &color_style[1].artist_font_color);
-    gdk_color_parse("#F0F0F0", &color_style[1].album_font_color);
-    gdk_color_parse("#F0F0F0", &color_style[1].info_font_color);
-    gdk_color_parse("#F0F0F0", &color_style[1].length_font_color);
-    gdk_color_parse("#F0F0F0", &color_style[1].lyric_font_color);
-    gdk_color_parse("#6D21F9", &color_style[1].time_font_color);
-    gdk_color_parse("#AD7FA8", &color_style[1].window_bg_color);
-    gdk_color_parse("#BB92EA",
-        &color_style[1].time_scalerbar_handle_normal_color);
-    gdk_color_parse("#CBA2FA",
-        &color_style[1].time_scalerbar_handle_prelight_color);
-    gdk_color_parse("#8932EA",
-        &color_style[1].time_scalerbar_handle_selected_color);
-    gdk_color_parse("#AB82DA", &color_style[1].button_bg_color);
-    gdk_color_parse("#CBA2FA", &color_style[1].button_prelight_color);
-    gdk_color_parse("#BB92EA", &color_style[1].button_active_color);
-    gdk_color_parse("#AD7FA8", &color_style[1].listview_base_normal_color);
-    gdk_color_parse("#9942FA", &color_style[1].listview_base_selected_color);
-    gdk_color_parse("#9942FA", &color_style[1].listview_base_active_color);
-    gdk_color_parse("#F0F0F0", &color_style[1].listview_font_normal_color);
-    gdk_color_parse("#F0F0F0", &color_style[1].listview_font_selected_color);
-    gdk_color_parse("#F0F0F0", &color_style[1].listview_font_active_color);
-    gdk_color_parse("#CBA2FA", &color_style[1].listview_scrbar_color);
-    /* Color style "Darkblue" */
-    strncpy(color_style[2].name, "Darkblue", 31);
-    gdk_color_parse("#F0F0F0", &color_style[2].label_font_color);
-    gdk_color_parse("#F0F0F0", &color_style[2].title_font_color);
-    gdk_color_parse("#F0F0F0", &color_style[2].artist_font_color);
-    gdk_color_parse("#F0F0F0", &color_style[2].album_font_color);
-    gdk_color_parse("#F0F0F0", &color_style[2].info_font_color);
-    gdk_color_parse("#F0F0F0", &color_style[2].length_font_color);
-    gdk_color_parse("#F0F0F0", &color_style[2].lyric_font_color);
-    gdk_color_parse("#F0F0F0", &color_style[2].time_font_color);
-    gdk_color_parse("#49657F", &color_style[2].window_bg_color);
-    gdk_color_parse("#DDF0F8",
-        &color_style[2].time_scalerbar_handle_normal_color);
-    gdk_color_parse("#F0FFFF",
-        &color_style[2].time_scalerbar_handle_prelight_color);
-    gdk_color_parse("#6DAFD1",
-        &color_style[2].time_scalerbar_handle_selected_color);
-    gdk_color_parse("#59859F", &color_style[2].button_bg_color);
-    gdk_color_parse("#79A5BF", &color_style[2].button_prelight_color);
-    gdk_color_parse("#6995AF", &color_style[2].button_active_color);
-    gdk_color_parse("#49657F", &color_style[2].listview_base_normal_color);
-    gdk_color_parse("#89A5BF", &color_style[2].listview_base_selected_color);
-    gdk_color_parse("#89A5BF", &color_style[2].listview_base_active_color);
-    gdk_color_parse("#8BBAC6", &color_style[2].listview_font_normal_color);
-    gdk_color_parse("#F0F0F0", &color_style[2].listview_font_selected_color);
-    gdk_color_parse("#F0F0F0", &color_style[2].listview_font_active_color);
-    gdk_color_parse("#E3EDF1", &color_style[2].listview_scrbar_color);
-}
+static gchar *rc_system_default_rc_file = NULL;
 
 /**
  * rc_gui_style_init:
@@ -144,7 +59,6 @@ void rc_gui_style_init()
     PangoAttribute *lrc_attr[2], *mini_info_attr[2];
     PangoAttribute *list1_attr[2], *list2_attr[2];
     gint i = 0;
-    rc_gui_style_data_init();
     RCGuiData *rc_ui = rc_gui_get_data();
     RCGuiMiniData *rc_mini = rc_gui_mini_get_data();
     title_attr_list = pango_attr_list_new();
@@ -223,8 +137,6 @@ void rc_gui_style_init()
             list2_attr_list, NULL);
     pango_attr_list_unref(list1_attr_list);
     pango_attr_list_unref(list2_attr_list);
-    rc_gui_style_set_color_style_by_index(rc_set_get_integer("Appearance",
-        "ColorStyle", NULL));
     gtk_widget_set_size_request(rc_ui->time_scroll_bar, -1, 20);
     gtk_widget_set_size_request(gtk_scrolled_window_get_vscrollbar(
         GTK_SCROLLED_WINDOW(rc_ui->list1_scr_window)), 15, -1);
@@ -241,434 +153,121 @@ void rc_gui_style_init()
 void rc_gui_style_refresh()
 {
     gchar *string;
-    string = rc_set_get_string("Appearance", "RCFile", NULL);
+    gchar *path;
+    string = rc_set_get_string("Appearance", "StylePath", NULL);
     if(string==NULL) return;
-    gtk_rc_parse(string);
-    g_free(string);
+    #ifdef USE_GTK3
+        GtkCssProvider *provider;
+        GFile *file;
+        GdkScreen *screen;
+        screen = gdk_screen_get_default();
+        if(string!=NULL && strlen(string)>=1)
+        {
+            path = g_build_filename(string, "gtk3.css", NULL);
+            file = g_file_new_for_path(path);
+            rc_debug_print("GUI-Style: Loading GTK3 CSS File: %s\n", path);
+            g_free(path);
+            if(file!=NULL)
+            {
+                provider = gtk_css_provider_get_default();
+                gtk_css_provider_load_from_file(provider, file, NULL);
+                gtk_style_context_add_provider_for_screen(screen,
+                    GTK_STYLE_PROVIDER(provider),
+                    GTK_STYLE_PROVIDER_PRIORITY_USER);
+                gtk_style_context_reset_widgets(screen);
+            }
+        }
+        else
+        {
+            provider = gtk_css_provider_get_default();
+            gtk_style_context_add_provider_for_screen(screen,
+                GTK_STYLE_PROVIDER(provider),
+                GTK_STYLE_PROVIDER_PRIORITY_USER);
+        }
+        if(string!=NULL) g_free(string);
+    #else
+        GtkSettings *settings;
+        settings = gtk_settings_get_default();
+        if(rc_system_default_rc_file==NULL)
+        {
+            g_object_get(G_OBJECT(settings), "gtk-theme-name",
+                &rc_system_default_rc_file, NULL);
+        }
+        if(string!=NULL && strlen(string)>0)
+        {
+            path = g_build_filename(string, "gtkrc", NULL);
+            rc_debug_print("GUI-Style: Loading GTK2 RC File: %s\n", path);
+            gtk_rc_parse(path);
+            if(settings!=NULL)
+            {
+                gtk_rc_reparse_all_for_settings(settings, TRUE);
+            }
+            gtk_rc_reparse_all();
+            g_free(path);
+        }
+        if(string!=NULL) g_free(string);
+    #endif
 }
 
 /**
- * rc_gui_style_set_color_style:
- * @style_data: the color style data to set
+ * rc_gui_style_path_search:
  *
- * Set the color style of the player by given data.
+ * Return all style directories the player can find.
+ *
+ * Returns: The path of style directories, stored in a GSList, NULL if none.
  */
 
-void rc_gui_style_set_color_style(const RCGuiColorStyle *style_data)
+GSList *rc_gui_style_path_search()
 {
-    gint i = 0;
-    RCGuiData *rc_ui = rc_gui_get_data();
-    RCGuiMiniData *rc_mini = rc_gui_mini_get_data();
-    RCGuiEQData *rc_eq = rc_gui_eq_get_data();
-    if(style_data==NULL)
+    GSList *list = NULL;
+    gchar *path = NULL;
+    GDir *dir = NULL;
+    const gchar *path_name = NULL;
+    gchar *theme_path = NULL;
+    gchar *theme_file = NULL;
+    path = g_build_filename(rc_player_get_data_dir(), "themes", NULL);
+    dir = g_dir_open(path, 0, NULL);
+    if(dir!=NULL)
     {
-        gtk_widget_modify_fg(rc_ui->title_label, GTK_STATE_NORMAL, NULL);
-        gtk_widget_modify_fg(rc_ui->artist_label, GTK_STATE_NORMAL, NULL);
-        gtk_widget_modify_fg(rc_ui->album_label, GTK_STATE_NORMAL, NULL);
-        gtk_widget_modify_fg(rc_ui->length_label, GTK_STATE_NORMAL, NULL);
-        gtk_widget_modify_fg(rc_ui->info_label, GTK_STATE_NORMAL, NULL);
-        gtk_widget_modify_fg(rc_ui->status_label, GTK_STATE_NORMAL, NULL);
-        gtk_widget_modify_fg(rc_ui->lrc_label, GTK_STATE_NORMAL, NULL);
-        gtk_widget_modify_text(rc_ui->list1_tree_view, GTK_STATE_NORMAL,
-            NULL);
-        gtk_widget_modify_text(rc_ui->list2_tree_view, GTK_STATE_NORMAL,
-            NULL);
-        gtk_widget_modify_text(rc_ui->list1_tree_view, GTK_STATE_SELECTED,
-            NULL);
-        gtk_widget_modify_text(rc_ui->list2_tree_view, GTK_STATE_SELECTED,
-            NULL);
-        gtk_widget_modify_text(rc_ui->list1_tree_view, GTK_STATE_ACTIVE,
-            NULL);
-        gtk_widget_modify_text(rc_ui->list2_tree_view, GTK_STATE_ACTIVE,
-            NULL);
-        gtk_widget_modify_fg(rc_ui->time_label, GTK_STATE_NORMAL, NULL);
-        gtk_widget_modify_bg(rc_ui->main_window, GTK_STATE_NORMAL, NULL);
-        gtk_widget_modify_base(rc_ui->main_window, GTK_STATE_NORMAL, NULL);
-        gtk_widget_modify_fg(rc_ui->main_window, GTK_STATE_NORMAL, NULL);
-        gtk_widget_modify_bg(rc_ui->lrc_viewport, GTK_STATE_NORMAL, NULL);
-        gtk_widget_modify_bg(rc_ui->title_label, GTK_STATE_NORMAL, NULL);
-        gtk_widget_modify_bg(rc_ui->artist_label, GTK_STATE_NORMAL, NULL);
-        gtk_widget_modify_bg(rc_ui->album_label, GTK_STATE_NORMAL, NULL);
-        gtk_widget_modify_bg(rc_ui->length_label, GTK_STATE_NORMAL, NULL);
-        gtk_widget_modify_bg(rc_ui->info_label, GTK_STATE_NORMAL, NULL);
-        gtk_widget_modify_bg(rc_ui->lrc_label, GTK_STATE_NORMAL, NULL);
-        gtk_widget_modify_bg(rc_ui->status_label, GTK_STATE_NORMAL, NULL);
-        gtk_widget_modify_bg(rc_ui->time_scroll_bar, GTK_STATE_INSENSITIVE,
-            NULL);
-        gtk_widget_modify_base(rc_ui->time_scroll_bar, GTK_STATE_NORMAL,
-            NULL);
-        gtk_widget_modify_bg(rc_ui->list_hpaned, GTK_STATE_PRELIGHT, NULL);
-        for(i=0;i<8;i++)
+        path_name = g_dir_read_name(dir);
+        while(path_name!=NULL)
         {
-            gtk_widget_modify_bg(rc_ui->control_buttons[i], GTK_STATE_NORMAL,
-                NULL);
-            gtk_widget_modify_bg(rc_ui->control_buttons[i], GTK_STATE_ACTIVE,
-                NULL);
-            gtk_widget_modify_bg(rc_ui->control_buttons[i], GTK_STATE_PRELIGHT,
-                NULL);
+            theme_path = g_build_filename(path, path_name, NULL);
+            if(g_file_test(theme_path, G_FILE_TEST_IS_DIR))
+                list = g_slist_append(list, theme_path);
+            else
+                g_free(theme_path);
+            path_name = g_dir_read_name(dir);
         }
-        gtk_widget_modify_bg(rc_ui->volume_button, GTK_STATE_NORMAL, NULL);
-        gtk_widget_modify_bg(rc_ui->volume_button, GTK_STATE_ACTIVE, NULL);
-        gtk_widget_modify_bg(rc_ui->volume_button, GTK_STATE_PRELIGHT, NULL);
-        gtk_widget_modify_bg(rc_ui->time_scroll_bar, GTK_STATE_NORMAL, NULL);
-        gtk_widget_modify_bg(rc_ui->time_scroll_bar, GTK_STATE_PRELIGHT, NULL);
-        gtk_widget_modify_bg(rc_ui->time_scroll_bar, GTK_STATE_SELECTED, NULL);
-        gtk_widget_modify_bg(rc_ui->status_cancel_button, GTK_STATE_NORMAL,
-            NULL);
-        gtk_widget_modify_bg(rc_ui->status_cancel_button, GTK_STATE_PRELIGHT,
-            NULL);
-        gtk_widget_modify_bg(rc_ui->status_cancel_button, GTK_STATE_ACTIVE,
-            NULL);
-        gtk_widget_modify_fg(gtk_bin_get_child(GTK_BIN(
-            rc_ui->status_cancel_button)), GTK_STATE_NORMAL, NULL);
-        gtk_widget_modify_fg(gtk_bin_get_child(GTK_BIN(
-            rc_ui->status_cancel_button)), GTK_STATE_PRELIGHT, NULL);
-        gtk_widget_modify_fg(gtk_bin_get_child(GTK_BIN(
-            rc_ui->status_cancel_button)), GTK_STATE_ACTIVE, NULL);
-        gtk_widget_modify_bg(rc_ui->list1_tree_view, GTK_STATE_NORMAL, NULL);
-        gtk_widget_modify_bg(rc_ui->list2_tree_view, GTK_STATE_NORMAL, NULL);
-        gtk_widget_modify_base(rc_ui->list1_tree_view, GTK_STATE_NORMAL, NULL);
-        gtk_widget_modify_base(rc_ui->list2_tree_view, GTK_STATE_NORMAL, NULL);
-        gtk_widget_modify_base(rc_ui->list1_tree_view, GTK_STATE_SELECTED,
-            NULL);
-        gtk_widget_modify_base(rc_ui->list2_tree_view, GTK_STATE_SELECTED,
-            NULL);
-        gtk_widget_modify_base(rc_ui->list1_tree_view, GTK_STATE_ACTIVE, NULL);
-        gtk_widget_modify_base(rc_ui->list2_tree_view, GTK_STATE_ACTIVE, NULL);
-        gtk_widget_modify_bg(gtk_scrolled_window_get_vscrollbar(
-            GTK_SCROLLED_WINDOW(rc_ui->list1_scr_window)), GTK_STATE_NORMAL,
-            NULL);
-        gtk_widget_modify_bg(gtk_scrolled_window_get_hscrollbar(
-            GTK_SCROLLED_WINDOW(rc_ui->list1_scr_window)), GTK_STATE_NORMAL,
-            NULL);
-        gtk_widget_modify_bg(gtk_scrolled_window_get_vscrollbar(
-            GTK_SCROLLED_WINDOW(rc_ui->list2_scr_window)), GTK_STATE_NORMAL,
-            NULL);
-        gtk_widget_modify_bg(gtk_scrolled_window_get_hscrollbar(
-            GTK_SCROLLED_WINDOW(rc_ui->list2_scr_window)), GTK_STATE_NORMAL,
-            NULL);
-        for(i=0;i<10;i++)
+        g_dir_close(dir);
+    }
+    g_free(path);
+    path = g_build_filename(rc_player_get_conf_dir(), "Themes", NULL);
+    dir = g_dir_open(path, 0, NULL);
+    if(dir!=NULL)
+    {
+        path_name = g_dir_read_name(dir);
+        while(path_name!=NULL)
         {
-            gtk_widget_modify_fg(rc_eq->eq_labels[i], GTK_STATE_NORMAL, NULL);
-            gtk_widget_modify_bg(rc_eq->eq_scales[i], GTK_STATE_NORMAL, NULL);
-            gtk_widget_modify_bg(rc_eq->eq_scales[i], GTK_STATE_PRELIGHT,
-                NULL);
-            gtk_widget_modify_bg(rc_eq->eq_scales[i], GTK_STATE_SELECTED,
-                NULL);
+            theme_path = g_build_filename(path, path_name, NULL);
+            #ifdef USE_GTK3
+                theme_file = g_build_filename(theme_path, "gtk3.css", NULL);
+            #else
+                theme_file = g_build_filename(theme_path, "gtkrc", NULL);
+            #endif
+            if(g_file_test(theme_path, G_FILE_TEST_IS_DIR) &&
+                g_file_test(theme_file, G_FILE_TEST_IS_REGULAR))
+            {
+                list = g_slist_append(list, theme_path);
+            }
+            else
+                g_free(theme_path);
+            g_free(theme_file);
+            path_name = g_dir_read_name(dir);
         }
-        for(i=0;i<3;i++)
-        {
-            gtk_widget_modify_fg(rc_eq->db_labels[i], GTK_STATE_NORMAL, NULL);
-        }
-        gtk_widget_modify_fg(gtk_bin_get_child(GTK_BIN(rc_eq->save_button)),
-            GTK_STATE_NORMAL, NULL);
-        gtk_widget_modify_fg(gtk_bin_get_child(GTK_BIN(rc_eq->save_button)),
-            GTK_STATE_PRELIGHT, NULL);
-        gtk_widget_modify_fg(gtk_bin_get_child(GTK_BIN(rc_eq->save_button)),
-            GTK_STATE_ACTIVE, NULL);
-        gtk_widget_modify_bg(rc_eq->save_button, GTK_STATE_NORMAL, NULL);
-        gtk_widget_modify_bg(rc_eq->save_button, GTK_STATE_PRELIGHT, NULL);
-        gtk_widget_modify_bg(rc_eq->save_button, GTK_STATE_ACTIVE, NULL);
-        gtk_widget_modify_fg(gtk_bin_get_child(GTK_BIN(rc_eq->import_button)),
-            GTK_STATE_NORMAL, NULL);
-        gtk_widget_modify_fg(gtk_bin_get_child(GTK_BIN(rc_eq->import_button)),
-            GTK_STATE_PRELIGHT, NULL);
-        gtk_widget_modify_fg(gtk_bin_get_child(GTK_BIN(rc_eq->import_button)),
-            GTK_STATE_ACTIVE, NULL);
-        gtk_widget_modify_bg(rc_eq->import_button, GTK_STATE_NORMAL, NULL);
-        gtk_widget_modify_bg(rc_eq->import_button, GTK_STATE_PRELIGHT, NULL);
-        gtk_widget_modify_bg(rc_eq->import_button, GTK_STATE_ACTIVE, NULL);
-        gtk_widget_modify_fg(rc_mini->info_label, GTK_STATE_NORMAL,
-            NULL);
-        gtk_widget_modify_fg(rc_mini->lrc_label, GTK_STATE_NORMAL,
-            NULL);
-        gtk_widget_modify_fg(rc_mini->time_label, GTK_STATE_NORMAL,
-            NULL);
-        gtk_widget_modify_bg(rc_mini->mini_window, GTK_STATE_NORMAL,
-            NULL);
-        gtk_widget_modify_base(rc_mini->mini_window, GTK_STATE_NORMAL,
-            NULL);
-        gtk_widget_modify_bg(rc_mini->info_viewport, GTK_STATE_NORMAL,
-            NULL);
-        gtk_widget_modify_bg(rc_mini->lrc_viewport, GTK_STATE_NORMAL,
-            NULL);
-        gtk_widget_modify_bg(rc_mini->icon_eventbox, GTK_STATE_NORMAL,
-            NULL);
-        gtk_widget_modify_bg(rc_mini->volume_button, GTK_STATE_NORMAL,
-            NULL);
-        gtk_widget_modify_bg(rc_mini->volume_button, GTK_STATE_ACTIVE,
-            NULL);
-        gtk_widget_modify_bg(rc_mini->volume_button, GTK_STATE_PRELIGHT,
-            NULL);
-        gtk_widget_modify_fg(rc_mini->resize_arrow, GTK_STATE_NORMAL,
-            NULL);
-        gtk_widget_modify_bg(rc_mini->resize_arrow, GTK_STATE_NORMAL,
-            NULL);
-        gtk_widget_modify_bg(rc_mini->resize_eventbox, GTK_STATE_NORMAL,
-            NULL);
-        for(i=0;i<4;i++)
-        {
-            gtk_widget_modify_bg(rc_mini->control_buttons[i], GTK_STATE_NORMAL,
-                NULL);
-            gtk_widget_modify_bg(rc_mini->control_buttons[i], GTK_STATE_ACTIVE,
-                NULL);
-            gtk_widget_modify_bg(rc_mini->control_buttons[i],
-                GTK_STATE_PRELIGHT, NULL);
-        }
-        for(i=0;i<3;i++)
-        {
-            gtk_widget_modify_bg(rc_mini->window_buttons[i], GTK_STATE_NORMAL,
-                NULL);
-            gtk_widget_modify_bg(rc_mini->window_buttons[i], GTK_STATE_ACTIVE,
-                NULL);
-            gtk_widget_modify_bg(rc_mini->window_buttons[i],
-                GTK_STATE_PRELIGHT, NULL);
-        }
-        gtk_widget_queue_draw(rc_ui->main_window);
-        gtk_widget_queue_draw(rc_mini->mini_window);
-        return;
+        g_dir_close(dir);
     }
-    gtk_widget_modify_fg(rc_ui->title_label, GTK_STATE_NORMAL,
-        &style_data->title_font_color);
-    gtk_widget_modify_fg(rc_ui->artist_label, GTK_STATE_NORMAL,
-        &style_data->artist_font_color);
-    gtk_widget_modify_fg(rc_ui->album_label, GTK_STATE_NORMAL,
-        &style_data->album_font_color);
-    gtk_widget_modify_fg(rc_ui->length_label, GTK_STATE_NORMAL,
-        &style_data->length_font_color);
-    gtk_widget_modify_fg(rc_ui->info_label, GTK_STATE_NORMAL,
-        &style_data->info_font_color);
-    gtk_widget_modify_fg(rc_ui->status_label, GTK_STATE_NORMAL,
-        &style_data->label_font_color);
-    gtk_widget_modify_fg(rc_ui->lrc_label, GTK_STATE_NORMAL,
-        &style_data->lyric_font_color);
-    gtk_widget_modify_text(rc_ui->list1_tree_view, GTK_STATE_NORMAL,
-        &style_data->listview_font_normal_color);
-    gtk_widget_modify_text(rc_ui->list2_tree_view, GTK_STATE_NORMAL,
-        &style_data->listview_font_normal_color);
-    gtk_widget_modify_text(rc_ui->list1_tree_view, GTK_STATE_SELECTED,
-        &style_data->listview_font_selected_color);
-    gtk_widget_modify_text(rc_ui->list2_tree_view, GTK_STATE_SELECTED,
-        &style_data->listview_font_selected_color);
-    gtk_widget_modify_text(rc_ui->list1_tree_view, GTK_STATE_ACTIVE,
-        &style_data->listview_font_active_color);
-    gtk_widget_modify_text(rc_ui->list2_tree_view, GTK_STATE_ACTIVE,
-        &style_data->listview_font_active_color);
-    gtk_widget_modify_fg(rc_ui->time_label, GTK_STATE_NORMAL,
-        &style_data->time_font_color);
-    gtk_widget_modify_bg(rc_ui->main_window, GTK_STATE_NORMAL,
-        &style_data->window_bg_color);
-    gtk_widget_modify_base(rc_ui->main_window, GTK_STATE_NORMAL,
-        &style_data->window_bg_color);
-    gtk_widget_modify_fg(rc_ui->main_window, GTK_STATE_NORMAL,
-        &style_data->window_bg_color);
-    gtk_widget_modify_bg(rc_ui->lrc_viewport, GTK_STATE_NORMAL,
-        &style_data->window_bg_color);
-    gtk_widget_modify_bg(rc_ui->title_label, GTK_STATE_NORMAL,
-        &style_data->window_bg_color);
-    gtk_widget_modify_bg(rc_ui->artist_label, GTK_STATE_NORMAL,
-        &style_data->window_bg_color);
-    gtk_widget_modify_bg(rc_ui->album_label, GTK_STATE_NORMAL,
-        &style_data->window_bg_color);
-    gtk_widget_modify_bg(rc_ui->length_label, GTK_STATE_NORMAL,
-        &style_data->window_bg_color);
-    gtk_widget_modify_bg(rc_ui->info_label, GTK_STATE_NORMAL,
-        &style_data->window_bg_color);
-    gtk_widget_modify_bg(rc_ui->lrc_label, GTK_STATE_NORMAL,
-        &style_data->window_bg_color);
-    gtk_widget_modify_bg(rc_ui->status_label, GTK_STATE_NORMAL,
-        &style_data->window_bg_color);
-    gtk_widget_modify_bg(rc_ui->time_scroll_bar, GTK_STATE_INSENSITIVE,
-        &style_data->window_bg_color);
-    gtk_widget_modify_base(rc_ui->time_scroll_bar, GTK_STATE_NORMAL,
-        &style_data->window_bg_color);
-    gtk_widget_modify_bg(rc_ui->list_hpaned, GTK_STATE_PRELIGHT,
-        &style_data->listview_scrbar_color);
-    for(i=0;i<8;i++)
-    {
-        gtk_widget_modify_bg(gtk_bin_get_child(GTK_BIN(
-            rc_ui->control_buttons[i])), GTK_STATE_NORMAL,
-            &style_data->window_bg_color);
-        gtk_widget_modify_bg(gtk_bin_get_child(GTK_BIN(
-            rc_ui->control_buttons[i])), GTK_STATE_ACTIVE,
-            &style_data->button_active_color);
-        gtk_widget_modify_bg(gtk_bin_get_child(GTK_BIN(
-            rc_ui->control_buttons[i])), GTK_STATE_PRELIGHT,
-            &style_data->button_prelight_color);
-    }
-    gtk_widget_modify_bg(rc_ui->volume_button, GTK_STATE_NORMAL,
-        &style_data->window_bg_color);
-    gtk_widget_modify_bg(rc_ui->volume_button, GTK_STATE_ACTIVE,
-        &style_data->button_active_color);
-    gtk_widget_modify_bg(rc_ui->volume_button, GTK_STATE_PRELIGHT,
-        &style_data->button_prelight_color);
-    gtk_widget_modify_bg(rc_ui->time_scroll_bar, GTK_STATE_NORMAL,
-        &style_data->time_scalerbar_handle_normal_color);
-    gtk_widget_modify_bg(rc_ui->time_scroll_bar, GTK_STATE_PRELIGHT,
-        &style_data->time_scalerbar_handle_prelight_color);
-    gtk_widget_modify_bg(rc_ui->time_scroll_bar, GTK_STATE_SELECTED,
-        &style_data->time_scalerbar_handle_selected_color);
-    gtk_widget_modify_bg(rc_ui->status_cancel_button, GTK_STATE_NORMAL,
-        &style_data->button_bg_color);
-    gtk_widget_modify_bg(rc_ui->status_cancel_button, GTK_STATE_PRELIGHT,
-        &style_data->button_prelight_color);
-    gtk_widget_modify_bg(rc_ui->status_cancel_button, GTK_STATE_ACTIVE,
-        &style_data->button_active_color);
-    gtk_widget_modify_fg(gtk_bin_get_child(GTK_BIN(
-        rc_ui->status_cancel_button)), GTK_STATE_NORMAL,
-        &style_data->label_font_color);
-    gtk_widget_modify_fg(gtk_bin_get_child(GTK_BIN(
-        rc_ui->status_cancel_button)), GTK_STATE_PRELIGHT,
-        &style_data->label_font_color);
-    gtk_widget_modify_fg(gtk_bin_get_child(GTK_BIN(
-        rc_ui->status_cancel_button)), GTK_STATE_ACTIVE,
-        &style_data->label_font_color);
-    gtk_widget_modify_bg(rc_ui->list1_tree_view, GTK_STATE_NORMAL,
-        &style_data->listview_base_normal_color);
-    gtk_widget_modify_bg(rc_ui->list2_tree_view, GTK_STATE_NORMAL,
-        &style_data->listview_base_normal_color);
-    gtk_widget_modify_base(rc_ui->list1_tree_view, GTK_STATE_NORMAL,
-        &style_data->listview_base_normal_color);
-    gtk_widget_modify_base(rc_ui->list2_tree_view, GTK_STATE_NORMAL,
-        &style_data->listview_base_normal_color);
-    gtk_widget_modify_base(rc_ui->list1_tree_view, GTK_STATE_SELECTED,
-        &style_data->listview_base_selected_color);
-    gtk_widget_modify_base(rc_ui->list2_tree_view, GTK_STATE_SELECTED,
-        &style_data->listview_base_selected_color);
-    gtk_widget_modify_base(rc_ui->list1_tree_view, GTK_STATE_ACTIVE,
-        &style_data->listview_base_active_color);
-    gtk_widget_modify_base(rc_ui->list2_tree_view, GTK_STATE_ACTIVE,
-        &style_data->listview_base_active_color);
-    gtk_widget_modify_bg(gtk_scrolled_window_get_vscrollbar(
-        GTK_SCROLLED_WINDOW(rc_ui->list1_scr_window)), GTK_STATE_NORMAL,
-        &style_data->listview_scrbar_color);
-    gtk_widget_modify_bg(gtk_scrolled_window_get_hscrollbar(
-        GTK_SCROLLED_WINDOW(rc_ui->list1_scr_window)), GTK_STATE_NORMAL,
-        &style_data->listview_scrbar_color);
-    gtk_widget_modify_bg(gtk_scrolled_window_get_vscrollbar(
-        GTK_SCROLLED_WINDOW(rc_ui->list2_scr_window)), GTK_STATE_NORMAL,
-        &style_data->listview_scrbar_color);
-    gtk_widget_modify_bg(gtk_scrolled_window_get_hscrollbar(
-        GTK_SCROLLED_WINDOW(rc_ui->list2_scr_window)), GTK_STATE_NORMAL,
-        &style_data->listview_scrbar_color);
-    for(i=0;i<10;i++)
-    {
-        gtk_widget_modify_fg(rc_eq->eq_labels[i], GTK_STATE_NORMAL,
-            &style_data->label_font_color);
-        gtk_widget_modify_bg(rc_eq->eq_scales[i], GTK_STATE_NORMAL,
-            &style_data->time_scalerbar_handle_normal_color);
-        gtk_widget_modify_bg(rc_eq->eq_scales[i], GTK_STATE_PRELIGHT,
-            &style_data->time_scalerbar_handle_prelight_color);
-        gtk_widget_modify_bg(rc_eq->eq_scales[i], GTK_STATE_SELECTED,
-            &style_data->time_scalerbar_handle_selected_color);
-    }
-    for(i=0;i<3;i++)
-    {
-        gtk_widget_modify_fg(rc_eq->db_labels[i], GTK_STATE_NORMAL,
-            &style_data->label_font_color);
-    }
-    gtk_widget_modify_fg(gtk_bin_get_child(GTK_BIN(rc_eq->save_button)),
-        GTK_STATE_NORMAL, &style_data->label_font_color);
-    gtk_widget_modify_fg(gtk_bin_get_child(GTK_BIN(rc_eq->save_button)),
-        GTK_STATE_PRELIGHT, &style_data->label_font_color);
-    gtk_widget_modify_fg(gtk_bin_get_child(GTK_BIN(rc_eq->save_button)),
-        GTK_STATE_ACTIVE, &style_data->label_font_color);
-    gtk_widget_modify_bg(rc_eq->save_button, GTK_STATE_NORMAL,
-        &style_data->button_bg_color);
-    gtk_widget_modify_bg(rc_eq->save_button, GTK_STATE_PRELIGHT,
-        &style_data->button_prelight_color);
-    gtk_widget_modify_bg(rc_eq->save_button, GTK_STATE_ACTIVE,
-        &style_data->button_active_color);
-    gtk_widget_modify_fg(gtk_bin_get_child(GTK_BIN(rc_eq->import_button)),
-        GTK_STATE_NORMAL, &style_data->label_font_color);
-    gtk_widget_modify_fg(gtk_bin_get_child(GTK_BIN(rc_eq->import_button)),
-        GTK_STATE_PRELIGHT, &style_data->label_font_color);
-    gtk_widget_modify_fg(gtk_bin_get_child(GTK_BIN(rc_eq->import_button)),
-        GTK_STATE_ACTIVE, &style_data->label_font_color);
-    gtk_widget_modify_bg(rc_eq->import_button, GTK_STATE_NORMAL,
-        &style_data->button_bg_color);
-    gtk_widget_modify_bg(rc_eq->import_button, GTK_STATE_PRELIGHT,
-        &style_data->button_prelight_color);
-    gtk_widget_modify_bg(rc_eq->import_button, GTK_STATE_ACTIVE,
-        &style_data->button_active_color);
-    gtk_widget_modify_fg(rc_mini->info_label, GTK_STATE_NORMAL,
-        &style_data->label_font_color);
-    gtk_widget_modify_fg(rc_mini->lrc_label, GTK_STATE_NORMAL,
-        &style_data->lyric_font_color);
-    gtk_widget_modify_fg(rc_mini->time_label, GTK_STATE_NORMAL,
-        &style_data->lyric_font_color);
-    gtk_widget_modify_bg(rc_mini->mini_window, GTK_STATE_NORMAL,
-        &style_data->window_bg_color);
-    gtk_widget_modify_base(rc_mini->mini_window, GTK_STATE_NORMAL,
-        &style_data->window_bg_color);
-    gtk_widget_modify_bg(rc_mini->info_viewport, GTK_STATE_NORMAL,
-        &style_data->window_bg_color);
-    gtk_widget_modify_bg(rc_mini->lrc_viewport, GTK_STATE_NORMAL,
-        &style_data->window_bg_color);
-    gtk_widget_modify_bg(rc_mini->icon_eventbox, GTK_STATE_NORMAL,
-        &style_data->window_bg_color);
-    gtk_widget_modify_bg(rc_mini->volume_button, GTK_STATE_NORMAL,
-        &style_data->window_bg_color);
-    gtk_widget_modify_bg(rc_mini->volume_button, GTK_STATE_ACTIVE,
-        &style_data->button_active_color);
-    gtk_widget_modify_bg(rc_mini->volume_button, GTK_STATE_PRELIGHT,
-        &style_data->button_prelight_color);
-    gtk_widget_modify_fg(rc_mini->resize_arrow, GTK_STATE_NORMAL,
-        &style_data->label_font_color);
-    gtk_widget_modify_bg(rc_mini->resize_arrow, GTK_STATE_NORMAL,
-        &style_data->window_bg_color);
-    gtk_widget_modify_bg(rc_mini->resize_eventbox, GTK_STATE_NORMAL,
-        &style_data->window_bg_color);
-    for(i=0;i<4;i++)
-    {
-        gtk_widget_modify_bg(rc_mini->control_buttons[i], GTK_STATE_NORMAL,
-            &style_data->window_bg_color);
-        gtk_widget_modify_bg(rc_mini->control_buttons[i], GTK_STATE_ACTIVE,
-            &style_data->button_active_color);
-        gtk_widget_modify_bg(rc_mini->control_buttons[i], GTK_STATE_PRELIGHT,
-            &style_data->button_prelight_color);
-    }
-    for(i=0;i<3;i++)
-    {
-        gtk_widget_modify_bg(rc_mini->window_buttons[i], GTK_STATE_NORMAL,
-            &style_data->window_bg_color);
-        gtk_widget_modify_bg(rc_mini->window_buttons[i], GTK_STATE_ACTIVE,
-            &style_data->button_active_color);
-        gtk_widget_modify_bg(rc_mini->window_buttons[i], GTK_STATE_PRELIGHT,
-            &style_data->button_prelight_color);
-    }
-    gtk_widget_queue_draw(rc_ui->main_window);
-    gtk_widget_queue_draw(rc_mini->mini_window);
-}
-
-/**
- * rc_gui_style_get_color_style:
- * @index: the index number of the color style
- *
- * Return the embeded color style in the player by given index.
- *
- * Returns: The color style data.
- */
-
-const RCGuiColorStyle *rc_gui_style_get_color_style(gint index)
-{
-    if(index<0 || index>=GUI_STYLE_NUM) return NULL;
-    return &color_style[index];
-}
-
-/**
- * rc_gui_style_set_color_style_by_index:
- * @index: the index number of the color style
- *
- * Set the color style of the player to the embeded color style
- * in the player by given index.
- */
-
-void rc_gui_style_set_color_style_by_index(gint index)
-{
-    if(index<1 || index>GUI_STYLE_NUM)
-        rc_gui_style_set_color_style(NULL);
-    else
-        rc_gui_style_set_color_style(&color_style[index-1]);
+    g_free(path);
+    return list;
 }
 

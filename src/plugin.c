@@ -137,8 +137,8 @@ void rc_plugin_exit()
         rc_plugin_module_free(module_data);
     }
     /* Save plugin configure data */
-    conf_file = g_strdup_printf("%s%cplugins.conf", rc_player_get_conf_dir(),
-        G_DIR_SEPARATOR);
+    conf_file = g_build_filename(rc_player_get_conf_dir(), "plugins.conf", 
+        NULL);
     conf_data = g_key_file_to_data(plugin_configure, &conf_data_length, NULL);
     g_file_set_contents(conf_file, conf_data, conf_data_length, NULL);
     if(conf_data!=NULL) g_free(conf_data);    
@@ -316,8 +316,7 @@ RCPluginConfData *rc_plugin_conf_load(const gchar *filename)
         NULL);
     if(strlen(plugin_name)<=0) goto error_out;
     plugin_dir = g_path_get_dirname(filename);
-    plugin_path = g_strdup_printf("%s%c%s", plugin_dir, G_DIR_SEPARATOR,
-        plugin_file);
+    plugin_path = g_build_filename(plugin_dir, plugin_file, NULL);
     g_free(plugin_dir);
     plugin_dir = NULL;
     g_free(plugin_file);

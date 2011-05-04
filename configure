@@ -3800,7 +3800,7 @@ else
 $as_echo "no, using $LN_S" >&6; }
 fi
 
-CFLAGS="-Wall -O2 -DINSTALL_PATH=\\\"$datadir/RhythmCat/\\\""
+CFLAGS="-Wall -O3 -DINSTALL_PATH=\\\"$datadir/RhythmCat/\\\""
 
 # Extract the first word of "dbus-binding-tool", so it can be a program name with args.
 set dummy dbus-binding-tool; ac_word=$2
@@ -8061,12 +8061,12 @@ if test -n "$GTK2_CFLAGS"; then
     pkg_cv_GTK2_CFLAGS="$GTK2_CFLAGS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-2.0 >= 2.12.0\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "gtk+-2.0 >= 2.12.0") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-2.0 >= 2.20.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "gtk+-2.0 >= 2.20.0") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_GTK2_CFLAGS=`$PKG_CONFIG --cflags "gtk+-2.0 >= 2.12.0" 2>/dev/null`
+  pkg_cv_GTK2_CFLAGS=`$PKG_CONFIG --cflags "gtk+-2.0 >= 2.20.0" 2>/dev/null`
 else
   pkg_failed=yes
 fi
@@ -8077,12 +8077,12 @@ if test -n "$GTK2_LIBS"; then
     pkg_cv_GTK2_LIBS="$GTK2_LIBS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-2.0 >= 2.12.0\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "gtk+-2.0 >= 2.12.0") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-2.0 >= 2.20.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "gtk+-2.0 >= 2.20.0") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_GTK2_LIBS=`$PKG_CONFIG --libs "gtk+-2.0 >= 2.12.0" 2>/dev/null`
+  pkg_cv_GTK2_LIBS=`$PKG_CONFIG --libs "gtk+-2.0 >= 2.20.0" 2>/dev/null`
 else
   pkg_failed=yes
 fi
@@ -8102,14 +8102,14 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        GTK2_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "gtk+-2.0 >= 2.12.0" 2>&1`
+	        GTK2_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "gtk+-2.0 >= 2.20.0" 2>&1`
         else
-	        GTK2_PKG_ERRORS=`$PKG_CONFIG --print-errors "gtk+-2.0 >= 2.12.0" 2>&1`
+	        GTK2_PKG_ERRORS=`$PKG_CONFIG --print-errors "gtk+-2.0 >= 2.20.0" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$GTK2_PKG_ERRORS" >&5
 
-	as_fn_error $? "Package requirements (gtk+-2.0 >= 2.12.0) were not met:
+	as_fn_error $? "Package requirements (gtk+-2.0 >= 2.20.0) were not met:
 
 $GTK2_PKG_ERRORS
 
@@ -8151,7 +8151,7 @@ else
 fi
 
 
-ac_config_files="$ac_config_files Makefile po/Makefile.in po/Makefile src/Makefile data/Makefile doc/Makefile doc/reference/Makefile data/images/Makefile data/icons/Makefile"
+ac_config_files="$ac_config_files Makefile po/Makefile.in po/Makefile src/Makefile data/Makefile doc/Makefile doc/reference/Makefile data/images/Makefile data/icons/Makefile data/themes/Makefile data/themes/Monochrome/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -8919,6 +8919,8 @@ do
     "doc/reference/Makefile") CONFIG_FILES="$CONFIG_FILES doc/reference/Makefile" ;;
     "data/images/Makefile") CONFIG_FILES="$CONFIG_FILES data/images/Makefile" ;;
     "data/icons/Makefile") CONFIG_FILES="$CONFIG_FILES data/icons/Makefile" ;;
+    "data/themes/Makefile") CONFIG_FILES="$CONFIG_FILES data/themes/Makefile" ;;
+    "data/themes/Monochrome/Makefile") CONFIG_FILES="$CONFIG_FILES data/themes/Monochrome/Makefile" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5 ;;
   esac

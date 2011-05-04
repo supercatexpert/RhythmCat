@@ -209,12 +209,9 @@
     <function name="rc_gui_eq_data_init ()" link="RhythmCat-Equalizer-UI.html#rc-gui-eq-data-init"/>
     <function name="rc_gui_eq_init ()" link="RhythmCat-Equalizer-UI.html#rc-gui-eq-init"/>
     <function name="rc_gui_eq_get_data ()" link="RhythmCat-Equalizer-UI.html#rc-gui-eq-get-data"/>
-    <function name="RCGuiColorStyle" link="RhythmCat-UI-Styles-and-Themes.html#RCGuiColorStyle"/>
     <function name="rc_gui_style_init ()" link="RhythmCat-UI-Styles-and-Themes.html#rc-gui-style-init"/>
     <function name="rc_gui_style_refresh ()" link="RhythmCat-UI-Styles-and-Themes.html#rc-gui-style-refresh"/>
-    <function name="rc_gui_style_set_color_style ()" link="RhythmCat-UI-Styles-and-Themes.html#rc-gui-style-set-color-style"/>
-    <function name="rc_gui_style_get_color_style ()" link="RhythmCat-UI-Styles-and-Themes.html#rc-gui-style-get-color-style"/>
-    <function name="rc_gui_style_set_color_style_by_index ()" link="RhythmCat-UI-Styles-and-Themes.html#rc-gui-style-set-color-style-by-index"/>
+    <function name="rc_gui_style_path_search ()" link="RhythmCat-UI-Styles-and-Themes.html#rc-gui-style-path-search"/>
     <function name="rc_gui_treeview_init ()" link="RhythmCat-Playlist-Views-UI.html#rc-gui-treeview-init"/>
     <function name="rc_gui_list_tree_reset_list_store ()" link="RhythmCat-Playlist-Views-UI.html#rc-gui-list-tree-reset-list-store"/>
     <function name="rc_gui_select_list1 ()" link="RhythmCat-Playlist-Views-UI.html#rc-gui-select-list1"/>
@@ -239,13 +236,13 @@
     <function name="rc_gui_mini_normal_mode_clicked ()" link="RhythmCat-Mini-Mode-UI.html#rc-gui-mini-normal-mode-clicked"/>
     <function name="rc_gui_create_setting_window ()" link="RhythmCat-Settings-UI.html#rc-gui-create-setting-window"/>
     <function name="rc_gui_plugin_window_create ()" link="RhythmCat-Plugin-Configuration-UI.html#rc-gui-plugin-window-create"/>
-    <function name="Introduction" link="PluginProgramming.html#id414777"/>
-    <function name="Preparation" link="PluginProgramming.html#id400952"/>
-    <function name="Implement a simple plugin" link="PluginProgramming.html#id403434"/>
-    <function name="How to compile the plugin" link="PluginProgramming.html#id378213"/>
-    <function name="Write a plugin description file" link="PluginProgramming.html#id392796"/>
-    <function name="Make your custom plugin work" link="PluginProgramming.html#id417649"/>
-    <function name="Catch signals in the player" link="PluginProgramming.html#id372560"/>
-    <function name="About this manual" link="PluginProgramming.html#id398069"/>
+    <function name="Introduction" link="PluginProgramming.html#id395673"/>
+    <function name="Preparation" link="PluginProgramming.html#id414765"/>
+    <function name="Implement a simple plugin" link="PluginProgramming.html#id439782"/>
+    <function name="How to compile the plugin" link="PluginProgramming.html#id417085"/>
+    <function name="Write a plugin description file" link="PluginProgramming.html#id440296"/>
+    <function name="Make your custom plugin work" link="PluginProgramming.html#id420090"/>
+    <function name="Catch signals in the player" link="PluginProgramming.html#id445544"/>
+    <function name="About this manual" link="PluginProgramming.html#id438282"/>
   </functions>
 </book>

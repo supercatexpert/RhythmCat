@@ -31,75 +31,10 @@
 #include <gdk/gdk.h>
 #include <gtk/gtk.h>
 
-/**
- * RCGuiColorStyle:
- * @name: the name of the color style
- * @label_font_color: the font color of the labels
- * @time_font_color: the font color of the time label
- * @title_font_color: the font color of the title label
- * @artist_font_color: the font color of the artist label
- * @album_font_color: the font color of the album label
- * @info_font_color: the font color of the information label
- * @length_font_color: the font color of the time length label
- * @lyric_font_color: the font color of the lyric label
- * @window_bg_color: the background color of the player window
- * @time_scalerbar_handle_normal_color: the color of the handle of the
- * time scalerbar
- * @time_scalerbar_handle_prelight_color: the color of the handle of the
- * time scalerbar when the mouse cursor is on the handle
- * @time_scalerbar_handle_selected_color: the color of the handle of the
- * time scalerbar when the handle is clicked
- * @button_bg_color: the background color of the buttons
- * @button_prelight_color: the color of the buttons when the mouse cursor
- * is on them
- * @button_active_color: the color of the buttons when they are clicked
- * @listview_base_normal_color: the background color of the playlist views
- * @listview_base_selected_color: the color of the cursors in the
- * playlist views
- * @listview_base_active_color: the color of the cursors in the
- * playlist views when the view is focused
- * @listview_font_normal_color: the color of the texts in the playlist views
- * @listview_font_selected_color: the color of the texts in the playlist
- * views when the item is selected
- * @listview_font_active_color: the color of the texts in the playlist views
- * when the item is selected and the view is focused
- * @listview_scrbar_color: the color of the scroll bars in the playlist views
- *
- * The color style data structure.
- */
-
-typedef struct RCGuiColorStyle {
-    gchar name[32];
-    GdkColor label_font_color;
-    GdkColor time_font_color;
-    GdkColor title_font_color;
-    GdkColor artist_font_color;
-    GdkColor album_font_color;
-    GdkColor info_font_color;
-    GdkColor length_font_color;
-    GdkColor lyric_font_color;
-    GdkColor window_bg_color;
-    GdkColor time_scalerbar_handle_normal_color;
-    GdkColor time_scalerbar_handle_prelight_color;
-    GdkColor time_scalerbar_handle_selected_color;
-    GdkColor button_bg_color;
-    GdkColor button_prelight_color;
-    GdkColor button_active_color;
-    GdkColor listview_base_normal_color;
-    GdkColor listview_base_selected_color;
-    GdkColor listview_base_active_color;
-    GdkColor listview_font_normal_color;
-    GdkColor listview_font_selected_color;
-    GdkColor listview_font_active_color;
-    GdkColor listview_scrbar_color;
-}RCGuiColorStyle;
-
 /* Functions */
 void rc_gui_style_init();
 void rc_gui_style_refresh();
-void rc_gui_style_set_color_style(const RCGuiColorStyle *style_data);
-const RCGuiColorStyle *rc_gui_style_get_color_style(gint index);
-void rc_gui_style_set_color_style_by_index(gint index);
+GSList *rc_gui_style_path_search();
 
 #endif
 

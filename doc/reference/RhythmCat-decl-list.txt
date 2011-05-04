@@ -129,12 +129,9 @@ rc_gui_eq_get_data
 
 <SECTION>
 <FILE>gui_style</FILE>
-RCGuiColorStyle
 rc_gui_style_init
 rc_gui_style_refresh
-rc_gui_style_set_color_style
-rc_gui_style_get_color_style
-rc_gui_style_set_color_style_by_index
+rc_gui_style_path_search
 </SECTION>
 
 <SECTION>

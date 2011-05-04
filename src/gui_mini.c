@@ -234,12 +234,8 @@ void rc_gui_mini_init()
     rc_mini.mini_window = gtk_window_new(GTK_WINDOW_POPUP);
     rc_mini.icon_eventbox = gtk_event_box_new();
     rc_mini.icon_image = gtk_image_new_from_pixbuf(mini_icon_pixbuf);
-    rc_mini.info_viewport = gtk_viewport_new(NULL, NULL);
-    rc_mini.lrc_viewport = gtk_viewport_new(NULL, NULL);
-    rc_mini.info_vport_adj = gtk_viewport_get_hadjustment(GTK_VIEWPORT(
-        rc_mini.info_viewport));
-    rc_mini.lrc_vport_adj = gtk_viewport_get_hadjustment(GTK_VIEWPORT(
-        rc_mini.lrc_viewport));
+    rc_mini.info_fixed = gtk_fixed_new();
+    rc_mini.lrc_fixed = gtk_fixed_new();
     rc_mini.info_label = gtk_label_new(NULL);
     rc_mini.lrc_label = gtk_label_new(NULL);
     rc_mini.time_label = gtk_label_new("--:--");
@@ -295,23 +291,23 @@ void rc_gui_mini_init()
     gtk_widget_set_name(rc_mini.mini_window, "RCMiniWindow");
     gtk_widget_set_size_request(rc_mini.mini_window, rc_mini.mini_window_width,
         rc_mini.mini_window_height);
+    gtk_widget_set_has_window(rc_mini.info_fixed, TRUE);
+    gtk_widget_set_has_window(rc_mini.lrc_fixed, TRUE);
     gtk_widget_add_events(rc_mini.mini_window,
         GDK_LEAVE_NOTIFY_MASK | GDK_BUTTON_PRESS_MASK |
         GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK |
         GDK_POINTER_MOTION_HINT_MASK);
-    gtk_widget_add_events(rc_mini.info_viewport, GDK_BUTTON_PRESS_MASK |
-        GDK_BUTTON_RELEASE_MASK | GDK_BUTTON_MOTION_MASK |
+    gtk_widget_add_events(rc_mini.info_fixed,
+        GDK_LEAVE_NOTIFY_MASK | GDK_BUTTON_PRESS_MASK |
+        GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK |
         GDK_POINTER_MOTION_HINT_MASK);
-    gtk_widget_add_events(rc_mini.lrc_viewport, GDK_BUTTON_PRESS_MASK |
-        GDK_BUTTON_RELEASE_MASK | GDK_BUTTON_MOTION_MASK |
+    gtk_widget_add_events(rc_mini.lrc_fixed,
+        GDK_LEAVE_NOTIFY_MASK | GDK_BUTTON_PRESS_MASK |
+        GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK |
         GDK_POINTER_MOTION_HINT_MASK);
     gtk_widget_add_events(rc_mini.resize_eventbox, GDK_BUTTON_PRESS_MASK |
         GDK_BUTTON_RELEASE_MASK | GDK_BUTTON_MOTION_MASK |
         GDK_POINTER_MOTION_HINT_MASK);
-    gtk_viewport_set_shadow_type(GTK_VIEWPORT(rc_mini.info_viewport),
-        GTK_SHADOW_NONE);
-    gtk_viewport_set_shadow_type(GTK_VIEWPORT(rc_mini.lrc_viewport),
-        GTK_SHADOW_NONE);
     gtk_button_set_relief(GTK_BUTTON(rc_mini.volume_button), GTK_RELIEF_NONE);
     g_object_set(G_OBJECT(rc_mini.volume_button), "size",
         GTK_ICON_SIZE_LARGE_TOOLBAR, NULL);
@@ -322,28 +318,26 @@ void rc_gui_mini_init()
     gtk_scale_button_set_adjustment(GTK_SCALE_BUTTON(rc_mini.volume_button),
         gtk_scale_button_get_adjustment(GTK_SCALE_BUTTON(rc_ui->volume_button)));
     gtk_widget_set_name(rc_mini.info_label, "RCMiniInfoLabel");
-    gtk_widget_set_name(rc_mini.info_viewport, "RCMiniInfoViewport");
     gtk_widget_set_name(rc_mini.lrc_label, "RCMiniLyricLabel");
-    gtk_widget_set_name(rc_mini.lrc_viewport, "RCMiniLyricViewport");
     gtk_widget_set_name(rc_mini.volume_button, "RCMiniVolumeButton");
     gtk_widget_set_name(rc_mini.time_label, "RCMiniTimeLabel");
+    gtk_widget_set_name(rc_mini.info_fixed, "RCMiniInfoFixed");
+    gtk_widget_set_name(rc_mini.lrc_fixed, "RCMiniLyricFixed");
     for(i=0;i<4;i++)
         gtk_box_pack_start(GTK_BOX(mini_button_hbox), 
             rc_mini.control_buttons[i], FALSE, FALSE, 0);
     for(i=0;i<3;i++)
         gtk_box_pack_start(GTK_BOX(window_button_hbox), 
             rc_mini.window_buttons[i], FALSE, FALSE, 0);
-    gtk_container_add(GTK_CONTAINER(rc_mini.info_viewport),
-        rc_mini.info_label);
-    gtk_container_add(GTK_CONTAINER(rc_mini.lrc_viewport), rc_mini.lrc_label);
+    gtk_fixed_put(GTK_FIXED(rc_mini.info_fixed), rc_mini.info_label, 0, 3);
+    gtk_fixed_put(GTK_FIXED(rc_mini.lrc_fixed), rc_mini.lrc_label, 0, 0);
     gtk_container_add(GTK_CONTAINER(rc_mini.icon_eventbox),
         rc_mini.icon_image);
     gtk_container_add(GTK_CONTAINER(rc_mini.resize_eventbox),
         rc_mini.resize_arrow);
     gtk_box_pack_start(GTK_BOX(mini_hbox1), rc_mini.icon_eventbox, FALSE,
         FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(mini_hbox1), rc_mini.info_viewport, TRUE,
-        TRUE, 4);
+    gtk_box_pack_start(GTK_BOX(mini_hbox1), rc_mini.info_fixed, TRUE, TRUE, 4);
     gtk_box_pack_start(GTK_BOX(mini_hbox1), mini_button_hbox, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(mini_hbox1), rc_mini.volume_button, FALSE,
         FALSE, 0);
@@ -351,8 +345,7 @@ void rc_gui_mini_init()
         FALSE, 0);
     gtk_box_pack_start(GTK_BOX(mini_hbox2), rc_mini.time_label, FALSE,
         FALSE, 6);
-    gtk_box_pack_start(GTK_BOX(mini_hbox2), rc_mini.lrc_viewport, TRUE,
-        TRUE, 8);
+    gtk_box_pack_start(GTK_BOX(mini_hbox2), rc_mini.lrc_fixed, TRUE, TRUE, 8);
     gtk_box_pack_start(GTK_BOX(mini_hbox2), rc_mini.resize_eventbox, FALSE,
         FALSE, 1);
     gtk_box_pack_start(GTK_BOX(mini_vbox), mini_hbox1, FALSE, FALSE, 0);
@@ -384,7 +377,10 @@ void rc_gui_mini_init()
         G_CALLBACK(rc_gui_mini_window_resize), NULL);
     g_signal_connect(G_OBJECT(rc_mini.resize_eventbox), "button-release-event",
         G_CALLBACK(rc_gui_mini_window_resize), NULL);
-    gtk_widget_show_all(rc_mini.mini_window);
+    if(rc_set_get_boolean("Player", "MiniMode", NULL))
+        gtk_widget_show_all(rc_mini.mini_window);
+    else
+        gtk_widget_realize(rc_mini.mini_window);
     opacity = rc_set_get_double("Player", "MiniWindowOpacity", NULL);
     if(opacity>1.0) opacity = 1.0;
     else if(opacity<0.3) opacity = 0.3;
@@ -445,38 +441,36 @@ void rc_gui_mini_set_lyric_text(const gchar *text)
 
 void rc_gui_mini_info_text_move()
 {
-    static gdouble pos = 0.0;
     static gboolean dir = FALSE;
-    gdouble info_vport_lower, info_vport_upper, info_vport_value;
-    gdouble info_vport_range, info_vport_page_size;
+    GtkAllocation info_label_allocation, info_fixed_allocation;
+    gint width = 0, pos = 0;
     if(!rc_set_get_boolean("Player", "MiniMode", NULL)) return;
-    g_object_get(G_OBJECT(rc_mini.info_vport_adj), "page-size",
-        &info_vport_page_size, "lower", &info_vport_lower, "upper",
-        &info_vport_upper, NULL);
-    info_vport_range = info_vport_upper - info_vport_page_size -
-        info_vport_lower;
-    info_vport_value = info_vport_lower;
-    if(info_vport_range>10e-3)
+    gtk_widget_get_allocation(rc_mini.info_label, &info_label_allocation);
+    gtk_widget_get_allocation(rc_mini.info_fixed, &info_fixed_allocation);
+    width = info_label_allocation.width - info_fixed_allocation.width;
+    gtk_container_child_get(GTK_CONTAINER(rc_mini.info_fixed),
+        rc_mini.info_label, "x", &pos, NULL);
+    if(width>0)
     {
-        if(pos>(info_vport_upper-info_vport_page_size))
+        if(pos<-width)
         {
-            pos = info_vport_upper - info_vport_page_size;
+            pos = -width;
             dir = TRUE;
         }
-        else if(pos<info_vport_lower)
+        else if(pos>0)
         {
-            pos = 0.0;
+            pos = 0;
             dir = FALSE;
         }
-        info_vport_value = info_vport_lower + pos;
         if(dir)
-            pos -= 4.0;
+            pos += 4;
         else
-            pos += 4.0;
+            pos -= 4;
     }
     else
         pos = 0.0;
-    gtk_adjustment_set_value(rc_mini.info_vport_adj, info_vport_value);
+    gtk_fixed_move(GTK_FIXED(rc_mini.info_fixed), rc_mini.info_label,
+        pos, 3);
 }
 
 /**
@@ -489,18 +483,18 @@ void rc_gui_mini_info_text_move()
 
 void rc_gui_mini_set_lyric_persent(gdouble persent)
 {
-    gdouble lrc_vport_lower, lrc_vport_upper, lrc_vport_value;
-    gdouble lrc_vport_range, lrc_vport_page_size;
+    GtkAllocation lrc_label_allocation, lrc_fixed_allocation;
+    gint width = 0;
     if(!rc_set_get_boolean("Player", "MiniMode", NULL)) return;
-    g_object_get(G_OBJECT(rc_mini.lrc_vport_adj), "page-size",
-        &lrc_vport_page_size, "lower", &lrc_vport_lower, "upper",
-        &lrc_vport_upper, NULL);
-    lrc_vport_range = lrc_vport_upper - lrc_vport_page_size -
-        lrc_vport_lower;
-    lrc_vport_value = lrc_vport_lower;
-    if(lrc_vport_range>10e-3)
-        lrc_vport_value = lrc_vport_lower + lrc_vport_range * persent;
-    gtk_adjustment_set_value(rc_mini.lrc_vport_adj, lrc_vport_value);
+    gtk_widget_get_allocation(rc_mini.lrc_label, &lrc_label_allocation);
+    gtk_widget_get_allocation(rc_mini.lrc_fixed, &lrc_fixed_allocation);
+    width = lrc_label_allocation.width - lrc_fixed_allocation.width;
+    if(width>0)
+        width = 0 - (gint)((gdouble)width * persent);
+    else
+        width = 0;
+    gtk_fixed_move(GTK_FIXED(rc_mini.lrc_fixed), rc_mini.lrc_label,
+        width, 0);
 }
 
 /**
@@ -564,7 +558,7 @@ void rc_gui_mini_window_hide()
 
 void rc_gui_mini_window_show()
 {
-    gtk_widget_show(rc_mini.mini_window);
+    gtk_widget_show_all(rc_mini.mini_window);
     gtk_window_move(GTK_WINDOW(rc_mini.mini_window), rc_set_get_integer(
         "Player", "MiniWindowX", NULL), rc_set_get_integer("Player",
         "MiniWindowY", NULL));
@@ -579,7 +573,7 @@ void rc_gui_mini_window_show()
 void rc_gui_mini_mini_mode_clicked()
 {
     rc_set_set_boolean("Player", "MiniMode", TRUE);
-    gtk_widget_show(rc_mini.mini_window);
+    gtk_widget_show_all(rc_mini.mini_window);
     gtk_widget_hide(rc_ui->main_window);
     gtk_window_move(GTK_WINDOW(rc_mini.mini_window), rc_set_get_integer(
         "Player", "MiniWindowX", NULL), rc_set_get_integer("Player",
@@ -596,6 +590,6 @@ void rc_gui_mini_normal_mode_clicked()
 {
     rc_set_set_boolean("Player", "MiniMode", FALSE);
     gtk_widget_hide(rc_mini.mini_window);
-    gtk_widget_show(rc_ui->main_window);
+    gtk_widget_show_all(rc_ui->main_window);
 }
 

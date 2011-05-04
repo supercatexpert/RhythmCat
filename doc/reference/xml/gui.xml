@@ -68,21 +68,19 @@ Show the main UI of the player.
     GtkWidget *title_label, *artist_label, *album_label;
     GtkWidget *time_label, *length_label, *info_label;
     GtkWidget *album_image, *album_eventbox, *album_frame;
-    GtkWidget *control_buttons_bar;
+    GtkWidget *control_images[8];
     GtkWidget *control_buttons[8];
     GtkWidget *volume_button;
     GtkWidget *time_scroll_bar;
-    GtkWidget *lrc_label, *lrc_viewport;
+    GtkWidget *lrc_label, *lrc_fixed;
     GtkWidget *list1_tree_view, *list2_tree_view;
     GtkWidget *list1_scr_window, *list2_scr_window;
-    GtkWidget *status_hbox, *status_progress, *status_label;
-    GtkWidget *status_cancel_button;
+    GtkWidget *status_infobar, *status_progress, *status_label;
     GtkWidget *list_hpaned;
     GtkTreeModel *list1_tree_model, *list2_tree_model;
     GtkTreeSelection *list1_selection, *list2_selection;
     GtkCellRenderer *renderer_text[5];
     GtkCellRenderer *renderer_pixbuf[2];
-    GtkAdjustment *lrc_vport_adj;
     guint main_window_width;
     guint main_window_height;
     guint status_task_length;
@@ -154,8 +152,8 @@ Please do not change the data in this structure.
 <listitem><simpara>the frame of album image widget
 </simpara></listitem>
 </varlistentry>
-<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.control-buttons-bar">control_buttons_bar</structfield>;</term>
-<listitem><simpara>the toolbar contains control buttons
+<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.control-images">control_images</structfield>[8];</term>
+<listitem><simpara>the images of control buttons
 </simpara></listitem>
 </varlistentry>
 <varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.control-buttons">control_buttons</structfield>[8];</term>
@@ -174,8 +172,8 @@ Please do not change the data in this structure.
 <listitem><simpara>show lyric text on the player window
 </simpara></listitem>
 </varlistentry>
-<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.lrc-viewport">lrc_viewport</structfield>;</term>
-<listitem><simpara>the viewport which makes lyric text widget scrollable
+<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.lrc-fixed">lrc_fixed</structfield>;</term>
+<listitem><simpara>the fixed container makes lyric text widget scrollable
 </simpara></listitem>
 </varlistentry>
 <varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.list1-tree-view">list1_tree_view</structfield>;</term>
@@ -194,7 +192,7 @@ Please do not change the data in this structure.
 <listitem><simpara>add scrollbars on list2
 </simpara></listitem>
 </varlistentry>
-<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.status-hbox">status_hbox</structfield>;</term>
+<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.status-infobar">status_infobar</structfield>;</term>
 <listitem><simpara>the GtkBox which stores status widgets
 </simpara></listitem>
 </varlistentry>
@@ -204,10 +202,6 @@ Please do not change the data in this structure.
 </varlistentry>
 <varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.status-label">status_label</structfield>;</term>
 <listitem><simpara>show status text on the player window
-</simpara></listitem>
-</varlistentry>
-<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.status-cancel-button">status_cancel_button</structfield>;</term>
-<listitem><simpara>the cancel button to cancel all working tasks
 </simpara></listitem>
 </varlistentry>
 <varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.list-hpaned">list_hpaned</structfield>;</term>
@@ -236,10 +230,6 @@ Please do not change the data in this structure.
 </varlistentry>
 <varlistentry><term><link linkend="GtkCellRenderer"><type>GtkCellRenderer</type></link>&#160;*<structfield id="RCGuiData.renderer-pixbuf">renderer_pixbuf</structfield>[2];</term>
 <listitem><simpara>the image renderers of list1 &amp; list2
-</simpara></listitem>
-</varlistentry>
-<varlistentry><term><link linkend="GtkAdjustment"><type>GtkAdjustment</type></link>&#160;*<structfield id="RCGuiData.lrc-vport-adj">lrc_vport_adj</structfield>;</term>
-<listitem><simpara>the GtkAdjustment object of lyric viewport
 </simpara></listitem>
 </varlistentry>
 <varlistentry><term><link linkend="guint"><type>guint</type></link>&#160;<structfield id="RCGuiData.main-window-width">main_window_width</structfield>;</term>

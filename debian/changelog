@@ -1,5 +1,5 @@
-rhythmcat (1.0.0-alpha1~110402) unstable; urgency=low
+rhythmcat (1.0.0-alpha2~110504) unstable; urgency=low
 
-  * Initial release (Closes: #1000)
+  * Fixed some bugs, completed the theme system. (Closes: #1020)
 
- -- SuperCat <supercatexpert@gmail.com>  Sat, 02 Apr 2011 19:28:33 +0800
+ -- SuperCat <supercatexpert@gmail.com>  Wed, 04 May 2011 02:36:33 +0800

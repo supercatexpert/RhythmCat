@@ -4,20 +4,20 @@
 
 2011-02-11  SuperCat    <supercatexpert@gmail.com>
 
-        Added plugin support and Desktop Lyric Show plugin.
+        * Added plugin support and Desktop Lyric Show plugin.
 
 2011-02-14  SuperCat    <supercatexpert@gmail.com>
 
-        Use GtkUIManager to build menus.
+        * Use GtkUIManager to build menus.
 
 2011-02-23  SuperCat    <supercatexpert@gmail.com>
 
-        Reading cover image in the tag of music file is now available.
-        Try to remove lyric show, and put this feature into a plugin.
+        * Reading cover image in the tag of music file is now available.
+        * Try to remove lyric show, and put this feature into a plugin.
 
 2011-03-12  SuperCat    <supercatexpert@gmail.com>
 
-        Added new color styles, and added the features below:
+        * Added new color styles, and added the features below:
 
           Automatic minimize at startup.
           Minimize window when the close button is pressed.
@@ -28,14 +28,20 @@
 
 2011-03-23  SuperCat    <supercatexpert@gmail.com>
 
-        Added mini mode.
-        Added some comments to make Gtk-Doc docuemnt.
-        Development reference manual has been made.
-        Provide more interfaces to D-Bus.
+        * Added mini mode.
+        * Added some comments to make Gtk-Doc docuemnt.
+        * Development reference manual has been made.
+        * Provide more interfaces to D-Bus.
         
 2011-04-02  SuperCat    <supercatexpert@gmail.com>
 
-        Fixed some bugs.
-        Finished development documents of the project.
+        * Fixed some bugs.
+        * Finished development documents of the project.
 
+2011-05-02  SuperCat    <supercatexpert@gmail.com>
 
+        * Completed the theme system.
+        * Added the feature that the user can see preview image of the theme.
+        * Removed color styles (merged to the theme system)
+        * Fixed some bugs.
+        

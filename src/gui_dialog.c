@@ -63,8 +63,7 @@ static void rc_gui_open_music_dir_recu(const gchar *dir_name, gint depth)
     {
         file_name = g_dir_read_name(dir);
         if(file_name==NULL) break;
-        full_file_name = g_strdup_printf("%s%c%s", dir_name, 
-            G_DIR_SEPARATOR, file_name);
+        full_file_name = g_build_filename(dir_name, file_name, NULL);
         if(g_file_test(full_file_name, G_FILE_TEST_IS_DIR))
             rc_gui_open_music_dir_recu(full_file_name, depth-1);
         if(!g_file_test(full_file_name, G_FILE_TEST_IS_REGULAR))
