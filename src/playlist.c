@@ -1101,7 +1101,6 @@ gboolean rc_plist_load_playlist_setting()
     gchar *line = NULL, *buf = NULL;
     gint linenum = 0;
     gint listnum = -1;
-    gint listflag = FALSE;
     gint existlist = FALSE;
     gint linecount = 0;
     gulong file_pointer = 0L;
@@ -1211,7 +1210,6 @@ gboolean rc_plist_load_playlist_setting()
                 if(line[0]=='L' && line[1]=='I' && line[2]=='=')
                 {
                     listnum++;
-                    listflag = TRUE;
                     existlist = TRUE;
                     rc_plist_insert_list(buf, listnum);
                     pl_store = rc_plist_get_list_store(listnum);

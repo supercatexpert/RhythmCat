@@ -44,4 +44,11 @@
         * Added the feature that the user can see preview image of the theme.
         * Removed color styles (merged to the theme system)
         * Fixed some bugs.
+
+2011-05-10  SuperCat    <supercatexpert@gmail.com>
+
+        * Implemented a custom widget for scrollable text show.
+        * Fixed some bugs.
+        * Better GTK3 support.
+
         

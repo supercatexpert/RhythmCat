@@ -38,6 +38,7 @@
 #include "gui_dialog.h"
 #include "gui_plugin.h"
 #include "gui_mini.h"
+#include "gui_text.h"
 #include "imgs/img_nocov.xpm"
 #include "imgs/img_icon.xpm"
 
@@ -54,6 +55,7 @@ static const guint img_cover_h = 160;
 static const guint img_cover_w = 160;
 static RCGuiData rc_gui;
 static GSList *rc_gui_view_page_list = NULL;
+
 
 typedef struct RCGuiViewPageData
 {
@@ -81,10 +83,8 @@ typedef enum
 static gboolean rc_gui_refresh_time_info(gpointer data)
 {
     gint64 pos = 0, len = 0;
-    gdouble persent = 0.0;
+    gdouble percent = 0.0;
     GstState state;
-    GtkAllocation lrc_label_allocation, lrc_fixed_allocation;
-    gint width = 0;
     const RCLyricData *lrc_data;
     static const gchar *text = NULL;
     pos = rc_core_get_play_position();
@@ -100,9 +100,9 @@ static gboolean rc_gui_refresh_time_info(gpointer data)
             {
                 if(len!=0)
                 {
-                    persent = (gdouble)pos / len;
+                    percent = (gdouble)pos / len;
                     gtk_range_set_value(GTK_RANGE(rc_gui.time_scroll_bar),
-                        persent * 100);
+                        percent * 100);
                 }
             }
             break;
@@ -115,7 +115,8 @@ static gboolean rc_gui_refresh_time_info(gpointer data)
             gtk_range_set_value(GTK_RANGE(rc_gui.time_scroll_bar), 0);
             if(text!=NULL)
             {
-                gtk_label_set_text(GTK_LABEL(rc_gui.lrc_label), "");
+                rc_gui_scrolled_text_set_text(RC_GUI_SCROLLED_TEXT(
+                    rc_gui.lrc_scrolled_label), NULL);
                 rc_gui_mini_set_lyric_text("");
                 text = NULL;
             }
@@ -127,30 +128,29 @@ static gboolean rc_gui_refresh_time_info(gpointer data)
         if(text!=lrc_data->text)
         {
             text = lrc_data->text;
-            gtk_label_set_text(GTK_LABEL(rc_gui.lrc_label), lrc_data->text);
+            rc_gui_scrolled_text_set_text(RC_GUI_SCROLLED_TEXT(
+                rc_gui.lrc_scrolled_label), lrc_data->text);
             rc_gui_mini_set_lyric_text(lrc_data->text);
         }
-        gtk_widget_get_allocation(rc_gui.lrc_label, &lrc_label_allocation);
-        gtk_widget_get_allocation(rc_gui.lrc_fixed, &lrc_fixed_allocation);
-        width = lrc_label_allocation.width - lrc_fixed_allocation.width;
-        if(width>0 && lrc_data->length>0)
+        if(lrc_data->length>0)
         {
-            persent = 1.2*(gdouble)(pos / GST_MSECOND / 10 - lrc_data->time) /
+            percent = 1.2*(gdouble)(pos / GST_MSECOND / 10 - lrc_data->time) /
                 lrc_data->length;
-            if(persent>1.0) persent = 1.0;
-            width = 0 - (gint)((gdouble)width * persent);
-            rc_gui_mini_set_lyric_persent(persent);
+            if(percent>1.0) percent = 1.0;
+            rc_gui_scrolled_text_set_percent(RC_GUI_SCROLLED_TEXT(
+                rc_gui.lrc_scrolled_label), percent);
+            rc_gui_mini_set_lyric_percent(percent);
         }
         else
-            width = 0;
-        gtk_fixed_move(GTK_FIXED(rc_gui.lrc_fixed), rc_gui.lrc_label,
-            width, 0);
+            rc_gui_scrolled_text_set_percent(RC_GUI_SCROLLED_TEXT(
+                rc_gui.lrc_scrolled_label), 0.0);
     }
     else
     {
         if(text!=NULL)
         {
-            gtk_label_set_text(GTK_LABEL(rc_gui.lrc_label), "");
+            rc_gui_scrolled_text_set_text(RC_GUI_SCROLLED_TEXT(
+                rc_gui.lrc_scrolled_label), NULL);
             rc_gui_mini_set_lyric_text("");
             text = NULL;
         }
@@ -165,20 +165,20 @@ static gboolean rc_gui_refresh_time_info(gpointer data)
 static gboolean rc_gui_adjust_volume(GtkScaleButton *widget, gdouble vol,
     gpointer data)
 {
-    gdouble persent = vol * 100;
-    if(100.0 - persent <= 10e-3)
+    gdouble percent = vol * 100;
+    if(100.0 - percent <= 10e-3)
         gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
             "/RCMenuBar/ControlMenu/ControlVolumeUp"), FALSE);
     else
         gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
             "/RCMenuBar/ControlMenu/ControlVolumeUp"), TRUE);
-    if(persent <= 10e-3)
+    if(percent <= 10e-3)
         gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
             "/RCMenuBar/ControlMenu/ControlVolumeDown"), FALSE);
     else
         gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
             "/RCMenuBar/ControlMenu/ControlVolumeDown"), TRUE);
-    rc_core_set_volume(persent);
+    rc_core_set_volume(percent);
     return FALSE;
 }
 
@@ -201,9 +201,9 @@ static gboolean rc_gui_seek_scale_button_pressed(GtkWidget *widget,
 static gboolean rc_gui_seek_scale_button_released(GtkWidget *widget, 
     GdkEventButton *event, gpointer data)
 {
-    gdouble persent = gtk_range_get_value(GTK_RANGE(rc_gui.time_scroll_bar));
+    gdouble percent = gtk_range_get_value(GTK_RANGE(rc_gui.time_scroll_bar));
     rc_gui.update_seek_scale_flag = TRUE;
-    rc_core_set_play_position_by_persent(persent);
+    rc_core_set_play_position_by_percent(percent);
     return FALSE;
 }
 
@@ -214,13 +214,13 @@ static gboolean rc_gui_seek_scale_button_released(GtkWidget *widget,
 
 static void rc_gui_seek_scale_value_changed()
 {
-    gdouble persent;
+    gdouble percent;
     gint64 pos, len;
     if(!rc_gui.update_seek_scale_flag)
     {
-        persent = gtk_range_get_value(GTK_RANGE(rc_gui.time_scroll_bar));
+        percent = gtk_range_get_value(GTK_RANGE(rc_gui.time_scroll_bar));
         len = rc_core_get_music_length();
-        pos = len * persent / 100;
+        pos = len * percent / 100;
         rc_gui_time_label_set_text(pos);
     }
 }
@@ -245,17 +245,17 @@ static gboolean rc_gui_play_button_clicked()
     gboolean flag = TRUE;
     gint list1_index, list2_index;
     if(rc_core_get_play_state()==GST_STATE_PLAYING)
-    {
-        flag = rc_core_pause();
-        if(!flag) return FALSE;
-    }
+        rc_core_pause();
     else
     {
-        rc_plist_play_get_index(&list1_index, &list2_index);
+        if(!rc_plist_play_get_index(&list1_index, &list2_index))
+        {
+            list1_index = 0;
+            list2_index = 0;
+        }
         if(rc_core_get_play_state()!=GST_STATE_PAUSED)
             flag = rc_plist_play_by_index(list1_index, list2_index);
-        flag = rc_core_play();
-        if(!flag) return FALSE;
+        if(flag) rc_core_play();
     }
     return FALSE;
 }
@@ -1009,7 +1009,6 @@ static void rc_gui_layout_init()
     album_frame = gtk_frame_new(NULL);
     eq_label = gtk_label_new(_("Equalizer"));
     pls_label = gtk_label_new(_("Playlists"));
-    gtk_fixed_put(GTK_FIXED(rc_gui.lrc_fixed), rc_gui.lrc_label, 0, 0);
     gtk_paned_pack1(GTK_PANED(rc_gui.list_hpaned), rc_gui.list1_scr_window,
         TRUE, FALSE);
     gtk_paned_pack2(GTK_PANED(rc_gui.list_hpaned), rc_gui.list2_scr_window,
@@ -1035,7 +1034,8 @@ static void rc_gui_layout_init()
     gtk_box_pack_start(GTK_BOX(hbox5), vbox1, TRUE, TRUE, 0);
     gtk_box_pack_start(GTK_BOX(hbox5), vbox2, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(vbox3), hbox5, FALSE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(vbox3), rc_gui.lrc_fixed, FALSE, FALSE, 2);
+    gtk_box_pack_start(GTK_BOX(vbox3), rc_gui.lrc_scrolled_label, FALSE,
+        FALSE, 2);
     gtk_box_pack_end(GTK_BOX(vbox3), hbox2, FALSE, FALSE, 0);
     gtk_box_pack_end(GTK_BOX(vbox3), rc_gui.time_scroll_bar, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(hbox1), album_frame, FALSE, FALSE, 2);
@@ -1141,11 +1141,10 @@ gboolean rc_gui_init()
     rc_gui.main_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     rc_gui.main_ui = gtk_ui_manager_new();
     rc_gui.plist_notebook = gtk_notebook_new();
-    rc_gui.lrc_fixed = gtk_fixed_new();
     rc_gui.album_image = gtk_image_new_from_pixbuf(rc_gui.no_cover_image);
     rc_gui.album_eventbox = gtk_event_box_new();
     rc_gui.status_label = gtk_label_new(NULL);
-    rc_gui.lrc_label = gtk_label_new(NULL);
+    rc_gui.lrc_scrolled_label = rc_gui_scrolled_text_new(NULL);
     rc_gui.title_label = gtk_label_new(NULL);
     rc_gui.artist_label = gtk_label_new(NULL);
     rc_gui.album_label = gtk_label_new(NULL);
@@ -1170,7 +1169,6 @@ gboolean rc_gui_init()
     gtk_widget_set_name(rc_gui.main_window, "RCMainWindow");
     g_object_set(gtk_settings_get_default(), "gtk-icon-sizes", 
         "gtk-small-toolbar=16,16:gtk-large-toolbar=16,16", NULL);
-    gtk_misc_set_alignment(GTK_MISC(rc_gui.lrc_label), 0.0, 0.5);
     gtk_misc_set_alignment(GTK_MISC(rc_gui.title_label), 0.0, 0.5);
     gtk_misc_set_alignment(GTK_MISC(rc_gui.artist_label), 0.0, 0.5);
     gtk_misc_set_alignment(GTK_MISC(rc_gui.album_label), 0.0, 0.5);
@@ -1187,7 +1185,7 @@ gboolean rc_gui_init()
     gtk_widget_set_name(rc_gui.info_label, "RCInfoLabel");
     gtk_widget_set_name(rc_gui.time_label, "RCTimeLabel");
     gtk_widget_set_name(rc_gui.length_label, "RCLengthLabel");
-    gtk_widget_set_name(rc_gui.lrc_label, "RCLyricLabel");
+    gtk_widget_set_name(rc_gui.lrc_scrolled_label, "RCLyricLabel");
     gtk_widget_set_size_request(rc_gui.album_image, img_cover_w, img_cover_h);
     gtk_widget_set_name(rc_gui.album_image, "RCAlbumImage");
     rc_gui.volume_button = gtk_volume_button_new();
@@ -1221,7 +1219,6 @@ gboolean rc_gui_init()
         gtk_widget_set_name(rc_gui.control_buttons[i], "RCControlButton");
         g_object_set(rc_gui.control_buttons[i], "can-focus", FALSE, NULL);
     }
-    gtk_widget_set_has_window(rc_gui.lrc_fixed, FALSE);
     gtk_label_set_justify(GTK_LABEL(rc_gui.time_label), GTK_JUSTIFY_RIGHT);
     position_adjustment = (GtkAdjustment *)gtk_adjustment_new(0.0, 0.0, 105.0,
         1.0, 2.0, 5.0);
@@ -1715,7 +1712,7 @@ void rc_gui_status_task_set(guint type, guint len)
 void rc_gui_status_progress_set_progress()
 {
     static guint completed_num = 0;
-    gdouble persent = 0.0;
+    gdouble percent = 0.0;
     gint remaining_num;
     gchar text[64];
     remaining_num = rc_plist_import_job_get_length();
@@ -1726,11 +1723,11 @@ void rc_gui_status_progress_set_progress()
         completed_num = 0;
         return;
     }
-    persent = (gdouble)(completed_num) / rc_gui.status_task_length;
+    percent = (gdouble)(completed_num) / rc_gui.status_task_length;
     g_snprintf(text, 63, "%u / %u", completed_num, rc_gui.status_task_length);
     gtk_progress_bar_set_text(GTK_PROGRESS_BAR(rc_gui.status_progress), text);
     gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(rc_gui.status_progress),
-        persent);
+        percent);
 }
 
 /**

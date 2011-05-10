@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RhythmCat 1.0.0\n"
 "Report-Msgid-Bugs-To: http://code.google.com/p/rhythmcat/issues/list\n"
-"POT-Creation-Date: 2011-05-04 02:19+0800\n"
+"POT-Creation-Date: 2011-05-10 11:08+0800\n"
 "PO-Revision-Date: 2011-04-02 21:18+0800\n"
 "Last-Translator: SuperCat <supercatexpert@gmail.com>\n"
 "Language-Team: SuperCat <supercatexpert@gmail.com>\n"
@@ -388,83 +388,88 @@ msgstr "均衡器"
 msgid "Playlists"
 msgstr "播放列表"
 
-#: src/gui.c:1351
+#: src/gui.c:1348
 msgid "Unknown Format"
 msgstr "未知格式"
 
-#: src/gui.c:1355
+#: src/gui.c:1352
 #, c-format
 msgid "%d kbps "
 msgstr "%d 千比特/秒"
 
-#: src/gui.c:1359
+#: src/gui.c:1356
 #, c-format
 msgid "%d Hz "
 msgstr "%d Hz"
 
-#: src/gui.c:1366
+#: src/gui.c:1363
 msgid "Mono"
 msgstr "單聲道"
 
-#: src/gui.c:1370
+#: src/gui.c:1367
 msgid "Stereo"
 msgstr "Stereo"
 
-#: src/gui.c:1374
+#: src/gui.c:1371
 #, c-format
 msgid "%d channels"
 msgstr "%d 聲道"
 
-#: src/gui.c:1381 src/playlist.c:256 src/playlist.c:331 src/playlist.c:443
+#: src/gui.c:1378 src/playlist.c:256 src/playlist.c:331 src/playlist.c:443
 #: src/playlist.c:575
 msgid "Unknown Title"
 msgstr "未知標題"
 
-#: src/gui.c:1385
+#: src/gui.c:1382
 msgid "Unknown Artist"
 msgstr "未知藝術家"
 
-#: src/gui.c:1389
+#: src/gui.c:1386
 msgid "Unknown Album"
 msgstr "未知專輯"
 
-#: src/gui.c:1672
+#: src/gui.c:1669
 msgid "Importing..."
 msgstr "導入中……"
 
-#: src/gui.c:1676
+#: src/gui.c:1673
 msgid "Refreshing..."
 msgstr "正在刷新……"
 
-#: src/gui_dialog.c:117
+#: src/gui_dialog.c:118
+#, fuzzy
+msgid "A music player based on GTK+ 3.0 & Gstreamer 0.10"
+msgstr "一個基於GTK+ 2.0和Gstreamer 0.10的音樂播放器"
+
+#: src/gui_dialog.c:121
 msgid "A music player based on GTK+ 2.0 & Gstreamer 0.10"
 msgstr "一個基於GTK+ 2.0和Gstreamer 0.10的音樂播放器"
 
-#: src/gui_dialog.c:171
+#: src/gui_dialog.c:176
 msgid "All supported music files(*.FLAC;*.OGG;*.MP3;*.WAV;*.WMA...)"
 msgstr "所有支持的格式(*.FLAC;*.OGG;*.MP3;*.WAV;*.WMA...)"
 
-#: src/gui_dialog.c:174
+#: src/gui_dialog.c:179
 msgid "Select the music you want to add..."
 msgstr "選擇需要添加的音樂"
 
-#: src/gui_dialog.c:224
+#: src/gui_dialog.c:229
 msgid "Select the directory you want to import..."
 msgstr "選擇需要導入的目錄"
 
-#: src/gui_dialog.c:264 src/gui_dialog.c:310
+#: src/gui_dialog.c:269 src/gui_dialog.c:315
 msgid "M3U Playlist(*.M3U, *.m3u)"
 msgstr "M3U 播放列表(*.M3U, *.m3u)"
 
-#: src/gui_dialog.c:267
+#: src/gui_dialog.c:272
 msgid "Save the playlist..."
 msgstr "保存到播放列表……"
 
-#: src/gui_dialog.c:313
+#: src/gui_dialog.c:318
 msgid "Load the playlist..."
 msgstr "從播放列表載入……"
 
-#: src/gui_dialog.c:356
+#: src/gui_dialog.c:361
 msgid "Select the directory you want to store the playlists..."
 msgstr "選擇保存播放列表的目錄"
 
@@ -689,4 +694,3 @@ msgstr "插件資訊"
 #: src/plugin.c:447
 msgid "This plugin is resident, you should restart the player to disable it."
 msgstr "該插件是常駐的，你需要重啟播放器來禁用它。"
-

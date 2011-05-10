@@ -7,7 +7,7 @@
 <link rel="home" href="index.html" title="RhythmCat Music Player Development Reference Manual">
 <link rel="up" href="ch02.html" title="Player UI">
 <link rel="prev" href="ch02.html" title="Player UI">
-<link rel="next" href="RhythmCat-Dialogs.html" title="Dialogs">
+<link rel="next" href="RCGuiScrolledText.html" title="Scrolledate Text Widget">
 <meta name="generator" content="GTK-Doc V1.15 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
@@ -18,7 +18,7 @@
 <td><a accesskey="u" href="ch02.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
 <th width="100%" align="center">RhythmCat Music Player Development Reference Manual</th>
-<td><a accesskey="n" href="RhythmCat-Dialogs.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="RCGuiScrolledText.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
 <a href="#RhythmCat-Main-UI.synopsis" class="shortcut">Top</a>
@@ -87,7 +87,7 @@ Show the main UI of the player.
     GtkWidget *control_buttons[8];
     GtkWidget *volume_button;
     GtkWidget *time_scroll_bar;
-    GtkWidget *lrc_label, *lrc_fixed;
+    GtkWidget *lrc_scrolled_label;
     GtkWidget *list1_tree_view, *list2_tree_view;
     GtkWidget *list1_scr_window, *list2_scr_window;
     GtkWidget *status_infobar, *status_progress, *status_label;
@@ -205,13 +205,8 @@ Please do not change the data in this structure.
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.lrc-label"></a>lrc_label</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.lrc-scrolled-label"></a>lrc_scrolled_label</code></em>;</span></p></td>
 <td>show lyric text on the player window
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.lrc-fixed"></a>lrc_fixed</code></em>;</span></p></td>
-<td>the fixed container makes lyric text widget scrollable
 </td>
 </tr>
 <tr>

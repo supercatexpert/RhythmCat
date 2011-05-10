@@ -316,9 +316,9 @@ gdouble volume
 gint64 time 
 </FUNCTION>
 <FUNCTION>
-<NAME>rc_core_set_play_position_by_persent</NAME>
+<NAME>rc_core_set_play_position_by_percent</NAME>
 <RETURNS>gboolean </RETURNS>
-gdouble persent 
+gdouble percent 
 </FUNCTION>
 <FUNCTION>
 <NAME>rc_core_get_play_position</NAME>
@@ -692,6 +692,87 @@ char *argv[]
 <RETURNS>gboolean </RETURNS>
 const gchar *uri 
 </FUNCTION>
+<MACRO>
+<NAME>RC_GUI_SCROLLED_TEXT_TYPE</NAME>
+#define RC_GUI_SCROLLED_TEXT_TYPE (rc_gui_scrolled_text_get_type())
+</MACRO>
+<MACRO>
+<NAME>RC_GUI_SCROLLED_TEXT</NAME>
+#define RC_GUI_SCROLLED_TEXT(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), \
+    RC_GUI_SCROLLED_TEXT_TYPE, RCGuiScrolledText))
+</MACRO>
+<MACRO>
+<NAME>RC_GUI_SCROLLED_TEXT_CLASS</NAME>
+#define RC_GUI_SCROLLED_TEXT_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST((klass), \
+    RC_GUI_SCROLLED_TEXT_TYPE, RCGuiScrolledTextClass))
+</MACRO>
+<MACRO>
+<NAME>IS_RC_GUI_SCROLLED_TEXT</NAME>
+#define IS_RC_GUI_SCROLLED_TEXT(obj) (G_TYPE_CHECK_INSTANCE_TYPE((obj), \
+    RC_GUI_SCROLLED_TEXT_TYPE))
+</MACRO>
+<MACRO>
+<NAME>IS_RC_GUI_SCROLLED_TEXT_CLASS</NAME>
+#define IS_RC_GUI_SCROLLED_TEXT_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), \
+    RC_GUI_SCROLLED_TEXT_TYPE))
+</MACRO>
+<STRUCT>
+<NAME>RCGuiScrolledText</NAME>
+typedef struct RCGuiScrolledText {
+    GtkWidget widget;
+}RCGuiScrolledText;
+</STRUCT>
+<STRUCT>
+<NAME>RCGuiScrolledTextClass</NAME>
+typedef struct RCGuiScrolledTextClass {
+    GtkWidgetClass parent_class;
+}RCGuiScrolledTextClass;
+</STRUCT>
+<FUNCTION>
+<NAME>rc_gui_scrolled_text_get_type</NAME>
+<RETURNS>GType </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_scrolled_text_new</NAME>
+<RETURNS>GtkWidget *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_scrolled_text_set_text</NAME>
+<RETURNS>void </RETURNS>
+RCGuiScrolledText *widget, const gchar *text 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_scrolled_text_get_text</NAME>
+<RETURNS>const gchar *</RETURNS>
+RCGuiScrolledText *widget 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_scrolled_text_set_attributes</NAME>
+<RETURNS>void </RETURNS>
+RCGuiScrolledText *widget, PangoAttrList *attrs 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_scrolled_text_get_attributes</NAME>
+<RETURNS>PangoAttrList *</RETURNS>
+RCGuiScrolledText *widget 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_scrolled_text_set_percent</NAME>
+<RETURNS>void </RETURNS>
+RCGuiScrolledText *widget, gdouble percent 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_scrolled_text_get_percent</NAME>
+<RETURNS>gdouble </RETURNS>
+RCGuiScrolledText *widget 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_scrolled_text_get_width</NAME>
+<RETURNS>gint </RETURNS>
+RCGuiScrolledText *widget 
+</FUNCTION>
 <FUNCTION>
 <NAME>rc_gui_treeview_init</NAME>
 <RETURNS>void </RETURNS>
@@ -757,7 +838,7 @@ typedef struct RCGuiData {
     GtkWidget *control_buttons[8];
     GtkWidget *volume_button;
     GtkWidget *time_scroll_bar;
-    GtkWidget *lrc_label, *lrc_fixed;
+    GtkWidget *lrc_scrolled_label;
     GtkWidget *list1_tree_view, *list2_tree_view;
     GtkWidget *list1_scr_window, *list2_scr_window;
     GtkWidget *status_infobar, *status_progress, *status_label;
@@ -888,9 +969,9 @@ const gchar *text
  
 </FUNCTION>
 <FUNCTION>
-<NAME>rc_gui_mini_set_lyric_persent</NAME>
+<NAME>rc_gui_mini_set_lyric_percent</NAME>
 <RETURNS>void </RETURNS>
-gdouble persent 
+gdouble percent 
 </FUNCTION>
 <FUNCTION>
 <NAME>rc_gui_mini_set_play_state</NAME>

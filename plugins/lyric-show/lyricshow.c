@@ -461,6 +461,7 @@ gboolean rc_plugin_lrcshow_drag(GtkWidget *widget, GdkEvent *event,
                 if(rc_glrc.drag_from_linenum!=rc_glrc.drag_to_linenum)
                 {
                     lrc_data_array = rc_lrc_get_lrc_data();
+                    if(lrc_data_array==NULL) break;
                     pos = lrc_data_array[rc_glrc.drag_to_linenum]->time;
                     pos = pos * 10 * GST_MSECOND;
                     rc_core_set_play_position(pos);

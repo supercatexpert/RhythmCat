@@ -53,8 +53,7 @@
  * @control_buttons: the button widgets of control buttons
  * @volume_button: the volume control button
  * @time_scroll_bar: the time scaler bar
- * @lrc_label: show lyric text on the player window
- * @lrc_fixed: the fixed container makes lyric text widget scrollable
+ * @lrc_scrolled_label: show lyric text on the player window
  * @list1_tree_view: the list view of list1
  * @list2_tree_view: the list view of list2
  * @list1_scr_window: add scrollbars on list1
@@ -69,7 +68,6 @@
  * @list2_selection: the GtkTreeSelection of list2
  * @renderer_text: the text renderers of list1 & list2
  * @renderer_pixbuf: the image renderers of list1 & list2
- * @lrc_vport_adj: the GtkAdjustment object of lyric viewport
  * @main_window_width: the default width of main window
  * @main_window_height: the default height of main window
  * @status_task_length: the length of working task
@@ -97,7 +95,7 @@ typedef struct RCGuiData {
     GtkWidget *control_buttons[8];
     GtkWidget *volume_button;
     GtkWidget *time_scroll_bar;
-    GtkWidget *lrc_label, *lrc_fixed;
+    GtkWidget *lrc_scrolled_label;
     GtkWidget *list1_tree_view, *list2_tree_view;
     GtkWidget *list1_scr_window, *list2_scr_window;
     GtkWidget *status_infobar, *status_progress, *status_label;

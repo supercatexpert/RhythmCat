@@ -26,6 +26,7 @@
 #include "gui_mini.h"
 #include "core.h"
 #include "gui.h"
+#include "gui_text.h"
 #include "settings.h"
 #include "playlist.h"
 #include "player.h"
@@ -110,17 +111,17 @@ static gboolean rc_gui_mini_play_button_clicked()
     gboolean flag = TRUE;
     gint list1_index, list2_index;
     if(rc_core_get_play_state()==GST_STATE_PLAYING)
-    {
-        flag = rc_core_pause();
-        if(!flag) return FALSE;
-    }
+        rc_core_pause();
     else
     {
-        rc_plist_play_get_index(&list1_index, &list2_index);
+        if(!rc_plist_play_get_index(&list1_index, &list2_index))
+        {
+            list1_index = 0;
+            list2_index = 0;
+        }
         if(rc_core_get_play_state()!=GST_STATE_PAUSED)
             flag = rc_plist_play_by_index(list1_index, list2_index);
-        flag = rc_core_play();
-        if(!flag) return FALSE;
+        if(flag) rc_core_play();
     }
     return FALSE;
 }
@@ -236,8 +237,8 @@ void rc_gui_mini_init()
     rc_mini.icon_image = gtk_image_new_from_pixbuf(mini_icon_pixbuf);
     rc_mini.info_fixed = gtk_fixed_new();
     rc_mini.lrc_fixed = gtk_fixed_new();
-    rc_mini.info_label = gtk_label_new(NULL);
-    rc_mini.lrc_label = gtk_label_new(NULL);
+    rc_mini.info_label = rc_gui_scrolled_text_new();
+    rc_mini.lrc_label = rc_gui_scrolled_text_new();
     rc_mini.time_label = gtk_label_new("--:--");
     rc_mini.volume_button = gtk_volume_button_new();
     rc_mini.resize_arrow = gtk_arrow_new(GTK_ARROW_RIGHT, GTK_SHADOW_NONE);
@@ -312,8 +313,6 @@ void rc_gui_mini_init()
     g_object_set(G_OBJECT(rc_mini.volume_button), "size",
         GTK_ICON_SIZE_LARGE_TOOLBAR, NULL);
     gtk_event_box_set_above_child(GTK_EVENT_BOX(rc_mini.resize_eventbox), TRUE);
-    gtk_misc_set_alignment(GTK_MISC(rc_mini.info_label), 0.0, 0.5);
-    gtk_misc_set_alignment(GTK_MISC(rc_mini.lrc_label), 0.0, 0.5);
     gtk_misc_set_alignment(GTK_MISC(rc_mini.time_label), 0.0, 0.5);
     gtk_scale_button_set_adjustment(GTK_SCALE_BUTTON(rc_mini.volume_button),
         gtk_scale_button_get_adjustment(GTK_SCALE_BUTTON(rc_ui->volume_button)));
@@ -329,15 +328,13 @@ void rc_gui_mini_init()
     for(i=0;i<3;i++)
         gtk_box_pack_start(GTK_BOX(window_button_hbox), 
             rc_mini.window_buttons[i], FALSE, FALSE, 0);
-    gtk_fixed_put(GTK_FIXED(rc_mini.info_fixed), rc_mini.info_label, 0, 3);
-    gtk_fixed_put(GTK_FIXED(rc_mini.lrc_fixed), rc_mini.lrc_label, 0, 0);
     gtk_container_add(GTK_CONTAINER(rc_mini.icon_eventbox),
         rc_mini.icon_image);
     gtk_container_add(GTK_CONTAINER(rc_mini.resize_eventbox),
         rc_mini.resize_arrow);
     gtk_box_pack_start(GTK_BOX(mini_hbox1), rc_mini.icon_eventbox, FALSE,
         FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(mini_hbox1), rc_mini.info_fixed, TRUE, TRUE, 4);
+    gtk_box_pack_start(GTK_BOX(mini_hbox1), rc_mini.info_label, TRUE, TRUE, 4);
     gtk_box_pack_start(GTK_BOX(mini_hbox1), mini_button_hbox, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(mini_hbox1), rc_mini.volume_button, FALSE,
         FALSE, 0);
@@ -345,7 +342,7 @@ void rc_gui_mini_init()
         FALSE, 0);
     gtk_box_pack_start(GTK_BOX(mini_hbox2), rc_mini.time_label, FALSE,
         FALSE, 6);
-    gtk_box_pack_start(GTK_BOX(mini_hbox2), rc_mini.lrc_fixed, TRUE, TRUE, 8);
+    gtk_box_pack_start(GTK_BOX(mini_hbox2), rc_mini.lrc_label, TRUE, TRUE, 8);
     gtk_box_pack_start(GTK_BOX(mini_hbox2), rc_mini.resize_eventbox, FALSE,
         FALSE, 1);
     gtk_box_pack_start(GTK_BOX(mini_vbox), mini_hbox1, FALSE, FALSE, 0);
@@ -416,7 +413,8 @@ RCGuiMiniData *rc_gui_mini_get_data()
 
 void rc_gui_mini_set_info_text(const gchar *text)
 {
-    gtk_label_set_text(GTK_LABEL(rc_mini.info_label), text);
+    rc_gui_scrolled_text_set_text(RC_GUI_SCROLLED_TEXT(rc_mini.info_label),
+        text);
 }
 
 /**
@@ -428,8 +426,9 @@ void rc_gui_mini_set_info_text(const gchar *text)
 
 void rc_gui_mini_set_lyric_text(const gchar *text)
 {
-    rc_gui_mini_set_lyric_persent(0.0);
-    gtk_label_set_text(GTK_LABEL(rc_mini.lrc_label), text);
+    rc_gui_mini_set_lyric_percent(0.0);
+    rc_gui_scrolled_text_set_text(RC_GUI_SCROLLED_TEXT(rc_mini.lrc_label),
+        text);
 }
 
 /**
@@ -442,59 +441,59 @@ void rc_gui_mini_set_lyric_text(const gchar *text)
 void rc_gui_mini_info_text_move()
 {
     static gboolean dir = FALSE;
-    GtkAllocation info_label_allocation, info_fixed_allocation;
-    gint width = 0, pos = 0;
+    static guint pause_count = 0;
+    gint pos = 0;
+    gint width = 0;
+    gdouble percent = 0.0;
     if(!rc_set_get_boolean("Player", "MiniMode", NULL)) return;
-    gtk_widget_get_allocation(rc_mini.info_label, &info_label_allocation);
-    gtk_widget_get_allocation(rc_mini.info_fixed, &info_fixed_allocation);
-    width = info_label_allocation.width - info_fixed_allocation.width;
-    gtk_container_child_get(GTK_CONTAINER(rc_mini.info_fixed),
-        rc_mini.info_label, "x", &pos, NULL);
+    if(pause_count>0)
+    {
+        pause_count--;
+        return;
+    }
+    percent = rc_gui_scrolled_text_get_percent(RC_GUI_SCROLLED_TEXT(
+        rc_mini.info_label));
+    width = rc_gui_scrolled_text_get_width(RC_GUI_SCROLLED_TEXT(
+        rc_mini.info_label));
     if(width>0)
     {
-        if(pos<-width)
-        {
-            pos = -width;
-            dir = TRUE;
-        }
-        else if(pos>0)
-        {
-            pos = 0;
-            dir = FALSE;
-        }
+        pos = (gint)((gdouble)width*percent);
         if(dir)
             pos += 4;
         else
             pos -= 4;
+        if(pos<0)
+        {
+            pos = 0;
+            dir = TRUE;
+            pause_count = 15;
+        }
+        else if(pos>width)
+        {
+            pos = width;
+            dir = FALSE;
+            pause_count = 15;
+        }
+        percent = (gdouble)pos / width;
     }
     else
-        pos = 0.0;
-    gtk_fixed_move(GTK_FIXED(rc_mini.info_fixed), rc_mini.info_label,
-        pos, 3);
+        percent = 0;
+    rc_gui_scrolled_text_set_percent(RC_GUI_SCROLLED_TEXT(
+        rc_mini.info_label), percent);
 }
 
 /**
- * rc_gui_mini_set_lyric_persent:
- * @persent: the persent position of the lyric text
+ * rc_gui_mini_set_lyric_percent:
+ * @percent: the percent position of the lyric text
  *
- * Make the view of the lyric label move by given persent if the lyric text
+ * Make the view of the lyric label move by given percent if the lyric text
  * is too loog.
  */
 
-void rc_gui_mini_set_lyric_persent(gdouble persent)
+void rc_gui_mini_set_lyric_percent(gdouble percent)
 {
-    GtkAllocation lrc_label_allocation, lrc_fixed_allocation;
-    gint width = 0;
-    if(!rc_set_get_boolean("Player", "MiniMode", NULL)) return;
-    gtk_widget_get_allocation(rc_mini.lrc_label, &lrc_label_allocation);
-    gtk_widget_get_allocation(rc_mini.lrc_fixed, &lrc_fixed_allocation);
-    width = lrc_label_allocation.width - lrc_fixed_allocation.width;
-    if(width>0)
-        width = 0 - (gint)((gdouble)width * persent);
-    else
-        width = 0;
-    gtk_fixed_move(GTK_FIXED(rc_mini.lrc_fixed), rc_mini.lrc_label,
-        width, 0);
+    rc_gui_scrolled_text_set_percent(RC_GUI_SCROLLED_TEXT(rc_mini.lrc_label),
+        percent);
 }
 
 /**

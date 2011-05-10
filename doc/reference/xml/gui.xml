@@ -72,7 +72,7 @@ Show the main UI of the player.
     GtkWidget *control_buttons[8];
     GtkWidget *volume_button;
     GtkWidget *time_scroll_bar;
-    GtkWidget *lrc_label, *lrc_fixed;
+    GtkWidget *lrc_scrolled_label;
     GtkWidget *list1_tree_view, *list2_tree_view;
     GtkWidget *list1_scr_window, *list2_scr_window;
     GtkWidget *status_infobar, *status_progress, *status_label;
@@ -168,12 +168,8 @@ Please do not change the data in this structure.
 <listitem><simpara>the time scaler bar
 </simpara></listitem>
 </varlistentry>
-<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.lrc-label">lrc_label</structfield>;</term>
+<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.lrc-scrolled-label">lrc_scrolled_label</structfield>;</term>
 <listitem><simpara>show lyric text on the player window
-</simpara></listitem>
-</varlistentry>
-<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.lrc-fixed">lrc_fixed</structfield>;</term>
-<listitem><simpara>the fixed container makes lyric text widget scrollable
 </simpara></listitem>
 </varlistentry>
 <varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.list1-tree-view">list1_tree_view</structfield>;</term>

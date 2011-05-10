@@ -28,6 +28,15 @@ GtkWindow#RCMiniWindow GtkLabel
     color: #F0F0F0;
 }
 
+GtkWindow#RCMainWindow RCGuiScrolledText#RCLyricLabel,
+GtkWidget#RCMiniWindow RCGuiScrolledText#RCMiniLyricLabel,
+GtkWidget#RCMiniWindow RCGuiScrolledText#RCMiniInfoLabel
+{
+    color: #F0F0F0;
+    background-color: #282828;
+}
+
+
 GtkLabel#RCTimeLabel
 {
     color: #6CD02F;

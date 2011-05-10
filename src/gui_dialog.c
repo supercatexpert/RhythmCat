@@ -113,8 +113,13 @@ void rc_gui_about_player()
         rc_player_get_version());
     gtk_about_dialog_set_logo(GTK_ABOUT_DIALOG(about_dialog),
         rc_ui->icon_image);
-    gtk_about_dialog_set_comments(GTK_ABOUT_DIALOG(about_dialog),
-        _("A music player based on GTK+ 2.0 & Gstreamer 0.10"));
+    #ifdef USE_GTK3
+        gtk_about_dialog_set_comments(GTK_ABOUT_DIALOG(about_dialog),
+            _("A music player based on GTK+ 3.0 & Gstreamer 0.10"));
+    #else
+        gtk_about_dialog_set_comments(GTK_ABOUT_DIALOG(about_dialog),
+            _("A music player based on GTK+ 2.0 & Gstreamer 0.10"));
+    #endif
     gtk_about_dialog_set_license(GTK_ABOUT_DIALOG(about_dialog),
         "The GNU General Public License (GPL) v3");
     gtk_about_dialog_set_website(GTK_ABOUT_DIALOG(about_dialog),

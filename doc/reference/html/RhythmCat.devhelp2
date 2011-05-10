@@ -17,6 +17,7 @@
       </sub>
       <sub name="Player UI" link="ch02.html">
         <sub name="Main UI" link="RhythmCat-Main-UI.html"/>
+        <sub name="Scrolledate Text Widget" link="RCGuiScrolledText.html"/>
         <sub name="Dialogs" link="RhythmCat-Dialogs.html"/>
         <sub name="Equalizer UI" link="RhythmCat-Equalizer-UI.html"/>
         <sub name="UI Styles and Themes" link="RhythmCat-UI-Styles-and-Themes.html"/>
@@ -60,7 +61,7 @@
     <keyword type="function" name="rc_core_stop ()" link="RhythmCat-Core.html#rc-core-stop"/>
     <keyword type="function" name="rc_core_set_volume ()" link="RhythmCat-Core.html#rc-core-set-volume"/>
     <keyword type="function" name="rc_core_set_play_position ()" link="RhythmCat-Core.html#rc-core-set-play-position"/>
-    <keyword type="function" name="rc_core_set_play_position_by_persent ()" link="RhythmCat-Core.html#rc-core-set-play-position-by-persent"/>
+    <keyword type="function" name="rc_core_set_play_position_by_percent ()" link="RhythmCat-Core.html#rc-core-set-play-position-by-percent"/>
     <keyword type="function" name="rc_core_get_play_position ()" link="RhythmCat-Core.html#rc-core-get-play-position"/>
     <keyword type="function" name="rc_core_get_music_length ()" link="RhythmCat-Core.html#rc-core-get-music-length"/>
     <keyword type="function" name="rc_core_get_volume ()" link="RhythmCat-Core.html#rc-core-get-volume"/>
@@ -197,6 +198,24 @@
     <keyword type="function" name="rc_gui_view_add_page ()" link="RhythmCat-Main-UI.html#rc-gui-view-add-page"/>
     <keyword type="function" name="rc_gui_view_remove_page ()" link="RhythmCat-Main-UI.html#rc-gui-view-remove-page"/>
     <keyword type="function" name="rc_gui_get_tray_icon ()" link="RhythmCat-Main-UI.html#rc-gui-get-tray-icon"/>
+    <keyword type="macro" name="RC_GUI_SCROLLED_TEXT_TYPE" link="RCGuiScrolledText.html#RC-GUI-SCROLLED-TEXT-TYPE:CAPS"/>
+    <keyword type="macro" name="RC_GUI_SCROLLED_TEXT()" link="RCGuiScrolledText.html#RC-GUI-SCROLLED-TEXT:CAPS"/>
+    <keyword type="macro" name="RC_GUI_SCROLLED_TEXT_CLASS()" link="RCGuiScrolledText.html#RC-GUI-SCROLLED-TEXT-CLASS:CAPS"/>
+    <keyword type="macro" name="IS_RC_GUI_SCROLLED_TEXT()" link="RCGuiScrolledText.html#IS-RC-GUI-SCROLLED-TEXT:CAPS"/>
+    <keyword type="macro" name="IS_RC_GUI_SCROLLED_TEXT_CLASS()" link="RCGuiScrolledText.html#IS-RC-GUI-SCROLLED-TEXT-CLASS:CAPS"/>
+    <keyword type="struct" name="RCGuiScrolledText" link="RCGuiScrolledText.html#RCGuiScrolledText-struct"/>
+    <keyword type="struct" name="RCGuiScrolledTextClass" link="RCGuiScrolledText.html#RCGuiScrolledTextClass"/>
+    <keyword type="function" name="rc_gui_scrolled_text_get_type ()" link="RCGuiScrolledText.html#rc-gui-scrolled-text-get-type"/>
+    <keyword type="function" name="rc_gui_scrolled_text_new ()" link="RCGuiScrolledText.html#rc-gui-scrolled-text-new"/>
+    <keyword type="function" name="rc_gui_scrolled_text_set_text ()" link="RCGuiScrolledText.html#rc-gui-scrolled-text-set-text"/>
+    <keyword type="function" name="rc_gui_scrolled_text_get_text ()" link="RCGuiScrolledText.html#rc-gui-scrolled-text-get-text"/>
+    <keyword type="function" name="rc_gui_scrolled_text_set_attributes ()" link="RCGuiScrolledText.html#rc-gui-scrolled-text-set-attributes"/>
+    <keyword type="function" name="rc_gui_scrolled_text_get_attributes ()" link="RCGuiScrolledText.html#rc-gui-scrolled-text-get-attributes"/>
+    <keyword type="function" name="rc_gui_scrolled_text_set_percent ()" link="RCGuiScrolledText.html#rc-gui-scrolled-text-set-percent"/>
+    <keyword type="function" name="rc_gui_scrolled_text_get_percent ()" link="RCGuiScrolledText.html#rc-gui-scrolled-text-get-percent"/>
+    <keyword type="property" name="The &quot;attributes&quot; property" link="RCGuiScrolledText.html#RCGuiScrolledText--attributes"/>
+    <keyword type="property" name="The &quot;percent&quot; property" link="RCGuiScrolledText.html#RCGuiScrolledText--percent"/>
+    <keyword type="property" name="The &quot;text&quot; property" link="RCGuiScrolledText.html#RCGuiScrolledText--text"/>
     <keyword type="macro" name="MAX_DIR_DEPTH" link="RhythmCat-Dialogs.html#MAX-DIR-DEPTH:CAPS"/>
     <keyword type="function" name="rc_gui_about_player ()" link="RhythmCat-Dialogs.html#rc-gui-about-player"/>
     <keyword type="function" name="rc_gui_show_message_dialog ()" link="RhythmCat-Dialogs.html#rc-gui-show-message-dialog"/>
@@ -227,7 +246,7 @@
     <keyword type="function" name="rc_gui_mini_set_info_text ()" link="RhythmCat-Mini-Mode-UI.html#rc-gui-mini-set-info-text"/>
     <keyword type="function" name="rc_gui_mini_set_lyric_text ()" link="RhythmCat-Mini-Mode-UI.html#rc-gui-mini-set-lyric-text"/>
     <keyword type="function" name="rc_gui_mini_info_text_move ()" link="RhythmCat-Mini-Mode-UI.html#rc-gui-mini-info-text-move"/>
-    <keyword type="function" name="rc_gui_mini_set_lyric_persent ()" link="RhythmCat-Mini-Mode-UI.html#rc-gui-mini-set-lyric-persent"/>
+    <keyword type="function" name="rc_gui_mini_set_lyric_percent ()" link="RhythmCat-Mini-Mode-UI.html#rc-gui-mini-set-lyric-percent"/>
     <keyword type="function" name="rc_gui_mini_set_play_state ()" link="RhythmCat-Mini-Mode-UI.html#rc-gui-mini-set-play-state"/>
     <keyword type="function" name="rc_gui_mini_set_time_text ()" link="RhythmCat-Mini-Mode-UI.html#rc-gui-mini-set-time-text"/>
     <keyword type="function" name="rc_gui_mini_window_hide ()" link="RhythmCat-Mini-Mode-UI.html#rc-gui-mini-window-hide"/>
@@ -236,14 +255,14 @@
     <keyword type="function" name="rc_gui_mini_normal_mode_clicked ()" link="RhythmCat-Mini-Mode-UI.html#rc-gui-mini-normal-mode-clicked"/>
     <keyword type="function" name="rc_gui_create_setting_window ()" link="RhythmCat-Settings-UI.html#rc-gui-create-setting-window"/>
     <keyword type="function" name="rc_gui_plugin_window_create ()" link="RhythmCat-Plugin-Configuration-UI.html#rc-gui-plugin-window-create"/>
-    <keyword type="" name="Introduction" link="PluginProgramming.html#id395673"/>
-    <keyword type="" name="Preparation" link="PluginProgramming.html#id414765"/>
-    <keyword type="" name="Implement a simple plugin" link="PluginProgramming.html#id439782"/>
-    <keyword type="" name="How to compile the plugin" link="PluginProgramming.html#id417085"/>
-    <keyword type="" name="Write a plugin description file" link="PluginProgramming.html#id440296"/>
-    <keyword type="" name="Make your custom plugin work" link="PluginProgramming.html#id420090"/>
-    <keyword type="" name="Catch signals in the player" link="PluginProgramming.html#id445544"/>
-    <keyword type="" name="About this manual" link="PluginProgramming.html#id438282"/>
+    <keyword type="" name="Introduction" link="PluginProgramming.html#id618322"/>
+    <keyword type="" name="Preparation" link="PluginProgramming.html#id657129"/>
+    <keyword type="" name="Implement a simple plugin" link="PluginProgramming.html#id632074"/>
+    <keyword type="" name="How to compile the plugin" link="PluginProgramming.html#id641198"/>
+    <keyword type="" name="Write a plugin description file" link="PluginProgramming.html#id663753"/>
+    <keyword type="" name="Make your custom plugin work" link="PluginProgramming.html#id673579"/>
+    <keyword type="" name="Catch signals in the player" link="PluginProgramming.html#id622392"/>
+    <keyword type="" name="About this manual" link="PluginProgramming.html#id652100"/>
     <keyword type="constant" name="MSG_TYPE_EMPTY" link="RhythmCat-Asynchronous-Message-Queue.html#MSG-TYPE-EMPTY:CAPS"/>
     <keyword type="constant" name="MSG_TYPE_TEST" link="RhythmCat-Asynchronous-Message-Queue.html#MSG-TYPE-TEST:CAPS"/>
     <keyword type="constant" name="MSG_TYPE_PL_INSERT" link="RhythmCat-Asynchronous-Message-Queue.html#MSG-TYPE-PL-INSERT:CAPS"/>

@@ -25,6 +25,7 @@
 
 #include "gui_style.h"
 #include "gui.h"
+#include "gui_text.h"
 #include "gui_mini.h"
 #include "gui_eq.h"
 #include "settings.h"
@@ -123,12 +124,14 @@ void rc_gui_style_init()
     pango_attr_list_unref(time_attr_list);
     gtk_label_set_attributes(GTK_LABEL(rc_ui->length_label), length_attr_list);
     pango_attr_list_unref(length_attr_list);
-    gtk_label_set_attributes(GTK_LABEL(rc_ui->lrc_label), lrc_attr_list);
-    gtk_label_set_attributes(GTK_LABEL(rc_mini->lrc_label), lrc_attr_list);
-    gtk_label_set_attributes(GTK_LABEL(rc_mini->time_label), lrc_attr_list);
+    rc_gui_scrolled_text_set_attributes(RC_GUI_SCROLLED_TEXT(
+        rc_ui->lrc_scrolled_label), lrc_attr_list);
+    rc_gui_scrolled_text_set_attributes(RC_GUI_SCROLLED_TEXT(
+        rc_mini->lrc_label), lrc_attr_list);
+    gtk_label_set_attributes(GTK_LABEL(rc_mini->time_label),lrc_attr_list);
     pango_attr_list_unref(lrc_attr_list);
-    gtk_label_set_attributes(GTK_LABEL(rc_mini->info_label),
-        mini_info_attr_list);
+    rc_gui_scrolled_text_set_attributes(RC_GUI_SCROLLED_TEXT(
+        rc_mini->info_label), mini_info_attr_list);
     pango_attr_list_unref(mini_info_attr_list);
     g_object_set(G_OBJECT(rc_ui->renderer_text[0]), "attributes",
         list1_attr_list, NULL);
@@ -204,6 +207,15 @@ void rc_gui_style_refresh()
             }
             gtk_rc_reparse_all();
             g_free(path);
+        }
+        else
+        {
+            if(settings!=NULL)
+            {
+                gtk_rc_reset_styles(settings);
+                gtk_rc_parse(rc_system_default_rc_file);
+                gtk_rc_reparse_all_for_settings(settings, TRUE);
+            }
         }
         if(string!=NULL) g_free(string);
     #endif

@@ -806,6 +806,7 @@ void rc_gui_list1_delete_list()
 {
     GtkTreeIter iter;
     int index = 0, list1_index = 0;
+    if(rc_plist_get_list1_length()<=1) return;
     if(rc_ui->list1_selection==NULL) return;
     if(gtk_tree_selection_get_selected(rc_ui->list1_selection, NULL, &iter))
     {
@@ -813,9 +814,9 @@ void rc_gui_list1_delete_list()
         if(index==-1) return;
     }
     else return;
-    if(index<=0) return;
+    if(index<0) return;
     rc_plist_remove_list(index);
-    rc_gui_select_list1(index-1);
+    rc_gui_select_list1(index);
     if(rc_plist_play_get_index(&list1_index, NULL) && list1_index==index)
     {
         rc_plist_play_by_index(0, 0);

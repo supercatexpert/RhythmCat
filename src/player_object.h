@@ -38,6 +38,13 @@
 #define RB_PLAYER_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS((o), RC_PLAYER_TYPE, \
     RCPlayerClass))
 
+/**
+ * RCPlayer:
+ * @parent: parent object
+ *
+ * The structure used in object.
+ */
+
 typedef struct RCPlayer {
     GObject parent;
 }RCPlayer;

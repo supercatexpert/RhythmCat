@@ -34,8 +34,8 @@
 <link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-core-stop">rc_core_stop</link>                        ();
 <link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-core-set-volume">rc_core_set_volume</link>                  (<parameter><link linkend="gdouble"><type>gdouble</type></link> volume</parameter>);
 <link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-core-set-play-position">rc_core_set_play_position</link>           (<parameter><link linkend="gint64"><type>gint64</type></link> time</parameter>);
-<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-core-set-play-position-by-persent">rc_core_set_play_position_by_persent</link>
-                                                        (<parameter><link linkend="gdouble"><type>gdouble</type></link> persent</parameter>);
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-core-set-play-position-by-percent">rc_core_set_play_position_by_percent</link>
+                                                        (<parameter><link linkend="gdouble"><type>gdouble</type></link> percent</parameter>);
 <link linkend="gint64"><returnvalue>gint64</returnvalue></link>              <link linkend="rc-core-get-play-position">rc_core_get_play_position</link>           ();
 <link linkend="gint64"><returnvalue>gint64</returnvalue></link>              <link linkend="rc-core-get-music-length">rc_core_get_music_length</link>            ();
 <link linkend="gdouble"><returnvalue>gdouble</returnvalue></link>             <link linkend="rc-core-get-volume">rc_core_get_volume</link>                  ();
@@ -200,18 +200,18 @@ playing or paused.
 <varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> Whether the time is valid.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
-<refsect2 id="rc-core-set-play-position-by-persent" role="function">
-<title>rc_core_set_play_position_by_persent ()</title>
-<indexterm zone="rc-core-set-play-position-by-persent"><primary>rc_core_set_play_position_by_persent</primary></indexterm>
-<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rc_core_set_play_position_by_persent
-                                                        (<parameter><link linkend="gdouble"><type>gdouble</type></link> persent</parameter>);</programlisting>
+<refsect2 id="rc-core-set-play-position-by-percent" role="function">
+<title>rc_core_set_play_position_by_percent ()</title>
+<indexterm zone="rc-core-set-play-position-by-percent"><primary>rc_core_set_play_position_by_percent</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rc_core_set_play_position_by_percent
+                                                        (<parameter><link linkend="gdouble"><type>gdouble</type></link> percent</parameter>);</programlisting>
 <para>
-Set the position to to go to in persent (0.0 - 1.0).
+Set the position to to go to in percent (0.0 - 1.0).
 </para><variablelist role="params">
-<varlistentry><term><parameter>persent</parameter>&#160;:</term>
-<listitem><simpara>the position (in persent, from 0.0 to 1.0) to go to
+<varlistentry><term><parameter>percent</parameter>&#160;:</term>
+<listitem><simpara>the position (in percent, from 0.0 to 1.0) to go to
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> Whether the persent is valid.
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> Whether the percent is valid.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="rc-core-get-play-position" role="function">

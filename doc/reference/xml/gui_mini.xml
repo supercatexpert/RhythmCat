@@ -28,7 +28,7 @@
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-mini-set-info-text">rc_gui_mini_set_info_text</link>           (<parameter>const <link linkend="gchar"><type>gchar</type></link> *text</parameter>);
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-mini-set-lyric-text">rc_gui_mini_set_lyric_text</link>          (<parameter>const <link linkend="gchar"><type>gchar</type></link> *text</parameter>);
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-mini-info-text-move">rc_gui_mini_info_text_move</link>          ();
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-mini-set-lyric-persent">rc_gui_mini_set_lyric_persent</link>       (<parameter><link linkend="gdouble"><type>gdouble</type></link> persent</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-mini-set-lyric-percent">rc_gui_mini_set_lyric_percent</link>       (<parameter><link linkend="gdouble"><type>gdouble</type></link> percent</parameter>);
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-mini-set-play-state">rc_gui_mini_set_play_state</link>          (<parameter><link linkend="gboolean"><type>gboolean</type></link> state</parameter>);
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-mini-set-time-text">rc_gui_mini_set_time_text</link>           (<parameter><link linkend="gint64"><type>gint64</type></link> pos</parameter>);
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-mini-window-hide">rc_gui_mini_window_hide</link>             ();
@@ -93,16 +93,16 @@ Set the lyric text of the lyric label.
 Make the view of the information label move if the text inside is
 too loog.
 </para></refsect2>
-<refsect2 id="rc-gui-mini-set-lyric-persent" role="function">
-<title>rc_gui_mini_set_lyric_persent ()</title>
-<indexterm zone="rc-gui-mini-set-lyric-persent"><primary>rc_gui_mini_set_lyric_persent</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_mini_set_lyric_persent       (<parameter><link linkend="gdouble"><type>gdouble</type></link> persent</parameter>);</programlisting>
+<refsect2 id="rc-gui-mini-set-lyric-percent" role="function">
+<title>rc_gui_mini_set_lyric_percent ()</title>
+<indexterm zone="rc-gui-mini-set-lyric-percent"><primary>rc_gui_mini_set_lyric_percent</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_mini_set_lyric_percent       (<parameter><link linkend="gdouble"><type>gdouble</type></link> percent</parameter>);</programlisting>
 <para>
-Make the view of the lyric label move by given persent if the lyric text
+Make the view of the lyric label move by given percent if the lyric text
 is too loog.
 </para><variablelist role="params">
-<varlistentry><term><parameter>persent</parameter>&#160;:</term>
-<listitem><simpara>the persent position of the lyric text
+<varlistentry><term><parameter>percent</parameter>&#160;:</term>
+<listitem><simpara>the percent position of the lyric text
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="rc-gui-mini-set-play-state" role="function">

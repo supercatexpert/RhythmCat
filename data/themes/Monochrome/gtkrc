@@ -26,6 +26,7 @@ style "rc-normal-label"
 {
 	fg[NORMAL]	= "#F0F0F0"
 	text[NORMAL]	= "#F0F0F0"
+	bg[NORMAL]	= "#282828"
 }
 
 style "rc-time-label"

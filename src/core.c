@@ -523,22 +523,22 @@ gboolean rc_core_set_play_position(gint64 time)
 }
 
 /**
- * rc_core_set_play_position_by_persent:
- * @persent: the position (in persent, from 0.0 to 1.0) to go to
+ * rc_core_set_play_position_by_percent:
+ * @percent: the position (in percent, from 0.0 to 1.0) to go to
  *
- * Set the position to to go to in persent (0.0 - 1.0).
+ * Set the position to to go to in percent (0.0 - 1.0).
  *
- * Returns: Whether the persent is valid.
+ * Returns: Whether the percent is valid.
  */
 
-gboolean rc_core_set_play_position_by_persent(gdouble persent)
+gboolean rc_core_set_play_position_by_percent(gdouble percent)
 {
     gint64 length;
-    if(persent>100.0 || persent<0.0) return FALSE;
-    persent/=100;
+    if(percent>100.0 || percent<0.0) return FALSE;
+    percent/=100;
     GstFormat fmt = GST_FORMAT_TIME;
     gst_element_query_duration(rc_core.playbin, &fmt, &length);
-    length *= persent;
+    length *= percent;
     gst_element_seek_simple(rc_core.playbin, GST_FORMAT_TIME,
         GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_ACCURATE, length);
     return TRUE;

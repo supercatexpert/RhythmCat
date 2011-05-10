@@ -79,7 +79,8 @@ expand_content_files=plugin-programming.xml
 # e.g. GTKDOC_LIBS=$(top_builddir)/gtk/$(gtktargetlib)
 GTKDOC_CFLAGS=-I@GLIB2_CFLAGS@ -I@GTK2_CFLAGS@ -I@GSTREAMER_CFLAGS@ \
     -I$(top_srcdir)/src
-GTKDOC_LIBS=@GLIB2_LIBS@ @GTK2_LIBS@ $(top_srcdir)/src/player_object.o
+GTKDOC_LIBS=@GLIB2_LIBS@ @GTK2_LIBS@ $(top_srcdir)/src/player_object.o \
+    $(top_srcdir)/src/gui_text.o
 
 # This includes the standard gtk-doc make rules, copied by gtkdocize.
 include $(top_srcdir)/gtk-doc.make

@@ -46,6 +46,7 @@ static gint osd_lyric_pos[2] = {100, 50};
 static gboolean osd_lyric_movable = TRUE;
 static gboolean osd_lyric_centered = FALSE;
 static gboolean osd_lyric_two_line = TRUE;
+static gboolean osd_lyric_draw_stroke = FALSE;
 static gulong lyric_found_signal, lyric_stop_signal;
 static gulong lyric_refresh_timeout;
 
@@ -119,12 +120,13 @@ void rc_plugin_module_configure()
     GtkWidget *window_width_spin;
     GtkWidget *window_movable_checkbox;
     GtkWidget *window_centered_checkbox;
+    GtkWidget *draw_stroke_checkbox;
     GdkColor color;
     gint i, result;
     dialog = gtk_dialog_new_with_buttons(_("Desktop Lyric Preferences"), NULL,
         GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT, GTK_STOCK_OK,
         GTK_RESPONSE_ACCEPT, GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT, NULL);
-    table = gtk_table_new(2, 8, FALSE);
+    table = gtk_table_new(2, 9, FALSE);
     label[0] = gtk_label_new(_("Font: "));
     label[1] = gtk_label_new(_("Normal Color 1: "));
     label[2] = gtk_label_new(_("Normal Color 2: "));
@@ -153,6 +155,8 @@ void rc_plugin_module_configure()
         _("Set the OSD Window movable"));
     window_centered_checkbox = gtk_check_button_new_with_mnemonic(
         _("Set the lyric text centered"));
+    draw_stroke_checkbox = gtk_check_button_new_with_mnemonic(
+        _("Draw strokes on the lyric text"));
     for(i=0;i<6;i++)
         gtk_misc_set_alignment(GTK_MISC(label[i]), 0.0, 0.5);
     gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(window_width_spin), FALSE);
@@ -162,6 +166,8 @@ void rc_plugin_module_configure()
         osd_lyric_movable);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(window_centered_checkbox),
         osd_lyric_centered);
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(draw_stroke_checkbox),
+        osd_lyric_draw_stroke);
     gtk_table_attach(GTK_TABLE(table), label[0], 0, 1, 0, 1, GTK_FILL,
         0, 2, 2);
     gtk_table_attach(GTK_TABLE(table), font_button, 1, 2, 0, 1, GTK_FILL |
@@ -189,6 +195,8 @@ void rc_plugin_module_configure()
     gtk_table_attach(GTK_TABLE(table), window_movable_checkbox, 0, 2, 6, 7,
         GTK_FILL | GTK_EXPAND, 0, 2, 2);
     gtk_table_attach(GTK_TABLE(table), window_centered_checkbox, 0, 2, 7, 8,
+        GTK_FILL | GTK_EXPAND, 0, 2, 2);
+    gtk_table_attach(GTK_TABLE(table), draw_stroke_checkbox, 0, 2, 8, 9,
         GTK_FILL | GTK_EXPAND, 0, 2, 2);
     content_area = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
     gtk_container_add(GTK_CONTAINER(content_area), table);
@@ -225,6 +233,8 @@ void rc_plugin_module_configure()
             GTK_TOGGLE_BUTTON(window_movable_checkbox));
         osd_lyric_centered = gtk_toggle_button_get_active(
             GTK_TOGGLE_BUTTON(window_centered_checkbox));
+        osd_lyric_draw_stroke = gtk_toggle_button_get_active(
+            GTK_TOGGLE_BUTTON(draw_stroke_checkbox));
     }
     gtk_widget_destroy(dialog);
 }
@@ -383,10 +393,11 @@ gboolean rc_plugin_desklrc_show(GtkWidget *widget, GdkEventExpose *event,
         cairo_move_to(cr, 5, (5*lh)/30);
     pango_cairo_update_layout(cr, layout);
     pango_cairo_layout_path(cr, layout);
-    cairo_save(cr);
-    cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 0.5);
-    cairo_stroke_preserve(cr);
-    cairo_restore(cr);
+    if(osd_lyric_draw_stroke)
+    {
+        cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 0.5);
+        cairo_stroke_preserve(cr);
+    }
     cairo_clip(cr);
     g_object_unref(layout);
     x = (gint)(((gdouble)time_temp / desklrc_time) * width);
@@ -653,6 +664,13 @@ void rc_plugin_desklrc_load_conf()
         g_error_free(error);
     osd_lyric_centered = g_key_file_get_boolean(keyfile,
         plugin_module_data.group_name, "OSDWindowMovable", NULL);
+    osd_lyric_draw_stroke = g_key_file_get_boolean(keyfile, 
+        plugin_module_data.group_name, "OSDLyricDrawStroke", &error);
+    if(error!=NULL)
+    {
+        osd_lyric_draw_stroke = TRUE;
+        g_error_free(error);
+    }
 }
 
 void rc_plugin_desklrc_save_conf()
@@ -697,6 +715,8 @@ void rc_plugin_desklrc_save_conf()
         "OSDWindowMovable", osd_lyric_movable);
     g_key_file_set_boolean(keyfile, plugin_module_data.group_name,
         "OSDLyricCentered", osd_lyric_centered);
+    g_key_file_set_boolean(keyfile, plugin_module_data.group_name,
+        "OSDLyricDrawStroke", osd_lyric_draw_stroke);
 }
 
 

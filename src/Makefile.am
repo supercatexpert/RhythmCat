@@ -5,9 +5,14 @@ shell_glue.h: shell.xml
             --output=$@ $^
 
 RhythmCat_SOURCES = core.c lyric.c playlist.c tag.c settings.c plugin.c \
-    shell.c msg.c debug.c player.c player_object.c gui.c gui_setting.c \
+    shell.c msg.c debug.c player.c player_object.c gui_text.c gui.c \
     gui_treeview.c gui_style.c gui_dialog.c gui_eq.c gui_plugin.c \
-    gui_mini.c main.c        
+    gui_setting.c gui_mini.c main.c \
+    core.h lyric.h playlist.h tag.h settings.h plugin.h \
+    shell.h msg.h debug.h player.h player_object.h gui_text.h gui.h \
+    gui_treeview.h gui_style.h gui_dialog.h gui_eq.h gui_plugin.h \
+    gui_setting.h gui_mini.h shell_glue.h shell.xml \
+    imgs/img_icon.xpm imgs/img_nocov.xpm
 
 INCLUDES = @GLIB2_CFLAGS@ @DBUS_GLIB_CFLAGS@ @GSTREAMER_CFLAGS@ \
     -DLOCALEDIR=\"$(localedir)\"

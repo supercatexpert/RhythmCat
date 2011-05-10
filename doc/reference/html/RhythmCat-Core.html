@@ -51,8 +51,8 @@
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Core.html#rc-core-stop" title="rc_core_stop ()">rc_core_stop</a>                        ();
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Core.html#rc-core-set-volume" title="rc_core_set_volume ()">rc_core_set_volume</a>                  (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> volume</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Core.html#rc-core-set-play-position" title="rc_core_set_play_position ()">rc_core_set_play_position</a>           (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> time</code></em>);
-<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Core.html#rc-core-set-play-position-by-persent" title="rc_core_set_play_position_by_persent ()">rc_core_set_play_position_by_persent</a>
-                                                        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> persent</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Core.html#rc-core-set-play-position-by-percent" title="rc_core_set_play_position_by_percent ()">rc_core_set_play_position_by_percent</a>
+                                                        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> percent</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint64"><span class="returnvalue">gint64</span></a>              <a class="link" href="RhythmCat-Core.html#rc-core-get-play-position" title="rc_core_get_play_position ()">rc_core_get_play_position</a>           ();
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint64"><span class="returnvalue">gint64</span></a>              <a class="link" href="RhythmCat-Core.html#rc-core-get-music-length" title="rc_core_get_music_length ()">rc_core_get_music_length</a>            ();
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"><span class="returnvalue">gdouble</span></a>             <a class="link" href="RhythmCat-Core.html#rc-core-get-volume" title="rc_core_get_volume ()">rc_core_get_volume</a>                  ();
@@ -276,24 +276,24 @@ playing or paused.
 </table></div>
 </div>
 <hr>
-<div class="refsect2" title="rc_core_set_play_position_by_persent ()">
-<a name="rc-core-set-play-position-by-persent"></a><h3>rc_core_set_play_position_by_persent ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_core_set_play_position_by_persent
-                                                        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> persent</code></em>);</pre>
+<div class="refsect2" title="rc_core_set_play_position_by_percent ()">
+<a name="rc-core-set-play-position-by-percent"></a><h3>rc_core_set_play_position_by_percent ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_core_set_play_position_by_percent
+                                                        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> percent</code></em>);</pre>
 <p>
-Set the position to to go to in persent (0.0 - 1.0).
+Set the position to to go to in percent (0.0 - 1.0).
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>persent</code></em> :</span></p></td>
-<td>the position (in persent, from 0.0 to 1.0) to go to
+<td><p><span class="term"><em class="parameter"><code>percent</code></em> :</span></p></td>
+<td>the position (in percent, from 0.0 to 1.0) to go to
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td> Whether the persent is valid.
+<td> Whether the percent is valid.
 </td>
 </tr>
 </tbody>

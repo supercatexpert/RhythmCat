@@ -1,12 +1,18 @@
-98% symbol docs coverage.
-239 symbols documented.
-0 symbols incomplete.
-4 not documented.
+96% symbol docs coverage.
+254 symbols documented.
+5 symbols incomplete.
+10 not documented.
 
 
 DEBUG_MODE
 GETTEXT_PACKAGE
-RCPlayer
+IS_RC_GUI_SCROLLED_TEXT (<parameters>)
+IS_RC_GUI_SCROLLED_TEXT_CLASS (<parameters>)
+RCGuiScrolledText
+RCGuiScrolledTextClass (<items>)
+RC_GUI_SCROLLED_TEXT (<parameters>)
+RC_GUI_SCROLLED_TEXT_CLASS (<parameters>)
+RC_GUI_SCROLLED_TEXT_TYPE
 RC_PLAYER_TYPE
 
 

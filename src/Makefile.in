@@ -60,10 +60,10 @@ PROGRAMS = $(bin_PROGRAMS)
 am_RhythmCat_OBJECTS = core.$(OBJEXT) lyric.$(OBJEXT) \
 	playlist.$(OBJEXT) tag.$(OBJEXT) settings.$(OBJEXT) \
 	plugin.$(OBJEXT) shell.$(OBJEXT) msg.$(OBJEXT) debug.$(OBJEXT) \
-	player.$(OBJEXT) player_object.$(OBJEXT) gui.$(OBJEXT) \
-	gui_setting.$(OBJEXT) gui_treeview.$(OBJEXT) \
-	gui_style.$(OBJEXT) gui_dialog.$(OBJEXT) gui_eq.$(OBJEXT) \
-	gui_plugin.$(OBJEXT) gui_mini.$(OBJEXT) main.$(OBJEXT)
+	player.$(OBJEXT) player_object.$(OBJEXT) gui_text.$(OBJEXT) \
+	gui.$(OBJEXT) gui_treeview.$(OBJEXT) gui_style.$(OBJEXT) \
+	gui_dialog.$(OBJEXT) gui_eq.$(OBJEXT) gui_plugin.$(OBJEXT) \
+	gui_setting.$(OBJEXT) gui_mini.$(OBJEXT) main.$(OBJEXT)
 RhythmCat_OBJECTS = $(am_RhythmCat_OBJECTS)
 am__DEPENDENCIES_1 =
 RhythmCat_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
@@ -222,9 +222,14 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 RhythmCat_SOURCES = core.c lyric.c playlist.c tag.c settings.c plugin.c \
-    shell.c msg.c debug.c player.c player_object.c gui.c gui_setting.c \
+    shell.c msg.c debug.c player.c player_object.c gui_text.c gui.c \
     gui_treeview.c gui_style.c gui_dialog.c gui_eq.c gui_plugin.c \
-    gui_mini.c main.c        
+    gui_setting.c gui_mini.c main.c \
+    core.h lyric.h playlist.h tag.h settings.h plugin.h \
+    shell.h msg.h debug.h player.h player_object.h gui_text.h gui.h \
+    gui_treeview.h gui_style.h gui_dialog.h gui_eq.h gui_plugin.h \
+    gui_setting.h gui_mini.h shell_glue.h shell.xml \
+    imgs/img_icon.xpm imgs/img_nocov.xpm
 
 INCLUDES = @GLIB2_CFLAGS@ @DBUS_GLIB_CFLAGS@ @GSTREAMER_CFLAGS@ \
 	-DLOCALEDIR=\"$(localedir)\" $(am__append_1) $(am__append_2) \
@@ -321,6 +326,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_plugin.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_setting.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_style.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_text.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_treeview.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lyric.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@

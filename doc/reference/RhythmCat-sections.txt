@@ -99,7 +99,7 @@ rc_core_pause
 rc_core_stop
 rc_core_set_volume
 rc_core_set_play_position
-rc_core_set_play_position_by_persent
+rc_core_set_play_position_by_percent
 rc_core_get_play_position
 rc_core_get_music_length
 rc_core_get_volume
@@ -174,6 +174,26 @@ rc_plist_load_uri_from_remote
 </SECTION>
 
 <SECTION>
+<FILE>gui_text</FILE>
+<TITLE>RCGuiScrolledText</TITLE>
+RC_GUI_SCROLLED_TEXT_TYPE
+RC_GUI_SCROLLED_TEXT
+RC_GUI_SCROLLED_TEXT_CLASS
+IS_RC_GUI_SCROLLED_TEXT
+IS_RC_GUI_SCROLLED_TEXT_CLASS
+RCGuiScrolledText
+RCGuiScrolledTextClass
+rc_gui_scrolled_text_get_type
+rc_gui_scrolled_text_new
+rc_gui_scrolled_text_set_text
+rc_gui_scrolled_text_get_text
+rc_gui_scrolled_text_set_attributes
+rc_gui_scrolled_text_get_attributes
+rc_gui_scrolled_text_set_percent
+rc_gui_scrolled_text_get_percent
+</SECTION>
+
+<SECTION>
 <FILE>gui_treeview</FILE>
 rc_gui_treeview_init
 rc_gui_list_tree_reset_list_store
@@ -216,7 +236,7 @@ rc_gui_mini_get_data
 rc_gui_mini_set_info_text
 rc_gui_mini_set_lyric_text
 rc_gui_mini_info_text_move
-rc_gui_mini_set_lyric_persent
+rc_gui_mini_set_lyric_percent
 rc_gui_mini_set_play_state
 rc_gui_mini_set_time_text
 rc_gui_mini_window_hide

@@ -6,5 +6,9 @@
 ]>
 <screen>
     <link linkend="GObject">GObject</link>
+        <link linkend="GInitiallyUnowned">GInitiallyUnowned</link>
+            <link linkend="GtkObject">GtkObject</link>
+                <link linkend="GtkWidget">GtkWidget</link>
+                    <link linkend="RCGuiScrolledText">RCGuiScrolledText</link>
         <link linkend="RCPlayer">RCPlayer</link>
 </screen>

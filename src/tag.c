@@ -297,7 +297,6 @@ RCMusicMetaData *rc_tag_read_metadata(const gchar *uri)
     GstPad *sink_pad;
     GstCaps *caps;
     GstStructure *structure;
-    gchar *path = NULL;
     gint changeTimeout = 0;
     gint64 dura = 0;
     GstStateChangeReturn state_ret;
@@ -351,7 +350,6 @@ RCMusicMetaData *rc_tag_read_metadata(const gchar *uri)
     mmd->tracknum = 0;
     mmd->length = 0L;
     pipeline = NULL;
-    path = g_filename_from_uri(uri, NULL, NULL);
     urisrc = gst_element_make_from_uri(GST_URI_SRC, mmd->uri, "urisrc");
     if(urisrc==NULL)
     {

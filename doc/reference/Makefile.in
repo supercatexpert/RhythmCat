@@ -278,7 +278,9 @@ expand_content_files = plugin-programming.xml
 GTKDOC_CFLAGS = -I@GLIB2_CFLAGS@ -I@GTK2_CFLAGS@ -I@GSTREAMER_CFLAGS@ \
     -I$(top_srcdir)/src
 
-GTKDOC_LIBS = @GLIB2_LIBS@ @GTK2_LIBS@ $(top_srcdir)/src/player_object.o
+GTKDOC_LIBS = @GLIB2_LIBS@ @GTK2_LIBS@ $(top_srcdir)/src/player_object.o \
+    $(top_srcdir)/src/gui_text.o
+
 @GTK_DOC_USE_LIBTOOL_FALSE@GTKDOC_CC = $(CC) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 @GTK_DOC_USE_LIBTOOL_TRUE@GTKDOC_CC = $(LIBTOOL) --tag=CC --mode=compile $(CC) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 @GTK_DOC_USE_LIBTOOL_FALSE@GTKDOC_LD = $(CC) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS)

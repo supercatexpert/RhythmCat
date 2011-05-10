@@ -70,7 +70,7 @@ gboolean rc_core_pause();
 gboolean rc_core_stop();
 gboolean rc_core_set_volume(gdouble volume);
 gboolean rc_core_set_play_position(gint64 time);
-gboolean rc_core_set_play_position_by_persent(gdouble persent);
+gboolean rc_core_set_play_position_by_percent(gdouble percent);
 gint64 rc_core_get_play_position();
 gint64 rc_core_get_music_length();
 gdouble rc_core_get_volume();

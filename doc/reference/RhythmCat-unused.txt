@@ -1,1 +1,2 @@
-RCGuiData(lrc_vport_adj)
+rc_gui_scrolled_text_get_width
+RCPlayer(parent)

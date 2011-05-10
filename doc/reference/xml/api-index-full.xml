@@ -19,7 +19,7 @@
 <indexentry><primaryie linkends="rc-core-play"><link linkend="rc-core-play">rc_core_play</link>, function in <link linkend="RhythmCat-Core">Core</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-core-set-eq-effect"><link linkend="rc-core-set-eq-effect">rc_core_set_eq_effect</link>, function in <link linkend="RhythmCat-Core">Core</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-core-set-play-position"><link linkend="rc-core-set-play-position">rc_core_set_play_position</link>, function in <link linkend="RhythmCat-Core">Core</link></primaryie></indexentry>
-<indexentry><primaryie linkends="rc-core-set-play-position-by-persent"><link linkend="rc-core-set-play-position-by-persent">rc_core_set_play_position_by_persent</link>, function in <link linkend="RhythmCat-Core">Core</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-core-set-play-position-by-percent"><link linkend="rc-core-set-play-position-by-percent">rc_core_set_play_position_by_percent</link>, function in <link linkend="RhythmCat-Core">Core</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-core-set-uri"><link linkend="rc-core-set-uri">rc_core_set_uri</link>, function in <link linkend="RhythmCat-Core">Core</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-core-set-volume"><link linkend="rc-core-set-volume">rc_core_set_volume</link>, function in <link linkend="RhythmCat-Core">Core</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-core-stop"><link linkend="rc-core-stop">rc_core_stop</link>, function in <link linkend="RhythmCat-Core">Core</link></primaryie></indexentry>
@@ -35,6 +35,11 @@
 <indexentry><primaryie linkends="GETTEXT-PACKAGE:CAPS"><link linkend="GETTEXT-PACKAGE:CAPS">GETTEXT_PACKAGE</link>, macro in <link linkend="RhythmCat-Player">Player</link></primaryie></indexentry>
 <indexentry><primaryie linkends="RCGuiData"><link linkend="RCGuiData">RCGuiData</link>, struct in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="RCGuiEQData"><link linkend="RCGuiEQData">RCGuiEQData</link>, struct in <link linkend="RhythmCat-Equalizer-UI">Equalizer UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCGuiScrolledText-struct"><link linkend="RCGuiScrolledText-struct">RCGuiScrolledText</link>, struct in <link linkend="RCGuiScrolledText">RCGuiScrolledText</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCGuiScrolledText--attributes"><link linkend="RCGuiScrolledText--attributes">RCGuiScrolledText:attributes</link>, object property in <link linkend="RCGuiScrolledText">RCGuiScrolledText</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCGuiScrolledText--percent"><link linkend="RCGuiScrolledText--percent">RCGuiScrolledText:percent</link>, object property in <link linkend="RCGuiScrolledText">RCGuiScrolledText</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCGuiScrolledText--text"><link linkend="RCGuiScrolledText--text">RCGuiScrolledText:text</link>, object property in <link linkend="RCGuiScrolledText">RCGuiScrolledText</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCGuiScrolledTextClass"><link linkend="RCGuiScrolledTextClass">RCGuiScrolledTextClass</link>, struct in <link linkend="RCGuiScrolledText">RCGuiScrolledText</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-about-player"><link linkend="rc-gui-about-player">rc_gui_about_player</link>, function in <link linkend="RhythmCat-Dialogs">Dialogs</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-create-setting-window"><link linkend="rc-gui-create-setting-window">rc_gui_create_setting_window</link>, function in <link linkend="RhythmCat-Settings-UI">Settings UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-eq-data-init"><link linkend="rc-gui-eq-data-init">rc_gui_eq_data_init</link>, function in <link linkend="RhythmCat-Equalizer-UI">Equalizer UI</link></primaryie></indexentry>
@@ -57,7 +62,7 @@
 <indexentry><primaryie linkends="rc-gui-mini-mini-mode-clicked"><link linkend="rc-gui-mini-mini-mode-clicked">rc_gui_mini_mini_mode_clicked</link>, function in <link linkend="RhythmCat-Mini-Mode-UI">Mini Mode UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-mini-normal-mode-clicked"><link linkend="rc-gui-mini-normal-mode-clicked">rc_gui_mini_normal_mode_clicked</link>, function in <link linkend="RhythmCat-Mini-Mode-UI">Mini Mode UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-mini-set-info-text"><link linkend="rc-gui-mini-set-info-text">rc_gui_mini_set_info_text</link>, function in <link linkend="RhythmCat-Mini-Mode-UI">Mini Mode UI</link></primaryie></indexentry>
-<indexentry><primaryie linkends="rc-gui-mini-set-lyric-persent"><link linkend="rc-gui-mini-set-lyric-persent">rc_gui_mini_set_lyric_persent</link>, function in <link linkend="RhythmCat-Mini-Mode-UI">Mini Mode UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-mini-set-lyric-percent"><link linkend="rc-gui-mini-set-lyric-percent">rc_gui_mini_set_lyric_percent</link>, function in <link linkend="RhythmCat-Mini-Mode-UI">Mini Mode UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-mini-set-lyric-text"><link linkend="rc-gui-mini-set-lyric-text">rc_gui_mini_set_lyric_text</link>, function in <link linkend="RhythmCat-Mini-Mode-UI">Mini Mode UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-mini-set-play-state"><link linkend="rc-gui-mini-set-play-state">rc_gui_mini_set_play_state</link>, function in <link linkend="RhythmCat-Mini-Mode-UI">Mini Mode UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-mini-set-time-text"><link linkend="rc-gui-mini-set-time-text">rc_gui_mini_set_time_text</link>, function in <link linkend="RhythmCat-Mini-Mode-UI">Mini Mode UI</link></primaryie></indexentry>
@@ -69,6 +74,17 @@
 <indexentry><primaryie linkends="rc-gui-quit-player"><link linkend="rc-gui-quit-player">rc_gui_quit_player</link>, function in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-save-all-playlists-dialog"><link linkend="rc-gui-save-all-playlists-dialog">rc_gui_save_all_playlists_dialog</link>, function in <link linkend="RhythmCat-Dialogs">Dialogs</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-save-playlist-dialog"><link linkend="rc-gui-save-playlist-dialog">rc_gui_save_playlist_dialog</link>, function in <link linkend="RhythmCat-Dialogs">Dialogs</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RC-GUI-SCROLLED-TEXT:CAPS"><link linkend="RC-GUI-SCROLLED-TEXT:CAPS">RC_GUI_SCROLLED_TEXT</link>, macro in <link linkend="RCGuiScrolledText">RCGuiScrolledText</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RC-GUI-SCROLLED-TEXT-CLASS:CAPS"><link linkend="RC-GUI-SCROLLED-TEXT-CLASS:CAPS">RC_GUI_SCROLLED_TEXT_CLASS</link>, macro in <link linkend="RCGuiScrolledText">RCGuiScrolledText</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-scrolled-text-get-attributes"><link linkend="rc-gui-scrolled-text-get-attributes">rc_gui_scrolled_text_get_attributes</link>, function in <link linkend="RCGuiScrolledText">RCGuiScrolledText</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-scrolled-text-get-percent"><link linkend="rc-gui-scrolled-text-get-percent">rc_gui_scrolled_text_get_percent</link>, function in <link linkend="RCGuiScrolledText">RCGuiScrolledText</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-scrolled-text-get-text"><link linkend="rc-gui-scrolled-text-get-text">rc_gui_scrolled_text_get_text</link>, function in <link linkend="RCGuiScrolledText">RCGuiScrolledText</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-scrolled-text-get-type"><link linkend="rc-gui-scrolled-text-get-type">rc_gui_scrolled_text_get_type</link>, function in <link linkend="RCGuiScrolledText">RCGuiScrolledText</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-scrolled-text-new"><link linkend="rc-gui-scrolled-text-new">rc_gui_scrolled_text_new</link>, function in <link linkend="RCGuiScrolledText">RCGuiScrolledText</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-scrolled-text-set-attributes"><link linkend="rc-gui-scrolled-text-set-attributes">rc_gui_scrolled_text_set_attributes</link>, function in <link linkend="RCGuiScrolledText">RCGuiScrolledText</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-scrolled-text-set-percent"><link linkend="rc-gui-scrolled-text-set-percent">rc_gui_scrolled_text_set_percent</link>, function in <link linkend="RCGuiScrolledText">RCGuiScrolledText</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-scrolled-text-set-text"><link linkend="rc-gui-scrolled-text-set-text">rc_gui_scrolled_text_set_text</link>, function in <link linkend="RCGuiScrolledText">RCGuiScrolledText</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RC-GUI-SCROLLED-TEXT-TYPE:CAPS"><link linkend="RC-GUI-SCROLLED-TEXT-TYPE:CAPS">RC_GUI_SCROLLED_TEXT_TYPE</link>, macro in <link linkend="RCGuiScrolledText">RCGuiScrolledText</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-seek-scaler-disable"><link linkend="rc-gui-seek-scaler-disable">rc_gui_seek_scaler_disable</link>, function in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-seek-scaler-enable"><link linkend="rc-gui-seek-scaler-enable">rc_gui_seek_scaler_enable</link>, function in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-select-list1"><link linkend="rc-gui-select-list1">rc_gui_select_list1</link>, function in <link linkend="RhythmCat-Playlist-Views-UI">Playlist Views UI</link></primaryie></indexentry>
@@ -89,6 +105,10 @@
 <indexentry><primaryie linkends="rc-gui-treeview-init"><link linkend="rc-gui-treeview-init">rc_gui_treeview_init</link>, function in <link linkend="RhythmCat-Playlist-Views-UI">Playlist Views UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-view-add-page"><link linkend="rc-gui-view-add-page">rc_gui_view_add_page</link>, function in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-view-remove-page"><link linkend="rc-gui-view-remove-page">rc_gui_view_remove_page</link>, function in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
+</indexdiv>
+<indexdiv><title>I</title>
+<indexentry><primaryie linkends="IS-RC-GUI-SCROLLED-TEXT:CAPS"><link linkend="IS-RC-GUI-SCROLLED-TEXT:CAPS">IS_RC_GUI_SCROLLED_TEXT</link>, macro in <link linkend="RCGuiScrolledText">RCGuiScrolledText</link></primaryie></indexentry>
+<indexentry><primaryie linkends="IS-RC-GUI-SCROLLED-TEXT-CLASS:CAPS"><link linkend="IS-RC-GUI-SCROLLED-TEXT-CLASS:CAPS">IS_RC_GUI_SCROLLED_TEXT_CLASS</link>, macro in <link linkend="RCGuiScrolledText">RCGuiScrolledText</link></primaryie></indexentry>
 </indexdiv>
 <indexdiv><title>L</title>
 <indexentry><primaryie linkends="rc-lrc-clean-data"><link linkend="rc-lrc-clean-data">rc_lrc_clean_data</link>, function in <link linkend="RhythmCat-Lyric">Lyric</link></primaryie></indexentry>
