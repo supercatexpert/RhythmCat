@@ -137,12 +137,14 @@ static void rc_gui_scrolled_text_realize(GtkWidget *widget)
     gtk_widget_set_window(widget, window);
     gdk_window_set_user_data(window, scrolled_text);
     #ifdef USE_GTK3
+        gdk_window_set_background_pattern(window, NULL);
         context = gtk_widget_get_style_context(widget);
         gtk_style_context_set_background(context, window);
     #else
         style = gtk_widget_get_style(widget);
         gtk_widget_style_attach(widget);
         gtk_style_set_background(style, window, GTK_STATE_NORMAL);
+        gdk_window_set_back_pixmap(window, NULL, TRUE);
     #endif
     gdk_window_show(window);
 }
@@ -271,14 +273,23 @@ static gboolean rc_gui_scrolled_text_expose(GtkWidget *widget,
 
 static void rc_gui_scrolled_text_init(RCGuiScrolledText *object)
 {
-    RCGuiScrolledTextPrivate *priv =
-        RC_GUI_SCROLLED_TEXT_GET_PRIVATE(object);
+    RCGuiScrolledTextPrivate *priv = RC_GUI_SCROLLED_TEXT_GET_PRIVATE(object);
     priv->percent = 0.0;
     priv->text = NULL;
     priv->attrs = NULL;
     priv->layout = gtk_widget_create_pango_layout(GTK_WIDGET(object), NULL);
     priv->current_x = 0;
     priv->current_width = 0;
+}
+
+static void rc_gui_scrolled_text_finalize(GObject *object)
+{
+    RCGuiScrolledText *scrolled_text = RC_GUI_SCROLLED_TEXT(object);
+    RCGuiScrolledTextPrivate *priv = RC_GUI_SCROLLED_TEXT_GET_PRIVATE(
+        scrolled_text);
+    if(priv->text!=NULL) g_free(priv->text);
+    if(priv->layout!=NULL) g_object_unref(priv->layout);
+    if(priv->attrs!=NULL) pango_attr_list_unref(priv->attrs);
 }
 
 static void rc_gui_scrolled_text_class_init(RCGuiScrolledTextClass *class)
@@ -289,6 +300,7 @@ static void rc_gui_scrolled_text_class_init(RCGuiScrolledTextClass *class)
     widget_class = (GtkWidgetClass *)class;
     object_class->set_property = rc_gui_scrolled_text_set_property;
     object_class->get_property = rc_gui_scrolled_text_get_property;
+    object_class->finalize = rc_gui_scrolled_text_finalize;
     widget_class->realize = rc_gui_scrolled_text_realize;
     widget_class->size_allocate = rc_gui_scrolled_text_size_allocate;
     g_type_class_add_private(class, sizeof(RCGuiScrolledTextPrivate));
@@ -419,7 +431,7 @@ void rc_gui_scrolled_text_set_attributes(RCGuiScrolledText *widget,
     RCGuiScrolledTextPrivate *priv = RC_GUI_SCROLLED_TEXT_GET_PRIVATE(widget);
     if(priv->attrs!=NULL)
     {
-        g_object_unref(priv->attrs);
+        pango_attr_list_unref(priv->attrs);
         priv->attrs = NULL;
     }
     if(attrs!=NULL)

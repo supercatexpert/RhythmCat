@@ -375,6 +375,7 @@ RCPluginConfData *rc_plugin_conf_load(const gchar *filename)
         if(plugin_website!=NULL) g_free(plugin_website);
         if(plugin_version!=NULL) g_free(plugin_version);
         if(error!=NULL) g_error_free(error);
+        error=NULL;
         g_key_file_free(keyfile);
         return NULL;
 }

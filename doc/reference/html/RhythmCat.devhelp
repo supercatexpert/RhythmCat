@@ -255,13 +255,13 @@
     <function name="rc_gui_mini_normal_mode_clicked ()" link="RhythmCat-Mini-Mode-UI.html#rc-gui-mini-normal-mode-clicked"/>
     <function name="rc_gui_create_setting_window ()" link="RhythmCat-Settings-UI.html#rc-gui-create-setting-window"/>
     <function name="rc_gui_plugin_window_create ()" link="RhythmCat-Plugin-Configuration-UI.html#rc-gui-plugin-window-create"/>
-    <function name="Introduction" link="PluginProgramming.html#id618322"/>
-    <function name="Preparation" link="PluginProgramming.html#id657129"/>
-    <function name="Implement a simple plugin" link="PluginProgramming.html#id632074"/>
-    <function name="How to compile the plugin" link="PluginProgramming.html#id641198"/>
-    <function name="Write a plugin description file" link="PluginProgramming.html#id663753"/>
-    <function name="Make your custom plugin work" link="PluginProgramming.html#id673579"/>
-    <function name="Catch signals in the player" link="PluginProgramming.html#id622392"/>
-    <function name="About this manual" link="PluginProgramming.html#id652100"/>
+    <function name="Introduction" link="PluginProgramming.html#id408811"/>
+    <function name="Preparation" link="PluginProgramming.html#id447618"/>
+    <function name="Implement a simple plugin" link="PluginProgramming.html#id422564"/>
+    <function name="How to compile the plugin" link="PluginProgramming.html#id431687"/>
+    <function name="Write a plugin description file" link="PluginProgramming.html#id454243"/>
+    <function name="Make your custom plugin work" link="PluginProgramming.html#id464068"/>
+    <function name="Catch signals in the player" link="PluginProgramming.html#id412881"/>
+    <function name="About this manual" link="PluginProgramming.html#id442590"/>
   </functions>
 </book>

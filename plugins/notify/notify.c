@@ -23,7 +23,10 @@
  * Boston, MA  02110-1301  USA
  */
 
+#include <glib.h>
 #include <libnotify/notify.h>
+#include <glib/gi18n.h>
+#include <gtk/gtk.h>
 #include "core.h"
 #include "plugin.h"
 #include "gui.h"
@@ -104,9 +107,10 @@ static gboolean rc_plugin_notify_init()
     RCGuiData *rc_ui = NULL;
     if(!notify_is_initted() && !notify_init("RhythmCat")) return FALSE;
     rc_ui = rc_gui_get_data();
-    notify = notify_notification_new_with_status_icon("Welcome to RhythmCat",
-        "Welcome to RhythmCat, the music player with plug-in support!", NULL,
-        rc_gui_get_tray_icon());
+    notify = notify_notification_new_with_status_icon(
+        _("Welcome to RhythmCat"),
+        _("Welcome to RhythmCat, the music player with plug-in support!"),
+        NULL, rc_gui_get_tray_icon());
     if(notify==NULL) return FALSE;
     notify_notification_set_timeout(notify, 5000);
     notify_notification_set_image_from_pixbuf(notify, rc_ui->icon_image);
@@ -139,10 +143,10 @@ gint rc_plugin_module_init()
     {
         rc_debug_perror("Notify-ERROR: Cannot initialize libnotify!\n");
         rc_gui_show_message_dialog(GTK_MESSAGE_ERROR,
-            "Cannot initialize libnotify",
-            "Cannot initialize libnotify, check if libnotify is working. "
+            _("Cannot initialize libnotify"),
+            _("Cannot initialize libnotify, check if libnotify is working. "
             "If this plugin is disabled yet, please restart the player first,"
-            " then re-enable the plugin again.");
+            " then re-enable the plugin again."));
         return -1;
     }
     player_play_signal = rc_player_object_signal_connect_simple(

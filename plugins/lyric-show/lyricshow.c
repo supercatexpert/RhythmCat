@@ -23,11 +23,47 @@
  * Boston, MA  02110-1301  USA
  */
 
-#include "lyricshow.h"
+#include <stdlib.h>
+#include <glib.h>
+#include <glib/gprintf.h>
+#include <glib/gi18n.h>
+#include <gdk/gdk.h>
+#include <gtk/gtk.h>
+#include "plugin.h"
+#include "lyric.h"
+#include "core.h"
+#include "gui.h"
+#include "gui_dialog.h"
+#include "debug.h"
+#include "player_object.h"
+#include "settings.h"
+
+typedef struct _GuiLrcData
+{
+    GtkWidget *lrc_swindow;
+    GtkWidget *lrc_scene;
+    gchar *lyric_font;
+    gint64 lrc_time_delay;
+    guint lyric_line_ds;
+    gint drag_to_linenum;
+    gint drag_from_linenum;
+    gint drag_height;
+    gdouble background[4];
+    gdouble text_color[4];
+    gdouble text_hilight[4];
+    gboolean lyric_flag;
+    gboolean drag_flag;
+    gboolean drag_action;
+    gboolean single_window_flag;
+}GuiLrcData;
 
 static RCPluginModuleData plugin_module_data =
 {
-    "LyricShowGtk2", /* group_name */
+    #ifdef USE_GTK3
+        "LyricShowGtk3", /* group_name */
+    #else
+        "LyricShowGtk2", /* group_name */
+    #endif
     FALSE /* resident */
 };
 
@@ -38,6 +74,433 @@ static guint id = 0;
 static guint timeout_id = 0;
 static GKeyFile *keyfile = NULL;
 
+static void rc_plugin_lrc_show_set_single_mode(gboolean flag)
+{
+    if(flag)
+    {
+        if(id>0)
+        {
+            g_object_ref(G_OBJECT(rc_glrc.lrc_scene));
+            rc_gui_view_remove_page(id);
+        }
+        id = 0;
+        gtk_container_add(GTK_CONTAINER(rc_glrc.lrc_swindow),
+            rc_glrc.lrc_scene);
+        gtk_widget_show_all(rc_glrc.lrc_swindow);  
+    }
+    else
+    {
+        gtk_widget_hide(rc_glrc.lrc_swindow);
+        if(gtk_bin_get_child(GTK_BIN(rc_glrc.lrc_swindow)))
+        {
+            g_object_ref(G_OBJECT(rc_glrc.lrc_scene));
+            gtk_container_remove(GTK_CONTAINER(rc_glrc.lrc_swindow),
+                rc_glrc.lrc_scene);
+        }
+        if(id==0)
+            id = rc_gui_view_add_page("ViewPageLyric", "_Lyric Show",
+                rc_glrc.lrc_scene);
+        gtk_widget_show_all(rc_glrc.lrc_scene);
+    }
+}
+
+static void rc_plugin_lrcshow_load_conf()
+{
+    gchar *string = NULL;
+    gint i;
+    GdkColor color;
+    string = g_key_file_get_string(keyfile, plugin_module_data.group_name, 
+        "LyricFont", NULL);
+    if(string!=NULL)
+    {
+        if(rc_glrc.lyric_font!=NULL) g_free(rc_glrc.lyric_font);
+        rc_glrc.lyric_font = string;
+    }
+    i = g_key_file_get_integer(keyfile, plugin_module_data.group_name,
+        "LyricLineDistance", NULL);
+    if(i<0) i = 0;
+    rc_glrc.lyric_line_ds = i;
+    string = g_key_file_get_string(keyfile, plugin_module_data.group_name,
+        "LyricBackgroundColor", NULL);
+    if(string!=NULL)
+    {
+        gdk_color_parse(string, &color);
+        rc_glrc.background[0] = (double)color.red / 0xFFFF;
+        rc_glrc.background[1] = (double)color.green / 0xFFFF;
+        rc_glrc.background[2] = (double)color.blue / 0xFFFF;
+        g_free(string);
+    }
+    string = g_key_file_get_string(keyfile, plugin_module_data.group_name,
+        "LyricTextNormalColor", NULL);
+    if(string!=NULL)
+    {
+        gdk_color_parse(string, &color);
+        rc_glrc.text_color[0] = (double)color.red / 0xFFFF;
+        rc_glrc.text_color[1] = (double)color.green / 0xFFFF;
+        rc_glrc.text_color[2] = (double)color.blue / 0xFFFF;
+        g_free(string);
+    }
+    string = g_key_file_get_string(keyfile, plugin_module_data.group_name,
+        "LyricTextHighLightColor", NULL);
+    if(string!=NULL)
+    {
+        gdk_color_parse(string, &color);
+        rc_glrc.text_hilight[0] = (double)color.red / 0xFFFF;
+        rc_glrc.text_hilight[1] = (double)color.green / 0xFFFF;
+        rc_glrc.text_hilight[2] = (double)color.blue / 0xFFFF;
+        g_free(string);
+    }
+    rc_glrc.single_window_flag = g_key_file_get_boolean(keyfile,
+        plugin_module_data.group_name, "LyricShowInSingleWindow", NULL);
+}
+
+static void rc_plugin_lrcshow_save_conf()
+{
+    gchar *string;
+    GdkColor color;
+    g_key_file_set_string(keyfile, plugin_module_data.group_name, 
+        "LyricFont", rc_glrc.lyric_font);
+    g_key_file_set_integer(keyfile, plugin_module_data.group_name, 
+        "LyricLineDistance", rc_glrc.lyric_line_ds);
+    color.red = rc_glrc.background[0] * 0xFFFF;
+    color.green = rc_glrc.background[1] * 0xFFFF;
+    color.blue = rc_glrc.background[2] * 0xFFFF;
+    string = gdk_color_to_string(&color);
+    g_key_file_set_string(keyfile, plugin_module_data.group_name, 
+        "LyricBackgroundColor", string);
+    g_free(string);
+    color.red = rc_glrc.text_color[0] * 0xFFFF;
+    color.green = rc_glrc.text_color[1] * 0xFFFF;
+    color.blue = rc_glrc.text_color[2] * 0xFFFF;
+    string = gdk_color_to_string(&color);
+    g_key_file_set_string(keyfile, plugin_module_data.group_name, 
+        "LyricTextNormalColor", string);
+    g_free(string);
+    color.red = rc_glrc.text_hilight[0] * 0xFFFF;
+    color.green = rc_glrc.text_hilight[1] * 0xFFFF;
+    color.blue = rc_glrc.text_hilight[2] * 0xFFFF;
+    string = gdk_color_to_string(&color);
+    g_key_file_set_string(keyfile, plugin_module_data.group_name, 
+        "LyricTextHighLightColor", string);
+    g_key_file_set_boolean(keyfile, plugin_module_data.group_name,
+        "LyricShowInSingleWindow", rc_glrc.single_window_flag);
+    g_free(string);
+}
+
+static void rc_plugin_lrcshow_enable()
+{
+    rc_glrc.lyric_flag = TRUE;
+    gtk_widget_queue_draw(rc_glrc.lrc_scene);
+}
+
+static void rc_plugin_lrcshow_disable()
+{
+    rc_glrc.lyric_flag = FALSE;
+    gtk_widget_queue_draw(rc_glrc.lrc_scene);
+}
+
+static void rc_plugin_lrcshow_draw_bg(cairo_t *cr)
+{
+    cairo_set_source_rgba(cr, rc_glrc.background[0], rc_glrc.background[1], 
+        rc_glrc.background[2], rc_glrc.background[3]);
+    cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
+    cairo_paint(cr);
+
+}
+
+static void rc_plugin_lrcshow_show(cairo_t *lrc_cr)
+{
+    static gint width = 400, height = 100;
+    gboolean visible = TRUE;
+    gint i = 0;
+    guint64 playing_time = 0;
+    gint lrc_line_num_now = -1;
+    gchar *text;
+    const RCLyricData *lrc_data_now = NULL;
+    const RCLyricData *lrc_line_data = NULL;
+    const RCLyricData **lrc_data_array = NULL;
+    gsize lrc_data_length = 0;
+    gdouble lrc_height, lrc_width;
+    gint t_height, t_width;
+    gdouble lrc_x, lrc_y;
+    gdouble lrc_y_plus = 0.0;
+    guint64 time_length = 0;
+    guint64 time_passed = 0;
+    PangoLayout *layout;
+    PangoFontDescription *desc;
+    GdkWindow *lrc_window;
+    GtkAllocation allocation;
+    if(!GTK_IS_WIDGET(rc_glrc.lrc_scene)) return;
+    lrc_window = gtk_widget_get_window(rc_glrc.lrc_scene);
+    if(!GDK_IS_WINDOW(lrc_window)) return;
+    g_object_get(G_OBJECT(rc_glrc.lrc_scene), "visible", &visible, NULL);
+    if(!visible) return;
+    if(!rc_glrc.lyric_flag) return;
+    lrc_data_array = rc_lrc_get_lrc_data();
+    if(lrc_data_array==NULL) return;
+    lrc_data_length = rc_lrc_get_lrc_length();
+    rc_glrc.text_color[3] = 1.0;
+    rc_glrc.text_hilight[3] = 1.0;
+    rc_glrc.background[3] = 1.0;
+    gtk_widget_get_allocation(rc_glrc.lrc_scene, &allocation);
+    width = allocation.width;
+    height = allocation.height;
+    layout = pango_cairo_create_layout(lrc_cr);
+    pango_layout_set_text(layout, "Font size test!", -1);
+    desc = pango_font_description_from_string(rc_glrc.lyric_font);
+    pango_layout_set_font_description(layout, desc);
+    pango_font_description_free(desc);
+    pango_layout_get_size(layout, &t_width, &t_height);
+    lrc_height = (gdouble)t_height / PANGO_SCALE;
+    cairo_set_operator(lrc_cr, CAIRO_OPERATOR_OVER);
+    cairo_set_source_rgba(lrc_cr, rc_glrc.text_color[0], 
+        rc_glrc.text_color[1], rc_glrc.text_color[2], rc_glrc.text_color[3]);
+    playing_time = rc_core_get_play_position() / GST_MSECOND / 10;
+    lrc_data_now = rc_lrc_get_line_now();
+    if(lrc_data_now!=NULL)
+    {
+        if(rc_glrc.drag_action)
+        {
+            lrc_line_num_now = rc_glrc.drag_from_linenum +
+                rc_glrc.drag_height / (lrc_height+rc_glrc.lyric_line_ds);
+            lrc_y_plus = rc_glrc.drag_height % (int)(lrc_height+
+                rc_glrc.lyric_line_ds);
+            if(lrc_line_num_now<0)
+                lrc_line_num_now = 0;
+            else if(lrc_line_num_now>=lrc_data_length)
+                lrc_line_num_now = lrc_data_length - 1;
+            rc_glrc.drag_to_linenum = lrc_line_num_now;
+        }
+        else
+            lrc_line_num_now = lrc_data_now->index;
+        time_length = lrc_data_now->length;
+        time_passed = playing_time - lrc_data_now->time;
+        if(time_length>0 && !rc_glrc.drag_action)
+        {
+            lrc_y_plus = (lrc_height+rc_glrc.lyric_line_ds) *
+                ((gdouble)time_passed / time_length);
+        }
+    }
+    else
+        lrc_line_num_now = -1;
+    for(i=0;i<lrc_data_length;i++)
+    {
+        lrc_line_data = lrc_data_array[i];
+        text = lrc_line_data->text;
+        pango_layout_set_text(layout, text, -1);
+        pango_layout_get_size(layout, &t_width, &t_height);
+        lrc_width = (gdouble)t_width / PANGO_SCALE;
+        lrc_x = (width - lrc_width) / 2;
+        lrc_y = height/2 + (lrc_height+rc_glrc.lyric_line_ds) * 
+            (gint64)(i - lrc_line_num_now);
+        lrc_y -= lrc_y_plus;
+        if(i==lrc_line_num_now)
+        {
+            if(lrc_width<=width)
+                lrc_x = (width - lrc_width) /2;
+            else if(!rc_glrc.drag_action)
+                lrc_x = 10 + (width - lrc_width - 20) * ((gdouble)
+                    (playing_time - lrc_line_data->time) /
+                    (lrc_line_data->length));
+            cairo_move_to(lrc_cr, lrc_x, lrc_y);
+            cairo_set_source_rgba(lrc_cr, rc_glrc.text_hilight[0], 
+                rc_glrc.text_hilight[1], rc_glrc.text_hilight[2],
+                rc_glrc.text_hilight[3]);
+        }
+        else
+        {
+            cairo_move_to(lrc_cr, lrc_x, lrc_y);
+            cairo_set_source_rgba(lrc_cr, rc_glrc.text_color[0],
+                rc_glrc.text_color[1], rc_glrc.text_color[2],
+                rc_glrc.text_color[3]);
+        }
+        if(lrc_y>=-lrc_height && lrc_y<=height)
+            pango_cairo_show_layout(lrc_cr, layout);
+    }
+    if(rc_glrc.drag_action)
+    {
+        cairo_move_to(lrc_cr, 0, height / 2);
+        cairo_set_source_rgba(lrc_cr, rc_glrc.text_color[0],
+            rc_glrc.text_color[1], rc_glrc.text_color[2],
+            0.8);
+        cairo_line_to(lrc_cr, width, height / 2);
+        cairo_stroke(lrc_cr);
+        if(lrc_line_num_now>=0 && lrc_line_num_now<lrc_data_length)
+            time_passed = lrc_data_array[lrc_line_num_now]->time / 100;
+        text = g_strdup_printf("%02d:%02d", (gint)time_passed/60,
+            (gint)time_passed%60);
+        pango_layout_set_text(layout, text, -1);
+        pango_layout_get_size(layout, &t_width, &t_height);
+        cairo_move_to(lrc_cr, width - t_width/PANGO_SCALE,
+            height/2 - t_height/PANGO_SCALE);
+        pango_cairo_show_layout(lrc_cr, layout);
+        g_free(text);
+    }
+    g_object_unref(layout);
+}
+
+static gboolean rc_plugin_lrcshow_drag(GtkWidget *widget, GdkEvent *event,
+    gpointer data)
+{
+    GdkCursor *cursor = NULL;
+    GdkWindow *window;
+    gint dy = 0;
+    gint64 pos = 0L;
+    const RCLyricData *lrc_data_now = NULL;
+    const RCLyricData **lrc_data_array = NULL;
+    static gint sy = 0;
+    static gboolean drag_action = FALSE;
+    if(!rc_glrc.drag_flag) return FALSE;
+    window = gtk_widget_get_window(rc_glrc.lrc_scene);
+    if(event->button.button==1)
+    {
+        switch(event->type)
+        {
+            case GDK_BUTTON_PRESS:
+                cursor = gdk_cursor_new(GDK_HAND1);
+                gdk_window_set_cursor(window, cursor);
+                gdk_cursor_unref(cursor);
+                drag_action = TRUE;
+                rc_glrc.drag_action = TRUE;
+                sy = event->button.y;
+                lrc_data_now = rc_lrc_get_line_now();
+                if(lrc_data_now!=NULL)
+                    rc_glrc.drag_from_linenum = lrc_data_now->index;
+                else
+                    rc_glrc.drag_from_linenum = -1;
+                break;
+            case GDK_BUTTON_RELEASE:
+                cursor = gdk_cursor_new(GDK_ARROW);
+                gdk_window_set_cursor(window, cursor);
+                gdk_cursor_unref(cursor);
+                if(!drag_action) break;
+                drag_action = FALSE;
+                rc_glrc.drag_action = FALSE;
+                rc_glrc.drag_height = 0;
+                if(rc_glrc.drag_from_linenum!=rc_glrc.drag_to_linenum)
+                {
+                    lrc_data_array = rc_lrc_get_lrc_data();
+                    if(lrc_data_array==NULL) break;
+                    pos = lrc_data_array[rc_glrc.drag_to_linenum]->time;
+                    pos = pos * 10 * GST_MSECOND;
+                    rc_core_set_play_position(pos);
+                }
+                break;
+            case GDK_MOTION_NOTIFY:
+                if(drag_action)
+                {
+                    dy = sy - event->button.y;
+                    rc_glrc.drag_height = dy;
+                }
+                break;
+            default:
+                break;
+        }
+    }
+    return FALSE;
+}
+
+#ifdef USE_GTK3
+
+static gboolean rc_plugin_lrcshow_draw(GtkWidget *widget, cairo_t *cr)
+{
+    gboolean visible = FALSE;
+    if(!GDK_IS_WINDOW(gtk_widget_get_window(rc_glrc.lrc_scene)))
+        return TRUE;
+    g_object_get(G_OBJECT(rc_glrc.lrc_scene), "visible", &visible, NULL);
+    if(!visible) return FALSE;
+    if(cr==NULL) return FALSE;
+    rc_plugin_lrcshow_draw_bg(cr);
+    if(rc_glrc.lyric_flag) rc_plugin_lrcshow_show(cr);
+    return FALSE;
+}
+
+#else
+
+static gboolean rc_plugin_lrcshow_expose(GtkWidget *widget,
+    GdkEventExpose *event)
+{
+    gboolean visible = FALSE;
+    cairo_t *cr;
+    if(!GDK_IS_WINDOW(gtk_widget_get_window(rc_glrc.lrc_scene)))
+        return TRUE;
+    g_object_get(G_OBJECT(rc_glrc.lrc_scene), "visible", &visible, NULL);
+    if(!visible) return FALSE;
+    cr = gdk_cairo_create(gtk_widget_get_window(rc_glrc.lrc_scene));
+    rc_plugin_lrcshow_draw_bg(cr);
+    if(rc_glrc.lyric_flag) rc_plugin_lrcshow_show(cr);
+    cairo_destroy(cr);
+    return FALSE;
+}
+
+#endif
+
+static gboolean rc_plugin_lrcshow_update(gpointer data)
+{
+    gboolean visible = FALSE;
+    static gboolean single_mode = FALSE;
+    if(single_mode!=rc_glrc.single_window_flag)
+    {
+        rc_plugin_lrc_show_set_single_mode(rc_glrc.single_window_flag);
+        single_mode = rc_glrc.single_window_flag;
+    }
+    if(rc_lrc_get_lrc_data()==NULL)
+        return TRUE;
+    g_object_get(G_OBJECT(rc_glrc.lrc_scene), "visible", &visible, NULL);
+    if(!visible)
+        return TRUE;
+    if(rc_glrc.lyric_flag)
+        gtk_widget_queue_draw(rc_glrc.lrc_scene);
+    return TRUE;   
+}
+
+static void rc_plugin_lrcshow_init()
+{
+    rc_ui = rc_gui_get_data();
+    bzero(&rc_glrc, sizeof(GuiLrcData));
+    rc_glrc.lrc_time_delay = 0L;
+    rc_glrc.lyric_font = g_strdup("Monospace 10");
+    rc_glrc.lyric_line_ds = 0;
+    rc_glrc.background[0] = 0.23046875;
+    rc_glrc.background[1] = 0.3359375;
+    rc_glrc.background[2] = 0.44921875;
+    rc_glrc.background[3] = 1.0;
+    rc_glrc.text_color[0] = 1.0;
+    rc_glrc.text_color[1] = 1.0;
+    rc_glrc.text_color[2] = 1.0;
+    rc_glrc.text_color[3] = 1.0;
+    rc_glrc.text_hilight[0] = 0.359375;
+    rc_glrc.text_hilight[1] = 0.65234375;
+    rc_glrc.text_hilight[2] = 0.83984375;
+    rc_glrc.text_hilight[3] = 1.0;
+    rc_glrc.lyric_flag = FALSE;
+    rc_glrc.drag_flag = TRUE;
+    rc_plugin_lrcshow_load_conf();
+    rc_glrc.lrc_swindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    rc_glrc.lrc_scene = gtk_drawing_area_new();
+    gtk_widget_set_size_request(rc_glrc.lrc_swindow, 300, 400);
+    gtk_widget_add_events(rc_glrc.lrc_scene, GDK_BUTTON_PRESS_MASK |
+        GDK_BUTTON_RELEASE_MASK | GDK_BUTTON_MOTION_MASK |
+        GDK_POINTER_MOTION_HINT_MASK);
+    #ifdef USE_GTK3
+        g_signal_connect(G_OBJECT(rc_glrc.lrc_scene), "draw",
+            G_CALLBACK(rc_plugin_lrcshow_draw),NULL);
+    #else
+        g_signal_connect(G_OBJECT(rc_glrc.lrc_scene), "expose-event",
+            G_CALLBACK(rc_plugin_lrcshow_expose),NULL);
+    #endif
+    g_signal_connect(G_OBJECT(rc_glrc.lrc_scene), "button-press-event",
+        G_CALLBACK(rc_plugin_lrcshow_drag),NULL);
+    g_signal_connect(G_OBJECT(rc_glrc.lrc_scene), "motion-notify-event",
+        G_CALLBACK(rc_plugin_lrcshow_drag),NULL);
+    g_signal_connect(G_OBJECT(rc_glrc.lrc_scene), "button-release-event",
+        G_CALLBACK(rc_plugin_lrcshow_drag),NULL);
+    timeout_id = g_timeout_add(100, (GSourceFunc)rc_plugin_lrcshow_update,
+        NULL);
+    rc_plugin_lrc_show_set_single_mode(rc_glrc.single_window_flag);
+    if(rc_lrc_get_lrc_data()!=NULL && rc_lrc_get_lrc_length()>0)
+        rc_plugin_lrcshow_enable();
+}
 
 const gchar *g_module_check_init(GModule *module)
 {
@@ -63,12 +526,28 @@ static void rc_plugin_lrcshow_stop()
 
 gint rc_plugin_module_init()
 {
-    if(gtk_major_version!=2 || gtk_minor_version<20)
-    {
-        rc_debug_perror("DeskLRC-ERROR: This plugin need GTK+ 2.20 or "
-            "newer version, somehow it doesn't work on GTK+ 3.0.\n");
-        return 1;
-    }
+    #ifdef USE_GTK3
+        if(gtk_major_version<3)
+        {
+            rc_debug_perror("LRCShow-ERROR: This plugin need GTK+ 3.0 or "
+                "newer version.\n");
+            rc_gui_show_message_dialog(GTK_MESSAGE_ERROR,
+                _("Cannot start Lyric Show"),
+                _("This plugin need GTK+ 3.0 or newer version."));
+            return 1;
+        }
+    #else
+        if(gtk_major_version!=2 || gtk_minor_version<20)
+        {
+            rc_gui_show_message_dialog(GTK_MESSAGE_ERROR,
+                _("Cannot start Lyric Show"),
+                _(" This plugin need GTK+ 2.20 or newer GTK+ 2 version, "
+                "somehow this plugin doesn't work on GTK+ 3.0."));
+            rc_debug_perror("LRCShow-ERROR: This plugin need GTK+ 2.20 or "
+                "newer version, somehow it doesn't work on GTK+ 3.0.\n");
+            return 1;
+        }
+    #endif
     rc_plugin_lrcshow_init();
     lyric_found_signal = rc_player_object_signal_connect_simple(
         "lyric-found", G_CALLBACK(rc_plugin_lrcshow_lyric_found));
@@ -194,416 +673,4 @@ const RCPluginModuleData *rc_plugin_module_data()
     return &plugin_module_data;
 }
 
-static void rc_plugin_lrc_show_set_single_mode(gboolean flag)
-{
-    if(flag)
-    {
-        if(id>0)
-        {
-            g_object_ref(G_OBJECT(rc_glrc.lrc_scene));
-            rc_gui_view_remove_page(id);
-        }
-        id = 0;
-        gtk_container_add(GTK_CONTAINER(rc_glrc.lrc_swindow),
-            rc_glrc.lrc_scene);
-        gtk_widget_show_all(rc_glrc.lrc_swindow);  
-    }
-    else
-    {
-        gtk_widget_hide(rc_glrc.lrc_swindow);
-        if(gtk_bin_get_child(GTK_BIN(rc_glrc.lrc_swindow)))
-        {
-            g_object_ref(G_OBJECT(rc_glrc.lrc_scene));
-            gtk_container_remove(GTK_CONTAINER(rc_glrc.lrc_swindow),
-                rc_glrc.lrc_scene);
-        }
-        if(id==0)
-            id = rc_gui_view_add_page("ViewPageLyric", "_Lyric Show",
-                rc_glrc.lrc_scene);
-        gtk_widget_show_all(rc_glrc.lrc_scene);
-    }
-}
-
-void rc_plugin_lrcshow_init()
-{
-    rc_ui = rc_gui_get_data();
-    bzero(&rc_glrc, sizeof(GuiLrcData));
-    rc_glrc.lrc_time_delay = 0L;
-    rc_glrc.lyric_font = g_strdup("Monospace 10");
-    rc_glrc.lyric_line_ds = 0;
-    rc_glrc.background[0] = 0.23046875;
-    rc_glrc.background[1] = 0.3359375;
-    rc_glrc.background[2] = 0.44921875;
-    rc_glrc.background[3] = 1.0;
-    rc_glrc.text_color[0] = 1.0;
-    rc_glrc.text_color[1] = 1.0;
-    rc_glrc.text_color[2] = 1.0;
-    rc_glrc.text_color[3] = 1.0;
-    rc_glrc.text_hilight[0] = 0.359375;
-    rc_glrc.text_hilight[1] = 0.65234375;
-    rc_glrc.text_hilight[2] = 0.83984375;
-    rc_glrc.text_hilight[3] = 1.0;
-    rc_glrc.lyric_flag = FALSE;
-    rc_glrc.drag_flag = TRUE;
-    rc_plugin_lrcshow_load_conf();
-    rc_glrc.lrc_swindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-    rc_glrc.lrc_scene = gtk_drawing_area_new();
-    gtk_widget_set_size_request(rc_glrc.lrc_swindow, 300, 400);
-    gtk_widget_add_events(rc_glrc.lrc_scene, GDK_BUTTON_PRESS_MASK |
-        GDK_BUTTON_RELEASE_MASK | GDK_BUTTON_MOTION_MASK |
-        GDK_POINTER_MOTION_HINT_MASK);
-    g_signal_connect(G_OBJECT(rc_glrc.lrc_scene), "expose-event",
-        G_CALLBACK(rc_plugin_lrcshow_expose),NULL);
-    g_signal_connect(G_OBJECT(rc_glrc.lrc_scene), "button-press-event",
-        G_CALLBACK(rc_plugin_lrcshow_drag),NULL);
-    g_signal_connect(G_OBJECT(rc_glrc.lrc_scene), "motion-notify-event",
-        G_CALLBACK(rc_plugin_lrcshow_drag),NULL);
-    g_signal_connect(G_OBJECT(rc_glrc.lrc_scene), "button-release-event",
-        G_CALLBACK(rc_plugin_lrcshow_drag),NULL);
-    timeout_id = g_timeout_add(100, (GSourceFunc)rc_plugin_lrcshow_update,
-        NULL);
-    rc_plugin_lrc_show_set_single_mode(rc_glrc.single_window_flag);
-    if(rc_lrc_get_lrc_data()!=NULL && rc_lrc_get_lrc_length()>0)
-        rc_plugin_lrcshow_enable();
-}
-
-
-GuiLrcData *rc_plugin_lrcshow_get_data()
-{
-    return &rc_glrc;
-}
-
-void rc_plugin_lrcshow_draw_bg()
-{
-    cairo_t *cr;
-    cr = gdk_cairo_create(gtk_widget_get_window(rc_glrc.lrc_scene));
-    cairo_set_source_rgba(cr, rc_glrc.background[0], rc_glrc.background[1], 
-        rc_glrc.background[2], rc_glrc.background[3]);
-    cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
-    cairo_paint(cr);
-    cairo_destroy(cr);
-}
-
-void rc_plugin_lrcshow_show()
-{
-    static gint width = 400, height = 100;
-    gboolean visible = TRUE;
-    GstState state;
-    gint i = 0;
-    guint64 playing_time = 0;
-    gint lrc_line_num_now = -1;
-    gchar *text;
-    const RCLyricData *lrc_data_now = NULL;
-    const RCLyricData *lrc_line_data = NULL;
-    const RCLyricData **lrc_data_array = NULL;
-    gsize lrc_data_length = 0;
-    gdouble lrc_height, lrc_width;
-    gint t_height, t_width;
-    gdouble lrc_x, lrc_y;
-    gdouble lrc_y_plus = 0.0;
-    cairo_t *lrc_cr;
-    guint64 time_length = 0;
-    guint64 time_passed = 0;
-    PangoLayout *layout;
-    PangoFontDescription *desc;
-    GdkWindow *lrc_window;
-    GtkAllocation allocation;
-    if(!GTK_IS_WIDGET(rc_glrc.lrc_scene)) return;
-    lrc_window = gtk_widget_get_window(rc_glrc.lrc_scene);
-    if(!GDK_IS_WINDOW(lrc_window)) return;
-    g_object_get(G_OBJECT(rc_glrc.lrc_scene), "visible", &visible, NULL);
-    if(!visible) return;
-    if(!rc_glrc.lyric_flag) return;
-    lrc_data_array = rc_lrc_get_lrc_data();
-    if(lrc_data_array==NULL) return;
-    lrc_data_length = rc_lrc_get_lrc_length();
-    rc_glrc.text_color[3] = 1.0;
-    rc_glrc.text_hilight[3] = 1.0;
-    rc_glrc.background[3] = 1.0;
-    gtk_widget_get_allocation(rc_glrc.lrc_scene, &allocation);
-    lrc_cr = gdk_cairo_create(lrc_window);
-    width = allocation.width;
-    height = allocation.height;
-    layout = pango_cairo_create_layout(lrc_cr);
-    pango_layout_set_text(layout, "Font size test!", -1);
-    desc = pango_font_description_from_string(rc_glrc.lyric_font);
-    pango_layout_set_font_description(layout, desc);
-    pango_font_description_free(desc);
-    pango_layout_get_size(layout, &t_width, &t_height);
-    lrc_height = (gdouble)t_height / PANGO_SCALE;
-    cairo_set_operator(lrc_cr, CAIRO_OPERATOR_OVER);
-    cairo_set_source_rgba(lrc_cr, rc_glrc.text_color[0], 
-        rc_glrc.text_color[1], rc_glrc.text_color[2], rc_glrc.text_color[3]);
-    state = rc_core_get_play_state();
-    playing_time = rc_core_get_play_position() / GST_MSECOND / 10;
-    lrc_data_now = rc_lrc_get_line_now();
-    if(lrc_data_now!=NULL)
-    {
-        if(rc_glrc.drag_action)
-        {
-            lrc_line_num_now = rc_glrc.drag_from_linenum +
-                rc_glrc.drag_height / (lrc_height+rc_glrc.lyric_line_ds);
-            lrc_y_plus = rc_glrc.drag_height % (int)(lrc_height+
-                rc_glrc.lyric_line_ds);
-            if(lrc_line_num_now<0)
-                lrc_line_num_now = 0;
-            else if(lrc_line_num_now>=lrc_data_length)
-                lrc_line_num_now = lrc_data_length - 1;
-            rc_glrc.drag_to_linenum = lrc_line_num_now;
-        }
-        else
-            lrc_line_num_now = lrc_data_now->index;
-        time_length = lrc_data_now->length;
-        time_passed = playing_time - lrc_data_now->time;
-        if(time_length>0 && !rc_glrc.drag_action)
-        {
-            lrc_y_plus = (lrc_height+rc_glrc.lyric_line_ds) *
-                ((gdouble)time_passed / time_length);
-        }
-    }
-    else
-        lrc_line_num_now = -1;
-    for(i=0;i<lrc_data_length;i++)
-    {
-        lrc_line_data = lrc_data_array[i];
-        text = lrc_line_data->text;
-        pango_layout_set_text(layout, text, -1);
-        pango_layout_get_size(layout, &t_width, &t_height);
-        lrc_width = (gdouble)t_width / PANGO_SCALE;
-        lrc_x = (width - lrc_width) / 2;
-        lrc_y = height/2 + (lrc_height+rc_glrc.lyric_line_ds) * 
-            (gint64)(i - lrc_line_num_now);
-        lrc_y -= lrc_y_plus;
-        if(i==lrc_line_num_now)
-        {
-            if(lrc_width<=width)
-                lrc_x = (width - lrc_width) /2;
-            else if(!rc_glrc.drag_action)
-                lrc_x = 10 + (width - lrc_width - 20) * ((gdouble)
-                    (playing_time - lrc_line_data->time) /
-                    (lrc_line_data->length));
-            cairo_move_to(lrc_cr, lrc_x, lrc_y);
-            cairo_set_source_rgba(lrc_cr, rc_glrc.text_hilight[0], 
-                rc_glrc.text_hilight[1], rc_glrc.text_hilight[2],
-                rc_glrc.text_hilight[3]);
-        }
-        else
-        {
-            cairo_move_to(lrc_cr, lrc_x, lrc_y);
-            cairo_set_source_rgba(lrc_cr, rc_glrc.text_color[0],
-                rc_glrc.text_color[1], rc_glrc.text_color[2],
-                rc_glrc.text_color[3]);
-        }
-        if(lrc_y>=-lrc_height && lrc_y<=height)
-            pango_cairo_show_layout(lrc_cr, layout);
-    }
-    if(rc_glrc.drag_action)
-    {
-        cairo_move_to(lrc_cr, 0, height / 2);
-        cairo_set_source_rgba(lrc_cr, rc_glrc.text_color[0],
-            rc_glrc.text_color[1], rc_glrc.text_color[2],
-            0.8);
-        cairo_line_to(lrc_cr, width, height / 2);
-        cairo_stroke(lrc_cr);
-        if(lrc_line_num_now>=0 && lrc_line_num_now<lrc_data_length)
-            time_passed = lrc_data_array[lrc_line_num_now]->time / 100;
-        text = g_strdup_printf("%02d:%02d", (gint)time_passed/60,
-            (gint)time_passed%60);
-        pango_layout_set_text(layout, text, -1);
-        pango_layout_get_size(layout, &t_width, &t_height);
-        cairo_move_to(lrc_cr, width - t_width/PANGO_SCALE,
-            height/2 - t_height/PANGO_SCALE);
-        pango_cairo_show_layout(lrc_cr, layout);
-        g_free(text);
-    }
-    cairo_destroy(lrc_cr);
-    g_object_unref(layout);
-}
-
-gboolean rc_plugin_lrcshow_drag(GtkWidget *widget, GdkEvent *event,
-    gpointer data)
-{
-    GdkCursor *cursor = NULL;
-    GdkWindow *window;
-    gint dy = 0;
-    gint64 pos = 0L;
-    const RCLyricData *lrc_data_now = NULL;
-    const RCLyricData **lrc_data_array = NULL;
-    static gint sy = 0;
-    static gboolean drag_action = FALSE;
-    if(!rc_glrc.drag_flag) return FALSE;
-    window = gtk_widget_get_window(rc_glrc.lrc_scene);
-    if(event->button.button==1)
-    {
-        switch(event->type)
-        {
-            case GDK_BUTTON_PRESS:
-                cursor = gdk_cursor_new(GDK_HAND1);
-                gdk_window_set_cursor(window, cursor);
-                gdk_cursor_destroy(cursor);
-                drag_action = TRUE;
-                rc_glrc.drag_action = TRUE;
-                sy = event->button.y;
-                lrc_data_now = rc_lrc_get_line_now();
-                if(lrc_data_now!=NULL)
-                    rc_glrc.drag_from_linenum = lrc_data_now->index;
-                else
-                    rc_glrc.drag_from_linenum = -1;
-                break;
-            case GDK_BUTTON_RELEASE:
-                cursor = gdk_cursor_new(GDK_ARROW);
-                gdk_window_set_cursor(window, cursor);
-                gdk_cursor_destroy(cursor);
-                if(!drag_action) break;
-                drag_action = FALSE;
-                rc_glrc.drag_action = FALSE;
-                rc_glrc.drag_height = 0;
-                if(rc_glrc.drag_from_linenum!=rc_glrc.drag_to_linenum)
-                {
-                    lrc_data_array = rc_lrc_get_lrc_data();
-                    if(lrc_data_array==NULL) break;
-                    pos = lrc_data_array[rc_glrc.drag_to_linenum]->time;
-                    pos = pos * 10 * GST_MSECOND;
-                    rc_core_set_play_position(pos);
-                }
-                break;
-            case GDK_MOTION_NOTIFY:
-                if(drag_action)
-                {
-                    dy = sy - event->button.y;
-                    rc_glrc.drag_height = dy;
-                }
-                break;
-            default:
-                break;
-        }
-    }
-    return FALSE;
-}
-
-gboolean rc_plugin_lrcshow_expose(GtkWidget *widget, gpointer data)
-{
-    gboolean visible = FALSE;
-    if(!GDK_IS_WINDOW(gtk_widget_get_window(rc_glrc.lrc_scene)))
-        return TRUE;
-    g_object_get(G_OBJECT(rc_glrc.lrc_scene), "visible", &visible, NULL);
-    if(!visible) return FALSE;
-    rc_plugin_lrcshow_draw_bg();
-    if(rc_glrc.lyric_flag) rc_plugin_lrcshow_show();
-    return FALSE;
-}
-
-gboolean rc_plugin_lrcshow_update(gpointer data)
-{
-    gboolean visible = FALSE;
-    static gboolean single_mode = FALSE;
-    if(single_mode!=rc_glrc.single_window_flag)
-    {
-        rc_plugin_lrc_show_set_single_mode(rc_glrc.single_window_flag);
-        single_mode = rc_glrc.single_window_flag;
-    }
-    if(rc_lrc_get_lrc_data()==NULL)
-        return TRUE;
-    g_object_get(G_OBJECT(rc_glrc.lrc_scene), "visible", &visible, NULL);
-    if(!visible)
-        return TRUE;
-    if(rc_glrc.lyric_flag)
-        gtk_widget_queue_draw(rc_glrc.lrc_scene);
-    return TRUE;   
-}
-
-void rc_plugin_lrcshow_enable()
-{
-    rc_glrc.lyric_flag = TRUE;
-    rc_plugin_lrcshow_update(NULL);
-}
-
-void rc_plugin_lrcshow_disable()
-{
-    rc_glrc.lyric_flag = FALSE;
-    rc_plugin_lrcshow_expose(NULL, NULL);
-}
-
-void rc_plugin_lrcshow_load_conf()
-{
-    gchar *string = NULL;
-    gint i;
-    GdkColor color;
-    string = g_key_file_get_string(keyfile, plugin_module_data.group_name, 
-        "LyricFont", NULL);
-    if(string!=NULL)
-    {
-        if(rc_glrc.lyric_font!=NULL) g_free(rc_glrc.lyric_font);
-        rc_glrc.lyric_font = string;
-    }
-    i = g_key_file_get_integer(keyfile, plugin_module_data.group_name,
-        "LyricLineDistance", NULL);
-    if(i<0) i = 0;
-    rc_glrc.lyric_line_ds = i;
-    string = g_key_file_get_string(keyfile, plugin_module_data.group_name,
-        "LyricBackgroundColor", NULL);
-    if(string!=NULL)
-    {
-        gdk_color_parse(string, &color);
-        rc_glrc.background[0] = (double)color.red / 0xFFFF;
-        rc_glrc.background[1] = (double)color.green / 0xFFFF;
-        rc_glrc.background[2] = (double)color.blue / 0xFFFF;
-        g_free(string);
-    }
-    string = g_key_file_get_string(keyfile, plugin_module_data.group_name,
-        "LyricTextNormalColor", NULL);
-    if(string!=NULL)
-    {
-        gdk_color_parse(string, &color);
-        rc_glrc.text_color[0] = (double)color.red / 0xFFFF;
-        rc_glrc.text_color[1] = (double)color.green / 0xFFFF;
-        rc_glrc.text_color[2] = (double)color.blue / 0xFFFF;
-        g_free(string);
-    }
-    string = g_key_file_get_string(keyfile, plugin_module_data.group_name,
-        "LyricTextHighLightColor", NULL);
-    if(string!=NULL)
-    {
-        gdk_color_parse(string, &color);
-        rc_glrc.text_hilight[0] = (double)color.red / 0xFFFF;
-        rc_glrc.text_hilight[1] = (double)color.green / 0xFFFF;
-        rc_glrc.text_hilight[2] = (double)color.blue / 0xFFFF;
-        g_free(string);
-    }
-    rc_glrc.single_window_flag = g_key_file_get_boolean(keyfile,
-        plugin_module_data.group_name, "LyricShowInSingleWindow", NULL);
-}
-
-void rc_plugin_lrcshow_save_conf()
-{
-    gchar *string;
-    GdkColor color;
-    g_key_file_set_string(keyfile, plugin_module_data.group_name, 
-        "LyricFont", rc_glrc.lyric_font);
-    g_key_file_set_integer(keyfile, plugin_module_data.group_name, 
-        "LyricLineDistance", rc_glrc.lyric_line_ds);
-    color.red = rc_glrc.background[0] * 0xFFFF;
-    color.green = rc_glrc.background[1] * 0xFFFF;
-    color.blue = rc_glrc.background[2] * 0xFFFF;
-    string = gdk_color_to_string(&color);
-    g_key_file_set_string(keyfile, plugin_module_data.group_name, 
-        "LyricBackgroundColor", string);
-    g_free(string);
-    color.red = rc_glrc.text_color[0] * 0xFFFF;
-    color.green = rc_glrc.text_color[1] * 0xFFFF;
-    color.blue = rc_glrc.text_color[2] * 0xFFFF;
-    string = gdk_color_to_string(&color);
-    g_key_file_set_string(keyfile, plugin_module_data.group_name, 
-        "LyricTextNormalColor", string);
-    g_free(string);
-    color.red = rc_glrc.text_hilight[0] * 0xFFFF;
-    color.green = rc_glrc.text_hilight[1] * 0xFFFF;
-    color.blue = rc_glrc.text_hilight[2] * 0xFFFF;
-    string = gdk_color_to_string(&color);
-    g_key_file_set_string(keyfile, plugin_module_data.group_name, 
-        "LyricTextHighLightColor", string);
-    g_key_file_set_boolean(keyfile, plugin_module_data.group_name,
-        "LyricShowInSingleWindow", rc_glrc.single_window_flag);
-    g_free(string);
-}
 

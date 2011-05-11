@@ -255,14 +255,14 @@
     <keyword type="function" name="rc_gui_mini_normal_mode_clicked ()" link="RhythmCat-Mini-Mode-UI.html#rc-gui-mini-normal-mode-clicked"/>
     <keyword type="function" name="rc_gui_create_setting_window ()" link="RhythmCat-Settings-UI.html#rc-gui-create-setting-window"/>
     <keyword type="function" name="rc_gui_plugin_window_create ()" link="RhythmCat-Plugin-Configuration-UI.html#rc-gui-plugin-window-create"/>
-    <keyword type="" name="Introduction" link="PluginProgramming.html#id618322"/>
-    <keyword type="" name="Preparation" link="PluginProgramming.html#id657129"/>
-    <keyword type="" name="Implement a simple plugin" link="PluginProgramming.html#id632074"/>
-    <keyword type="" name="How to compile the plugin" link="PluginProgramming.html#id641198"/>
-    <keyword type="" name="Write a plugin description file" link="PluginProgramming.html#id663753"/>
-    <keyword type="" name="Make your custom plugin work" link="PluginProgramming.html#id673579"/>
-    <keyword type="" name="Catch signals in the player" link="PluginProgramming.html#id622392"/>
-    <keyword type="" name="About this manual" link="PluginProgramming.html#id652100"/>
+    <keyword type="" name="Introduction" link="PluginProgramming.html#id408811"/>
+    <keyword type="" name="Preparation" link="PluginProgramming.html#id447618"/>
+    <keyword type="" name="Implement a simple plugin" link="PluginProgramming.html#id422564"/>
+    <keyword type="" name="How to compile the plugin" link="PluginProgramming.html#id431687"/>
+    <keyword type="" name="Write a plugin description file" link="PluginProgramming.html#id454243"/>
+    <keyword type="" name="Make your custom plugin work" link="PluginProgramming.html#id464068"/>
+    <keyword type="" name="Catch signals in the player" link="PluginProgramming.html#id412881"/>
+    <keyword type="" name="About this manual" link="PluginProgramming.html#id442590"/>
     <keyword type="constant" name="MSG_TYPE_EMPTY" link="RhythmCat-Asynchronous-Message-Queue.html#MSG-TYPE-EMPTY:CAPS"/>
     <keyword type="constant" name="MSG_TYPE_TEST" link="RhythmCat-Asynchronous-Message-Queue.html#MSG-TYPE-TEST:CAPS"/>
     <keyword type="constant" name="MSG_TYPE_PL_INSERT" link="RhythmCat-Asynchronous-Message-Queue.html#MSG-TYPE-PL-INSERT:CAPS"/>

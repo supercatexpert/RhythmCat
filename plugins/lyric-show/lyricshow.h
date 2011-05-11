@@ -58,25 +58,7 @@ typedef struct _GuiLrcData
     gboolean single_window_flag;
 }GuiLrcData;
 
-const gchar *g_module_check_init(GModule *);
-void g_module_unload(GModule *);
 
-gint rc_plugin_module_init();
-void rc_plugin_module_exit();
-void rc_plugin_module_configure();
-const RCPluginModuleData *rc_plugin_module_data();
-
-void rc_plugin_lrcshow_init();
-GuiLrcData *rc_plugin_lrcshow_get_data();
-void rc_plugin_lrcshow_draw_bg();
-void rc_plugin_lrcshow_show();
-gboolean rc_plugin_lrcshow_drag(GtkWidget *, GdkEvent *, gpointer);
-gboolean rc_plugin_lrcshow_expose(GtkWidget *, gpointer);
-gboolean rc_plugin_lrcshow_update(gpointer);
-void rc_plugin_lrcshow_enable();
-void rc_plugin_lrcshow_disable();
-void rc_plugin_lrcshow_load_conf();
-void rc_plugin_lrcshow_save_conf();
 
 #endif
 
