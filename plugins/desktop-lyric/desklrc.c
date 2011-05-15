@@ -49,7 +49,7 @@ static RCPluginModuleData plugin_module_data =
 };
 
 static GKeyFile *keyfile = NULL;
-static GtkWidget *desklrc_window;
+static GtkWidget *desklrc_window = NULL;
 static gboolean desklrc_flag = TRUE;
 static gboolean lyrics_notify = FALSE;
 static gboolean desklrc_composited = FALSE;
@@ -585,6 +585,7 @@ static void rc_plugin_desklrc_init()
     gint font_height;
     PangoFontDescription *font_desc;
     gint desklrc_height = -1;
+    GdkScreen *screen;
     rc_plugin_desklrc_set_font("Monospace 25");
     rc_plugin_desklrc_load_conf();
     font_desc = pango_font_description_from_string(desklrc_font);
@@ -604,8 +605,14 @@ static void rc_plugin_desklrc_init()
         desklrc_height);
     gtk_window_move(GTK_WINDOW(desklrc_window), osd_lyric_pos[0],
         osd_lyric_pos[1]);
-    #ifndef USE_GTK3
-        GdkScreen *screen = gtk_widget_get_screen(desklrc_window);
+    screen = gtk_widget_get_screen(desklrc_window);
+    #ifdef USE_GTK3
+        GdkVisual *visual = gdk_screen_get_rgba_visual(screen);
+        if(visual!=NULL)
+            gtk_widget_set_visual(desklrc_window, visual);
+        else
+            rc_debug_perror("DeskLRC: Transparent is NOT supported!\n");
+    #else
         gtk_window_set_has_frame(GTK_WINDOW(desklrc_window), FALSE);
         GdkColormap *colormap = gdk_screen_get_rgba_colormap(screen);
         if(colormap!=NULL)
@@ -858,6 +865,8 @@ void rc_plugin_module_configure()
             GTK_TOGGLE_BUTTON(draw_stroke_checkbox));
         osd_lyric_two_line = gtk_toggle_button_get_active(
             GTK_TOGGLE_BUTTON(two_line_mode_checkbox));
+        if(desklrc_window!=NULL)
+            rc_plugin_desklrc_set_movable(osd_lyric_movable);
     }
     gtk_widget_destroy(dialog);
 }

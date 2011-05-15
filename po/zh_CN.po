@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RhythmCat 1.0.0\n"
 "Report-Msgid-Bugs-To: http://code.google.com/p/rhythmcat/issues/list\n"
-"POT-Creation-Date: 2011-05-10 11:08+0800\n"
+"POT-Creation-Date: 2011-05-14 00:58+0800\n"
 "PO-Revision-Date: 2011-04-02 21:19+0800\n"
 "Last-Translator: SuperCat <supercatexpert@gmail.com>\n"
 "Language-Team: SuperCat <supercatexpert@gmail.com>\n"
@@ -135,7 +135,7 @@ msgstr "重命名播放列表"
 #: src/gui.c:577 src/gui.c:653
 #, fuzzy
 msgid "R_emove Playlist"
-msgstr "移除播放列表"
+msgstr "移除播放列表(_E)"
 
 #: src/gui.c:578 src/gui.c:654
 msgid "Remove the playlist"
@@ -217,7 +217,7 @@ msgstr "播放上一首音乐"
 #: src/gui.c:617 src/gui.c:693
 #, fuzzy
 msgid "_Next"
-msgstr "下一首"
+msgstr "下一首(_N)"
 
 #: src/gui.c:618 src/gui.c:694
 msgid "Play next music"
@@ -380,66 +380,66 @@ msgstr "总在最上"
 msgid "Always on top"
 msgstr "总是处于所有窗口的最上方"
 
-#: src/gui.c:1010
+#: src/gui.c:1006
 msgid "Equalizer"
 msgstr "均衡器"
 
-#: src/gui.c:1011
+#: src/gui.c:1007
 msgid "Playlists"
 msgstr "播放列表"
 
-#: src/gui.c:1348
+#: src/gui.c:1344
 msgid "Unknown Format"
 msgstr "未知格式"
 
-#: src/gui.c:1352
+#: src/gui.c:1348
 #, c-format
 msgid "%d kbps "
 msgstr "%d 千比特/秒"
 
-#: src/gui.c:1356
+#: src/gui.c:1352
 #, c-format
 msgid "%d Hz "
 msgstr "%d Hz"
 
-#: src/gui.c:1363
+#: src/gui.c:1359
 msgid "Mono"
 msgstr "单声道"
 
-#: src/gui.c:1367
+#: src/gui.c:1363
 msgid "Stereo"
 msgstr "Stereo"
 
-#: src/gui.c:1371
+#: src/gui.c:1367
 #, c-format
 msgid "%d channels"
 msgstr "%d 声道"
 
-#: src/gui.c:1378 src/playlist.c:256 src/playlist.c:331 src/playlist.c:443
+#: src/gui.c:1374 src/playlist.c:256 src/playlist.c:331 src/playlist.c:443
 #: src/playlist.c:575
 msgid "Unknown Title"
 msgstr "未知标题"
 
-#: src/gui.c:1382
+#: src/gui.c:1378
 msgid "Unknown Artist"
 msgstr "未知艺术家"
 
-#: src/gui.c:1386
+#: src/gui.c:1382
 msgid "Unknown Album"
 msgstr "未知专辑"
 
-#: src/gui.c:1669
+#: src/gui.c:1665
 msgid "Importing..."
 msgstr "导入中……"
 
-#: src/gui.c:1673
+#: src/gui.c:1669
 msgid "Refreshing..."
 msgstr "正在刷新……"
 
 #: src/gui_dialog.c:118
 #, fuzzy
 msgid "A music player based on GTK+ 3.0 & Gstreamer 0.10"
-msgstr "一个基于GTK+ 2.0和Gstreamer 0.10的音乐播放器"
+msgstr "一个基于GTK+ 3.0和Gstreamer 0.10的音乐播放器"
 
 #: src/gui_dialog.c:121
 msgid "A music player based on GTK+ 2.0 & Gstreamer 0.10"
@@ -636,7 +636,7 @@ msgstr "<b>主题</b>"
 #: src/gui_setting.c:349
 #, fuzzy
 msgid "<b>Preview</b>"
-msgstr "<b>网站:</b>"
+msgstr "<b>预览:</b>"
 
 #: src/gui_setting.c:367
 msgid "None"
@@ -668,7 +668,7 @@ msgstr "播放列表 %d"
 #: src/player.c:237
 #, fuzzy
 msgid "Enable debug mode"
-msgstr "启用迷你模式"
+msgstr "启用调试模式"
 
 #: src/player.c:239
 msgid "[URI...]"
@@ -687,10 +687,10 @@ msgstr ""
 msgid "Default Playlist"
 msgstr "默认播放列表"
 
-#: src/plugin.c:446
+#: src/plugin.c:447
 msgid "Plugin Info"
 msgstr "插件信息"
 
-#: src/plugin.c:447
+#: src/plugin.c:448
 msgid "This plugin is resident, you should restart the player to disable it."
 msgstr "该插件是常驻的，你需要重启播放器来禁用它。"

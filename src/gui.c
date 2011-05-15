@@ -961,10 +961,9 @@ static void rc_gui_set_list2_menu()
 static void rc_gui_layout_init()
 {
     GtkWidget *main_vbox, *player_vbox;
-    GtkWidget *hbox1, *hbox2, *hbox3, *hbox4, *hbox5;
+    GtkWidget *hbox1, *hbox2, *hbox3;
     GtkWidget *vbox1, *vbox2, *vbox3;
     GtkWidget *pls_label, *eq_label;
-    GtkWidget *info_label_hbox;
     GtkWidget *info_hbox;
     GtkWidget *album_frame;
     gint i = 0;
@@ -973,9 +972,7 @@ static void rc_gui_layout_init()
     player_vbox = gtk_vbox_new(FALSE, 0);
     hbox1 = gtk_hbox_new(FALSE, 2);
     hbox2 = gtk_hbox_new(FALSE, 0);
-    hbox3 = gtk_hbox_new(FALSE, 4);
-    hbox4 = gtk_hbox_new(FALSE, 1);
-    hbox5 = gtk_hbox_new(FALSE, 2);
+    hbox3 = gtk_hbox_new(FALSE, 2);
     vbox1 = gtk_vbox_new(FALSE, 1);
     vbox2 = gtk_vbox_new(FALSE, 2);
     vbox3 = gtk_vbox_new(FALSE, 0);
@@ -989,7 +986,6 @@ static void rc_gui_layout_init()
         rc_gui.list2_scr_window), GTK_POLICY_NEVER,GTK_POLICY_AUTOMATIC);
     gtk_widget_set_name(rc_gui.list1_scr_window, "RCListScrolledWindow");
     gtk_widget_set_name(rc_gui.list2_scr_window, "RCListScrolledWindow");
-    info_label_hbox = gtk_hbox_new(FALSE, 20);
     rc_gui.list_hpaned = gtk_hpaned_new();
     gtk_widget_set_name(rc_gui.status_infobar, "RCStatusInfoBar");
     gtk_widget_set_name(rc_gui.list_hpaned, "RCListHPaned");
@@ -1031,9 +1027,9 @@ static void rc_gui_layout_init()
     gtk_container_add(GTK_CONTAINER(rc_gui.album_eventbox),
         rc_gui.album_image);
     gtk_box_pack_end(GTK_BOX(hbox2), rc_gui.volume_button, FALSE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(hbox5), vbox1, TRUE, TRUE, 0);
-    gtk_box_pack_start(GTK_BOX(hbox5), vbox2, FALSE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(vbox3), hbox5, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(hbox3), vbox1, TRUE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(hbox3), vbox2, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(vbox3), hbox3, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(vbox3), rc_gui.lrc_scrolled_label, FALSE,
         FALSE, 2);
     gtk_box_pack_end(GTK_BOX(vbox3), hbox2, FALSE, FALSE, 0);

@@ -61,6 +61,20 @@ Then you can try to compile it:
 make
 sudo make install
 
+If you want to compile the plugins, you should install the development
+libraries which the plugin depends, and than enter the directory where the
+plugin is. Compile the plugin simply by command "make". You should put all
+the directories where the compiled plugins are into ~/.RhythmCat/Plugins.
+
+If you have GTK+ 3.0, and you want to try it on this player. You can compile it
+by:
+
+./configure --enable-gtk3
+make
+sudo make install
+
+And compile the plugins by command "make -f Makefile3" instead.
+
 This program is just in alpha stage. We provide no WARRANTY. 
 If you found any bugs, please send an e-mail to me, and report the bugs you
 found. My e-mail: supercatexpert@gmail.com. Or send the Issue on the 
@@ -124,6 +138,17 @@ sudo apt-get install gstreamer0.10-plugins-bad gstreamer0.10-plugins-ugly
 ./configure
 make
 sudo make install
+
+如果您想要编译插件，您需要安装插件所依赖的开发库，并且进入插件所在目录。使用命令make编译它。您
+必须将编译后插件所在的目录复制到~/.RhythmCat/Plugins下面。
+
+如果您的系统中安装了GTK+ 3.0，并且想要尝试在本播放器上使用它。您可以使用以下命令进行编译:
+
+./configure --enable-gtk3
+make
+sudo make install
+
+并且使用make -f Makefile3命令编译插件。
 
 这个程序尚处于Alpha开发阶段，我们不为该程序提供任何保证。
 如果您发现了本程序的任何一个BUG，请给我发送E-Mail，并且汇报您发现的BUG。我的E-Mail:

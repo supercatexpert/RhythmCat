@@ -255,6 +255,12 @@ gboolean rc_lrc_read_from_file(const gchar *filename)
             new_length++;
             j++;
         }
+        else if(i+1<length && lrc_text_data[i+1]!='\n')
+        {
+            new_text[j] = '\n';
+            new_length++;
+            j++;
+        }
     }
     g_free(lrc_text_data);
     lrc_text_data = new_text;

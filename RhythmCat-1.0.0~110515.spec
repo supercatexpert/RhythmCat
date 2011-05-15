@@ -2,9 +2,9 @@
 
 Name: RhythmCat
 Version: 1.0.0
-Release: Alpha2
+Release: Alpha3
 Summary: A Music Player with Plugin Support
-Source0: %{name}-%{version}-alpha1~110504.tar.gz
+Source0: %{name}-%{version}-alpha3~110515.tar.gz
 License: GPLv3
 Group: Application/Multimedia
 URL: http://code.google.com/p/rhythmcat
@@ -19,7 +19,7 @@ player, and it can also show lyrics in the player
 window, it can extend its functions by plugins...
 
 %prep
-%setup -q -n %{name}-%{version}-alpha1~110504
+%setup -q -n %{name}-%{version}-alpha3~110515
 
 %build
 ./configure --prefix=/usr
@@ -54,6 +54,6 @@ rm -rf %{buildroot}
 %{_datadir}/applications/%{name}.desktop
 
 %changelog
-* Sat Apr 2 2011 SuperCat <supercatexpert@gmail.com> - 1.0.0-Alpha1~110402
-- The first RPM package.
+* Sat May 14 2011 SuperCat <supercatexpert@gmail.com> - 1.0.0-Alpha3~110515
+- The 1.0.0-Alpha3 Version Package.
 

@@ -1,5 +1,5 @@
-rhythmcat (1.0.0-alpha2~110504) unstable; urgency=low
+rhythmcat (1.0.0-alpha3~110515) unstable; urgency=low
 
-  * Fixed some bugs, completed the theme system. (Closes: #1020)
+  * Better GTK3 support, fixed some bugs. (Closes: #1025)
 
- -- SuperCat <supercatexpert@gmail.com>  Wed, 04 May 2011 02:36:33 +0800
+ -- SuperCat <supercatexpert@gmail.com>  Sun, 15 May 2011 15:33:33 +0800

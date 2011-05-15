@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RhythmCat 1.0.0\n"
 "Report-Msgid-Bugs-To: http://code.google.com/p/rhythmcat/issues/list\n"
-"POT-Creation-Date: 2011-05-10 11:08+0800\n"
+"POT-Creation-Date: 2011-05-14 00:58+0800\n"
 "PO-Revision-Date: 2011-04-02 16:51+0800\n"
 "Last-Translator: SuperCat <supercatexpert@gmail.com>\n"
 "Language-Team: SuperCat <supercatexpert@gmail.com>\n"
@@ -376,59 +376,59 @@ msgstr ""
 msgid "Always on top"
 msgstr ""
 
-#: src/gui.c:1010
+#: src/gui.c:1006
 msgid "Equalizer"
 msgstr ""
 
-#: src/gui.c:1011
+#: src/gui.c:1007
 msgid "Playlists"
 msgstr ""
 
-#: src/gui.c:1348
+#: src/gui.c:1344
 msgid "Unknown Format"
 msgstr ""
 
-#: src/gui.c:1352
+#: src/gui.c:1348
 #, c-format
 msgid "%d kbps "
 msgstr ""
 
-#: src/gui.c:1356
+#: src/gui.c:1352
 #, c-format
 msgid "%d Hz "
 msgstr ""
 
-#: src/gui.c:1363
+#: src/gui.c:1359
 msgid "Mono"
 msgstr ""
 
-#: src/gui.c:1367
+#: src/gui.c:1363
 msgid "Stereo"
 msgstr ""
 
-#: src/gui.c:1371
+#: src/gui.c:1367
 #, c-format
 msgid "%d channels"
 msgstr ""
 
-#: src/gui.c:1378 src/playlist.c:256 src/playlist.c:331 src/playlist.c:443
+#: src/gui.c:1374 src/playlist.c:256 src/playlist.c:331 src/playlist.c:443
 #: src/playlist.c:575
 msgid "Unknown Title"
 msgstr ""
 
-#: src/gui.c:1382
+#: src/gui.c:1378
 msgid "Unknown Artist"
 msgstr ""
 
-#: src/gui.c:1386
+#: src/gui.c:1382
 msgid "Unknown Album"
 msgstr ""
 
-#: src/gui.c:1669
+#: src/gui.c:1665
 msgid "Importing..."
 msgstr ""
 
-#: src/gui.c:1673
+#: src/gui.c:1669
 msgid "Refreshing..."
 msgstr ""
 
@@ -678,10 +678,10 @@ msgstr ""
 msgid "Default Playlist"
 msgstr ""
 
-#: src/plugin.c:446
+#: src/plugin.c:447
 msgid "Plugin Info"
 msgstr ""
 
-#: src/plugin.c:447
+#: src/plugin.c:448
 msgid "This plugin is resident, you should restart the player to disable it."
 msgstr ""
