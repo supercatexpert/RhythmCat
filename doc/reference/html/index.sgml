@@ -115,6 +115,7 @@
 <ANCHOR id="PLIST2-URI:CAPS" href="RhythmCat/RhythmCat-Playlist.html#PLIST2-URI:CAPS">
 <ANCHOR id="PLIST2-STATE:CAPS" href="RhythmCat/RhythmCat-Playlist.html#PLIST2-STATE:CAPS">
 <ANCHOR id="PLIST2-TITLE:CAPS" href="RhythmCat/RhythmCat-Playlist.html#PLIST2-TITLE:CAPS">
+<ANCHOR id="PLIST2-ORITITLE:CAPS" href="RhythmCat/RhythmCat-Playlist.html#PLIST2-ORITITLE:CAPS">
 <ANCHOR id="PLIST2-ARTIST:CAPS" href="RhythmCat/RhythmCat-Playlist.html#PLIST2-ARTIST:CAPS">
 <ANCHOR id="PLIST2-ALBUM:CAPS" href="RhythmCat/RhythmCat-Playlist.html#PLIST2-ALBUM:CAPS">
 <ANCHOR id="PLIST2-LENGTH:CAPS" href="RhythmCat/RhythmCat-Playlist.html#PLIST2-LENGTH:CAPS">
@@ -197,6 +198,7 @@
 <ANCHOR id="rc-plugin-configure" href="RhythmCat/RhythmCat-Plugin-Support.html#rc-plugin-configure">
 <ANCHOR id="rc-plugin-close" href="RhythmCat/RhythmCat-Plugin-Support.html#rc-plugin-close">
 <ANCHOR id="rc-plugin-check-running" href="RhythmCat/RhythmCat-Plugin-Support.html#rc-plugin-check-running">
+<ANCHOR id="rc-plugin-check-exist" href="RhythmCat/RhythmCat-Plugin-Support.html#rc-plugin-check-exist">
 <ANCHOR id="RhythmCat-Debug" href="RhythmCat/RhythmCat-Debug.html">
 <ANCHOR id="RhythmCat-Debug.synopsis" href="RhythmCat/RhythmCat-Debug.html#RhythmCat-Debug.synopsis">
 <ANCHOR id="RhythmCat-Debug.description" href="RhythmCat/RhythmCat-Debug.html#RhythmCat-Debug.description">
@@ -250,6 +252,7 @@
 <ANCHOR id="rc-gui-scrolled-text-get-attributes" href="RhythmCat/RCGuiScrolledText.html#rc-gui-scrolled-text-get-attributes">
 <ANCHOR id="rc-gui-scrolled-text-set-percent" href="RhythmCat/RCGuiScrolledText.html#rc-gui-scrolled-text-set-percent">
 <ANCHOR id="rc-gui-scrolled-text-get-percent" href="RhythmCat/RCGuiScrolledText.html#rc-gui-scrolled-text-get-percent">
+<ANCHOR id="rc-gui-scrolled-text-get-width" href="RhythmCat/RCGuiScrolledText.html#rc-gui-scrolled-text-get-width">
 <ANCHOR id="RCGuiScrolledText.property-details" href="RhythmCat/RCGuiScrolledText.html#RCGuiScrolledText.property-details">
 <ANCHOR id="RCGuiScrolledText--attributes" href="RhythmCat/RCGuiScrolledText.html#RCGuiScrolledText--attributes">
 <ANCHOR id="RCGuiScrolledText--percent" href="RhythmCat/RCGuiScrolledText.html#RCGuiScrolledText--percent">

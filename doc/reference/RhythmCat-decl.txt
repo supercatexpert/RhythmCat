@@ -78,6 +78,11 @@ RCPluginType type, const gchar *filename
 <RETURNS>gboolean </RETURNS>
 RCPluginType type, const gchar *path 
 </FUNCTION>
+<FUNCTION>
+<NAME>rc_plugin_check_exist</NAME>
+<RETURNS>GSList *</RETURNS>
+RCPluginType type, const gchar *name 
+</FUNCTION>
 <STRUCT>
 <NAME>RCMusicMetaData</NAME>
 typedef struct RCMusicMetaData {
@@ -520,11 +525,12 @@ typedef enum RCPlist2Column {
     PLIST2_URI = 0,
     PLIST2_STATE = 1,
     PLIST2_TITLE = 2,
-    PLIST2_ARTIST = 3,
-    PLIST2_ALBUM = 4,
-    PLIST2_LENGTH = 5,
-    PLIST2_TRACKNO = 6,
-    PLIST2_LAST = 7
+    PLIST2_ORITITLE = 3,
+    PLIST2_ARTIST = 4,
+    PLIST2_ALBUM = 5,
+    PLIST2_LENGTH = 6,
+    PLIST2_TRACKNO = 7,
+    PLIST2_LAST = 8
 }RCPlist2Column;
 </ENUM>
 <FUNCTION>

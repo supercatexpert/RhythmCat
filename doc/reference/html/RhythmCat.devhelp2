@@ -175,6 +175,7 @@
     <keyword type="function" name="rc_plugin_configure ()" link="RhythmCat-Plugin-Support.html#rc-plugin-configure"/>
     <keyword type="function" name="rc_plugin_close ()" link="RhythmCat-Plugin-Support.html#rc-plugin-close"/>
     <keyword type="function" name="rc_plugin_check_running ()" link="RhythmCat-Plugin-Support.html#rc-plugin-check-running"/>
+    <keyword type="function" name="rc_plugin_check_exist ()" link="RhythmCat-Plugin-Support.html#rc-plugin-check-exist"/>
     <keyword type="macro" name="DEBUG_MODE" link="RhythmCat-Debug.html#DEBUG-MODE:CAPS"/>
     <keyword type="function" name="rc_debug_get_flag ()" link="RhythmCat-Debug.html#rc-debug-get-flag"/>
     <keyword type="function" name="rc_debug_set_mode ()" link="RhythmCat-Debug.html#rc-debug-set-mode"/>
@@ -213,6 +214,7 @@
     <keyword type="function" name="rc_gui_scrolled_text_get_attributes ()" link="RCGuiScrolledText.html#rc-gui-scrolled-text-get-attributes"/>
     <keyword type="function" name="rc_gui_scrolled_text_set_percent ()" link="RCGuiScrolledText.html#rc-gui-scrolled-text-set-percent"/>
     <keyword type="function" name="rc_gui_scrolled_text_get_percent ()" link="RCGuiScrolledText.html#rc-gui-scrolled-text-get-percent"/>
+    <keyword type="function" name="rc_gui_scrolled_text_get_width ()" link="RCGuiScrolledText.html#rc-gui-scrolled-text-get-width"/>
     <keyword type="property" name="The &quot;attributes&quot; property" link="RCGuiScrolledText.html#RCGuiScrolledText--attributes"/>
     <keyword type="property" name="The &quot;percent&quot; property" link="RCGuiScrolledText.html#RCGuiScrolledText--percent"/>
     <keyword type="property" name="The &quot;text&quot; property" link="RCGuiScrolledText.html#RCGuiScrolledText--text"/>
@@ -255,14 +257,14 @@
     <keyword type="function" name="rc_gui_mini_normal_mode_clicked ()" link="RhythmCat-Mini-Mode-UI.html#rc-gui-mini-normal-mode-clicked"/>
     <keyword type="function" name="rc_gui_create_setting_window ()" link="RhythmCat-Settings-UI.html#rc-gui-create-setting-window"/>
     <keyword type="function" name="rc_gui_plugin_window_create ()" link="RhythmCat-Plugin-Configuration-UI.html#rc-gui-plugin-window-create"/>
-    <keyword type="" name="Introduction" link="PluginProgramming.html#id516058"/>
-    <keyword type="" name="Preparation" link="PluginProgramming.html#id554865"/>
-    <keyword type="" name="Implement a simple plugin" link="PluginProgramming.html#id529811"/>
-    <keyword type="" name="How to compile the plugin" link="PluginProgramming.html#id538934"/>
-    <keyword type="" name="Write a plugin description file" link="PluginProgramming.html#id561490"/>
-    <keyword type="" name="Make your custom plugin work" link="PluginProgramming.html#id571315"/>
-    <keyword type="" name="Catch signals in the player" link="PluginProgramming.html#id520128"/>
-    <keyword type="" name="About this manual" link="PluginProgramming.html#id549837"/>
+    <keyword type="" name="Introduction" link="PluginProgramming.html#id649602"/>
+    <keyword type="" name="Preparation" link="PluginProgramming.html#id635199"/>
+    <keyword type="" name="Implement a simple plugin" link="PluginProgramming.html#id577930"/>
+    <keyword type="" name="How to compile the plugin" link="PluginProgramming.html#id644046"/>
+    <keyword type="" name="Write a plugin description file" link="PluginProgramming.html#id612814"/>
+    <keyword type="" name="Make your custom plugin work" link="PluginProgramming.html#id633479"/>
+    <keyword type="" name="Catch signals in the player" link="PluginProgramming.html#id618260"/>
+    <keyword type="" name="About this manual" link="PluginProgramming.html#id631799"/>
     <keyword type="constant" name="MSG_TYPE_EMPTY" link="RhythmCat-Asynchronous-Message-Queue.html#MSG-TYPE-EMPTY:CAPS"/>
     <keyword type="constant" name="MSG_TYPE_TEST" link="RhythmCat-Asynchronous-Message-Queue.html#MSG-TYPE-TEST:CAPS"/>
     <keyword type="constant" name="MSG_TYPE_PL_INSERT" link="RhythmCat-Asynchronous-Message-Queue.html#MSG-TYPE-PL-INSERT:CAPS"/>
@@ -275,6 +277,7 @@
     <keyword type="constant" name="PLIST2_URI" link="RhythmCat-Playlist.html#PLIST2-URI:CAPS"/>
     <keyword type="constant" name="PLIST2_STATE" link="RhythmCat-Playlist.html#PLIST2-STATE:CAPS"/>
     <keyword type="constant" name="PLIST2_TITLE" link="RhythmCat-Playlist.html#PLIST2-TITLE:CAPS"/>
+    <keyword type="constant" name="PLIST2_ORITITLE" link="RhythmCat-Playlist.html#PLIST2-ORITITLE:CAPS"/>
     <keyword type="constant" name="PLIST2_ARTIST" link="RhythmCat-Playlist.html#PLIST2-ARTIST:CAPS"/>
     <keyword type="constant" name="PLIST2_ALBUM" link="RhythmCat-Playlist.html#PLIST2-ALBUM:CAPS"/>
     <keyword type="constant" name="PLIST2_LENGTH" link="RhythmCat-Playlist.html#PLIST2-LENGTH:CAPS"/>

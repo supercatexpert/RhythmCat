@@ -41,6 +41,8 @@ const <link linkend="GSList"><returnvalue>GSList</returnvalue></link> *      <li
                                                          <parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>);
 <link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-plugin-check-running">rc_plugin_check_running</link>             (<parameter><link linkend="RCPluginType"><type>RCPluginType</type></link> type</parameter>,
                                                          <parameter>const <link linkend="gchar"><type>gchar</type></link> *path</parameter>);
+<link linkend="GSList"><returnvalue>GSList</returnvalue></link> *            <link linkend="rc-plugin-check-exist">rc_plugin_check_exist</link>               (<parameter><link linkend="RCPluginType"><type>RCPluginType</type></link> type</parameter>,
+                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *name</parameter>);
 </synopsis>
 </refsynopsisdiv>
 
@@ -267,6 +269,25 @@ Check if the plugin is running.
 <listitem><simpara>the path of the plugin
 </simpara></listitem></varlistentry>
 <varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> Whether the plugin is running.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-plugin-check-exist" role="function">
+<title>rc_plugin_check_exist ()</title>
+<indexterm zone="rc-plugin-check-exist"><primary>rc_plugin_check_exist</primary></indexterm>
+<programlisting><link linkend="GSList"><returnvalue>GSList</returnvalue></link> *            rc_plugin_check_exist               (<parameter><link linkend="RCPluginType"><type>RCPluginType</type></link> type</parameter>,
+                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *name</parameter>);</programlisting>
+<para>
+Check if the plugin configure data exists, if it is found, return
+the configure data item, otherwise NULL.
+</para><variablelist role="params">
+<varlistentry><term><parameter>type</parameter>&#160;:</term>
+<listitem><simpara>the type of the plugin
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>name</parameter>&#160;:</term>
+<listitem><simpara>the name of the plugin in configure file
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The plugin configure data item if the configure data exists,
+NULL if not found.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 

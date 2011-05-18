@@ -58,6 +58,8 @@ const <a href="/usr/share/gtk-doc/html/glib/glib-Singly-Linked-Lists.html#GSList
                                                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Plugin-Support.html#rc-plugin-check-running" title="rc_plugin_check_running ()">rc_plugin_check_running</a>             (<em class="parameter"><code><a class="link" href="RhythmCat-Plugin-Support.html#RCPluginType" title="enum RCPluginType"><span class="type">RCPluginType</span></a> type</code></em>,
                                                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *path</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Singly-Linked-Lists.html#GSList"><span class="returnvalue">GSList</span></a> *            <a class="link" href="RhythmCat-Plugin-Support.html#rc-plugin-check-exist" title="rc_plugin_check_exist ()">rc_plugin_check_exist</a>               (<em class="parameter"><code><a class="link" href="RhythmCat-Plugin-Support.html#RCPluginType" title="enum RCPluginType"><span class="type">RCPluginType</span></a> type</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);
 </pre>
 </div>
 <div class="refsect1" title="Description">
@@ -380,6 +382,37 @@ Check if the plugin is running.
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td> Whether the plugin is running.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_plugin_check_exist ()">
+<a name="rc-plugin-check-exist"></a><h3>rc_plugin_check_exist ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Singly-Linked-Lists.html#GSList"><span class="returnvalue">GSList</span></a> *            rc_plugin_check_exist               (<em class="parameter"><code><a class="link" href="RhythmCat-Plugin-Support.html#RCPluginType" title="enum RCPluginType"><span class="type">RCPluginType</span></a> type</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);</pre>
+<p>
+Check if the plugin configure data exists, if it is found, return
+the configure data item, otherwise NULL.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>type</code></em> :</span></p></td>
+<td>the type of the plugin
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
+<td>the name of the plugin in configure file
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The plugin configure data item if the configure data exists,
+NULL if not found.
 </td>
 </tr>
 </tbody>

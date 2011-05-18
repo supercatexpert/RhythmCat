@@ -35,6 +35,7 @@ rc_plugin_load
 rc_plugin_configure
 rc_plugin_close
 rc_plugin_check_running
+rc_plugin_check_exist
 </SECTION>
 
 <SECTION>
@@ -191,6 +192,7 @@ rc_gui_scrolled_text_set_attributes
 rc_gui_scrolled_text_get_attributes
 rc_gui_scrolled_text_set_percent
 rc_gui_scrolled_text_get_percent
+rc_gui_scrolled_text_get_width
 </SECTION>
 
 <SECTION>
