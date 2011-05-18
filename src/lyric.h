@@ -25,9 +25,6 @@
 #ifndef HAVE_LYRIC_H
 #define HAVE_LYRIC_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <glib.h>
 
 /**

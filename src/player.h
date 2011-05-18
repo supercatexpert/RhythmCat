@@ -25,15 +25,9 @@
 #ifndef HAVE_PLAYER_H
 #define HAVE_PLAYER_H
 
-#include <stdlib.h>
-#include <string.h>
 #include <glib.h>
-#include <glib/gprintf.h>
 #include <gtk/gtk.h>
 #include <gst/gst.h>
-#include <dbus/dbus.h>
-#include <dbus/dbus-glib.h>
-#include <limits.h>
 
 #define GETTEXT_PACKAGE "RhythmCat"
 

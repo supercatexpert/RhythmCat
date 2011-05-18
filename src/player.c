@@ -23,6 +23,9 @@
  * Boston, MA  02110-1301  USA
  */
 
+#include <dbus/dbus.h>
+#include <dbus/dbus-glib.h>
+#include <limits.h>
 #include "player.h"
 #include "core.h"
 #include "gui.h"
@@ -56,8 +59,8 @@
 #endif
 
 static const gchar rc_player_program_name[] = "RhythmCat Music Player";
-static const gchar rc_player_build_date[] = "110515";
-static const gchar rc_player_version[] = "1.0.0 alpha 3";
+static const gchar rc_player_build_date[] = "110518";
+static const gchar rc_player_version[] = "1.0.0 beta 1";
 static const gboolean rc_player_stable_flag = FALSE;
 static const gchar *rc_player_support_formatx = "(.FLAC|.OGG|.MP3|.WMA|.WAV|"
     ".OGA|.OGM|.APE|.AAC|.AC3|.MIDI|.MP2|.MID)$";

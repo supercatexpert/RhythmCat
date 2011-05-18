@@ -25,9 +25,7 @@
 #ifndef HAVE_GUI_H
 #define HAVE_GUI_H
 
-#include <stdlib.h>
 #include <glib.h>
-#include <glib/gprintf.h>
 #include <gdk/gdk.h>
 #include <gtk/gtk.h>
 #include <gst/gst.h>

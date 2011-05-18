@@ -25,7 +25,6 @@
 #ifndef HAVE_SETTINGS_H
 #define HAVE_SETTINGS_H
 
-#include <stdlib.h>
 #include <glib.h>
 #include <gst/gst.h>
 #include <gtk/gtk.h>

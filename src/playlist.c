@@ -23,6 +23,7 @@
  * Boston, MA  02110-1301  USA
  */
 
+#include <time.h>
 #include "playlist.h"
 #include "core.h"
 #include "gui.h"
@@ -254,6 +255,7 @@ void rc_plist_list2_insert_item(const gchar *uri, const gchar *title,
         }
         else
             new_title = g_strdup(_("Unknown Title"));
+        title = NULL;
     }
     seclength = length / GST_SECOND;
     time_min = seclength / 60;
@@ -264,8 +266,9 @@ void rc_plist_list2_insert_item(const gchar *uri, const gchar *title,
     else
         gtk_list_store_append(store, &iter);
     gtk_list_store_set(store, &iter, PLIST2_URI, uri, PLIST2_STATE, NULL,
-        PLIST2_TITLE, new_title, PLIST2_ARTIST, artist, PLIST2_ALBUM, album,
-        PLIST2_LENGTH, new_length, PLIST2_TRACKNO, trackno, -1);
+        PLIST2_TITLE, new_title, PLIST2_ORITITLE, title,
+        PLIST2_ARTIST, artist, PLIST2_ALBUM, album, PLIST2_LENGTH,
+        new_length, PLIST2_TRACKNO, trackno, -1);
     if(new_title!=NULL) g_free(new_title);
 }
 
@@ -313,7 +316,9 @@ void rc_plist_list2_refresh_item(const gchar *uri, const gchar *title,
     gtk_tree_model_get_iter(GTK_TREE_MODEL(pl_store), &iter, path);
     gtk_tree_path_free(path);
     if(title!=NULL && strlen(title)>0)
+    {
         new_title = g_strdup(title);
+    }
     else
     {
         fpathname = g_filename_from_uri(uri, NULL, NULL);
@@ -329,14 +334,16 @@ void rc_plist_list2_refresh_item(const gchar *uri, const gchar *title,
         }
         else
             new_title = g_strdup(_("Unknown Title"));
+        title = NULL;
     }
     seclength = length / GST_SECOND;
     time_min = seclength / 60;
     time_sec = seclength % 60;
     g_snprintf(new_length, 63, "%02d:%02d", time_min, time_sec);
     gtk_list_store_set(pl_store, &iter, PLIST2_URI, uri, PLIST2_STATE, NULL,
-        PLIST2_TITLE, new_title, PLIST2_ARTIST, artist, PLIST2_ALBUM, album,
-        PLIST2_LENGTH, new_length, PLIST2_TRACKNO, trackno, -1);
+        PLIST2_TITLE, new_title, PLIST2_ORITITLE, title, PLIST2_ARTIST,
+        artist, PLIST2_ALBUM, album, PLIST2_LENGTH, new_length,
+        PLIST2_TRACKNO, trackno, -1);
     if(new_title!=NULL) g_free(new_title);
 }
 
@@ -448,8 +455,9 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
     rc_gui_set_cover_image_by_file(NULL);
     rc_tag_set_playing_metadata(mmd_new);
     gtk_list_store_set(list_store, &iter, PLIST2_STATE, GTK_STOCK_MEDIA_PLAY,
-        PLIST2_TITLE, list_title, PLIST2_ARTIST, mmd_new->artist, PLIST2_ALBUM,
-        mmd_new->album, PLIST2_LENGTH, list_timelen, -1);
+        PLIST2_TITLE, list_title, PLIST2_ORITITLE, mmd_new->title,
+        PLIST2_ARTIST, mmd_new->artist, PLIST2_ALBUM, mmd_new->album,
+        PLIST2_LENGTH, list_timelen, -1);
     if(rc_plist.list1_reference!=NULL)
     {
         gtk_tree_row_reference_free(rc_plist.list1_reference);
@@ -957,7 +965,7 @@ gboolean rc_plist_insert_list(const gchar *listname, gint index)
     GtkTreeIter iter;
     pl_store = gtk_list_store_new(PLIST2_LAST, G_TYPE_STRING, G_TYPE_STRING,
         G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING,
-        G_TYPE_INT);
+        G_TYPE_STRING, G_TYPE_INT);
     if(index>=0)
         gtk_list_store_insert(rc_plist.list_store, &iter, index);
     else
@@ -1159,6 +1167,16 @@ gboolean rc_plist_load_playlist_setting()
                     buf[0]='\0';
                 }
             }
+            sscanf(line,"OT=%[^\n]", buf); /* original title */
+            if(line_length>=4 && pl_store!=NULL)
+            {
+                if(line[0]=='O' && line[1]=='T' && line[2]=='=')
+                {
+                    gtk_list_store_set(pl_store, &iter, PLIST2_ORITITLE,
+                        buf, -1);
+                    buf[0]='\0';
+                }
+            }
             sscanf(line,"AR=%[^\n]", buf);  /* artist */
             if(line_length>=4 && pl_store!=NULL)
             {
@@ -1252,6 +1270,7 @@ gboolean rc_plist_save_playlist_setting()
     long long time_length = 0;
     gint list1_index, list2_index;
     gchar *list_uri, *list_title, *list_artist, *list_album, *list_time;
+    gchar *list_ori_title;
     gint list_trackno = -1;
     if(list_length<1) return FALSE;
     fname_length = strlen(rc_set_dir) + strlen(play_list_setting_file) + 16;
@@ -1279,13 +1298,16 @@ gboolean rc_plist_save_playlist_setting()
                 {
                     gtk_tree_model_get(GTK_TREE_MODEL(pl_store), &iter,
                         PLIST2_URI, &list_uri, PLIST2_TITLE, &list_title,
-                        PLIST2_ARTIST, &list_artist, PLIST2_ALBUM, &list_album,
+                        PLIST2_ORITITLE, &list_ori_title, PLIST2_ARTIST,
+                        &list_artist, PLIST2_ALBUM, &list_album,
                         PLIST2_LENGTH, &list_time, PLIST2_TRACKNO,
                         &list_trackno, -1);
                     sscanf(list_time, "%d:%d", &time_min, &time_sec);
                     time_length = (time_min * 60 + time_sec) * 100;
                     fprintf(fp, "UR=%s\n", list_uri);
                     fprintf(fp, "TI=%s\n", list_title);
+                    if(list_ori_title!=NULL)
+                        fprintf(fp, "OT=%s\n", list_ori_title);
                     if(list_artist!=NULL)
                         fprintf(fp, "AR=%s\n", list_artist);
                     else
@@ -1301,6 +1323,7 @@ gboolean rc_plist_save_playlist_setting()
                     if(list_artist!=NULL) g_free(list_artist);
                     if(list_album!=NULL) g_free(list_album);
                     if(list_time!=NULL) g_free(list_time);
+                    if(list_ori_title!=NULL) g_free(list_ori_title);
                 }
                 while(gtk_tree_model_iter_next(GTK_TREE_MODEL(pl_store),
                     &iter));
@@ -1347,7 +1370,7 @@ void rc_plist_plist_move2(gint list_index, GtkTreePath **from_paths,
     GtkTreeIter from_iter, to_iter, tmp_iter;
     GtkTreePath *path;
     gchar *list_uri, *list_state, *list_title, *list_artist, *list_album;
-    gchar *list_time;
+    gchar *list_time, *list_ori_title;
     gint *indices1;
     gint list1_index, list2_index;
     gint i = 0;
@@ -1360,13 +1383,14 @@ void rc_plist_plist_move2(gint list_index, GtkTreePath **from_paths,
             &from_iter, from_paths[i]);
         gtk_tree_model_get(GTK_TREE_MODEL(from_list_store), &from_iter,
             PLIST2_URI, &list_uri, PLIST2_STATE, &list_state, PLIST2_TITLE,
-            &list_title, PLIST2_ARTIST, &list_artist, PLIST2_ALBUM,
-            &list_album, PLIST2_LENGTH, &list_time, -1);
+            &list_title, PLIST2_ORITITLE, &list_ori_title, PLIST2_ARTIST,
+            &list_artist, PLIST2_ALBUM, &list_album, PLIST2_LENGTH,
+            &list_time, -1);
         gtk_list_store_append(to_list_store, &to_iter);
         gtk_list_store_set(to_list_store, &to_iter, PLIST2_URI, list_uri, 
-            PLIST2_STATE, list_state, PLIST2_TITLE, list_title, PLIST2_ARTIST,
-            list_artist, PLIST2_ALBUM, list_album, PLIST2_LENGTH, list_time,
-            -1);
+            PLIST2_STATE, list_state, PLIST2_TITLE, list_title, 
+            PLIST2_ORITITLE, list_ori_title, PLIST2_ARTIST, list_artist,
+            PLIST2_ALBUM, list_album, PLIST2_LENGTH, list_time, -1);
         if(!rc_plist_play_get_index(&list1_index, &list2_index))
         {
             list1_index = -1;
@@ -1422,6 +1446,7 @@ void rc_plist_plist_move2(gint list_index, GtkTreePath **from_paths,
         if(list_artist!=NULL) g_free(list_artist);
         if(list_album!=NULL) g_free(list_album);
         if(list_time!=NULL) g_free(list_time);
+        if(list_ori_title!=NULL) g_free(list_ori_title);
     }
     for(i=f_length-1;i>=0;i--)
     {

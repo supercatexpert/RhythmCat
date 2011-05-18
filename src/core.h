@@ -25,14 +25,10 @@
 #ifndef HAVE_CORE_H
 #define HAVE_CORE_H
 
-#include <stdlib.h>
 #include <glib.h>
+#include <glib/gi18n.h>
 #include <gst/gst.h>
 #include <gtk/gtk.h>
-#include <time.h>
-#include <glib/gi18n.h>
-#include <gst/pbutils/missing-plugins.h>
-#include <gst/pbutils/install-plugins.h>
 
 /**
  * RCCoreData:

@@ -25,9 +25,7 @@
 #ifndef HAVE_GUI_SETTING_H
 #define HAVE_GUI_SETTING_H
 
-#include <stdlib.h>
 #include <glib.h>
-#include <glib/gprintf.h>
 #include <gtk/gtk.h>
 
 /* Functions */

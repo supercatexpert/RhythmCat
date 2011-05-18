@@ -25,14 +25,9 @@
 #ifndef HAVE_MSG_H
 #define HAVE_MSG_H
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <glib.h>
-#include <glib/gprintf.h>
-#include <gdk/gdk.h>
 #include <gtk/gtk.h>
 #include <gst/gst.h>
-#include <png.h>
 #include <glib/gi18n.h>
 
 /**

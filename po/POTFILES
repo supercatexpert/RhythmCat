@@ -1,0 +1,19 @@
+     ../src/core.c \
+     ../src/debug.c \
+     ../src/gui.c \
+     ../src/gui_dialog.c \
+     ../src/gui_eq.c \
+     ../src/gui_mini.c \
+     ../src/gui_plugin.c \
+     ../src/gui_setting.c \
+     ../src/gui_style.c \
+     ../src/gui_treeview.c \
+     ../src/lyric.c \
+     ../src/main.c \
+     ../src/msg.c \
+     ../src/player.c \
+     ../src/playlist.c \
+     ../src/plugin.c \
+     ../src/settings.c \
+     ../src/shell.c \
+     ../src/tag.c

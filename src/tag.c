@@ -26,6 +26,8 @@
  */
 
 #include "tag.h"
+#include <gst/pbutils/missing-plugins.h>
+#include <gst/pbutils/install-plugins.h>
 #include "settings.h"
 #include "player.h"
 #include "debug.h"

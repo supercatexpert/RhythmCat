@@ -31,11 +31,8 @@
 
 #include <glib.h>
 #include <glib/gi18n.h>
-#include <glib/gprintf.h>
 #include <gst/gst.h>
 #include <gtk/gtk.h>
-#include <gst/pbutils/missing-plugins.h>
-#include <gst/pbutils/install-plugins.h>
 
 /**
  * RCMusicMetaData:

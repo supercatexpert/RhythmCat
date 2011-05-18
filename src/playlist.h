@@ -5,12 +5,8 @@
 #ifndef HAVE_PLAYLIST_H
 #define HAVE_PLAYLIST_H
 
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
 #include <glib.h>
 #include <glib/gi18n.h>
-#include <glib/gprintf.h>
 #include <gtk/gtk.h>
 #include <gst/gst.h>
 
@@ -41,6 +37,7 @@ typedef enum RCPlist1Column {
  * @PLIST2_URI: the URI of the music
  * @PLIST2_STATE: the state of the music
  * @PLIST2_TITLE: the title of the music
+ * @PLIST2_ORITITLE: the original title of the music
  * @PLIST2_ARTIST: the artist of the music
  * @PLIST2_ALBUM: the album of the music
  * @PLIST2_LENGTH: the time length of the music
@@ -53,11 +50,12 @@ typedef enum RCPlist2Column {
     PLIST2_URI = 0,
     PLIST2_STATE = 1,
     PLIST2_TITLE = 2,
-    PLIST2_ARTIST = 3,
-    PLIST2_ALBUM = 4,
-    PLIST2_LENGTH = 5,
-    PLIST2_TRACKNO = 6,
-    PLIST2_LAST = 7
+    PLIST2_ORITITLE = 3,
+    PLIST2_ARTIST = 4,
+    PLIST2_ALBUM = 5,
+    PLIST2_LENGTH = 6,
+    PLIST2_TRACKNO = 7,
+    PLIST2_LAST = 8
 }RCPlist2Column;
 
 /* Functions */

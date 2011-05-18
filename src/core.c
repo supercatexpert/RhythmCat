@@ -23,7 +23,10 @@
  * Boston, MA  02110-1301  USA
  */
 
+#include <time.h>
 #include "core.h"
+#include <gst/pbutils/missing-plugins.h>
+#include <gst/pbutils/install-plugins.h>
 #include "tag.h"
 #include "gui.h"
 #include "gui_dialog.h"

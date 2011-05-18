@@ -84,16 +84,14 @@ msgid "Import _Music"
 msgstr "ファイルのインポート(_M)"
 
 #: src/gui.c:550 src/gui.c:662
-#, fuzzy
 msgid "Import music file"
-msgstr "音楽ファイルをインポートします(_M)"
+msgstr "音楽ファイルをインポートします"
 
 #: src/gui.c:553 src/gui.c:665
 msgid "Import _Playlist"
-msgstr "プレイリストをインポートします(_P)"
+msgstr "プレイリストのインポート(_P)"
 
 #: src/gui.c:554 src/gui.c:666
-#, fuzzy
 msgid "Import music from playlist"
 msgstr "プレイリストから音楽ファイルをインポートします"
 
@@ -110,7 +108,6 @@ msgid "_Export Playlist"
 msgstr "プレイリストのエクスポート(_E)"
 
 #: src/gui.c:562 src/gui.c:658
-#, fuzzy
 msgid "Export music to a playlist"
 msgstr "プレイリストファイルまで音楽リストをエクスポートします"
 
@@ -119,7 +116,6 @@ msgid "Export _All Playlists"
 msgstr "全てのプレイリストのエクスポート(_A)"
 
 #: src/gui.c:566
-#, fuzzy
 msgid "Export all playlists to a folder"
 msgstr "フォルダまで全てのプレイリストをエクスポートします"
 
@@ -128,7 +124,6 @@ msgid "_Quit"
 msgstr "終了(_Q)"
 
 #: src/gui.c:570 src/gui.c:710
-#, fuzzy
 msgid "Quit this player"
 msgstr "このプレーヤを終了します"
 
@@ -137,24 +132,20 @@ msgid "Re_name Playlist"
 msgstr "プレイリストの名前の変更(_N)"
 
 #: src/gui.c:574
-#, fuzzy
 msgid "Rename the playlist"
 msgstr "プレイリストの名前を変更します"
 
 #: src/gui.c:577 src/gui.c:653
-#, fuzzy
 msgid "R_emove Playlist"
 msgstr "プレイリストの削除(_E)"
 
 #: src/gui.c:578 src/gui.c:654
-#, fuzzy
 msgid "Remove the playlist"
 msgstr "プレイリストを削除します"
 
 #: src/gui.c:581
-#, fuzzy
 msgid "_Remove Music"
-msgstr "プレイリストから削除します(_R)"
+msgstr "プレイリストから削除する(_R)"
 
 #: src/gui.c:582 src/gui.c:674
 msgid "Remove music from playlist"
@@ -169,9 +160,8 @@ msgid "Select all music in the playlist"
 msgstr "そのプレーリスト中の全ての音楽を選択します"
 
 #: src/gui.c:589 src/gui.c:677
-#, fuzzy
 msgid "Re_fresh Playlist"
-msgstr "プレイリストのリフレッシュ"
+msgstr "プレイリストのリフレッシュ(_F)"
 
 #: src/gui.c:590 src/gui.c:678
 msgid "Refresh music information in the playlist"
@@ -190,7 +180,6 @@ msgid "_Preferences"
 msgstr "設定(_P)"
 
 #: src/gui.c:598
-#, fuzzy
 msgid "Configure the player"
 msgstr "このプレーヤを設定します"
 
@@ -199,7 +188,6 @@ msgid "_Mini Mode"
 msgstr "ミニモード"
 
 #: src/gui.c:602
-#, fuzzy
 msgid "Enable mini mode"
 msgstr "ミニモードを有効します"
 
@@ -284,17 +272,14 @@ msgid "About this player"
 msgstr "このプレーヤの情報"
 
 #: src/gui.c:650
-#, fuzzy
 msgid "Raname the playlist"
 msgstr "プレイリストの名前を変更します"
 
 #: src/gui.c:657
-#, fuzzy
 msgid "E_xport Playlist"
 msgstr "プレイリストのエクスポート(_X)"
 
 #: src/gui.c:673
-#, fuzzy
 msgid "R_emove Music"
 msgstr "音楽の削除(_E)"
 
@@ -315,12 +300,10 @@ msgid "Switch between normal mode and mini mode"
 msgstr "モードスウィッチ"
 
 #: src/gui.c:719
-#, fuzzy
 msgid "_Playlists"
 msgstr "プレイリスト(_P)"
 
 #: src/gui.c:720
-#, fuzzy
 msgid "Show playlists"
 msgstr "プレイリストを表現します"
 
@@ -342,7 +325,7 @@ msgstr "リピートしない"
 
 #: src/gui.c:734
 msgid "Single _Music Repeat"
-msgstr "一つの音楽をリピートします(_M)"
+msgstr "一つの音楽をリピートする(_M)"
 
 #: src/gui.c:735
 msgid "Repeat playing single music"
@@ -350,16 +333,15 @@ msgstr "一つの音楽をリピートします"
 
 #: src/gui.c:737
 msgid "Single _Playlist Repeat"
-msgstr "一つのプレーリストをリピートします(_P)"
+msgstr "一つのプレーリストをリピートする_P)"
 
 #: src/gui.c:738
 msgid "Repeat playing single playlist"
 msgstr "一つのプレーリストをリピートします"
 
 #: src/gui.c:740
-#, fuzzy
 msgid "_All Playlists Repeat"
-msgstr "全てのプレイリストをリピートします(_A)"
+msgstr "全てのプレイリストをリピートする(_A)"
 
 #: src/gui.c:741
 msgid "Repeat playing all playlists"
@@ -375,7 +357,7 @@ msgstr "ランダムしない"
 
 #: src/gui.c:752
 msgid "_Single Playlist Random"
-msgstr "一つのプレーリストをランダム再生します(_S)"
+msgstr "一つのプレーリストをランダム再生する(_S)"
 
 #: src/gui.c:753
 msgid "Random playing a music in the playlist"
@@ -383,7 +365,7 @@ msgstr "一つのプレーリストの中にランダム再生します"
 
 #: src/gui.c:755
 msgid "_All Playlists Random"
-msgstr "全てのプレーリストをランダム再生します(_A)"
+msgstr "全てのプレーリストをランダム再生する(_A)"
 
 #: src/gui.c:756
 msgid "Random playing a music in all playlists"
@@ -391,7 +373,7 @@ msgstr "全てのプレーリストの中にランダム再生します"
 
 #: src/gui.c:764 src/gui.c:768
 msgid "Always On _Top"
-msgstr "常に最上に表示します(_T)"
+msgstr "常に最上に表示する(_T)"
 
 #: src/gui.c:765 src/gui.c:769
 msgid "Always on top"
@@ -412,12 +394,12 @@ msgstr "不明なフォーマット"
 #: src/gui.c:1348
 #, c-format
 msgid "%d kbps "
-msgstr "%d キロビット毎秒"
+msgstr "%d kbps　"
 
 #: src/gui.c:1352
 #, c-format
 msgid "%d Hz "
-msgstr "%d ヘルツ"
+msgstr "%d Hz "
 
 #: src/gui.c:1359
 msgid "Mono"
@@ -468,7 +450,7 @@ msgstr ""
 
 #: src/gui_dialog.c:179
 msgid "Select the music you want to add..."
-msgstr "音楽ファイルを追加します"
+msgstr "音楽ファイルを追加します…"
 
 #: src/gui_dialog.c:229
 msgid "Select the directory you want to import..."
@@ -504,7 +486,7 @@ msgstr "イコライザの設定を保存します…"
 
 #: src/gui_eq.c:243
 msgid "Disabled"
-msgstr "使いません"
+msgstr "使わない"
 
 #: src/gui_eq.c:244
 msgid "Pop"
@@ -548,15 +530,15 @@ msgstr "カスタム"
 
 #: src/gui_eq.c:307
 msgid "_Save"
-msgstr "保存します(_S)"
+msgstr "保存(_S)"
 
 #: src/gui_eq.c:308
 msgid "_Open"
-msgstr "オープンします(_O)"
+msgstr "オープン(_O)"
 
 #: src/gui_plugin.c:149
 msgid "Enabled"
-msgstr "使います"
+msgstr "使う"
 
 #: src/gui_plugin.c:151
 msgid "Plugin"
@@ -568,11 +550,11 @@ msgstr "プラグインの設定"
 
 #: src/gui_plugin.c:245
 msgid "C_onfigure"
-msgstr "設定します(_O)"
+msgstr "設定(_O)"
 
 #: src/gui_plugin.c:246
 msgid "_Close"
-msgstr "閉じます(_C)"
+msgstr "閉じる(_C)"
 
 #: src/gui_plugin.c:252
 msgid "<b>Description:</b>"
@@ -604,23 +586,23 @@ msgstr "<b>通常</b>"
 
 #: src/gui_setting.c:185
 msgid "Auto _play on startup"
-msgstr "起動時に自動再生します(_P)"
+msgstr "起動時に自動再生する(_P)"
 
 #: src/gui_setting.c:187
 msgid "_Load the last playing position"
-msgstr "前回停止した位置から再生します(_L)"
+msgstr "前回停止した位置から再生する(_L)"
 
 #: src/gui_setting.c:189
 msgid "Minimize to _tray"
-msgstr "トレーに最小化します(_T)"
+msgstr "トレーに最小化する(_T)"
 
 #: src/gui_setting.c:191
 msgid "Auto _minimize when startup"
-msgstr "起動時に自動最小化します(_M)"
+msgstr "起動時に自動的に最小化する(_M)"
 
 #: src/gui_setting.c:193
 msgid "Minimize the window if the _close button is clicked"
-msgstr "ウィンドウを閉じられた場合、ウィンドウを最小化します(_C)"
+msgstr "ウィンドウを閉じられた場合、ウィンドウを最小化する(_C)"
 
 #: src/gui_setting.c:231
 msgid "<b>Playlist</b>"
@@ -640,11 +622,11 @@ msgstr "歌詞のフォールバックエンコード"
 
 #: src/gui_setting.c:243
 msgid "Auto _remove invalid music file"
-msgstr "無効の音楽を自動的に削除します(_R)"
+msgstr "無効の音楽を自動的に削除する(_R)"
 
 #: src/gui_setting.c:261
 msgid "_Auto encoding detect (use system language settings)"
-msgstr "エンコードを自動的に検出します (システムの言語設定を使います) (_A)"
+msgstr "エンコードを自動的に検出する (システムの言語設定を使う) (_A)"
 
 #: src/gui_setting.c:348
 msgid "<b>Theme</b>"
@@ -663,8 +645,8 @@ msgid ""
 "Please notice that you should restart the player if you have disabled the "
 "style or the style does not work properly."
 msgstr ""
-"ヒント: スタイルを無効にする、またはスタイルはが動作しないの場合、このプレー"
-"ヤを再起動します。"
+"ヒント: スタイルを無効にする、またはスタイルは動作しないの場合、このプレーヤ"
+"を再起動してください。"
 
 #: src/gui_setting.c:442
 msgid "Settings"
@@ -684,7 +666,6 @@ msgid "Playlist %d"
 msgstr "プレーレスト %d"
 
 #: src/player.c:237
-#, fuzzy
 msgid "Enable debug mode"
 msgstr "ミニモードを有効する"
 
@@ -699,7 +680,7 @@ msgid ""
 "Run '%s --help' to see a full list of available command line options.\n"
 msgstr ""
 "%s\n"
-"'%s --help'を使って、ヘルプのオプションを全て表示します。\n"
+"'%s --help'を使って、ヘルプのオプションを全て表示する。\n"
 
 #: src/playlist.c:137
 msgid "Default Playlist"
@@ -711,4 +692,5 @@ msgstr "プラグインの情報"
 
 #: src/plugin.c:448
 msgid "This plugin is resident, you should restart the player to disable it."
-msgstr "このプラグインは永久的な、無効にする為に、このプレーヤを再起動します"
+msgstr ""
+"このプラグインは永久的な、無効にする為に、このプレーヤを再起動してください。"

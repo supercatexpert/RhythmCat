@@ -28,6 +28,7 @@
 #include "core.h"
 #include "player.h"
 #include "playlist.h"
+#include "debug.h"
 
 /**
  * SECTION: gui_treeview
@@ -299,7 +300,8 @@ static void rc_gui_list2_dnd_data_received(GtkWidget *widget,
         }
         case 7:
         {
-            g_printf("%s", gtk_selection_data_get_data(seldata));
+            rc_debug_print("Gui: Unknown dnd data in list2: %s\n",
+                gtk_selection_data_get_data(seldata));
         }
         default: break;
     }
@@ -639,18 +641,20 @@ void rc_gui_treeview_init()
     gtk_cell_renderer_set_fixed_size(rc_ui->renderer_pixbuf[1], 16, -1);
     list1_column = gtk_tree_view_column_new();
     list2_index_column = gtk_tree_view_column_new_with_attributes(
-        "#", rc_ui->renderer_pixbuf[1], "stock-id", 1, NULL);
+        "#", rc_ui->renderer_pixbuf[1], "stock-id", PLIST2_STATE, NULL);
     list2_title_column = gtk_tree_view_column_new_with_attributes(
-        _("Title"), rc_ui->renderer_text[2], "text", 2, NULL);
+        _("Title"), rc_ui->renderer_text[2], "text", PLIST2_TITLE, NULL);
     list2_time_column = gtk_tree_view_column_new_with_attributes(
-        _("Length"), rc_ui->renderer_text[4], "text", 5, NULL);
+        _("Length"), rc_ui->renderer_text[4], "text", PLIST2_LENGTH, NULL);
     gtk_tree_view_column_set_title(list1_column, "Playlist");
-    gtk_tree_view_column_pack_start(list1_column, rc_ui->renderer_pixbuf[0], FALSE);
-    gtk_tree_view_column_pack_start(list1_column, rc_ui->renderer_text[0], TRUE);
+    gtk_tree_view_column_pack_start(list1_column, rc_ui->renderer_pixbuf[0],
+        FALSE);
+    gtk_tree_view_column_pack_start(list1_column, rc_ui->renderer_text[0],
+        TRUE);
     gtk_tree_view_column_add_attribute(list1_column,rc_ui->renderer_pixbuf[0],
-        "stock-id", 0);
+        "stock-id", PLIST1_STATE);
     gtk_tree_view_column_add_attribute(list1_column,rc_ui->renderer_text[0],
-        "text", 1);
+        "text", PLIST1_NAME);
     gtk_tree_view_append_column(GTK_TREE_VIEW(rc_ui->list1_tree_view),
         list1_column);
     gtk_tree_view_column_set_expand(list1_column, TRUE);

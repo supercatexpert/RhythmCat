@@ -25,10 +25,7 @@
 #ifndef HAVE_SHELL_H
 #define HAVE_SHELL_H
 
-#include <stdlib.h>
-#include <string.h>
 #include <glib.h>
-#include <glib/gprintf.h>
 #include <gtk/gtk.h>
 #include <gst/gst.h>
 #include <dbus/dbus.h>

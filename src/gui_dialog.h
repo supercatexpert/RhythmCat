@@ -25,11 +25,8 @@
 #ifndef HAVE_GUI_DIALOG_H
 #define HAVE_GUI_DIALOG_H
 
-#include <stdlib.h>
 #include <glib.h>
-#include <glib/gprintf.h>
 #include <gtk/gtk.h>
-#include <glib/gstdio.h>
 
 /**
  * MAX_DIR_DEPTH:

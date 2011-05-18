@@ -25,9 +25,7 @@
 #ifndef GUI_EQ_H
 #define GUI_EQ_H
 
-#include <stdlib.h>
 #include <glib.h>
-#include <glib/gprintf.h>
 #include <gtk/gtk.h>
 
 /**

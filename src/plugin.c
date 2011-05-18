@@ -71,6 +71,26 @@ static void rc_plugin_module_free(RCModuleData *module_data)
     g_free(module_data);
 }
 
+/*
+ * Compare the version.
+ */
+
+static gint rc_plugin_version_compare(const gchar *v1, const gchar *v2)
+{
+    gint v1_major = 0, v1_minor = 0, v1_micro = 0;
+    gint v2_major = 0, v2_minor = 0, v2_micro = 0;
+    gint result;
+    sscanf(v1, "%d.%d.%d", &v1_major, &v1_minor, &v1_micro);
+    sscanf(v2, "%d.%d.%d", &v2_major, &v2_minor, &v2_micro);
+    result = v1_major - v2_major;
+    if(result!=0) return result;
+    result = v1_minor - v2_minor;
+    if(result!=0) return result;
+    result = v1_micro - v2_micro;
+    if(result!=0) return result;
+    return 0;
+}
+
 /**
  * rc_plugin_init:
  *
@@ -165,6 +185,9 @@ gboolean rc_plugin_search_dir(const gchar *dirname)
     if(dir==NULL) return FALSE;
     dir_item = g_dir_read_name(dir);
     RCPluginConfData *plugin_data = NULL;
+    GSList *prev_list = NULL;
+    RCPluginConfData *prev_data = NULL;
+    gint version_result = 0;
     while(dir_item!=NULL)
     {
         full_path = g_strdup_printf("%s%c%s%c%s.conf", dirname,
@@ -174,8 +197,38 @@ gboolean rc_plugin_search_dir(const gchar *dirname)
             plugin_data = rc_plugin_conf_load(full_path);
             if(plugin_data!=NULL)
             {
-                rc_debug_print("Plugin: Found plugin: %s\n", full_path);
-                plugin_list = g_slist_append(plugin_list, plugin_data);
+                prev_list = rc_plugin_check_exist(plugin_data->type,
+                    plugin_data->name);
+                if(prev_list!=NULL)
+                    prev_data = prev_list->data;
+                else
+                    prev_data = NULL;
+                if(prev_data!=NULL)
+                {
+                    rc_debug_print("Plugin: Found the same plugin, the player "
+                       "will load the newer one.\n");
+                    version_result = rc_plugin_version_compare(
+                        prev_data->version, plugin_data->version);
+                    if(version_result>=0)
+                    {
+                        rc_plugin_conf_free(plugin_data);
+                    }
+                    else
+                    {
+                        rc_debug_print("Plugin: Found newer version of the "
+                            "plugin, removing the older one...\n");
+                        rc_plugin_conf_free(prev_data);
+                        plugin_list = g_slist_delete_link(plugin_list,
+                            prev_list);
+                        rc_debug_print("Plugin: Found plugin: %s\n", full_path);
+                        plugin_list = g_slist_append(plugin_list, plugin_data);
+                    }
+                }
+                else
+                {
+                    rc_debug_print("Plugin: Found plugin: %s\n", full_path);
+                    plugin_list = g_slist_append(plugin_list, plugin_data);
+                }
             }
         }
         g_free(full_path);
@@ -256,6 +309,22 @@ static gboolean rc_plugin_module_check_running(const gchar *path)
             return TRUE;
     }
     return FALSE;
+}
+
+static GSList *rc_plugin_module_check_exist(const gchar *name)
+{
+    GSList *list_foreach = NULL;
+    RCPluginConfData *plugin_data = NULL;
+    if(plugin_list==NULL) return FALSE;
+    for(list_foreach=plugin_list;list_foreach!=NULL;
+        list_foreach=g_slist_next(list_foreach))
+    {
+        plugin_data = list_foreach->data;
+        if(plugin_data->type==PLUGIN_TYPE_MODULE && 
+            g_strcmp0(plugin_data->name, name)==0)
+            return list_foreach;
+    }
+    return NULL;
 }
 
 static RCModuleData *rc_plugin_module_get_running(const gchar *path)
@@ -561,5 +630,30 @@ gboolean rc_plugin_check_running(RCPluginType type, const gchar *path)
             rc_debug_perror("Plugin-ERROR: Unknown plugin type!\n");
     }
     return FALSE;
+}
+
+/**
+ * rc_plugin_check_exist:
+ * @type: the type of the plugin
+ * @name: the name of the plugin in configure file
+ *
+ * Check if the plugin configure data exists, if it is found, return
+ * the configure data item, otherwise NULL.
+ *
+ * Returns: The plugin configure data item if the configure data exists,
+ * NULL if not found.
+ */
+
+GSList *rc_plugin_check_exist(RCPluginType type, const gchar *name)
+{
+    switch(type)
+    {
+        case PLUGIN_TYPE_MODULE:
+            return rc_plugin_module_check_exist(name);
+            break;
+        default:
+            rc_debug_perror("Plugin-ERROR: Unknown plugin type!\n");
+    }
+    return NULL;
 }
 

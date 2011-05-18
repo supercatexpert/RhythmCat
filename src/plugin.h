@@ -25,8 +25,6 @@
 #ifndef HAVE_PLUGIN_H
 #define HAVE_PLUGIN_H
 
-#include <string.h>
-#include <stdlib.h>
 #include <glib.h>
 #include <gtk/gtk.h>
 #include <gst/gst.h>
@@ -90,6 +88,7 @@ gboolean rc_plugin_load(RCPluginType type, const gchar *filename);
 gboolean rc_plugin_configure(RCPluginType type, const gchar *filename);
 void rc_plugin_close(RCPluginType type, const gchar *filename);
 gboolean rc_plugin_check_running(RCPluginType type, const gchar *path);
+GSList *rc_plugin_check_exist(RCPluginType type, const gchar *name);
 
 #endif
 

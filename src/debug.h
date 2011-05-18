@@ -25,8 +25,6 @@
 #ifndef HAVE_DEBUG_H
 #define HAVE_DEBUG_H
 
-#include <stdlib.h>
-#include <unistd.h>
 #include <glib.h>
 #include <glib/gprintf.h>
 

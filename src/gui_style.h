@@ -25,9 +25,7 @@
 #ifndef HAVE_GUI_STYLE_H
 #define HAVE_GUI_STYLE_H
 
-#include <string.h>
 #include <glib.h>
-#include <glib/gprintf.h>
 #include <gdk/gdk.h>
 #include <gtk/gtk.h>
 

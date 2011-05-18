@@ -133,7 +133,6 @@ msgid "Rename the playlist"
 msgstr "重命名播放列表"
 
 #: src/gui.c:577 src/gui.c:653
-#, fuzzy
 msgid "R_emove Playlist"
 msgstr "移除播放列表(_E)"
 
@@ -186,7 +185,6 @@ msgid "_Mini Mode"
 msgstr "迷你模式(_M)"
 
 #: src/gui.c:602
-#, fuzzy
 msgid "Enable mini mode"
 msgstr "启用迷你模式"
 
@@ -215,7 +213,6 @@ msgid "Play previous music"
 msgstr "播放上一首音乐"
 
 #: src/gui.c:617 src/gui.c:693
-#, fuzzy
 msgid "_Next"
 msgstr "下一首(_N)"
 
@@ -272,7 +269,6 @@ msgid "About this player"
 msgstr "关于这个播放器"
 
 #: src/gui.c:650
-#, fuzzy
 msgid "Raname the playlist"
 msgstr "重命名播放列表"
 
@@ -395,12 +391,12 @@ msgstr "未知格式"
 #: src/gui.c:1348
 #, c-format
 msgid "%d kbps "
-msgstr "%d 千比特/秒"
+msgstr "%d 千比特/秒 "
 
 #: src/gui.c:1352
 #, c-format
 msgid "%d Hz "
-msgstr "%d Hz"
+msgstr "%d Hz "
 
 #: src/gui.c:1359
 msgid "Mono"
@@ -408,7 +404,7 @@ msgstr "单声道"
 
 #: src/gui.c:1363
 msgid "Stereo"
-msgstr "Stereo"
+msgstr "立体声"
 
 #: src/gui.c:1367
 #, c-format
@@ -437,7 +433,6 @@ msgid "Refreshing..."
 msgstr "正在刷新……"
 
 #: src/gui_dialog.c:118
-#, fuzzy
 msgid "A music player based on GTK+ 3.0 & Gstreamer 0.10"
 msgstr "一个基于GTK+ 3.0和Gstreamer 0.10的音乐播放器"
 
@@ -634,7 +629,6 @@ msgid "<b>Theme</b>"
 msgstr "<b>主题</b>"
 
 #: src/gui_setting.c:349
-#, fuzzy
 msgid "<b>Preview</b>"
 msgstr "<b>预览:</b>"
 
@@ -666,7 +660,6 @@ msgid "Playlist %d"
 msgstr "播放列表 %d"
 
 #: src/player.c:237
-#, fuzzy
 msgid "Enable debug mode"
 msgstr "启用调试模式"
 

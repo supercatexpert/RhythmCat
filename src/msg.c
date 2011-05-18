@@ -24,7 +24,6 @@
  */
 
 #include "msg.h"
-#include "global.h"
 #include "core.h"
 #include "gui.h"
 #include "tag.h"
