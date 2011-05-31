@@ -28,8 +28,12 @@
 #include <glib.h>
 #include <gtk/gtk.h>
 
+G_BEGIN_DECLS
+
 /* Functions */
 void rc_gui_create_setting_window();
+
+G_END_DECLS
 
 #endif
 

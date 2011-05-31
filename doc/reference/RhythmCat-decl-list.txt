@@ -229,6 +229,8 @@ rc_gui_status_progress_set_progress
 rc_gui_view_add_page
 rc_gui_view_remove_page
 rc_gui_get_tray_icon
+rc_gui_get_ui_manager
+rc_gui_get_action_group
 </SECTION>
 
 <SECTION>

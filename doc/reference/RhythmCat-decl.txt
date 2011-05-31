@@ -950,6 +950,16 @@ guint id
  
 </FUNCTION>
 <FUNCTION>
+<NAME>rc_gui_get_ui_manager</NAME>
+<RETURNS>GtkUIManager *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_get_action_group</NAME>
+<RETURNS>GtkActionGroup *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
 <NAME>rc_gui_mini_init</NAME>
 <RETURNS>void </RETURNS>
  

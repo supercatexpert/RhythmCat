@@ -29,6 +29,8 @@
 #include <gtk/gtk.h>
 #include <gst/gst.h>
 
+G_BEGIN_DECLS
+
 #define GETTEXT_PACKAGE "RhythmCat"
 
 void rc_player_init(int *argc, char **argv[]);
@@ -46,6 +48,8 @@ const gchar *rc_player_get_data_dir();
 const gchar *rc_player_get_home_dir();
 const gchar *rc_player_get_locale();
 gboolean rc_player_check_supported_format(const gchar *filename);
+
+G_END_DECLS
 
 #endif
 

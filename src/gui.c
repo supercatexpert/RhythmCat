@@ -777,24 +777,24 @@ static const gchar *rc_ui_info =
     "  <menubar name='RCMenuBar'>"
     "    <menu action='FileMenu'>"
     "      <menuitem action='FileNewList'/>"
-    "      <separator/>"
+    "      <separator name='FileSep1'/>"
     "      <menuitem action='FileImportMusic'/>"
     "      <menuitem action='FileImportList'/>"
     "      <menuitem action='FileImportFolder'/>"
-    "      <separator/>"
+    "      <separator name='FileSep2'/>"
     "      <menuitem action='FileExportList'/>"
     "      <menuitem action='FileExportAll'/>"
-    "      <separator/>"
+    "      <separator name='FileSep3'/>"
     "      <menuitem action='FileQuit'/>"
     "    </menu>"
     "    <menu action='EditMenu'>"
     "      <menuitem action='EditRenameList'/>"
     "      <menuitem action='EditRemoveList'/>"
-    "      <separator/>"
+    "      <separator name='EditSep1'/>"
     "      <menuitem action='EditRemoveMusic'/>"
     "      <menuitem action='EditSelectAll'/>"
     "      <menuitem action='EditRefreshList'/>"
-    "      <separator/>"
+    "      <separator name='EditSep2'/>"
     "      <menuitem action='EditPlugin'/>"
     "      <menuitem action='EditPreferences'/>"
     "    </menu>"
@@ -812,20 +812,20 @@ static const gchar *rc_ui_info =
     "      <menuitem action='ControlNext'/>"
     "      <menuitem action='ControlBackward'/>"
     "      <menuitem action='ControlForward'/>"
-    "      <separator/>"
+    "      <separator name='ControlSep1'/>"
     "      <menuitem action='ControlVolumeUp'/>"
     "      <menuitem action='ControlVolumeDown'/>"
-    "      <separator/>"
+    "      <separator name='ControlSep2'/>"
     "      <menu action='RepeatMenu'>"
     "        <menuitem action='RepeatNoRepeat'/>"
-    "        <separator/>"
+    "        <separator name='RepeatSep1'/>"
     "        <menuitem action='RepeatMusicRepeat'/>"
     "        <menuitem action='RepeatListRepeat'/>"
     "        <menuitem action='RepeatAllRepeat'/>"
     "      </menu>"
     "      <menu action='RandomMenu'>"
     "        <menuitem action='RandomNoRandom'/>"
-    "        <separator/>"
+    "        <separator name='RandomSep1'/>"
     "        <menuitem action='RandomSingleRandom'/>"
     "        <menuitem action='RandomAllRandom'/>"
     "      </menu>"
@@ -844,10 +844,10 @@ static const gchar *rc_ui_info =
     "  <popup action='List2PopupMenu'>"
     "    <menuitem action='List2ImportMusic'/>"
     "    <menuitem action='List2ImportList'/>"
-    "    <separator/>"
+    "    <separator name='List2Sep1'/>"
     "    <menuitem action='List2SelectAll'/>"
     "    <menuitem action='List2RemoveMusic'/>"
-    "    <separator/>"
+    "    <separator name='List2Sep2'/>"
     "    <menuitem action='List2RefreshList'/>"
     "  </popup>"
     "  <popup action='TrayPopupMenu'>"
@@ -1814,5 +1814,31 @@ gboolean rc_gui_view_remove_page(guint id)
 GtkStatusIcon *rc_gui_get_tray_icon()
 {
     return rc_gui.tray_icon;
+}
+
+/**
+ * rc_gui_get_ui_manager:
+ *
+ * Return the UI Manager.
+ *
+ * Returns: The UI Manager.
+ */
+
+GtkUIManager *rc_gui_get_ui_manager()
+{
+    return rc_gui.main_ui;
+}
+
+/**
+ * rc_gui_get_action_group:
+ *
+ * Return the action group in UI Manager.
+ *
+ * Returns: The action group.
+ */
+
+GtkActionGroup *rc_gui_get_action_group()
+{
+    return rc_gui.main_action_group;
 }
 

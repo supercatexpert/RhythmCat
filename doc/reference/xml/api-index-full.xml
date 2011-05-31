@@ -45,8 +45,10 @@
 <indexentry><primaryie linkends="rc-gui-eq-data-init"><link linkend="rc-gui-eq-data-init">rc_gui_eq_data_init</link>, function in <link linkend="RhythmCat-Equalizer-UI">Equalizer UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-eq-get-data"><link linkend="rc-gui-eq-get-data">rc_gui_eq_get_data</link>, function in <link linkend="RhythmCat-Equalizer-UI">Equalizer UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-eq-init"><link linkend="rc-gui-eq-init">rc_gui_eq_init</link>, function in <link linkend="RhythmCat-Equalizer-UI">Equalizer UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-get-action-group"><link linkend="rc-gui-get-action-group">rc_gui_get_action_group</link>, function in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-get-data"><link linkend="rc-gui-get-data">rc_gui_get_data</link>, function in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-get-tray-icon"><link linkend="rc-gui-get-tray-icon">rc_gui_get_tray_icon</link>, function in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-get-ui-manager"><link linkend="rc-gui-get-ui-manager">rc_gui_get_ui_manager</link>, function in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-init"><link linkend="rc-gui-init">rc_gui_init</link>, function in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-list1-delete-list"><link linkend="rc-gui-list1-delete-list">rc_gui_list1_delete_list</link>, function in <link linkend="RhythmCat-Playlist-Views-UI">Playlist Views UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-list1-get-selected-index"><link linkend="rc-gui-list1-get-selected-index">rc_gui_list1_get_selected_index</link>, function in <link linkend="RhythmCat-Playlist-Views-UI">Playlist Views UI</link></primaryie></indexentry>

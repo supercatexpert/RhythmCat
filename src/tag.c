@@ -98,7 +98,7 @@ static gboolean rc_tag_bus_handler(GstBus *bus, GstMessage *message,
         case GST_MESSAGE_EOS:
         {
             mmd->eos = TRUE;
-        return TRUE;
+            return TRUE;
         }
         case GST_MESSAGE_ERROR:
         {
@@ -360,7 +360,9 @@ RCMusicMetaData *rc_tag_read_metadata(const gchar *uri)
         return NULL;
     }
     pipeline = gst_pipeline_new("pipeline");
-    decodebin = gst_element_factory_make("decodebin", NULL);
+    decodebin = gst_element_factory_make("decodebin2", NULL);
+    if(decodebin==NULL)
+        decodebin = gst_element_factory_make("decodebin", NULL);
     fakesink = gst_element_factory_make("fakesink", NULL);
     decoded_pad_data.pipeline = pipeline;
     decoded_pad_data.fakesink = fakesink;

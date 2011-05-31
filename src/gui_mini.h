@@ -30,6 +30,8 @@
 #include <gtk/gtk.h>
 #include <gst/gst.h>
 
+G_BEGIN_DECLS
+
 /**
  * RCGuiMiniData:
  * @mini_window: the player window in mini mode
@@ -85,6 +87,8 @@ void rc_gui_mini_window_hide();
 void rc_gui_mini_window_show();
 void rc_gui_mini_mini_mode_clicked();
 void rc_gui_mini_normal_mode_clicked();
+
+G_END_DECLS
 
 #endif
 

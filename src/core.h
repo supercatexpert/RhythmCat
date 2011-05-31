@@ -30,6 +30,8 @@
 #include <gst/gst.h>
 #include <gtk/gtk.h>
 
+G_BEGIN_DECLS
+
 /**
  * RCCoreData:
  * @playbin: the playbin element
@@ -72,6 +74,8 @@ gint64 rc_core_get_music_length();
 gdouble rc_core_get_volume();
 void rc_core_set_eq_effect(gdouble *fq);
 GstState rc_core_get_play_state();
+
+G_END_DECLS
 
 #endif
 

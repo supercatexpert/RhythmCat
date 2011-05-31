@@ -28,6 +28,8 @@
 #include <glib.h>
 #include <glib-object.h>
 
+G_BEGIN_DECLS
+
 #define RC_PLAYER_TYPE (rc_player_get_type())
 #define RC_PLAYER(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), RC_PLAYER_TYPE, \
     RCPlayer))
@@ -81,6 +83,8 @@ void rc_player_object_signal_emit_simple(const char *name);
 gulong rc_player_object_signal_connect_simple(const char *name,
     GCallback callback);
 void rc_player_object_signal_disconnect(gulong id);
+
+G_END_DECLS
 
 #endif
 

@@ -28,7 +28,11 @@
 #include <glib.h>
 #include <gtk/gtk.h>
 
+G_BEGIN_DECLS
+
 void rc_gui_plugin_window_create();
+
+G_END_DECLS
 
 #endif
 

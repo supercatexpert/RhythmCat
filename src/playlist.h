@@ -10,6 +10,8 @@
 #include <gtk/gtk.h>
 #include <gst/gst.h>
 
+G_BEGIN_DECLS
+
 /*
  * ListStore1: 0:State, 1:Name, 2: ListStore2(gpointer).
  * ListStore2: 0:URI, 1:State, 2:Title, 3: Artist, 4: Album, 5: Length, 
@@ -25,6 +27,7 @@
  *
  * The enum type to show the columns in ListStore1.
  */
+
 typedef enum RCPlist1Column {
     PLIST1_STATE = 0,
     PLIST1_NAME = 1,
@@ -46,6 +49,7 @@ typedef enum RCPlist1Column {
  *
  * The enum type to show the columns in ListStore2.
  */
+
 typedef enum RCPlist2Column {
     PLIST2_URI = 0,
     PLIST2_STATE = 1,
@@ -98,6 +102,8 @@ gint rc_plist_import_job_get_length();
 void rc_plist_import_job_cancel();
 void rc_plist_load_argument(char *argv[]);
 gboolean rc_plist_load_uri_from_remote(const gchar *uri);
+
+G_END_DECLS
 
 #endif
 

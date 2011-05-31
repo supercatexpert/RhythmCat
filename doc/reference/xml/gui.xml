@@ -45,6 +45,8 @@
                                                          <parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *widget</parameter>);
 <link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-gui-view-remove-page">rc_gui_view_remove_page</link>             (<parameter><link linkend="guint"><type>guint</type></link> id</parameter>);
 <link linkend="GtkStatusIcon"><returnvalue>GtkStatusIcon</returnvalue></link> *     <link linkend="rc-gui-get-tray-icon">rc_gui_get_tray_icon</link>                ();
+<link linkend="GtkUIManager"><returnvalue>GtkUIManager</returnvalue></link> *      <link linkend="rc-gui-get-ui-manager">rc_gui_get_ui_manager</link>               ();
+<link linkend="GtkActionGroup"><returnvalue>GtkActionGroup</returnvalue></link> *    <link linkend="rc-gui-get-action-group">rc_gui_get_action_group</link>             ();
 </synopsis>
 </refsynopsisdiv>
 
@@ -454,6 +456,26 @@ Remove a view page from player.
 Return the tray icon.
 </para><variablelist role="params">
 <varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The tray icon.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-gui-get-ui-manager" role="function">
+<title>rc_gui_get_ui_manager ()</title>
+<indexterm zone="rc-gui-get-ui-manager"><primary>rc_gui_get_ui_manager</primary></indexterm>
+<programlisting><link linkend="GtkUIManager"><returnvalue>GtkUIManager</returnvalue></link> *      rc_gui_get_ui_manager               ();</programlisting>
+<para>
+Return the UI Manager.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The UI Manager.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-gui-get-action-group" role="function">
+<title>rc_gui_get_action_group ()</title>
+<indexterm zone="rc-gui-get-action-group"><primary>rc_gui_get_action_group</primary></indexterm>
+<programlisting><link linkend="GtkActionGroup"><returnvalue>GtkActionGroup</returnvalue></link> *    rc_gui_get_action_group             ();</programlisting>
+<para>
+Return the action group in UI Manager.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The action group.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 

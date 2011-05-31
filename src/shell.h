@@ -31,6 +31,8 @@
 #include <dbus/dbus.h>
 #include <dbus/dbus-glib.h>
 
+G_BEGIN_DECLS
+
 typedef struct RCShell {
     GObject parent;
 }RCShell;
@@ -62,6 +64,8 @@ gboolean rc_shell_get_random_mode(RCShell *shell, gint *random,
     GError **error);
 gboolean rc_shell_set_random_mode(RCShell *shell, gint random,
     GError **error);
+
+G_END_DECLS
 
 #endif
 

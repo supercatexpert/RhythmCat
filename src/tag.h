@@ -34,6 +34,8 @@
 #include <gst/gst.h>
 #include <gtk/gtk.h>
 
+G_BEGIN_DECLS
+
 /**
  * RCMusicMetaData:
  * @length: the length of the music
@@ -88,6 +90,8 @@ const RCMusicMetaData *rc_tag_get_playing_metadata();
 gchar *rc_tag_get_name_from_fpath(const gchar *filename);
 gchar *rc_tag_find_file(const gchar *dirname, const gchar *str,
     const gchar *extname);
+
+G_END_DECLS
 
 #endif
 

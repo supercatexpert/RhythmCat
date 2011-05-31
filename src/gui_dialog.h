@@ -28,6 +28,8 @@
 #include <glib.h>
 #include <gtk/gtk.h>
 
+G_BEGIN_DECLS
+
 /**
  * MAX_DIR_DEPTH:
  *
@@ -45,6 +47,8 @@ void rc_gui_open_music_directory();
 void rc_gui_save_playlist_dialog();
 void rc_gui_load_playlist_dialog();
 void rc_gui_save_all_playlists_dialog();
+
+G_END_DECLS
 
 #endif
 

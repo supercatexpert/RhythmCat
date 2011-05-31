@@ -224,7 +224,7 @@ gboolean rc_lrc_read_from_file(const gchar *filename)
     }
     else
         ex_encoding = rc_set_get_string("Metadata", "LRCExEncoding", NULL);
-    if(!g_utf8_validate(lrc_text_data,-1,NULL))
+    if(!g_utf8_validate(lrc_text_data, -1, NULL))
     {
         new_text = g_convert(lrc_text_data, length, "UTF-8",
             ex_encoding, &size1, &size2, NULL);

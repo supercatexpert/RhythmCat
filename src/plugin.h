@@ -29,6 +29,8 @@
 #include <gtk/gtk.h>
 #include <gst/gst.h>
 
+G_BEGIN_DECLS
+
 /**
  * RCPluginType:
  * @PLUGIN_TYPE_MODULE: the plugin is a module
@@ -89,6 +91,8 @@ gboolean rc_plugin_configure(RCPluginType type, const gchar *filename);
 void rc_plugin_close(RCPluginType type, const gchar *filename);
 gboolean rc_plugin_check_running(RCPluginType type, const gchar *path);
 GSList *rc_plugin_check_exist(RCPluginType type, const gchar *name);
+
+G_END_DECLS
 
 #endif
 

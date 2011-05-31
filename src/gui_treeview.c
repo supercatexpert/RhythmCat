@@ -186,6 +186,7 @@ static void rc_gui_list2_dnd_data_received(GtkWidget *widget,
     gint *indices = NULL;
     gint *index = NULL;
     gint target = 0;
+    guint insert_num = 0;
     GList *path_list_foreach = NULL;
     GtkTreeViewDropPosition pos;
     GtkTreePath *path_start = NULL;
@@ -283,6 +284,7 @@ static void rc_gui_list2_dnd_data_received(GtkWidget *widget,
                 rc_ui->list2_tree_model, NULL);
             if(target<0) target = list_length;
             uri_array = g_uri_list_extract_uris(uris);
+            insert_num = 0;
             for(count=0;uri_array[count]!=NULL;count++)
             {
                 uri = uri_array[count];
@@ -291,11 +293,12 @@ static void rc_gui_list2_dnd_data_received(GtkWidget *widget,
                     flag = rc_plist_insert_music(uri, 
                         rc_gui_list1_get_selected_index(), target);
                     target++;
+                    insert_num++;
                 }
             }
             g_strfreev(uri_array);
-            if(target>0)
-                rc_gui_status_task_set(1, target);
+            if(insert_num>0)
+                rc_gui_status_task_set(1, insert_num);
             break;
         }
         case 7:

@@ -31,6 +31,8 @@
 #include <gst/gst.h>
 #include <glib/gi18n.h>
 
+G_BEGIN_DECLS
+
 /**
  * RCGuiData:
  * @main_ui: the GtkUIManager which manages the menus
@@ -132,6 +134,10 @@ guint rc_gui_view_add_page(const gchar *name, const gchar *title,
     GtkWidget *widget);
 gboolean rc_gui_view_remove_page(guint id);
 GtkStatusIcon *rc_gui_get_tray_icon();
+GtkUIManager *rc_gui_get_ui_manager();
+GtkActionGroup *rc_gui_get_action_group();
+
+G_END_DECLS
 
 #endif
 

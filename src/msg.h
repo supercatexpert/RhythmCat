@@ -30,6 +30,8 @@
 #include <gst/gst.h>
 #include <glib/gi18n.h>
 
+G_BEGIN_DECLS
+
 /**
  * RCMsgAsyncQueueWatchFunc:
  * @item: queue item
@@ -79,6 +81,8 @@ guint rc_msg_async_queue_watch_new(GAsyncQueue *queue, gint priority,
     GMainContext *context);
 void rc_msg_init();
 void rc_msg_push(RCMsgType type, gpointer data);
+
+G_END_DECLS
 
 #endif
 

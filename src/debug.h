@@ -28,6 +28,8 @@
 #include <glib.h>
 #include <glib/gprintf.h>
 
+G_BEGIN_DECLS
+
 #ifndef DEBUG_MODE
 #define DEBUG_MODE FALSE
 #endif
@@ -36,6 +38,8 @@ gboolean rc_debug_get_flag();
 void rc_debug_set_mode(gboolean mode);
 gint rc_debug_print(const gchar *format, ...);
 gint rc_debug_perror(const gchar *format, ...);
+
+G_END_DECLS
 
 #endif
 

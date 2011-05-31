@@ -29,6 +29,8 @@
 #include <gst/gst.h>
 #include <gtk/gtk.h>
 
+G_BEGIN_DECLS
+
 /* Functions */
 void rc_set_init();
 void rc_set_exit();
@@ -68,4 +70,7 @@ gboolean rc_set_load_setting(const gchar *filename);
 void rc_set_save_setting(const gchar *filename);
 GKeyFile *rc_set_get_plugin_configure();
 
+G_END_DECLS
+
 #endif
+

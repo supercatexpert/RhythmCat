@@ -27,6 +27,8 @@
 
 #include <glib.h>
 
+G_BEGIN_DECLS
+
 /**
  * RCLyricData:
  * @time: the start time of the lyric text
@@ -54,6 +56,8 @@ gsize rc_lrc_get_lrc_length();
 const gchar *rc_lrc_get_text_data();
 const RCLyricData *rc_lrc_get_line_by_time(gint64 time);
 const RCLyricData *rc_lrc_get_line_now();
+
+G_END_DECLS
 
 #endif
 

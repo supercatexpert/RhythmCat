@@ -62,6 +62,8 @@
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *widget</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Main-UI.html#rc-gui-view-remove-page" title="rc_gui_view_remove_page ()">rc_gui_view_remove_page</a>             (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> id</code></em>);
 <a href="/usr/share/gtk-doc/html/gtk/GtkStatusIcon.html"><span class="returnvalue">GtkStatusIcon</span></a> *     <a class="link" href="RhythmCat-Main-UI.html#rc-gui-get-tray-icon" title="rc_gui_get_tray_icon ()">rc_gui_get_tray_icon</a>                ();
+<a href="/usr/share/gtk-doc/html/gtk/GtkUIManager.html"><span class="returnvalue">GtkUIManager</span></a> *      <a class="link" href="RhythmCat-Main-UI.html#rc-gui-get-ui-manager" title="rc_gui_get_ui_manager ()">rc_gui_get_ui_manager</a>               ();
+<a href="/usr/share/gtk-doc/html/gtk/GtkActionGroup.html"><span class="returnvalue">GtkActionGroup</span></a> *    <a class="link" href="RhythmCat-Main-UI.html#rc-gui-get-action-group" title="rc_gui_get_action_group ()">rc_gui_get_action_group</a>             ();
 </pre>
 </div>
 <div class="refsect1" title="Description">
@@ -614,6 +616,38 @@ Return the tray icon.
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td> The tray icon.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_get_ui_manager ()">
+<a name="rc-gui-get-ui-manager"></a><h3>rc_gui_get_ui_manager ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gtk/GtkUIManager.html"><span class="returnvalue">GtkUIManager</span></a> *      rc_gui_get_ui_manager               ();</pre>
+<p>
+Return the UI Manager.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The UI Manager.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_get_action_group ()">
+<a name="rc-gui-get-action-group"></a><h3>rc_gui_get_action_group ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gtk/GtkActionGroup.html"><span class="returnvalue">GtkActionGroup</span></a> *    rc_gui_get_action_group             ();</pre>
+<p>
+Return the action group in UI Manager.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The action group.
 </td>
 </tr></tbody>
 </table></div>

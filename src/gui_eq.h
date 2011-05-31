@@ -28,6 +28,8 @@
 #include <glib.h>
 #include <gtk/gtk.h>
 
+G_BEGIN_DECLS
+
 /**
  * RCGuiEQData:
  * @eq_combobox: the combo-box
@@ -54,6 +56,8 @@ typedef struct RCGuiEQData {
 void rc_gui_eq_data_init();
 void rc_gui_eq_init();
 RCGuiEQData *rc_gui_eq_get_data();
+
+G_END_DECLS
 
 #endif
 

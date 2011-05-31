@@ -2,9 +2,9 @@ English Introduction
 -------------------------------------------------------------------------------
 Introduction:
 
-RhythmCat is a music player which can be running under Linux. It can be used as
-a normal music player, and it can also show lyrics in the player window, it can
-extend its functions by plugins...
+RhythmCat is a music player which can be used under Linux. It is not only a
+normal music player, it can extend its features by plug-ins, like lyric show
+in window, desktop lyric show, etc...
 
 Developing platform:
 
@@ -84,8 +84,8 @@ Google Code project page.
 -------------------------------------------------------------------------------
 介绍:
 
-RhythmCat 是一个可以在Linux平台下工作的音乐播放器。它可以在播放器的窗口内显示歌词，
-也可以通过插件扩展其功能。
+RhythmCat 是一个可以在Linux平台下工作的音乐播放器。它不只是一个普通的音乐播放器，它可以通过
+插件扩展其功能，如窗口歌词显示、桌面歌词显示等。
 
 开发环境:
 

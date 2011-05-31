@@ -28,6 +28,8 @@
 #include <glib.h>
 #include <gtk/gtk.h>
 
+G_BEGIN_DECLS
+
 /* Functions */
 void rc_gui_treeview_init();
 void rc_gui_list_tree_reset_list_store();
@@ -39,6 +41,8 @@ gint rc_gui_list1_get_selected_index();
 void rc_gui_list2_delete_lists();
 void rc_gui_list2_select_all();
 void rc_gui_list1_rename_list();
+
+G_END_DECLS
 
 #endif
 
