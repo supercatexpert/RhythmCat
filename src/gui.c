@@ -1186,6 +1186,7 @@ gboolean rc_gui_init()
     gtk_widget_set_name(rc_gui.album_image, "RCAlbumImage");
     rc_gui.volume_button = gtk_volume_button_new();
     gtk_widget_set_name(rc_gui.volume_button, "RCVolumeButton");
+    gtk_widget_set_name(rc_gui.plist_notebook, "RCPlistNotebook");
     gtk_button_set_relief(GTK_BUTTON(rc_gui.volume_button), GTK_RELIEF_NONE);
     g_object_set(G_OBJECT(rc_gui.volume_button), "size",
         GTK_ICON_SIZE_SMALL_TOOLBAR, NULL);
@@ -1840,5 +1841,44 @@ GtkUIManager *rc_gui_get_ui_manager()
 GtkActionGroup *rc_gui_get_action_group()
 {
     return rc_gui.main_action_group;
+}
+
+/**
+ * rc_gui_get_main_window:
+ *
+ * Return the main window widget.
+ *
+ * Returns: The main window widget.
+ */
+
+GtkWidget *rc_gui_get_main_window()
+{
+    return rc_gui.main_window;
+}
+
+/**
+ * rc_gui_get_icon_image:
+ *
+ * Return the icon image.
+ *
+ * Returns: The icon image.
+ */
+
+const GdkPixbuf *rc_gui_get_icon_image()
+{
+    return rc_gui.icon_image;
+}
+
+/**
+ * rc_gui_get_no_cover_image:
+ *
+ * Return the image shows when the cover image is not found.
+ *
+ * Returns: The images shows when the cover image is not found.
+ */
+
+const GdkPixbuf *rc_gui_get_no_cover_image()
+{
+    return rc_gui.no_cover_image;
 }
 

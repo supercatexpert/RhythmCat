@@ -66,7 +66,8 @@ AM_CONDITIONAL(USE_GTK3, test "x$enable_gtk3" = "xyes")
 
 AC_OUTPUT([Makefile po/Makefile.in po/Makefile src/Makefile data/Makefile \
     doc/Makefile doc/reference/Makefile data/images/Makefile
-    data/icons/Makefile data/themes/Makefile data/themes/Monochrome/Makefile])
+    data/icons/Makefile data/themes/Makefile data/themes/Monochrome/Makefile \
+    data/themes/AeroBlue/Makefile])
 
 AC_CONFIG_MACRO_DIR(m4)
 

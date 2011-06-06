@@ -47,6 +47,9 @@
 <link linkend="GtkStatusIcon"><returnvalue>GtkStatusIcon</returnvalue></link> *     <link linkend="rc-gui-get-tray-icon">rc_gui_get_tray_icon</link>                ();
 <link linkend="GtkUIManager"><returnvalue>GtkUIManager</returnvalue></link> *      <link linkend="rc-gui-get-ui-manager">rc_gui_get_ui_manager</link>               ();
 <link linkend="GtkActionGroup"><returnvalue>GtkActionGroup</returnvalue></link> *    <link linkend="rc-gui-get-action-group">rc_gui_get_action_group</link>             ();
+<link linkend="GtkWidget"><returnvalue>GtkWidget</returnvalue></link> *         <link linkend="rc-gui-get-main-window">rc_gui_get_main_window</link>              ();
+const <link linkend="GdkPixbuf"><returnvalue>GdkPixbuf</returnvalue></link> *   <link linkend="rc-gui-get-icon-image">rc_gui_get_icon_image</link>               ();
+const <link linkend="GdkPixbuf"><returnvalue>GdkPixbuf</returnvalue></link> *   <link linkend="rc-gui-get-no-cover-image">rc_gui_get_no_cover_image</link>           ();
 </synopsis>
 </refsynopsisdiv>
 
@@ -476,6 +479,36 @@ Return the UI Manager.
 Return the action group in UI Manager.
 </para><variablelist role="params">
 <varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The action group.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-gui-get-main-window" role="function">
+<title>rc_gui_get_main_window ()</title>
+<indexterm zone="rc-gui-get-main-window"><primary>rc_gui_get_main_window</primary></indexterm>
+<programlisting><link linkend="GtkWidget"><returnvalue>GtkWidget</returnvalue></link> *         rc_gui_get_main_window              ();</programlisting>
+<para>
+Return the main window widget.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The main window widget.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-gui-get-icon-image" role="function">
+<title>rc_gui_get_icon_image ()</title>
+<indexterm zone="rc-gui-get-icon-image"><primary>rc_gui_get_icon_image</primary></indexterm>
+<programlisting>const <link linkend="GdkPixbuf"><returnvalue>GdkPixbuf</returnvalue></link> *   rc_gui_get_icon_image               ();</programlisting>
+<para>
+Return the icon image.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The icon image.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-gui-get-no-cover-image" role="function">
+<title>rc_gui_get_no_cover_image ()</title>
+<indexterm zone="rc-gui-get-no-cover-image"><primary>rc_gui_get_no_cover_image</primary></indexterm>
+<programlisting>const <link linkend="GdkPixbuf"><returnvalue>GdkPixbuf</returnvalue></link> *   rc_gui_get_no_cover_image           ();</programlisting>
+<para>
+Return the image shows when the cover image is not found.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The images shows when the cover image is not found.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 

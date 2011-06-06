@@ -221,9 +221,12 @@ gboolean rc_lrc_read_from_file(const gchar *filename)
             ex_encoding = g_strdup("ShiftJIS");
             rc_set_set_string("Metadata", "LRCExEncoding", ex_encoding);
         }
+        else
+            ex_encoding = rc_set_get_string("Metadata", "LRCExEncoding", NULL);
     }
     else
         ex_encoding = rc_set_get_string("Metadata", "LRCExEncoding", NULL);
+    if(ex_encoding==NULL) ex_encoding = g_strdup("GBK");
     if(!g_utf8_validate(lrc_text_data, -1, NULL))
     {
         new_text = g_convert(lrc_text_data, length, "UTF-8",

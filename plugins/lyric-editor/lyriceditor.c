@@ -180,18 +180,16 @@ static gboolean rc_plugin_editor_save_to_file()
     gint result = 0;
     gchar *file_name = NULL;
     GtkTextIter iter_start, iter_end;
-    RCGuiData *rc_ui;
     gchar *text = NULL;
     gchar *title = NULL;
     gboolean flag = FALSE;
-    rc_ui = rc_gui_get_data();
     file_filter1 = gtk_file_filter_new();
     gtk_file_filter_set_name(file_filter1,
         _("Lyric File (*.LRC, *.lrc)"));
     gtk_file_filter_add_pattern(file_filter1, "*.LRC");
     gtk_file_filter_add_pattern(file_filter1, "*.lrc");
     file_chooser = gtk_file_chooser_dialog_new(_("Save lyric file..."),
-        GTK_WINDOW(rc_ui->main_window), GTK_FILE_CHOOSER_ACTION_SAVE,
+        GTK_WINDOW(rc_gui_get_main_window()), GTK_FILE_CHOOSER_ACTION_SAVE,
         GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT, GTK_STOCK_CANCEL,
         GTK_RESPONSE_CANCEL, NULL);
     gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(file_chooser),
@@ -301,7 +299,6 @@ static void rc_plugin_editor_load_from_file()
     gsize text_src_len;
     gchar *ex_encoding = NULL;
     const gchar *locale;
-    RCGuiData *rc_ui;
     gchar *text_src = NULL, *text = NULL;
     gsize size1 = 0, size2 = 0;
     gchar *title = NULL;
@@ -321,14 +318,13 @@ static void rc_plugin_editor_load_from_file()
                 return;
         }
     }
-    rc_ui = rc_gui_get_data();
     file_filter1 = gtk_file_filter_new();
     gtk_file_filter_set_name(file_filter1,
         _("Lyric File (*.LRC, *.lrc)"));
     gtk_file_filter_add_pattern(file_filter1, "*.LRC");
     gtk_file_filter_add_pattern(file_filter1, "*.lrc");
     file_chooser = gtk_file_chooser_dialog_new(_("Load lyric file..."),
-        GTK_WINDOW(rc_ui->main_window), GTK_FILE_CHOOSER_ACTION_OPEN,
+        GTK_WINDOW(rc_gui_get_main_window()), GTK_FILE_CHOOSER_ACTION_OPEN,
         GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT, GTK_STOCK_CANCEL,
         GTK_RESPONSE_CANCEL, NULL);
     gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(file_chooser),
@@ -537,7 +533,6 @@ static void rc_plugin_editor_ui_init()
 {
     GtkWidget *main_vbox;
     GtkWidget *editor_scr_window;
-    RCGuiData *rc_ui;
     if(editor_window!=NULL) return;
     editor_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     editor_buffer = gtk_source_buffer_new(NULL);
@@ -546,11 +541,10 @@ static void rc_plugin_editor_ui_init()
     editor_toolbar = gtk_toolbar_new();
     main_vbox = gtk_vbox_new(FALSE, 0);
     rc_plugin_editor_tool_init();
-    rc_ui = rc_gui_get_data();
     gtk_window_set_title(GTK_WINDOW(editor_window), _("Lyric Editor"));
     gtk_widget_set_size_request(editor_window, 400, 300);
     gtk_window_set_transient_for(GTK_WINDOW(editor_window),
-        GTK_WINDOW(rc_ui->main_window));
+        GTK_WINDOW(rc_gui_get_main_window()));
     gtk_window_set_destroy_with_parent(GTK_WINDOW(editor_window), TRUE);
     gtk_window_set_position(GTK_WINDOW(editor_window),
         GTK_WIN_POS_CENTER_ON_PARENT);
@@ -570,19 +564,19 @@ static void rc_plugin_editor_ui_init()
     gtk_widget_show_all(editor_window);
 }
 
-const gchar *g_module_check_init(GModule *module)
+G_MODULE_EXPORT const gchar *g_module_check_init(GModule *module)
 {
     g_printf("LRCEditor: Plugin loaded successfully!\n");
     keyfile = rc_set_get_plugin_configure();
     return NULL;
 }
 
-void g_module_unload(GModule *module)
+G_MODULE_EXPORT void g_module_unload(GModule *module)
 {
     g_printf("LRCEditor: Plugin exited!\n");
 }
 
-gint rc_plugin_module_init()
+G_MODULE_EXPORT gint rc_plugin_module_init()
 {
     GtkActionEntry entry;
     #ifdef USE_GTK3
@@ -607,7 +601,6 @@ gint rc_plugin_module_init()
             return 1;
         }
     #endif
-
     menu_id = gtk_ui_manager_new_merge_id(rc_gui_get_ui_manager());
     entry.name = "ViewLyricEditor";
     entry.label = _("Lyric Editor");
@@ -620,11 +613,10 @@ gint rc_plugin_module_init()
         GTK_UI_MANAGER_MENUITEM, FALSE);
     gtk_action_group_add_actions(rc_gui_get_action_group(),
         &entry, 1, NULL);
-
     return 0;
 }
 
-void rc_plugin_module_exit()
+G_MODULE_EXPORT void rc_plugin_module_exit()
 {
     if(menu_id>0)
     {
@@ -637,7 +629,7 @@ void rc_plugin_module_exit()
         gtk_widget_destroy(editor_window);
 }
 
-const RCPluginModuleData *rc_plugin_module_data()
+G_MODULE_EXPORT const RCPluginModuleData *rc_plugin_module_data()
 {
     return &plugin_module_data;
 }

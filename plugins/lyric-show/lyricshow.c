@@ -69,7 +69,6 @@ static RCPluginModuleData plugin_module_data =
 
 static gulong lyric_found_signal, lyric_stop_signal;
 static GuiLrcData rc_glrc;
-static RCGuiData *rc_ui;
 static guint id = 0;
 static guint timeout_id = 0;
 static GKeyFile *keyfile = NULL;
@@ -456,7 +455,6 @@ static gboolean rc_plugin_lrcshow_update(gpointer data)
 
 static void rc_plugin_lrcshow_init()
 {
-    rc_ui = rc_gui_get_data();
     bzero(&rc_glrc, sizeof(GuiLrcData));
     rc_glrc.lrc_time_delay = 0L;
     rc_glrc.lyric_font = g_strdup("Monospace 10");
@@ -502,14 +500,14 @@ static void rc_plugin_lrcshow_init()
         rc_plugin_lrcshow_enable();
 }
 
-const gchar *g_module_check_init(GModule *module)
+G_MODULE_EXPORT const gchar *g_module_check_init(GModule *module)
 {
     g_printf("LRCShow: Plugin loaded successfully!\n");
     keyfile = rc_set_get_plugin_configure();
     return NULL;
 }
 
-void g_module_unload(GModule *module)
+G_MODULE_EXPORT void g_module_unload(GModule *module)
 {
     g_printf("LRCShow: Plugin exited!\n");
 }
@@ -524,7 +522,7 @@ static void rc_plugin_lrcshow_stop()
     rc_plugin_lrcshow_disable();
 }
 
-gint rc_plugin_module_init()
+G_MODULE_EXPORT gint rc_plugin_module_init()
 {
     #ifdef USE_GTK3
         if(gtk_major_version<3)
@@ -556,7 +554,7 @@ gint rc_plugin_module_init()
     return 0;
 }
 
-void rc_plugin_module_exit()
+G_MODULE_EXPORT void rc_plugin_module_exit()
 {
     rc_plugin_lrcshow_save_conf();
     g_source_remove(timeout_id);
@@ -567,7 +565,7 @@ void rc_plugin_module_exit()
     g_free(rc_glrc.lyric_font);
 }
 
-void rc_plugin_module_configure()
+G_MODULE_EXPORT void rc_plugin_module_configure()
 {
     GtkWidget *dialog;
     GtkWidget *content_area;
@@ -668,7 +666,7 @@ void rc_plugin_module_configure()
     gtk_widget_destroy(dialog);
 }
 
-const RCPluginModuleData *rc_plugin_module_data()
+G_MODULE_EXPORT const RCPluginModuleData *rc_plugin_module_data()
 {
     return &plugin_module_data;
 }

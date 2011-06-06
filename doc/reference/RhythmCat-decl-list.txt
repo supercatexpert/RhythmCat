@@ -231,6 +231,9 @@ rc_gui_view_remove_page
 rc_gui_get_tray_icon
 rc_gui_get_ui_manager
 rc_gui_get_action_group
+rc_gui_get_main_window
+rc_gui_get_icon_image
+rc_gui_get_no_cover_image
 </SECTION>
 
 <SECTION>

@@ -136,6 +136,9 @@ gboolean rc_gui_view_remove_page(guint id);
 GtkStatusIcon *rc_gui_get_tray_icon();
 GtkUIManager *rc_gui_get_ui_manager();
 GtkActionGroup *rc_gui_get_action_group();
+GtkWidget *rc_gui_get_main_window();
+const GdkPixbuf *rc_gui_get_icon_image();
+const GdkPixbuf *rc_gui_get_no_cover_image();
 
 G_END_DECLS
 

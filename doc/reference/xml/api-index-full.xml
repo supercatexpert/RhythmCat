@@ -47,6 +47,9 @@
 <indexentry><primaryie linkends="rc-gui-eq-init"><link linkend="rc-gui-eq-init">rc_gui_eq_init</link>, function in <link linkend="RhythmCat-Equalizer-UI">Equalizer UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-get-action-group"><link linkend="rc-gui-get-action-group">rc_gui_get_action_group</link>, function in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-get-data"><link linkend="rc-gui-get-data">rc_gui_get_data</link>, function in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-get-icon-image"><link linkend="rc-gui-get-icon-image">rc_gui_get_icon_image</link>, function in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-get-main-window"><link linkend="rc-gui-get-main-window">rc_gui_get_main_window</link>, function in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-get-no-cover-image"><link linkend="rc-gui-get-no-cover-image">rc_gui_get_no_cover_image</link>, function in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-get-tray-icon"><link linkend="rc-gui-get-tray-icon">rc_gui_get_tray_icon</link>, function in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-get-ui-manager"><link linkend="rc-gui-get-ui-manager">rc_gui_get_ui_manager</link>, function in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-init"><link linkend="rc-gui-init">rc_gui_init</link>, function in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>

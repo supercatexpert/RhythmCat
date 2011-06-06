@@ -456,7 +456,7 @@ static gboolean rc_plugin_module_load(const gchar *filename)
     gint retval = 0;
     if(rc_plugin_module_check_running(filename))
         return FALSE;
-    module = g_module_open(filename, G_MODULE_BIND_LAZY);
+    module = g_module_open(filename, G_MODULE_BIND_LOCAL);
     if(module==NULL) return FALSE;
     module_data = g_malloc0(sizeof(RCModuleData));
     if(!g_module_symbol(module, "rc_plugin_module_init",
@@ -491,6 +491,8 @@ static gboolean rc_plugin_module_load(const gchar *filename)
     module_data->path = g_strdup(filename);
     module_data->data = module_data->module_data();
     module_data->resident = module_data->data->resident;
+    if(module_data->resident)
+        g_module_make_resident(module_data->module);
     module_list = g_slist_append(module_list, module_data);
     g_key_file_set_boolean(plugin_configure,
         module_data->data->group_name, "Enabled", TRUE);

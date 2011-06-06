@@ -960,6 +960,21 @@ guint id
  
 </FUNCTION>
 <FUNCTION>
+<NAME>rc_gui_get_main_window</NAME>
+<RETURNS>GtkWidget *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_get_icon_image</NAME>
+<RETURNS>const GdkPixbuf *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_get_no_cover_image</NAME>
+<RETURNS>const GdkPixbuf *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
 <NAME>rc_gui_mini_init</NAME>
 <RETURNS>void </RETURNS>
  

@@ -201,6 +201,9 @@
     <function name="rc_gui_get_tray_icon ()" link="RhythmCat-Main-UI.html#rc-gui-get-tray-icon"/>
     <function name="rc_gui_get_ui_manager ()" link="RhythmCat-Main-UI.html#rc-gui-get-ui-manager"/>
     <function name="rc_gui_get_action_group ()" link="RhythmCat-Main-UI.html#rc-gui-get-action-group"/>
+    <function name="rc_gui_get_main_window ()" link="RhythmCat-Main-UI.html#rc-gui-get-main-window"/>
+    <function name="rc_gui_get_icon_image ()" link="RhythmCat-Main-UI.html#rc-gui-get-icon-image"/>
+    <function name="rc_gui_get_no_cover_image ()" link="RhythmCat-Main-UI.html#rc-gui-get-no-cover-image"/>
     <function name="RC_GUI_SCROLLED_TEXT_TYPE" link="RCGuiScrolledText.html#RC-GUI-SCROLLED-TEXT-TYPE:CAPS"/>
     <function name="RC_GUI_SCROLLED_TEXT()" link="RCGuiScrolledText.html#RC-GUI-SCROLLED-TEXT:CAPS"/>
     <function name="RC_GUI_SCROLLED_TEXT_CLASS()" link="RCGuiScrolledText.html#RC-GUI-SCROLLED-TEXT-CLASS:CAPS"/>
@@ -259,13 +262,13 @@
     <function name="rc_gui_mini_normal_mode_clicked ()" link="RhythmCat-Mini-Mode-UI.html#rc-gui-mini-normal-mode-clicked"/>
     <function name="rc_gui_create_setting_window ()" link="RhythmCat-Settings-UI.html#rc-gui-create-setting-window"/>
     <function name="rc_gui_plugin_window_create ()" link="RhythmCat-Plugin-Configuration-UI.html#rc-gui-plugin-window-create"/>
-    <function name="Introduction" link="PluginProgramming.html#id600556"/>
-    <function name="Preparation" link="PluginProgramming.html#id581110"/>
-    <function name="Implement a simple plugin" link="PluginProgramming.html#id631120"/>
-    <function name="How to compile the plugin" link="PluginProgramming.html#id623678"/>
-    <function name="Write a plugin description file" link="PluginProgramming.html#id610924"/>
-    <function name="Make your custom plugin work" link="PluginProgramming.html#id581728"/>
-    <function name="Catch signals in the player" link="PluginProgramming.html#id625258"/>
-    <function name="About this manual" link="PluginProgramming.html#id632510"/>
+    <function name="Introduction" link="PluginProgramming.html#id357214"/>
+    <function name="Preparation" link="PluginProgramming.html#id371899"/>
+    <function name="Implement a simple plugin" link="PluginProgramming.html#id402884"/>
+    <function name="How to compile the plugin" link="PluginProgramming.html#id410303"/>
+    <function name="Write a plugin description file" link="PluginProgramming.html#id402227"/>
+    <function name="Make your custom plugin work" link="PluginProgramming.html#id384162"/>
+    <function name="Catch signals in the player" link="PluginProgramming.html#id425935"/>
+    <function name="About this manual" link="PluginProgramming.html#id400575"/>
   </functions>
 </book>

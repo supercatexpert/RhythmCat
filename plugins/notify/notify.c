@@ -48,7 +48,6 @@ static NotifyNotification *notify = NULL;
 
 static void rc_plugin_notfiy_player_start()
 {
-    RCGuiData *rc_ui = NULL;
     const RCMusicMetaData *mmd = NULL;
     gchar *title = NULL;
     gchar *filepath = NULL;
@@ -92,10 +91,8 @@ static void rc_plugin_notfiy_player_start()
         g_object_unref(loader);
     }
     else
-    {
-        rc_ui = rc_gui_get_data();
-        notify_notification_set_image_from_pixbuf(notify, rc_ui->icon_image);
-    }
+        notify_notification_set_image_from_pixbuf(notify,
+            (GdkPixbuf *)rc_gui_get_icon_image());
     notify_notification_update(notify, title, info_body, NULL);
     notify_notification_show(notify, NULL);
     if(title!=NULL) g_free(title);
@@ -104,16 +101,15 @@ static void rc_plugin_notfiy_player_start()
 
 static gboolean rc_plugin_notify_init()
 {
-    RCGuiData *rc_ui = NULL;
     if(!notify_is_initted() && !notify_init("RhythmCat")) return FALSE;
-    rc_ui = rc_gui_get_data();
     notify = notify_notification_new_with_status_icon(
         _("Welcome to RhythmCat"),
         _("Welcome to RhythmCat, the music player with plug-in support!"),
         NULL, rc_gui_get_tray_icon());
     if(notify==NULL) return FALSE;
     notify_notification_set_timeout(notify, 5000);
-    notify_notification_set_image_from_pixbuf(notify, rc_ui->icon_image);
+    notify_notification_set_image_from_pixbuf(notify,
+        (GdkPixbuf *)rc_gui_get_icon_image());
     notify_notification_show(notify, NULL);
     return TRUE;
 }
@@ -125,19 +121,19 @@ static void rc_plugin_notify_exit()
     notify_uninit();
 }
 
-const gchar *g_module_check_init(GModule *module)
+G_MODULE_EXPORT const gchar *g_module_check_init(GModule *module)
 {
     g_printf("Notify: Plugin loaded successfully!\n");
     keyfile = rc_set_get_plugin_configure();
     return NULL;
 }
 
-void g_module_unload(GModule *module)
+G_MODULE_EXPORT void g_module_unload(GModule *module)
 {
     g_printf("Notify: Plugin exited!\n");
 }
 
-gint rc_plugin_module_init()
+G_MODULE_EXPORT gint rc_plugin_module_init()
 {
     if(!rc_plugin_notify_init())
     {
@@ -154,17 +150,12 @@ gint rc_plugin_module_init()
     return 0;
 }
 
-void rc_plugin_module_exit()
+G_MODULE_EXPORT void rc_plugin_module_exit()
 {
     rc_plugin_notify_exit();
 }
 
-void rc_plugin_module_configure()
-{
-
-}
-
-const RCPluginModuleData *rc_plugin_module_data()
+G_MODULE_EXPORT const RCPluginModuleData *rc_plugin_module_data()
 {
     return &plugin_module_data;
 }

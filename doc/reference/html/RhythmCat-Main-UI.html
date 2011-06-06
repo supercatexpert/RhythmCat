@@ -64,6 +64,9 @@
 <a href="/usr/share/gtk-doc/html/gtk/GtkStatusIcon.html"><span class="returnvalue">GtkStatusIcon</span></a> *     <a class="link" href="RhythmCat-Main-UI.html#rc-gui-get-tray-icon" title="rc_gui_get_tray_icon ()">rc_gui_get_tray_icon</a>                ();
 <a href="/usr/share/gtk-doc/html/gtk/GtkUIManager.html"><span class="returnvalue">GtkUIManager</span></a> *      <a class="link" href="RhythmCat-Main-UI.html#rc-gui-get-ui-manager" title="rc_gui_get_ui_manager ()">rc_gui_get_ui_manager</a>               ();
 <a href="/usr/share/gtk-doc/html/gtk/GtkActionGroup.html"><span class="returnvalue">GtkActionGroup</span></a> *    <a class="link" href="RhythmCat-Main-UI.html#rc-gui-get-action-group" title="rc_gui_get_action_group ()">rc_gui_get_action_group</a>             ();
+<a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="returnvalue">GtkWidget</span></a> *         <a class="link" href="RhythmCat-Main-UI.html#rc-gui-get-main-window" title="rc_gui_get_main_window ()">rc_gui_get_main_window</a>              ();
+const <a href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-gdk-pixbuf.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *   <a class="link" href="RhythmCat-Main-UI.html#rc-gui-get-icon-image" title="rc_gui_get_icon_image ()">rc_gui_get_icon_image</a>               ();
+const <a href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-gdk-pixbuf.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *   <a class="link" href="RhythmCat-Main-UI.html#rc-gui-get-no-cover-image" title="rc_gui_get_no_cover_image ()">rc_gui_get_no_cover_image</a>           ();
 </pre>
 </div>
 <div class="refsect1" title="Description">
@@ -648,6 +651,54 @@ Return the action group in UI Manager.
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td> The action group.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_get_main_window ()">
+<a name="rc-gui-get-main-window"></a><h3>rc_gui_get_main_window ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="returnvalue">GtkWidget</span></a> *         rc_gui_get_main_window              ();</pre>
+<p>
+Return the main window widget.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The main window widget.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_get_icon_image ()">
+<a name="rc-gui-get-icon-image"></a><h3>rc_gui_get_icon_image ()</h3>
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-gdk-pixbuf.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *   rc_gui_get_icon_image               ();</pre>
+<p>
+Return the icon image.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The icon image.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_get_no_cover_image ()">
+<a name="rc-gui-get-no-cover-image"></a><h3>rc_gui_get_no_cover_image ()</h3>
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-gdk-pixbuf.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *   rc_gui_get_no_cover_image           ();</pre>
+<p>
+Return the image shows when the cover image is not found.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The images shows when the cover image is not found.
 </td>
 </tr></tbody>
 </table></div>

@@ -77,8 +77,12 @@ gint rc_debug_print(const gchar *format, ...)
 {
     gint result;
     va_list arg_ptr;
-    if(!debug_flag) return -1;
     va_start(arg_ptr, format);
+/*
+    g_logv("RhythmCat", G_LOG_LEVEL_INFO | G_LOG_LEVEL_DEBUG, format,
+        arg_ptr);
+*/
+    if(!debug_flag) return 0;
     result = g_vprintf(format, arg_ptr);
     return result;
 }
@@ -98,6 +102,10 @@ gint rc_debug_perror(const gchar *format, ...)
     gint result;
     va_list arg_ptr;
     va_start(arg_ptr, format);
+/*
+    g_logv("RhythmCat", G_LOG_LEVEL_ERROR | G_LOG_LEVEL_DEBUG, format,
+        arg_ptr);
+*/
     result = g_vfprintf(stderr, format, arg_ptr);
     return result;
 }

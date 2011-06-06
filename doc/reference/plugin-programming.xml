@@ -59,17 +59,18 @@
       rc_plugin_module_exit() will be called, you can finish the function to
       exit from your plugin. The player also needs some information about the
       plugin, it will call rc_plugin_module_data() to get the data, you should
-      finish it by returning the information of your plugin. The definition of
-      these functions are:
+      finish it by returning the information of your plugin. And, if you want
+      to make the plugin usable in Windows, you should add G_MODULE_EXPORT in
+      function definition. The definition of these functions are:
       <programlisting>
 /* Necessary */
-const gchar *g_module_check_init(GModule *module);
-void g_module_unload(GModule *module);
-gint rc_plugin_module_init();
-void rc_plugin_module_exit();
-const RCPluginModuleData *rc_plugin_module_data();
+G_MODULE_EXPORT const gchar *g_module_check_init(GModule *module);
+G_MODULE_EXPORT void g_module_unload(GModule *module);
+G_MODULE_EXPORT gint rc_plugin_module_init();
+G_MODULE_EXPORT void rc_plugin_module_exit();
+G_MODULE_EXPORT const RCPluginModuleData *rc_plugin_module_data();
 /* Optional */
-void rc_plugin_module_configure();
+G_MODULE_EXPORT void rc_plugin_module_configure();
       </programlisting>
       The definition of type #RCPluginModuleData is in header file
       <filename>"plugin.h"</filename>:
@@ -119,7 +120,7 @@ static RCPluginModuleData plugin_module_data =
 
 static GKeyFile *keyfile = NULL;
 
-const gchar *g_module_check_init(GModule *module)
+G_MODULE_EXPORT const gchar *g_module_check_init(GModule *module)
 {
     g_printf("ExamplePlugin: Plugin loaded successfully!\n");
     keyfile = rc_set_get_plugin_configure();
@@ -137,13 +138,13 @@ const gchar *g_module_check_init(GModule *module)
     /* If there is no error, return NULL, else return the error string. */
 }
 
-void g_module_unload(GModule *module)
+G_MODULE_EXPORT void g_module_unload(GModule *module)
 {
     g_printf("ExamplePlugin: Plugin unloaded!\n");
     /* Do some cleaning work here. */
 }
 
-gint rc_plugin_module_init()
+G_MODULE_EXPORT gint rc_plugin_module_init()
 {
     g_printf("ExamplePlugin: Plugin is running!\n");
 
@@ -160,18 +161,18 @@ gint rc_plugin_module_init()
     /* If there is no error, return 0, else return the error code. */
 }
 
-void rc_plugin_module_exit()
+G_MODULE_EXPORT void rc_plugin_module_exit()
 {
     g_printf("ExamplePlugin: Plugin is not running now!\n");
     /* Disable all features of the plugin, and do some cleanning work. */
 }
 
-void rc_plugin_module_configure()
+G_MODULE_EXPORT void rc_plugin_module_configure()
 {
     /* Show configure dialog if necessary. */
 }
 
-const RCPluginModuleData *rc_plugin_module_data()
+G_MODULE_EXPORT const RCPluginModuleData *rc_plugin_module_data()
 {
     return &amp;plugin_module_data;
 }

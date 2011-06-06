@@ -338,7 +338,7 @@ RCMusicMetaData *rc_tag_read_metadata(const gchar *uri)
     else
     {
         encoding = rc_set_get_string("Metadata", "TagExEncoding", NULL);
-        if(encoding!=NULL)
+        if(encoding!=NULL && strlen(encoding)>0)
         {
             g_setenv("GST_ID3_TAG_ENCODING", encoding, TRUE);
             g_setenv("GST_ID3V2_TAG_ENCODING", encoding, TRUE);

@@ -995,19 +995,19 @@ static void rc_plugin_tag_ui_init()
         &popup_action_entry, 1, NULL);
 }
 
-const gchar *g_module_check_init(GModule *module)
+G_MODULE_EXPORT const gchar *g_module_check_init(GModule *module)
 {
     g_printf("TagEditor: Plugin loaded successfully!\n");
     keyfile = rc_set_get_plugin_configure();
     return NULL;
 }
 
-void g_module_unload(GModule *module)
+G_MODULE_EXPORT void g_module_unload(GModule *module)
 {
     g_printf("TagEditor: Plugin exited!\n");
 }
 
-gint rc_plugin_module_init()
+G_MODULE_EXPORT gint rc_plugin_module_init()
 {
     #ifdef USE_GTK3
         if(gtk_major_version<3)
@@ -1041,7 +1041,7 @@ gint rc_plugin_module_init()
     return 0;
 }
 
-void rc_plugin_module_exit()
+G_MODULE_EXPORT void rc_plugin_module_exit()
 {
     if(tag_reader_bin!=NULL)
     {
@@ -1066,7 +1066,7 @@ void rc_plugin_module_exit()
     }
 }
 
-const RCPluginModuleData *rc_plugin_module_data()
+G_MODULE_EXPORT const RCPluginModuleData *rc_plugin_module_data()
 {
     return &plugin_module_data;
 }

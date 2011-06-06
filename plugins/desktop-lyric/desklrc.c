@@ -664,19 +664,19 @@ static void rc_plugin_desklrc_stop()
     rc_plugin_desklrc_enable(FALSE);
 }
 
-const gchar *g_module_check_init(GModule *module)
+G_MODULE_EXPORT const gchar *g_module_check_init(GModule *module)
 {
     g_printf("DeskLRC: Plugin loaded successfully!\n");
     keyfile = rc_set_get_plugin_configure();
     return NULL;
 }
 
-void g_module_unload(GModule *module)
+G_MODULE_EXPORT void g_module_unload(GModule *module)
 {
     g_printf("DeskLRC: Plugin exited!\n");
 }
 
-gint rc_plugin_module_init()
+G_MODULE_EXPORT gint rc_plugin_module_init()
 {
     GdkScreen *screen;
     screen = gdk_screen_get_default();
@@ -717,7 +717,7 @@ gint rc_plugin_module_init()
     return 0;
 }
 
-void rc_plugin_module_exit()
+G_MODULE_EXPORT void rc_plugin_module_exit()
 {
     rc_plugin_desklrc_save_conf();
     g_source_remove(lyric_refresh_timeout);
@@ -727,7 +727,7 @@ void rc_plugin_module_exit()
     rc_player_object_signal_disconnect(lyric_stop_signal);
 }
 
-void rc_plugin_module_configure()
+G_MODULE_EXPORT void rc_plugin_module_configure()
 {
     GtkWidget *dialog;
     GtkWidget *content_area;
@@ -871,7 +871,7 @@ void rc_plugin_module_configure()
     gtk_widget_destroy(dialog);
 }
 
-const RCPluginModuleData *rc_plugin_module_data()
+G_MODULE_EXPORT const RCPluginModuleData *rc_plugin_module_data()
 {
     return &plugin_module_data;
 }

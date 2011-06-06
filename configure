@@ -8151,7 +8151,7 @@ else
 fi
 
 
-ac_config_files="$ac_config_files Makefile po/Makefile.in po/Makefile src/Makefile data/Makefile doc/Makefile doc/reference/Makefile data/images/Makefile data/icons/Makefile data/themes/Makefile data/themes/Monochrome/Makefile"
+ac_config_files="$ac_config_files Makefile po/Makefile.in po/Makefile src/Makefile data/Makefile doc/Makefile doc/reference/Makefile data/images/Makefile data/icons/Makefile data/themes/Makefile data/themes/Monochrome/Makefile data/themes/AeroBlue/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -8921,6 +8921,7 @@ do
     "data/icons/Makefile") CONFIG_FILES="$CONFIG_FILES data/icons/Makefile" ;;
     "data/themes/Makefile") CONFIG_FILES="$CONFIG_FILES data/themes/Makefile" ;;
     "data/themes/Monochrome/Makefile") CONFIG_FILES="$CONFIG_FILES data/themes/Monochrome/Makefile" ;;
+    "data/themes/AeroBlue/Makefile") CONFIG_FILES="$CONFIG_FILES data/themes/AeroBlue/Makefile" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5 ;;
   esac

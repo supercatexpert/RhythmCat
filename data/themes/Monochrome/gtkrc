@@ -96,9 +96,9 @@ style "rc-time-scale"
         bg[INSENSITIVE] = "#383838"
 	GtkRange::trough-border = 0
 	GtkRange::slider-width = 3
-	GtkRange::stepper-size = 15
-	GtkScale::slider-length	= 14
-	GtkScale::slider-width	= 14
+	GtkRange::stepper-size = 22
+	GtkScale::slider-length	= 22
+	GtkScale::slider-width	= 22
 	GtkScale::trough-side-details = 0
 	GtkScale::activate_slider = 1
 	GtkScale::trough-under-steppers = 1
@@ -110,7 +110,7 @@ style "rc-time-scale"
 			recolorable	= FALSE
 			detail		= "trough"
 			file		= "time-trough.png"
-			border		= { 0, 0, 0, 0 }
+			border		= { 10, 10, 0, 0 }
 			stretch		= TRUE
 			orientation	= HORIZONTAL
 		}
@@ -119,7 +119,7 @@ style "rc-time-scale"
 			function	= SLIDER
 			recolorable	= TRUE
 			state		= NORMAL
-			file		= "time-slider-normal.png"
+			file		= "null.png"
 			border		= { 0, 0, 0, 0 }
 			stretch		= TRUE
 			overlay_file	= "time-slider-normal.png"
@@ -131,7 +131,7 @@ style "rc-time-scale"
 			function	= SLIDER
 			recolorable	= TRUE
 			state		= PRELIGHT
-			file		= "time-slider-prelight.png"
+			file		= "null.png"
 			border		= { 0, 0, 0, 0 }
 			stretch		= TRUE
 			overlay_file	= "time-slider-prelight.png"
@@ -143,10 +143,10 @@ style "rc-time-scale"
 			function	= SLIDER
 			recolorable	= TRUE
 			state		= ACTIVE
-			file		= "time-slider-pressed.png"
+			file		= "null.png"
 			border		= { 0, 0, 0, 0 }
 			stretch		= TRUE
-			overlay_file	= "time-slider-pressed.png"
+			overlay_file	= "time-slider-prelight.png"
 			overlay_stretch	= FALSE
 			orientation	= HORIZONTAL
 		}
@@ -155,7 +155,7 @@ style "rc-time-scale"
 			function	= SLIDER
 			recolorable	= TRUE
 			state		= INSENSITIVE
-			file		= "time-slider-disabled.png"
+			file		= "null.png"
 			border		= { 0, 0, 0, 0 }
 			stretch		= TRUE
 			overlay_file	= "time-slider-disabled.png"
