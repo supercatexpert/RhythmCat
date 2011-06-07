@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RhythmCat 1.0.0\n"
 "Report-Msgid-Bugs-To: http://code.google.com/p/rhythmcat/issues/list\n"
-"POT-Creation-Date: 2011-06-06 03:07+0800\n"
+"POT-Creation-Date: 2011-06-07 01:57+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,27 +17,27 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/core.c:249 src/core.c:286
+#: src/core.c:220 src/core.c:252
 msgid "Effect plugins are missing!"
 msgstr ""
 
-#: src/core.c:249 src/core.c:286
+#: src/core.c:220 src/core.c:252
 msgid "Some effect plugins are missing, effects are not available now!"
 msgstr ""
 
-#: src/core.c:256
+#: src/core.c:227
 msgid "Critical Error!"
 msgstr ""
 
-#: src/core.c:257
+#: src/core.c:228
 msgid "Failed to make playbin/playbin2 element!"
 msgstr ""
 
-#: src/core.c:314
+#: src/core.c:273
 msgid "Link elements error!"
 msgstr ""
 
-#: src/core.c:314
+#: src/core.c:273
 msgid "Cannot link effect elements, effects are not available now!"
 msgstr ""
 

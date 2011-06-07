@@ -59,7 +59,7 @@
 #endif
 
 static const gchar rc_player_program_name[] = "RhythmCat Music Player";
-static const gchar rc_player_build_date[] = "110606";
+static const gchar rc_player_build_date[] = "110607";
 static const gchar rc_player_version[] = "1.0.0 beta 1";
 static const gboolean rc_player_stable_flag = FALSE;
 static const gchar *rc_player_support_formatx = "(.FLAC|.OGG|.MP3|.WMA|.WAV|"

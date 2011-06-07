@@ -47,9 +47,6 @@
 
 static RCCoreData rc_core;
 static gboolean playing_flag = FALSE;
-static guint spect_bands = 30;
-static gdouble magnitude[30];
-static const gint audio_freq = 48000;
 
 static void rc_core_plugin_install_result(GstInstallPluginsReturn result,
     gpointer data)
@@ -79,16 +76,10 @@ static void rc_core_plugin_install_result(GstInstallPluginsReturn result,
 
 static gboolean rc_core_bus_call(GstBus *bus, GstMessage *msg, gpointer data)
 {
-    const GstStructure *gstru = NULL;
-    const gchar *name = NULL;
-    const GValue *magnitudes;
-    const GValue *mag;
     gchar *debug;
     GstState state;
     gchar *plugin_error_msg;
     GError *error;
-    guint i;
-    gdouble db;
     switch(GST_MESSAGE_TYPE(msg))
     {
         case GST_MESSAGE_EOS:
@@ -140,21 +131,6 @@ static gboolean rc_core_bus_call(GstBus *bus, GstMessage *msg, gpointer data)
         case GST_MESSAGE_BUFFERING:
             break;
         case GST_MESSAGE_ELEMENT:
-            gstru = gst_message_get_structure(msg);
-            name = gst_structure_get_name(gstru);
-            if(strcmp(name, "spectrum")==0)
-            {
-                magnitudes = gst_structure_get_value(gstru, "magnitude");
-                for(i=0;i<spect_bands;i++)
-                {
-                    mag = gst_value_list_get_value(magnitudes, i);
-                    if(mag!=NULL)
-                        db = g_value_get_float(mag);
-                    else
-                        db = -80.0;
-                    magnitude[i] = db;
-                }
-            }
             if(gst_is_missing_plugin_message(msg))
             {
                 rc_debug_perror("Core-ERROR: Missing plugin to open the "
@@ -179,7 +155,7 @@ static gboolean rc_core_bus_call(GstBus *bus, GstMessage *msg, gpointer data)
 static gboolean rc_core_plugin_check()
 {
     GstElementFactory *playbin, *fakesink, *equalizer, *audiosink, *convert;
-    GstElementFactory *volume, *spectrum;
+    GstElementFactory *volume;
     gboolean flag = FALSE;
     playbin = gst_element_factory_find("playbin2");
     if(playbin==NULL)
@@ -200,15 +176,12 @@ static gboolean rc_core_plugin_check()
     equalizer = gst_element_factory_find("equalizer-10bands");
     audiosink = gst_element_factory_find("autoaudiosink");
     volume = gst_element_factory_find("volume");
-    spectrum = gst_element_factory_find("spectrum");
     convert = gst_element_factory_find("audioconvert");
-    if(equalizer!=NULL && audiosink!=NULL && volume!=NULL && spectrum!=NULL
-        && convert!=NULL)
+    if(equalizer!=NULL && audiosink!=NULL && volume!=NULL && convert!=NULL)
         flag = TRUE;
     if(equalizer!=NULL) gst_object_unref(equalizer);
     if(audiosink!=NULL) gst_object_unref(audiosink);
     if(volume!=NULL) gst_object_unref(volume);
-    if(spectrum!=NULL) gst_object_unref(spectrum);
     if(convert!=NULL) gst_object_unref(convert);
     return flag;
 }
@@ -232,9 +205,7 @@ void rc_core_init()
     GstElement *audio_equalizer = NULL;
     GstElement *audio_convert = NULL;
     GstElement *volume_plugin = NULL;
-    GstElement *spectrum_plugin = NULL;
     GstPad *pad1;
-    GstCaps *caps;
     gdouble volume = 1.0;
     gboolean flag = FALSE;
     GError *error = NULL;
@@ -265,11 +236,8 @@ void rc_core_init()
             "audio_equalizer"); 
         audio_convert = gst_element_factory_make("audioconvert", "eqauconv");
         volume_plugin = gst_element_factory_make("volume", "volume_plugin");
-        spectrum_plugin = gst_element_factory_make("spectrum",
-            "spectrum_plugin");
         if(!GST_IS_ELEMENT(audio_equalizer) || !GST_IS_ELEMENT(audio_sink) ||
-            !GST_IS_ELEMENT(audio_convert) || !GST_IS_ELEMENT(volume_plugin) ||
-            !GST_IS_ELEMENT(spectrum_plugin))
+            !GST_IS_ELEMENT(audio_convert) || !GST_IS_ELEMENT(volume_plugin))
         {
             flag = FALSE;
             if(GST_IS_ELEMENT(audio_equalizer))
@@ -280,8 +248,6 @@ void rc_core_init()
                 gst_object_unref(audio_convert);
             if(GST_IS_ELEMENT(volume_plugin))
                 gst_object_unref(volume_plugin);
-            if(GST_IS_ELEMENT(spectrum_plugin))
-                gst_object_unref(spectrum_plugin);
             rc_gui_show_message_dialog(GTK_MESSAGE_ERROR,
                 _("Effect plugins are missing!"), _("Some effect plugins are "
                 "missing, effects are not available now!"));
@@ -296,18 +262,11 @@ void rc_core_init()
     }
     if(flag)
     { 
-        g_object_set(G_OBJECT(spectrum_plugin), "bands", spect_bands,
-            "threshold", -80, "message", TRUE, "message-magnitude", TRUE,
-            NULL);
         seff = gst_bin_new("audio-bin");
         gst_bin_add_many(GST_BIN(seff), audio_convert, audio_equalizer,
-            spectrum_plugin, volume_plugin, audio_sink, NULL);
-        caps = gst_caps_new_simple("audio/x-raw-int", "rate", G_TYPE_INT,
-            audio_freq, NULL);
-        if(!gst_element_link_many(audio_convert, audio_equalizer, NULL) ||
-            !gst_element_link_filtered(audio_equalizer, spectrum_plugin,
-            caps) || !gst_element_link_many(spectrum_plugin, volume_plugin,
-            audio_sink, NULL))
+            volume_plugin, audio_sink, NULL);
+        if(!gst_element_link_many(audio_convert, audio_equalizer,
+            volume_plugin, audio_sink, NULL))
         {
             flag = FALSE;
             rc_gui_show_message_dialog(GTK_MESSAGE_ERROR,
@@ -323,12 +282,9 @@ void rc_core_init()
                 gst_object_unref(audio_convert);
             if(GST_IS_ELEMENT(volume_plugin))
                 gst_object_unref(volume_plugin);
-            if(GST_IS_ELEMENT(spectrum_plugin))
-                gst_object_unref(spectrum_plugin);
             if(GST_IS_ELEMENT(seff))
                 gst_object_unref(seff);
         }
-        gst_caps_unref(caps);
     }
     volume = rc_set_get_double("Player", "Volume", &error);
     if(error!=NULL)

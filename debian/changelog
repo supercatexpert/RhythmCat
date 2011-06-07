@@ -1,4 +1,4 @@
-rhythmcat (1.0.0-beta1~110606) unstable; urgency=low
+rhythmcat (1.0.0-beta1~110607) unstable; urgency=low
 
   * Added some plugins, fixed some bugs. (Closes: #1100)
 
