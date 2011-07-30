@@ -457,13 +457,20 @@ static gboolean rc_plugin_module_load(const gchar *filename)
     if(rc_plugin_module_check_running(filename))
         return FALSE;
     module = g_module_open(filename, G_MODULE_BIND_LOCAL);
-    if(module==NULL) return FALSE;
+    if(module==NULL)
+    {
+        rc_debug_perror("Plugin-ERROR: Cannot load plugin: %s\n",
+            g_module_error());
+        return FALSE;
+    }
     module_data = g_malloc0(sizeof(RCModuleData));
     if(!g_module_symbol(module, "rc_plugin_module_init",
         (gpointer *)&module_data->module_init))
     {
         g_free(module_data);
         g_module_close(module);
+        rc_debug_perror("Plugin-ERROR: Cannot found entry function:"
+            "rc_plugin_module_init()!\n");
         return FALSE;
     }
     if(!g_module_symbol(module, "rc_plugin_module_exit",
@@ -471,6 +478,8 @@ static gboolean rc_plugin_module_load(const gchar *filename)
     {
         g_free(module_data);
         g_module_close(module);
+        rc_debug_perror("Plugin-ERROR: Cannot found entry function:"
+            "rc_plugin_module_exit()!\n");
         return FALSE;
     }
     if(!g_module_symbol(module, "rc_plugin_module_data",
@@ -478,6 +487,8 @@ static gboolean rc_plugin_module_load(const gchar *filename)
     {
         g_free(module_data);
         g_module_close(module);
+        rc_debug_perror("Plugin-ERROR: Cannot found entry function:"
+            "rc_plugin_module_data()!\n");
         return FALSE;
     }
     module_data->module = module;
@@ -576,11 +587,21 @@ gboolean rc_plugin_configure(RCPluginType type, const gchar *filename)
                 module = module_data->module;
             if(module==NULL)
                 module = g_module_open(filename, G_MODULE_BIND_LAZY);
-            if(module==NULL) return FALSE;
+            if(module==NULL)
+            {
+                rc_debug_perror("Plugin-ERROR: Cannot load plugin: %s\n",
+                    g_module_error());
+                return FALSE;
+            }
             flag = g_module_symbol(module, "rc_plugin_module_configure",
                 (gpointer *)&module_configure);
             if(flag)
                 module_configure();
+            else
+            {
+                rc_debug_print("Plugin: Configure entry function does not "
+                    "exist, or cannot be loaded.\n");
+            }
             if(module_data==NULL)
                 g_module_close(module);
             return flag;

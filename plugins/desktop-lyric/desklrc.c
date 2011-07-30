@@ -299,7 +299,7 @@ static gboolean rc_plugin_desklrc_expose(GtkWidget *widget,
     GdkEventExpose *event)
 {
     cairo_t *cr;
-    cr = gdk_cairo_create(gtk_widget_get_window(desklrc_window));
+    cr = gdk_cairo_create(desklrc_window->window);
     cairo_set_source_rgba(cr, 1.0, 1.0, 1.0, 0.0);
     cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
     cairo_paint(cr);
@@ -343,10 +343,15 @@ static gboolean rc_plugin_desklrc_drag(GtkWidget *widget, GdkEvent *event,
     static gint desklrc_move_x = 0;
     static gint desklrc_move_y = 0;
     static gboolean lyrics_drag = FALSE;
-    GdkWindow *window = gtk_widget_get_window(desklrc_window);
+    GdkWindow *window;
     if(!osd_lyric_movable) return FALSE;
     GdkCursor *cursor = NULL;
     gint x, y;
+    #ifdef USE_GTK3
+        window = gtk_widget_get_window(desklrc_window);
+    #else
+        window = desklrc_window->window;
+    #endif
     if(event->button.button==1)
     {
         switch(event->type)
@@ -556,7 +561,12 @@ static void rc_plugin_desklrc_enable(gboolean flag)
 static void rc_plugin_desklrc_set_movable(gboolean movable)
 {
     osd_lyric_movable = movable;
-    GdkWindow *window = gtk_widget_get_window(desklrc_window);
+    GdkWindow *window;
+    #ifdef USE_GTK3
+        window = gtk_widget_get_window(desklrc_window);
+    #else
+        window = desklrc_window->window;
+    #endif
     if(movable)
         gdk_window_input_shape_combine_region(window, NULL, 0, 0);
     else

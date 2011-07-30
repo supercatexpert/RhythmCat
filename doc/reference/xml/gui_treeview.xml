@@ -33,6 +33,10 @@
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-list2-delete-lists">rc_gui_list2_delete_lists</link>           ();
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-list2-select-all">rc_gui_list2_select_all</link>             ();
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-list1-rename-list">rc_gui_list1_rename_list</link>            ();
+<link linkend="GtkTreeModel"><returnvalue>GtkTreeModel</returnvalue></link> *      <link linkend="rc-gui-list1-get-model">rc_gui_list1_get_model</link>              ();
+<link linkend="GtkTreeModel"><returnvalue>GtkTreeModel</returnvalue></link> *      <link linkend="rc-gui-list2-get-model">rc_gui_list2_get_model</link>              ();
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-gui-list1-get-cursor">rc_gui_list1_get_cursor</link>             (<parameter><link linkend="GtkTreeIter"><type>GtkTreeIter</type></link> *iter</parameter>);
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-gui-list2-get-cursor">rc_gui_list2_get_cursor</link>             (<parameter><link linkend="GtkTreeIter"><type>GtkTreeIter</type></link> *iter</parameter>);
 </synopsis>
 </refsynopsisdiv>
 
@@ -125,6 +129,52 @@ Select all items in the playlist.
 <para>
 Rename a list (make the name of the selected playlist editable).
 </para></refsect2>
+<refsect2 id="rc-gui-list1-get-model" role="function">
+<title>rc_gui_list1_get_model ()</title>
+<indexterm zone="rc-gui-list1-get-model"><primary>rc_gui_list1_get_model</primary></indexterm>
+<programlisting><link linkend="GtkTreeModel"><returnvalue>GtkTreeModel</returnvalue></link> *      rc_gui_list1_get_model              ();</programlisting>
+<para>
+Return the GtkTreeModel of list1 in player.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The GtkTreeModel.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-gui-list2-get-model" role="function">
+<title>rc_gui_list2_get_model ()</title>
+<indexterm zone="rc-gui-list2-get-model"><primary>rc_gui_list2_get_model</primary></indexterm>
+<programlisting><link linkend="GtkTreeModel"><returnvalue>GtkTreeModel</returnvalue></link> *      rc_gui_list2_get_model              ();</programlisting>
+<para>
+Return the GtkTreeModel of list2 in player.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The GtkTreeModel.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-gui-list1-get-cursor" role="function">
+<title>rc_gui_list1_get_cursor ()</title>
+<indexterm zone="rc-gui-list1-get-cursor"><primary>rc_gui_list1_get_cursor</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rc_gui_list1_get_cursor             (<parameter><link linkend="GtkTreeIter"><type>GtkTreeIter</type></link> *iter</parameter>);</programlisting>
+<para>
+Get the GtkTreeIter of the selected item.
+</para><variablelist role="params">
+<varlistentry><term><parameter>iter</parameter>&#160;:</term>
+<listitem><simpara>the uninitialized GtkTreeIter
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> TRUE, if iter was set.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-gui-list2-get-cursor" role="function">
+<title>rc_gui_list2_get_cursor ()</title>
+<indexterm zone="rc-gui-list2-get-cursor"><primary>rc_gui_list2_get_cursor</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rc_gui_list2_get_cursor             (<parameter><link linkend="GtkTreeIter"><type>GtkTreeIter</type></link> *iter</parameter>);</programlisting>
+<para>
+Get the GtkTreeIter of the selected item.
+</para><variablelist role="params">
+<varlistentry><term><parameter>iter</parameter>&#160;:</term>
+<listitem><simpara>the uninitialized GtkTreeIter
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> TRUE, if iter was set.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
 
 </refsect1>
 

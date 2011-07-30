@@ -135,6 +135,7 @@ static void rc_msg_process_func(gpointer data, gpointer user_data)
 {
     RCMsgData *msg = (RCMsgData *)data;
     RCMusicMetaData *mmd;
+    RCMsgPlistData *plist_msg;
     if(data!=NULL)
     {
         switch(msg->type)
@@ -143,19 +144,23 @@ static void rc_msg_process_func(gpointer data, gpointer user_data)
                 rc_gui_status_progress_set_progress();
                 break;
             case MSG_TYPE_PL_INSERT:
-                mmd = msg->data;
+                plist_msg = msg->data;
+                mmd = (RCMusicMetaData *)plist_msg->mmd;
                 rc_plist_list2_insert_item(mmd->uri, mmd->title,
                     mmd->artist, mmd->album, mmd->length, mmd->tracknum,
-                    mmd->store, mmd->list2_index);
+                    plist_msg->store, plist_msg->list2_index);
                 rc_tag_free(mmd);
+                g_free(plist_msg);
                 rc_gui_status_progress_set_progress();
                 break;
             case MSG_TYPE_PL_REFRESH:
-                mmd = msg->data;
+                plist_msg = msg->data;
+                mmd = (RCMusicMetaData *)plist_msg->mmd;
                 rc_plist_list2_refresh_item(mmd->uri, mmd->title,
                     mmd->artist, mmd->album, mmd->length, mmd->tracknum,
-                    mmd->reference);
+                    plist_msg->reference);
                 rc_tag_free(mmd);
+                g_free(plist_msg);
                 rc_gui_status_progress_set_progress();
                 break;
             case MSG_TYPE_PL_REMOVE:

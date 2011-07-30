@@ -59,8 +59,8 @@
 #endif
 
 static const gchar rc_player_program_name[] = "RhythmCat Music Player";
-static const gchar rc_player_build_date[] = "110607";
-static const gchar rc_player_version[] = "1.0.0 beta 1";
+static const gchar rc_player_build_date[] = "110730";
+static const gchar rc_player_version[] = "1.0.0 beta 2";
 static const gboolean rc_player_stable_flag = FALSE;
 static const gchar *rc_player_support_formatx = "(.FLAC|.OGG|.MP3|.WMA|.WAV|"
     ".OGA|.OGM|.APE|.AAC|.AC3|.MIDI|.MP2|.MID|.M4A)$";
@@ -78,6 +78,7 @@ static char **rc_player_remaining_args = NULL;
 static gchar *rc_player_conf_dir = NULL;
 static const gchar *rc_player_data_dir = NULL;
 static const gchar *rc_player_home_dir = NULL;
+static const gchar *rc_player_locale_dir = NULL;
 static const gchar *rc_player_locale = NULL; 
 
 static gchar *rc_player_get_program_data_dir()
@@ -243,7 +244,6 @@ void rc_player_init(int *argc, char **argv[])
         {NULL}
     };
     const gchar *homedir = g_getenv("HOME");
-    gchar *locale_dir = NULL;
     gchar *string = NULL;
     GError *error = NULL;
     /* Enable this to enable memory leak check. */
@@ -256,7 +256,7 @@ void rc_player_init(int *argc, char **argv[])
     rc_player_conf_dir = g_build_filename(homedir, ".RhythmCat", NULL);
     rc_player_data_dir = rc_player_get_program_data_dir();
     if(rc_player_data_dir!=NULL)
-        rc_player_locale = g_build_filename(rc_player_data_dir, "..",
+        rc_player_locale_dir = g_build_filename(rc_player_data_dir, "..",
             "locale", NULL);
     srand((unsigned)time(0));
     g_mkdir_with_parents(rc_player_conf_dir, 0700);
@@ -276,13 +276,10 @@ void rc_player_init(int *argc, char **argv[])
     gdk_threads_init();
     g_type_init();
     dbus_g_thread_init();
-    if(locale_dir==NULL)
+    if(rc_player_locale_dir==NULL)
         bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
     else
-    {
-        bindtextdomain(GETTEXT_PACKAGE, locale_dir);
-        g_free(locale_dir);
-    }
+        bindtextdomain(GETTEXT_PACKAGE, rc_player_locale_dir);
     bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
     textdomain(GETTEXT_PACKAGE);
     rc_player_locale = g_strdup(setlocale(LC_ALL, NULL));

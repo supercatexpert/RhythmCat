@@ -46,7 +46,6 @@
  */
 
 static RCCoreData rc_core;
-static gboolean playing_flag = FALSE;
 
 static void rc_core_plugin_install_result(GstInstallPluginsReturn result,
     gpointer data)
@@ -77,46 +76,60 @@ static void rc_core_plugin_install_result(GstInstallPluginsReturn result,
 static gboolean rc_core_bus_call(GstBus *bus, GstMessage *msg, gpointer data)
 {
     gchar *debug;
-    GstState state;
+    GstState old_state, new_state, pending_state;
     gchar *plugin_error_msg;
     GError *error;
     switch(GST_MESSAGE_TYPE(msg))
     {
         case GST_MESSAGE_EOS:
-            rc_plist_play_next(TRUE);
+            rc_debug_print("Core: Reached EOS, playing the next!\n");
+            if(!rc_plist_play_next(TRUE)) rc_core_stop();
             break;
         case GST_MESSAGE_SEGMENT_DONE:
             rc_debug_print("CORE: Segment done!\n");
             break;
         case GST_MESSAGE_STATE_CHANGED:
-            if(gst_element_get_state(rc_core.playbin, &state, NULL,
-                GST_CLOCK_TIME_NONE)==GST_STATE_CHANGE_SUCCESS)
+            gst_message_parse_state_changed(msg, &old_state, &new_state,
+                &pending_state);
+            switch(new_state)
             {
-                switch(state)
+                case GST_STATE_PLAYING:
+                    rc_gui_set_play_button_state(TRUE);
+                    rc_gui_seek_scaler_enable();
+                    if(old_state==GST_STATE_PAUSED)
+                    {
+                        rc_player_object_signal_emit_simple(
+                            "player-continue");
+                    }
+                    else
+                    {
+                        rc_player_object_signal_emit_simple(
+                            "player-play");
+                    }
+                    break;
+                case GST_STATE_PAUSED:
+                    rc_gui_set_play_button_state(FALSE);
+                    rc_player_object_signal_emit_simple("player-pause");
+                    break;
+                default:
+                    break;
+            }
+            if(!rc_core.start_flag && (new_state==GST_STATE_PAUSED ||
+                new_state==GST_STATE_PLAYING))
+            {
+                rc_core.start_flag = TRUE;
+                if(rc_core.start_time>0)
                 {
-                    case GST_STATE_PLAYING:
-                        rc_gui_set_play_button_state(TRUE);
-                        rc_gui_seek_scaler_enable();
-                        if(playing_flag)
-                        {
-                            rc_player_object_signal_emit_simple(
-                                "player-continue");
-                        }
-                        else
-                        {
-                            rc_player_object_signal_emit_simple(
-                                "player-play");
-                        }
-                        playing_flag = TRUE;
-                        break;
-                    case GST_STATE_PAUSED:
-                        rc_gui_set_play_button_state(FALSE);
-                        rc_player_object_signal_emit_simple("player-pause");
-                        playing_flag = TRUE;
-                        break;
-                    default:
-                        break;
+                    rc_debug_print("Core: Starting a segment playing.\n");
+                    gst_element_seek_simple(rc_core.playbin, GST_FORMAT_TIME,
+                        GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_ACCURATE,
+                        rc_core.start_time);
                 }
+            }
+            if(rc_core.start_flag && new_state!=GST_STATE_PAUSED &&
+                new_state!=GST_STATE_PLAYING)
+            {
+                rc_core.start_flag = FALSE;
             }
             break;
         case GST_MESSAGE_ERROR:
@@ -129,6 +142,8 @@ static gboolean rc_core_bus_call(GstBus *bus, GstMessage *msg, gpointer data)
         case GST_MESSAGE_TAG:
             break;
         case GST_MESSAGE_BUFFERING:
+            break;
+        case GST_MESSAGE_DURATION:
             break;
         case GST_MESSAGE_ELEMENT:
             if(gst_is_missing_plugin_message(msg))
@@ -149,6 +164,42 @@ static gboolean rc_core_bus_call(GstBus *bus, GstMessage *msg, gpointer data)
         default:
             break;
     }
+    return TRUE;
+}
+
+static gboolean rc_core_pad_buffer_probe_cb(GstPad *pad, GstBuffer *buf,
+    gpointer data)
+{
+    GstMessage *msg;
+    GstStructure* structure;
+    gint channel, depth;
+    gint sz, frames;
+    gint64 pos = (gint64)GST_BUFFER_TIMESTAMP(buf);
+    if(rc_core.end_time>0 && rc_core.end_time<pos)
+    {
+        msg = gst_message_new_eos(GST_OBJECT(rc_core.playbin));
+        rc_debug_print("Core: Reached the end time in segment playing, "
+            "sending a new EOS event now.\n");
+        if(!gst_element_post_message(rc_core.playbin, msg))
+            rc_core_stop();
+    }
+    structure = gst_caps_get_structure(GST_BUFFER_CAPS(buf), 0);
+    gst_structure_get_int(structure, "channels", &channel);
+    gst_structure_get_int(structure, "depth", &depth);
+    /* g_printf("Structure: %s\n", gst_structure_to_string(structure)); */
+    /* Calculate the number of samples in the buffer. */
+    sz = GST_BUFFER_SIZE(buf) / (depth / 8);
+    /* Number of frames is the number of samples in each channel. */
+    frames = sz / channel;
+    /*
+    g_printf("Buffer size: %u\n", GST_BUFFER_SIZE(buf));
+    g_printf("Buffer data1: %08X\n", *(unsigned int *)GST_BUFFER_DATA(buf));
+    */
+    /*
+    g_printf("Pos: %u\n", (guint)(GST_BUFFER_TIMESTAMP(buf) / GST_SECOND));
+    g_printf("Dura: %u\n", (guint)(GST_BUFFER_DURATION(buf) / GST_SECOND));
+    */
+    /* The buffer probe callback, may be used in CUE support? */
     return TRUE;
 }
 
@@ -296,7 +347,12 @@ void rc_core_init()
     {
         pad1 = gst_element_get_static_pad(audio_convert, "sink");
         gst_element_add_pad(seff, gst_ghost_pad_new(NULL, pad1));
+        gst_object_unref(pad1);
         g_object_set(G_OBJECT(play), "audio-sink", seff, NULL);
+        pad1 = gst_element_get_static_pad(audio_convert, "src");
+        gst_pad_add_buffer_probe(pad1, G_CALLBACK(rc_core_pad_buffer_probe_cb),
+            NULL);
+        gst_object_unref(pad1);
         rc_core.eq_plugin = audio_equalizer;
         /* Use Volume Plugin to avoid the bug in Gstreamer 0.10.28. */
         rc_core.vol_plugin = volume_plugin;
@@ -423,7 +479,7 @@ gboolean rc_core_stop()
     rc_gui_set_play_button_state(FALSE);
     rc_gui_seek_scaler_disable();
     rc_player_object_signal_emit_simple("player-stop");
-    playing_flag = FALSE;
+    rc_core.start_flag = FALSE;
     return TRUE;
 }
 
@@ -476,8 +532,17 @@ gdouble rc_core_get_volume()
 gboolean rc_core_set_play_position(gint64 time)
 { 
     if(time<0) return FALSE;
-    gst_element_seek_simple(rc_core.playbin, GST_FORMAT_TIME, 
-        GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_ACCURATE, time);
+    if(rc_core.start_time>0)
+    {
+        gst_element_seek_simple(rc_core.playbin, GST_FORMAT_TIME, 
+            GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_ACCURATE,
+            time + rc_core.start_time);
+    }
+    else
+    {
+        gst_element_seek_simple(rc_core.playbin, GST_FORMAT_TIME, 
+            GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_ACCURATE, time);
+    }
     return TRUE;
 }
 
@@ -495,12 +560,9 @@ gboolean rc_core_set_play_position_by_percent(gdouble percent)
     gint64 length;
     if(percent>100.0 || percent<0.0) return FALSE;
     percent/=100;
-    GstFormat fmt = GST_FORMAT_TIME;
-    gst_element_query_duration(rc_core.playbin, &fmt, &length);
+    length = rc_core_get_music_length();
     length *= percent;
-    gst_element_seek_simple(rc_core.playbin, GST_FORMAT_TIME,
-        GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_ACCURATE, length);
-    return TRUE;
+    return rc_core_set_play_position(length);
 }
 
 /**
@@ -519,6 +581,8 @@ gint64 rc_core_get_play_position()
     {
         if(pos<0) pos = 0;
     }
+    if(rc_core.start_time>0 && pos - rc_core.start_time>0)
+        pos = pos - rc_core.start_time;
     return pos;
 }
 
@@ -534,10 +598,17 @@ gint64 rc_core_get_music_length()
 {
     gint64 dura = 0;
     GstFormat fmt = GST_FORMAT_TIME;
+    if(rc_core.start_time>0 && rc_core.end_time>0)
+    {
+        dura = rc_core.end_time - rc_core.start_time;
+        if(dura>0) return dura;
+    }
     if(gst_element_query_duration(rc_core.playbin, &fmt, &dura))
     {
         if(dura<0) dura = 0;
     }
+    if(rc_core.start_time>0 && dura - rc_core.start_time>0)
+        dura = dura - rc_core.start_time;
     return dura;
 }
 
@@ -577,5 +648,27 @@ GstState rc_core_get_play_state()
     gst_element_get_state(rc_core.playbin, &state, NULL,
         GST_CLOCK_TIME_NONE);
     return state;
+}
+
+/**
+ * rc_core_set_play_segment:
+ * @start_time: the start time of the segment
+ * @end_time: the end time of the segment
+ *
+ * Set the segment in the music for playing.
+ */
+
+void rc_core_set_play_segment(gint64 start_time, gint64 end_time)
+{
+    if(start_time<0 || (end_time>0 && end_time-start_time<0))
+    {
+        rc_core.start_time = -1;
+        rc_core.end_time = -1;
+    }
+    else
+    {
+        rc_core.start_time = start_time;
+        rc_core.end_time = end_time;
+    }
 }
 

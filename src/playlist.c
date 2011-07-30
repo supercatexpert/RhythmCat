@@ -80,6 +80,7 @@ static GCancellable *plist_import_thread_cancel = NULL;
 static gpointer rc_plist_import_job_func(gpointer data)
 {
     RCMusicMetaData *mmd = NULL;
+    RCMsgPlistData *msg;
     RCPlistImportData *import_data;
     plist_import_thread_cancel = g_cancellable_new();
     while(plist_import_job_flag)
@@ -105,13 +106,15 @@ static gpointer rc_plist_import_job_func(gpointer data)
                 g_free(import_data);
                 continue;
             }
-            mmd->list2_index = import_data->list2_index;
-            mmd->reference = import_data->reference;
-            mmd->store = import_data->store;
+            msg = g_malloc(sizeof(RCMsgPlistData));
+            msg->list2_index = import_data->list2_index;
+            msg->reference = import_data->reference;
+            msg->store = import_data->store;
+            msg->mmd = (gpointer)mmd;
             if(!import_data->refresh_flag)
-                rc_msg_push(MSG_TYPE_PL_INSERT, mmd);
+                rc_msg_push(MSG_TYPE_PL_INSERT, msg);
             else
-                rc_msg_push(MSG_TYPE_PL_REFRESH, mmd);
+                rc_msg_push(MSG_TYPE_PL_REFRESH, msg);
         }
         g_free(import_data);
     }
@@ -452,6 +455,7 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
     if(mmd_new->album!=NULL)
         album_name = g_strdup(mmd_new->album);
     rc_core_set_uri(mmd_new->uri);
+    rc_core_set_play_segment(-1, -1);
     rc_gui_set_cover_image_by_file(NULL);
     rc_tag_set_playing_metadata(mmd_new);
     gtk_list_store_set(list_store, &iter, PLIST2_STATE, GTK_STOCK_MEDIA_PLAY,
@@ -533,8 +537,13 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
         {
             rc_debug_print("Plist: Found cover image file: %s.\n",
                 cover_filename);
+            image_flag = TRUE;
         }
     }
+    if(image_flag)
+        rc_player_object_signal_emit_simple("cover-found");
+    else
+        rc_player_object_signal_emit_simple("cover-not-found");
     g_free(music_dir);
     g_free(realname);
     if(album_name!=NULL) g_free(album_name);
@@ -965,7 +974,7 @@ gboolean rc_plist_insert_list(const gchar *listname, gint index)
     GtkTreeIter iter;
     pl_store = gtk_list_store_new(PLIST2_LAST, G_TYPE_STRING, G_TYPE_STRING,
         G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING,
-        G_TYPE_STRING, G_TYPE_INT);
+        G_TYPE_STRING, G_TYPE_INT, G_TYPE_STRING);
     if(index>=0)
         gtk_list_store_insert(rc_plist.list_store, &iter, index);
     else
@@ -1101,149 +1110,82 @@ gboolean rc_plist_remove_list(gint index)
 
 gboolean rc_plist_load_playlist_setting()
 {
-    const gchar *rc_set_dir = rc_player_get_conf_dir();
     GtkListStore *pl_store = NULL;
-    gsize s_length;
-    gchar bytechr = 0;
     gchar *file_data = NULL;
-    gchar *line = NULL, *buf = NULL;
-    gint linenum = 0;
-    gint listnum = -1;
+    gchar *line = NULL;
+    guint listnum = 0, musicnum = 0;
     gint existlist = FALSE;
-    gint linecount = 0;
-    gulong file_pointer = 0L;
-    gulong line_length = 0L;
-    gulong file_length = 0L;
-    gint fname_length = 0;
     gint64 timeinfo;
     gint time_min, time_sec;
     gint trackno;
     gchar time_str[64];
     GtkTreeIter iter;
-    fname_length = strlen(rc_set_dir) + strlen(play_list_setting_file) + 16;
-    gchar *plist_set_file_full_path = g_malloc0(fname_length);
-    g_sprintf(plist_set_file_full_path,"%s/%s",rc_set_dir,
-        play_list_setting_file);
-    if(!g_file_get_contents(plist_set_file_full_path,&file_data,&s_length,
-        NULL))
-    {
-        g_free(plist_set_file_full_path);
-        return FALSE;
-    }
+    gboolean flag = FALSE;
+    gchar *plist_set_file_full_path = NULL;
+    gchar **line_array;
+    guint i;
+    plist_set_file_full_path = g_build_filename(rc_player_get_conf_dir(),
+        play_list_setting_file, NULL);
+    if(plist_set_file_full_path==NULL) return FALSE;
+    flag = g_file_get_contents(plist_set_file_full_path, &file_data,
+        NULL, NULL);
     g_free(plist_set_file_full_path);
-    file_length = s_length;
-    if(file_length<1)
+    if(!flag || file_data==NULL)
     {
-        if(file_data!=NULL) g_free(file_data);
         return FALSE;
     }
-    for(file_pointer=0;file_pointer<=file_length-1;file_pointer++)
+    line_array = g_strsplit(file_data, "\n", 0);
+    g_free(file_data);
+    if(line_array==NULL) return FALSE;
+    for(i=0;line_array[i]!=NULL;i++)
     {
-        bytechr = file_data[file_pointer];
-        if(bytechr!='\n') line_length++;
-        else if(line_length>0)
+        line = line_array[i];
+        if(line==NULL) continue;
+        if(strncmp(line, "UR=", 3)==0)
         {
-            line = g_malloc0(line_length+16);
-            for(linecount=0;linecount<=line_length-1;linecount++)
-                line[linecount]=file_data[file_pointer-line_length+linecount];
-            buf = g_malloc0(line_length+16);
-            sscanf(line,"UR=%[^\n]", buf);
-            if(line_length>=4)
-            {
-                if(line[0]=='U' && line[1]=='R' && line[2]=='=')  /* uri */
-                {
-                    gtk_list_store_append(pl_store, &iter);
-                    gtk_list_store_set(pl_store, &iter, PLIST2_URI, buf,
-                        PLIST2_TRACKNO, -1, -1);
-                    buf[0]='\0';
-                }
-            }
-            sscanf(line,"TI=%[^\n]", buf); /* title */
-            if(line_length>=4 && pl_store!=NULL)
-            {
-                if(line[0]=='T' && line[1]=='I' && line[2]=='=')
-                {
-                    gtk_list_store_set(pl_store, &iter, PLIST2_TITLE, buf, -1);
-                    buf[0]='\0';
-                }
-            }
-            sscanf(line,"OT=%[^\n]", buf); /* original title */
-            if(line_length>=4 && pl_store!=NULL)
-            {
-                if(line[0]=='O' && line[1]=='T' && line[2]=='=')
-                {
-                    gtk_list_store_set(pl_store, &iter, PLIST2_ORITITLE,
-                        buf, -1);
-                    buf[0]='\0';
-                }
-            }
-            sscanf(line,"AR=%[^\n]", buf);  /* artist */
-            if(line_length>=4 && pl_store!=NULL)
-            {
-                if(line[0]=='A' && line[1]=='R' && line[2]=='=')
-                {
-                    gtk_list_store_set(pl_store, &iter, PLIST2_ARTIST, buf,
-                        -1);
-                    buf[0]='\0';
-                }
-            }
-            sscanf(line,"AL=%[^\n]",buf);  /* album */
-            if(line_length>=4 && pl_store!=NULL)
-            {
-                if(line[0]=='A' && line[1]=='L' && line[2]=='=')
-                {
-                    gtk_list_store_set(pl_store, &iter, PLIST2_ALBUM, buf, -1);
-                    buf[0]='\0';
-                }
-            }
-            sscanf(line,"TL=%[^\n]",buf);  /* time length */
-            if(line_length>=4 && pl_store!=NULL)
-            {
-                if(line[0]=='T' && line[1]=='L' && line[2]=='=')
-                {
-                    sscanf(buf,"%lld",(long long *)&timeinfo);
-                    timeinfo = timeinfo / 100;
-                    time_min = timeinfo / 60;
-                    time_sec = timeinfo % 60;
-                    g_snprintf(time_str, 63, "%02d:%02d", time_min, time_sec);
-                    gtk_list_store_set(pl_store, &iter, PLIST2_LENGTH,
-                        time_str, -1);
-                    buf[0]='\0';
-                }
-            }
-            sscanf(line,"TN=%[^\n]",buf);  /* track number */
-            if(line_length>=4 && pl_store!=NULL)
-            {
-                if(line[0]=='T' && line[1]=='N' && line[2]=='=')
-                {
-                    sscanf(buf,"%d",&trackno);
-                    gtk_list_store_set(pl_store, &iter, PLIST2_TRACKNO,
-                        trackno, -1);
-                    buf[0]='\0';
-                }
-            }
-            sscanf(line,"LI=%[^\n]",buf); /* list (name) */
-            if(line_length>=4)
-            {
-                if(line[0]=='L' && line[1]=='I' && line[2]=='=')
-                {
-                    listnum++;
-                    existlist = TRUE;
-                    rc_plist_insert_list(buf, listnum);
-                    pl_store = rc_plist_get_list_store(listnum);
-                    buf[0]='\0';
-                }
-            }
-            g_free(buf);
-            linenum++;
-            g_free(line);
-            line_length = 0L;
+            gtk_list_store_append(pl_store, &iter);
+            gtk_list_store_set(pl_store, &iter, PLIST2_URI, line+3,
+                PLIST2_TRACKNO, -1, -1);
+            musicnum++;
+        }
+        else if(strncmp(line, "TI=", 3)==0) /* title */
+            gtk_list_store_set(pl_store, &iter, PLIST2_TITLE, line+3, -1);
+        else if(strncmp(line, "OT=", 3)==0) /* original title */
+            gtk_list_store_set(pl_store, &iter, PLIST2_ORITITLE, line+3, -1);
+        else if(strncmp(line, "AR=", 3)==0) /* artist */
+            gtk_list_store_set(pl_store, &iter, PLIST2_ARTIST, line+3, -1);
+        else if(strncmp(line, "AL=", 3)==0) /* album */
+            gtk_list_store_set(pl_store, &iter, PLIST2_ALBUM, line+3, -1);
+        else if(strncmp(line, "TL=", 3)==0)  /* time length */
+        {
+            sscanf(line+3, "%lld", (long long *)&timeinfo);
+            timeinfo = timeinfo / 100;
+            time_min = timeinfo / 60;
+            time_sec = timeinfo % 60;
+            g_snprintf(time_str, 63, "%02d:%02d", time_min, time_sec);
+            gtk_list_store_set(pl_store, &iter, PLIST2_LENGTH, time_str, -1);
+        }
+        else if(strncmp(line, "TN=", 3)==0)  /* track number */
+        {
+            sscanf(line+3, "%d", &trackno);
+            gtk_list_store_set(pl_store, &iter, PLIST2_TRACKNO, trackno, -1);
+
+        }
+        else if(strncmp(line, "EX=", 3)==0)
+            gtk_list_store_set(pl_store, &iter, PLIST2_EXTRA, line+3, -1);
+        else if(strncmp(line, "LI=", 3)==0) /* list (name) */
+        {
+            existlist = TRUE;
+            rc_plist_insert_list(line+3, listnum);
+            pl_store = rc_plist_get_list_store(listnum);
+            listnum++;
         }
     }
-    g_free(file_data);
+    g_strfreev(line_array);
     if(existlist)
     {
         rc_gui_select_list1(0);
+        rc_debug_print("Plist: Loaded %u list(s), %u music.\n", listnum, musicnum);
         return TRUE;
     }
     else return FALSE;
@@ -1259,28 +1201,26 @@ gboolean rc_plist_load_playlist_setting()
 
 gboolean rc_plist_save_playlist_setting()
 {
-    const gchar *rc_set_dir = rc_player_get_conf_dir();
     FILE *fp;
     GtkTreeIter iter_head, iter;
     GtkListStore *pl_store = NULL;
     gchar *list_name = NULL;
     gulong list_length = rc_plist_get_list1_length();
-    gint fname_length = 0;
     gint time_min, time_sec;
     long long time_length = 0;
+    guint listnum = 0, musicnum = 0;
     gint list1_index, list2_index;
     gchar *list_uri, *list_title, *list_artist, *list_album, *list_time;
-    gchar *list_ori_title;
-    gint list_trackno = -1;
+    gchar *list_ori_title, *list_extra;
+    gchar *plist_set_file_full_path;
+    gint list_trackno = -1;    
     if(list_length<1) return FALSE;
-    fname_length = strlen(rc_set_dir) + strlen(play_list_setting_file) + 16;
-    gchar *plist_set_file_full_path = g_malloc0(fname_length);
-    g_sprintf(plist_set_file_full_path,"%s/%s",rc_set_dir,
-        play_list_setting_file);
+    plist_set_file_full_path = g_build_filename(rc_player_get_conf_dir(),
+        play_list_setting_file, NULL);
     fp = fopen(plist_set_file_full_path,"wb");
     g_free(plist_set_file_full_path);
     if(fp==NULL) return FALSE;
-    fprintf(fp,"/* PLEASE DO NOT EDIT THIS FILE!!! */\n");
+    fprintf(fp, "/* PLEASE DO NOT EDIT THIS FILE!!! */\n");
     if(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(rc_plist.list_store), 
         &iter_head))
     {
@@ -1290,6 +1230,7 @@ gboolean rc_plist_save_playlist_setting()
                 PLIST1_NAME, &list_name, PLIST1_STORE, &pl_store, -1);
             fprintf(fp,"LI=%s\n", list_name);
             if(list_name!=NULL) g_free(list_name);
+            listnum++;
             if(pl_store==NULL) continue;
             if(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl_store),
                 &iter))
@@ -1301,7 +1242,7 @@ gboolean rc_plist_save_playlist_setting()
                         PLIST2_ORITITLE, &list_ori_title, PLIST2_ARTIST,
                         &list_artist, PLIST2_ALBUM, &list_album,
                         PLIST2_LENGTH, &list_time, PLIST2_TRACKNO,
-                        &list_trackno, -1);
+                        &list_trackno, PLIST2_EXTRA, &list_extra, -1);
                     sscanf(list_time, "%d:%d", &time_min, &time_sec);
                     time_length = (time_min * 60 + time_sec) * 100;
                     fprintf(fp, "UR=%s\n", list_uri);
@@ -1311,19 +1252,25 @@ gboolean rc_plist_save_playlist_setting()
                     if(list_artist!=NULL)
                         fprintf(fp, "AR=%s\n", list_artist);
                     else
-                        fprintf(fp, "AR=%s\n", "");
+                        fprintf(fp, "AR=\n");
                     if(list_album!=NULL)
                         fprintf(fp, "AL=%s\n", list_album);
                     else
-                        fprintf(fp, "AL=%s\n", "");
+                        fprintf(fp, "AL=\n");
                     fprintf(fp, "TL=%lld\n", time_length);
                     fprintf(fp, "TN=%d\n", list_trackno);
+                    if(list_extra!=NULL)
+                        fprintf(fp, "EX=%s\n", list_extra);
+                    else
+                        fprintf(fp, "EX=\n");
                     if(list_uri!=NULL) g_free(list_uri);
                     if(list_title!=NULL) g_free(list_title);
                     if(list_artist!=NULL) g_free(list_artist);
                     if(list_album!=NULL) g_free(list_album);
                     if(list_time!=NULL) g_free(list_time);
                     if(list_ori_title!=NULL) g_free(list_ori_title);
+                    if(list_extra!=NULL) g_free(list_extra);
+                    musicnum++;
                 }
                 while(gtk_tree_model_iter_next(GTK_TREE_MODEL(pl_store),
                     &iter));
@@ -1333,6 +1280,7 @@ gboolean rc_plist_save_playlist_setting()
             &iter_head));
     }
     fclose(fp);
+    rc_debug_print("Plist: Saved %u list(s), %u music.\n", listnum, musicnum);
     if(rc_plist_play_get_index(&list1_index, &list2_index))
     {
         rc_set_set_integer("Playlist", "LastList", list1_index);
@@ -1523,8 +1471,6 @@ void rc_plist_save_playlist(const gchar *s_filename, gint index)
 
 void rc_plist_load_playlist(const gchar *s_filename, gint index)
 {
-    if(index<0 || index>=rc_plist_get_list1_length()) return;
-    if(s_filename==NULL || *s_filename=='\0') return;
     gchar *contents = NULL;
     gchar *file_list = NULL;
     gchar *file_data = NULL;
@@ -1537,6 +1483,8 @@ void rc_plist_load_playlist(const gchar *s_filename, gint index)
     guint length = 0;
     guint i = 0;
     guint linenum = 0;
+    if(index<0 || index>=rc_plist_get_list1_length()) return;
+    if(s_filename==NULL || *s_filename=='\0') return;
     if(!g_file_get_contents(s_filename, &contents, &s_length, NULL))
         return;
     path = g_path_get_dirname(s_filename);
@@ -1553,21 +1501,24 @@ void rc_plist_load_playlist(const gchar *s_filename, gint index)
     file_data = file_list;
     file_array = g_strsplit(file_data, "\n", 0);
     i = 0;
-    while(file_array[linenum]!=NULL)
+    for(linenum=0;file_array[linenum]!=NULL;linenum++)
     {
+        temp_name = NULL;
         line = file_array[linenum];
         if(!g_str_has_prefix(line, "#") && *line!='\n' && *line!='\0')
         {
-            if(!g_path_is_absolute(line) && strncmp(line, "file://", 7)!=0
+            if(strncmp(line, "file://", 7)!=0
                 && strncmp(line, "http://", 7)!=0)
             {
-                temp_name = g_strdup_printf("%s%c%s", path, G_DIR_SEPARATOR,
-                    line);
-                line = temp_name;
+                if(g_path_is_absolute(line))
+                    uri = g_filename_to_uri(line, NULL, NULL);
+                else
+                {
+                    temp_name = g_build_filename(path, line, NULL);
+                    uri = g_filename_to_uri(temp_name, NULL, NULL);
+                    g_free(temp_name);
+                }
             }
-            if(strncmp(line, "file://", 7)!=0 ||
-                strncmp(line, "http://", 7)!=0)
-                uri = g_filename_to_uri(line, NULL, NULL);
             else
                 uri = g_strdup(line);
             if(uri!=NULL)
@@ -1577,7 +1528,6 @@ void rc_plist_load_playlist(const gchar *s_filename, gint index)
                 g_free(uri);
             }
         }
-        linenum++;
     }
     g_strfreev(file_array);
     if(i>0)
@@ -1785,7 +1735,7 @@ gboolean rc_plist_load_uri_from_remote(const gchar *uri)
     {
         gtk_tree_model_get(GTK_TREE_MODEL(rc_plist.list_store), &iter,
             PLIST1_NAME, &list_name, -1);
-        if(strncmp(list_name, default_list_name, 512)==0)
+        if(g_strcmp0(list_name, default_list_name)==0)
         {
             list_index = i;
         }

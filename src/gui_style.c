@@ -61,7 +61,9 @@ void rc_gui_style_init()
     PangoAttribute *list1_attr[2], *list2_attr[2];
     gint i = 0;
     RCGuiData *rc_ui = rc_gui_get_data();
-    RCGuiMiniData *rc_mini = rc_gui_mini_get_data();
+    #ifndef USE_MAEMO5
+        RCGuiMiniData *rc_mini = rc_gui_mini_get_data();
+    #endif
     title_attr_list = pango_attr_list_new();
     artist_attr_list = pango_attr_list_new();
     album_attr_list = pango_attr_list_new();
@@ -126,12 +128,16 @@ void rc_gui_style_init()
     pango_attr_list_unref(length_attr_list);
     rc_gui_scrolled_text_set_attributes(RC_GUI_SCROLLED_TEXT(
         rc_ui->lrc_scrolled_label), lrc_attr_list);
-    rc_gui_scrolled_text_set_attributes(RC_GUI_SCROLLED_TEXT(
-        rc_mini->lrc_label), lrc_attr_list);
+    #ifndef USE_MAEMO5
+        rc_gui_scrolled_text_set_attributes(RC_GUI_SCROLLED_TEXT(
+            rc_mini->lrc_label), lrc_attr_list);
     gtk_label_set_attributes(GTK_LABEL(rc_mini->time_label),lrc_attr_list);
+    #endif
     pango_attr_list_unref(lrc_attr_list);
-    rc_gui_scrolled_text_set_attributes(RC_GUI_SCROLLED_TEXT(
-        rc_mini->info_label), mini_info_attr_list);
+    #ifndef USE_MAEMO5
+        rc_gui_scrolled_text_set_attributes(RC_GUI_SCROLLED_TEXT(
+            rc_mini->info_label), mini_info_attr_list);
+    #endif
     pango_attr_list_unref(mini_info_attr_list);
     g_object_set(G_OBJECT(rc_ui->renderer_text[0]), "attributes",
         list1_attr_list, NULL);

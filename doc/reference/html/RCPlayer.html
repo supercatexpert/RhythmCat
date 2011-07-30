@@ -67,6 +67,8 @@
 <div class="refsect1" title="Signals">
 <a name="RCPlayer.signals"></a><h2>Signals</h2>
 <pre class="synopsis">
+  "<a class="link" href="RCPlayer.html#RCPlayer-cover-found" title='The "cover-found" signal'>cover-found</a>"                                    : Run First
+  "<a class="link" href="RCPlayer.html#RCPlayer-cover-not-found" title='The "cover-not-found" signal'>cover-not-found</a>"                                : Run First
   "<a class="link" href="RCPlayer.html#RCPlayer-lyric-found" title='The "lyric-found" signal'>lyric-found</a>"                                    : Run First
   "<a class="link" href="RCPlayer.html#RCPlayer-lyric-not-found" title='The "lyric-not-found" signal'>lyric-not-found</a>"                                : Run First
   "<a class="link" href="RCPlayer.html#RCPlayer-player-continue" title='The "player-continue" signal'>player-continue</a>"                                : Run First
@@ -111,6 +113,8 @@ The structure used in object.
     void (*player_continue)();
     void (*lyric_found)();
     void (*lyric_not_found)();
+    void (*cover_found)();
+    void (*cover_not_found)();
 } RCPlayerClass;
 </pre>
 <p>
@@ -153,6 +157,14 @@ Provide signal process functions in the class.
 <td><p><span class="term"><em class="structfield"><code><a name="RCPlayerClass.lyric-not-found"></a>lyric_not_found</code></em> ()</span></p></td>
 <td>the function to call when the lyric data is not found
 </td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="structfield"><code><a name="RCPlayerClass.cover-found"></a>cover_found</code></em> ()</span></p></td>
+<td></td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="structfield"><code><a name="RCPlayerClass.cover-not-found"></a>cover_not_found</code></em> ()</span></p></td>
+<td></td>
 </tr>
 </tbody>
 </table></div>
@@ -273,6 +285,40 @@ signal it has been connected to. The <em class="parameter"><code>id</code></em> 
 </div>
 <div class="refsect1" title="Signal Details">
 <a name="RCPlayer.signal-details"></a><h2>Signal Details</h2>
+<div class="refsect2" title='The "cover-found" signal'>
+<a name="RCPlayer-cover-found"></a><h3>The <code class="literal">"cover-found"</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="RCPlayer.html" title="Player Object"><span class="type">RCPlayer</span></a> *arg0,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>  user_data)      : Run First</pre>
+<p>
+Emitted when the cover image is found at the moment the player
+starts playing.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td>user data set when the signal handler was connected.</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title='The "cover-not-found" signal'>
+<a name="RCPlayer-cover-not-found"></a><h3>The <code class="literal">"cover-not-found"</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="RCPlayer.html" title="Player Object"><span class="type">RCPlayer</span></a> *arg0,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>  user_data)      : Run First</pre>
+<p>
+Emitted when the cover image is not found at the moment the player
+starts playing.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td>user data set when the signal handler was connected.</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
 <div class="refsect2" title='The "lyric-found" signal'>
 <a name="RCPlayer-lyric-found"></a><h3>The <code class="literal">"lyric-found"</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="RCPlayer.html" title="Player Object"><span class="type">RCPlayer</span></a> *arg0,

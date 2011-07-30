@@ -38,10 +38,13 @@ G_BEGIN_DECLS
  * @audio_sink: the audio sink element
  * @eq_plugin: the equalizer element
  * @vol_plugin: the volume control element
- * @ver_major: the major version number of Gstreamer
- * @ver_minor: the minor version number of Gstreamer
- * @ver_micro: the micro version number of Gstreamer
- * @ver_nano: the nano version number of Gstreamer
+ * @start_time: the start time used in segment playing
+ * @end_time: the end time used in segment playing
+ * @start_flag: whether the player has been started (playing or paused)
+ * @ver_major: the major version number of GStreamer
+ * @ver_minor: the minor version number of GStreamer
+ * @ver_micro: the micro version number of GStreamer
+ * @ver_nano: the nano version number of GStreamer
  *
  * The data of the core.
  */
@@ -51,6 +54,9 @@ typedef struct RCCoreData {
     GstElement *audio_sink;
     GstElement *eq_plugin;
     GstElement *vol_plugin;
+    gint64 start_time;
+    gint64 end_time;
+    gboolean start_flag;
     guint ver_major;
     guint ver_minor;
     guint ver_micro;
@@ -74,6 +80,7 @@ gint64 rc_core_get_music_length();
 gdouble rc_core_get_volume();
 void rc_core_set_eq_effect(gdouble *fq);
 GstState rc_core_get_play_state();
+void rc_core_set_play_segment(gint64 start_time, gint64 end_time);
 
 G_END_DECLS
 

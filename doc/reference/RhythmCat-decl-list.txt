@@ -106,6 +106,7 @@ rc_core_get_music_length
 rc_core_get_volume
 rc_core_set_eq_effect
 rc_core_get_play_state
+rc_core_set_play_segment
 </SECTION>
 
 <SECTION>
@@ -207,6 +208,10 @@ rc_gui_list1_get_selected_index
 rc_gui_list2_delete_lists
 rc_gui_list2_select_all
 rc_gui_list1_rename_list
+rc_gui_list1_get_model
+rc_gui_list2_get_model
+rc_gui_list1_get_cursor
+rc_gui_list2_get_cursor
 </SECTION>
 
 <SECTION>

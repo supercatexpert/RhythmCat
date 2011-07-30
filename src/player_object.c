@@ -44,6 +44,8 @@ enum
     PLAYER_CONTINUE,
     LYRIC_FOUND,
     LYRIC_NOT_FOUND,
+    COVER_FOUND,
+    COVER_NOT_FOUND,
     LAST_SIGNAL
 };
 
@@ -122,6 +124,30 @@ static void rc_player_class_init(RCPlayerClass *class)
     object_signals[LYRIC_NOT_FOUND] = g_signal_new("lyric-not-found",
         RC_PLAYER_TYPE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCPlayerClass,
         lyric_not_found), NULL, NULL, g_cclosure_marshal_VOID__VOID,
+        G_TYPE_NONE, 0, NULL);
+
+    /**
+     * RCPlayer::cover-found:
+     *
+     * Emitted when the cover image is found at the moment the player
+     * starts playing.
+     */
+
+    object_signals[COVER_FOUND] = g_signal_new("cover-found",
+        RC_PLAYER_TYPE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCPlayerClass,
+        cover_found), NULL, NULL, g_cclosure_marshal_VOID__VOID,
+        G_TYPE_NONE, 0, NULL);
+
+    /**
+     * RCPlayer::cover-not-found:
+     *
+     * Emitted when the cover image is not found at the moment the player
+     * starts playing.
+     */
+
+    object_signals[COVER_NOT_FOUND] = g_signal_new("cover-not-found",
+        RC_PLAYER_TYPE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCPlayerClass,
+        cover_not_found), NULL, NULL, g_cclosure_marshal_VOID__VOID,
         G_TYPE_NONE, 0, NULL);
 }
 

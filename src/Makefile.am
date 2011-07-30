@@ -23,6 +23,10 @@ if DEBUG_MODE
     INCLUDES += -DDEBUG_MODE=1 -g
 endif
 
+if USE_MAEMO5
+    INCLUDES += -DUSE_MAEMO5=1
+endif
+
 if USE_GTK3
     INCLUDES += @GTK3_CFLAGS@ -DUSE_GTK3=1
     RhythmCat_LDADD += @GTK3_LIBS@

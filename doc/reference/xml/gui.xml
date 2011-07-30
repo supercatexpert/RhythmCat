@@ -276,6 +276,7 @@ Please do not change the data in this structure.
 <programlisting><link linkend="RCGuiData"><returnvalue>RCGuiData</returnvalue></link> *         rc_gui_get_data                     ();</programlisting>
 <para>
 Return the data of main UI structure.
+Notice that you should not use this function in plugins.
 </para><variablelist role="params">
 <varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The data of main UI structure.
 </simpara></listitem></varlistentry>

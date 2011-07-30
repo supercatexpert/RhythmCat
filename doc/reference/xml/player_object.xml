@@ -46,6 +46,8 @@
 <refsect1 id="RCPlayer.signals" role="signal_proto">
 <title role="signal_proto.title">Signals</title>
 <synopsis>
+  &quot;<link linkend="RCPlayer-cover-found">cover-found</link>&quot;                                    : Run First
+  &quot;<link linkend="RCPlayer-cover-not-found">cover-not-found</link>&quot;                                : Run First
   &quot;<link linkend="RCPlayer-lyric-found">lyric-found</link>&quot;                                    : Run First
   &quot;<link linkend="RCPlayer-lyric-not-found">lyric-not-found</link>&quot;                                : Run First
   &quot;<link linkend="RCPlayer-player-continue">player-continue</link>&quot;                                : Run First
@@ -88,6 +90,8 @@ The structure used in object.
     void (*player_continue)();
     void (*lyric_found)();
     void (*lyric_not_found)();
+    void (*cover_found)();
+    void (*cover_not_found)();
 } RCPlayerClass;
 </programlisting>
 <para>
@@ -120,6 +124,12 @@ Provide signal process functions in the class.
 <varlistentry><term><structfield id="RCPlayerClass.lyric-not-found">lyric_not_found</structfield>&#160;()</term>
 <listitem><simpara>the function to call when the lyric data is not found
 </simpara></listitem>
+</varlistentry>
+<varlistentry><term><structfield id="RCPlayerClass.cover-found">cover_found</structfield>&#160;()</term>
+<listitem />
+</varlistentry>
+<varlistentry><term><structfield id="RCPlayerClass.cover-not-found">cover_not_found</structfield>&#160;()</term>
+<listitem />
 </varlistentry>
 </variablelist></refsect2>
 <refsect2 id="rc-player-new" role="function">
@@ -199,7 +209,27 @@ signal it has been connected to. The <parameter>id</parameter> becomes invalid a
 </refsect1>
 <refsect1 id="RCPlayer.signal-details" role="signals">
 <title role="signals.title">Signal Details</title>
-<refsect2 id="RCPlayer-lyric-found" role="signal"><title>The <literal>&quot;lyric-found&quot;</literal> signal</title>
+<refsect2 id="RCPlayer-cover-found" role="signal"><title>The <literal>&quot;cover-found&quot;</literal> signal</title>
+<indexterm zone="RCPlayer-cover-found"><primary>RCPlayer::cover-found</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                user_function                      (<link linkend="RCPlayer"><type>RCPlayer</type></link> *arg0,
+                                                        <link linkend="gpointer"><type>gpointer</type></link>  user_data)      : Run First</programlisting>
+<para>
+Emitted when the cover image is found at the moment the player
+starts playing.
+</para><variablelist role="params">
+<varlistentry><term><parameter>user_data</parameter>&#160;:</term>
+<listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
+</variablelist></refsect2><refsect2 id="RCPlayer-cover-not-found" role="signal"><title>The <literal>&quot;cover-not-found&quot;</literal> signal</title>
+<indexterm zone="RCPlayer-cover-not-found"><primary>RCPlayer::cover-not-found</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                user_function                      (<link linkend="RCPlayer"><type>RCPlayer</type></link> *arg0,
+                                                        <link linkend="gpointer"><type>gpointer</type></link>  user_data)      : Run First</programlisting>
+<para>
+Emitted when the cover image is not found at the moment the player
+starts playing.
+</para><variablelist role="params">
+<varlistentry><term><parameter>user_data</parameter>&#160;:</term>
+<listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
+</variablelist></refsect2><refsect2 id="RCPlayer-lyric-found" role="signal"><title>The <literal>&quot;lyric-found&quot;</literal> signal</title>
 <indexterm zone="RCPlayer-lyric-found"><primary>RCPlayer::lyric-found</primary></indexterm>
 <programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                user_function                      (<link linkend="RCPlayer"><type>RCPlayer</type></link> *arg0,
                                                         <link linkend="gpointer"><type>gpointer</type></link>  user_data)      : Run First</programlisting>

@@ -72,6 +72,8 @@ typedef struct RCPlayerClass {
     void (*player_continue)();
     void (*lyric_found)();
     void (*lyric_not_found)();
+    void (*cover_found)();
+    void (*cover_not_found)();
 }RCPlayerClass;
 
 GType rc_player_get_type();

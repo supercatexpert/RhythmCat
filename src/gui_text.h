@@ -26,6 +26,7 @@
 #ifndef HAVE_GUI_TEXT_H
 #define HAVE_GUI_TEXT_H
 
+#include <string.h>
 #include <glib.h>
 #include <glib-object.h>
 #include <gdk/gdk.h>

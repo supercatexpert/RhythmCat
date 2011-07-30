@@ -86,9 +86,12 @@ static gboolean rc_tag_bus_handler(GstBus *bus, GstMessage *message,
     gchar *tag_filetype = NULL;
     gchar *tag_album = NULL;
     gchar *tag_comment = NULL;
+    gchar *tag_cuelist = NULL;
     GstBuffer *tag_image = NULL;
     guint bitrates = 0;
     guint tracknum = 0;
+    guint tag_cue_num = 0;
+    guint i = 0;
     gchar *plugin_error_msg = NULL;
     GstTagList *tags = NULL;
     if(mmd==NULL) return FALSE;
@@ -166,6 +169,21 @@ static gboolean rc_tag_bus_handler(GstBus *bus, GstMessage *message,
                 if(bitrates>0) mmd->bitrate = bitrates;
             if(gst_tag_list_get_uint(tags, GST_TAG_TRACK_NUMBER, &tracknum))
                 mmd->tracknum = tracknum;
+            tag_cue_num = gst_tag_list_get_tag_size(tags,
+                GST_TAG_EXTENDED_COMMENT);
+            for(i=0;i<tag_cue_num && mmd->emb_cue==NULL;i++)
+            {
+                if(gst_tag_list_get_string_index(tags, 
+                    GST_TAG_EXTENDED_COMMENT, i, &tag_cuelist))
+                {
+                    if(!strncmp(tag_cuelist, "cuesheet=", 9))
+                    {
+                        if(mmd->emb_cue!=NULL) g_free(mmd->emb_cue);
+                        mmd->emb_cue = g_strdup(tag_cuelist+9);
+                    }
+                    if(tag_cuelist!=NULL) g_free(tag_cuelist);
+                }
+            }
             gst_tag_list_free(tags);
             return TRUE;
             break;
@@ -347,11 +365,6 @@ RCMusicMetaData *rc_tag_read_metadata(const gchar *uri)
     }
     mmd = g_malloc0(sizeof(RCMusicMetaData));
     mmd->uri = g_strdup(uri);
-    mmd->eos = FALSE;
-    mmd->bitrate = 0;
-    mmd->tracknum = 0;
-    mmd->length = 0L;
-    pipeline = NULL;
     urisrc = gst_element_make_from_uri(GST_URI_SRC, mmd->uri, "urisrc");
     if(urisrc==NULL)
     {
@@ -435,6 +448,7 @@ void rc_tag_free(RCMusicMetaData *mmd)
     if(mmd->album!=NULL) g_free(mmd->album);
     if(mmd->comment!=NULL) g_free(mmd->comment);
     if(mmd->file_type!=NULL) g_free(mmd->file_type);
+    if(mmd->emb_cue!=NULL) g_free(mmd->emb_cue);
     g_free(mmd);
 }
 

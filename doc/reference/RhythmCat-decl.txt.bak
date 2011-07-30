@@ -92,16 +92,18 @@ typedef struct RCMusicMetaData {
     guint bitrate;
     gint samplerate;
     gint channels;
+    gint eos;
+    gint list2_index;
     gchar *title;
     gchar *artist;
     gchar *album;
     gchar *comment;
     gchar *file_type;
-    gchar *emb_cue;
     GstBuffer *image;
-    gboolean eos;
     gboolean audio_flag;
     gboolean video_flag;
+    GtkTreeRowReference *reference;
+    GtkListStore *store;
     gpointer user_data;
 }RCMusicMetaData;
 </STRUCT>
@@ -262,9 +264,6 @@ typedef struct RCCoreData {
     GstElement *audio_sink;
     GstElement *eq_plugin;
     GstElement *vol_plugin;
-    gint64 start_time;
-    gint64 end_time;
-    gboolean start_flag;
     guint ver_major;
     guint ver_minor;
     guint ver_micro;
@@ -350,11 +349,6 @@ gdouble *fq
 <NAME>rc_core_get_play_state</NAME>
 <RETURNS>GstState </RETURNS>
  
-</FUNCTION>
-<FUNCTION>
-<NAME>rc_core_set_play_segment</NAME>
-<RETURNS>void </RETURNS>
-gint64 start_time, gint64 end_time 
 </FUNCTION>
 <MACRO>
 <NAME>MAX_DIR_DEPTH</NAME>
@@ -464,8 +458,6 @@ typedef struct RCPlayerClass {
     void (*player_continue)();
     void (*lyric_found)();
     void (*lyric_not_found)();
-    void (*cover_found)();
-    void (*cover_not_found)();
 }RCPlayerClass;
 </STRUCT>
 <FUNCTION>
@@ -538,8 +530,7 @@ typedef enum RCPlist2Column {
     PLIST2_ALBUM = 5,
     PLIST2_LENGTH = 6,
     PLIST2_TRACKNO = 7,
-    PLIST2_EXTRA = 8,
-    PLIST2_LAST = 9
+    PLIST2_LAST = 8
 }RCPlist2Column;
 </ENUM>
 <FUNCTION>

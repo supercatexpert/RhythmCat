@@ -67,6 +67,8 @@
 <ANCHOR id="rc-player-object-signal-connect-simple" href="RhythmCat/RCPlayer.html#rc-player-object-signal-connect-simple">
 <ANCHOR id="rc-player-object-signal-disconnect" href="RhythmCat/RCPlayer.html#rc-player-object-signal-disconnect">
 <ANCHOR id="RCPlayer.signal-details" href="RhythmCat/RCPlayer.html#RCPlayer.signal-details">
+<ANCHOR id="RCPlayer-cover-found" href="RhythmCat/RCPlayer.html#RCPlayer-cover-found">
+<ANCHOR id="RCPlayer-cover-not-found" href="RhythmCat/RCPlayer.html#RCPlayer-cover-not-found">
 <ANCHOR id="RCPlayer-lyric-found" href="RhythmCat/RCPlayer.html#RCPlayer-lyric-found">
 <ANCHOR id="RCPlayer-lyric-not-found" href="RhythmCat/RCPlayer.html#RCPlayer-lyric-not-found">
 <ANCHOR id="RCPlayer-player-continue" href="RhythmCat/RCPlayer.html#RCPlayer-player-continue">
@@ -120,6 +122,7 @@
 <ANCHOR id="PLIST2-ALBUM:CAPS" href="RhythmCat/RhythmCat-Playlist.html#PLIST2-ALBUM:CAPS">
 <ANCHOR id="PLIST2-LENGTH:CAPS" href="RhythmCat/RhythmCat-Playlist.html#PLIST2-LENGTH:CAPS">
 <ANCHOR id="PLIST2-TRACKNO:CAPS" href="RhythmCat/RhythmCat-Playlist.html#PLIST2-TRACKNO:CAPS">
+<ANCHOR id="PLIST2-EXTRA:CAPS" href="RhythmCat/RhythmCat-Playlist.html#PLIST2-EXTRA:CAPS">
 <ANCHOR id="PLIST2-LAST:CAPS" href="RhythmCat/RhythmCat-Playlist.html#PLIST2-LAST:CAPS">
 <ANCHOR id="rc-plist-init" href="RhythmCat/RhythmCat-Playlist.html#rc-plist-init">
 <ANCHOR id="rc-plist-exit" href="RhythmCat/RhythmCat-Playlist.html#rc-plist-exit">
@@ -303,6 +306,10 @@
 <ANCHOR id="rc-gui-list2-delete-lists" href="RhythmCat/RhythmCat-Playlist-Views-UI.html#rc-gui-list2-delete-lists">
 <ANCHOR id="rc-gui-list2-select-all" href="RhythmCat/RhythmCat-Playlist-Views-UI.html#rc-gui-list2-select-all">
 <ANCHOR id="rc-gui-list1-rename-list" href="RhythmCat/RhythmCat-Playlist-Views-UI.html#rc-gui-list1-rename-list">
+<ANCHOR id="rc-gui-list1-get-model" href="RhythmCat/RhythmCat-Playlist-Views-UI.html#rc-gui-list1-get-model">
+<ANCHOR id="rc-gui-list2-get-model" href="RhythmCat/RhythmCat-Playlist-Views-UI.html#rc-gui-list2-get-model">
+<ANCHOR id="rc-gui-list1-get-cursor" href="RhythmCat/RhythmCat-Playlist-Views-UI.html#rc-gui-list1-get-cursor">
+<ANCHOR id="rc-gui-list2-get-cursor" href="RhythmCat/RhythmCat-Playlist-Views-UI.html#rc-gui-list2-get-cursor">
 <ANCHOR id="RhythmCat-Mini-Mode-UI" href="RhythmCat/RhythmCat-Mini-Mode-UI.html">
 <ANCHOR id="RhythmCat-Mini-Mode-UI.synopsis" href="RhythmCat/RhythmCat-Mini-Mode-UI.html#RhythmCat-Mini-Mode-UI.synopsis">
 <ANCHOR id="RhythmCat-Mini-Mode-UI.description" href="RhythmCat/RhythmCat-Mini-Mode-UI.html#RhythmCat-Mini-Mode-UI.description">

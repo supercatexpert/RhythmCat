@@ -23,6 +23,7 @@
  * Boston, MA  02110-1301  USA
  */
 
+#include <string.h>
 #include <stdlib.h>
 #include <glib.h>
 #include <glib/gprintf.h>
@@ -230,7 +231,11 @@ static void rc_plugin_lrcshow_show(cairo_t *lrc_cr)
     GdkWindow *lrc_window;
     GtkAllocation allocation;
     if(!GTK_IS_WIDGET(rc_glrc.lrc_scene)) return;
-    lrc_window = gtk_widget_get_window(rc_glrc.lrc_scene);
+    #ifdef USE_GTK3
+        lrc_window = gtk_widget_get_window(rc_glrc.lrc_scene);
+    #else
+        lrc_window = rc_glrc.lrc_scene->window;
+    #endif
     if(!GDK_IS_WINDOW(lrc_window)) return;
     g_object_get(G_OBJECT(rc_glrc.lrc_scene), "visible", &visible, NULL);
     if(!visible) return;
@@ -241,7 +246,12 @@ static void rc_plugin_lrcshow_show(cairo_t *lrc_cr)
     rc_glrc.text_color[3] = 1.0;
     rc_glrc.text_hilight[3] = 1.0;
     rc_glrc.background[3] = 1.0;
-    gtk_widget_get_allocation(rc_glrc.lrc_scene, &allocation);
+    #ifdef USE_GTK3
+        gtk_widget_get_allocation(rc_glrc.lrc_scene, &allocation);
+    #else
+        memcpy(&allocation, &(rc_glrc.lrc_scene->allocation),
+            sizeof(GtkAllocation));
+    #endif
     width = allocation.width;
     height = allocation.height;
     layout = pango_cairo_create_layout(lrc_cr);
@@ -350,7 +360,11 @@ static gboolean rc_plugin_lrcshow_drag(GtkWidget *widget, GdkEvent *event,
     static gint sy = 0;
     static gboolean drag_action = FALSE;
     if(!rc_glrc.drag_flag) return FALSE;
-    window = gtk_widget_get_window(rc_glrc.lrc_scene);
+    #ifdef USE_GTK3
+        window = gtk_widget_get_window(rc_glrc.lrc_scene);
+    #else
+        window = rc_glrc.lrc_scene->window;
+    #endif
     if(event->button.button==1)
     {
         switch(event->type)
@@ -421,11 +435,11 @@ static gboolean rc_plugin_lrcshow_expose(GtkWidget *widget,
 {
     gboolean visible = FALSE;
     cairo_t *cr;
-    if(!GDK_IS_WINDOW(gtk_widget_get_window(rc_glrc.lrc_scene)))
+    if(!GDK_IS_WINDOW(rc_glrc.lrc_scene->window))
         return TRUE;
     g_object_get(G_OBJECT(rc_glrc.lrc_scene), "visible", &visible, NULL);
     if(!visible) return FALSE;
-    cr = gdk_cairo_create(gtk_widget_get_window(rc_glrc.lrc_scene));
+    cr = gdk_cairo_create(rc_glrc.lrc_scene->window);
     rc_plugin_lrcshow_draw_bg(cr);
     if(rc_glrc.lyric_flag) rc_plugin_lrcshow_show(cr);
     cairo_destroy(cr);

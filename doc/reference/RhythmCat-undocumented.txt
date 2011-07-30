@@ -1,6 +1,6 @@
 96% symbol docs coverage.
-260 symbols documented.
-5 symbols incomplete.
+268 symbols documented.
+6 symbols incomplete.
 10 not documented.
 
 
@@ -10,6 +10,7 @@ IS_RC_GUI_SCROLLED_TEXT (<parameters>)
 IS_RC_GUI_SCROLLED_TEXT_CLASS (<parameters>)
 RCGuiScrolledText
 RCGuiScrolledTextClass (<items>)
+RCPlayerClass (cover_found, cover_not_found)
 RC_GUI_SCROLLED_TEXT (<parameters>)
 RC_GUI_SCROLLED_TEXT_CLASS (<parameters>)
 RC_GUI_SCROLLED_TEXT_TYPE

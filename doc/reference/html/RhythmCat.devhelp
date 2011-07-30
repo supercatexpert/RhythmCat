@@ -83,6 +83,8 @@
     <function name="rc_player_object_signal_emit_simple ()" link="RCPlayer.html#rc-player-object-signal-emit-simple"/>
     <function name="rc_player_object_signal_connect_simple ()" link="RCPlayer.html#rc-player-object-signal-connect-simple"/>
     <function name="rc_player_object_signal_disconnect ()" link="RCPlayer.html#rc-player-object-signal-disconnect"/>
+    <function name="The &quot;cover-found&quot; signal" link="RCPlayer.html#RCPlayer-cover-found"/>
+    <function name="The &quot;cover-not-found&quot; signal" link="RCPlayer.html#RCPlayer-cover-not-found"/>
     <function name="The &quot;lyric-found&quot; signal" link="RCPlayer.html#RCPlayer-lyric-found"/>
     <function name="The &quot;lyric-not-found&quot; signal" link="RCPlayer.html#RCPlayer-lyric-not-found"/>
     <function name="The &quot;player-continue&quot; signal" link="RCPlayer.html#RCPlayer-player-continue"/>
@@ -248,6 +250,10 @@
     <function name="rc_gui_list2_delete_lists ()" link="RhythmCat-Playlist-Views-UI.html#rc-gui-list2-delete-lists"/>
     <function name="rc_gui_list2_select_all ()" link="RhythmCat-Playlist-Views-UI.html#rc-gui-list2-select-all"/>
     <function name="rc_gui_list1_rename_list ()" link="RhythmCat-Playlist-Views-UI.html#rc-gui-list1-rename-list"/>
+    <function name="rc_gui_list1_get_model ()" link="RhythmCat-Playlist-Views-UI.html#rc-gui-list1-get-model"/>
+    <function name="rc_gui_list2_get_model ()" link="RhythmCat-Playlist-Views-UI.html#rc-gui-list2-get-model"/>
+    <function name="rc_gui_list1_get_cursor ()" link="RhythmCat-Playlist-Views-UI.html#rc-gui-list1-get-cursor"/>
+    <function name="rc_gui_list2_get_cursor ()" link="RhythmCat-Playlist-Views-UI.html#rc-gui-list2-get-cursor"/>
     <function name="rc_gui_mini_init ()" link="RhythmCat-Mini-Mode-UI.html#rc-gui-mini-init"/>
     <function name="rc_gui_mini_get_data ()" link="RhythmCat-Mini-Mode-UI.html#rc-gui-mini-get-data"/>
     <function name="rc_gui_mini_set_info_text ()" link="RhythmCat-Mini-Mode-UI.html#rc-gui-mini-set-info-text"/>
@@ -262,13 +268,13 @@
     <function name="rc_gui_mini_normal_mode_clicked ()" link="RhythmCat-Mini-Mode-UI.html#rc-gui-mini-normal-mode-clicked"/>
     <function name="rc_gui_create_setting_window ()" link="RhythmCat-Settings-UI.html#rc-gui-create-setting-window"/>
     <function name="rc_gui_plugin_window_create ()" link="RhythmCat-Plugin-Configuration-UI.html#rc-gui-plugin-window-create"/>
-    <function name="Introduction" link="PluginProgramming.html#id357214"/>
-    <function name="Preparation" link="PluginProgramming.html#id371899"/>
-    <function name="Implement a simple plugin" link="PluginProgramming.html#id402884"/>
-    <function name="How to compile the plugin" link="PluginProgramming.html#id410303"/>
-    <function name="Write a plugin description file" link="PluginProgramming.html#id402227"/>
-    <function name="Make your custom plugin work" link="PluginProgramming.html#id384162"/>
-    <function name="Catch signals in the player" link="PluginProgramming.html#id425935"/>
-    <function name="About this manual" link="PluginProgramming.html#id400575"/>
+    <function name="Introduction" link="PluginProgramming.html#id373684"/>
+    <function name="Preparation" link="PluginProgramming.html#id394314"/>
+    <function name="Implement a simple plugin" link="PluginProgramming.html#id347009"/>
+    <function name="How to compile the plugin" link="PluginProgramming.html#id410031"/>
+    <function name="Write a plugin description file" link="PluginProgramming.html#id382297"/>
+    <function name="Make your custom plugin work" link="PluginProgramming.html#id395270"/>
+    <function name="Catch signals in the player" link="PluginProgramming.html#id369668"/>
+    <function name="About this manual" link="PluginProgramming.html#id349309"/>
   </functions>
 </book>

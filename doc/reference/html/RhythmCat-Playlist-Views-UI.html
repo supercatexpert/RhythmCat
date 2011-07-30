@@ -50,6 +50,10 @@
 <span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist-Views-UI.html#rc-gui-list2-delete-lists" title="rc_gui_list2_delete_lists ()">rc_gui_list2_delete_lists</a>           ();
 <span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist-Views-UI.html#rc-gui-list2-select-all" title="rc_gui_list2_select_all ()">rc_gui_list2_select_all</a>             ();
 <span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist-Views-UI.html#rc-gui-list1-rename-list" title="rc_gui_list1_rename_list ()">rc_gui_list1_rename_list</a>            ();
+<a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="returnvalue">GtkTreeModel</span></a> *      <a class="link" href="RhythmCat-Playlist-Views-UI.html#rc-gui-list1-get-model" title="rc_gui_list1_get_model ()">rc_gui_list1_get_model</a>              ();
+<a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="returnvalue">GtkTreeModel</span></a> *      <a class="link" href="RhythmCat-Playlist-Views-UI.html#rc-gui-list2-get-model" title="rc_gui_list2_get_model ()">rc_gui_list2_get_model</a>              ();
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist-Views-UI.html#rc-gui-list1-get-cursor" title="rc_gui_list1_get_cursor ()">rc_gui_list1_get_cursor</a>             (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *iter</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist-Views-UI.html#rc-gui-list2-get-cursor" title="rc_gui_list2_get_cursor ()">rc_gui_list2_get_cursor</a>             (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *iter</code></em>);
 </pre>
 </div>
 <div class="refsect1" title="Description">
@@ -162,6 +166,84 @@ Select all items in the playlist.
 <p>
 Rename a list (make the name of the selected playlist editable).
 </p>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_list1_get_model ()">
+<a name="rc-gui-list1-get-model"></a><h3>rc_gui_list1_get_model ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="returnvalue">GtkTreeModel</span></a> *      rc_gui_list1_get_model              ();</pre>
+<p>
+Return the GtkTreeModel of list1 in player.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The GtkTreeModel.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_list2_get_model ()">
+<a name="rc-gui-list2-get-model"></a><h3>rc_gui_list2_get_model ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="returnvalue">GtkTreeModel</span></a> *      rc_gui_list2_get_model              ();</pre>
+<p>
+Return the GtkTreeModel of list2 in player.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The GtkTreeModel.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_list1_get_cursor ()">
+<a name="rc-gui-list1-get-cursor"></a><h3>rc_gui_list1_get_cursor ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_gui_list1_get_cursor             (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *iter</code></em>);</pre>
+<p>
+Get the GtkTreeIter of the selected item.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the uninitialized GtkTreeIter
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> TRUE, if iter was set.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_list2_get_cursor ()">
+<a name="rc-gui-list2-get-cursor"></a><h3>rc_gui_list2_get_cursor ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_gui_list2_get_cursor             (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *iter</code></em>);</pre>
+<p>
+Get the GtkTreeIter of the selected item.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the uninitialized GtkTreeIter
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> TRUE, if iter was set.
+</td>
+</tr>
+</tbody>
+</table></div>
 </div>
 </div>
 </div>

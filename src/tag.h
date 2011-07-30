@@ -44,18 +44,16 @@ G_BEGIN_DECLS
  * @bitrate: the bitrate of the music
  * @samplerate: the sample rate of the music
  * @channels: the channel number of the music
- * @eos: the EOS signal
- * @list2_index: the insert index in list2, only used in insert operation
  * @title: the title text of the music
  * @artist: the artist text of the music
  * @album: the album text of the music
  * @comment: the comment text of the music
  * @file_type: the file type of the music
+ * @emb_cue: the embeded CUE data of the music
  * @image: the GstBuffer which contains the cover image
+ * @eos: the EOS signal
  * @audio_flag: whether this file has audio
  * @video_flag: whether this file has video
- * @reference: the GtkTreeRowReference, used in list2 refresh operation
- * @store: the GtkListStore, used in list2 refresh operation
  * @user_data: the user data
  *
  * Custom struct type to store the music metadata.
@@ -68,18 +66,16 @@ typedef struct RCMusicMetaData {
     guint bitrate;
     gint samplerate;
     gint channels;
-    gint eos;
-    gint list2_index;
     gchar *title;
     gchar *artist;
     gchar *album;
     gchar *comment;
     gchar *file_type;
+    gchar *emb_cue;
     GstBuffer *image;
+    gboolean eos;
     gboolean audio_flag;
     gboolean video_flag;
-    GtkTreeRowReference *reference;
-    GtkListStore *store;
     gpointer user_data;
 }RCMusicMetaData;
 

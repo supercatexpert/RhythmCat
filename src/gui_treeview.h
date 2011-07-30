@@ -41,6 +41,10 @@ gint rc_gui_list1_get_selected_index();
 void rc_gui_list2_delete_lists();
 void rc_gui_list2_select_all();
 void rc_gui_list1_rename_list();
+GtkTreeModel *rc_gui_list1_get_model();
+GtkTreeModel *rc_gui_list2_get_model();
+gboolean rc_gui_list1_get_cursor(GtkTreeIter *iter);
+gboolean rc_gui_list2_get_cursor(GtkTreeIter *iter);
 
 G_END_DECLS
 

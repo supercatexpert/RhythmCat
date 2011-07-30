@@ -57,7 +57,11 @@ static gboolean rc_gui_mini_window_drag(GtkWidget *widget, GdkEvent *event,
     static gint bx = 0, by = 0;
     gint tx, ty;
     GdkWindow *window;
-    window = gtk_widget_get_window(rc_mini.mini_window);
+    #ifdef USE_GTK3
+        window = gtk_widget_get_window(rc_mini.mini_window);
+    #else
+        window = rc_mini.mini_window->window;
+    #endif
     if(event->button.button==1)
     {
         switch(event->type)
@@ -168,7 +172,11 @@ static gboolean rc_gui_mini_window_resize(GtkWidget *widget, GdkEvent *event,
     gint width = 0, height = 0;
     static gint bx = 0;
     GdkWindow *window;
-    window = gtk_widget_get_window(rc_mini.mini_window);
+    #ifdef USE_GTK3
+        window = gtk_widget_get_window(rc_mini.mini_window);
+    #else
+        window = rc_mini.mini_window->window;
+    #endif
     if(event->button.button==1)
     {
         switch(event->type)
@@ -226,6 +234,9 @@ void rc_gui_mini_init()
     gint i;
     gint width, height;
     gdouble opacity;
+    #ifdef USE_MAEMO5
+        return;
+    #endif
     rc_ui = rc_gui_get_data();
     bzero(&rc_mini, sizeof(RCGuiMiniData));
     mini_icon_pixbuf = gdk_pixbuf_scale_simple(rc_ui->icon_image, 28, 28,
@@ -292,8 +303,13 @@ void rc_gui_mini_init()
     gtk_widget_set_name(rc_mini.mini_window, "RCMiniWindow");
     gtk_widget_set_size_request(rc_mini.mini_window, rc_mini.mini_window_width,
         rc_mini.mini_window_height);
-    gtk_widget_set_has_window(rc_mini.info_fixed, TRUE);
-    gtk_widget_set_has_window(rc_mini.lrc_fixed, TRUE);
+    #ifdef USE_GTK3
+        gtk_widget_set_has_window(rc_mini.info_fixed, TRUE);
+        gtk_widget_set_has_window(rc_mini.lrc_fixed, TRUE);
+    #else
+        GTK_WIDGET_SET_FLAGS(rc_mini.info_fixed, !GTK_NO_WINDOW);
+        GTK_WIDGET_SET_FLAGS(rc_mini.lrc_fixed, !GTK_NO_WINDOW);
+    #endif
     gtk_widget_add_events(rc_mini.mini_window,
         GDK_LEAVE_NOTIFY_MASK | GDK_BUTTON_PRESS_MASK |
         GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK |
@@ -401,6 +417,9 @@ void rc_gui_mini_init()
 
 RCGuiMiniData *rc_gui_mini_get_data()
 {
+    #ifdef USE_MAEMO5
+        return NULL;
+    #endif
     return &rc_mini;
 }
 
@@ -413,6 +432,9 @@ RCGuiMiniData *rc_gui_mini_get_data()
 
 void rc_gui_mini_set_info_text(const gchar *text)
 {
+    #ifdef USE_MAEMO5
+        return;
+    #endif
     rc_gui_scrolled_text_set_text(RC_GUI_SCROLLED_TEXT(rc_mini.info_label),
         text);
 }
@@ -426,6 +448,9 @@ void rc_gui_mini_set_info_text(const gchar *text)
 
 void rc_gui_mini_set_lyric_text(const gchar *text)
 {
+    #ifdef USE_MAEMO5
+        return;
+    #endif
     rc_gui_mini_set_lyric_percent(0.0);
     rc_gui_scrolled_text_set_text(RC_GUI_SCROLLED_TEXT(rc_mini.lrc_label),
         text);
@@ -445,6 +470,9 @@ void rc_gui_mini_info_text_move()
     gint pos = 0;
     gint width = 0;
     gdouble percent = 0.0;
+    #ifdef USE_MAEMO5
+        return;
+    #endif
     if(!rc_set_get_boolean("Player", "MiniMode", NULL)) return;
     if(pause_count>0)
     {
@@ -492,6 +520,9 @@ void rc_gui_mini_info_text_move()
 
 void rc_gui_mini_set_lyric_percent(gdouble percent)
 {
+    #ifdef USE_MAEMO5
+        return;
+    #endif
     rc_gui_scrolled_text_set_percent(RC_GUI_SCROLLED_TEXT(rc_mini.lrc_label),
         percent);
 }
@@ -506,6 +537,9 @@ void rc_gui_mini_set_lyric_percent(gdouble percent)
 
 void rc_gui_mini_set_play_state(gboolean state)
 {
+    #ifdef USE_MAEMO5
+        return;
+    #endif
     if(state)
         gtk_image_set_from_stock(GTK_IMAGE(rc_mini.control_images[0]),
             GTK_STOCK_MEDIA_PAUSE, GTK_ICON_SIZE_MENU);
@@ -526,6 +560,9 @@ void rc_gui_mini_set_time_text(gint64 pos)
     gchar timestr[64];
     gint64 time;
     gint pos_m, pos_s;
+    #ifdef USE_MAEMO5
+        return;
+    #endif
     if(pos>=0)
     {
         time = pos / GST_SECOND;
@@ -546,6 +583,9 @@ void rc_gui_mini_set_time_text(gint64 pos)
 
 void rc_gui_mini_window_hide()
 {
+    #ifdef USE_MAEMO5
+        return;
+    #endif
     gtk_widget_hide(rc_mini.mini_window);
 }
 
@@ -557,6 +597,9 @@ void rc_gui_mini_window_hide()
 
 void rc_gui_mini_window_show()
 {
+    #ifdef USE_MAEMO5
+        return;
+    #endif
     gtk_widget_show_all(rc_mini.mini_window);
     gtk_window_move(GTK_WINDOW(rc_mini.mini_window), rc_set_get_integer(
         "Player", "MiniWindowX", NULL), rc_set_get_integer("Player",
@@ -571,6 +614,9 @@ void rc_gui_mini_window_show()
 
 void rc_gui_mini_mini_mode_clicked()
 {
+    #ifdef USE_MAEMO5
+        return;
+    #endif
     rc_set_set_boolean("Player", "MiniMode", TRUE);
     gtk_widget_show_all(rc_mini.mini_window);
     gtk_widget_hide(rc_ui->main_window);
@@ -587,6 +633,9 @@ void rc_gui_mini_mini_mode_clicked()
 
 void rc_gui_mini_normal_mode_clicked()
 {
+    #ifdef USE_MAEMO5
+        return;
+    #endif
     rc_set_set_boolean("Player", "MiniMode", FALSE);
     gtk_widget_hide(rc_mini.mini_window);
     gtk_widget_show_all(rc_ui->main_window);

@@ -54,10 +54,14 @@
 <indexentry><primaryie linkends="rc-gui-get-ui-manager"><link linkend="rc-gui-get-ui-manager">rc_gui_get_ui_manager</link>, function in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-init"><link linkend="rc-gui-init">rc_gui_init</link>, function in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-list1-delete-list"><link linkend="rc-gui-list1-delete-list">rc_gui_list1_delete_list</link>, function in <link linkend="RhythmCat-Playlist-Views-UI">Playlist Views UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-list1-get-cursor"><link linkend="rc-gui-list1-get-cursor">rc_gui_list1_get_cursor</link>, function in <link linkend="RhythmCat-Playlist-Views-UI">Playlist Views UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-list1-get-model"><link linkend="rc-gui-list1-get-model">rc_gui_list1_get_model</link>, function in <link linkend="RhythmCat-Playlist-Views-UI">Playlist Views UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-list1-get-selected-index"><link linkend="rc-gui-list1-get-selected-index">rc_gui_list1_get_selected_index</link>, function in <link linkend="RhythmCat-Playlist-Views-UI">Playlist Views UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-list1-new-list"><link linkend="rc-gui-list1-new-list">rc_gui_list1_new_list</link>, function in <link linkend="RhythmCat-Playlist-Views-UI">Playlist Views UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-list1-rename-list"><link linkend="rc-gui-list1-rename-list">rc_gui_list1_rename_list</link>, function in <link linkend="RhythmCat-Playlist-Views-UI">Playlist Views UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-list2-delete-lists"><link linkend="rc-gui-list2-delete-lists">rc_gui_list2_delete_lists</link>, function in <link linkend="RhythmCat-Playlist-Views-UI">Playlist Views UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-list2-get-cursor"><link linkend="rc-gui-list2-get-cursor">rc_gui_list2_get_cursor</link>, function in <link linkend="RhythmCat-Playlist-Views-UI">Playlist Views UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-list2-get-model"><link linkend="rc-gui-list2-get-model">rc_gui_list2_get_model</link>, function in <link linkend="RhythmCat-Playlist-Views-UI">Playlist Views UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-list2-select-all"><link linkend="rc-gui-list2-select-all">rc_gui_list2_select_all</link>, function in <link linkend="RhythmCat-Playlist-Views-UI">Playlist Views UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-list-tree-reset-list-store"><link linkend="rc-gui-list-tree-reset-list-store">rc_gui_list_tree_reset_list_store</link>, function in <link linkend="RhythmCat-Playlist-Views-UI">Playlist Views UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-load-playlist-dialog"><link linkend="rc-gui-load-playlist-dialog">rc_gui_load_playlist_dialog</link>, function in <link linkend="RhythmCat-Dialogs">Dialogs</link></primaryie></indexentry>
@@ -140,6 +144,8 @@
 </indexdiv>
 <indexdiv><title>P</title>
 <indexentry><primaryie linkends="RCPlayer-struct"><link linkend="RCPlayer-struct">RCPlayer</link>, struct in <link linkend="RCPlayer">RCPlayer</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCPlayer-cover-found"><link linkend="RCPlayer-cover-found">RCPlayer::cover-found</link>, object signal in <link linkend="RCPlayer">RCPlayer</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCPlayer-cover-not-found"><link linkend="RCPlayer-cover-not-found">RCPlayer::cover-not-found</link>, object signal in <link linkend="RCPlayer">RCPlayer</link></primaryie></indexentry>
 <indexentry><primaryie linkends="RCPlayer-lyric-found"><link linkend="RCPlayer-lyric-found">RCPlayer::lyric-found</link>, object signal in <link linkend="RCPlayer">RCPlayer</link></primaryie></indexentry>
 <indexentry><primaryie linkends="RCPlayer-lyric-not-found"><link linkend="RCPlayer-lyric-not-found">RCPlayer::lyric-not-found</link>, object signal in <link linkend="RCPlayer">RCPlayer</link></primaryie></indexentry>
 <indexentry><primaryie linkends="RCPlayer-player-continue"><link linkend="RCPlayer-player-continue">RCPlayer::player-continue</link>, object signal in <link linkend="RCPlayer">RCPlayer</link></primaryie></indexentry>

@@ -36,10 +36,11 @@ build_triplet = @build@
 host_triplet = @host@
 bin_PROGRAMS = RhythmCat$(EXEEXT)
 @DEBUG_MODE_TRUE@am__append_1 = -DDEBUG_MODE=1 -g
-@USE_GTK3_TRUE@am__append_2 = @GTK3_CFLAGS@ -DUSE_GTK3=1
-@USE_GTK3_TRUE@am__append_3 = @GTK3_LIBS@
-@USE_GTK3_FALSE@am__append_4 = @GTK2_CFLAGS@
-@USE_GTK3_FALSE@am__append_5 = @GTK2_LIBS@
+@USE_MAEMO5_TRUE@am__append_2 = -DUSE_MAEMO5=1
+@USE_GTK3_TRUE@am__append_3 = @GTK3_CFLAGS@ -DUSE_GTK3=1
+@USE_GTK3_TRUE@am__append_4 = @GTK3_LIBS@
+@USE_GTK3_FALSE@am__append_5 = @GTK2_CFLAGS@
+@USE_GTK3_FALSE@am__append_6 = @GTK2_LIBS@
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -233,9 +234,9 @@ RhythmCat_SOURCES = core.c lyric.c playlist.c tag.c settings.c plugin.c \
 
 INCLUDES = @GLIB2_CFLAGS@ @DBUS_GLIB_CFLAGS@ @GSTREAMER_CFLAGS@ \
 	-DLOCALEDIR=\"$(localedir)\" $(am__append_1) $(am__append_2) \
-	$(am__append_4)
-RhythmCat_LDADD = @GLIB2_LIBS@ @DBUS_GLIB_LIBS@ @GSTREAMER_LIBS@ \
 	$(am__append_3) $(am__append_5)
+RhythmCat_LDADD = @GLIB2_LIBS@ @DBUS_GLIB_LIBS@ @GSTREAMER_LIBS@ \
+	$(am__append_4) $(am__append_6)
 all: all-am
 
 .SUFFIXES:

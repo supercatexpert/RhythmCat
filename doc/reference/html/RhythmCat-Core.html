@@ -75,6 +75,9 @@ The core part of the player, it uses Gstreamer as backend to play audio files.
     GstElement *audio_sink;
     GstElement *eq_plugin;
     GstElement *vol_plugin;
+    gint64 start_time;
+    gint64 end_time;
+    gboolean start_flag;
     guint ver_major;
     guint ver_minor;
     guint ver_micro;
@@ -108,23 +111,38 @@ The data of the core.
 </td>
 </tr>
 <tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> <em class="structfield"><code><a name="RCCoreData.start-time"></a>start_time</code></em>;</span></p></td>
+<td>the start time used in segment playing
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> <em class="structfield"><code><a name="RCCoreData.end-time"></a>end_time</code></em>;</span></p></td>
+<td>the end time used in segment playing
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> <em class="structfield"><code><a name="RCCoreData.start-flag"></a>start_flag</code></em>;</span></p></td>
+<td>whether the player has been started (playing or paused)
+</td>
+</tr>
+<tr>
 <td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="RCCoreData.ver-major"></a>ver_major</code></em>;</span></p></td>
-<td>the major version number of Gstreamer
+<td>the major version number of GStreamer
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="RCCoreData.ver-minor"></a>ver_minor</code></em>;</span></p></td>
-<td>the minor version number of Gstreamer
+<td>the minor version number of GStreamer
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="RCCoreData.ver-micro"></a>ver_micro</code></em>;</span></p></td>
-<td>the micro version number of Gstreamer
+<td>the micro version number of GStreamer
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="RCCoreData.ver-nano"></a>ver_nano</code></em>;</span></p></td>
-<td>the nano version number of Gstreamer
+<td>the nano version number of GStreamer
 </td>
 </tr>
 </tbody>

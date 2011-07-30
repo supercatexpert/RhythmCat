@@ -44,6 +44,24 @@ G_BEGIN_DECLS
 typedef void (*RCMsgAsyncQueueWatchFunc)(gpointer item, gpointer data);
 
 /**
+ * RCMsgPlistData:
+ * @list2_index: the insert index in list2, only used in insert operation
+ * @reference: the GtkTreeRowReference, used in list2 refresh operation
+ * @store: the GtkListStore, used in list2 refresh operation
+ * @mmd: the metadata
+ *
+ * The playlist item message data used in playlist operation.
+ */
+
+typedef struct RCMsgPlistData
+{
+    gint list2_index;
+    GtkTreeRowReference *reference;
+    GtkListStore *store;
+    gpointer *mmd;
+}RCMsgPlistData;
+
+/**
  * RCMsgType:
  * @MSG_TYPE_EMPTY: empty message
  * @MSG_TYPE_TEST: test message

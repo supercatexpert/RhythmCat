@@ -802,21 +802,15 @@ static gboolean rc_plugin_tag_data_save_cb()
 
 static void rc_plugin_tag_edit_menu_cb()
 {
-    RCGuiData *rc_ui;
-    GtkTreePath *path;
     GtkTreeIter iter;
     gchar *uri = NULL;
     GtkAction *action;
-    rc_ui = rc_gui_get_data();
     action = gtk_ui_manager_get_action(rc_gui_get_ui_manager(),
         "/RCMenuBar/ViewMenu/ViewPlaylist");
     gtk_radio_action_set_current_value(GTK_RADIO_ACTION(action), table_id+2);
-    gtk_tree_view_get_cursor(GTK_TREE_VIEW(rc_ui->list2_tree_view), &path,
-        NULL);
-    if(gtk_tree_model_get_iter(GTK_TREE_MODEL(rc_ui->list2_tree_model), &iter,
-        path))
+    if(rc_gui_list2_get_cursor(&iter))
     {
-        gtk_tree_model_get(GTK_TREE_MODEL(rc_ui->list2_tree_model), &iter,
+        gtk_tree_model_get(rc_gui_list2_get_model(), &iter,
             PLIST2_URI, &uri, -1);
         if(uri!=NULL)
         {

@@ -68,18 +68,16 @@ Process the tags of the music, like metadata, etc.
     guint bitrate;
     gint samplerate;
     gint channels;
-    gint eos;
-    gint list2_index;
     gchar *title;
     gchar *artist;
     gchar *album;
     gchar *comment;
     gchar *file_type;
+    gchar *emb_cue;
     GstBuffer *image;
+    gboolean eos;
     gboolean audio_flag;
     gboolean video_flag;
-    GtkTreeRowReference *reference;
-    GtkListStore *store;
     gpointer user_data;
 } RCMusicMetaData;
 </pre>
@@ -120,16 +118,6 @@ Custom struct type to store the music metadata.
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="RCMusicMetaData.eos"></a>eos</code></em>;</span></p></td>
-<td>the EOS signal
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="RCMusicMetaData.list2-index"></a>list2_index</code></em>;</span></p></td>
-<td>the insert index in list2, only used in insert operation
-</td>
-</tr>
-<tr>
 <td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCMusicMetaData.title"></a>title</code></em>;</span></p></td>
 <td>the title text of the music
 </td>
@@ -155,8 +143,18 @@ Custom struct type to store the music metadata.
 </td>
 </tr>
 <tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCMusicMetaData.emb-cue"></a>emb_cue</code></em>;</span></p></td>
+<td>the embeded CUE data of the music
+</td>
+</tr>
+<tr>
 <td><p><span class="term"><a href="/usr/share/gtk-doc/html/gstreamer-0.10/gstreamer-GstBuffer.html#GstBuffer"><span class="type">GstBuffer</span></a> *<em class="structfield"><code><a name="RCMusicMetaData.image"></a>image</code></em>;</span></p></td>
 <td>the GstBuffer which contains the cover image
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> <em class="structfield"><code><a name="RCMusicMetaData.eos"></a>eos</code></em>;</span></p></td>
+<td>the EOS signal
 </td>
 </tr>
 <tr>
@@ -167,16 +165,6 @@ Custom struct type to store the music metadata.
 <tr>
 <td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> <em class="structfield"><code><a name="RCMusicMetaData.video-flag"></a>video_flag</code></em>;</span></p></td>
 <td>whether this file has video
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html#GtkTreeRowReference"><span class="type">GtkTreeRowReference</span></a> *<em class="structfield"><code><a name="RCMusicMetaData.reference"></a>reference</code></em>;</span></p></td>
-<td>the GtkTreeRowReference, used in list2 refresh operation
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkListStore.html"><span class="type">GtkListStore</span></a> *<em class="structfield"><code><a name="RCMusicMetaData.store"></a>store</code></em>;</span></p></td>
-<td>the GtkListStore, used in list2 refresh operation
 </td>
 </tr>
 <tr>

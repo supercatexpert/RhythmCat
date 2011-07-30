@@ -605,6 +605,8 @@ GTK2_LIBS
 GTK2_CFLAGS
 GTK3_LIBS
 GTK3_CFLAGS
+USE_MAEMO5_FALSE
+USE_MAEMO5_TRUE
 DEBUG_MODE_FALSE
 DEBUG_MODE_TRUE
 LTLIBINTL
@@ -762,6 +764,7 @@ enable_rpath
 with_libiconv_prefix
 with_libintl_prefix
 enable_debug
+enable_maemo5
 enable_gtk3
 '
       ac_precious_vars='build_alias
@@ -1414,6 +1417,7 @@ Optional Features:
   --disable-nls           do not use Native Language Support
   --disable-rpath         do not hardcode runtime library paths
   --enable-debug          enable debug mode
+  --enable-maemo5         enable Maemo5 compatiblity
   --enable-gtk3           use gtk+ 3.0 instead of gtk+ 2.0
 
 Optional Packages:
@@ -7955,6 +7959,21 @@ else
 fi
 
 
+@%:@ Check whether --enable-maemo5 was given.
+if test "${enable_maemo5+set}" = set; then :
+  enableval=$enable_maemo5; \
+    enable_maemo5=yes
+fi
+
+ if test "x$enable_maemo5" = "xyes"; then
+  USE_MAEMO5_TRUE=
+  USE_MAEMO5_FALSE='#'
+else
+  USE_MAEMO5_TRUE='#'
+  USE_MAEMO5_FALSE=
+fi
+
+
 @%:@ Check whether --enable-gtk3 was given.
 if test "${enable_gtk3+set}" = set; then :
   enableval=$enable_gtk3; \
@@ -8061,12 +8080,12 @@ if test -n "$GTK2_CFLAGS"; then
     pkg_cv_GTK2_CFLAGS="$GTK2_CFLAGS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-2.0 >= 2.20.0\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "gtk+-2.0 >= 2.20.0") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-2.0 >= 2.14.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "gtk+-2.0 >= 2.14.0") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_GTK2_CFLAGS=`$PKG_CONFIG --cflags "gtk+-2.0 >= 2.20.0" 2>/dev/null`
+  pkg_cv_GTK2_CFLAGS=`$PKG_CONFIG --cflags "gtk+-2.0 >= 2.14.0" 2>/dev/null`
 else
   pkg_failed=yes
 fi
@@ -8077,12 +8096,12 @@ if test -n "$GTK2_LIBS"; then
     pkg_cv_GTK2_LIBS="$GTK2_LIBS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-2.0 >= 2.20.0\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "gtk+-2.0 >= 2.20.0") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-2.0 >= 2.14.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "gtk+-2.0 >= 2.14.0") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_GTK2_LIBS=`$PKG_CONFIG --libs "gtk+-2.0 >= 2.20.0" 2>/dev/null`
+  pkg_cv_GTK2_LIBS=`$PKG_CONFIG --libs "gtk+-2.0 >= 2.14.0" 2>/dev/null`
 else
   pkg_failed=yes
 fi
@@ -8102,14 +8121,14 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        GTK2_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "gtk+-2.0 >= 2.20.0" 2>&1`
+	        GTK2_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "gtk+-2.0 >= 2.14.0" 2>&1`
         else 
-	        GTK2_PKG_ERRORS=`$PKG_CONFIG --print-errors "gtk+-2.0 >= 2.20.0" 2>&1`
+	        GTK2_PKG_ERRORS=`$PKG_CONFIG --print-errors "gtk+-2.0 >= 2.14.0" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$GTK2_PKG_ERRORS" >&5
 
-	as_fn_error $? "Package requirements (gtk+-2.0 >= 2.20.0) were not met:
+	as_fn_error $? "Package requirements (gtk+-2.0 >= 2.14.0) were not met:
 
 $GTK2_PKG_ERRORS
 
@@ -8289,6 +8308,10 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${DEBUG_MODE_TRUE}" && test -z "${DEBUG_MODE_FALSE}"; then
   as_fn_error $? "conditional \"DEBUG_MODE\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5 
+fi
+if test -z "${USE_MAEMO5_TRUE}" && test -z "${USE_MAEMO5_FALSE}"; then
+  as_fn_error $? "conditional \"USE_MAEMO5\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5 
 fi
 if test -z "${USE_GTK3_TRUE}" && test -z "${USE_GTK3_FALSE}"; then

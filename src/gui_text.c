@@ -113,9 +113,14 @@ static void rc_gui_scrolled_text_realize(GtkWidget *widget)
     #endif
     g_return_if_fail(widget!=NULL);
     g_return_if_fail(IS_RC_GUI_SCROLLED_TEXT(widget));
-    gtk_widget_set_realized(widget, TRUE);
     scrolled_text = RC_GUI_SCROLLED_TEXT(widget);
-    gtk_widget_get_allocation(widget, &allocation);
+    #ifdef USE_GTK3
+        gtk_widget_set_realized(widget, TRUE);
+        gtk_widget_get_allocation(widget, &allocation);
+    #else
+        GTK_WIDGET_SET_FLAGS(widget, GTK_REALIZED);
+        memcpy(&allocation, &(widget->allocation), sizeof(GtkAllocation));
+    #endif
     attributes.x = allocation.x;
     attributes.y = allocation.y;
     attributes.width = allocation.width;
@@ -127,14 +132,19 @@ static void rc_gui_scrolled_text_realize(GtkWidget *widget)
     attributes.visual = gtk_widget_get_visual(widget);
     #ifdef USE_GTK3
         attr_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_VISUAL;
+        gtk_widget_set_has_window(widget, TRUE);
     #else
         attributes.colormap = gtk_widget_get_colormap(widget);
         attr_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_VISUAL | GDK_WA_COLORMAP;
+        GTK_WIDGET_SET_FLAGS(widget, !GTK_NO_WINDOW);
     #endif
-    gtk_widget_set_has_window(widget, TRUE);
     parent = gtk_widget_get_parent_window(widget);
     window = gdk_window_new(parent, &attributes, attr_mask);
-    gtk_widget_set_window(widget, window);
+    #ifdef USE_GTK3
+        gtk_widget_set_window(widget, window);
+    #else
+        widget->window = window;
+    #endif
     gdk_window_set_user_data(window, scrolled_text);
     #ifdef USE_GTK3
         gdk_window_set_background_pattern(window, NULL);
@@ -142,7 +152,7 @@ static void rc_gui_scrolled_text_realize(GtkWidget *widget)
         gtk_style_context_set_background(context, window);
     #else
         style = gtk_widget_get_style(widget);
-        gtk_widget_style_attach(widget);
+        widget->style = gtk_style_attach(widget->style, widget->window);
         gtk_style_set_background(style, window, GTK_STATE_NORMAL);
         gdk_window_set_back_pixmap(window, NULL, TRUE);
     #endif
@@ -155,13 +165,23 @@ static void rc_gui_scrolled_text_size_allocate(GtkWidget *widget,
     GdkWindow *window;
     g_return_if_fail(widget!=NULL);
     g_return_if_fail(IS_RC_GUI_SCROLLED_TEXT(widget));
-    gtk_widget_set_allocation(widget, allocation);
-    window = gtk_widget_get_window(widget);
-    if(gtk_widget_get_realized(widget))
-    {
-        gdk_window_move_resize(window, allocation->x, allocation->y,
-            allocation->width, allocation->height);
-    }
+    #ifdef USE_GTK3
+        gtk_widget_set_allocation(widget, allocation);
+        window = gtk_widget_get_window(widget);
+        if(gtk_widget_get_realized(widget))
+        {
+            gdk_window_move_resize(window, allocation->x, allocation->y,
+                 allocation->width, allocation->height);
+        }
+    #else
+        memcpy(&(widget->allocation), allocation, sizeof(GtkAllocation));
+        window = widget->window;
+        if(GTK_WIDGET_REALIZED(widget))
+        {
+            gdk_window_move_resize(window, allocation->x, allocation->y,
+                 allocation->width, allocation->height);
+        }
+    #endif
 }
 
 #ifdef USE_GTK3
@@ -202,7 +222,11 @@ static gboolean rc_gui_scrolled_text_draw(GtkWidget *widget, cairo_t *cr)
     else
         pango_layout_set_text(layout, "", -1);
     pango_layout_get_size(layout, &width, &height);
-    gtk_widget_get_allocation(widget, &allocation);
+    #ifdef USE_GTK3
+        gtk_widget_get_allocation(widget, &allocation);
+    #else
+        memcpy(&allocation, &(widget->allocation), sizeof(GtkAllocation));
+    #endif
     priv->current_width = width / PANGO_SCALE;
     if(width/PANGO_SCALE>allocation.width)
         priv->current_x = (gint)((gdouble)(allocation.width-width/PANGO_SCALE)
@@ -245,7 +269,11 @@ static gboolean rc_gui_scrolled_text_expose(GtkWidget *widget,
     if(event->count>0) return TRUE;
     scrolled_text = RC_GUI_SCROLLED_TEXT(widget);
     priv = RC_GUI_SCROLLED_TEXT_GET_PRIVATE(scrolled_text);
-    window = gtk_widget_get_window(widget);
+    #ifdef USE_GTK3
+        window = gtk_widget_get_window(widget);
+    #else
+        window = widget->window;
+    #endif
     style = gtk_widget_get_style(widget);
     fd = style->font_desc;
     layout = priv->layout;
@@ -257,7 +285,11 @@ static gboolean rc_gui_scrolled_text_expose(GtkWidget *widget,
     else
         pango_layout_set_text(layout, "", -1);
     pango_layout_get_size(layout, &width, &height);
-    gtk_widget_get_allocation(widget, &allocation);
+    #ifdef USE_GTK3
+        gtk_widget_get_allocation(widget, &allocation);
+    #else
+        memcpy(&allocation, &(widget->allocation), sizeof(GtkAllocation));
+    #endif
     priv->current_width = width / PANGO_SCALE;
     if(width/PANGO_SCALE>allocation.width)
         priv->current_x = (gint)((gdouble)(allocation.width-width/PANGO_SCALE)

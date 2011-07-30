@@ -55,6 +55,7 @@ static const guint img_cover_h = 160;
 static const guint img_cover_w = 160;
 static RCGuiData rc_gui;
 static GSList *rc_gui_view_page_list = NULL;
+static GtkWidget *rc_task_cancel_button;
 
 
 typedef struct RCGuiViewPageData
@@ -94,7 +95,6 @@ static gboolean rc_gui_refresh_time_info(gpointer data)
     switch(state)
     {
         case GST_STATE_PLAYING:
-            rc_gui_time_label_set_text(pos);
             rc_gui_mini_set_time_text(pos);
             if(rc_gui.update_seek_scale_flag)
             {
@@ -104,6 +104,7 @@ static gboolean rc_gui_refresh_time_info(gpointer data)
                     gtk_range_set_value(GTK_RANGE(rc_gui.time_scroll_bar),
                         percent * 100);
                 }
+                rc_gui_time_label_set_text(pos);
             }
             break;
         case GST_STATE_PAUSED:
@@ -531,6 +532,18 @@ static void rc_gui_window_mode_switch()
     rc_gui_window_deiconify(NULL);   
 }
 
+/*
+ * Cover image popup menu.
+ */
+
+static gboolean rc_gui_cover_image_popup(GtkWidget *widget,
+    GdkEventButton *event, gpointer data)
+{
+    gtk_menu_popup(GTK_MENU(gtk_ui_manager_get_widget(rc_gui.main_ui,
+        "/CoverPopupMenu")), NULL, NULL, NULL, NULL, 3, event->time);
+    return FALSE;
+}
+
 
 static GtkActionEntry rc_menu_entries[] =
 {
@@ -863,12 +876,15 @@ static const gchar *rc_ui_info =
     "    <separator/>"
     "    <menuitem action='TrayQuit'/>"
     "  </popup>"
+    "  <popup action='CoverPopupMenu'>"
+    "  </popup>"
     "</ui>";
 
 /**
  * rc_gui_get_data:
  *
  * Return the data of main UI structure.
+ * Notice that you should not use this function in plugins.
  *
  * Returns: The data of main UI structure.
  */
@@ -976,7 +992,7 @@ static void rc_gui_layout_init()
     vbox1 = gtk_vbox_new(FALSE, 1);
     vbox2 = gtk_vbox_new(FALSE, 2);
     vbox3 = gtk_vbox_new(FALSE, 0);
-    rc_gui.status_infobar = gtk_info_bar_new();
+    rc_gui.status_infobar = gtk_hbox_new(FALSE, 2);
     info_hbox = gtk_hbox_new(FALSE, 2);
     rc_gui.list1_scr_window = gtk_scrolled_window_new(NULL, NULL);
     rc_gui.list2_scr_window = gtk_scrolled_window_new(NULL, NULL);
@@ -989,10 +1005,6 @@ static void rc_gui_layout_init()
     rc_gui.list_hpaned = gtk_hpaned_new();
     gtk_widget_set_name(rc_gui.status_infobar, "RCStatusInfoBar");
     gtk_widget_set_name(rc_gui.list_hpaned, "RCListHPaned");
-    gtk_info_bar_add_button(GTK_INFO_BAR(rc_gui.status_infobar),
-        GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL);
-    gtk_info_bar_set_message_type(GTK_INFO_BAR(rc_gui.status_infobar),
-        GTK_MESSAGE_OTHER);
     gtk_widget_set_no_show_all(rc_gui.status_infobar, TRUE);
     gtk_container_set_border_width(GTK_CONTAINER(rc_gui.list_hpaned), 0);
     gtk_container_add(GTK_CONTAINER(rc_gui.list1_scr_window), 
@@ -1040,8 +1052,12 @@ static void rc_gui_layout_init()
         FALSE, 2);
     gtk_box_pack_start(GTK_BOX(info_hbox), rc_gui.status_progress,
         TRUE, TRUE, 0);
-    gtk_container_add(GTK_CONTAINER(gtk_info_bar_get_content_area(
-        GTK_INFO_BAR(rc_gui.status_infobar))), info_hbox);
+    gtk_widget_show_all(info_hbox);
+    gtk_widget_show(rc_task_cancel_button);
+    gtk_box_pack_start(GTK_BOX(rc_gui.status_infobar), info_hbox, TRUE, TRUE,
+        2);
+    gtk_box_pack_end(GTK_BOX(rc_gui.status_infobar), rc_task_cancel_button,
+        FALSE, FALSE, 2);
     gtk_box_pack_start(GTK_BOX(player_vbox), hbox1, FALSE, TRUE, 4);
     gtk_box_pack_start(GTK_BOX(player_vbox), rc_gui.plist_notebook, TRUE, TRUE,
         0);
@@ -1087,12 +1103,14 @@ static void rc_gui_signal_bind()
         "clicked", G_CALLBACK(rc_gui_eq_button_clicked), NULL);
     g_signal_connect(G_OBJECT(rc_gui.control_buttons[RC_UI_CTRL_MINI]),
         "clicked", G_CALLBACK(rc_gui_mini_mini_mode_clicked), NULL);
-    g_signal_connect(G_OBJECT(rc_gui.status_infobar), "response",
+    g_signal_connect(G_OBJECT(rc_task_cancel_button), "clicked",
         G_CALLBACK(rc_gui_import_cancel_button_clicked), NULL);
     g_signal_connect(GTK_STATUS_ICON(rc_gui.tray_icon), "activate", 
         G_CALLBACK(rc_gui_show_hide_window), NULL);
     g_signal_connect(GTK_STATUS_ICON(rc_gui.tray_icon), "popup-menu",
         G_CALLBACK(rc_gui_tray_icon_popup), NULL);
+    g_signal_connect(G_OBJECT(rc_gui.album_eventbox), "button-release-event",
+        G_CALLBACK(rc_gui_cover_image_popup), NULL);
     g_signal_connect(G_OBJECT(rc_gui.main_window), "window-state-event",
         G_CALLBACK(rc_gui_window_state_changed), NULL);
     g_signal_connect(G_OBJECT(rc_gui.main_window), "destroy",
@@ -1148,6 +1166,7 @@ gboolean rc_gui_init()
     rc_gui.time_label = gtk_label_new("00:00");
     rc_gui.length_label = gtk_label_new("00:00");
     rc_gui.status_progress = gtk_progress_bar_new();
+    rc_task_cancel_button = gtk_button_new_from_stock(GTK_STOCK_CANCEL);
     g_object_set(G_OBJECT(rc_gui.tray_icon), "has-tooltip", TRUE,
         "tooltip-text", rc_player_get_program_name(), "title",
         "RhythmCat", NULL);
@@ -1221,7 +1240,7 @@ gboolean rc_gui_init()
         1.0, 2.0, 5.0);
     rc_gui.time_scroll_bar = gtk_hscale_new(GTK_ADJUSTMENT(
         position_adjustment));
-    gtk_scale_set_draw_value(GTK_SCALE(rc_gui.time_scroll_bar),FALSE);
+    gtk_scale_set_draw_value(GTK_SCALE(rc_gui.time_scroll_bar), FALSE);
     g_object_set(rc_gui.time_scroll_bar, "can-focus", FALSE, NULL);
     gtk_widget_set_name(rc_gui.time_scroll_bar, "RCTimeScalerBar");
     g_object_set(rc_gui.volume_button, "can-focus", FALSE, NULL);
@@ -1265,21 +1284,31 @@ gboolean rc_gui_init()
     /* Disable unusable menus */
     gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
         "/RCMenuBar/EditMenu/EditRemoveMusic"), FALSE);
+    #ifdef USE_MAEMO5
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+            "/RCMenuBar/ViewMenu/ViewMiniMode"), FALSE); 
+    #endif
     rc_debug_print("GUI: Main window is successfully loaded!\n");
-    if(!rc_set_get_boolean("Player", "MiniMode", NULL))
-    {
+    #ifdef USE_MAEMO5
         gtk_widget_show_all(rc_gui.main_window);
         if(rc_set_get_boolean("Player", "AutoMinimize", NULL))
             gtk_window_iconify(GTK_WINDOW(rc_gui.main_window));
-    }
-    else
-        gtk_widget_realize(rc_gui.main_window);
-    if(rc_set_get_boolean("Player", "AlwaysOnTop", NULL))
-    {
-        gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(
-            gtk_ui_manager_get_action(rc_gui.main_ui,
-            "/RCMenuBar/ViewMenu/ViewAlwaysOnTop")), TRUE);
-    }
+    #else
+        if(!rc_set_get_boolean("Player", "MiniMode", NULL))
+        {
+            gtk_widget_show_all(rc_gui.main_window);
+            if(rc_set_get_boolean("Player", "AutoMinimize", NULL))
+                gtk_window_iconify(GTK_WINDOW(rc_gui.main_window));
+        }
+        else
+            gtk_widget_realize(rc_gui.main_window);
+        if(rc_set_get_boolean("Player", "AlwaysOnTop", NULL))
+        {
+            gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(
+                gtk_ui_manager_get_action(rc_gui.main_ui,
+                "/RCMenuBar/ViewMenu/ViewAlwaysOnTop")), TRUE);
+        }
+    #endif
     return TRUE;
 }
 
@@ -1672,8 +1701,6 @@ void rc_gui_status_task_set(guint type, guint len)
         default:
             break;
     }
-    gtk_widget_show_all(gtk_info_bar_get_content_area(
-        GTK_INFO_BAR(rc_gui.status_infobar)));
     gtk_widget_show(rc_gui.status_infobar);
     gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
         "/RCMenuBar/FileMenu/FileImportMusic"), FALSE);

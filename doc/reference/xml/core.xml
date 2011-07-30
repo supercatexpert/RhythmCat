@@ -60,6 +60,9 @@ The core part of the player, it uses Gstreamer as backend to play audio files.
     GstElement *audio_sink;
     GstElement *eq_plugin;
     GstElement *vol_plugin;
+    gint64 start_time;
+    gint64 end_time;
+    gboolean start_flag;
     guint ver_major;
     guint ver_minor;
     guint ver_micro;
@@ -85,20 +88,32 @@ The data of the core.
 <listitem><simpara>the volume control element
 </simpara></listitem>
 </varlistentry>
+<varlistentry><term><link linkend="gint64"><type>gint64</type></link>&#160;<structfield id="RCCoreData.start-time">start_time</structfield>;</term>
+<listitem><simpara>the start time used in segment playing
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gint64"><type>gint64</type></link>&#160;<structfield id="RCCoreData.end-time">end_time</structfield>;</term>
+<listitem><simpara>the end time used in segment playing
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gboolean"><type>gboolean</type></link>&#160;<structfield id="RCCoreData.start-flag">start_flag</structfield>;</term>
+<listitem><simpara>whether the player has been started (playing or paused)
+</simpara></listitem>
+</varlistentry>
 <varlistentry><term><link linkend="guint"><type>guint</type></link>&#160;<structfield id="RCCoreData.ver-major">ver_major</structfield>;</term>
-<listitem><simpara>the major version number of Gstreamer
+<listitem><simpara>the major version number of GStreamer
 </simpara></listitem>
 </varlistentry>
 <varlistentry><term><link linkend="guint"><type>guint</type></link>&#160;<structfield id="RCCoreData.ver-minor">ver_minor</structfield>;</term>
-<listitem><simpara>the minor version number of Gstreamer
+<listitem><simpara>the minor version number of GStreamer
 </simpara></listitem>
 </varlistentry>
 <varlistentry><term><link linkend="guint"><type>guint</type></link>&#160;<structfield id="RCCoreData.ver-micro">ver_micro</structfield>;</term>
-<listitem><simpara>the micro version number of Gstreamer
+<listitem><simpara>the micro version number of GStreamer
 </simpara></listitem>
 </varlistentry>
 <varlistentry><term><link linkend="guint"><type>guint</type></link>&#160;<structfield id="RCCoreData.ver-nano">ver_nano</structfield>;</term>
-<listitem><simpara>the nano version number of Gstreamer
+<listitem><simpara>the nano version number of GStreamer
 </simpara></listitem>
 </varlistentry>
 </variablelist></refsect2>

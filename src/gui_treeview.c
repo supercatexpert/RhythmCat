@@ -927,3 +927,71 @@ void rc_gui_list1_rename_list()
     gtk_tree_path_free(path);
 }
 
+/**
+ * rc_gui_list1_get_model:
+ *
+ * Return the GtkTreeModel of list1 in player.
+ *
+ * Returns: The GtkTreeModel.
+ */
+
+GtkTreeModel *rc_gui_list1_get_model()
+{
+    return rc_ui->list1_tree_model;
+}
+
+/**
+ * rc_gui_list2_get_model:
+ *
+ * Return the GtkTreeModel of list2 in player.
+ *
+ * Returns: The GtkTreeModel.
+ */
+
+GtkTreeModel *rc_gui_list2_get_model()
+{
+    return rc_ui->list2_tree_model;
+}
+
+/**
+ * rc_gui_list1_get_cursor:
+ * @iter: the uninitialized GtkTreeIter
+ *
+ * Get the GtkTreeIter of the selected item.
+ *
+ * Returns: TRUE, if iter was set.
+ */
+
+gboolean rc_gui_list1_get_cursor(GtkTreeIter *iter)
+{
+    GtkTreePath *path;
+    gboolean flag;
+    gtk_tree_view_get_cursor(GTK_TREE_VIEW(rc_ui->list1_tree_view), &path,
+        NULL);
+    flag = gtk_tree_model_get_iter(GTK_TREE_MODEL(rc_ui->list1_tree_model),
+        iter, path);
+    gtk_tree_path_free(path);
+    return flag;
+}
+
+/**
+ * rc_gui_list2_get_cursor:
+ * @iter: the uninitialized GtkTreeIter
+ *
+ * Get the GtkTreeIter of the selected item.
+ *
+ * Returns: TRUE, if iter was set.
+ */
+
+gboolean rc_gui_list2_get_cursor(GtkTreeIter *iter)
+{
+    GtkTreePath *path;
+    gboolean flag;
+    gtk_tree_view_get_cursor(GTK_TREE_VIEW(rc_ui->list2_tree_view), &path,
+        NULL);
+    flag = gtk_tree_model_get_iter(GTK_TREE_MODEL(rc_ui->list2_tree_model),
+        iter, path);
+    gtk_tree_path_free(path);
+    return flag;
+}
+

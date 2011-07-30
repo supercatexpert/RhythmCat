@@ -1,1 +1,2 @@
+rc_core_set_play_segment
 RCPlayer(parent)
