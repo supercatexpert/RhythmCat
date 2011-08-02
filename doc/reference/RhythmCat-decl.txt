@@ -206,7 +206,8 @@ typedef enum RCMsgType {
     MSG_TYPE_TEST = 1,
     MSG_TYPE_PL_INSERT = 2,
     MSG_TYPE_PL_REFRESH = 3,
-    MSG_TYPE_PL_REMOVE = 4
+    MSG_TYPE_PL_REMOVE = 4,
+    MSG_TYPE_PL_INVALID = 5
 }RCMsgType;
 </ENUM>
 <STRUCT>
@@ -574,6 +575,11 @@ const gchar *uri, const gchar *title, const gchar *artist, const gchar *album, g
 </FUNCTION>
 <FUNCTION>
 <NAME>rc_plist_list2_remove_item</NAME>
+<RETURNS>void </RETURNS>
+GtkTreeRowReference *reference 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plist_list2_mark_invalid_item</NAME>
 <RETURNS>void </RETURNS>
 GtkTreeRowReference *reference 
 </FUNCTION>

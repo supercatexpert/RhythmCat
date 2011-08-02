@@ -58,6 +58,8 @@
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"><span class="returnvalue">gdouble</span></a>             <a class="link" href="RhythmCat-Core.html#rc-core-get-volume" title="rc_core_get_volume ()">rc_core_get_volume</a>                  ();
 <span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Core.html#rc-core-set-eq-effect" title="rc_core_set_eq_effect ()">rc_core_set_eq_effect</a>               (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> *fq</code></em>);
 <a href="/usr/share/gtk-doc/html/gstreamer-0.10/GstElement.html#GstState"><span class="returnvalue">GstState</span></a>            <a class="link" href="RhythmCat-Core.html#rc-core-get-play-state" title="rc_core_get_play_state ()">rc_core_get_play_state</a>              ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Core.html#rc-core-set-play-segment" title="rc_core_set_play_segment ()">rc_core_set_play_segment</a>            (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> start_time</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> end_time</code></em>);
 </pre>
 </div>
 <div class="refsect1" title="Description">
@@ -395,6 +397,30 @@ Return the state of the core.
 <td> The state of the core.
 </td>
 </tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_core_set_play_segment ()">
+<a name="rc-core-set-play-segment"></a><h3>rc_core_set_play_segment ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_core_set_play_segment            (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> start_time</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> end_time</code></em>);</pre>
+<p>
+Set the segment in the music for playing.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>start_time</code></em> :</span></p></td>
+<td>the start time of the segment
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>end_time</code></em> :</span></p></td>
+<td>the end time of the segment
+</td>
+</tr>
+</tbody>
 </table></div>
 </div>
 </div>

@@ -96,7 +96,8 @@ queue changed.
     MSG_TYPE_TEST = 1,
     MSG_TYPE_PL_INSERT = 2,
     MSG_TYPE_PL_REFRESH = 3,
-    MSG_TYPE_PL_REMOVE = 4
+    MSG_TYPE_PL_REMOVE = 4,
+    MSG_TYPE_PL_INVALID = 5
 }RCMsgType;
 </pre>
 <p>
@@ -128,6 +129,11 @@ Types of the message.
 <tr>
 <td><p><a name="MSG-TYPE-PL-REMOVE:CAPS"></a><span class="term"><code class="literal">MSG_TYPE_PL_REMOVE</code></span></p></td>
 <td>playlist remove message
+</td>
+</tr>
+<tr>
+<td><p><a name="MSG-TYPE-PL-INVALID:CAPS"></a><span class="term"><code class="literal">MSG_TYPE_PL_INVALID</code></span></p></td>
+<td>the message to mark the invalid music in the playlist
 </td>
 </tr>
 </tbody>

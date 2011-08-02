@@ -167,6 +167,11 @@ static void rc_msg_process_func(gpointer data, gpointer user_data)
                 rc_plist_list2_remove_item((GtkTreeRowReference *)msg->data);
                 rc_gui_status_progress_set_progress();
                 break;
+            case MSG_TYPE_PL_INVALID:
+                rc_plist_list2_mark_invalid_item((GtkTreeRowReference *)
+                    msg->data);
+                rc_gui_status_progress_set_progress();
+                break;
             default:
                 break;
         }

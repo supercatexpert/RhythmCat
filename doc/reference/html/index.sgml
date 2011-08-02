@@ -40,6 +40,7 @@
 <ANCHOR id="rc-core-get-volume" href="RhythmCat/RhythmCat-Core.html#rc-core-get-volume">
 <ANCHOR id="rc-core-set-eq-effect" href="RhythmCat/RhythmCat-Core.html#rc-core-set-eq-effect">
 <ANCHOR id="rc-core-get-play-state" href="RhythmCat/RhythmCat-Core.html#rc-core-get-play-state">
+<ANCHOR id="rc-core-set-play-segment" href="RhythmCat/RhythmCat-Core.html#rc-core-set-play-segment">
 <ANCHOR id="RhythmCat-Tag" href="RhythmCat/RhythmCat-Tag.html">
 <ANCHOR id="RhythmCat-Tag.synopsis" href="RhythmCat/RhythmCat-Tag.html#RhythmCat-Tag.synopsis">
 <ANCHOR id="RhythmCat-Tag.description" href="RhythmCat/RhythmCat-Tag.html#RhythmCat-Tag.description">
@@ -100,6 +101,7 @@
 <ANCHOR id="MSG-TYPE-PL-INSERT:CAPS" href="RhythmCat/RhythmCat-Asynchronous-Message-Queue.html#MSG-TYPE-PL-INSERT:CAPS">
 <ANCHOR id="MSG-TYPE-PL-REFRESH:CAPS" href="RhythmCat/RhythmCat-Asynchronous-Message-Queue.html#MSG-TYPE-PL-REFRESH:CAPS">
 <ANCHOR id="MSG-TYPE-PL-REMOVE:CAPS" href="RhythmCat/RhythmCat-Asynchronous-Message-Queue.html#MSG-TYPE-PL-REMOVE:CAPS">
+<ANCHOR id="MSG-TYPE-PL-INVALID:CAPS" href="RhythmCat/RhythmCat-Asynchronous-Message-Queue.html#MSG-TYPE-PL-INVALID:CAPS">
 <ANCHOR id="RCMsgData" href="RhythmCat/RhythmCat-Asynchronous-Message-Queue.html#RCMsgData">
 <ANCHOR id="rc-msg-async-queue-watch-new" href="RhythmCat/RhythmCat-Asynchronous-Message-Queue.html#rc-msg-async-queue-watch-new">
 <ANCHOR id="rc-msg-init" href="RhythmCat/RhythmCat-Asynchronous-Message-Queue.html#rc-msg-init">
@@ -131,6 +133,7 @@
 <ANCHOR id="rc-plist-list2-insert-item" href="RhythmCat/RhythmCat-Playlist.html#rc-plist-list2-insert-item">
 <ANCHOR id="rc-plist-list2-refresh-item" href="RhythmCat/RhythmCat-Playlist.html#rc-plist-list2-refresh-item">
 <ANCHOR id="rc-plist-list2-remove-item" href="RhythmCat/RhythmCat-Playlist.html#rc-plist-list2-remove-item">
+<ANCHOR id="rc-plist-list2-mark-invalid-item" href="RhythmCat/RhythmCat-Playlist.html#rc-plist-list2-mark-invalid-item">
 <ANCHOR id="rc-plist-remove-list" href="RhythmCat/RhythmCat-Playlist.html#rc-plist-remove-list">
 <ANCHOR id="rc-plist-get-list1-name" href="RhythmCat/RhythmCat-Playlist.html#rc-plist-get-list1-name">
 <ANCHOR id="rc-plist-get-list1-length" href="RhythmCat/RhythmCat-Playlist.html#rc-plist-get-list1-length">

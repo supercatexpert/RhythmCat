@@ -539,6 +539,7 @@ static void rc_gui_window_mode_switch()
 static gboolean rc_gui_cover_image_popup(GtkWidget *widget,
     GdkEventButton *event, gpointer data)
 {
+    if(event->button!=3) return FALSE;
     gtk_menu_popup(GTK_MENU(gtk_ui_manager_get_widget(rc_gui.main_ui,
         "/CoverPopupMenu")), NULL, NULL, NULL, NULL, 3, event->time);
     return FALSE;

@@ -147,6 +147,7 @@ rc_plist_insert_music
 rc_plist_list2_insert_item
 rc_plist_list2_refresh_item
 rc_plist_list2_remove_item
+rc_plist_list2_mark_invalid_item
 rc_plist_remove_list
 rc_plist_get_list1_name
 rc_plist_get_list1_length

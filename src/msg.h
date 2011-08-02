@@ -68,6 +68,7 @@ typedef struct RCMsgPlistData
  * @MSG_TYPE_PL_INSERT: playlist insertion message
  * @MSG_TYPE_PL_REFRESH: playlist refresh message
  * @MSG_TYPE_PL_REMOVE: playlist remove message
+ * @MSG_TYPE_PL_INVALID: the message to mark the invalid music in the playlist
  *
  * Types of the message.
  */
@@ -77,7 +78,8 @@ typedef enum RCMsgType {
     MSG_TYPE_TEST = 1,
     MSG_TYPE_PL_INSERT = 2,
     MSG_TYPE_PL_REFRESH = 3,
-    MSG_TYPE_PL_REMOVE = 4
+    MSG_TYPE_PL_REMOVE = 4,
+    MSG_TYPE_PL_INVALID = 5
 }RCMsgType;
 
 /**

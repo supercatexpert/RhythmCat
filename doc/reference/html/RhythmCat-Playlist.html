@@ -65,6 +65,7 @@ enum                <a class="link" href="RhythmCat-Playlist.html#RCPlist2Column
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> trackno</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html#GtkTreeRowReference"><span class="type">GtkTreeRowReference</span></a> *reference</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-list2-remove-item" title="rc_plist_list2_remove_item ()">rc_plist_list2_remove_item</a>          (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html#GtkTreeRowReference"><span class="type">GtkTreeRowReference</span></a> *reference</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-list2-mark-invalid-item" title="rc_plist_list2_mark_invalid_item ()">rc_plist_list2_mark_invalid_item</a>    (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html#GtkTreeRowReference"><span class="type">GtkTreeRowReference</span></a> *reference</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist.html#rc-plist-remove-list" title="rc_plist_remove_list ()">rc_plist_remove_list</a>                (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             <a class="link" href="RhythmCat-Playlist.html#rc-plist-get-list1-name" title="rc_plist_get_list1_name ()">rc_plist_get_list1_name</a>             (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-get-list1-length" title="rc_plist_get_list1_length ()">rc_plist_get_list1_length</a>           ();
@@ -439,6 +440,23 @@ want to refresh the playlist, please use <a class="link" href="RhythmCat-Playlis
 <p>
 Remove invalid item in list2.
 WARNING: This function is only used to remove invalid music item.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>reference</code></em> :</span></p></td>
+<td>the path reference of the item
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_plist_list2_mark_invalid_item ()">
+<a name="rc-plist-list2-mark-invalid-item"></a><h3>rc_plist_list2_mark_invalid_item ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_plist_list2_mark_invalid_item    (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html#GtkTreeRowReference"><span class="type">GtkTreeRowReference</span></a> *reference</code></em>);</pre>
+<p>
+Mark invalid item in list2.
+WARNING: This function is only used to mark invalid music item.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">

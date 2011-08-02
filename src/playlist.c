@@ -98,11 +98,7 @@ static gpointer rc_plist_import_job_func(gpointer data)
                 if(import_data->auto_clean)
                     rc_msg_push(MSG_TYPE_PL_REMOVE, import_data->reference);
                 else
-                {
-                    rc_msg_push(MSG_TYPE_EMPTY, NULL);
-                    if(import_data->reference!=NULL)
-                        gtk_tree_row_reference_free(import_data->reference);
-                }
+                    rc_msg_push(MSG_TYPE_PL_INVALID, import_data->reference);
                 g_free(import_data);
                 continue;
             }
@@ -382,6 +378,38 @@ void rc_plist_list2_remove_item(GtkTreeRowReference *reference)
 }
 
 /**
+ * rc_plist_list2_mark_invalid_item:
+ * @reference: the path reference of the item
+ *
+ * Mark invalid item in list2.
+ * WARNING: This function is only used to mark invalid music item.
+ */
+
+void rc_plist_list2_mark_invalid_item(GtkTreeRowReference *reference)
+{
+    GtkTreeIter iter;
+    GtkListStore *pl_store;
+    GtkTreePath *path;
+    if(!gtk_tree_row_reference_valid(reference))
+    {
+        gtk_tree_row_reference_free(reference);
+        return;
+    }
+    pl_store = GTK_LIST_STORE(gtk_tree_row_reference_get_model(reference));
+    if(!GTK_IS_LIST_STORE(pl_store))
+    {
+        gtk_tree_row_reference_free(reference);
+        return;
+    }
+    path = gtk_tree_row_reference_get_path(reference);
+    gtk_tree_row_reference_free(reference);
+    gtk_tree_model_get_iter(GTK_TREE_MODEL(pl_store), &iter, path);
+    gtk_tree_path_free(path);
+    gtk_list_store_set(pl_store, &iter, PLIST2_STATE, GTK_STOCK_CANCEL,
+        -1);    
+}
+
+/**
  * rc_plist_play_by_index:
  * @list_index: the index of the playlist
  * @music_index: the index of the music in the playlist
@@ -430,8 +458,10 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
     if(mmd_new==NULL || !mmd_new->audio_flag)
     {
         rc_debug_perror("Plist-ERROR: Cannot open the music!\n");
+        gtk_list_store_set(list_store, &iter, PLIST2_STATE, GTK_STOCK_CANCEL,
+            -1);
         if(rc_set_get_boolean("Playlist", "AutoClean", NULL))
-            gtk_list_store_remove(GTK_LIST_STORE(list_store), &iter); 
+            gtk_list_store_remove(GTK_LIST_STORE(list_store), &iter);
         return FALSE;
     }
     timeinfo = mmd_new->length / GST_SECOND;

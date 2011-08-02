@@ -41,6 +41,8 @@
 <link linkend="gdouble"><returnvalue>gdouble</returnvalue></link>             <link linkend="rc-core-get-volume">rc_core_get_volume</link>                  ();
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-core-set-eq-effect">rc_core_set_eq_effect</link>               (<parameter><link linkend="gdouble"><type>gdouble</type></link> *fq</parameter>);
 <link linkend="GstState"><returnvalue>GstState</returnvalue></link>            <link linkend="rc-core-get-play-state">rc_core_get_play_state</link>              ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-core-set-play-segment">rc_core_set_play_segment</link>            (<parameter><link linkend="gint64"><type>gint64</type></link> start_time</parameter>,
+                                                         <parameter><link linkend="gint64"><type>gint64</type></link> end_time</parameter>);
 </synopsis>
 </refsynopsisdiv>
 
@@ -278,6 +280,21 @@ Set the EQ effect of the player.
 Return the state of the core.
 </para><variablelist role="params">
 <varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The state of the core.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-core-set-play-segment" role="function">
+<title>rc_core_set_play_segment ()</title>
+<indexterm zone="rc-core-set-play-segment"><primary>rc_core_set_play_segment</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_core_set_play_segment            (<parameter><link linkend="gint64"><type>gint64</type></link> start_time</parameter>,
+                                                         <parameter><link linkend="gint64"><type>gint64</type></link> end_time</parameter>);</programlisting>
+<para>
+Set the segment in the music for playing.
+</para><variablelist role="params">
+<varlistentry><term><parameter>start_time</parameter>&#160;:</term>
+<listitem><simpara>the start time of the segment
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>end_time</parameter>&#160;:</term>
+<listitem><simpara>the end time of the segment
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 

@@ -62,3 +62,12 @@
         * Added some new plugins.
         * Fixed some bugs.
 
+2011-08-02  SuperCat    <supercatexpert@gmail.com>
+
+        * Fixed some bugs.
+        * Added some new signals in the player object.
+        * Mark the unavailable music in the playlist (if auto-remove option
+          is not enabled).
+        * Need lower GTK2 version now (at least 2.12).
+ 
+

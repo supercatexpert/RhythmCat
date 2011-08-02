@@ -20,6 +20,7 @@
 <indexentry><primaryie linkends="rc-core-set-eq-effect"><link linkend="rc-core-set-eq-effect">rc_core_set_eq_effect</link>, function in <link linkend="RhythmCat-Core">Core</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-core-set-play-position"><link linkend="rc-core-set-play-position">rc_core_set_play_position</link>, function in <link linkend="RhythmCat-Core">Core</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-core-set-play-position-by-percent"><link linkend="rc-core-set-play-position-by-percent">rc_core_set_play_position_by_percent</link>, function in <link linkend="RhythmCat-Core">Core</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-core-set-play-segment"><link linkend="rc-core-set-play-segment">rc_core_set_play_segment</link>, function in <link linkend="RhythmCat-Core">Core</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-core-set-uri"><link linkend="rc-core-set-uri">rc_core_set_uri</link>, function in <link linkend="RhythmCat-Core">Core</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-core-set-volume"><link linkend="rc-core-set-volume">rc_core_set_volume</link>, function in <link linkend="RhythmCat-Core">Core</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-core-stop"><link linkend="rc-core-stop">rc_core_stop</link>, function in <link linkend="RhythmCat-Core">Core</link></primaryie></indexentry>
@@ -191,6 +192,7 @@
 <indexentry><primaryie linkends="rc-plist-insert-list"><link linkend="rc-plist-insert-list">rc_plist_insert_list</link>, function in <link linkend="RhythmCat-Playlist">Playlist</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-plist-insert-music"><link linkend="rc-plist-insert-music">rc_plist_insert_music</link>, function in <link linkend="RhythmCat-Playlist">Playlist</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-plist-list2-insert-item"><link linkend="rc-plist-list2-insert-item">rc_plist_list2_insert_item</link>, function in <link linkend="RhythmCat-Playlist">Playlist</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plist-list2-mark-invalid-item"><link linkend="rc-plist-list2-mark-invalid-item">rc_plist_list2_mark_invalid_item</link>, function in <link linkend="RhythmCat-Playlist">Playlist</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-plist-list2-refresh"><link linkend="rc-plist-list2-refresh">rc_plist_list2_refresh</link>, function in <link linkend="RhythmCat-Playlist">Playlist</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-plist-list2-refresh-item"><link linkend="rc-plist-list2-refresh-item">rc_plist_list2_refresh_item</link>, function in <link linkend="RhythmCat-Playlist">Playlist</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-plist-list2-remove-item"><link linkend="rc-plist-list2-remove-item">rc_plist_list2_remove_item</link>, function in <link linkend="RhythmCat-Playlist">Playlist</link></primaryie></indexentry>

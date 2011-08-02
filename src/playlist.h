@@ -77,6 +77,7 @@ void rc_plist_list2_refresh_item(const gchar *uri, const gchar *title,
     const gchar *artist, const gchar *album, gint64 length, gint trackno,
     GtkTreeRowReference *reference);
 void rc_plist_list2_remove_item(GtkTreeRowReference *reference);
+void rc_plist_list2_mark_invalid_item(GtkTreeRowReference *reference);
 gboolean rc_plist_remove_list(gint index);
 gchar *rc_plist_get_list1_name(gint index);
 gint rc_plist_get_list1_length();
