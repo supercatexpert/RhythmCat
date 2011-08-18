@@ -43,7 +43,20 @@
     <method name="SetRandomMode">
       <arg type="i" name="random" direction="in"/>
     </method>
+    <method name="GetCurrentTrack">
+      <arg direction="out" name="uri" type="s"/>
+      <arg direction="out" name="title" type="s"/>
+      <arg direction="out" name="artist" type="s"/>
+      <arg direction="out" name="album" type="s"/>
+      <arg direction="out" name="comment" type="s"/>
+      <arg direction="out" name="duration" type="t"/>
+      <arg direction="out" name="tracknum" type="u"/>
+      <arg direction="out" name="bitrate" type="u"/>
+      <arg direction="out" name="samplerate" type="u"/>
+      <arg direction="out" name="channel" type="u"/>
+    </method>
+    <signal name="StateChanged"/>
+    <signal name="MusicStarted"/>
   </interface>
-
 </node>
 

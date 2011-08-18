@@ -28,6 +28,7 @@
 #include "playlist.h"
 #include "core.h"
 #include "gui.h"
+#include "tag.h"
 
 /**
  * SECTION: shell
@@ -40,6 +41,15 @@
 
 G_DEFINE_TYPE(RCShell, rc_shell, G_TYPE_OBJECT)
 
+enum
+{
+    STATE_CHANGED,
+    MUSIC_STARTED,
+    LAST_SIGNAL
+};
+
+static gint object_signals[LAST_SIGNAL] = {0};
+static GObject *shell_object = NULL;
 
 static void rc_shell_init(RCShell *obj)
 {
@@ -47,6 +57,40 @@ static void rc_shell_init(RCShell *obj)
 
 static void rc_shell_class_init(RCShellClass *class)
 {
+    object_signals[STATE_CHANGED] = g_signal_new("state-changed", RC_SHELL_TYPE,
+        G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCShellClass, state_changed),
+        NULL, NULL, g_cclosure_marshal_VOID__VOID,
+        G_TYPE_NONE, 0, NULL);
+    object_signals[MUSIC_STARTED] = g_signal_new("music-started", RC_SHELL_TYPE,
+        G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCShellClass, music_started),
+        NULL, NULL, g_cclosure_marshal_VOID__VOID,
+        G_TYPE_NONE, 0, NULL);
+}
+
+RCShell *rc_shell_new()
+{
+    RCShell *shell;
+    shell = g_object_new(RC_SHELL_TYPE, NULL);
+    return shell;
+}
+
+gboolean rc_shell_object_init()
+{
+    if(shell_object!=NULL) return TRUE;
+    shell_object = G_OBJECT(rc_shell_new());
+    if(shell_object==NULL) return FALSE;
+    return TRUE;
+}
+
+GObject *rc_shell_get_object()
+{
+    return shell_object;
+}
+
+void rc_shell_signal_emit_simple(const char *name)
+{
+    if(shell_object==NULL) return;
+    g_signal_emit_by_name(shell_object, name, G_TYPE_NONE);
 }
 
 gboolean rc_shell_load_uri(RCShell *shell, const gchar *uri, GError **error)
@@ -92,13 +136,17 @@ gboolean rc_shell_next(RCShell *shell, GError **error)
 
 gboolean rc_shell_get_state(RCShell *shell, gint *state, GError **error)
 {
-    *state = rc_core_get_play_state();
+    if(state!=NULL)
+        *state = rc_core_get_play_state();
+    else return FALSE;
     return TRUE;
 }
 
 gboolean rc_shell_get_position(RCShell *shell, gint64 *pos, GError **error)
 {
-    *pos = rc_core_get_play_position();
+    if(pos!=NULL)
+        *pos = rc_core_get_play_position();
+    else return FALSE;
     return TRUE;
 }
 
@@ -109,13 +157,17 @@ gboolean rc_shell_set_position(RCShell *shell, gint64 pos, GError **error)
 
 gboolean rc_shell_get_duration(RCShell *shell, gint64 *dura, GError **error)
 {
-    *dura = rc_core_get_play_position();
+    if(dura!=NULL)
+        *dura = rc_core_get_play_position();
+    else return FALSE;
     return TRUE;
 }
 
 gboolean rc_shell_get_volume(RCShell *shell, gdouble *vol, GError **error)
 {
-    *vol = rc_core_get_volume() / 100;
+    if(vol!=NULL)
+        *vol = rc_core_get_volume() / 100;
+    else return FALSE;
     return TRUE;
 }
 
@@ -148,5 +200,48 @@ gboolean rc_shell_set_random_mode(RCShell *shell, gint random, GError **error)
     return TRUE;
 }
 
-
+gboolean rc_shell_get_current_track(RCShell *shell, gchar **uri,
+    gchar **title, gchar **artist, gchar **album, gchar **comment,
+    guint64 *duration, guint *tracknum, guint *bitrate, guint *samplerate,
+    guint *channel)
+{
+    const RCMusicMetaData *md;
+    md = rc_tag_get_playing_metadata();
+    if(uri!=NULL)
+    {
+        if(md->uri!=NULL) *uri = g_strdup(md->uri);
+        else *uri = NULL;
+    }
+    if(title!=NULL)
+    {
+        if(md->title!=NULL) *title = g_strdup(md->title);
+        else *title = NULL;
+    }
+    if(artist!=NULL)
+    {
+        if(md->artist!=NULL) *artist = g_strdup(md->artist);
+        else *artist = NULL;
+    }
+    if(album!=NULL)
+    {
+        if(md->album!=NULL) *album = g_strdup(md->album);
+        else *album = NULL;
+    }
+    if(comment!=NULL)
+    {
+        if(md->comment!=NULL) *comment = g_strdup(md->comment);
+        else *comment = NULL;
+    }
+    if(duration!=NULL)
+        *duration = md->length;
+    if(tracknum!=NULL)
+        *tracknum = md->tracknum;
+    if(bitrate!=NULL)
+        *bitrate = md->bitrate;
+    if(samplerate!=NULL)
+        *samplerate = md->samplerate;
+    if(channel!=NULL)
+        *channel = md->channels;
+    return TRUE;
+}
 

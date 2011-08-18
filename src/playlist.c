@@ -35,6 +35,7 @@
 #include "player.h"
 #include "debug.h"
 #include "player_object.h"
+#include "shell.h"
 
 /**
  * SECTION: playlist
@@ -525,6 +526,7 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
     gtk_tree_path_free(path);
     rc_tag_free(mmd_new);
     if(list_title!=NULL) g_free(list_title);
+    rc_shell_signal_emit_simple("music-started");
     /* Search extra info for the music file in local filesystem. */
     rc_lrc_clean_data();
     if(fpathname==NULL)
@@ -646,6 +648,7 @@ gboolean rc_plist_play_by_uri(const gchar *uri)
 
     rc_tag_free(mmd_new);
     if(list_title!=NULL) g_free(list_title);
+    rc_shell_signal_emit_simple("music-started");
     /* Search extra info for the music file in local filesystem. */
     rc_lrc_clean_data();
     if(fpathname==NULL)

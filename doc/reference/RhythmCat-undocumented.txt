@@ -1,16 +1,22 @@
-96% symbol docs coverage.
-269 symbols documented.
-6 symbols incomplete.
-10 not documented.
+94% symbol docs coverage.
+276 symbols documented.
+11 symbols incomplete.
+17 not documented.
 
 
 DEBUG_MODE
 GETTEXT_PACKAGE
+IS_RC_GUI_AUDIO_VIS (<parameters>)
+IS_RC_GUI_AUDIO_VIS_CLASS (<parameters>)
 IS_RC_GUI_SCROLLED_TEXT (<parameters>)
 IS_RC_GUI_SCROLLED_TEXT_CLASS (<parameters>)
+RCGuiAudioVis (<items>)
+RCGuiAudioVisClass (<items>)
 RCGuiScrolledText
 RCGuiScrolledTextClass (<items>)
-RCPlayerClass (cover_found, cover_not_found)
+RC_GUI_AUDIO_VIS (<parameters>)
+RC_GUI_AUDIO_VIS_CLASS (<parameters>)
+RC_GUI_AUDIO_VIS_TYPE
 RC_GUI_SCROLLED_TEXT (<parameters>)
 RC_GUI_SCROLLED_TEXT_CLASS (<parameters>)
 RC_GUI_SCROLLED_TEXT_TYPE

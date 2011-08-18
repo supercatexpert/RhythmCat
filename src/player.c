@@ -59,7 +59,7 @@
 #endif
 
 static const gchar rc_player_program_name[] = "RhythmCat Music Player";
-static const gchar rc_player_build_date[] = "110802";
+static const gchar rc_player_build_date[] = "110818";
 static const gchar rc_player_version[] = "1.0.0 beta 2";
 static const gboolean rc_player_stable_flag = FALSE;
 static const gchar *rc_player_support_formatx = "(.FLAC|.OGG|.MP3|.WMA|.WAV|"
@@ -184,7 +184,7 @@ static gboolean rc_player_dbus_init(gchar **remaining_args)
             dbus_g_object_type_install_info(RC_SHELL_TYPE,
                 &dbus_glib_rc_shell_object_info);
             /* Regist RC-Shell to dbus. */
-            rc_shell_info = g_object_new(RC_SHELL_TYPE, NULL);
+            rc_shell_info = rc_shell_get_object();
             dbus_g_connection_register_g_object(session_bus, 
                 rc_player_dbus_path_shell, G_OBJECT(rc_shell_info));
         }
@@ -305,6 +305,7 @@ void rc_player_init(int *argc, char **argv[])
         G_REGEX_CASELESS, G_REGEX_MATCH_ANCHORED, &error);
     if(error!=NULL) g_error_free(error);
     gst_init(argc, argv);
+    rc_shell_object_init();
     rc_player_dbus_init(rc_player_remaining_args);
     rc_gui_style_refresh();
     rc_gui_init();

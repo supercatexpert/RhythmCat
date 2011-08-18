@@ -39,11 +39,17 @@ typedef struct RCShell {
 
 typedef struct RCShellClass {
     GObjectClass parent;
+    void (*state_changed)();
+    void (*music_started)();
 }RCShellClass;
 
 #define RC_SHELL_TYPE (rc_shell_get_type())
 
 GType rc_shell_get_type(void);
+RCShell *rc_shell_new();
+gboolean rc_shell_object_init();
+GObject *rc_shell_get_object();
+void rc_shell_signal_emit_simple(const char *name);
 gboolean rc_shell_load_uri(RCShell *shell, const gchar *uri, GError **error);
 gboolean rc_shell_play(RCShell *shell, GError **error);
 gboolean rc_shell_pause(RCShell *shell, GError **error);
@@ -64,6 +70,10 @@ gboolean rc_shell_get_random_mode(RCShell *shell, gint *random,
     GError **error);
 gboolean rc_shell_set_random_mode(RCShell *shell, gint random,
     GError **error);
+gboolean rc_shell_get_current_track(RCShell *shell, gchar **uri,
+    gchar **title, gchar **artist, gchar **album, gchar **comment,
+    guint64 *duration, guint *tracknum, guint *bitrate, guint *samplerate,
+    guint *channel);
 
 G_END_DECLS
 

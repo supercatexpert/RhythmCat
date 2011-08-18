@@ -126,10 +126,12 @@ Provide signal process functions in the class.
 </simpara></listitem>
 </varlistentry>
 <varlistentry><term><structfield id="RCPlayerClass.cover-found">cover_found</structfield>&#160;()</term>
-<listitem />
+<listitem><simpara>the function to call when the cover image is found
+</simpara></listitem>
 </varlistentry>
 <varlistentry><term><structfield id="RCPlayerClass.cover-not-found">cover_not_found</structfield>&#160;()</term>
-<listitem />
+<listitem><simpara>the function to call when the cover image is not found
+</simpara></listitem>
 </varlistentry>
 </variablelist></refsect2>
 <refsect2 id="rc-player-new" role="function">

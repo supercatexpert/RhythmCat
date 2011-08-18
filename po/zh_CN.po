@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RhythmCat 1.0.0\n"
 "Report-Msgid-Bugs-To: http://code.google.com/p/rhythmcat/issues/list\n"
-"POT-Creation-Date: 2011-08-02 17:21+0800\n"
+"POT-Creation-Date: 2011-08-18 18:05+0800\n"
 "PO-Revision-Date: 2011-04-02 21:19+0800\n"
 "Last-Translator: SuperCat <supercatexpert@gmail.com>\n"
 "Language-Team: SuperCat <supercatexpert@gmail.com>\n"
@@ -16,27 +16,27 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/core.c:271 src/core.c:303
+#: src/core.c:273 src/core.c:305
 msgid "Effect plugins are missing!"
 msgstr "找不到效果插件!"
 
-#: src/core.c:271 src/core.c:303
+#: src/core.c:273 src/core.c:305
 msgid "Some effect plugins are missing, effects are not available now!"
 msgstr "一些效果插件不存在，特效将无法使用!"
 
-#: src/core.c:278
+#: src/core.c:280
 msgid "Critical Error!"
 msgstr "致命错误!"
 
-#: src/core.c:279
+#: src/core.c:281
 msgid "Failed to make playbin/playbin2 element!"
 msgstr "无法启动playbin/playbin2元件"
 
-#: src/core.c:324
+#: src/core.c:326
 msgid "Link elements error!"
 msgstr "连接元件时错误!"
 
-#: src/core.c:324
+#: src/core.c:326
 msgid "Cannot link effect elements, effects are not available now!"
 msgstr "无法连接效果元件，特效将无法使用!"
 
@@ -384,51 +384,51 @@ msgstr "均衡器"
 msgid "Playlists"
 msgstr "播放列表"
 
-#: src/gui.c:1375
+#: src/gui.c:1377
 msgid "Unknown Format"
 msgstr "未知格式"
 
-#: src/gui.c:1379
+#: src/gui.c:1381
 #, c-format
 msgid "%d kbps "
 msgstr "%d 千比特/秒 "
 
-#: src/gui.c:1383
+#: src/gui.c:1385
 #, c-format
 msgid "%d Hz "
 msgstr "%d Hz "
 
-#: src/gui.c:1390
+#: src/gui.c:1392
 msgid "Mono"
 msgstr "单声道"
 
-#: src/gui.c:1394
+#: src/gui.c:1396
 msgid "Stereo"
 msgstr "立体声"
 
-#: src/gui.c:1398
+#: src/gui.c:1400
 #, c-format
 msgid "%d channels"
 msgstr "%d 声道"
 
-#: src/gui.c:1405 src/playlist.c:256 src/playlist.c:335 src/playlist.c:483
-#: src/playlist.c:622
+#: src/gui.c:1407 src/playlist.c:257 src/playlist.c:336 src/playlist.c:484
+#: src/playlist.c:624
 msgid "Unknown Title"
 msgstr "未知标题"
 
-#: src/gui.c:1409
+#: src/gui.c:1411
 msgid "Unknown Artist"
 msgstr "未知艺术家"
 
-#: src/gui.c:1413
+#: src/gui.c:1415
 msgid "Unknown Album"
 msgstr "未知专辑"
 
-#: src/gui.c:1696
+#: src/gui.c:1698
 msgid "Importing..."
 msgstr "导入中……"
 
-#: src/gui.c:1700
+#: src/gui.c:1702
 msgid "Refreshing..."
 msgstr "正在刷新……"
 
@@ -676,7 +676,7 @@ msgstr ""
 "%s\n"
 "运行 '%s --help' 来查看全部的可用命令行参数列表。\n"
 
-#: src/playlist.c:137
+#: src/playlist.c:138
 msgid "Default Playlist"
 msgstr "默认播放列表"
 

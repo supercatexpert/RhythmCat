@@ -222,11 +222,7 @@ static gboolean rc_gui_scrolled_text_draw(GtkWidget *widget, cairo_t *cr)
     else
         pango_layout_set_text(layout, "", -1);
     pango_layout_get_size(layout, &width, &height);
-    #ifdef USE_GTK3
-        gtk_widget_get_allocation(widget, &allocation);
-    #else
-        memcpy(&allocation, &(widget->allocation), sizeof(GtkAllocation));
-    #endif
+    gtk_widget_get_allocation(widget, &allocation);
     priv->current_width = width / PANGO_SCALE;
     if(width/PANGO_SCALE>allocation.width)
         priv->current_x = (gint)((gdouble)(allocation.width-width/PANGO_SCALE)
@@ -269,11 +265,7 @@ static gboolean rc_gui_scrolled_text_expose(GtkWidget *widget,
     if(event->count>0) return TRUE;
     scrolled_text = RC_GUI_SCROLLED_TEXT(widget);
     priv = RC_GUI_SCROLLED_TEXT_GET_PRIVATE(scrolled_text);
-    #ifdef USE_GTK3
-        window = gtk_widget_get_window(widget);
-    #else
-        window = widget->window;
-    #endif
+    window = widget->window;
     style = gtk_widget_get_style(widget);
     fd = style->font_desc;
     layout = priv->layout;
@@ -285,11 +277,7 @@ static gboolean rc_gui_scrolled_text_expose(GtkWidget *widget,
     else
         pango_layout_set_text(layout, "", -1);
     pango_layout_get_size(layout, &width, &height);
-    #ifdef USE_GTK3
-        gtk_widget_get_allocation(widget, &allocation);
-    #else
-        memcpy(&allocation, &(widget->allocation), sizeof(GtkAllocation));
-    #endif
+    memcpy(&allocation, &(widget->allocation), sizeof(GtkAllocation));
     priv->current_width = width / PANGO_SCALE;
     if(width/PANGO_SCALE>allocation.width)
         priv->current_x = (gint)((gdouble)(allocation.width-width/PANGO_SCALE)
@@ -440,7 +428,7 @@ void rc_gui_scrolled_text_set_text(RCGuiScrolledText *widget,
  *
  * Return the text in the widget.
  *
- * Returns: The text in thw widget, do not modify or free it.
+ * Returns: The text in the widget, do not modify or free it.
  */
 
 const gchar *rc_gui_scrolled_text_get_text(RCGuiScrolledText *widget)

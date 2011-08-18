@@ -60,6 +60,8 @@ typedef struct RCPlayer {
  * @player_continue: the function to call when the player continues playing
  * @lyric_found: the function to call when the lyric data is found
  * @lyric_not_found: the function to call when the lyric data is not found
+ * @cover_found: the function to call when the cover image is found
+ * @cover_not_found: the function to call when the cover image is not found
  *
  * Provide signal process functions in the class.
  */

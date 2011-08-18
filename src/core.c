@@ -35,6 +35,7 @@
 #include "debug.h"
 #include "gui_eq.h"
 #include "player_object.h"
+#include "shell.h"
 
 /**
  * SECTION: core
@@ -131,6 +132,7 @@ static gboolean rc_core_bus_call(GstBus *bus, GstMessage *msg, gpointer data)
             {
                 rc_core.start_flag = FALSE;
             }
+            rc_shell_signal_emit_simple("state-changed");
             break;
         case GST_MESSAGE_ERROR:
             gst_message_parse_error(msg, &error, &debug);

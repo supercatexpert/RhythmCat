@@ -1,0 +1,142 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+]>
+<refentry id="RhythmCat-RCGuiAudioVis">
+<refmeta>
+<refentrytitle role="top_of_page" id="RhythmCat-RCGuiAudioVis.top_of_page">Audio Visualisation Widget</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>
+  RHYTHMCAT Library
+</refmiscinfo>
+</refmeta>
+<refnamediv>
+<refname>Audio Visualisation Widget</refname>
+<refpurpose>A audio visualisation widget in the player.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv id="RhythmCat-RCGuiAudioVis.synopsis" role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>
+#include &lt;gui_vis.h&gt;
+
+#define             <link linkend="RC-GUI-AUDIO-VIS-TYPE:CAPS">RC_GUI_AUDIO_VIS_TYPE</link>
+#define             <link linkend="RC-GUI-AUDIO-VIS:CAPS">RC_GUI_AUDIO_VIS</link>                    (obj)
+#define             <link linkend="RC-GUI-AUDIO-VIS-CLASS:CAPS">RC_GUI_AUDIO_VIS_CLASS</link>              (klass)
+#define             <link linkend="IS-RC-GUI-AUDIO-VIS:CAPS">IS_RC_GUI_AUDIO_VIS</link>                 (obj)
+#define             <link linkend="IS-RC-GUI-AUDIO-VIS-CLASS:CAPS">IS_RC_GUI_AUDIO_VIS_CLASS</link>           (klass)
+                    <link linkend="RCGuiAudioVis">RCGuiAudioVis</link>;
+                    <link linkend="RCGuiAudioVisClass">RCGuiAudioVisClass</link>;
+<link linkend="GType"><returnvalue>GType</returnvalue></link>               <link linkend="rc-gui-audio-vis-get-type">rc_gui_audio_vis_get_type</link>           ();
+<link linkend="GtkWidget"><returnvalue>GtkWidget</returnvalue></link> *         <link linkend="rc-gui-audio-vis-new">rc_gui_audio_vis_new</link>                ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-audio-vis-set-style">rc_gui_audio_vis_set_style</link>          (<parameter><link linkend="RCGuiAudioVis"><type>RCGuiAudioVis</type></link> *widget</parameter>,
+                                                         <parameter><link linkend="guint"><type>guint</type></link> style</parameter>);
+<link linkend="guint"><returnvalue>guint</returnvalue></link>               <link linkend="rc-gui-audio-vis-get-style">rc_gui_audio_vis_get_style</link>          (<parameter><link linkend="RCGuiAudioVis"><type>RCGuiAudioVis</type></link> *widget</parameter>);
+</synopsis>
+</refsynopsisdiv>
+
+<refsect1 id="RhythmCat-RCGuiAudioVis.description" role="desc">
+<title role="desc.title">Description</title>
+<para>
+A audio visualisation widget in the player.
+</para>
+</refsect1>
+<refsect1 id="RhythmCat-RCGuiAudioVis.details" role="details">
+<title role="details.title">Details</title>
+<refsect2 id="RC-GUI-AUDIO-VIS-TYPE:CAPS" role="macro">
+<title>RC_GUI_AUDIO_VIS_TYPE</title>
+<indexterm zone="RC-GUI-AUDIO-VIS-TYPE:CAPS"><primary>RC_GUI_AUDIO_VIS_TYPE</primary></indexterm>
+<programlisting>#define RC_GUI_AUDIO_VIS_TYPE (rc_gui_audio_vis_get_type())
+</programlisting>
+</refsect2>
+<refsect2 id="RC-GUI-AUDIO-VIS:CAPS" role="macro">
+<title>RC_GUI_AUDIO_VIS()</title>
+<indexterm zone="RC-GUI-AUDIO-VIS:CAPS"><primary>RC_GUI_AUDIO_VIS</primary></indexterm>
+<programlisting>#define             RC_GUI_AUDIO_VIS(obj)</programlisting>
+</refsect2>
+<refsect2 id="RC-GUI-AUDIO-VIS-CLASS:CAPS" role="macro">
+<title>RC_GUI_AUDIO_VIS_CLASS()</title>
+<indexterm zone="RC-GUI-AUDIO-VIS-CLASS:CAPS"><primary>RC_GUI_AUDIO_VIS_CLASS</primary></indexterm>
+<programlisting>#define             RC_GUI_AUDIO_VIS_CLASS(klass)</programlisting>
+</refsect2>
+<refsect2 id="IS-RC-GUI-AUDIO-VIS:CAPS" role="macro">
+<title>IS_RC_GUI_AUDIO_VIS()</title>
+<indexterm zone="IS-RC-GUI-AUDIO-VIS:CAPS"><primary>IS_RC_GUI_AUDIO_VIS</primary></indexterm>
+<programlisting>#define             IS_RC_GUI_AUDIO_VIS(obj)</programlisting>
+</refsect2>
+<refsect2 id="IS-RC-GUI-AUDIO-VIS-CLASS:CAPS" role="macro">
+<title>IS_RC_GUI_AUDIO_VIS_CLASS()</title>
+<indexterm zone="IS-RC-GUI-AUDIO-VIS-CLASS:CAPS"><primary>IS_RC_GUI_AUDIO_VIS_CLASS</primary></indexterm>
+<programlisting>#define             IS_RC_GUI_AUDIO_VIS_CLASS(klass)</programlisting>
+</refsect2>
+<refsect2 id="RCGuiAudioVis" role="struct">
+<title>RCGuiAudioVis</title>
+<indexterm zone="RCGuiAudioVis"><primary>RCGuiAudioVis</primary></indexterm>
+<programlisting>typedef struct {
+    GtkWidget widget;
+} RCGuiAudioVis;
+</programlisting>
+</refsect2>
+<refsect2 id="RCGuiAudioVisClass" role="struct">
+<title>RCGuiAudioVisClass</title>
+<indexterm zone="RCGuiAudioVisClass"><primary>RCGuiAudioVisClass</primary></indexterm>
+<programlisting>typedef struct {
+    GtkWidgetClass parent_class;
+} RCGuiAudioVisClass;
+</programlisting>
+</refsect2>
+<refsect2 id="rc-gui-audio-vis-get-type" role="function">
+<title>rc_gui_audio_vis_get_type ()</title>
+<indexterm zone="rc-gui-audio-vis-get-type"><primary>rc_gui_audio_vis_get_type</primary></indexterm>
+<programlisting><link linkend="GType"><returnvalue>GType</returnvalue></link>               rc_gui_audio_vis_get_type           ();</programlisting>
+<para>
+Return the <link linkend="GType"><type>GType</type></link> of the <link linkend="RCGuiAudioVis"><type>RCGuiAudioVis</type></link> class.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The <link linkend="GType"><type>GType</type></link> of the <link linkend="RCGuiAudioVis"><type>RCGuiAudioVis</type></link> class.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-gui-audio-vis-new" role="function">
+<title>rc_gui_audio_vis_new ()</title>
+<indexterm zone="rc-gui-audio-vis-new"><primary>rc_gui_audio_vis_new</primary></indexterm>
+<programlisting><link linkend="GtkWidget"><returnvalue>GtkWidget</returnvalue></link> *         rc_gui_audio_vis_new                ();</programlisting>
+<para>
+Return a new <link linkend="RCGuiAudioVis"><type>RCGuiAudioVis</type></link> widget.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> A new <link linkend="RCGuiAudioVis"><type>RCGuiAudioVis</type></link> widget.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-gui-audio-vis-set-style" role="function">
+<title>rc_gui_audio_vis_set_style ()</title>
+<indexterm zone="rc-gui-audio-vis-set-style"><primary>rc_gui_audio_vis_set_style</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_audio_vis_set_style          (<parameter><link linkend="RCGuiAudioVis"><type>RCGuiAudioVis</type></link> *widget</parameter>,
+                                                         <parameter><link linkend="guint"><type>guint</type></link> style</parameter>);</programlisting>
+<para>
+Set the audio visualisation style to show in the widget.
+</para><variablelist role="params">
+<varlistentry><term><parameter>widget</parameter>&#160;:</term>
+<listitem><simpara>the RCGuiAudioVis widget to set
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>style</parameter>&#160;:</term>
+<listitem><simpara>the visualisation style to set
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-gui-audio-vis-get-style" role="function">
+<title>rc_gui_audio_vis_get_style ()</title>
+<indexterm zone="rc-gui-audio-vis-get-style"><primary>rc_gui_audio_vis_get_style</primary></indexterm>
+<programlisting><link linkend="guint"><returnvalue>guint</returnvalue></link>               rc_gui_audio_vis_get_style          (<parameter><link linkend="RCGuiAudioVis"><type>RCGuiAudioVis</type></link> *widget</parameter>);</programlisting>
+<para>
+Return the visualisation style in the widget.
+</para><variablelist role="params">
+<varlistentry><term><parameter>widget</parameter>&#160;:</term>
+<listitem><simpara>the RCGuiAudioVis widget
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The visualisation style in the widget.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+
+</refsect1>
+
+</refentry>

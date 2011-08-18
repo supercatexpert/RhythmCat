@@ -216,6 +216,22 @@ rc_gui_list2_get_cursor
 </SECTION>
 
 <SECTION>
+<FILE>gui_vis</FILE>
+<TITLE>RCGuiAudioVis</TITLE>
+RC_GUI_AUDIO_VIS_TYPE
+RC_GUI_AUDIO_VIS
+RC_GUI_AUDIO_VIS_CLASS
+IS_RC_GUI_AUDIO_VIS
+IS_RC_GUI_AUDIO_VIS_CLASS
+RCGuiAudioVis
+RCGuiAudioVisClass
+rc_gui_audio_vis_get_type
+rc_gui_audio_vis_new
+rc_gui_audio_vis_set_style
+rc_gui_audio_vis_get_style
+</SECTION>
+
+<SECTION>
 <FILE>gui</FILE>
 RCGuiData
 rc_gui_get_data

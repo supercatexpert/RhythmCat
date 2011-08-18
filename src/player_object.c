@@ -198,6 +198,7 @@ RCPlayer *rc_player_new()
 
 gboolean rc_player_object_init()
 {
+    if(player_object!=NULL) return TRUE;
     player_object = G_OBJECT(rc_player_new());
     if(player_object==NULL) return FALSE;
     return TRUE;

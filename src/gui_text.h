@@ -1,5 +1,5 @@
 /*
- * GUI Scrollable Text Widget
+ * GUI Scrollable Text Widget Declaration
  * A scrollable text widget in the player.
  *
  * gui_text.h

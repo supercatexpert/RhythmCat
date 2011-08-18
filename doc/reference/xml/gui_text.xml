@@ -161,7 +161,7 @@ Return the text in the widget.
 <varlistentry><term><parameter>widget</parameter>&#160;:</term>
 <listitem><simpara>the RCGuiScrolledText widget
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The text in thw widget, do not modify or free it.
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The text in the widget, do not modify or free it.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="rc-gui-scrolled-text-set-attributes" role="function">

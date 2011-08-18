@@ -864,6 +864,62 @@ GtkTreeIter *iter
 <RETURNS>gboolean </RETURNS>
 GtkTreeIter *iter 
 </FUNCTION>
+<MACRO>
+<NAME>RC_GUI_AUDIO_VIS_TYPE</NAME>
+#define RC_GUI_AUDIO_VIS_TYPE (rc_gui_audio_vis_get_type())
+</MACRO>
+<MACRO>
+<NAME>RC_GUI_AUDIO_VIS</NAME>
+#define RC_GUI_AUDIO_VIS(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), \
+    RC_GUI_AUDIO_VIS_TYPE, RCGuiAudioVis))
+</MACRO>
+<MACRO>
+<NAME>RC_GUI_AUDIO_VIS_CLASS</NAME>
+#define RC_GUI_AUDIO_VIS_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST((klass), \
+    RC_GUI_AUDIO_VIS_TYPE, RCGuiAudioVisClass))
+</MACRO>
+<MACRO>
+<NAME>IS_RC_GUI_AUDIO_VIS</NAME>
+#define IS_RC_GUI_AUDIO_VIS(obj) (G_TYPE_CHECK_INSTANCE_TYPE((obj), \
+    RC_GUI_AUDIO_VIS_TYPE))
+</MACRO>
+<MACRO>
+<NAME>IS_RC_GUI_AUDIO_VIS_CLASS</NAME>
+#define IS_RC_GUI_AUDIO_VIS_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), \
+    RC_GUI_AUDIO_VIS_TYPE))
+</MACRO>
+<STRUCT>
+<NAME>RCGuiAudioVis</NAME>
+typedef struct RCGuiAudioVis {
+    GtkWidget widget;
+}RCGuiAudioVis;
+</STRUCT>
+<STRUCT>
+<NAME>RCGuiAudioVisClass</NAME>
+typedef struct RCGuiAudioVisClass {
+    GtkWidgetClass parent_class;
+}RCGuiAudioVisClass;
+</STRUCT>
+<FUNCTION>
+<NAME>rc_gui_audio_vis_get_type</NAME>
+<RETURNS>GType </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_audio_vis_new</NAME>
+<RETURNS>GtkWidget *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_audio_vis_set_style</NAME>
+<RETURNS>void </RETURNS>
+RCGuiAudioVis *widget, guint style 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_audio_vis_get_style</NAME>
+<RETURNS>guint </RETURNS>
+RCGuiAudioVis *widget 
+</FUNCTION>
 <STRUCT>
 <NAME>RCGuiData</NAME>
 typedef struct RCGuiData {
