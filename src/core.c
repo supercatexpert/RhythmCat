@@ -177,6 +177,7 @@ static gboolean rc_core_pad_buffer_probe_cb(GstPad *pad, GstBuffer *buf,
     gint channel, depth;
     gint sz, frames;
     gint64 pos = (gint64)GST_BUFFER_TIMESTAMP(buf);
+    gint64 len = rc_core_get_music_length();
     if(rc_core.end_time>0 && rc_core.end_time<pos)
     {
         msg = gst_message_new_eos(GST_OBJECT(rc_core.playbin));
@@ -184,6 +185,14 @@ static gboolean rc_core_pad_buffer_probe_cb(GstPad *pad, GstBuffer *buf,
             "sending a new EOS event now.\n");
         if(!gst_element_post_message(rc_core.playbin, msg))
             rc_core_stop();
+    }
+    else if(len>0 && pos-len>2*GST_SECOND)
+    {
+        msg = gst_message_new_eos(GST_OBJECT(rc_core.playbin));
+        rc_debug_print("Core: Reached the end time in normal playing, "
+            "sending a new EOS event now.\n");
+        if(!gst_element_post_message(rc_core.playbin, msg))
+            rc_core_stop();   
     }
     structure = gst_caps_get_structure(GST_BUFFER_CAPS(buf), 0);
     gst_structure_get_int(structure, "channels", &channel);

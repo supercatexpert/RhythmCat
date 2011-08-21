@@ -1143,8 +1143,11 @@ gboolean rc_plist_remove_list(gint index)
 
 gboolean rc_plist_load_playlist_setting()
 {
+    GFile *file;
+    GFileInputStream *input_stream;
+    GDataInputStream *data_stream;
+    gsize line_len;
     GtkListStore *pl_store = NULL;
-    gchar *file_data = NULL;
     gchar *line = NULL;
     guint listnum = 0, musicnum = 0;
     gint existlist = FALSE;
@@ -1153,27 +1156,28 @@ gboolean rc_plist_load_playlist_setting()
     gint trackno;
     gchar time_str[64];
     GtkTreeIter iter;
-    gboolean flag = FALSE;
     gchar *plist_set_file_full_path = NULL;
-    gchar **line_array;
-    guint i;
     plist_set_file_full_path = g_build_filename(rc_player_get_conf_dir(),
         play_list_setting_file, NULL);
     if(plist_set_file_full_path==NULL) return FALSE;
-    flag = g_file_get_contents(plist_set_file_full_path, &file_data,
-        NULL, NULL);
-    g_free(plist_set_file_full_path);
-    if(!flag || file_data==NULL)
+    file = g_file_new_for_path(plist_set_file_full_path);
+    if(file==NULL) return FALSE;
+    if(!g_file_query_exists(file, NULL))
     {
+        g_object_unref(file);
         return FALSE;
     }
-    line_array = g_strsplit(file_data, "\n", 0);
-    g_free(file_data);
-    if(line_array==NULL) return FALSE;
-    for(i=0;line_array[i]!=NULL;i++)
+    input_stream = g_file_read(file, NULL, NULL);
+    g_object_unref(file);
+    if(input_stream==NULL) return FALSE;
+    data_stream = g_data_input_stream_new(G_INPUT_STREAM(input_stream));
+    g_object_unref(input_stream);
+    if(data_stream==NULL) return FALSE;
+    g_data_input_stream_set_newline_type(data_stream,
+        G_DATA_STREAM_NEWLINE_TYPE_ANY);
+    while((line=g_data_input_stream_read_line(data_stream, &line_len,
+        NULL, NULL))!=NULL)
     {
-        line = line_array[i];
-        if(line==NULL) continue;
         if(strncmp(line, "UR=", 3)==0)
         {
             gtk_list_store_append(pl_store, &iter);
@@ -1213,8 +1217,9 @@ gboolean rc_plist_load_playlist_setting()
             pl_store = rc_plist_get_list_store(listnum);
             listnum++;
         }
+        g_free(line);
     }
-    g_strfreev(line_array);
+    g_object_unref(data_stream);
     if(existlist)
     {
         rc_gui_select_list1(0);
@@ -1504,40 +1509,36 @@ void rc_plist_save_playlist(const gchar *s_filename, gint index)
 
 void rc_plist_load_playlist(const gchar *s_filename, gint index)
 {
-    gchar *contents = NULL;
-    gchar *file_list = NULL;
-    gchar *file_data = NULL;
-    gchar **file_array = NULL;
+    GFile *file;
+    GFileInputStream *input_stream;
+    GDataInputStream *data_stream;
+    gsize line_len;
     gchar *line = NULL;
     gchar *uri = NULL;
     gchar *temp_name = NULL;
     gchar *path = NULL;
-    gsize s_length = 0;
-    guint length = 0;
     guint i = 0;
-    guint linenum = 0;
     if(index<0 || index>=rc_plist_get_list1_length()) return;
     if(s_filename==NULL || *s_filename=='\0') return;
-    if(!g_file_get_contents(s_filename, &contents, &s_length, NULL))
+    file = g_file_new_for_path(s_filename);
+    if(file==NULL) return;
+    if(!g_file_query_exists(file, NULL))
+    {
+        g_object_unref(file);
         return;
-    path = g_path_get_dirname(s_filename);
-    file_list = g_malloc0(s_length * sizeof(gchar));
-    for(i=0;i<s_length;i++)
-    {
-        if(contents[i]!='\r')
-        {
-            file_list[length] = contents[i];
-            length++;
-        }
     }
-    g_free(contents);
-    file_data = file_list;
-    file_array = g_strsplit(file_data, "\n", 0);
-    i = 0;
-    for(linenum=0;file_array[linenum]!=NULL;linenum++)
+    input_stream = g_file_read(file, NULL, NULL);
+    g_object_unref(file);
+    if(input_stream==NULL) return;
+    data_stream = g_data_input_stream_new(G_INPUT_STREAM(input_stream));
+    g_object_unref(input_stream);
+    if(data_stream==NULL) return;
+    path = g_path_get_dirname(s_filename);
+    g_data_input_stream_set_newline_type(data_stream,
+        G_DATA_STREAM_NEWLINE_TYPE_ANY);
+    while((line=g_data_input_stream_read_line(data_stream, &line_len,
+        NULL, NULL))!=NULL)
     {
-        temp_name = NULL;
-        line = file_array[linenum];
         if(!g_str_has_prefix(line, "#") && *line!='\n' && *line!='\0')
         {
             if(strncmp(line, "file://", 7)!=0
@@ -1561,12 +1562,11 @@ void rc_plist_load_playlist(const gchar *s_filename, gint index)
                 g_free(uri);
             }
         }
+        g_free(line);
     }
-    g_strfreev(file_array);
-    if(i>0)
-        rc_gui_status_task_set(1, i);
+    g_object_unref(data_stream);
+    if(i>0) rc_gui_status_task_set(1, i);
     g_free(path);
-    g_free(file_list);
 }
 
 /**

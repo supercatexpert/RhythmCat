@@ -6,6 +6,7 @@
 #define HAVE_PLAYLIST_H
 
 #include <glib.h>
+#include <gio/gio.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <gst/gst.h>

@@ -1039,15 +1039,14 @@ static void rc_gui_layout_init()
     gtk_container_add(GTK_CONTAINER(album_frame), rc_gui.album_eventbox);
     gtk_container_add(GTK_CONTAINER(rc_gui.album_eventbox),
         rc_gui.album_image);
-    gtk_box_pack_start(GTK_BOX(hbox2), rc_gui.time_scroll_bar, TRUE, TRUE, 0);
     gtk_box_pack_end(GTK_BOX(hbox2), rc_gui.volume_button, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(hbox3), vbox1, TRUE, TRUE, 0);
     gtk_box_pack_start(GTK_BOX(hbox3), vbox2, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(vbox3), hbox3, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(vbox3), rc_gui.lrc_scrolled_label, FALSE,
         FALSE, 2);
-    //gtk_box_pack_end(GTK_BOX(vbox3), hbox2, FALSE, FALSE, 0);
-    //gtk_box_pack_end(GTK_BOX(vbox3), rc_gui.time_scroll_bar, FALSE, FALSE, 0);
+    gtk_box_pack_end(GTK_BOX(vbox3), hbox2, FALSE, FALSE, 0);
+    gtk_box_pack_end(GTK_BOX(vbox3), rc_gui.time_scroll_bar, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(hbox1), album_frame, FALSE, FALSE, 2);
     gtk_box_pack_start(GTK_BOX(hbox1), vbox3, TRUE, TRUE, 2);
     gtk_box_pack_start(GTK_BOX(info_hbox), rc_gui.status_label, FALSE,
@@ -1061,7 +1060,6 @@ static void rc_gui_layout_init()
     gtk_box_pack_end(GTK_BOX(rc_gui.status_infobar), rc_task_cancel_button,
         FALSE, FALSE, 2);
     gtk_box_pack_start(GTK_BOX(player_vbox), hbox1, FALSE, TRUE, 4);
-    gtk_box_pack_start(GTK_BOX(player_vbox), hbox2, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(player_vbox), rc_gui.plist_notebook, TRUE, TRUE,
         0);
     gtk_box_pack_start(GTK_BOX(player_vbox), rc_gui.status_infobar, FALSE, FALSE,
@@ -1186,7 +1184,7 @@ gboolean rc_gui_init()
         GTK_WIDGET(rc_gui.main_window), &main_window_hints, GDK_HINT_MIN_SIZE);
     gtk_widget_set_name(rc_gui.main_window, "RCMainWindow");
     g_object_set(gtk_settings_get_default(), "gtk-icon-sizes", 
-        "gtk-small-toolbar=16,16:gtk-large-toolbar=16,16", NULL);
+        "gtk-small-toolbar=24,24:gtk-large-toolbar=16,16", NULL);
     gtk_misc_set_alignment(GTK_MISC(rc_gui.title_label), 0.0, 0.5);
     gtk_misc_set_alignment(GTK_MISC(rc_gui.artist_label), 0.0, 0.5);
     gtk_misc_set_alignment(GTK_MISC(rc_gui.album_label), 0.0, 0.5);
