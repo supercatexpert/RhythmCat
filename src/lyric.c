@@ -36,6 +36,7 @@
 #include "settings.h"
 #include "player.h"
 #include "core.h"
+#include "shell.h"
 
 /* Variables */
 static RCLyricData **lrc_line_array = NULL;
@@ -128,6 +129,7 @@ static gboolean rc_lrc_watch_timer(gpointer data)
 {
     GstState state;
     gint64 pos;
+    static const RCLyricData *lrc_old_line = NULL;
     if(lrc_line_array==NULL) return TRUE;
     state = rc_core_get_play_state();
     if(state!=GST_STATE_PLAYING && state!=GST_STATE_PAUSED)
@@ -137,6 +139,11 @@ static gboolean rc_lrc_watch_timer(gpointer data)
     }
     pos = rc_core_get_play_position();
     lrc_line_now = rc_lrc_get_line_by_time(pos);
+    if(lrc_old_line!=lrc_line_now)
+    {
+        rc_shell_signal_emit_simple("lyric-line-changed");
+        lrc_old_line = lrc_line_now;
+    }
     return TRUE;
 }
 

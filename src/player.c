@@ -42,6 +42,10 @@
 #include "gui_treeview.h"
 #include "gui_style.h"
 
+#ifdef G_OS_WIN32
+    #include <windows.h>
+#endif
+
 /**
  * SECTION: player
  * @Short_description: Manage the player information, and initialize the
@@ -59,11 +63,11 @@
 #endif
 
 static const gchar rc_player_program_name[] = "RhythmCat Music Player";
-static const gchar rc_player_build_date[] = "110821";
-static const gchar rc_player_version[] = "1.0.0 beta 2";
+static const gchar rc_player_build_date[] = "110907";
+static const gchar rc_player_version[] = "1.0.0 beta 3";
 static const gboolean rc_player_stable_flag = FALSE;
 static const gchar *rc_player_support_formatx = "(.FLAC|.OGG|.MP3|.WMA|.WAV|"
-    ".OGA|.OGM|.APE|.AAC|.AC3|.MIDI|.MP2|.MID|.M4A)$";
+    ".OGA|.OGM|.APE|.AAC|.AC3|.MIDI|.MP2|.MID|.M4A|.CUE)$";
 static GRegex *rc_player_support_format_regex = NULL;
 static const gchar rc_player_dbus_name[] = "org.supercat.RhythmCat";
 static const gchar rc_player_dbus_path_shell[] =
@@ -74,6 +78,7 @@ static const gchar const *rc_player_authors[] = {"SuperCat", "Mr. Zhu", NULL};
 static const gchar const *rc_player_documenters[] = {"SuperCat", NULL};
 static const gchar const *rc_player_artists[] = {"SuperCat", NULL};
 static gboolean rc_player_debug_flag = FALSE;
+static gboolean rc_player_malloc_flag = FALSE;
 static char **rc_player_remaining_args = NULL;
 static gchar *rc_player_conf_dir = NULL;
 static const gchar *rc_player_data_dir = NULL;
@@ -81,18 +86,39 @@ static const gchar *rc_player_home_dir = NULL;
 static const gchar *rc_player_locale_dir = NULL;
 static const gchar *rc_player_locale = NULL; 
 
-static gchar *rc_player_get_program_data_dir()
+static gchar *rc_player_get_program_data_dir(const gchar *argv0)
 {
     gchar *data_dir = NULL;
     gchar *bin_dir = NULL;
     gchar *exec_path = NULL;
     char full_path[PATH_MAX];
-    exec_path = g_file_read_link("/proc/self/exe", NULL);
-    if(exec_path!=NULL)
-    {
-        bin_dir = g_path_get_dirname(exec_path);
-        g_free(exec_path);
-    }
+    #ifdef G_OS_UNIX
+        exec_path = g_file_read_link("/proc/self/exe", NULL);
+        if(exec_path!=NULL)
+        {
+            bin_dir = g_path_get_dirname(exec_path);
+            g_free(exec_path);
+            exec_path = NULL;
+        }
+        else exec_path = g_file_read_link("/proc/curproc/file", NULL);
+        if(exec_path!=NULL)
+        {
+            bin_dir = g_path_get_dirname(exec_path);
+            g_free(exec_path);
+            exec_path = NULL;
+        }
+        else exec_path = g_file_read_link("/proc/self/path/a.out", NULL);
+        if(exec_path!=NULL)
+        {
+            bin_dir = g_path_get_dirname(exec_path);
+            g_free(exec_path);
+            exec_path = NULL;
+        }
+    #elif G_OS_WIN32
+        bzero(full_path, PATH_MAX);
+        GetModuleFileName(NULL, full_path, PATH_MAX);
+        bin_dir = g_strdup(full_path);
+    #endif
     if(bin_dir!=NULL)
     {
         data_dir = g_build_filename(bin_dir, "..", "share", "RhythmCat",
@@ -104,25 +130,52 @@ static gchar *rc_player_get_program_data_dir()
         }
         g_free(bin_dir);
     }
-    if(data_dir==NULL)
-    {
-        if(realpath(data_dir, full_path)!=NULL)
-            data_dir = g_strdup(full_path);
-    }
-    if(data_dir==NULL)
-    {
-        if(g_file_test("/usr/share/RhythmCat", G_FILE_TEST_IS_DIR))
-            data_dir = g_strdup("/usr/share/RhythmCat");
-        else if(g_file_test("/usr/local/share/RhythmCat", G_FILE_TEST_IS_DIR))
-            data_dir = g_strdup("/usr/local/share/RhythmCat");
-        else if(g_file_test("/opt/share/RhythmCat", G_FILE_TEST_IS_DIR))
-            data_dir = g_strdup("/opt/local/share/RhythmCat");
-        else if(g_file_test("/opt/RhythmCat/share/RhythmCat",
-            G_FILE_TEST_IS_DIR))
-            data_dir = g_strdup("/opt/RhythmCat/share/RhythmCat");
-        else
-            data_dir = g_get_current_dir();
-    }
+    #ifdef G_OS_UNIX
+        if(data_dir==NULL)
+        {
+            if(g_path_is_absolute(argv0))
+                exec_path = g_strdup(argv0);
+            else
+            {
+                bin_dir = g_get_current_dir();
+                exec_path = g_build_filename(bin_dir, argv0, NULL);
+                g_free(bin_dir);
+            }
+            strncpy(full_path, exec_path, PATH_MAX-1);
+            g_free(exec_path);
+            exec_path = realpath(data_dir, full_path);
+            if(exec_path!=NULL)
+                bin_dir = g_path_get_dirname(exec_path);
+            else
+                bin_dir = NULL;
+            if(bin_dir!=NULL)
+            {
+                data_dir = g_build_filename(bin_dir, "..", "share",
+                    "RhythmCat", NULL);
+                if(!g_file_test(data_dir, G_FILE_TEST_IS_DIR))
+                {
+                    g_free(data_dir);
+                    data_dir = g_strdup(bin_dir);
+                }
+                g_free(bin_dir);
+            }
+        }
+        if(data_dir==NULL)
+        {
+            if(g_file_test("/usr/share/RhythmCat", G_FILE_TEST_IS_DIR))
+                data_dir = g_strdup("/usr/share/RhythmCat");
+            else if(g_file_test("/usr/local/share/RhythmCat",
+                G_FILE_TEST_IS_DIR))
+                data_dir = g_strdup("/usr/local/share/RhythmCat");
+            else if(g_file_test("/opt/share/RhythmCat", G_FILE_TEST_IS_DIR))
+                data_dir = g_strdup("/opt/local/share/RhythmCat");
+            else if(g_file_test("/opt/RhythmCat/share/RhythmCat",
+                G_FILE_TEST_IS_DIR))
+                data_dir = g_strdup("/opt/RhythmCat/share/RhythmCat");
+            else
+                data_dir = g_get_current_dir();
+       }
+    #endif
     return data_dir;
 }
 
@@ -239,6 +292,8 @@ void rc_player_init(int *argc, char **argv[])
     {
         {"debug", 'd', 0, G_OPTION_ARG_NONE, &rc_player_debug_flag,
             N_("Enable debug mode"), NULL},
+        {"use-std-malloc", 0, 0, G_OPTION_ARG_NONE, &rc_player_malloc_flag,
+            N_("Use malloc function in stardard C library"), NULL},
         {G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_STRING_ARRAY,
             &rc_player_remaining_args, NULL, N_("[URI...]")},
         {NULL}
@@ -246,15 +301,13 @@ void rc_player_init(int *argc, char **argv[])
     const gchar *homedir = g_getenv("HOME");
     gchar *string = NULL;
     GError *error = NULL;
-    /* Enable this to enable memory leak check. */
-    /*
-    g_slice_set_config(G_SLICE_CONFIG_ALWAYS_MALLOC, TRUE);
-    */
+    if(rc_player_malloc_flag)
+        g_slice_set_config(G_SLICE_CONFIG_ALWAYS_MALLOC, TRUE);
     g_set_application_name("RhythmCat");
     if(homedir==NULL) homedir = g_get_home_dir();
     rc_player_home_dir = homedir;
     rc_player_conf_dir = g_build_filename(homedir, ".RhythmCat", NULL);
-    rc_player_data_dir = rc_player_get_program_data_dir();
+    rc_player_data_dir = rc_player_get_program_data_dir(*argv[0]);
     if(rc_player_data_dir!=NULL)
         rc_player_locale_dir = g_build_filename(rc_player_data_dir, "..",
             "locale", NULL);
@@ -283,6 +336,11 @@ void rc_player_init(int *argc, char **argv[])
     bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
     textdomain(GETTEXT_PACKAGE);
     rc_player_locale = g_strdup(setlocale(LC_ALL, NULL));
+    rc_debug_pmsg("\n***** RhythmCat Process Messages *****\n");
+    rc_debug_pmsg("Starting RhythmCat, version: %s\n", rc_player_version);
+    if(!rc_player_stable_flag)
+        rc_debug_pmsg("This program is under testing, report bugs to me"
+            " if you find any.\n");
     rc_set_init();
     /* Arguments/Options process. */
     if(!gtk_init_with_args(argc, argv, NULL, options, GETTEXT_PACKAGE, &error))
@@ -293,14 +351,9 @@ void rc_player_init(int *argc, char **argv[])
         exit(1);
     }
     if(rc_player_debug_flag) rc_debug_set_mode(TRUE);
-    rc_debug_print("\n***** RhythmCat DEBUG Messages *****\n");  
     rc_debug_print("DEBUG MODE Enabled!\n"); 
     rc_debug_print("Got home directory at: %s\n", rc_player_home_dir);
     rc_debug_print("Got data directory at: %s\n", rc_player_data_dir);
-    rc_debug_print("Starting RhythmCat, version: %s\n", rc_player_version);
-    if(!rc_player_stable_flag)
-        rc_debug_print("This program is under testing, report bugs to me"
-            " if you find any.\n");
     rc_player_support_format_regex = g_regex_new(rc_player_support_formatx,
         G_REGEX_CASELESS, G_REGEX_MATCH_ANCHORED, &error);
     if(error!=NULL) g_error_free(error);

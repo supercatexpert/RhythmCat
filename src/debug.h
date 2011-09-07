@@ -38,6 +38,13 @@ gboolean rc_debug_get_flag();
 void rc_debug_set_mode(gboolean mode);
 gint rc_debug_print(const gchar *format, ...);
 gint rc_debug_perror(const gchar *format, ...);
+gint rc_debug_pmsg(const gchar *format, ...);
+gint rc_debug_module_pmsg(const gchar *module_name, const gchar *format,
+    ...);
+gint rc_debug_module_print(const gchar *module_name, const gchar *format,
+    ...);
+gint rc_debug_module_perror(const gchar *module_name, const gchar *format,
+    ...);
 
 G_END_DECLS
 

@@ -77,8 +77,7 @@ The player object of the player, used in player signal processing.
 <programlisting>typedef struct _RCPlayer RCPlayer;</programlisting>
 <para>
 The structure used in object.
-</para><variablelist role="struct">
-</variablelist></refsect2>
+</para></refsect2>
 <refsect2 id="RCPlayerClass" role="struct">
 <title>RCPlayerClass</title>
 <indexterm zone="RCPlayerClass"><primary>RCPlayerClass</primary></indexterm>

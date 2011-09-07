@@ -91,8 +91,8 @@ typedef struct RCGuiData {
     GtkWidget *title_label, *artist_label, *album_label;
     GtkWidget *time_label, *length_label, *info_label;
     GtkWidget *album_image, *album_eventbox, *album_frame;
-    GtkWidget *control_images[8];
-    GtkWidget *control_buttons[8];
+    GtkWidget *control_images[5];
+    GtkWidget *control_buttons[5];
     GtkWidget *volume_button;
     GtkWidget *time_scroll_bar;
     GtkWidget *lrc_scrolled_label;
@@ -115,11 +115,14 @@ typedef struct RCGuiData {
     GtkStatusIcon *tray_icon;
 }RCGuiData;
 
+struct RCMusicMetaData;
+
 /* Functions */
 RCGuiData *rc_gui_get_data();
 gboolean rc_gui_init();
 void rc_gui_quit_player();
-void rc_gui_music_info_set_data(const gchar *title, const gpointer data);
+void rc_gui_music_info_set_data(const gchar *title,
+    const struct RCMusicMetaData *data);
 void rc_gui_time_label_set_text(gint64 time);
 void rc_gui_set_play_button_state(gboolean state);
 void rc_gui_seek_scaler_disable();
@@ -132,6 +135,8 @@ void rc_gui_status_task_set(guint type, guint len);
 void rc_gui_status_progress_set_progress();
 guint rc_gui_view_add_page(const gchar *name, const gchar *title,
     GtkWidget *widget);
+guint rc_gui_view_add_page_with_label(const gchar *name, const gchar *title,
+    const gchar *label_text, GtkWidget *widget);
 gboolean rc_gui_view_remove_page(guint id);
 GtkStatusIcon *rc_gui_get_tray_icon();
 GtkUIManager *rc_gui_get_ui_manager();

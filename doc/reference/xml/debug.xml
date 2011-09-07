@@ -30,6 +30,17 @@
                                                          <parameter>...</parameter>);
 <link linkend="gint"><returnvalue>gint</returnvalue></link>                <link linkend="rc-debug-perror">rc_debug_perror</link>                     (<parameter>const <link linkend="gchar"><type>gchar</type></link> *format</parameter>,
                                                          <parameter>...</parameter>);
+<link linkend="gint"><returnvalue>gint</returnvalue></link>                <link linkend="rc-debug-pmsg">rc_debug_pmsg</link>                       (<parameter>const <link linkend="gchar"><type>gchar</type></link> *format</parameter>,
+                                                         <parameter>...</parameter>);
+<link linkend="gint"><returnvalue>gint</returnvalue></link>                <link linkend="rc-debug-module-pmsg">rc_debug_module_pmsg</link>                (<parameter>const <link linkend="gchar"><type>gchar</type></link> *module_name</parameter>,
+                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *format</parameter>,
+                                                         <parameter>...</parameter>);
+<link linkend="gint"><returnvalue>gint</returnvalue></link>                <link linkend="rc-debug-module-print">rc_debug_module_print</link>               (<parameter>const <link linkend="gchar"><type>gchar</type></link> *module_name</parameter>,
+                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *format</parameter>,
+                                                         <parameter>...</parameter>);
+<link linkend="gint"><returnvalue>gint</returnvalue></link>                <link linkend="rc-debug-module-perror">rc_debug_module_perror</link>              (<parameter>const <link linkend="gchar"><type>gchar</type></link> *module_name</parameter>,
+                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *format</parameter>,
+                                                         <parameter>...</parameter>);
 </synopsis>
 </refsynopsisdiv>
 
@@ -82,7 +93,7 @@ Print debug message when debug mode is enabled.
 <varlistentry><term><parameter>...</parameter>&#160;:</term>
 <listitem><simpara>the arguments to insert in the output
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>the number of bytes printed.
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The number of bytes printed.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="rc-debug-perror" role="function">
@@ -99,7 +110,87 @@ Print error message on standard error (stderr).
 <varlistentry><term><parameter>...</parameter>&#160;:</term>
 <listitem><simpara>the arguments to insert in the output
 </simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>the number of bytes printed.
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The number of bytes printed.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-debug-pmsg" role="function">
+<title>rc_debug_pmsg ()</title>
+<indexterm zone="rc-debug-pmsg"><primary>rc_debug_pmsg</primary></indexterm>
+<programlisting><link linkend="gint"><returnvalue>gint</returnvalue></link>                rc_debug_pmsg                       (<parameter>const <link linkend="gchar"><type>gchar</type></link> *format</parameter>,
+                                                         <parameter>...</parameter>);</programlisting>
+<para>
+Print normal message on standard output (stdout).
+</para><variablelist role="params">
+<varlistentry><term><parameter>format</parameter>&#160;:</term>
+<listitem><simpara>a standard <link linkend="printf"><function>printf()</function></link> format string
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>...</parameter>&#160;:</term>
+<listitem><simpara>the arguments to insert in the output
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The number of bytes printed.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-debug-module-pmsg" role="function">
+<title>rc_debug_module_pmsg ()</title>
+<indexterm zone="rc-debug-module-pmsg"><primary>rc_debug_module_pmsg</primary></indexterm>
+<programlisting><link linkend="gint"><returnvalue>gint</returnvalue></link>                rc_debug_module_pmsg                (<parameter>const <link linkend="gchar"><type>gchar</type></link> *module_name</parameter>,
+                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *format</parameter>,
+                                                         <parameter>...</parameter>);</programlisting>
+<para>
+Print normal message with given module name on standard output (stdout).
+</para><variablelist role="params">
+<varlistentry><term><parameter>module_name</parameter>&#160;:</term>
+<listitem><simpara>the module name
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>format</parameter>&#160;:</term>
+<listitem><simpara>a standard <link linkend="printf"><function>printf()</function></link> format string
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>...</parameter>&#160;:</term>
+<listitem><simpara>the arguments to insert in the output
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The number of bytes printed.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-debug-module-print" role="function">
+<title>rc_debug_module_print ()</title>
+<indexterm zone="rc-debug-module-print"><primary>rc_debug_module_print</primary></indexterm>
+<programlisting><link linkend="gint"><returnvalue>gint</returnvalue></link>                rc_debug_module_print               (<parameter>const <link linkend="gchar"><type>gchar</type></link> *module_name</parameter>,
+                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *format</parameter>,
+                                                         <parameter>...</parameter>);</programlisting>
+<para>
+Print debug message with give module name when debug mode is enabled.
+</para><variablelist role="params">
+<varlistentry><term><parameter>module_name</parameter>&#160;:</term>
+<listitem><simpara>the module name
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>format</parameter>&#160;:</term>
+<listitem><simpara>a standard <link linkend="printf"><function>printf()</function></link> format string
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>...</parameter>&#160;:</term>
+<listitem><simpara>the arguments to insert in the output
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The number of bytes printed.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-debug-module-perror" role="function">
+<title>rc_debug_module_perror ()</title>
+<indexterm zone="rc-debug-module-perror"><primary>rc_debug_module_perror</primary></indexterm>
+<programlisting><link linkend="gint"><returnvalue>gint</returnvalue></link>                rc_debug_module_perror              (<parameter>const <link linkend="gchar"><type>gchar</type></link> *module_name</parameter>,
+                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *format</parameter>,
+                                                         <parameter>...</parameter>);</programlisting>
+<para>
+Print error message with given module name on standard error (stderr).
+</para><variablelist role="params">
+<varlistentry><term><parameter>module_name</parameter>&#160;:</term>
+<listitem><simpara>the module name
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>format</parameter>&#160;:</term>
+<listitem><simpara>a standard <link linkend="printf"><function>printf()</function></link> format string
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>...</parameter>&#160;:</term>
+<listitem><simpara>the arguments to insert in the output
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The number of bytes printed.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 

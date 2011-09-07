@@ -1029,8 +1029,8 @@ G_MODULE_EXPORT gint rc_plugin_module_init()
     rc_plugin_tag_ui_init();
     rc_plugin_tag_data_clean();
     rc_plugin_tag_reader_init();
-    table_id = rc_gui_view_add_page("TagEditor", "_Tag Editor",
-        tag_ui.tag_main_vbox);
+    table_id = rc_gui_view_add_page_with_label("TagEditor", "_Tag Editor",
+        "Tag Editor", tag_ui.tag_main_vbox);
     gtk_widget_show_all(tag_ui.tag_main_vbox);
     return 0;
 }

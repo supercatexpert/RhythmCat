@@ -98,8 +98,8 @@ static void rc_plugin_lrc_show_set_single_mode(gboolean flag)
                 rc_glrc.lrc_scene);
         }
         if(id==0)
-            id = rc_gui_view_add_page("ViewPageLyric", "_Lyric Show",
-                rc_glrc.lrc_scene);
+            id = rc_gui_view_add_page_with_label("ViewPageLyric",
+                _("_Lyric Show"), _("Lyric Show"), rc_glrc.lrc_scene);
         gtk_widget_show_all(rc_glrc.lrc_scene);
     }
 }

@@ -41,6 +41,7 @@ typedef struct RCShellClass {
     GObjectClass parent;
     void (*state_changed)();
     void (*music_started)();
+    void (*lyric_line_changed)();
 }RCShellClass;
 
 #define RC_SHELL_TYPE (rc_shell_get_type())
@@ -74,6 +75,8 @@ gboolean rc_shell_get_current_track(RCShell *shell, gchar **uri,
     gchar **title, gchar **artist, gchar **album, gchar **comment,
     guint64 *duration, guint *tracknum, guint *bitrate, guint *samplerate,
     guint *channel);
+gboolean rc_shell_get_current_lyric_text(RCShell *shell, gchar **text,
+    GError **error);
 
 G_END_DECLS
 

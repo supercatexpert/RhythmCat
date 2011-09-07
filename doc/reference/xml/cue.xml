@@ -1,0 +1,253 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+]>
+<refentry id="RhythmCat-CUE-Parser">
+<refmeta>
+<refentrytitle role="top_of_page" id="RhythmCat-CUE-Parser.top_of_page">CUE Parser</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>
+  RHYTHMCAT Library
+</refmiscinfo>
+</refmeta>
+<refnamediv>
+<refname>CUE Parser</refname>
+<refpurpose>CUE Parser.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv id="RhythmCat-CUE-Parser.synopsis" role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>
+#include &lt;cue.h&gt;
+
+                    <link linkend="RCMusicMetaData">RCMusicMetaData</link>;
+enum                <link linkend="RCCueInputType">RCCueInputType</link>;
+                    <link linkend="RCCueTrack">RCCueTrack</link>;
+<link linkend="guint"><returnvalue>guint</returnvalue></link>               <link linkend="rc-cue-read-data">rc_cue_read_data</link>                    (<parameter>const <link linkend="gchar"><type>gchar</type></link> *input</parameter>,
+                                                         <parameter><link linkend="RCCueInputType"><type>RCCueInputType</type></link> type</parameter>,
+                                                         <parameter><link linkend="RCCueData"><type>RCCueData</type></link> *data</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-cue-free">rc_cue_free</link>                         (<parameter><link linkend="RCCueData"><type>RCCueData</type></link> *data</parameter>);
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-cue-get-track-num">rc_cue_get_track_num</link>                (<parameter>const <link linkend="gchar"><type>gchar</type></link> *path</parameter>,
+                                                         <parameter><link linkend="gchar"><type>gchar</type></link> **cue_path</parameter>,
+                                                         <parameter><link linkend="gint"><type>gint</type></link> *track_num</parameter>);
+struct <link linkend="RCMusicMetaData"><returnvalue>RCMusicMetaData</returnvalue></link> * <link linkend="rc-cue-get-metadata">rc_cue_get_metadata</link>            (<parameter><link linkend="RCCueData"><type>RCCueData</type></link> *cue_data</parameter>,
+                                                         <parameter><link linkend="gint"><type>gint</type></link> track_num</parameter>,
+                                                         <parameter><type>struct RCMusicMetaData</type> *cue_mmd</parameter>);
+</synopsis>
+</refsynopsisdiv>
+
+<refsect1 id="RhythmCat-CUE-Parser.description" role="desc">
+<title role="desc.title">Description</title>
+<para>
+Parse track data in CUE files.
+</para>
+</refsect1>
+<refsect1 id="RhythmCat-CUE-Parser.details" role="details">
+<title role="details.title">Details</title>
+<refsect2 id="RCMusicMetaData" role="struct">
+<title>RCMusicMetaData</title>
+<indexterm zone="RCMusicMetaData"><primary>RCMusicMetaData</primary></indexterm>
+<programlisting>typedef struct {
+    gint64 length;
+    gchar *uri;
+    guint tracknum;
+    guint bitrate;
+    gint samplerate;
+    gint channels;
+    gchar *title;
+    gchar *artist;
+    gchar *album;
+    gchar *comment;
+    gchar *file_type;
+    gchar *emb_cue;
+    GstBuffer *image;
+    gboolean eos;
+    gboolean audio_flag;
+    gboolean video_flag;
+    gpointer user_data;
+} RCMusicMetaData;
+</programlisting>
+<para>
+Custom struct type to store the music metadata.
+</para><variablelist role="struct">
+<varlistentry><term><link linkend="gint64"><type>gint64</type></link>&#160;<structfield id="RCMusicMetaData.length">length</structfield>;</term>
+<listitem><simpara>the length of the music
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gchar"><type>gchar</type></link>&#160;*<structfield id="RCMusicMetaData.uri">uri</structfield>;</term>
+<listitem><simpara>the URI of the music
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="guint"><type>guint</type></link>&#160;<structfield id="RCMusicMetaData.tracknum">tracknum</structfield>;</term>
+<listitem><simpara>the track number of the music
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="guint"><type>guint</type></link>&#160;<structfield id="RCMusicMetaData.bitrate">bitrate</structfield>;</term>
+<listitem><simpara>the bitrate of the music
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gint"><type>gint</type></link>&#160;<structfield id="RCMusicMetaData.samplerate">samplerate</structfield>;</term>
+<listitem><simpara>the sample rate of the music
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gint"><type>gint</type></link>&#160;<structfield id="RCMusicMetaData.channels">channels</structfield>;</term>
+<listitem><simpara>the channel number of the music
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gchar"><type>gchar</type></link>&#160;*<structfield id="RCMusicMetaData.title">title</structfield>;</term>
+<listitem><simpara>the title text of the music
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gchar"><type>gchar</type></link>&#160;*<structfield id="RCMusicMetaData.artist">artist</structfield>;</term>
+<listitem><simpara>the artist text of the music
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gchar"><type>gchar</type></link>&#160;*<structfield id="RCMusicMetaData.album">album</structfield>;</term>
+<listitem><simpara>the album text of the music
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gchar"><type>gchar</type></link>&#160;*<structfield id="RCMusicMetaData.comment">comment</structfield>;</term>
+<listitem><simpara>the comment text of the music
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gchar"><type>gchar</type></link>&#160;*<structfield id="RCMusicMetaData.file-type">file_type</structfield>;</term>
+<listitem><simpara>the file type of the music
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gchar"><type>gchar</type></link>&#160;*<structfield id="RCMusicMetaData.emb-cue">emb_cue</structfield>;</term>
+<listitem><simpara>the embeded CUE data of the music
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GstBuffer"><type>GstBuffer</type></link>&#160;*<structfield id="RCMusicMetaData.image">image</structfield>;</term>
+<listitem><simpara>the GstBuffer which contains the cover image
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gboolean"><type>gboolean</type></link>&#160;<structfield id="RCMusicMetaData.eos">eos</structfield>;</term>
+<listitem><simpara>the EOS signal
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gboolean"><type>gboolean</type></link>&#160;<structfield id="RCMusicMetaData.audio-flag">audio_flag</structfield>;</term>
+<listitem><simpara>whether this file has audio
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gboolean"><type>gboolean</type></link>&#160;<structfield id="RCMusicMetaData.video-flag">video_flag</structfield>;</term>
+<listitem><simpara>whether this file has video
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gpointer"><type>gpointer</type></link>&#160;<structfield id="RCMusicMetaData.user-data">user_data</structfield>;</term>
+<listitem><simpara>the user data
+</simpara></listitem>
+</varlistentry>
+</variablelist></refsect2>
+<refsect2 id="RCCueInputType" role="enum">
+<title>enum RCCueInputType</title>
+<indexterm zone="RCCueInputType"><primary>RCCueInputType</primary></indexterm>
+<programlisting>typedef enum RCCueInputType
+{
+    RC_CUE_INPUT_URI = 0,
+    RC_CUE_INPUT_PATH = 1,
+    RC_CUE_INPUT_EMBEDED = 2
+}RCCueInputType;
+</programlisting>
+</refsect2>
+<refsect2 id="RCCueTrack" role="struct">
+<title>RCCueTrack</title>
+<indexterm zone="RCCueTrack"><primary>RCCueTrack</primary></indexterm>
+<programlisting>typedef struct {
+    guint index;
+    gchar *title;
+    gchar *performer;
+    guint64 time0;
+    guint64 time1;
+} RCCueTrack;
+</programlisting>
+</refsect2>
+<refsect2 id="rc-cue-read-data" role="function">
+<title>rc_cue_read_data ()</title>
+<indexterm zone="rc-cue-read-data"><primary>rc_cue_read_data</primary></indexterm>
+<programlisting><link linkend="guint"><returnvalue>guint</returnvalue></link>               rc_cue_read_data                    (<parameter>const <link linkend="gchar"><type>gchar</type></link> *input</parameter>,
+                                                         <parameter><link linkend="RCCueInputType"><type>RCCueInputType</type></link> type</parameter>,
+                                                         <parameter><link linkend="RCCueData"><type>RCCueData</type></link> *data</parameter>);</programlisting>
+<para>
+Read and parse data from CUE file or string.
+</para><variablelist role="params">
+<varlistentry><term><parameter>input</parameter>&#160;:</term>
+<listitem><simpara>the input data
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>type</parameter>&#160;:</term>
+<listitem><simpara>the data type of the input data
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>data</parameter>&#160;:</term>
+<listitem><simpara>the parsed CUE data
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The track number, 0 if the CUE data is incorrect.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-cue-free" role="function">
+<title>rc_cue_free ()</title>
+<indexterm zone="rc-cue-free"><primary>rc_cue_free</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_cue_free                         (<parameter><link linkend="RCCueData"><type>RCCueData</type></link> *data</parameter>);</programlisting>
+<para>
+Free the CUE data.
+Notice that the parameter itself will not be free.
+</para><variablelist role="params">
+<varlistentry><term><parameter>data</parameter>&#160;:</term>
+<listitem><simpara>the CUE data to free
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-cue-get-track-num" role="function">
+<title>rc_cue_get_track_num ()</title>
+<indexterm zone="rc-cue-get-track-num"><primary>rc_cue_get_track_num</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rc_cue_get_track_num                (<parameter>const <link linkend="gchar"><type>gchar</type></link> *path</parameter>,
+                                                         <parameter><link linkend="gchar"><type>gchar</type></link> **cue_path</parameter>,
+                                                         <parameter><link linkend="gint"><type>gint</type></link> *track_num</parameter>);</programlisting>
+<para>
+Get the CUE path/URI and track number from given path/URI.
+</para>
+<para>
+e.g. For the given path "/home/test/1.cue:1", you will get
+path "/home/test/1.cue", and track number 1.
+</para><variablelist role="params">
+<varlistentry><term><parameter>path</parameter>&#160;:</term>
+<listitem><simpara>the file path or URI
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>cue_path</parameter>&#160;:</term>
+<listitem><simpara>the file path or URI of the CUE file
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>track_num</parameter>&#160;:</term>
+<listitem><simpara>the track number
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> Whether the path/URI is valid.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-cue-get-metadata" role="function">
+<title>rc_cue_get_metadata ()</title>
+<indexterm zone="rc-cue-get-metadata"><primary>rc_cue_get_metadata</primary></indexterm>
+<programlisting>struct <link linkend="RCMusicMetaData"><returnvalue>RCMusicMetaData</returnvalue></link> * rc_cue_get_metadata            (<parameter><link linkend="RCCueData"><type>RCCueData</type></link> *cue_data</parameter>,
+                                                         <parameter><link linkend="gint"><type>gint</type></link> track_num</parameter>,
+                                                         <parameter><type>struct RCMusicMetaData</type> *cue_mmd</parameter>);</programlisting>
+<para>
+Get the metadata of the given track in the CUE file.
+If <parameter>cue_mmd</parameter> is NULL, it will try to read metadata of the audio file
+in CUE FILE part.
+</para><variablelist role="params">
+<varlistentry><term><parameter>cue_data</parameter>&#160;:</term>
+<listitem><simpara>the CUE data
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>track_num</parameter>&#160;:</term>
+<listitem><simpara>the track number
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>cue_mmd</parameter>&#160;:</term>
+<listitem><simpara>the metadata of the audio file used by CUE file
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The metadata, NULL if the parameters are invalid or the
+given track does not exist in the CUE file.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+
+</refsect1>
+
+</refentry>

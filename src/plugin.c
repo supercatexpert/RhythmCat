@@ -56,6 +56,7 @@ typedef struct RCModuleData {
     const RCPluginModuleData *(*module_data)();
 }RCModuleData;
 
+static const gchar *module_name = "Plugin";
 static GSList *plugin_list = NULL;
 static GSList *module_list = NULL;
 static GKeyFile *plugin_configure = NULL;
@@ -104,6 +105,7 @@ void rc_plugin_init()
     gchar **group_names = NULL;
     guint i = 0;
     gint type = 0;
+    rc_debug_module_pmsg(module_name, "Loading...");
     plugin_configure = rc_set_get_plugin_configure();
     group_names = g_key_file_get_groups(plugin_configure, NULL);
     for(i=0;group_names[i]!=NULL;i++)
@@ -127,6 +129,7 @@ void rc_plugin_init()
         }
     }
     g_strfreev(group_names);
+    rc_debug_module_pmsg(module_name, "Loaded successfully!");
 }
 
 /**
@@ -205,8 +208,8 @@ gboolean rc_plugin_search_dir(const gchar *dirname)
                     prev_data = NULL;
                 if(prev_data!=NULL)
                 {
-                    rc_debug_print("Plugin: Found the same plugin, the player "
-                       "will load the newer one.\n");
+                    rc_debug_module_print(module_name, "Found the same plugin, "
+                       "the player will load the newer one.");
                     version_result = rc_plugin_version_compare(
                         prev_data->version, plugin_data->version);
                     if(version_result>=0)
@@ -215,18 +218,21 @@ gboolean rc_plugin_search_dir(const gchar *dirname)
                     }
                     else
                     {
-                        rc_debug_print("Plugin: Found newer version of the "
-                            "plugin, removing the older one...\n");
+                        rc_debug_module_print(module_name, "Found newer "
+                            "version of the plugin, removing the older "
+                            "one...");
                         rc_plugin_conf_free(prev_data);
                         plugin_list = g_slist_delete_link(plugin_list,
                             prev_list);
-                        rc_debug_print("Plugin: Found plugin: %s\n", full_path);
+                        rc_debug_module_print(module_name,
+                            "Found plugin: %s", full_path);
                         plugin_list = g_slist_append(plugin_list, plugin_data);
                     }
                 }
                 else
                 {
-                    rc_debug_print("Plugin: Found plugin: %s\n", full_path);
+                    rc_debug_module_print(module_name, "Found plugin: %s",
+                        full_path);
                     plugin_list = g_slist_append(plugin_list, plugin_data);
                 }
             }
@@ -342,6 +348,21 @@ static RCModuleData *rc_plugin_module_get_running(const gchar *path)
     return NULL;
 }
 
+static const gchar *rc_plugin_module_get_path(const gchar *group_name)
+{
+    const GSList *list_foreach = NULL;
+    RCModuleData *module_data;
+    if(module_list==NULL) return FALSE;
+    for(list_foreach=module_list;list_foreach!=NULL;
+        list_foreach=g_slist_next(list_foreach))
+    {
+        module_data = list_foreach->data;
+        if(g_strcmp0(module_data->data->group_name, group_name)==0)
+            return module_data->path;
+    }
+    return NULL;
+}
+
 /**
  * rc_plugin_conf_load:
  * @filename: the configuration file to open
@@ -433,7 +454,7 @@ RCPluginConfData *rc_plugin_conf_load(const gchar *filename)
     return plugin_data;
 
     error_out:
-        rc_debug_perror("Plugin-ERROR: Cannot load plugin!\n");
+        rc_debug_module_perror(module_name, "Cannot load this plugin!");
         if(plugin_dir!=NULL) g_free(plugin_dir);
         if(plugin_path!=NULL) g_free(plugin_path);
         if(plugin_type!=NULL) g_free(plugin_type);
@@ -459,7 +480,7 @@ static gboolean rc_plugin_module_load(const gchar *filename)
     module = g_module_open(filename, G_MODULE_BIND_LOCAL);
     if(module==NULL)
     {
-        rc_debug_perror("Plugin-ERROR: Cannot load plugin: %s\n",
+        rc_debug_module_perror(module_name, "Cannot load plugin: %s",
             g_module_error());
         return FALSE;
     }
@@ -469,8 +490,8 @@ static gboolean rc_plugin_module_load(const gchar *filename)
     {
         g_free(module_data);
         g_module_close(module);
-        rc_debug_perror("Plugin-ERROR: Cannot found entry function:"
-            "rc_plugin_module_init()!\n");
+        rc_debug_module_perror(module_name, "Cannot found entry function: "
+            "rc_plugin_module_init()!");
         return FALSE;
     }
     if(!g_module_symbol(module, "rc_plugin_module_exit",
@@ -478,8 +499,8 @@ static gboolean rc_plugin_module_load(const gchar *filename)
     {
         g_free(module_data);
         g_module_close(module);
-        rc_debug_perror("Plugin-ERROR: Cannot found entry function:"
-            "rc_plugin_module_exit()!\n");
+        rc_debug_module_perror(module_name, "Cannot found entry function: "
+            "rc_plugin_module_exit()!");
         return FALSE;
     }
     if(!g_module_symbol(module, "rc_plugin_module_data",
@@ -487,8 +508,8 @@ static gboolean rc_plugin_module_load(const gchar *filename)
     {
         g_free(module_data);
         g_module_close(module);
-        rc_debug_perror("Plugin-ERROR: Cannot found entry function:"
-            "rc_plugin_module_data()!\n");
+        rc_debug_module_perror(module_name, "Cannot found entry function: "
+            "rc_plugin_module_data()!");
         return FALSE;
     }
     module_data->module = module;
@@ -558,7 +579,7 @@ gboolean rc_plugin_load(RCPluginType type, const gchar *filename)
             return rc_plugin_module_load(filename);
             break;
         default:
-            rc_debug_perror("Plugin-ERROR: Unknown plugin type!\n");
+            rc_debug_module_perror(module_name, "Unknown plugin type!");
     }
     return FALSE;
 }
@@ -589,7 +610,7 @@ gboolean rc_plugin_configure(RCPluginType type, const gchar *filename)
                 module = g_module_open(filename, G_MODULE_BIND_LAZY);
             if(module==NULL)
             {
-                rc_debug_perror("Plugin-ERROR: Cannot load plugin: %s\n",
+                rc_debug_module_perror(module_name, "Cannot load plugin: %s",
                     g_module_error());
                 return FALSE;
             }
@@ -599,15 +620,15 @@ gboolean rc_plugin_configure(RCPluginType type, const gchar *filename)
                 module_configure();
             else
             {
-                rc_debug_print("Plugin: Configure entry function does not "
-                    "exist, or cannot be loaded.\n");
+                rc_debug_module_print(module_name, "Configure entry function "
+                    "does not exist, or cannot be loaded.");
             }
             if(module_data==NULL)
                 g_module_close(module);
             return flag;
             break;
         default:
-            rc_debug_perror("Plugin-ERROR: Unknown plugin type!\n");
+            rc_debug_module_perror(module_name, "Unknown plugin type!");
     }
     return FALSE;
 }
@@ -628,7 +649,7 @@ void rc_plugin_close(RCPluginType type, const gchar *filename)
             rc_plugin_module_close(filename);
             break;
         default:
-            rc_debug_perror("Plugin-ERROR: Unknown plugin type!\n");
+            rc_debug_module_perror(module_name, "Unknown plugin type!");
     }
 }
 
@@ -650,7 +671,7 @@ gboolean rc_plugin_check_running(RCPluginType type, const gchar *path)
             return rc_plugin_module_check_running(path);
             break;
         default:
-            rc_debug_perror("Plugin-ERROR: Unknown plugin type!\n");
+            rc_debug_module_perror(module_name, "Unknown plugin type!");
     }
     return FALSE;
 }
@@ -675,7 +696,30 @@ GSList *rc_plugin_check_exist(RCPluginType type, const gchar *name)
             return rc_plugin_module_check_exist(name);
             break;
         default:
-            rc_debug_perror("Plugin-ERROR: Unknown plugin type!\n");
+            rc_debug_module_perror(module_name, "Unknown plugin type!");
+    }
+    return NULL;
+}
+
+/**
+ * rc_plugin_get_path:
+ * @type: the type of the plugin
+ * @group_name: the group name of the plugin
+ *
+ * Get the file path of the plugin by the given group name.
+ *
+ * Returns: The file path of the plugin, NULL if not found.
+ */
+
+const gchar *rc_plugin_get_path(RCPluginType type, const gchar *group_name)
+{
+    switch(type)
+    {
+        case PLUGIN_TYPE_MODULE:
+            return rc_plugin_module_get_path(group_name);
+            break;
+        default:
+            rc_debug_module_perror(module_name, "Unknown plugin type!");
     }
     return NULL;
 }

@@ -60,6 +60,8 @@ const <a href="/usr/share/gtk-doc/html/glib/glib-Singly-Linked-Lists.html#GSList
                                                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *path</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Singly-Linked-Lists.html#GSList"><span class="returnvalue">GSList</span></a> *            <a class="link" href="RhythmCat-Plugin-Support.html#rc-plugin-check-exist" title="rc_plugin_check_exist ()">rc_plugin_check_exist</a>               (<em class="parameter"><code><a class="link" href="RhythmCat-Plugin-Support.html#RCPluginType" title="enum RCPluginType"><span class="type">RCPluginType</span></a> type</code></em>,
                                                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);
+const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="RhythmCat-Plugin-Support.html#rc-plugin-get-path" title="rc_plugin_get_path ()">rc_plugin_get_path</a>                  (<em class="parameter"><code><a class="link" href="RhythmCat-Plugin-Support.html#RCPluginType" title="enum RCPluginType"><span class="type">RCPluginType</span></a> type</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *group_name</code></em>);
 </pre>
 </div>
 <div class="refsect1" title="Description">
@@ -413,6 +415,35 @@ the configure data item, otherwise NULL.
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td> The plugin configure data item if the configure data exists,
 NULL if not found.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_plugin_get_path ()">
+<a name="rc-plugin-get-path"></a><h3>rc_plugin_get_path ()</h3>
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       rc_plugin_get_path                  (<em class="parameter"><code><a class="link" href="RhythmCat-Plugin-Support.html#RCPluginType" title="enum RCPluginType"><span class="type">RCPluginType</span></a> type</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *group_name</code></em>);</pre>
+<p>
+Get the file path of the plugin by the given group name.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>type</code></em> :</span></p></td>
+<td>the type of the plugin
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>group_name</code></em> :</span></p></td>
+<td>the group name of the plugin
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The file path of the plugin, NULL if not found.
 </td>
 </tr>
 </tbody>

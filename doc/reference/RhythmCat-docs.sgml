@@ -22,6 +22,7 @@
       <xi:include href="xml/player.xml"/>
       <xi:include href="xml/core.xml"/>
       <xi:include href="xml/tag.xml"/>
+      <xi:include href="xml/cue.xml"/>
       <xi:include href="xml/player_object.xml"/>
       <xi:include href="xml/lyric.xml"/>
       <xi:include href="xml/msg.xml"/>

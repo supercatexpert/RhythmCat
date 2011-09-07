@@ -36,6 +36,7 @@ rc_plugin_configure
 rc_plugin_close
 rc_plugin_check_running
 rc_plugin_check_exist
+rc_plugin_get_path
 </SECTION>
 
 <SECTION>
@@ -47,6 +48,17 @@ rc_tag_set_playing_metadata
 rc_tag_get_playing_metadata
 rc_tag_get_name_from_fpath
 rc_tag_find_file
+</SECTION>
+
+<SECTION>
+<FILE>cue</FILE>
+RCMusicMetaData
+RCCueInputType
+RCCueTrack
+rc_cue_read_data
+rc_cue_free
+rc_cue_get_track_num
+rc_cue_get_metadata
 </SECTION>
 
 <SECTION>
@@ -70,6 +82,7 @@ rc_gui_plugin_window_create
 
 <SECTION>
 <FILE>msg</FILE>
+RCMusicMetaData
 RCMsgAsyncQueueWatchFunc
 RCMsgType
 RCMsgData
@@ -85,6 +98,10 @@ rc_debug_get_flag
 rc_debug_set_mode
 rc_debug_print
 rc_debug_perror
+rc_debug_pmsg
+rc_debug_module_pmsg
+rc_debug_module_print
+rc_debug_module_perror
 </SECTION>
 
 <SECTION>
@@ -216,24 +233,9 @@ rc_gui_list2_get_cursor
 </SECTION>
 
 <SECTION>
-<FILE>gui_vis</FILE>
-<TITLE>RCGuiAudioVis</TITLE>
-RC_GUI_AUDIO_VIS_TYPE
-RC_GUI_AUDIO_VIS
-RC_GUI_AUDIO_VIS_CLASS
-IS_RC_GUI_AUDIO_VIS
-IS_RC_GUI_AUDIO_VIS_CLASS
-RCGuiAudioVis
-RCGuiAudioVisClass
-rc_gui_audio_vis_get_type
-rc_gui_audio_vis_new
-rc_gui_audio_vis_set_style
-rc_gui_audio_vis_get_style
-</SECTION>
-
-<SECTION>
 <FILE>gui</FILE>
 RCGuiData
+RCMusicMetaData
 rc_gui_get_data
 rc_gui_init
 rc_gui_quit_player
@@ -249,6 +251,7 @@ rc_gui_set_cover_image_by_buf
 rc_gui_status_task_set
 rc_gui_status_progress_set_progress
 rc_gui_view_add_page
+rc_gui_view_add_page_with_label
 rc_gui_view_remove_page
 rc_gui_get_tray_icon
 rc_gui_get_ui_manager

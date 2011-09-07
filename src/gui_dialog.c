@@ -42,6 +42,8 @@
  * Show dialogs in the player.
  */
 
+static const gchar *module_name = "GUI";
+
 static gboolean rc_gui_music_file_filter(const GtkFileFilterInfo *info,
     gpointer data)
 {
@@ -78,7 +80,8 @@ static void rc_gui_open_music_dir_recu(const gchar *dir_name, gint depth)
             rc_plist_insert_music(uri, rc_gui_list1_get_selected_index(), -1);
             count++;
             g_free(uri);
-            rc_debug_print("GUI: Inserted %d file(s)!\n", count);
+            rc_debug_module_pmsg(module_name,
+                "Added %d file(s) to be processed.", count);
         }
         g_free(full_file_name);
     }

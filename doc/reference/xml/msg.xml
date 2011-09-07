@@ -23,6 +23,7 @@
 <synopsis>
 #include &lt;msg.h&gt;
 
+                    <link linkend="RCMusicMetaData">RCMusicMetaData</link>;
 <link linkend="void"><returnvalue>void</returnvalue></link>                (<link linkend="RCMsgAsyncQueueWatchFunc">*RCMsgAsyncQueueWatchFunc</link>)         (<parameter><link linkend="gpointer"><type>gpointer</type></link> item</parameter>,
                                                          <parameter><link linkend="gpointer"><type>gpointer</type></link> data</parameter>);
 enum                <link linkend="RCMsgType">RCMsgType</link>;
@@ -48,6 +49,101 @@ and other threads.
 </refsect1>
 <refsect1 id="RhythmCat-Asynchronous-Message-Queue.details" role="details">
 <title role="details.title">Details</title>
+<refsect2 id="RCMusicMetaData" role="struct">
+<title>RCMusicMetaData</title>
+<indexterm zone="RCMusicMetaData"><primary>RCMusicMetaData</primary></indexterm>
+<programlisting>typedef struct {
+    gint64 length;
+    gchar *uri;
+    guint tracknum;
+    guint bitrate;
+    gint samplerate;
+    gint channels;
+    gchar *title;
+    gchar *artist;
+    gchar *album;
+    gchar *comment;
+    gchar *file_type;
+    gchar *emb_cue;
+    GstBuffer *image;
+    gboolean eos;
+    gboolean audio_flag;
+    gboolean video_flag;
+    gpointer user_data;
+} RCMusicMetaData;
+</programlisting>
+<para>
+Custom struct type to store the music metadata.
+</para><variablelist role="struct">
+<varlistentry><term><link linkend="gint64"><type>gint64</type></link>&#160;<structfield id="RCMusicMetaData.length">length</structfield>;</term>
+<listitem><simpara>the length of the music
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gchar"><type>gchar</type></link>&#160;*<structfield id="RCMusicMetaData.uri">uri</structfield>;</term>
+<listitem><simpara>the URI of the music
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="guint"><type>guint</type></link>&#160;<structfield id="RCMusicMetaData.tracknum">tracknum</structfield>;</term>
+<listitem><simpara>the track number of the music
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="guint"><type>guint</type></link>&#160;<structfield id="RCMusicMetaData.bitrate">bitrate</structfield>;</term>
+<listitem><simpara>the bitrate of the music
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gint"><type>gint</type></link>&#160;<structfield id="RCMusicMetaData.samplerate">samplerate</structfield>;</term>
+<listitem><simpara>the sample rate of the music
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gint"><type>gint</type></link>&#160;<structfield id="RCMusicMetaData.channels">channels</structfield>;</term>
+<listitem><simpara>the channel number of the music
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gchar"><type>gchar</type></link>&#160;*<structfield id="RCMusicMetaData.title">title</structfield>;</term>
+<listitem><simpara>the title text of the music
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gchar"><type>gchar</type></link>&#160;*<structfield id="RCMusicMetaData.artist">artist</structfield>;</term>
+<listitem><simpara>the artist text of the music
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gchar"><type>gchar</type></link>&#160;*<structfield id="RCMusicMetaData.album">album</structfield>;</term>
+<listitem><simpara>the album text of the music
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gchar"><type>gchar</type></link>&#160;*<structfield id="RCMusicMetaData.comment">comment</structfield>;</term>
+<listitem><simpara>the comment text of the music
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gchar"><type>gchar</type></link>&#160;*<structfield id="RCMusicMetaData.file-type">file_type</structfield>;</term>
+<listitem><simpara>the file type of the music
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gchar"><type>gchar</type></link>&#160;*<structfield id="RCMusicMetaData.emb-cue">emb_cue</structfield>;</term>
+<listitem><simpara>the embeded CUE data of the music
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GstBuffer"><type>GstBuffer</type></link>&#160;*<structfield id="RCMusicMetaData.image">image</structfield>;</term>
+<listitem><simpara>the GstBuffer which contains the cover image
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gboolean"><type>gboolean</type></link>&#160;<structfield id="RCMusicMetaData.eos">eos</structfield>;</term>
+<listitem><simpara>the EOS signal
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gboolean"><type>gboolean</type></link>&#160;<structfield id="RCMusicMetaData.audio-flag">audio_flag</structfield>;</term>
+<listitem><simpara>whether this file has audio
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gboolean"><type>gboolean</type></link>&#160;<structfield id="RCMusicMetaData.video-flag">video_flag</structfield>;</term>
+<listitem><simpara>whether this file has video
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gpointer"><type>gpointer</type></link>&#160;<structfield id="RCMusicMetaData.user-data">user_data</structfield>;</term>
+<listitem><simpara>the user data
+</simpara></listitem>
+</varlistentry>
+</variablelist></refsect2>
 <refsect2 id="RCMsgAsyncQueueWatchFunc" role="function">
 <title>RCMsgAsyncQueueWatchFunc ()</title>
 <indexterm zone="RCMsgAsyncQueueWatchFunc"><primary>RCMsgAsyncQueueWatchFunc</primary></indexterm>

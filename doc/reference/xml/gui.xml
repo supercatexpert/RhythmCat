@@ -24,11 +24,12 @@
 #include &lt;gui.h&gt;
 
                     <link linkend="RCGuiData">RCGuiData</link>;
+                    <link linkend="RCMusicMetaData">RCMusicMetaData</link>;
 <link linkend="RCGuiData"><returnvalue>RCGuiData</returnvalue></link> *         <link linkend="rc-gui-get-data">rc_gui_get_data</link>                     ();
 <link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-gui-init">rc_gui_init</link>                         ();
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-quit-player">rc_gui_quit_player</link>                  ();
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-music-info-set-data">rc_gui_music_info_set_data</link>          (<parameter>const <link linkend="gchar"><type>gchar</type></link> *title</parameter>,
-                                                         <parameter>const <link linkend="gpointer"><type>gpointer</type></link> data</parameter>);
+                                                         <parameter>const <type>struct RCMusicMetaData</type> *data</parameter>);
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-time-label-set-text">rc_gui_time_label_set_text</link>          (<parameter><link linkend="gint64"><type>gint64</type></link> time</parameter>);
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-set-play-button-state">rc_gui_set_play_button_state</link>        (<parameter><link linkend="gboolean"><type>gboolean</type></link> state</parameter>);
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-seek-scaler-disable">rc_gui_seek_scaler_disable</link>          ();
@@ -42,6 +43,10 @@
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-status-progress-set-progress">rc_gui_status_progress_set_progress</link> ();
 <link linkend="guint"><returnvalue>guint</returnvalue></link>               <link linkend="rc-gui-view-add-page">rc_gui_view_add_page</link>                (<parameter>const <link linkend="gchar"><type>gchar</type></link> *name</parameter>,
                                                          <parameter>const <link linkend="gchar"><type>gchar</type></link> *title</parameter>,
+                                                         <parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *widget</parameter>);
+<link linkend="guint"><returnvalue>guint</returnvalue></link>               <link linkend="rc-gui-view-add-page-with-label">rc_gui_view_add_page_with_label</link>     (<parameter>const <link linkend="gchar"><type>gchar</type></link> *name</parameter>,
+                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *title</parameter>,
+                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *label_text</parameter>,
                                                          <parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *widget</parameter>);
 <link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-gui-view-remove-page">rc_gui_view_remove_page</link>             (<parameter><link linkend="guint"><type>guint</type></link> id</parameter>);
 <link linkend="GtkStatusIcon"><returnvalue>GtkStatusIcon</returnvalue></link> *     <link linkend="rc-gui-get-tray-icon">rc_gui_get_tray_icon</link>                ();
@@ -73,8 +78,8 @@ Show the main UI of the player.
     GtkWidget *title_label, *artist_label, *album_label;
     GtkWidget *time_label, *length_label, *info_label;
     GtkWidget *album_image, *album_eventbox, *album_frame;
-    GtkWidget *control_images[8];
-    GtkWidget *control_buttons[8];
+    GtkWidget *control_images[5];
+    GtkWidget *control_buttons[5];
     GtkWidget *volume_button;
     GtkWidget *time_scroll_bar;
     GtkWidget *lrc_scrolled_label;
@@ -157,11 +162,11 @@ Please do not change the data in this structure.
 <listitem><simpara>the frame of album image widget
 </simpara></listitem>
 </varlistentry>
-<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.control-images">control_images</structfield>[8];</term>
+<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.control-images">control_images</structfield>[5];</term>
 <listitem><simpara>the images of control buttons
 </simpara></listitem>
 </varlistentry>
-<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.control-buttons">control_buttons</structfield>[8];</term>
+<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;*<structfield id="RCGuiData.control-buttons">control_buttons</structfield>[5];</term>
 <listitem><simpara>the button widgets of control buttons
 </simpara></listitem>
 </varlistentry>
@@ -270,6 +275,101 @@ Please do not change the data in this structure.
 </simpara></listitem>
 </varlistentry>
 </variablelist></refsect2>
+<refsect2 id="RCMusicMetaData" role="struct">
+<title>RCMusicMetaData</title>
+<indexterm zone="RCMusicMetaData"><primary>RCMusicMetaData</primary></indexterm>
+<programlisting>typedef struct {
+    gint64 length;
+    gchar *uri;
+    guint tracknum;
+    guint bitrate;
+    gint samplerate;
+    gint channels;
+    gchar *title;
+    gchar *artist;
+    gchar *album;
+    gchar *comment;
+    gchar *file_type;
+    gchar *emb_cue;
+    GstBuffer *image;
+    gboolean eos;
+    gboolean audio_flag;
+    gboolean video_flag;
+    gpointer user_data;
+} RCMusicMetaData;
+</programlisting>
+<para>
+Custom struct type to store the music metadata.
+</para><variablelist role="struct">
+<varlistentry><term><link linkend="gint64"><type>gint64</type></link>&#160;<structfield id="RCMusicMetaData.length">length</structfield>;</term>
+<listitem><simpara>the length of the music
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gchar"><type>gchar</type></link>&#160;*<structfield id="RCMusicMetaData.uri">uri</structfield>;</term>
+<listitem><simpara>the URI of the music
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="guint"><type>guint</type></link>&#160;<structfield id="RCMusicMetaData.tracknum">tracknum</structfield>;</term>
+<listitem><simpara>the track number of the music
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="guint"><type>guint</type></link>&#160;<structfield id="RCMusicMetaData.bitrate">bitrate</structfield>;</term>
+<listitem><simpara>the bitrate of the music
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gint"><type>gint</type></link>&#160;<structfield id="RCMusicMetaData.samplerate">samplerate</structfield>;</term>
+<listitem><simpara>the sample rate of the music
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gint"><type>gint</type></link>&#160;<structfield id="RCMusicMetaData.channels">channels</structfield>;</term>
+<listitem><simpara>the channel number of the music
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gchar"><type>gchar</type></link>&#160;*<structfield id="RCMusicMetaData.title">title</structfield>;</term>
+<listitem><simpara>the title text of the music
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gchar"><type>gchar</type></link>&#160;*<structfield id="RCMusicMetaData.artist">artist</structfield>;</term>
+<listitem><simpara>the artist text of the music
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gchar"><type>gchar</type></link>&#160;*<structfield id="RCMusicMetaData.album">album</structfield>;</term>
+<listitem><simpara>the album text of the music
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gchar"><type>gchar</type></link>&#160;*<structfield id="RCMusicMetaData.comment">comment</structfield>;</term>
+<listitem><simpara>the comment text of the music
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gchar"><type>gchar</type></link>&#160;*<structfield id="RCMusicMetaData.file-type">file_type</structfield>;</term>
+<listitem><simpara>the file type of the music
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gchar"><type>gchar</type></link>&#160;*<structfield id="RCMusicMetaData.emb-cue">emb_cue</structfield>;</term>
+<listitem><simpara>the embeded CUE data of the music
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GstBuffer"><type>GstBuffer</type></link>&#160;*<structfield id="RCMusicMetaData.image">image</structfield>;</term>
+<listitem><simpara>the GstBuffer which contains the cover image
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gboolean"><type>gboolean</type></link>&#160;<structfield id="RCMusicMetaData.eos">eos</structfield>;</term>
+<listitem><simpara>the EOS signal
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gboolean"><type>gboolean</type></link>&#160;<structfield id="RCMusicMetaData.audio-flag">audio_flag</structfield>;</term>
+<listitem><simpara>whether this file has audio
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gboolean"><type>gboolean</type></link>&#160;<structfield id="RCMusicMetaData.video-flag">video_flag</structfield>;</term>
+<listitem><simpara>whether this file has video
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gpointer"><type>gpointer</type></link>&#160;<structfield id="RCMusicMetaData.user-data">user_data</structfield>;</term>
+<listitem><simpara>the user data
+</simpara></listitem>
+</varlistentry>
+</variablelist></refsect2>
 <refsect2 id="rc-gui-get-data" role="function">
 <title>rc_gui_get_data ()</title>
 <indexterm zone="rc-gui-get-data"><primary>rc_gui_get_data</primary></indexterm>
@@ -302,7 +402,7 @@ Quit the player.
 <title>rc_gui_music_info_set_data ()</title>
 <indexterm zone="rc-gui-music-info-set-data"><primary>rc_gui_music_info_set_data</primary></indexterm>
 <programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_music_info_set_data          (<parameter>const <link linkend="gchar"><type>gchar</type></link> *title</parameter>,
-                                                         <parameter>const <link linkend="gpointer"><type>gpointer</type></link> data</parameter>);</programlisting>
+                                                         <parameter>const <type>struct RCMusicMetaData</type> *data</parameter>);</programlisting>
 <para>
 Set the data in the information labels.
 </para><variablelist role="params">
@@ -432,6 +532,31 @@ Add new view page and menu to player.
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>title</parameter>&#160;:</term>
 <listitem><simpara>the string which shows on the menu
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>widget</parameter>&#160;:</term>
+<listitem><simpara>the widget to add to the page 
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The unique ID of the added page.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-gui-view-add-page-with-label" role="function">
+<title>rc_gui_view_add_page_with_label ()</title>
+<indexterm zone="rc-gui-view-add-page-with-label"><primary>rc_gui_view_add_page_with_label</primary></indexterm>
+<programlisting><link linkend="guint"><returnvalue>guint</returnvalue></link>               rc_gui_view_add_page_with_label     (<parameter>const <link linkend="gchar"><type>gchar</type></link> *name</parameter>,
+                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *title</parameter>,
+                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *label_text</parameter>,
+                                                         <parameter><link linkend="GtkWidget"><type>GtkWidget</type></link> *widget</parameter>);</programlisting>
+<para>
+Add new view page and menu to player.
+</para><variablelist role="params">
+<varlistentry><term><parameter>name</parameter>&#160;:</term>
+<listitem><simpara>the name of the menu to add
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>title</parameter>&#160;:</term>
+<listitem><simpara>the string which shows on the menu
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>label_text</parameter>&#160;:</term>
+<listitem><simpara>the label show on the notebook tab
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>widget</parameter>&#160;:</term>
 <listitem><simpara>the widget to add to the page 

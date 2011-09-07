@@ -16,6 +16,24 @@ GtkWindow#RCMiniWindow GtkEventBox
         from (#282828), to (#282828));
 }
 
+GtkWindow#RCMainWindow GtkNotebook#RCPlistNotebook
+{
+    color: #F0F0F0;
+    background-color: #282828;
+    background-image: -gtk-gradient (linear,
+        left top, right bottom,
+        from (#282828), to (#282828));
+}
+
+GtkWindow#RCMainWindow GtkNotebook#RCPlistNotebook:active
+{
+    color: #F0F0F0;
+    background-color: #505050;
+    background-image: -gtk-gradient (linear,
+        left top, right bottom,
+        from (#505050), to (#505050));
+}
+
 GtkWindow#RCMainWindow GtkLabel#RCTitleLabel,
 GtkWindow#RCMainWindow GtkLabel#RCArtistLabel,
 GtkWindow#RCMainWindow GtkLabel#RCAlbumLabel,

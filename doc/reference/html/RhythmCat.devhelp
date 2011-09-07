@@ -7,6 +7,7 @@
         <sub name="Player" link="RhythmCat-Player.html"/>
         <sub name="Core" link="RhythmCat-Core.html"/>
         <sub name="Tag" link="RhythmCat-Tag.html"/>
+        <sub name="CUE Parser" link="RhythmCat-CUE-Parser.html"/>
         <sub name="Player Object" link="RCPlayer.html"/>
         <sub name="Lyric" link="RhythmCat-Lyric.html"/>
         <sub name="Asynchronous Message Queue" link="RhythmCat-Asynchronous-Message-Queue.html"/>
@@ -75,6 +76,13 @@
     <function name="rc_tag_get_playing_metadata ()" link="RhythmCat-Tag.html#rc-tag-get-playing-metadata"/>
     <function name="rc_tag_get_name_from_fpath ()" link="RhythmCat-Tag.html#rc-tag-get-name-from-fpath"/>
     <function name="rc_tag_find_file ()" link="RhythmCat-Tag.html#rc-tag-find-file"/>
+    <function name="RCMusicMetaData" link="RhythmCat-CUE-Parser.html#RCMusicMetaData"/>
+    <function name="enum RCCueInputType" link="RhythmCat-CUE-Parser.html#RCCueInputType"/>
+    <function name="RCCueTrack" link="RhythmCat-CUE-Parser.html#RCCueTrack"/>
+    <function name="rc_cue_read_data ()" link="RhythmCat-CUE-Parser.html#rc-cue-read-data"/>
+    <function name="rc_cue_free ()" link="RhythmCat-CUE-Parser.html#rc-cue-free"/>
+    <function name="rc_cue_get_track_num ()" link="RhythmCat-CUE-Parser.html#rc-cue-get-track-num"/>
+    <function name="rc_cue_get_metadata ()" link="RhythmCat-CUE-Parser.html#rc-cue-get-metadata"/>
     <function name="RC_PLAYER_TYPE" link="RCPlayer.html#RC-PLAYER-TYPE:CAPS"/>
     <function name="RCPlayer" link="RCPlayer.html#RCPlayer-struct"/>
     <function name="RCPlayerClass" link="RCPlayer.html#RCPlayerClass"/>
@@ -102,6 +110,7 @@
     <function name="rc_lrc_get_text_data ()" link="RhythmCat-Lyric.html#rc-lrc-get-text-data"/>
     <function name="rc_lrc_get_line_by_time ()" link="RhythmCat-Lyric.html#rc-lrc-get-line-by-time"/>
     <function name="rc_lrc_get_line_now ()" link="RhythmCat-Lyric.html#rc-lrc-get-line-now"/>
+    <function name="RCMusicMetaData" link="RhythmCat-Asynchronous-Message-Queue.html#RCMusicMetaData"/>
     <function name="RCMsgAsyncQueueWatchFunc ()" link="RhythmCat-Asynchronous-Message-Queue.html#RCMsgAsyncQueueWatchFunc"/>
     <function name="enum RCMsgType" link="RhythmCat-Asynchronous-Message-Queue.html#RCMsgType"/>
     <function name="RCMsgData" link="RhythmCat-Asynchronous-Message-Queue.html#RCMsgData"/>
@@ -180,12 +189,18 @@
     <function name="rc_plugin_close ()" link="RhythmCat-Plugin-Support.html#rc-plugin-close"/>
     <function name="rc_plugin_check_running ()" link="RhythmCat-Plugin-Support.html#rc-plugin-check-running"/>
     <function name="rc_plugin_check_exist ()" link="RhythmCat-Plugin-Support.html#rc-plugin-check-exist"/>
+    <function name="rc_plugin_get_path ()" link="RhythmCat-Plugin-Support.html#rc-plugin-get-path"/>
     <function name="DEBUG_MODE" link="RhythmCat-Debug.html#DEBUG-MODE:CAPS"/>
     <function name="rc_debug_get_flag ()" link="RhythmCat-Debug.html#rc-debug-get-flag"/>
     <function name="rc_debug_set_mode ()" link="RhythmCat-Debug.html#rc-debug-set-mode"/>
     <function name="rc_debug_print ()" link="RhythmCat-Debug.html#rc-debug-print"/>
     <function name="rc_debug_perror ()" link="RhythmCat-Debug.html#rc-debug-perror"/>
+    <function name="rc_debug_pmsg ()" link="RhythmCat-Debug.html#rc-debug-pmsg"/>
+    <function name="rc_debug_module_pmsg ()" link="RhythmCat-Debug.html#rc-debug-module-pmsg"/>
+    <function name="rc_debug_module_print ()" link="RhythmCat-Debug.html#rc-debug-module-print"/>
+    <function name="rc_debug_module_perror ()" link="RhythmCat-Debug.html#rc-debug-module-perror"/>
     <function name="RCGuiData" link="RhythmCat-Main-UI.html#RCGuiData"/>
+    <function name="RCMusicMetaData" link="RhythmCat-Main-UI.html#RCMusicMetaData"/>
     <function name="rc_gui_get_data ()" link="RhythmCat-Main-UI.html#rc-gui-get-data"/>
     <function name="rc_gui_init ()" link="RhythmCat-Main-UI.html#rc-gui-init"/>
     <function name="rc_gui_quit_player ()" link="RhythmCat-Main-UI.html#rc-gui-quit-player"/>
@@ -201,6 +216,7 @@
     <function name="rc_gui_status_task_set ()" link="RhythmCat-Main-UI.html#rc-gui-status-task-set"/>
     <function name="rc_gui_status_progress_set_progress ()" link="RhythmCat-Main-UI.html#rc-gui-status-progress-set-progress"/>
     <function name="rc_gui_view_add_page ()" link="RhythmCat-Main-UI.html#rc-gui-view-add-page"/>
+    <function name="rc_gui_view_add_page_with_label ()" link="RhythmCat-Main-UI.html#rc-gui-view-add-page-with-label"/>
     <function name="rc_gui_view_remove_page ()" link="RhythmCat-Main-UI.html#rc-gui-view-remove-page"/>
     <function name="rc_gui_get_tray_icon ()" link="RhythmCat-Main-UI.html#rc-gui-get-tray-icon"/>
     <function name="rc_gui_get_ui_manager ()" link="RhythmCat-Main-UI.html#rc-gui-get-ui-manager"/>
@@ -270,13 +286,13 @@
     <function name="rc_gui_mini_normal_mode_clicked ()" link="RhythmCat-Mini-Mode-UI.html#rc-gui-mini-normal-mode-clicked"/>
     <function name="rc_gui_create_setting_window ()" link="RhythmCat-Settings-UI.html#rc-gui-create-setting-window"/>
     <function name="rc_gui_plugin_window_create ()" link="RhythmCat-Plugin-Configuration-UI.html#rc-gui-plugin-window-create"/>
-    <function name="Introduction" link="PluginProgramming.html#id567737"/>
-    <function name="Preparation" link="PluginProgramming.html#id571890"/>
-    <function name="Implement a simple plugin" link="PluginProgramming.html#id546438"/>
-    <function name="How to compile the plugin" link="PluginProgramming.html#id581523"/>
-    <function name="Write a plugin description file" link="PluginProgramming.html#id566137"/>
-    <function name="Make your custom plugin work" link="PluginProgramming.html#id584413"/>
-    <function name="Catch signals in the player" link="PluginProgramming.html#id563134"/>
-    <function name="About this manual" link="PluginProgramming.html#id556918"/>
+    <function name="Introduction" link="PluginProgramming.html#id548126"/>
+    <function name="Preparation" link="PluginProgramming.html#id518725"/>
+    <function name="Implement a simple plugin" link="PluginProgramming.html#id526059"/>
+    <function name="How to compile the plugin" link="PluginProgramming.html#id516196"/>
+    <function name="Write a plugin description file" link="PluginProgramming.html#id540938"/>
+    <function name="Make your custom plugin work" link="PluginProgramming.html#id485108"/>
+    <function name="Catch signals in the player" link="PluginProgramming.html#id521655"/>
+    <function name="About this manual" link="PluginProgramming.html#id540764"/>
   </functions>
 </book>

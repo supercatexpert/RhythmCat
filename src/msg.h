@@ -32,6 +32,8 @@
 
 G_BEGIN_DECLS
 
+struct RCMusicMetaData;
+
 /**
  * RCMsgAsyncQueueWatchFunc:
  * @item: queue item
@@ -58,7 +60,7 @@ typedef struct RCMsgPlistData
     gint list2_index;
     GtkTreeRowReference *reference;
     GtkListStore *store;
-    gpointer *mmd;
+    struct RCMusicMetaData *mmd;
 }RCMsgPlistData;
 
 /**

@@ -36,6 +36,7 @@
 #include "debug.h"
 #include "player_object.h"
 #include "shell.h"
+#include "cue.h"
 
 /**
  * SECTION: playlist
@@ -65,6 +66,7 @@ typedef struct RCPlistImportData {
 }RCPlistImportData;
 
 /* Variables */
+static const gchar *module_name = "Plist";
 static gchar play_list_setting_file[] = "playlist.dat";
 static gchar *default_list_name = "[Default]";
 static RCPlistData rc_plist;
@@ -80,34 +82,188 @@ static GCancellable *plist_import_thread_cancel = NULL;
 
 static gpointer rc_plist_import_job_func(gpointer data)
 {
-    RCMusicMetaData *mmd = NULL;
+    RCMusicMetaData *mmd = NULL, *cue_mmd = NULL;
     RCMsgPlistData *msg;
     RCPlistImportData *import_data;
+    RCCueData cue_data;
+    gboolean cue_flag, cue_embeded_flag;
+    gchar *cue_uri = NULL;
+    gint track_num;
+    guint i;
     plist_import_thread_cancel = g_cancellable_new();
+    rc_debug_module_pmsg(module_name, "Job thread started!");
     while(plist_import_job_flag)
     {
         import_data = g_async_queue_pop(plist_import_job_queue);
         if(import_data==NULL) continue;
         if(import_data->uri!=NULL)
         {
-            mmd = rc_tag_read_metadata(import_data->uri);
-            g_free(import_data->uri);
-            if(mmd==NULL || !mmd->audio_flag)
+            cue_flag = FALSE;
+            cue_embeded_flag = FALSE;
+            cue_uri = NULL;
+            if(g_regex_match_simple("(.CUE)$", import_data->uri,
+                G_REGEX_CASELESS, 0) && !import_data->refresh_flag)
             {
-                rc_debug_print("Plist: The file is not a music file!\n");
-                if(mmd!=NULL) rc_tag_free(mmd);
-                if(import_data->auto_clean)
-                    rc_msg_push(MSG_TYPE_PL_REMOVE, import_data->reference);
+                if(rc_cue_read_data(import_data->uri, RC_CUE_INPUT_URI,
+                    &cue_data)>0)
+                {
+                    cue_flag = TRUE;
+                    cue_mmd = rc_tag_read_metadata(cue_data.file);
+                    for(i=0;i<cue_data.length;i++)
+                    {
+                        mmd = rc_cue_get_metadata(&cue_data, i, cue_mmd);
+                        if(mmd==NULL) continue;
+                        if(mmd->uri!=NULL) g_free(mmd->uri);
+                        mmd->uri = g_strdup_printf("%s:%d",
+                            import_data->uri, i+1);
+                        msg = g_malloc0(sizeof(RCMsgPlistData));
+                        msg->list2_index = import_data->list2_index;
+                        if(import_data->list2_index>=0)
+                            msg->list2_index += i;
+                        msg->store = import_data->store;
+                        msg->mmd = mmd;
+                        rc_msg_push(MSG_TYPE_PL_INSERT, msg);
+                    }
+                    rc_tag_free(cue_mmd);
+                }
                 else
-                    rc_msg_push(MSG_TYPE_PL_INVALID, import_data->reference);
+                    rc_msg_push(MSG_TYPE_EMPTY, NULL);
+                rc_cue_free(&cue_data);
+                g_free(import_data->uri);
                 g_free(import_data);
                 continue;
             }
-            msg = g_malloc(sizeof(RCMsgPlistData));
+            track_num = 0;
+            if(rc_cue_get_track_num(import_data->uri, &cue_uri, &track_num))
+            {
+                if(g_regex_match_simple("(.CUE)$", cue_uri, G_REGEX_CASELESS,
+                    0))
+                {
+                    mmd = NULL;
+                    if(rc_cue_read_data(cue_uri, RC_CUE_INPUT_URI,
+                        &cue_data)>0)
+                    {
+                        cue_flag = TRUE;
+                        mmd = rc_cue_get_metadata(&cue_data, track_num-1, NULL);
+                        if(mmd!=NULL)
+                        {
+                            if(mmd->uri!=NULL) g_free(mmd->uri);
+                                mmd->uri = g_strdup(import_data->uri);
+                            msg = g_malloc0(sizeof(RCMsgPlistData));
+                            msg->list2_index = import_data->list2_index;
+                            msg->store = import_data->store;
+                            msg->reference = import_data->reference;
+                            msg->mmd = mmd;
+                            if(!import_data->refresh_flag)
+                                rc_msg_push(MSG_TYPE_PL_INSERT, msg);
+                            else
+                                rc_msg_push(MSG_TYPE_PL_REFRESH, msg);
+                        }
+                    }
+                    rc_cue_free(&cue_data);
+                    if(mmd==NULL)
+                    {
+                        if(import_data->refresh_flag &&
+                            import_data->reference!=NULL)
+                        {
+                            if(import_data->auto_clean)
+                                rc_msg_push(MSG_TYPE_PL_REMOVE,
+                                    import_data->reference);
+                            else
+                                rc_msg_push(MSG_TYPE_PL_INVALID,
+                                    import_data->reference);
+                        }
+                        else
+                            rc_msg_push(MSG_TYPE_EMPTY, NULL);
+                    }
+                    if(cue_uri!=NULL) g_free(cue_uri);
+                    g_free(import_data->uri);
+                    g_free(import_data);
+                    continue;
+                }
+                else
+                {
+                    g_free(import_data->uri);
+                    import_data->uri = g_strdup(cue_uri);
+                }
+                if(cue_uri!=NULL) g_free(cue_uri);
+            }
+            mmd = rc_tag_read_metadata(import_data->uri);
+            g_free(import_data->uri);
+            if(mmd!=NULL && mmd->emb_cue!=NULL)
+            {
+                if(rc_cue_read_data(mmd->emb_cue, RC_CUE_INPUT_EMBEDED,
+                    &cue_data)>0)
+                {
+                    if(track_num>0)
+                    {
+                        cue_flag = TRUE;
+                        cue_embeded_flag = TRUE;
+                        cue_mmd = rc_cue_get_metadata(&cue_data, track_num-1,
+                            mmd);
+                        if(cue_mmd!=NULL)
+                        {
+                            msg = g_malloc0(sizeof(RCMsgPlistData));
+                            msg->list2_index = import_data->list2_index;
+                            msg->store = import_data->store;
+                            msg->reference = import_data->reference;
+                            msg->mmd = cue_mmd;
+                            if(!import_data->refresh_flag)
+                                rc_msg_push(MSG_TYPE_PL_INSERT, msg);
+                            else
+                                rc_msg_push(MSG_TYPE_PL_REFRESH, msg);
+                        }
+                    }
+                    else if(!import_data->refresh_flag)
+                    {
+                        cue_flag = TRUE;
+                        cue_embeded_flag = TRUE;
+                        for(i=0;i<cue_data.length;i++)
+                        {
+                            cue_mmd = rc_cue_get_metadata(&cue_data, i, mmd);
+                            if(cue_mmd==NULL) continue;
+                            msg = g_malloc0(sizeof(RCMsgPlistData));
+                            msg->list2_index = import_data->list2_index;
+                            if(import_data->list2_index>=0)
+                                msg->list2_index += i;
+                            msg->store = import_data->store;
+                            msg->mmd = cue_mmd;
+                            rc_msg_push(MSG_TYPE_PL_INSERT, msg);
+                        }
+                    }
+                    else
+                        rc_msg_push(MSG_TYPE_EMPTY, NULL);
+
+                }
+                else
+                    rc_msg_push(MSG_TYPE_EMPTY, NULL);
+                rc_cue_free(&cue_data);
+                rc_tag_free(mmd);
+                g_free(import_data);
+                continue;
+            }
+            if(mmd==NULL || !mmd->audio_flag)
+            {
+                rc_debug_module_perror(module_name,
+                    "The file is not a music file!");
+                if(mmd!=NULL) rc_tag_free(mmd);
+                if(import_data->refresh_flag && import_data->reference!=NULL)
+                {
+                    if(import_data->auto_clean)
+                        rc_msg_push(MSG_TYPE_PL_REMOVE,
+                            import_data->reference);
+                    else
+                        rc_msg_push(MSG_TYPE_PL_INVALID,
+                            import_data->reference);
+                }
+                g_free(import_data);
+                continue;
+            }
+            msg = g_malloc0(sizeof(RCMsgPlistData));
             msg->list2_index = import_data->list2_index;
             msg->reference = import_data->reference;
             msg->store = import_data->store;
-            msg->mmd = (gpointer)mmd;
+            msg->mmd = mmd;
             if(!import_data->refresh_flag)
                 rc_msg_push(MSG_TYPE_PL_INSERT, msg);
             else
@@ -115,7 +271,7 @@ static gpointer rc_plist_import_job_func(gpointer data)
         }
         g_free(import_data);
     }
-    rc_debug_print("Plist: Job thread cancelled!\n");
+    rc_debug_module_pmsg(module_name, "Job thread exited!");
     return NULL;
 }
 
@@ -134,7 +290,7 @@ gboolean rc_plist_init()
     gint i;
     if(init) return FALSE;
     init = TRUE;
-    rc_debug_print("Plist: Loading playlists...\n");
+    rc_debug_module_pmsg(module_name, "Loading...");
     default_list_name = _("Default Playlist");
     bzero(&rc_plist, sizeof(RCPlistData));
     rc_plist.list_store = gtk_list_store_new(PLIST1_LAST, G_TYPE_STRING,
@@ -151,13 +307,14 @@ gboolean rc_plist_init()
             (GThreadFunc)rc_plist_import_job_func, NULL, FALSE, &error);
         if(error!=NULL)
         {
-            rc_debug_perror("Plist-ERROR: %s\n", error->message);
+            rc_debug_module_perror(module_name,
+                "Cannot create job thread, %s.", error->message);
             g_error_free(error);
         }
     }
     plist_import_job_flag = TRUE;
     rc_gui_set_player_mode();
-    rc_debug_print("Plist: Playlists are successfully loaded!\n");
+    rc_debug_module_pmsg(module_name, "Loaded successfully!");
     return TRUE;
 }
 
@@ -437,13 +594,17 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
     gchar *cover_filename = NULL;
     gchar *fpathname = NULL;
     gchar *realname = NULL;
-    RCMusicMetaData *mmd_new = NULL;
+    RCMusicMetaData *mmd_new = NULL, *cue_mmd = NULL;
     gboolean image_flag = FALSE;
+    gchar *cue_uri;
+    RCCueData cue_data;
+    gint64 cue_start_time = 0;
+    gboolean cue_flag = TRUE;
     list_store = rc_plist_get_list_store(list_index);
     path = gtk_tree_path_new_from_indices(music_index, -1);
     if(!gtk_tree_model_get_iter(GTK_TREE_MODEL(list_store), &iter, path))
     {
-        rc_debug_perror("Plist-ERROR: Cannot find iter!\n");
+        rc_debug_module_perror(module_name, "Cannot find iter!");
         if(path!=NULL) gtk_tree_path_free(path);
         return FALSE;
     }
@@ -454,11 +615,49 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
     {
         return FALSE;
     }
-    mmd_new = rc_tag_read_metadata(list_uri);
+    if(rc_cue_get_track_num(list_uri, &cue_uri, &trackno))
+    {
+        if(g_regex_match_simple("(.CUE)$", cue_uri, G_REGEX_CASELESS, 0))
+        {
+            if(rc_cue_read_data(cue_uri, RC_CUE_INPUT_URI,
+                &cue_data)>0)
+            {
+                mmd_new = rc_cue_get_metadata(&cue_data, trackno-1, NULL);
+                if(mmd_new->uri!=NULL) g_free(mmd_new->uri);
+                mmd_new->uri = g_strdup(cue_data.file);
+                cue_flag = TRUE;
+                cue_start_time = cue_data.track[trackno-1].time1;
+            }
+            rc_cue_free(&cue_data);
+        }
+        else
+        {
+             cue_mmd = rc_tag_read_metadata(cue_uri);
+             if(cue_mmd!=NULL && cue_mmd->audio_flag &&
+                 cue_mmd->emb_cue!=NULL)
+             {
+                 if(rc_cue_read_data(cue_mmd->emb_cue, RC_CUE_INPUT_EMBEDED,
+                     &cue_data)>0)
+                 {
+                     mmd_new = rc_cue_get_metadata(&cue_data, trackno-1,
+                         cue_mmd);
+                     if(mmd_new->uri!=NULL) g_free(mmd_new->uri);
+                     mmd_new->uri = g_strdup(cue_uri);
+                     cue_flag = TRUE;
+                     cue_start_time = cue_data.track[trackno-1].time1;
+                 }
+                 rc_cue_free(&cue_data);
+             }
+             if(cue_mmd!=NULL) rc_tag_free(cue_mmd);
+        }
+        g_free(cue_uri);
+    }
+    else
+        mmd_new = rc_tag_read_metadata(list_uri);
     g_free(list_uri);
     if(mmd_new==NULL || !mmd_new->audio_flag)
     {
-        rc_debug_perror("Plist-ERROR: Cannot open the music!\n");
+        rc_debug_module_perror(module_name, "Cannot open the music!");
         gtk_list_store_set(list_store, &iter, PLIST2_STATE, GTK_STOCK_CANCEL,
             -1);
         if(rc_set_get_boolean("Playlist", "AutoClean", NULL))
@@ -486,7 +685,13 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
     if(mmd_new->album!=NULL)
         album_name = g_strdup(mmd_new->album);
     rc_core_set_uri(mmd_new->uri);
-    rc_core_set_play_segment(-1, -1);
+    if(cue_flag)
+    {
+        rc_core_set_play_segment(cue_start_time,
+            cue_start_time + mmd_new->length);
+    }
+    else
+        rc_core_set_play_segment(-1, -1);
     rc_gui_set_cover_image_by_file(NULL);
     rc_tag_set_playing_metadata(mmd_new);
     gtk_list_store_set(list_store, &iter, PLIST2_STATE, GTK_STOCK_MEDIA_PLAY,
@@ -503,12 +708,12 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
         gtk_tree_row_reference_free(rc_plist.list2_reference);
         rc_plist.list2_reference = NULL;
     }
-    rc_debug_print("Plist: Play music file: %s\n", mmd_new->uri);
+    rc_debug_module_print(module_name, "Play music file: %s", mmd_new->uri);
     rc_gui_music_info_set_data(list_title, mmd_new);
     if(mmd_new->image!=NULL)
     {
         image_flag = TRUE;
-        rc_debug_print("Plist: Found cover image in tag!\n");
+        rc_debug_module_print(module_name, "Found cover image in tag!");
     }
     path = gtk_tree_path_new_from_indices(list_index, -1);
     if(gtk_tree_model_get_iter(GTK_TREE_MODEL(rc_plist.list_store), &iter,
@@ -545,14 +750,14 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
     g_free(lyric_dir);
     if(lyric_filename!=NULL && rc_lrc_read_from_file(lyric_filename))
     {
-        rc_debug_print("Plist: Found lyric file: %s, enable the lyric show.\n",
-            lyric_filename);
+        rc_debug_module_print(module_name, "Found lyric file: %s, "
+            "enable the lyric show.", lyric_filename);
         rc_player_object_signal_emit_simple("lyric-found");
     }
     else
     {
-        rc_debug_print("Plist: Not found lyric file, disable the lyric "
-            "show.\n");
+        rc_debug_module_print(module_name, "Not found lyric file, disable "
+            "the lyric show.");
         rc_player_object_signal_emit_simple("lyric-not-found");
     }
     if(lyric_filename!=NULL) g_free(lyric_filename);
@@ -567,7 +772,7 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
         if(cover_filename!=NULL && rc_gui_set_cover_image_by_file(
             cover_filename))
         {
-            rc_debug_print("Plist: Found cover image file: %s.\n",
+            rc_debug_module_print(module_name, "Found cover image file: %s.",
                 cover_filename);
             image_flag = TRUE;
         }
@@ -606,7 +811,7 @@ gboolean rc_plist_play_by_uri(const gchar *uri)
     mmd_new = rc_tag_read_metadata(uri);
     if(mmd_new==NULL || !mmd_new->audio_flag)
     {
-        rc_debug_perror("Plist-ERROR: Cannot open the music!\n");
+        rc_debug_module_perror(module_name, "Cannot open the music!");
         return FALSE;
     }
     fpathname = g_filename_from_uri(mmd_new->uri, NULL, NULL);
@@ -638,12 +843,12 @@ gboolean rc_plist_play_by_uri(const gchar *uri)
         gtk_tree_row_reference_free(rc_plist.list2_reference);
         rc_plist.list2_reference = NULL;
     }
-    rc_debug_print("Plist: Play music file: %s\n", mmd_new->uri);
+    rc_debug_module_print(module_name, "Play music file: %s", mmd_new->uri);
     rc_gui_music_info_set_data(list_title, mmd_new);
     if(mmd_new->image!=NULL)
     {
         image_flag = TRUE;
-        rc_debug_print("Plist: Found cover image in tag!\n");
+        rc_debug_module_print(module_name, "Found cover image in tag!");
     }
 
     rc_tag_free(mmd_new);
@@ -667,14 +872,14 @@ gboolean rc_plist_play_by_uri(const gchar *uri)
     g_free(lyric_dir);
     if(lyric_filename!=NULL && rc_lrc_read_from_file(lyric_filename))
     {
-        rc_debug_print("Plist: Found lyric file: %s, enable the lyric show.\n",
-            lyric_filename);
+        rc_debug_module_print(module_name, "Found lyric file: %s, "
+            "enable the lyric show.", lyric_filename);
         rc_player_object_signal_emit_simple("lyric-found");
     }
     else
     {
-        rc_debug_print("Plist: Not found lyric file, disable the lyric "
-            "show.\n");
+        rc_debug_module_print(module_name, "Not found lyric file, disable "
+            "the lyric show.");
         rc_player_object_signal_emit_simple("lyric-not-found");
     }
     if(lyric_filename!=NULL) g_free(lyric_filename);
@@ -689,7 +894,7 @@ gboolean rc_plist_play_by_uri(const gchar *uri)
         if(cover_filename!=NULL && rc_gui_set_cover_image_by_file(
             cover_filename))
         {
-            rc_debug_print("Plist: Found cover image file: %s.\n",
+            rc_debug_module_print(module_name, "Found cover image file: %s.",
                 cover_filename);
         }
     }
@@ -1066,8 +1271,6 @@ void rc_plist_set_list1_name(gint index, const gchar *name)
     if(old_name==NULL) return;
     if(g_strcmp0(old_name, name)==0)
     {
-        rc_debug_print("The list name is the same, there's no need to "
-            "rename.\n");
         g_free(old_name);
         return;
     }
@@ -1195,8 +1398,7 @@ gboolean rc_plist_load_playlist_setting()
             gtk_list_store_set(pl_store, &iter, PLIST2_ALBUM, line+3, -1);
         else if(strncmp(line, "TL=", 3)==0)  /* time length */
         {
-            sscanf(line+3, "%lld", (long long *)&timeinfo);
-            timeinfo = timeinfo / 100;
+            timeinfo = g_ascii_strtoll(line+3, NULL, 10) / 100;
             time_min = timeinfo / 60;
             time_sec = timeinfo % 60;
             g_snprintf(time_str, 63, "%02d:%02d", time_min, time_sec);
@@ -1223,7 +1425,8 @@ gboolean rc_plist_load_playlist_setting()
     if(existlist)
     {
         rc_gui_select_list1(0);
-        rc_debug_print("Plist: Loaded %u list(s), %u music.\n", listnum, musicnum);
+        rc_debug_module_pmsg(module_name, "Loaded %u list(s), %u music.",
+            listnum, musicnum);
         return TRUE;
     }
     else return FALSE;
@@ -1318,7 +1521,8 @@ gboolean rc_plist_save_playlist_setting()
             &iter_head));
     }
     fclose(fp);
-    rc_debug_print("Plist: Saved %u list(s), %u music.\n", listnum, musicnum);
+    rc_debug_module_pmsg(module_name, "Saved %u list(s), %u music.", listnum,
+        musicnum);
     if(rc_plist_play_get_index(&list1_index, &list2_index))
     {
         rc_set_set_integer("Playlist", "LastList", list1_index);

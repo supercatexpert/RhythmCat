@@ -47,6 +47,17 @@
                                                          <em class="parameter"><code>...</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="RhythmCat-Debug.html#rc-debug-perror" title="rc_debug_perror ()">rc_debug_perror</a>                     (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
                                                          <em class="parameter"><code>...</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="RhythmCat-Debug.html#rc-debug-pmsg" title="rc_debug_pmsg ()">rc_debug_pmsg</a>                       (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
+                                                         <em class="parameter"><code>...</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="RhythmCat-Debug.html#rc-debug-module-pmsg" title="rc_debug_module_pmsg ()">rc_debug_module_pmsg</a>                (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *module_name</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
+                                                         <em class="parameter"><code>...</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="RhythmCat-Debug.html#rc-debug-module-print" title="rc_debug_module_print ()">rc_debug_module_print</a>               (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *module_name</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
+                                                         <em class="parameter"><code>...</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="RhythmCat-Debug.html#rc-debug-module-perror" title="rc_debug_module_perror ()">rc_debug_module_perror</a>              (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *module_name</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
+                                                         <em class="parameter"><code>...</code></em>);
 </pre>
 </div>
 <div class="refsect1" title="Description">
@@ -117,7 +128,7 @@ Print debug message when debug mode is enabled.
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>the number of bytes printed.
+<td> The number of bytes printed.
 </td>
 </tr>
 </tbody>
@@ -146,7 +157,141 @@ Print error message on standard error (stderr).
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>the number of bytes printed.
+<td> The number of bytes printed.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_debug_pmsg ()">
+<a name="rc-debug-pmsg"></a><h3>rc_debug_pmsg ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                rc_debug_pmsg                       (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
+                                                         <em class="parameter"><code>...</code></em>);</pre>
+<p>
+Print normal message on standard output (stdout).
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>format</code></em> :</span></p></td>
+<td>a standard <code class="function">printf()</code> format string
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>...</code></em> :</span></p></td>
+<td>the arguments to insert in the output
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The number of bytes printed.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_debug_module_pmsg ()">
+<a name="rc-debug-module-pmsg"></a><h3>rc_debug_module_pmsg ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                rc_debug_module_pmsg                (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *module_name</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
+                                                         <em class="parameter"><code>...</code></em>);</pre>
+<p>
+Print normal message with given module name on standard output (stdout).
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>module_name</code></em> :</span></p></td>
+<td>the module name
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>format</code></em> :</span></p></td>
+<td>a standard <code class="function">printf()</code> format string
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>...</code></em> :</span></p></td>
+<td>the arguments to insert in the output
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The number of bytes printed.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_debug_module_print ()">
+<a name="rc-debug-module-print"></a><h3>rc_debug_module_print ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                rc_debug_module_print               (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *module_name</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
+                                                         <em class="parameter"><code>...</code></em>);</pre>
+<p>
+Print debug message with give module name when debug mode is enabled.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>module_name</code></em> :</span></p></td>
+<td>the module name
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>format</code></em> :</span></p></td>
+<td>a standard <code class="function">printf()</code> format string
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>...</code></em> :</span></p></td>
+<td>the arguments to insert in the output
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The number of bytes printed.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_debug_module_perror ()">
+<a name="rc-debug-module-perror"></a><h3>rc_debug_module_perror ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                rc_debug_module_perror              (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *module_name</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
+                                                         <em class="parameter"><code>...</code></em>);</pre>
+<p>
+Print error message with given module name on standard error (stderr).
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>module_name</code></em> :</span></p></td>
+<td>the module name
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>format</code></em> :</span></p></td>
+<td>a standard <code class="function">printf()</code> format string
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>...</code></em> :</span></p></td>
+<td>the arguments to insert in the output
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The number of bytes printed.
 </td>
 </tr>
 </tbody>

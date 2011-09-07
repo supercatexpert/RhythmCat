@@ -40,7 +40,6 @@ G_BEGIN_DECLS
  * @vol_plugin: the volume control element
  * @start_time: the start time used in segment playing
  * @end_time: the end time used in segment playing
- * @start_flag: whether the player has been started (playing or paused)
  * @ver_major: the major version number of GStreamer
  * @ver_minor: the minor version number of GStreamer
  * @ver_micro: the micro version number of GStreamer
@@ -56,7 +55,6 @@ typedef struct RCCoreData {
     GstElement *vol_plugin;
     gint64 start_time;
     gint64 end_time;
-    gboolean start_flag;
     guint ver_major;
     guint ver_minor;
     guint ver_micro;

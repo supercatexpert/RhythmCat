@@ -40,6 +40,7 @@
  */
 
 /* Variables */
+static const gchar *module_name = "GUI";
 static RCGuiData *rc_ui;
 static GtkTreeViewColumn *list1_column;
 static GtkTreeViewColumn *list2_index_column;
@@ -303,7 +304,8 @@ static void rc_gui_list2_dnd_data_received(GtkWidget *widget,
         }
         case 7:
         {
-            rc_debug_print("Gui: Unknown dnd data in list2: %s\n",
+            rc_debug_module_perror(module_name,
+                "Unknown dnd data in list2: %s",
                 gtk_selection_data_get_data(seldata));
         }
         default: break;

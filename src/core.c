@@ -46,6 +46,7 @@
  * The core part of the player, it uses Gstreamer as backend to play audio files.
  */
 
+const gchar *module_name = "Core";
 static RCCoreData rc_core;
 
 static void rc_core_plugin_install_result(GstInstallPluginsReturn result,
@@ -54,19 +55,21 @@ static void rc_core_plugin_install_result(GstInstallPluginsReturn result,
     switch(result)
     {
         case GST_INSTALL_PLUGINS_SUCCESS:
-            rc_debug_print("Core: Install plugin successfully!\n");
+            rc_debug_module_pmsg(module_name,
+                "Install plugin successfully.");
             break;
         case GST_INSTALL_PLUGINS_NOT_FOUND:
-            rc_debug_perror("Core-ERROR: Cannot found necessary plugin!\n");
+            rc_debug_module_perror(module_name,
+                "Cannot found necessary plugin!");
             break;
         case GST_INSTALL_PLUGINS_ERROR:
-            rc_debug_perror("Core-ERROR: Cannot install plugin!\n");
+            rc_debug_module_perror(module_name, "Cannot install plugin!");
             break;
         case GST_INSTALL_PLUGINS_USER_ABORT:
-            rc_debug_perror("Core-ERROR: User abouted!\n");
+            rc_debug_module_perror(module_name, "User abouted!");
             break;
         default:
-            rc_debug_perror("Core-ERROR: Cannot install plugin!\n");
+            rc_debug_module_perror(module_name, "Cannot install plugin!");
     }
 }
 
@@ -80,14 +83,16 @@ static gboolean rc_core_bus_call(GstBus *bus, GstMessage *msg, gpointer data)
     GstState old_state, new_state, pending_state;
     gchar *plugin_error_msg;
     GError *error;
+    static gint state_checker = -1;
     switch(GST_MESSAGE_TYPE(msg))
     {
         case GST_MESSAGE_EOS:
-            rc_debug_print("Core: Reached EOS, playing the next!\n");
+            rc_debug_module_print(module_name,
+                "Reached EOS, playing the next one.");
             if(!rc_plist_play_next(TRUE)) rc_core_stop();
             break;
         case GST_MESSAGE_SEGMENT_DONE:
-            rc_debug_print("CORE: Segment done!\n");
+            rc_debug_module_print(module_name, "Segment is done.");
             break;
         case GST_MESSAGE_STATE_CHANGED:
             gst_message_parse_state_changed(msg, &old_state, &new_state,
@@ -115,31 +120,23 @@ static gboolean rc_core_bus_call(GstBus *bus, GstMessage *msg, gpointer data)
                 default:
                     break;
             }
-            if(!rc_core.start_flag && (new_state==GST_STATE_PAUSED ||
-                new_state==GST_STATE_PLAYING))
+            if(state_checker!=new_state)
             {
-                rc_core.start_flag = TRUE;
-                if(rc_core.start_time>0)
-                {
-                    rc_debug_print("Core: Starting a segment playing.\n");
-                    gst_element_seek_simple(rc_core.playbin, GST_FORMAT_TIME,
-                        GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_ACCURATE,
-                        rc_core.start_time);
-                }
+                rc_shell_signal_emit_simple("state-changed");
+                state_checker = new_state;
             }
-            if(rc_core.start_flag && new_state!=GST_STATE_PAUSED &&
-                new_state!=GST_STATE_PLAYING)
-            {
-                rc_core.start_flag = FALSE;
-            }
-            rc_shell_signal_emit_simple("state-changed");
             break;
         case GST_MESSAGE_ERROR:
             gst_message_parse_error(msg, &error, &debug);
-            rc_debug_perror("Core-ERROR: %s\nDEBUG: %s\n", error->message,
-                debug);
+            rc_debug_module_perror(module_name, "%s\nDEBUG: %s",
+                error->message, debug);
             g_error_free(error);
             g_free(debug);
+            rc_debug_module_perror(module_name, "Error occured, sending "
+                "EOS message...");
+            if(!gst_element_post_message(rc_core.playbin,
+                gst_message_new_eos(GST_OBJECT(rc_core.playbin))))
+                rc_core_stop();
             break;
         case GST_MESSAGE_TAG:
             break;
@@ -147,15 +144,28 @@ static gboolean rc_core_bus_call(GstBus *bus, GstMessage *msg, gpointer data)
             break;
         case GST_MESSAGE_DURATION:
             break;
+        case GST_MESSAGE_STREAM_STATUS:
+            break;
+        case GST_MESSAGE_NEW_CLOCK:
+            rc_debug_module_print(module_name, "Get a new clock.");
+            if(rc_core.start_time>0)
+            {
+                rc_debug_module_print(module_name,
+                    "Starting a segment playing.");
+                gst_element_seek_simple(rc_core.playbin, GST_FORMAT_TIME,
+                    GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_ACCURATE,
+                    rc_core.start_time);
+            }
+            break;
         case GST_MESSAGE_ELEMENT:
             if(gst_is_missing_plugin_message(msg))
             {
-                rc_debug_perror("Core-ERROR: Missing plugin to open the "
-                    "media file!\n");
+                rc_debug_module_perror(module_name, "Missing necessary plugin "
+                    "to open the media file!");
                 if(gst_install_plugins_supported())
                 {
-                    rc_debug_print("Core: Trying to install necessary "
-                        "plugins\n");
+                    rc_debug_module_pmsg(module_name, "Trying to install "
+                        "necessary plugins");
                     plugin_error_msg =
                         gst_missing_plugin_message_get_installer_detail(msg);
                     gst_install_plugins_async(&plugin_error_msg, NULL,
@@ -178,19 +188,22 @@ static gboolean rc_core_pad_buffer_probe_cb(GstPad *pad, GstBuffer *buf,
     gint sz, frames;
     gint64 pos = (gint64)GST_BUFFER_TIMESTAMP(buf);
     gint64 len = rc_core_get_music_length();
-    if(rc_core.end_time>0 && rc_core.end_time<pos)
+    if(rc_core.end_time>0)
     {
-        msg = gst_message_new_eos(GST_OBJECT(rc_core.playbin));
-        rc_debug_print("Core: Reached the end time in segment playing, "
-            "sending a new EOS event now.\n");
-        if(!gst_element_post_message(rc_core.playbin, msg))
-            rc_core_stop();
+        if(rc_core.end_time<pos)
+        {
+            msg = gst_message_new_eos(GST_OBJECT(rc_core.playbin));
+            rc_debug_module_print(module_name, "Reached the end time in "
+                "segment playing, sending a new EOS event now.");
+            if(!gst_element_post_message(rc_core.playbin, msg))
+                rc_core_stop();
+        }
     }
     else if(len>0 && pos-len>2*GST_SECOND)
     {
         msg = gst_message_new_eos(GST_OBJECT(rc_core.playbin));
-        rc_debug_print("Core: Reached the end time in normal playing, "
-            "sending a new EOS event now.\n");
+        rc_debug_module_print(module_name, "Reached the end time in normal "
+            "playing, sending a new EOS event now.");
         if(!gst_element_post_message(rc_core.playbin, msg))
             rc_core_stop();   
     }
@@ -271,13 +284,13 @@ void rc_core_init()
     gdouble volume = 1.0;
     gboolean flag = FALSE;
     GError *error = NULL;
-    rc_debug_print("Core: Loading CORE...\n");
+    rc_debug_module_pmsg(module_name, "Loading...");
     bzero(&rc_core, sizeof(RCCoreData));
     flag = rc_core_plugin_check();
     if(!flag)
     {
-        rc_debug_perror("Core-ERROR: Some effect plugins are missing, "
-            "effects are not available now!\n");
+        rc_debug_module_perror(module_name, "Some effect plugins are "
+            "missing, effects are not available now!");
         rc_gui_show_message_dialog(GTK_MESSAGE_ERROR,
             _("Effect plugins are missing!"), _("Some effect plugins are "
             "missing, effects are not available now!"));
@@ -289,6 +302,7 @@ void rc_core_init()
         rc_gui_show_message_dialog(GTK_MESSAGE_ERROR, _("Critical Error!"),
             _("Failed to make playbin/playbin2 element!"));
         g_assert("Core-CRITICAL: Failed to make playbin element!\n");
+        exit(2);
     }
     if(flag)
     {
@@ -313,8 +327,8 @@ void rc_core_init()
             rc_gui_show_message_dialog(GTK_MESSAGE_ERROR,
                 _("Effect plugins are missing!"), _("Some effect plugins are "
                 "missing, effects are not available now!"));
-            rc_debug_perror("Core-ERROR: Some effect plugins are missing, "
-                "effects are not available now!\n");
+            rc_debug_module_perror(module_name, "Some effect plugins are "
+                "missing, effects are not available now!");
         }
     }
     if(GST_IS_ELEMENT(video_fakesink))
@@ -334,8 +348,8 @@ void rc_core_init()
             rc_gui_show_message_dialog(GTK_MESSAGE_ERROR,
                 _("Link elements error!"), _("Cannot link effect elements, "
                 "effects are not available now!"));
-            rc_debug_perror("Core-ERROR: Cannot link effect elements, "
-                "effects are not available now!\n");
+            rc_debug_module_perror(module_name, "Cannot link effect elements, "
+                "effects are not available now!");
             if(GST_IS_ELEMENT(audio_equalizer))
                 gst_object_unref(audio_equalizer);
             if(GST_IS_ELEMENT(audio_sink))
@@ -379,7 +393,7 @@ void rc_core_init()
     gst_element_set_state(play, GST_STATE_READY);
     gst_version(&rc_core.ver_major, &rc_core.ver_minor, &rc_core.ver_micro,
         &rc_core.ver_nano);
-    rc_debug_print("Core: CORE is successfully loaded!\n");
+    rc_debug_module_pmsg(module_name, "Loaded successfully!");
 }
 
 /**
@@ -456,6 +470,7 @@ gboolean rc_core_play()
     }
     flag = gst_element_set_state(rc_core.playbin, GST_STATE_PLAYING);
     if(!flag) return FALSE;
+    rc_debug_module_pmsg(module_name, "Start playing...");
     return TRUE;
 }
 
@@ -474,6 +489,7 @@ gboolean rc_core_pause()
     flag = gst_element_set_state(rc_core.playbin, GST_STATE_PAUSED);
     if(pos>0) rc_core_set_play_position(pos);
     if(!flag) return FALSE;
+    rc_debug_module_pmsg(module_name, "Trying to pause...");
     return TRUE;
 }
 
@@ -490,7 +506,7 @@ gboolean rc_core_stop()
     rc_gui_set_play_button_state(FALSE);
     rc_gui_seek_scaler_disable();
     rc_player_object_signal_emit_simple("player-stop");
-    rc_core.start_flag = FALSE;
+    rc_debug_module_pmsg(module_name, "Stopping the player...");
     return TRUE;
 }
 

@@ -41,6 +41,7 @@
  * Set the styles and themes of the player window.
  */
 
+static const gchar *module_name = "GUI";
 static gchar *rc_system_default_rc_file = NULL;
 
 /**
@@ -174,7 +175,7 @@ void rc_gui_style_refresh()
         {
             path = g_build_filename(string, "gtk3.css", NULL);
             file = g_file_new_for_path(path);
-            rc_debug_print("GUI-Style: Loading GTK3 CSS File: %s\n", path);
+            rc_debug_module_pmsg(module_name, "Loading GTK3 CSS File: %s", path);
             g_free(path);
             if(file!=NULL)
             {
@@ -205,7 +206,7 @@ void rc_gui_style_refresh()
         if(string!=NULL && strlen(string)>0)
         {
             path = g_build_filename(string, "gtkrc", NULL);
-            rc_debug_print("GUI-Style: Loading GTK2 RC File: %s\n", path);
+            rc_debug_module_pmsg(module_name, "Loading GTK2 RC File: %s", path);
             gtk_rc_parse(path);
             if(settings!=NULL)
             {

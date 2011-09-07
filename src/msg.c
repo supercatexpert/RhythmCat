@@ -28,6 +28,7 @@
 #include "gui.h"
 #include "tag.h"
 #include "playlist.h"
+#include "debug.h"
 
 /**
  * SECTION: msg
@@ -45,6 +46,7 @@ typedef struct RCMsgAsyncQueueWatch
     GAsyncQueue *queue;
 }RCMsgAsyncQueueWatch;
 
+static const gchar *module_name = "Msg";
 static GAsyncQueue *msg_queue;
 
 static gboolean rc_msg_async_queue_watch_prepare(GSource *source,
@@ -189,10 +191,12 @@ static void rc_msg_process_func(gpointer data, gpointer user_data)
 void rc_msg_init()
 {
     GMainContext *context;
+    rc_debug_module_pmsg(module_name, "Loading...");
     msg_queue = g_async_queue_new();
     context = g_main_context_default();
     rc_msg_async_queue_watch_new(msg_queue, G_PRIORITY_DEFAULT,
         rc_msg_process_func, NULL, NULL, context);
+    rc_debug_module_pmsg(module_name, "Loaded successfully!");
 }
 
 /**

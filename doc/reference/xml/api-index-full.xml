@@ -24,18 +24,26 @@
 <indexentry><primaryie linkends="rc-core-set-uri"><link linkend="rc-core-set-uri">rc_core_set_uri</link>, function in <link linkend="RhythmCat-Core">Core</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-core-set-volume"><link linkend="rc-core-set-volume">rc_core_set_volume</link>, function in <link linkend="RhythmCat-Core">Core</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-core-stop"><link linkend="rc-core-stop">rc_core_stop</link>, function in <link linkend="RhythmCat-Core">Core</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCCueInputType"><link linkend="RCCueInputType">RCCueInputType</link>, enum in <link linkend="RhythmCat-CUE-Parser">CUE Parser</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCCueTrack"><link linkend="RCCueTrack">RCCueTrack</link>, struct in <link linkend="RhythmCat-CUE-Parser">CUE Parser</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-cue-free"><link linkend="rc-cue-free">rc_cue_free</link>, function in <link linkend="RhythmCat-CUE-Parser">CUE Parser</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-cue-get-metadata"><link linkend="rc-cue-get-metadata">rc_cue_get_metadata</link>, function in <link linkend="RhythmCat-CUE-Parser">CUE Parser</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-cue-get-track-num"><link linkend="rc-cue-get-track-num">rc_cue_get_track_num</link>, function in <link linkend="RhythmCat-CUE-Parser">CUE Parser</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-cue-read-data"><link linkend="rc-cue-read-data">rc_cue_read_data</link>, function in <link linkend="RhythmCat-CUE-Parser">CUE Parser</link></primaryie></indexentry>
 </indexdiv>
 <indexdiv><title>D</title>
 <indexentry><primaryie linkends="rc-debug-get-flag"><link linkend="rc-debug-get-flag">rc_debug_get_flag</link>, function in <link linkend="RhythmCat-Debug">Debug</link></primaryie></indexentry>
 <indexentry><primaryie linkends="DEBUG-MODE:CAPS"><link linkend="DEBUG-MODE:CAPS">DEBUG_MODE</link>, macro in <link linkend="RhythmCat-Debug">Debug</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-debug-module-perror"><link linkend="rc-debug-module-perror">rc_debug_module_perror</link>, function in <link linkend="RhythmCat-Debug">Debug</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-debug-module-pmsg"><link linkend="rc-debug-module-pmsg">rc_debug_module_pmsg</link>, function in <link linkend="RhythmCat-Debug">Debug</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-debug-module-print"><link linkend="rc-debug-module-print">rc_debug_module_print</link>, function in <link linkend="RhythmCat-Debug">Debug</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-debug-perror"><link linkend="rc-debug-perror">rc_debug_perror</link>, function in <link linkend="RhythmCat-Debug">Debug</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-debug-pmsg"><link linkend="rc-debug-pmsg">rc_debug_pmsg</link>, function in <link linkend="RhythmCat-Debug">Debug</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-debug-print"><link linkend="rc-debug-print">rc_debug_print</link>, function in <link linkend="RhythmCat-Debug">Debug</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-debug-set-mode"><link linkend="rc-debug-set-mode">rc_debug_set_mode</link>, function in <link linkend="RhythmCat-Debug">Debug</link></primaryie></indexentry>
 </indexdiv>
 <indexdiv><title>G</title>
 <indexentry><primaryie linkends="GETTEXT-PACKAGE:CAPS"><link linkend="GETTEXT-PACKAGE:CAPS">GETTEXT_PACKAGE</link>, macro in <link linkend="RhythmCat-Player">Player</link></primaryie></indexentry>
-<indexentry><primaryie linkends="RCGuiAudioVis"><link linkend="RCGuiAudioVis">RCGuiAudioVis</link>, struct in <link linkend="RhythmCat-RCGuiAudioVis">RCGuiAudioVis</link></primaryie></indexentry>
-<indexentry><primaryie linkends="RCGuiAudioVisClass"><link linkend="RCGuiAudioVisClass">RCGuiAudioVisClass</link>, struct in <link linkend="RhythmCat-RCGuiAudioVis">RCGuiAudioVis</link></primaryie></indexentry>
 <indexentry><primaryie linkends="RCGuiData"><link linkend="RCGuiData">RCGuiData</link>, struct in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="RCGuiEQData"><link linkend="RCGuiEQData">RCGuiEQData</link>, struct in <link linkend="RhythmCat-Equalizer-UI">Equalizer UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="RCGuiScrolledText-struct"><link linkend="RCGuiScrolledText-struct">RCGuiScrolledText</link>, struct in <link linkend="RCGuiScrolledText">RCGuiScrolledText</link></primaryie></indexentry>
@@ -44,13 +52,6 @@
 <indexentry><primaryie linkends="RCGuiScrolledText--text"><link linkend="RCGuiScrolledText--text">RCGuiScrolledText:text</link>, object property in <link linkend="RCGuiScrolledText">RCGuiScrolledText</link></primaryie></indexentry>
 <indexentry><primaryie linkends="RCGuiScrolledTextClass"><link linkend="RCGuiScrolledTextClass">RCGuiScrolledTextClass</link>, struct in <link linkend="RCGuiScrolledText">RCGuiScrolledText</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-about-player"><link linkend="rc-gui-about-player">rc_gui_about_player</link>, function in <link linkend="RhythmCat-Dialogs">Dialogs</link></primaryie></indexentry>
-<indexentry><primaryie linkends="RC-GUI-AUDIO-VIS:CAPS"><link linkend="RC-GUI-AUDIO-VIS:CAPS">RC_GUI_AUDIO_VIS</link>, macro in <link linkend="RhythmCat-RCGuiAudioVis">RCGuiAudioVis</link></primaryie></indexentry>
-<indexentry><primaryie linkends="RC-GUI-AUDIO-VIS-CLASS:CAPS"><link linkend="RC-GUI-AUDIO-VIS-CLASS:CAPS">RC_GUI_AUDIO_VIS_CLASS</link>, macro in <link linkend="RhythmCat-RCGuiAudioVis">RCGuiAudioVis</link></primaryie></indexentry>
-<indexentry><primaryie linkends="rc-gui-audio-vis-get-style"><link linkend="rc-gui-audio-vis-get-style">rc_gui_audio_vis_get_style</link>, function in <link linkend="RhythmCat-RCGuiAudioVis">RCGuiAudioVis</link></primaryie></indexentry>
-<indexentry><primaryie linkends="rc-gui-audio-vis-get-type"><link linkend="rc-gui-audio-vis-get-type">rc_gui_audio_vis_get_type</link>, function in <link linkend="RhythmCat-RCGuiAudioVis">RCGuiAudioVis</link></primaryie></indexentry>
-<indexentry><primaryie linkends="rc-gui-audio-vis-new"><link linkend="rc-gui-audio-vis-new">rc_gui_audio_vis_new</link>, function in <link linkend="RhythmCat-RCGuiAudioVis">RCGuiAudioVis</link></primaryie></indexentry>
-<indexentry><primaryie linkends="rc-gui-audio-vis-set-style"><link linkend="rc-gui-audio-vis-set-style">rc_gui_audio_vis_set_style</link>, function in <link linkend="RhythmCat-RCGuiAudioVis">RCGuiAudioVis</link></primaryie></indexentry>
-<indexentry><primaryie linkends="RC-GUI-AUDIO-VIS-TYPE:CAPS"><link linkend="RC-GUI-AUDIO-VIS-TYPE:CAPS">RC_GUI_AUDIO_VIS_TYPE</link>, macro in <link linkend="RhythmCat-RCGuiAudioVis">RCGuiAudioVis</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-create-setting-window"><link linkend="rc-gui-create-setting-window">rc_gui_create_setting_window</link>, function in <link linkend="RhythmCat-Settings-UI">Settings UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-eq-data-init"><link linkend="rc-gui-eq-data-init">rc_gui_eq_data_init</link>, function in <link linkend="RhythmCat-Equalizer-UI">Equalizer UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-eq-get-data"><link linkend="rc-gui-eq-get-data">rc_gui_eq_get_data</link>, function in <link linkend="RhythmCat-Equalizer-UI">Equalizer UI</link></primaryie></indexentry>
@@ -124,11 +125,10 @@
 <indexentry><primaryie linkends="rc-gui-time-label-set-text"><link linkend="rc-gui-time-label-set-text">rc_gui_time_label_set_text</link>, function in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-treeview-init"><link linkend="rc-gui-treeview-init">rc_gui_treeview_init</link>, function in <link linkend="RhythmCat-Playlist-Views-UI">Playlist Views UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-view-add-page"><link linkend="rc-gui-view-add-page">rc_gui_view_add_page</link>, function in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-gui-view-add-page-with-label"><link linkend="rc-gui-view-add-page-with-label">rc_gui_view_add_page_with_label</link>, function in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-gui-view-remove-page"><link linkend="rc-gui-view-remove-page">rc_gui_view_remove_page</link>, function in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
 </indexdiv>
 <indexdiv><title>I</title>
-<indexentry><primaryie linkends="IS-RC-GUI-AUDIO-VIS:CAPS"><link linkend="IS-RC-GUI-AUDIO-VIS:CAPS">IS_RC_GUI_AUDIO_VIS</link>, macro in <link linkend="RhythmCat-RCGuiAudioVis">RCGuiAudioVis</link></primaryie></indexentry>
-<indexentry><primaryie linkends="IS-RC-GUI-AUDIO-VIS-CLASS:CAPS"><link linkend="IS-RC-GUI-AUDIO-VIS-CLASS:CAPS">IS_RC_GUI_AUDIO_VIS_CLASS</link>, macro in <link linkend="RhythmCat-RCGuiAudioVis">RCGuiAudioVis</link></primaryie></indexentry>
 <indexentry><primaryie linkends="IS-RC-GUI-SCROLLED-TEXT:CAPS"><link linkend="IS-RC-GUI-SCROLLED-TEXT:CAPS">IS_RC_GUI_SCROLLED_TEXT</link>, macro in <link linkend="RCGuiScrolledText">RCGuiScrolledText</link></primaryie></indexentry>
 <indexentry><primaryie linkends="IS-RC-GUI-SCROLLED-TEXT-CLASS:CAPS"><link linkend="IS-RC-GUI-SCROLLED-TEXT-CLASS:CAPS">IS_RC_GUI_SCROLLED_TEXT_CLASS</link>, macro in <link linkend="RCGuiScrolledText">RCGuiScrolledText</link></primaryie></indexentry>
 </indexdiv>
@@ -152,7 +152,7 @@
 <indexentry><primaryie linkends="rc-msg-async-queue-watch-new"><link linkend="rc-msg-async-queue-watch-new">rc_msg_async_queue_watch_new</link>, function in <link linkend="RhythmCat-Asynchronous-Message-Queue">Asynchronous Message Queue</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-msg-init"><link linkend="rc-msg-init">rc_msg_init</link>, function in <link linkend="RhythmCat-Asynchronous-Message-Queue">Asynchronous Message Queue</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-msg-push"><link linkend="rc-msg-push">rc_msg_push</link>, function in <link linkend="RhythmCat-Asynchronous-Message-Queue">Asynchronous Message Queue</link></primaryie></indexentry>
-<indexentry><primaryie linkends="RCMusicMetaData"><link linkend="RCMusicMetaData">RCMusicMetaData</link>, struct in <link linkend="RhythmCat-Tag">Tag</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCMusicMetaData"><link linkend="RCMusicMetaData">RCMusicMetaData</link>, struct in <link linkend="RhythmCat-Main-UI">Main UI</link></primaryie></indexentry>
 </indexdiv>
 <indexdiv><title>P</title>
 <indexentry><primaryie linkends="RCPlayer-struct"><link linkend="RCPlayer-struct">RCPlayer</link>, struct in <link linkend="RCPlayer">RCPlayer</link></primaryie></indexentry>
@@ -234,6 +234,7 @@
 <indexentry><primaryie linkends="rc-plugin-conf-load"><link linkend="rc-plugin-conf-load">rc_plugin_conf_load</link>, function in <link linkend="RhythmCat-Plugin-Support">Plugin Support</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-plugin-exit"><link linkend="rc-plugin-exit">rc_plugin_exit</link>, function in <link linkend="RhythmCat-Plugin-Support">Plugin Support</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-plugin-get-list"><link linkend="rc-plugin-get-list">rc_plugin_get_list</link>, function in <link linkend="RhythmCat-Plugin-Support">Plugin Support</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-plugin-get-path"><link linkend="rc-plugin-get-path">rc_plugin_get_path</link>, function in <link linkend="RhythmCat-Plugin-Support">Plugin Support</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-plugin-init"><link linkend="rc-plugin-init">rc_plugin_init</link>, function in <link linkend="RhythmCat-Plugin-Support">Plugin Support</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-plugin-list-free"><link linkend="rc-plugin-list-free">rc_plugin_list_free</link>, function in <link linkend="RhythmCat-Plugin-Support">Plugin Support</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-plugin-load"><link linkend="rc-plugin-load">rc_plugin_load</link>, function in <link linkend="RhythmCat-Plugin-Support">Plugin Support</link></primaryie></indexentry>

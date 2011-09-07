@@ -41,7 +41,8 @@
  * Process the tags of the music, like metadata, etc.
  */
 
-RCMusicMetaData playing_mmd = {0};
+static const gchar *module_name = "Tag";
+static RCMusicMetaData playing_mmd = {0};
 
 typedef struct RCTagDecodedPadData
 {
@@ -58,19 +59,22 @@ static void rc_tag_plugin_install_result(GstInstallPluginsReturn result,
     switch(result)
     {
         case GST_INSTALL_PLUGINS_SUCCESS:
-            rc_debug_print("Tag: Install plugin successfully!\n");
+            rc_debug_module_pmsg(module_name,
+                "Install plugin successfully!");
             break;
         case GST_INSTALL_PLUGINS_NOT_FOUND:
-            rc_debug_perror("Tag-ERROR: Cannot found necessary plugin!\n");
+            rc_debug_module_perror(module_name,
+                "Cannot found necessary plugin!");
             break;
         case GST_INSTALL_PLUGINS_ERROR:
-            rc_debug_perror("Tag-ERROR: Cannot install plugin!\n");
+            rc_debug_module_perror(module_name,
+                "Cannot install plugin!");
             break;
         case GST_INSTALL_PLUGINS_USER_ABORT:
-            rc_debug_perror("Tag-ERROR: User abouted!\n");
+            rc_debug_module_perror(module_name, "User abouted!\n");
             break;
         default:
-            rc_debug_perror("Tag-ERROR: Cannot install plugin!\n");
+            rc_debug_module_perror(module_name, "Cannot install plugin!\n");
     }
 }
 
@@ -192,12 +196,12 @@ static gboolean rc_tag_bus_handler(GstBus *bus, GstMessage *message,
         {
             if(gst_is_missing_plugin_message(message))
             {
-                rc_debug_perror("Tag-ERROR: Missing plugin to open the "
-                    "media file!\n");
+                rc_debug_module_perror(module_name, "Missing plugin to open "
+                    "the media file!");
                 if(gst_install_plugins_supported())
                 {
-                    rc_debug_print("Tag: Trying to install necessary "
-                        "plugin\n");
+                    rc_debug_module_pmsg(module_name, "Trying to install necessary "
+                        "plugin.");
                     plugin_error_msg =
                         gst_missing_plugin_message_get_installer_detail(
                             message);
@@ -258,8 +262,8 @@ static void rc_tag_gst_new_decoded_pad_cb(GstElement *decodebin,
     /* we get "ANY" caps for text/plain files etc. */
     if(gst_caps_is_empty(caps) || gst_caps_is_any(caps))
     {
-        rc_debug_print("Tag: Decoded pad with no caps or any caps."
-            "This file is boring.\n");
+        rc_debug_module_print(module_name, "Decoded pad with no caps or "
+            "any caps. This file is boring.");
         cancel = TRUE;
         data->non_audio_flag = TRUE;
     }
@@ -273,20 +277,20 @@ static void rc_tag_gst_new_decoded_pad_cb(GstElement *decodebin,
         mimetype = gst_structure_get_name(structure);
         if(g_str_has_prefix(mimetype, "audio/x-raw"))
         {
-            rc_debug_print("Tag: Got decoded audio pad of type %s\n",
-                mimetype);
+            rc_debug_module_print(module_name,
+                "Got decoded audio pad of type %s", mimetype);
             data->audio_flag = TRUE;
         }
         else if(g_str_has_prefix(mimetype, "video/"))
         {
-            rc_debug_print("Tag: Got decoded video pad of type %s\n",
-                mimetype);
+            rc_debug_module_print(module_name,
+                "Got decoded video pad of type %s", mimetype);
             data->video_flag = TRUE;
         }
         else
         {
-            rc_debug_print("Tag: Got decoded pad of non-audio type %s\n",
-                mimetype);
+            rc_debug_module_print(module_name,
+                "Got decoded pad of non-audio type %s", mimetype);
             data->non_audio_flag = TRUE;
         }
     }
@@ -368,7 +372,8 @@ RCMusicMetaData *rc_tag_read_metadata(const gchar *uri)
     urisrc = gst_element_make_from_uri(GST_URI_SRC, mmd->uri, "urisrc");
     if(urisrc==NULL)
     {
-        rc_debug_perror("Tag-ERROR: Cannot load urisrc from URI!\n");
+        rc_debug_module_perror(module_name, "Cannot load urisrc from "
+            "given URI!");
         g_free(mmd);
         return NULL;
     }
@@ -571,7 +576,7 @@ gchar *rc_tag_find_file(const gchar *dirname, const gchar *str,
     gdir = g_dir_open(dirname, 0, NULL);
     if(gdir==NULL) return NULL;
     bzero(extname_regstr, 256);
-    snprintf(extname_regstr, 255, "(%s)$", extname);
+    g_snprintf(extname_regstr, 255, "(%s)$", extname);
     while((fname_foreach=g_dir_read_name(gdir))!=NULL)
     {
         if(g_regex_match_simple(extname_regstr, fname_foreach,

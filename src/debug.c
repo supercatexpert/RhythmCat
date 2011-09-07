@@ -26,6 +26,7 @@
 #include <stdlib.h>
 #include "debug.h"
 
+
 /**
  * SECTION: debug
  * @Short_description: Debug and print debug information.
@@ -70,7 +71,7 @@ void rc_debug_set_mode(gboolean mode)
  *
  * Print debug message when debug mode is enabled.
  *
- * Returns:the number of bytes printed.
+ * Returns: The number of bytes printed.
  */
 
 gint rc_debug_print(const gchar *format, ...)
@@ -78,10 +79,6 @@ gint rc_debug_print(const gchar *format, ...)
     gint result;
     va_list arg_ptr;
     va_start(arg_ptr, format);
-/*
-    g_logv("RhythmCat", G_LOG_LEVEL_INFO | G_LOG_LEVEL_DEBUG, format,
-        arg_ptr);
-*/
     if(!debug_flag) return 0;
     result = g_vprintf(format, arg_ptr);
     return result;
@@ -94,7 +91,7 @@ gint rc_debug_print(const gchar *format, ...)
  *
  * Print error message on standard error (stderr).
  *
- * Returns:the number of bytes printed.
+ * Returns: The number of bytes printed.
  */
 
 gint rc_debug_perror(const gchar *format, ...)
@@ -102,11 +99,99 @@ gint rc_debug_perror(const gchar *format, ...)
     gint result;
     va_list arg_ptr;
     va_start(arg_ptr, format);
-/*
-    g_logv("RhythmCat", G_LOG_LEVEL_ERROR | G_LOG_LEVEL_DEBUG, format,
-        arg_ptr);
-*/
     result = g_vfprintf(stderr, format, arg_ptr);
+    return result;
+}
+
+/**
+ * rc_debug_pmsg:
+ * @format: a standard printf() format string
+ * @Varargs: the arguments to insert in the output
+ *
+ * Print normal message on standard output (stdout).
+ *
+ * Returns: The number of bytes printed.
+ */
+
+gint rc_debug_pmsg(const gchar *format, ...)
+{
+    gint result;
+    va_list arg_ptr;
+    va_start(arg_ptr, format);
+    result = g_vfprintf(stdout, format, arg_ptr);
+    return result;
+}
+
+/**
+ * rc_debug_module_pmsg:
+ * @module_name: the module name
+ * @format: a standard printf() format string
+ * @Varargs: the arguments to insert in the output
+ *
+ * Print normal message with given module name on standard output (stdout).
+ *
+ * Returns: The number of bytes printed.
+ */
+
+gint rc_debug_module_pmsg(const gchar *module_name, const gchar *format,
+    ...)
+{
+    gint result;
+    gchar *new_format;
+    va_list arg_ptr;
+    va_start(arg_ptr, format);
+    new_format = g_strdup_printf("%s: %s\n", module_name, format);
+    result = g_vfprintf(stdout, new_format, arg_ptr);
+    g_free(new_format);
+    return result;
+}
+
+/**
+ * rc_debug_module_print:
+ * @module_name: the module name
+ * @format: a standard printf() format string
+ * @Varargs: the arguments to insert in the output
+ *
+ * Print debug message with give module name when debug mode is enabled.
+ *
+ * Returns: The number of bytes printed.
+ */
+
+gint rc_debug_module_print(const gchar *module_name, const gchar *format,
+    ...)
+{
+    gint result;
+    gchar *new_format;
+    va_list arg_ptr;
+    va_start(arg_ptr, format);
+    if(!debug_flag) return 0;
+    new_format = g_strdup_printf("%s: %s\n", module_name, format);
+    result = g_vfprintf(stdout, new_format, arg_ptr);
+    g_free(new_format);
+    return result;
+}
+
+/**
+ * rc_debug_module_perror:
+ * @module_name: the module name
+ * @format: a standard printf() format string
+ * @Varargs: the arguments to insert in the output
+ *
+ * Print error message with given module name on standard error (stderr).
+ *
+ * Returns: The number of bytes printed.
+ */
+
+gint rc_debug_module_perror(const gchar *module_name, const gchar *format,
+    ...)
+{
+    gint result;
+    gchar *new_format;
+    va_list arg_ptr;
+    va_start(arg_ptr, format);
+    new_format = g_strdup_printf("%s-ERROR: %s\n", module_name, format);
+    result = g_vfprintf(stderr, new_format, arg_ptr);
+    g_free(new_format);
     return result;
 }
 

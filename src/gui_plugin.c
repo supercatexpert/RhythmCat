@@ -38,6 +38,7 @@
  * Show the plugin configuration window of the player.
  */
 
+static const gchar *module_name = "GUI";
 static GtkWidget *plugin_window = NULL;
 static GtkWidget *plugin_conf_button;
 static GtkWidget *plugin_close_button;
@@ -70,7 +71,7 @@ static void rc_gui_plugin_list_toggled(GtkCellRendererToggle *renderer,
         gtk_list_store_set(GTK_LIST_STORE(plugin_list_model), &iter,
             0, flag, -1);
         if(!flag)
-            rc_debug_perror("Gui-ERROR: Cannot open the plugin %s!\n",
+            rc_debug_module_perror(module_name, "Cannot open the plugin %s!",
                 plugin_path);
     }
     else

@@ -38,6 +38,13 @@ style "rc-widget-bg"
 	}
 }
 
+style "rc-list-notebook"
+{
+	bg[NORMAL]	= "#5197EF"
+	fg[NORMAL]	= "#FFFFFF"
+	bg[ACTIVE]	= "#71B7FF"
+}
+
 style "rc-lyric-label"
 {
 	bg[NORMAL]	= "#5197EF"
@@ -47,6 +54,7 @@ style "rc-lyric-label"
 style "rc-normal-label"
 {
 	fg[NORMAL]	= "#FFFFFF"
+	fg[ACTIVE]	= "#FFFFFF"
 	text[NORMAL]	= "#FFFFFF"
 }
 
@@ -342,6 +350,7 @@ style "rc-list-paned"
 
 widget "RCMainWindow"	style "rc-main-window"
 widget "RCMiniWindow"	style "rc-mini-window"
+widget "RCMainWindow.*.RCPlistNotebook*"	style "rc-list-notebook"
 widget "RCMainWindow.*.RCStatusInfoBar"	style "rc-widget-bg"
 widget "RCMainWindow.*.GtkProgressBar"	style "rc-widget-bg"
 widget "RCMainWindow.*.GtkEventBox"	style "rc-widget-bg"

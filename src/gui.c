@@ -51,6 +51,7 @@
  * Show the main UI of the player.
  */
 
+static const gchar *module_name = "GUI";
 static const guint img_cover_h = 160;
 static const guint img_cover_w = 160;
 static RCGuiData rc_gui;
@@ -71,10 +72,7 @@ typedef enum
     RC_UI_CTRL_PLAY,
     RC_UI_CTRL_STOP,
     RC_UI_CTRL_NEXT,
-    RC_UI_CTRL_OPEN,
-    RC_UI_CTRL_LIST,
-    RC_UI_CTRL_EQ,
-    RC_UI_CTRL_MINI
+    RC_UI_CTRL_OPEN
 }RCGuiControlType;
 
 /*
@@ -314,6 +312,31 @@ static void rc_gui_ontop_menu_clicked(GtkAction *action)
 }
 
 /*
+ * Process the tab switched event in the playlist notebook.
+ */
+
+static void rc_gui_notebook_page_switched(GtkNotebook *notebook,
+    GtkWidget *page, guint page_num, gpointer data)
+{
+    const GSList *list_foreach = NULL;
+    RCGuiViewPageData *page_data = NULL;
+    GtkWidget *child = gtk_notebook_get_nth_page(notebook, page_num);
+    if(page_num>1)
+    {
+        for(list_foreach=rc_gui_view_page_list;list_foreach!=NULL;
+            list_foreach=g_slist_next(list_foreach))
+        {
+            page_data = list_foreach->data;
+            if(page_data->view_widget==child)
+                page_num = page_data->id + 2;
+        }
+    }
+    gtk_radio_action_set_current_value(GTK_RADIO_ACTION(
+        gtk_ui_manager_get_action(rc_gui.main_ui,
+        "/RCMenuBar/ViewMenu/ViewPlaylist")), page_num);
+}
+
+/*
  * Process the click event of the view menu.
  */
 
@@ -322,10 +345,14 @@ static void rc_gui_view_menu_clicked(GtkAction *action, GtkRadioAction *current)
     gint value = gtk_radio_action_get_current_value(current);
     const GSList *list_foreach = NULL;
     RCGuiViewPageData *page_data = NULL;
+    guint current_page = gtk_notebook_get_current_page(GTK_NOTEBOOK(
+        rc_gui.plist_notebook));
+    guint child_page;
     if(value==0 || value==1)
     {
-        gtk_notebook_set_current_page(GTK_NOTEBOOK(rc_gui.plist_notebook),
-            value);
+        if(current_page!=value)
+            gtk_notebook_set_current_page(GTK_NOTEBOOK(rc_gui.plist_notebook),
+                value);
     }
     else
     {
@@ -336,35 +363,16 @@ static void rc_gui_view_menu_clicked(GtkAction *action, GtkRadioAction *current)
             page_data = list_foreach->data;
             if(value==page_data->id)
             {
-                gtk_notebook_set_current_page(GTK_NOTEBOOK(
-                    rc_gui.plist_notebook), gtk_notebook_page_num(
-                    GTK_NOTEBOOK(rc_gui.plist_notebook),
-                    page_data->view_widget));
+                child_page = gtk_notebook_page_num(GTK_NOTEBOOK(
+                    rc_gui.plist_notebook), page_data->view_widget);
+                if(current_page!=child_page)
+                {
+                    gtk_notebook_set_current_page(GTK_NOTEBOOK(
+                        rc_gui.plist_notebook), child_page);
+                }
             }
         }
     }
-}
-
-/*
- * Process the click event of the playlist button.
- */
-
-static void rc_gui_plist_button_clicked()
-{
-    gtk_radio_action_set_current_value(GTK_RADIO_ACTION(
-        gtk_ui_manager_get_action(rc_gui.main_ui,
-        "/RCMenuBar/ViewMenu/ViewPlaylist")), 0);
-}
-
-/*
- * Process the click event of the equalizer button.
- */
-
-static void rc_gui_eq_button_clicked()
-{
-    gtk_radio_action_set_current_value(GTK_RADIO_ACTION(
-        gtk_ui_manager_get_action(rc_gui.main_ui,
-        "/RCMenuBar/ViewMenu/ViewEqualizer")), 1);
 }
 
 /*
@@ -1012,7 +1020,7 @@ static void rc_gui_layout_init()
         rc_gui.list1_tree_view);
     gtk_container_add(GTK_CONTAINER(rc_gui.list2_scr_window),
         rc_gui.list2_tree_view);
-    for(i=0;i<8;i++)
+    for(i=0;i<5;i++)
         gtk_box_pack_start(GTK_BOX(hbox2), 
             rc_gui.control_buttons[i], FALSE, FALSE, 0);
     album_frame = gtk_frame_new(NULL);
@@ -1029,7 +1037,9 @@ static void rc_gui_layout_init()
         rc_gui.list_hpaned, pls_label);
     gtk_notebook_append_page(GTK_NOTEBOOK(rc_gui.plist_notebook),
         rc_gui.eq_vbox, eq_label);
-    gtk_notebook_set_show_tabs(GTK_NOTEBOOK(rc_gui.plist_notebook), FALSE);
+    gtk_notebook_set_show_tabs(GTK_NOTEBOOK(rc_gui.plist_notebook), TRUE);
+    gtk_notebook_set_tab_pos(GTK_NOTEBOOK(rc_gui.plist_notebook),
+        GTK_POS_BOTTOM);
     gtk_box_pack_start(GTK_BOX(vbox1), rc_gui.title_label, FALSE, TRUE, 0);
     gtk_box_pack_start(GTK_BOX(vbox1), rc_gui.artist_label, FALSE, TRUE, 0);
     gtk_box_pack_start(GTK_BOX(vbox1), rc_gui.album_label, FALSE, TRUE, 0);
@@ -1098,12 +1108,6 @@ static void rc_gui_signal_bind()
         "clicked", G_CALLBACK(rc_gui_next_button_clicked), NULL);
     g_signal_connect(G_OBJECT(rc_gui.control_buttons[RC_UI_CTRL_OPEN]),
         "clicked", G_CALLBACK(rc_gui_show_open_dialog), NULL);
-    g_signal_connect(G_OBJECT(rc_gui.control_buttons[RC_UI_CTRL_LIST]),
-        "clicked", G_CALLBACK(rc_gui_plist_button_clicked), NULL);
-    g_signal_connect(G_OBJECT(rc_gui.control_buttons[RC_UI_CTRL_EQ]),
-        "clicked", G_CALLBACK(rc_gui_eq_button_clicked), NULL);
-    g_signal_connect(G_OBJECT(rc_gui.control_buttons[RC_UI_CTRL_MINI]),
-        "clicked", G_CALLBACK(rc_gui_mini_mini_mode_clicked), NULL);
     g_signal_connect(G_OBJECT(rc_task_cancel_button), "clicked",
         G_CALLBACK(rc_gui_import_cancel_button_clicked), NULL);
     g_signal_connect(GTK_STATUS_ICON(rc_gui.tray_icon), "activate", 
@@ -1112,6 +1116,8 @@ static void rc_gui_signal_bind()
         G_CALLBACK(rc_gui_tray_icon_popup), NULL);
     g_signal_connect(G_OBJECT(rc_gui.album_eventbox), "button-release-event",
         G_CALLBACK(rc_gui_cover_image_popup), NULL);
+    g_signal_connect(G_OBJECT(rc_gui.plist_notebook), "switch-page",
+        G_CALLBACK(rc_gui_notebook_page_switched), NULL);
     g_signal_connect(G_OBJECT(rc_gui.main_window), "window-state-event",
         G_CALLBACK(rc_gui_window_state_changed), NULL);
     g_signal_connect(G_OBJECT(rc_gui.main_window), "destroy",
@@ -1147,7 +1153,7 @@ gboolean rc_gui_init()
     main_window_hints.base_height = 400;
     rc_gui.no_cover_image = NULL;
     rc_gui.update_seek_scale_flag = TRUE;
-    rc_debug_print("GUI: Loading main window...\n");
+    rc_debug_module_pmsg(module_name, "Loading...");
     rc_gui.no_cover_image = gdk_pixbuf_new_from_xpm_data((const gchar **)
         &image_no_cover);
     rc_gui.icon_image = gdk_pixbuf_new_from_xpm_data((const gchar **)
@@ -1220,13 +1226,7 @@ gboolean rc_gui_init()
         GTK_STOCK_MEDIA_NEXT, GTK_ICON_SIZE_SMALL_TOOLBAR);
     rc_gui.control_images[RC_UI_CTRL_OPEN] = gtk_image_new_from_stock(
         GTK_STOCK_OPEN, GTK_ICON_SIZE_SMALL_TOOLBAR);
-    rc_gui.control_images[RC_UI_CTRL_LIST] = gtk_image_new_from_stock(
-        GTK_STOCK_JUSTIFY_FILL, GTK_ICON_SIZE_SMALL_TOOLBAR);
-    rc_gui.control_images[RC_UI_CTRL_EQ] = gtk_image_new_from_stock(
-        GTK_STOCK_PROPERTIES, GTK_ICON_SIZE_SMALL_TOOLBAR);
-    rc_gui.control_images[RC_UI_CTRL_MINI] = gtk_image_new_from_stock(
-        GTK_STOCK_GOTO_BOTTOM, GTK_ICON_SIZE_SMALL_TOOLBAR);
-    for(i=0;i<8;i++)
+    for(i=0;i<5;i++)
     {
         rc_gui.control_buttons[i] = gtk_button_new();
         gtk_button_set_relief(GTK_BUTTON(rc_gui.control_buttons[i]),
@@ -1269,7 +1269,7 @@ gboolean rc_gui_init()
     if(!gtk_ui_manager_add_ui_from_string(rc_gui.main_ui, rc_ui_info, -1,
         &error))
     {
-        rc_debug_perror("Gui-ERROR: Building menus failed: %s\n",
+        rc_debug_module_perror(module_name, "Building menus failed: %s",
             error->message);
         g_error_free(error);
     }
@@ -1289,7 +1289,7 @@ gboolean rc_gui_init()
         gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
             "/RCMenuBar/ViewMenu/ViewMiniMode"), FALSE); 
     #endif
-    rc_debug_print("GUI: Main window is successfully loaded!\n");
+    rc_debug_module_pmsg(module_name, "Loaded successfully!");
     #ifdef USE_MAEMO5
         gtk_widget_show_all(rc_gui.main_window);
         if(rc_set_get_boolean("Player", "AutoMinimize", NULL))
@@ -1352,7 +1352,8 @@ void rc_gui_set_play_button_state(gboolean state)
  * Set the data in the information labels.
  */
 
-void rc_gui_music_info_set_data(const gchar *title, const gpointer data)
+void rc_gui_music_info_set_data(const gchar *title,
+    const struct RCMusicMetaData *data)
 {
     const RCMusicMetaData *mmd = data;
     gchar title_info[512];
@@ -1622,7 +1623,7 @@ gboolean rc_gui_set_cover_image_by_buf(const GstBuffer *buf)
     loader = gdk_pixbuf_loader_new();
     if(!gdk_pixbuf_loader_write(loader, buf->data, buf->size, &error))
     {
-        rc_debug_perror("Gui-ERROR: Cannot load cover image data: %s\n",
+        rc_debug_module_perror(module_name, "Cannot load cover image data: %s",
             error->message);
         g_error_free(error);
         g_object_unref(loader);
@@ -1634,7 +1635,8 @@ gboolean rc_gui_set_cover_image_by_buf(const GstBuffer *buf)
     g_object_unref(loader);
     if(pixbuf_src==NULL)
     {
-        rc_debug_perror("Gui-ERROR: Cannot get pixbuf from loader!\n");
+        rc_debug_module_perror(module_name,
+            "Cannot get pixbuf from loader!");
         return FALSE;
     }
     album_new_pixbuf = gdk_pixbuf_scale_simple(pixbuf_src, img_cover_w,
@@ -1642,7 +1644,8 @@ gboolean rc_gui_set_cover_image_by_buf(const GstBuffer *buf)
     g_object_unref(pixbuf_src);
     if(album_new_pixbuf==NULL)
     {
-        rc_debug_perror("Gui-ERROR: Cannot convert pixbuf for cover image!\n");
+        rc_debug_module_perror(module_name,
+            "Cannot convert pixbuf for cover image!");
         return FALSE;
     }
     gtk_image_set_from_pixbuf(GTK_IMAGE(rc_gui.album_image), album_new_pixbuf);
@@ -1772,6 +1775,7 @@ guint rc_gui_view_add_page(const gchar *name, const gchar *title, GtkWidget *wid
     RCGuiViewPageData *page_data = NULL;
     GtkRadioAction *action = NULL;
     guint id = 0;
+    GtkWidget *label;
     if(name==NULL || title==NULL || widget==NULL) return 0;
     id = gtk_ui_manager_new_merge_id(rc_gui.main_ui);
     action = gtk_radio_action_new(name, title, title, NULL, 2+id);
@@ -1783,8 +1787,51 @@ guint rc_gui_view_add_page(const gchar *name, const gchar *title, GtkWidget *wid
         "/RCMenuBar/ViewMenu/ViewSep1", name, name,
         GTK_UI_MANAGER_MENUITEM, TRUE);
     gtk_action_group_add_action(rc_gui.main_action_group, GTK_ACTION(action));
+    label = gtk_label_new(name);
     gtk_notebook_append_page(GTK_NOTEBOOK(rc_gui.plist_notebook), widget,
-        NULL);
+        label);
+    page_data = g_malloc0(sizeof(RCGuiViewPageData));
+    page_data->id = id;
+    page_data->view_widget = widget;
+    page_data->action = GTK_ACTION(action);
+    rc_gui_view_page_list = g_slist_append(rc_gui_view_page_list, page_data);
+    return id;
+}
+
+/**
+ * rc_gui_view_add_page_with_label:
+ * @name: the name of the menu to add
+ * @title: the string which shows on the menu
+ * @label_text: the label show on the notebook tab
+ * @widget: the widget to add to the page 
+ *
+ * Add new view page and menu to player.
+ *
+ * Returns: The unique ID of the added page.
+ */
+
+guint rc_gui_view_add_page_with_label(const gchar *name, const gchar *title,
+    const gchar *label_text, GtkWidget *widget)
+{
+    GSList *group = NULL;
+    RCGuiViewPageData *page_data = NULL;
+    GtkRadioAction *action = NULL;
+    guint id = 0;
+    GtkWidget *label;
+    if(name==NULL || title==NULL || widget==NULL) return 0;
+    id = gtk_ui_manager_new_merge_id(rc_gui.main_ui);
+    action = gtk_radio_action_new(name, title, title, NULL, 2+id);
+    group = gtk_radio_action_get_group(GTK_RADIO_ACTION(
+        gtk_ui_manager_get_action(rc_gui.main_ui,
+        "/RCMenuBar/ViewMenu/ViewPlaylist")));
+    gtk_radio_action_set_group(GTK_RADIO_ACTION(action), group);
+    gtk_ui_manager_add_ui(rc_gui.main_ui, id,
+        "/RCMenuBar/ViewMenu/ViewSep1", name, name,
+        GTK_UI_MANAGER_MENUITEM, TRUE);
+    gtk_action_group_add_action(rc_gui.main_action_group, GTK_ACTION(action));
+    label = gtk_label_new(label_text);
+    gtk_notebook_append_page(GTK_NOTEBOOK(rc_gui.plist_notebook), widget,
+        label);
     page_data = g_malloc0(sizeof(RCGuiViewPageData));
     page_data->id = id;
     page_data->view_widget = widget;

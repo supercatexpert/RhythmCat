@@ -91,6 +91,7 @@ gboolean rc_plugin_configure(RCPluginType type, const gchar *filename);
 void rc_plugin_close(RCPluginType type, const gchar *filename);
 gboolean rc_plugin_check_running(RCPluginType type, const gchar *path);
 GSList *rc_plugin_check_exist(RCPluginType type, const gchar *name);
+const gchar *rc_plugin_get_path(RCPluginType type, const gchar *group_name);
 
 G_END_DECLS
 

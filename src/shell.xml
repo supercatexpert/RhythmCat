@@ -55,8 +55,12 @@
       <arg direction="out" name="samplerate" type="u"/>
       <arg direction="out" name="channel" type="u"/>
     </method>
+    <method name="GetCurrentLyricText">
+      <arg direction="out" name="text" type="s"/>
+    </method>
     <signal name="StateChanged"/>
     <signal name="MusicStarted"/>
+    <signal name="LyricLineChanged"/>
   </interface>
 </node>
 

@@ -1,0 +1,340 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>CUE Parser</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="index.html" title="RhythmCat Music Player Development Reference Manual">
+<link rel="up" href="ch01.html" title="Player Backend">
+<link rel="prev" href="RhythmCat-Tag.html" title="Tag">
+<link rel="next" href="RCPlayer.html" title="Player Object">
+<meta name="generator" content="GTK-Doc V1.15 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="RhythmCat-Tag.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">RhythmCat Music Player Development Reference Manual</th>
+<td><a accesskey="n" href="RCPlayer.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#RhythmCat-CUE-Parser.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#RhythmCat-CUE-Parser.description" class="shortcut">Description</a>
+</td></tr>
+</table>
+<div class="refentry" title="CUE Parser">
+<a name="RhythmCat-CUE-Parser"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="RhythmCat-CUE-Parser.top_of_page"></a>CUE Parser</span></h2>
+<p>CUE Parser — CUE Parser.</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv" title="Synopsis">
+<a name="RhythmCat-CUE-Parser.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">
+#include &lt;cue.h&gt;
+
+                    <a class="link" href="RhythmCat-Tag.html#RCMusicMetaData" title="RCMusicMetaData">RCMusicMetaData</a>;
+enum                <a class="link" href="RhythmCat-CUE-Parser.html#RCCueInputType" title="enum RCCueInputType">RCCueInputType</a>;
+                    <a class="link" href="RhythmCat-CUE-Parser.html#RCCueTrack" title="RCCueTrack">RCCueTrack</a>;
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               <a class="link" href="RhythmCat-CUE-Parser.html#rc-cue-read-data" title="rc_cue_read_data ()">rc_cue_read_data</a>                    (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *input</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RhythmCat-CUE-Parser.html#RCCueInputType" title="enum RCCueInputType"><span class="type">RCCueInputType</span></a> type</code></em>,
+                                                         <em class="parameter"><code><span class="type">RCCueData</span> *data</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-CUE-Parser.html#rc-cue-free" title="rc_cue_free ()">rc_cue_free</a>                         (<em class="parameter"><code><span class="type">RCCueData</span> *data</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-CUE-Parser.html#rc-cue-get-track-num" title="rc_cue_get_track_num ()">rc_cue_get_track_num</a>                (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *path</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> **cue_path</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *track_num</code></em>);
+struct <a class="link" href="RhythmCat-Tag.html#RCMusicMetaData" title="RCMusicMetaData"><span class="returnvalue">RCMusicMetaData</span></a> * <a class="link" href="RhythmCat-CUE-Parser.html#rc-cue-get-metadata" title="rc_cue_get_metadata ()">rc_cue_get_metadata</a>            (<em class="parameter"><code><span class="type">RCCueData</span> *cue_data</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> track_num</code></em>,
+                                                         <em class="parameter"><code><span class="type">struct RCMusicMetaData</span> *cue_mmd</code></em>);
+</pre>
+</div>
+<div class="refsect1" title="Description">
+<a name="RhythmCat-CUE-Parser.description"></a><h2>Description</h2>
+<p>
+Parse track data in CUE files.
+</p>
+</div>
+<div class="refsect1" title="Details">
+<a name="RhythmCat-CUE-Parser.details"></a><h2>Details</h2>
+<div class="refsect2" title="RCMusicMetaData">
+<a name="RCMusicMetaData"></a><h3>RCMusicMetaData</h3>
+<pre class="programlisting">typedef struct {
+    gint64 length;
+    gchar *uri;
+    guint tracknum;
+    guint bitrate;
+    gint samplerate;
+    gint channels;
+    gchar *title;
+    gchar *artist;
+    gchar *album;
+    gchar *comment;
+    gchar *file_type;
+    gchar *emb_cue;
+    GstBuffer *image;
+    gboolean eos;
+    gboolean audio_flag;
+    gboolean video_flag;
+    gpointer user_data;
+} RCMusicMetaData;
+</pre>
+<p>
+Custom struct type to store the music metadata.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> <em class="structfield"><code><a name="RCMusicMetaData.length"></a>length</code></em>;</span></p></td>
+<td>the length of the music
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCMusicMetaData.uri"></a>uri</code></em>;</span></p></td>
+<td>the URI of the music
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="RCMusicMetaData.tracknum"></a>tracknum</code></em>;</span></p></td>
+<td>the track number of the music
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="RCMusicMetaData.bitrate"></a>bitrate</code></em>;</span></p></td>
+<td>the bitrate of the music
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="RCMusicMetaData.samplerate"></a>samplerate</code></em>;</span></p></td>
+<td>the sample rate of the music
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="RCMusicMetaData.channels"></a>channels</code></em>;</span></p></td>
+<td>the channel number of the music
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCMusicMetaData.title"></a>title</code></em>;</span></p></td>
+<td>the title text of the music
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCMusicMetaData.artist"></a>artist</code></em>;</span></p></td>
+<td>the artist text of the music
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCMusicMetaData.album"></a>album</code></em>;</span></p></td>
+<td>the album text of the music
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCMusicMetaData.comment"></a>comment</code></em>;</span></p></td>
+<td>the comment text of the music
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCMusicMetaData.file-type"></a>file_type</code></em>;</span></p></td>
+<td>the file type of the music
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCMusicMetaData.emb-cue"></a>emb_cue</code></em>;</span></p></td>
+<td>the embeded CUE data of the music
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gstreamer-0.10/gstreamer-GstBuffer.html#GstBuffer"><span class="type">GstBuffer</span></a> *<em class="structfield"><code><a name="RCMusicMetaData.image"></a>image</code></em>;</span></p></td>
+<td>the GstBuffer which contains the cover image
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> <em class="structfield"><code><a name="RCMusicMetaData.eos"></a>eos</code></em>;</span></p></td>
+<td>the EOS signal
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> <em class="structfield"><code><a name="RCMusicMetaData.audio-flag"></a>audio_flag</code></em>;</span></p></td>
+<td>whether this file has audio
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> <em class="structfield"><code><a name="RCMusicMetaData.video-flag"></a>video_flag</code></em>;</span></p></td>
+<td>whether this file has video
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> <em class="structfield"><code><a name="RCMusicMetaData.user-data"></a>user_data</code></em>;</span></p></td>
+<td>the user data
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="enum RCCueInputType">
+<a name="RCCueInputType"></a><h3>enum RCCueInputType</h3>
+<pre class="programlisting">typedef enum RCCueInputType
+{
+    RC_CUE_INPUT_URI = 0,
+    RC_CUE_INPUT_PATH = 1,
+    RC_CUE_INPUT_EMBEDED = 2
+}RCCueInputType;
+</pre>
+</div>
+<hr>
+<div class="refsect2" title="RCCueTrack">
+<a name="RCCueTrack"></a><h3>RCCueTrack</h3>
+<pre class="programlisting">typedef struct {
+    guint index;
+    gchar *title;
+    gchar *performer;
+    guint64 time0;
+    guint64 time1;
+} RCCueTrack;
+</pre>
+</div>
+<hr>
+<div class="refsect2" title="rc_cue_read_data ()">
+<a name="rc-cue-read-data"></a><h3>rc_cue_read_data ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               rc_cue_read_data                    (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *input</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RhythmCat-CUE-Parser.html#RCCueInputType" title="enum RCCueInputType"><span class="type">RCCueInputType</span></a> type</code></em>,
+                                                         <em class="parameter"><code><span class="type">RCCueData</span> *data</code></em>);</pre>
+<p>
+Read and parse data from CUE file or string.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>input</code></em> :</span></p></td>
+<td>the input data
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>type</code></em> :</span></p></td>
+<td>the data type of the input data
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>data</code></em> :</span></p></td>
+<td>the parsed CUE data
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The track number, 0 if the CUE data is incorrect.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_cue_free ()">
+<a name="rc-cue-free"></a><h3>rc_cue_free ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_cue_free                         (<em class="parameter"><code><span class="type">RCCueData</span> *data</code></em>);</pre>
+<p>
+Free the CUE data.
+Notice that the parameter itself will not be free.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>data</code></em> :</span></p></td>
+<td>the CUE data to free
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_cue_get_track_num ()">
+<a name="rc-cue-get-track-num"></a><h3>rc_cue_get_track_num ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_cue_get_track_num                (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *path</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> **cue_path</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *track_num</code></em>);</pre>
+<p>
+Get the CUE path/URI and track number from given path/URI.
+</p>
+<p>
+e.g. For the given path "/home/test/1.cue:1", you will get
+path "/home/test/1.cue", and track number 1.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>path</code></em> :</span></p></td>
+<td>the file path or URI
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>cue_path</code></em> :</span></p></td>
+<td>the file path or URI of the CUE file
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>track_num</code></em> :</span></p></td>
+<td>the track number
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> Whether the path/URI is valid.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_cue_get_metadata ()">
+<a name="rc-cue-get-metadata"></a><h3>rc_cue_get_metadata ()</h3>
+<pre class="programlisting">struct <a class="link" href="RhythmCat-Tag.html#RCMusicMetaData" title="RCMusicMetaData"><span class="returnvalue">RCMusicMetaData</span></a> * rc_cue_get_metadata            (<em class="parameter"><code><span class="type">RCCueData</span> *cue_data</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> track_num</code></em>,
+                                                         <em class="parameter"><code><span class="type">struct RCMusicMetaData</span> *cue_mmd</code></em>);</pre>
+<p>
+Get the metadata of the given track in the CUE file.
+If <em class="parameter"><code>cue_mmd</code></em> is NULL, it will try to read metadata of the audio file
+in CUE FILE part.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>cue_data</code></em> :</span></p></td>
+<td>the CUE data
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>track_num</code></em> :</span></p></td>
+<td>the track number
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>cue_mmd</code></em> :</span></p></td>
+<td>the metadata of the audio file used by CUE file
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The metadata, NULL if the parameters are invalid or the
+given track does not exist in the CUE file.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.15</div>
+</body>
+</html>

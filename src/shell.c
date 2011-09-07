@@ -29,6 +29,7 @@
 #include "core.h"
 #include "gui.h"
 #include "tag.h"
+#include "lyric.h"
 
 /**
  * SECTION: shell
@@ -45,9 +46,11 @@ enum
 {
     STATE_CHANGED,
     MUSIC_STARTED,
+    LYRIC_LINE_CHANGED,
     LAST_SIGNAL
 };
 
+static const gchar *module_name = "Shell";
 static gint object_signals[LAST_SIGNAL] = {0};
 static GObject *shell_object = NULL;
 
@@ -57,14 +60,18 @@ static void rc_shell_init(RCShell *obj)
 
 static void rc_shell_class_init(RCShellClass *class)
 {
-    object_signals[STATE_CHANGED] = g_signal_new("state-changed", RC_SHELL_TYPE,
-        G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCShellClass, state_changed),
-        NULL, NULL, g_cclosure_marshal_VOID__VOID,
-        G_TYPE_NONE, 0, NULL);
-    object_signals[MUSIC_STARTED] = g_signal_new("music-started", RC_SHELL_TYPE,
-        G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCShellClass, music_started),
-        NULL, NULL, g_cclosure_marshal_VOID__VOID,
-        G_TYPE_NONE, 0, NULL);
+    object_signals[STATE_CHANGED] = g_signal_new("state-changed",
+        RC_SHELL_TYPE, G_SIGNAL_RUN_FIRST,
+        G_STRUCT_OFFSET(RCShellClass, state_changed), NULL, NULL,
+        g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0, NULL);
+    object_signals[MUSIC_STARTED] = g_signal_new("music-started",
+        RC_SHELL_TYPE, G_SIGNAL_RUN_FIRST,
+        G_STRUCT_OFFSET(RCShellClass, music_started), NULL, NULL,
+        g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0, NULL);
+    object_signals[LYRIC_LINE_CHANGED] = g_signal_new("lyric-line-changed",
+        RC_SHELL_TYPE, G_SIGNAL_RUN_FIRST,
+        G_STRUCT_OFFSET(RCShellClass, lyric_line_changed), NULL, NULL,
+        g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0, NULL);
 }
 
 RCShell *rc_shell_new()
@@ -96,14 +103,14 @@ void rc_shell_signal_emit_simple(const char *name)
 gboolean rc_shell_load_uri(RCShell *shell, const gchar *uri, GError **error)
 {
     if(uri==NULL) return FALSE;
-    rc_debug_print("Shell: Load URI from remote: %s\n", uri);
+    rc_debug_module_print(module_name, "Load URI from remote: %s", uri);
     return rc_plist_load_uri_from_remote(uri);
 }
 
 gboolean rc_shell_play(RCShell *shell, GError **error)
 {
     gint list1_index = 0, list2_index = 0;
-    gboolean flag = FALSE;;
+    gboolean flag = FALSE;
     GstState state = rc_core_get_play_state();
     if(state==GST_STATE_PLAYING) return TRUE;
     rc_plist_play_get_index(&list1_index, &list2_index);
@@ -242,6 +249,21 @@ gboolean rc_shell_get_current_track(RCShell *shell, gchar **uri,
         *samplerate = md->samplerate;
     if(channel!=NULL)
         *channel = md->channels;
+    return TRUE;
+}
+
+gboolean rc_shell_get_current_lyric_text(RCShell *shell, gchar **text,
+    GError **error)
+{
+    const RCLyricData *lyric_data;
+    if(text==NULL) return FALSE;
+    lyric_data = rc_lrc_get_line_now();
+    if(lyric_data!=NULL)
+    {
+        *text = g_strdup(lyric_data->text);
+    }
+    else
+        *text = NULL;
     return TRUE;
 }
 

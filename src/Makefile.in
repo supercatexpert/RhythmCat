@@ -64,7 +64,8 @@ am_RhythmCat_OBJECTS = core.$(OBJEXT) lyric.$(OBJEXT) \
 	player.$(OBJEXT) player_object.$(OBJEXT) gui_text.$(OBJEXT) \
 	gui.$(OBJEXT) gui_treeview.$(OBJEXT) gui_style.$(OBJEXT) \
 	gui_dialog.$(OBJEXT) gui_eq.$(OBJEXT) gui_plugin.$(OBJEXT) \
-	gui_setting.$(OBJEXT) gui_mini.$(OBJEXT) main.$(OBJEXT)
+	gui_setting.$(OBJEXT) gui_mini.$(OBJEXT) cue.$(OBJEXT) \
+	main.$(OBJEXT)
 RhythmCat_OBJECTS = $(am_RhythmCat_OBJECTS)
 am__DEPENDENCIES_1 =
 RhythmCat_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
@@ -225,11 +226,11 @@ top_srcdir = @top_srcdir@
 RhythmCat_SOURCES = core.c lyric.c playlist.c tag.c settings.c plugin.c \
     shell.c msg.c debug.c player.c player_object.c gui_text.c gui.c \
     gui_treeview.c gui_style.c gui_dialog.c gui_eq.c gui_plugin.c \
-    gui_setting.c gui_mini.c main.c \
+    gui_setting.c gui_mini.c cue.c main.c \
     core.h lyric.h playlist.h tag.h settings.h plugin.h \
     shell.h msg.h debug.h player.h player_object.h gui_text.h gui.h \
     gui_treeview.h gui_style.h gui_dialog.h gui_eq.h gui_plugin.h \
-    gui_setting.h gui_mini.h shell_glue.h shell.xml \
+    gui_setting.h gui_mini.h cue.h shell_glue.h shell.xml \
     imgs/img_icon.xpm imgs/img_nocov.xpm
 
 INCLUDES = @GLIB2_CFLAGS@ @DBUS_GLIB_CFLAGS@ @GSTREAMER_CFLAGS@ \
@@ -319,6 +320,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/core.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cue.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/debug.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gui_dialog.Po@am__quote@

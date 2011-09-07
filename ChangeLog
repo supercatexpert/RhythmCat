@@ -70,4 +70,6 @@
           is not enabled).
         * Need lower GTK2 version now (at least 2.12).
  
+2011-09-07  SuperCat    <supercatexpert@gmail.com>
+        * Added CUE sheet file support, including embeded CUE sheet in FLAC file.
 

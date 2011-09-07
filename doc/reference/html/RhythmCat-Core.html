@@ -79,7 +79,6 @@ The core part of the player, it uses Gstreamer as backend to play audio files.
     GstElement *vol_plugin;
     gint64 start_time;
     gint64 end_time;
-    gboolean start_flag;
     guint ver_major;
     guint ver_minor;
     guint ver_micro;
@@ -120,11 +119,6 @@ The data of the core.
 <tr>
 <td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> <em class="structfield"><code><a name="RCCoreData.end-time"></a>end_time</code></em>;</span></p></td>
 <td>the end time used in segment playing
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> <em class="structfield"><code><a name="RCCoreData.start-flag"></a>start_flag</code></em>;</span></p></td>
-<td>whether the player has been started (playing or paused)
 </td>
 </tr>
 <tr>

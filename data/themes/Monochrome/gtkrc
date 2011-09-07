@@ -22,11 +22,19 @@ style "rc-widget-bg"
 	fg[NORMAL]	= "#F0F0F0"
 }
 
+style "rc-list-notebook"
+{
+	bg[NORMAL]	= "#282828"
+	bg[ACTIVE]	= "#505050"
+	fg[NORMAL]	= "#F0F0F0"
+}
+
 style "rc-normal-label"
 {
 	fg[NORMAL]	= "#F0F0F0"
 	text[NORMAL]	= "#F0F0F0"
 	bg[NORMAL]	= "#282828"
+        fg[ACTIVE]	= "#F0F0F0"
 }
 
 style "rc-time-label"
@@ -322,6 +330,7 @@ style "rc-list-paned"
 
 widget "RCMainWindow"	style "rc-main-window"
 widget "RCMiniWindow"	style "rc-widget-bg"
+widget "RCMainWindow.*.RCPlistNotebook*"	style "rc-list-notebook"
 widget "RCMainWindow.*.RCStatusInfoBar"	style "rc-widget-bg"
 widget "RCMainWindow.*.GtkProgressBar"	style "rc-widget-bg"
 widget "RCMainWindow.*.GtkEventBox"	style "rc-widget-bg"

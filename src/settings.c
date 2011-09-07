@@ -40,6 +40,7 @@
  */
 
 /* Variables */
+static const gchar *module_name = "Settings";
 static GKeyFile *rc_configure = NULL;
 static GKeyFile *rc_plugin_configure = NULL;
 
@@ -54,6 +55,7 @@ void rc_set_init()
     gchar *conf_file = NULL;
     gdouble eq_array[10];
     const gchar *locale;
+    rc_debug_module_pmsg(module_name, "Loading...");
     bzero(eq_array, sizeof(eq_array));
     rc_configure = g_key_file_new();
     rc_plugin_configure = g_key_file_new();
@@ -99,16 +101,30 @@ void rc_set_init()
     /* Load user setting. */
     conf_file = g_build_filename(rc_player_get_conf_dir(), "setting.conf",
         NULL);
-    rc_set_load_setting(conf_file);
+    if(rc_set_load_setting(conf_file))
+    {
+        rc_debug_module_pmsg(module_name,
+            "Loaded user settings successfully!");
+    }
+    else
+    {
+        rc_debug_module_print(module_name,
+            "User settings do not exist.");
+    }
     g_free(conf_file);
     /* Load plugin setting. */
     conf_file = g_build_filename(rc_player_get_conf_dir(), "plugins.conf", 
         NULL);
-    if(!g_key_file_load_from_file(rc_plugin_configure, conf_file,
+    if(g_key_file_load_from_file(rc_plugin_configure, conf_file,
         G_KEY_FILE_NONE, NULL))
     {
-        rc_debug_print("Plugin: Cannot open configure file. Maybe it is not "
-            "exist?\n");
+        rc_debug_module_pmsg(module_name,
+            "Loaded plugin settings successfully!");
+    }
+    else
+    {
+        rc_debug_module_print(module_name, "Cannot open configure file. "
+            "Maybe it is not exist?");
     }
     g_free(conf_file);
 }

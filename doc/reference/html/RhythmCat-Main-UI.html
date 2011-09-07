@@ -41,11 +41,12 @@
 #include &lt;gui.h&gt;
 
                     <a class="link" href="RhythmCat-Main-UI.html#RCGuiData" title="RCGuiData">RCGuiData</a>;
+                    <a class="link" href="RhythmCat-Tag.html#RCMusicMetaData" title="RCMusicMetaData">RCMusicMetaData</a>;
 <a class="link" href="RhythmCat-Main-UI.html#RCGuiData" title="RCGuiData"><span class="returnvalue">RCGuiData</span></a> *         <a class="link" href="RhythmCat-Main-UI.html#rc-gui-get-data" title="rc_gui_get_data ()">rc_gui_get_data</a>                     ();
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Main-UI.html#rc-gui-init" title="rc_gui_init ()">rc_gui_init</a>                         ();
 <span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Main-UI.html#rc-gui-quit-player" title="rc_gui_quit_player ()">rc_gui_quit_player</a>                  ();
 <span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Main-UI.html#rc-gui-music-info-set-data" title="rc_gui_music_info_set_data ()">rc_gui_music_info_set_data</a>          (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *title</code></em>,
-                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);
+                                                         <em class="parameter"><code>const <span class="type">struct RCMusicMetaData</span> *data</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Main-UI.html#rc-gui-time-label-set-text" title="rc_gui_time_label_set_text ()">rc_gui_time_label_set_text</a>          (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> time</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Main-UI.html#rc-gui-set-play-button-state" title="rc_gui_set_play_button_state ()">rc_gui_set_play_button_state</a>        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> state</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Main-UI.html#rc-gui-seek-scaler-disable" title="rc_gui_seek_scaler_disable ()">rc_gui_seek_scaler_disable</a>          ();
@@ -59,6 +60,10 @@
 <span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Main-UI.html#rc-gui-status-progress-set-progress" title="rc_gui_status_progress_set_progress ()">rc_gui_status_progress_set_progress</a> ();
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               <a class="link" href="RhythmCat-Main-UI.html#rc-gui-view-add-page" title="rc_gui_view_add_page ()">rc_gui_view_add_page</a>                (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
                                                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *title</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *widget</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               <a class="link" href="RhythmCat-Main-UI.html#rc-gui-view-add-page-with-label" title="rc_gui_view_add_page_with_label ()">rc_gui_view_add_page_with_label</a>     (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *title</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *label_text</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *widget</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Main-UI.html#rc-gui-view-remove-page" title="rc_gui_view_remove_page ()">rc_gui_view_remove_page</a>             (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> id</code></em>);
 <a href="/usr/share/gtk-doc/html/gtk/GtkStatusIcon.html"><span class="returnvalue">GtkStatusIcon</span></a> *     <a class="link" href="RhythmCat-Main-UI.html#rc-gui-get-tray-icon" title="rc_gui_get_tray_icon ()">rc_gui_get_tray_icon</a>                ();
@@ -88,8 +93,8 @@ Show the main UI of the player.
     GtkWidget *title_label, *artist_label, *album_label;
     GtkWidget *time_label, *length_label, *info_label;
     GtkWidget *album_image, *album_eventbox, *album_frame;
-    GtkWidget *control_images[8];
-    GtkWidget *control_buttons[8];
+    GtkWidget *control_images[5];
+    GtkWidget *control_buttons[5];
     GtkWidget *volume_button;
     GtkWidget *time_scroll_bar;
     GtkWidget *lrc_scrolled_label;
@@ -190,12 +195,12 @@ Please do not change the data in this structure.
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.control-images"></a>control_images</code></em>[8];</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.control-images"></a>control_images</code></em>[5];</span></p></td>
 <td>the images of control buttons
 </td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.control-buttons"></a>control_buttons</code></em>[8];</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *<em class="structfield"><code><a name="RCGuiData.control-buttons"></a>control_buttons</code></em>[5];</span></p></td>
 <td>the button widgets of control buttons
 </td>
 </tr>
@@ -333,6 +338,123 @@ Please do not change the data in this structure.
 </table></div>
 </div>
 <hr>
+<div class="refsect2" title="RCMusicMetaData">
+<a name="RCMusicMetaData"></a><h3>RCMusicMetaData</h3>
+<pre class="programlisting">typedef struct {
+    gint64 length;
+    gchar *uri;
+    guint tracknum;
+    guint bitrate;
+    gint samplerate;
+    gint channels;
+    gchar *title;
+    gchar *artist;
+    gchar *album;
+    gchar *comment;
+    gchar *file_type;
+    gchar *emb_cue;
+    GstBuffer *image;
+    gboolean eos;
+    gboolean audio_flag;
+    gboolean video_flag;
+    gpointer user_data;
+} RCMusicMetaData;
+</pre>
+<p>
+Custom struct type to store the music metadata.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint64"><span class="type">gint64</span></a> <em class="structfield"><code><a name="RCMusicMetaData.length"></a>length</code></em>;</span></p></td>
+<td>the length of the music
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCMusicMetaData.uri"></a>uri</code></em>;</span></p></td>
+<td>the URI of the music
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="RCMusicMetaData.tracknum"></a>tracknum</code></em>;</span></p></td>
+<td>the track number of the music
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="RCMusicMetaData.bitrate"></a>bitrate</code></em>;</span></p></td>
+<td>the bitrate of the music
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="RCMusicMetaData.samplerate"></a>samplerate</code></em>;</span></p></td>
+<td>the sample rate of the music
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="RCMusicMetaData.channels"></a>channels</code></em>;</span></p></td>
+<td>the channel number of the music
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCMusicMetaData.title"></a>title</code></em>;</span></p></td>
+<td>the title text of the music
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCMusicMetaData.artist"></a>artist</code></em>;</span></p></td>
+<td>the artist text of the music
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCMusicMetaData.album"></a>album</code></em>;</span></p></td>
+<td>the album text of the music
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCMusicMetaData.comment"></a>comment</code></em>;</span></p></td>
+<td>the comment text of the music
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCMusicMetaData.file-type"></a>file_type</code></em>;</span></p></td>
+<td>the file type of the music
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCMusicMetaData.emb-cue"></a>emb_cue</code></em>;</span></p></td>
+<td>the embeded CUE data of the music
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gstreamer-0.10/gstreamer-GstBuffer.html#GstBuffer"><span class="type">GstBuffer</span></a> *<em class="structfield"><code><a name="RCMusicMetaData.image"></a>image</code></em>;</span></p></td>
+<td>the GstBuffer which contains the cover image
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> <em class="structfield"><code><a name="RCMusicMetaData.eos"></a>eos</code></em>;</span></p></td>
+<td>the EOS signal
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> <em class="structfield"><code><a name="RCMusicMetaData.audio-flag"></a>audio_flag</code></em>;</span></p></td>
+<td>whether this file has audio
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> <em class="structfield"><code><a name="RCMusicMetaData.video-flag"></a>video_flag</code></em>;</span></p></td>
+<td>whether this file has video
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> <em class="structfield"><code><a name="RCMusicMetaData.user-data"></a>user_data</code></em>;</span></p></td>
+<td>the user data
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
 <div class="refsect2" title="rc_gui_get_data ()">
 <a name="rc-gui-get-data"></a><h3>rc_gui_get_data ()</h3>
 <pre class="programlisting"><a class="link" href="RhythmCat-Main-UI.html#RCGuiData" title="RCGuiData"><span class="returnvalue">RCGuiData</span></a> *         rc_gui_get_data                     ();</pre>
@@ -377,7 +499,7 @@ Quit the player.
 <div class="refsect2" title="rc_gui_music_info_set_data ()">
 <a name="rc-gui-music-info-set-data"></a><h3>rc_gui_music_info_set_data ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_music_info_set_data          (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *title</code></em>,
-                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);</pre>
+                                                         <em class="parameter"><code>const <span class="type">struct RCMusicMetaData</span> *data</code></em>);</pre>
 <p>
 Set the data in the information labels.
 </p>
@@ -570,6 +692,47 @@ Add new view page and menu to player.
 <tr>
 <td><p><span class="term"><em class="parameter"><code>title</code></em> :</span></p></td>
 <td>the string which shows on the menu
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>widget</code></em> :</span></p></td>
+<td>the widget to add to the page 
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The unique ID of the added page.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_view_add_page_with_label ()">
+<a name="rc-gui-view-add-page-with-label"></a><h3>rc_gui_view_add_page_with_label ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               rc_gui_view_add_page_with_label     (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *title</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *label_text</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> *widget</code></em>);</pre>
+<p>
+Add new view page and menu to player.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
+<td>the name of the menu to add
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>title</code></em> :</span></p></td>
+<td>the string which shows on the menu
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>label_text</code></em> :</span></p></td>
+<td>the label show on the notebook tab
 </td>
 </tr>
 <tr>
