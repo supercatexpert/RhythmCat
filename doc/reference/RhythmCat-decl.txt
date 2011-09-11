@@ -1,7 +1,11 @@
+<MACRO>
+<NAME>RC_PLUGIN_MAGIC_NUMBER</NAME>
+#define RC_PLUGIN_MAGIC_NUMBER 0x100B090B
+</MACRO>
 <ENUM>
 <NAME>RCPluginType</NAME>
 typedef enum RCPluginType {
-    PLUGIN_TYPE_MODULE = 1,
+    PLUGIN_TYPE_MODULE = 1
 }RCPluginType;
 </ENUM>
 <STRUCT>
@@ -19,8 +23,11 @@ typedef struct RCPluginConfData {
 <STRUCT>
 <NAME>RCPluginModuleData</NAME>
 typedef struct RCPluginModuleData {
+    guint32 magic_number;
     gchar *group_name;
+    gchar *path;
     gboolean resident;
+    GQuark id;
 }RCPluginModuleData;
 </STRUCT>
 <FUNCTION>
@@ -1086,6 +1093,11 @@ guint id
 </FUNCTION>
 <FUNCTION>
 <NAME>rc_gui_get_no_cover_image</NAME>
+<RETURNS>const GdkPixbuf *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_get_cover_image</NAME>
 <RETURNS>const GdkPixbuf *</RETURNS>
  
 </FUNCTION>

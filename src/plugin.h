@@ -31,6 +31,8 @@
 
 G_BEGIN_DECLS
 
+#define RC_PLUGIN_MAGIC_NUMBER 0x100B090B
+
 /**
  * RCPluginType:
  * @PLUGIN_TYPE_MODULE: the plugin is a module
@@ -39,7 +41,7 @@ G_BEGIN_DECLS
  */
 
 typedef enum RCPluginType {
-    PLUGIN_TYPE_MODULE = 1,
+    PLUGIN_TYPE_MODULE = 1
 }RCPluginType;
 
 /**
@@ -67,15 +69,21 @@ typedef struct RCPluginConfData {
 
 /**
  * RCPluginModuleData:
+ * @magic_number: the magic number
  * @group_name: the group name used in plugin configure file
+ * @path: the plugin path (can only be accessed when the plugin is running)
  * @resident: whether the plugin can be removed while the player is running
+ * @id: the unique ID when the plugin is running
  *
  * The data structure of module.
  */
 
 typedef struct RCPluginModuleData {
+    guint32 magic_number;
     gchar *group_name;
+    gchar *path;
     gboolean resident;
+    GQuark id;
 }RCPluginModuleData;
 
 /* Function */

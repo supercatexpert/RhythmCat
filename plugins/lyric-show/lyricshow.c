@@ -60,12 +60,15 @@ typedef struct _GuiLrcData
 
 static RCPluginModuleData plugin_module_data =
 {
+    RC_PLUGIN_MAGIC_NUMBER, /* magic_number */
     #ifdef USE_GTK3
         "LyricShowGtk3", /* group_name */
     #else
         "LyricShowGtk2", /* group_name */
     #endif
-    FALSE /* resident */
+    NULL, /* path */
+    FALSE, /* resident */
+    0 /* id */
 };
 
 static gulong lyric_found_signal, lyric_stop_signal;
@@ -516,14 +519,16 @@ static void rc_plugin_lrcshow_init()
 
 G_MODULE_EXPORT const gchar *g_module_check_init(GModule *module)
 {
-    g_printf("LRCShow: Plugin loaded successfully!\n");
+    rc_debug_module_pmsg(plugin_module_data.group_name,
+        "Plugin loaded successfully!");
     keyfile = rc_set_get_plugin_configure();
     return NULL;
 }
 
 G_MODULE_EXPORT void g_module_unload(GModule *module)
 {
-    g_printf("LRCShow: Plugin exited!\n");
+    rc_debug_module_pmsg(plugin_module_data.group_name,
+        "Plugin exited!");
 }
 
 static void rc_plugin_lrcshow_lyric_found()
@@ -680,7 +685,7 @@ G_MODULE_EXPORT void rc_plugin_module_configure()
     gtk_widget_destroy(dialog);
 }
 
-G_MODULE_EXPORT const RCPluginModuleData *rc_plugin_module_data()
+G_MODULE_EXPORT RCPluginModuleData *rc_plugin_module_data()
 {
     return &plugin_module_data;
 }

@@ -4,9 +4,9 @@
 [
   <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
 ]>
-<refentry id="RCGuiScrolledText">
+<refentry id="RhythmCat-RCGuiScrolledText">
 <refmeta>
-<refentrytitle role="top_of_page" id="RCGuiScrolledText.top_of_page">Scrolledate Text Widget</refentrytitle>
+<refentrytitle role="top_of_page" id="RhythmCat-RCGuiScrolledText.top_of_page">Scrolledate Text Widget</refentrytitle>
 <manvolnum>3</manvolnum>
 <refmiscinfo>
   RHYTHMCAT Library
@@ -17,7 +17,7 @@
 <refpurpose>An scrollable text widget in the player.</refpurpose>
 </refnamediv>
 
-<refsynopsisdiv id="RCGuiScrolledText.synopsis" role="synopsis">
+<refsynopsisdiv id="RhythmCat-RCGuiScrolledText.synopsis" role="synopsis">
 <title role="synopsis.title">Synopsis</title>
 
 <synopsis>
@@ -28,7 +28,7 @@
 #define             <link linkend="RC-GUI-SCROLLED-TEXT-CLASS:CAPS">RC_GUI_SCROLLED_TEXT_CLASS</link>          (klass)
 #define             <link linkend="IS-RC-GUI-SCROLLED-TEXT:CAPS">IS_RC_GUI_SCROLLED_TEXT</link>             (obj)
 #define             <link linkend="IS-RC-GUI-SCROLLED-TEXT-CLASS:CAPS">IS_RC_GUI_SCROLLED_TEXT_CLASS</link>       (klass)
-                    <link linkend="RCGuiScrolledText-struct">RCGuiScrolledText</link>;
+                    <link linkend="RCGuiScrolledText">RCGuiScrolledText</link>;
                     <link linkend="RCGuiScrolledTextClass">RCGuiScrolledTextClass</link>;
 <link linkend="GType"><returnvalue>GType</returnvalue></link>               <link linkend="rc-gui-scrolled-text-get-type">rc_gui_scrolled_text_get_type</link>       ();
 <link linkend="GtkWidget"><returnvalue>GtkWidget</returnvalue></link> *         <link linkend="rc-gui-scrolled-text-new">rc_gui_scrolled_text_new</link>            ();
@@ -44,38 +44,14 @@ const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       <lin
 <link linkend="gint"><returnvalue>gint</returnvalue></link>                <link linkend="rc-gui-scrolled-text-get-width">rc_gui_scrolled_text_get_width</link>      (<parameter><link linkend="RCGuiScrolledText"><type>RCGuiScrolledText</type></link> *widget</parameter>);
 </synopsis>
 </refsynopsisdiv>
-<refsect1 id="RCGuiScrolledText.object-hierarchy" role="object_hierarchy">
-<title role="object_hierarchy.title">Object Hierarchy</title>
-<synopsis>
-  <link linkend="GObject">GObject</link>
-   +----<link linkend="GInitiallyUnowned">GInitiallyUnowned</link>
-         +----<link linkend="GtkObject">GtkObject</link>
-               +----<link linkend="GtkWidget">GtkWidget</link>
-                     +----RCGuiScrolledText
-</synopsis>
-</refsect1>
-<refsect1 id="RCGuiScrolledText.implemented-interfaces" role="impl_interfaces">
-<title role="impl_interfaces.title">Implemented Interfaces</title>
-<para>
-RCGuiScrolledText implements
- <link linkend="AtkImplementorIface">AtkImplementorIface</link> and  <link linkend="GtkBuildable">GtkBuildable</link>.</para>
-</refsect1>
-<refsect1 id="RCGuiScrolledText.properties" role="properties">
-<title role="properties.title">Properties</title>
-<synopsis>
-  &quot;<link linkend="RCGuiScrolledText--attributes">attributes</link>&quot;               <link linkend="PangoAttrList"><type>PangoAttrList</type></link>*        : Read / Write
-  &quot;<link linkend="RCGuiScrolledText--percent">percent</link>&quot;                  <link linkend="gdouble"><type>gdouble</type></link>               : Read / Write
-  &quot;<link linkend="RCGuiScrolledText--text">text</link>&quot;                     <link linkend="gchar"><type>gchar</type></link>*                : Read / Write
-</synopsis>
-</refsect1>
 
-<refsect1 id="RCGuiScrolledText.description" role="desc">
+<refsect1 id="RhythmCat-RCGuiScrolledText.description" role="desc">
 <title role="desc.title">Description</title>
 <para>
 An scrolledate text widget in the player.
 </para>
 </refsect1>
-<refsect1 id="RCGuiScrolledText.details" role="details">
+<refsect1 id="RhythmCat-RCGuiScrolledText.details" role="details">
 <title role="details.title">Details</title>
 <refsect2 id="RC-GUI-SCROLLED-TEXT-TYPE:CAPS" role="macro">
 <title>RC_GUI_SCROLLED_TEXT_TYPE</title>
@@ -103,11 +79,21 @@ An scrolledate text widget in the player.
 <indexterm zone="IS-RC-GUI-SCROLLED-TEXT-CLASS:CAPS"><primary>IS_RC_GUI_SCROLLED_TEXT_CLASS</primary></indexterm>
 <programlisting>#define             IS_RC_GUI_SCROLLED_TEXT_CLASS(klass)</programlisting>
 </refsect2>
-<refsect2 id="RCGuiScrolledText-struct" role="struct">
+<refsect2 id="RCGuiScrolledText" role="struct">
 <title>RCGuiScrolledText</title>
-<indexterm zone="RCGuiScrolledText-struct"><primary>RCGuiScrolledText</primary></indexterm>
-<programlisting>typedef struct _RCGuiScrolledText RCGuiScrolledText;</programlisting>
-</refsect2>
+<indexterm zone="RCGuiScrolledText"><primary>RCGuiScrolledText</primary></indexterm>
+<programlisting>typedef struct {
+    GtkWidget widget;
+} RCGuiScrolledText;
+</programlisting>
+<para>
+The structure used in object.
+</para><variablelist role="struct">
+<varlistentry><term><link linkend="GtkWidget"><type>GtkWidget</type></link>&#160;<structfield id="RCGuiScrolledText.widget">widget</structfield>;</term>
+<listitem><simpara>the parent widget
+</simpara></listitem>
+</varlistentry>
+</variablelist></refsect2>
 <refsect2 id="RCGuiScrolledTextClass" role="struct">
 <title>RCGuiScrolledTextClass</title>
 <indexterm zone="RCGuiScrolledTextClass"><primary>RCGuiScrolledTextClass</primary></indexterm>
@@ -115,7 +101,14 @@ An scrolledate text widget in the player.
     GtkWidgetClass parent_class;
 } RCGuiScrolledTextClass;
 </programlisting>
-</refsect2>
+<para>
+The class data.
+</para><variablelist role="struct">
+<varlistentry><term><link linkend="GtkWidgetClass"><type>GtkWidgetClass</type></link>&#160;<structfield id="RCGuiScrolledTextClass.parent-class">parent_class</structfield>;</term>
+<listitem><simpara>parent widget class
+</simpara></listitem>
+</varlistentry>
+</variablelist></refsect2>
 <refsect2 id="rc-gui-scrolled-text-get-type" role="function">
 <title>rc_gui_scrolled_text_get_type ()</title>
 <indexterm zone="rc-gui-scrolled-text-get-type"><primary>rc_gui_scrolled_text_get_type</primary></indexterm>
@@ -237,30 +230,6 @@ Get the text width in the widget.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 
-</refsect1>
-<refsect1 id="RCGuiScrolledText.property-details" role="property_details">
-<title role="property_details.title">Property Details</title>
-<refsect2 id="RCGuiScrolledText--attributes" role="property"><title>The <literal>&quot;attributes&quot;</literal> property</title>
-<indexterm zone="RCGuiScrolledText--attributes"><primary>RCGuiScrolledText:attributes</primary></indexterm>
-<programlisting>  &quot;attributes&quot;               <link linkend="PangoAttrList"><type>PangoAttrList</type></link>*        : Read / Write</programlisting>
-<para>
-Sets the text of the widget to show.
-</para></refsect2>
-<refsect2 id="RCGuiScrolledText--percent" role="property"><title>The <literal>&quot;percent&quot;</literal> property</title>
-<indexterm zone="RCGuiScrolledText--percent"><primary>RCGuiScrolledText:percent</primary></indexterm>
-<programlisting>  &quot;percent&quot;                  <link linkend="gdouble"><type>gdouble</type></link>               : Read / Write</programlisting>
-<para>
-Sets the percentage of text movement.
-</para><para>Allowed values: [0,1]</para>
-<para>Default value: 0</para>
-</refsect2>
-<refsect2 id="RCGuiScrolledText--text" role="property"><title>The <literal>&quot;text&quot;</literal> property</title>
-<indexterm zone="RCGuiScrolledText--text"><primary>RCGuiScrolledText:text</primary></indexterm>
-<programlisting>  &quot;text&quot;                     <link linkend="gchar"><type>gchar</type></link>*                : Read / Write</programlisting>
-<para>
-Sets the text of the widget to show.
-</para><para>Default value: NULL</para>
-</refsect2>
 </refsect1>
 
 </refentry>

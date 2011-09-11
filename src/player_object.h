@@ -42,6 +42,7 @@ G_BEGIN_DECLS
 
 /**
  * RCPlayer:
+ * @parent: the parent object
  *
  * The structure used in object.
  */

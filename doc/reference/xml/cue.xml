@@ -152,7 +152,25 @@ Custom struct type to store the music metadata.
     RC_CUE_INPUT_EMBEDED = 2
 }RCCueInputType;
 </programlisting>
-</refsect2>
+<para>
+The input data type of CUE.
+</para><variablelist role="enum">
+<varlistentry id="RC-CUE-INPUT-URI:CAPS" role="constant">
+<term><literal>RC_CUE_INPUT_URI</literal></term>
+<listitem><simpara>the input data is a URI
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="RC-CUE-INPUT-PATH:CAPS" role="constant">
+<term><literal>RC_CUE_INPUT_PATH</literal></term>
+<listitem><simpara>the input data is a file path
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="RC-CUE-INPUT-EMBEDED:CAPS" role="constant">
+<term><literal>RC_CUE_INPUT_EMBEDED</literal></term>
+<listitem><simpara>the input data is from a embeded CUE tag
+</simpara></listitem>
+</varlistentry>
+</variablelist></refsect2>
 <refsect2 id="RCCueTrack" role="struct">
 <title>RCCueTrack</title>
 <indexterm zone="RCCueTrack"><primary>RCCueTrack</primary></indexterm>
@@ -164,7 +182,30 @@ Custom struct type to store the music metadata.
     guint64 time1;
 } RCCueTrack;
 </programlisting>
-</refsect2>
+<para>
+The track data structure of CUE data.
+</para><variablelist role="struct">
+<varlistentry><term><link linkend="guint"><type>guint</type></link>&#160;<structfield id="RCCueTrack.index">index</structfield>;</term>
+<listitem><simpara>the track index
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gchar"><type>gchar</type></link>&#160;*<structfield id="RCCueTrack.title">title</structfield>;</term>
+<listitem><simpara>the track title
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gchar"><type>gchar</type></link>&#160;*<structfield id="RCCueTrack.performer">performer</structfield>;</term>
+<listitem><simpara>the track performer (artist)
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="guint64"><type>guint64</type></link>&#160;<structfield id="RCCueTrack.time0">time0</structfield>;</term>
+<listitem><simpara>the INDEX 00 time
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="guint64"><type>guint64</type></link>&#160;<structfield id="RCCueTrack.time1">time1</structfield>;</term>
+<listitem><simpara>the INDEX 01 time (start time)
+</simpara></listitem>
+</varlistentry>
+</variablelist></refsect2>
 <refsect2 id="rc-cue-read-data" role="function">
 <title>rc_cue_read_data ()</title>
 <indexterm zone="rc-cue-read-data"><primary>rc_cue_read_data</primary></indexterm>

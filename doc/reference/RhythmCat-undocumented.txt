@@ -1,17 +1,13 @@
-96% symbol docs coverage.
-281 symbols documented.
-7 symbols incomplete.
-12 not documented.
+97% symbol docs coverage.
+287 symbols documented.
+4 symbols incomplete.
+8 not documented.
 
 
 DEBUG_MODE
 GETTEXT_PACKAGE
 IS_RC_GUI_SCROLLED_TEXT (<parameters>)
 IS_RC_GUI_SCROLLED_TEXT_CLASS (<parameters>)
-RCCueInputType (<items>)
-RCCueTrack (<items>)
-RCGuiScrolledText
-RCGuiScrolledTextClass (<items>)
 RC_GUI_SCROLLED_TEXT (<parameters>)
 RC_GUI_SCROLLED_TEXT_CLASS (<parameters>)
 RC_GUI_SCROLLED_TEXT_TYPE

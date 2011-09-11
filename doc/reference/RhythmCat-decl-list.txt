@@ -21,6 +21,7 @@ RB_PLAYER_GET_CLASS
 
 <SECTION>
 <FILE>plugin</FILE>
+RC_PLUGIN_MAGIC_NUMBER
 RCPluginType
 RCPluginConfData
 RCPluginModuleData
@@ -259,6 +260,7 @@ rc_gui_get_action_group
 rc_gui_get_main_window
 rc_gui_get_icon_image
 rc_gui_get_no_cover_image
+rc_gui_get_cover_image
 </SECTION>
 
 <SECTION>

@@ -1,0 +1,2 @@
+RC_PLUGIN_MAGIC_NUMBER
+rc_gui_get_cover_image

@@ -32,12 +32,32 @@
 
 struct RCMusicMetaData;
 
+/**
+ * RCCueInputType:
+ * @RC_CUE_INPUT_URI: the input data is a URI
+ * @RC_CUE_INPUT_PATH: the input data is a file path
+ * @RC_CUE_INPUT_EMBEDED: the input data is from a embeded CUE tag
+ *
+ * The input data type of CUE.
+ */
+
 typedef enum RCCueInputType
 {
     RC_CUE_INPUT_URI = 0,
     RC_CUE_INPUT_PATH = 1,
     RC_CUE_INPUT_EMBEDED = 2
 }RCCueInputType;
+
+/**
+ * RCCueTrack:
+ * @index: the track index
+ * @title: the track title
+ * @performer: the track performer (artist)
+ * @time0: the INDEX 00 time
+ * @time1: the INDEX 01 time (start time)
+ *
+ * The track data structure of CUE data.
+ */
 
 typedef struct RCCueTrack {
     guint index;
@@ -46,6 +66,18 @@ typedef struct RCCueTrack {
     guint64 time0;
     guint64 time1;
 }RCCueTrack;
+
+/**
+ * RCCueData:
+ * @type: the input type of the CUE file
+ * @file: the audio file URI
+ * @performer: the performer
+ * @title: the title (it is usually the album name)
+ * @length: the track length (number)
+ * @track: the track data
+ *
+ * The structure of CUE data.
+ */
 
 typedef struct RCCueData
 {

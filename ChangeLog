@@ -71,5 +71,12 @@
         * Need lower GTK2 version now (at least 2.12).
  
 2011-09-07  SuperCat    <supercatexpert@gmail.com>
-        * Added CUE sheet file support, including embeded CUE sheet in FLAC file.
+        * Added CUE sheet file support, including embeded CUE sheet in FLAC
+          file.
+
+2011-09-12  SuperCat    <supercatexpert@gmail.com>
+        * Fixed some bugs on CUE support.
+        * Added a Python plugin (only for experiment).
+        * Added more features on plugin support.
+
 

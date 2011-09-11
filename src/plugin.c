@@ -50,10 +50,12 @@ typedef struct RCModuleData {
     GModule *module;
     gchar *path;
     gboolean resident;
-    const RCPluginModuleData *data;
+    gboolean suspend;
+    GQuark id;
+    RCPluginModuleData *data;
     gint (*module_init)();
     void (*module_exit)();
-    const RCPluginModuleData *(*module_data)();
+    RCPluginModuleData *(*module_data)();
 }RCModuleData;
 
 static const gchar *module_name = "Plugin";
@@ -311,10 +313,25 @@ static gboolean rc_plugin_module_check_running(const gchar *path)
         list_foreach=g_slist_next(list_foreach))
     {
         module_data = list_foreach->data;
-        if(g_strcmp0(module_data->path, path)==0)
+        if(g_strcmp0(module_data->path, path)==0 && !module_data->suspend)
             return TRUE;
     }
     return FALSE;
+}
+
+static RCModuleData *rc_plugin_module_get_running(const gchar *path)
+{
+    const GSList *list_foreach = NULL;
+    RCModuleData *module_data;
+    if(module_list==NULL) return FALSE;
+    for(list_foreach=module_list;list_foreach!=NULL;
+        list_foreach=g_slist_next(list_foreach))
+    {
+        module_data = list_foreach->data;
+        if(g_strcmp0(module_data->path, path)==0)
+            return module_data;
+    }
+    return NULL;
 }
 
 static GSList *rc_plugin_module_check_exist(const gchar *name)
@@ -329,21 +346,6 @@ static GSList *rc_plugin_module_check_exist(const gchar *name)
         if(plugin_data->type==PLUGIN_TYPE_MODULE && 
             g_strcmp0(plugin_data->name, name)==0)
             return list_foreach;
-    }
-    return NULL;
-}
-
-static RCModuleData *rc_plugin_module_get_running(const gchar *path)
-{
-    const GSList *list_foreach = NULL;
-    RCModuleData *module_data;
-    if(module_list==NULL) return FALSE;
-    for(list_foreach=module_list;list_foreach!=NULL;
-        list_foreach=g_slist_next(list_foreach))
-    {
-        module_data = list_foreach->data;
-        if(g_strcmp0(module_data->path, path)==0)
-            return module_data;
     }
     return NULL;
 }
@@ -475,9 +477,19 @@ static gboolean rc_plugin_module_load(const gchar *filename)
     GModule *module;
     RCModuleData *module_data;
     gint retval = 0;
-    if(rc_plugin_module_check_running(filename))
+    module_data = rc_plugin_module_get_running(filename);
+    if(module_data!=NULL)
+    {
+        if(module_data->resident && module_data->suspend)
+        {
+            retval = module_data->module_init();
+            if(retval!=0) return FALSE;
+            module_data->suspend = FALSE;
+            return TRUE;
+        }
         return FALSE;
-    module = g_module_open(filename, G_MODULE_BIND_LOCAL);
+    }
+    module = g_module_open(filename, G_MODULE_BIND_LAZY);
     if(module==NULL)
     {
         rc_debug_module_perror(module_name, "Cannot load plugin: %s",
@@ -513,18 +525,29 @@ static gboolean rc_plugin_module_load(const gchar *filename)
         return FALSE;
     }
     module_data->module = module;
-    retval = module_data->module_init();
-    if(retval!=0)
+    module_data->data = module_data->module_data();
+    if(module_data->data->magic_number>RC_PLUGIN_MAGIC_NUMBER)
     {
+        rc_debug_module_perror(module_name, "Invalid magic number!");
         g_free(module_data);
         g_module_close(module);
         return FALSE;
     }
-    module_data->path = g_strdup(filename);
-    module_data->data = module_data->module_data();
+    module_data->id = g_quark_from_string(module_data->data->group_name);
     module_data->resident = module_data->data->resident;
+    module_data->data->id = module_data->id;
+    module_data->path = g_strdup(filename);
+    module_data->data->path = g_strdup(filename);
     if(module_data->resident)
         g_module_make_resident(module_data->module);
+    retval = module_data->module_init();
+    if(retval!=0)
+    {
+        if(module_data->data->path!=NULL) g_free(module_data->data->path);
+        rc_plugin_module_free(module_data);
+        g_module_close(module);
+        return FALSE;
+    }
     module_list = g_slist_append(module_list, module_data);
     g_key_file_set_boolean(plugin_configure,
         module_data->data->group_name, "Enabled", TRUE);
@@ -547,12 +570,12 @@ static void rc_plugin_module_close(const gchar *filename)
                 FALSE);
             if(module_data->resident)
             {
-                rc_gui_show_message_dialog(GTK_MESSAGE_INFO, _("Plugin Info"),
-                    _("This plugin is resident, you should restart the player"
-                    " to disable it."));
+                module_data->module_exit();
+                module_data->suspend = TRUE;
                 break;
             }
             module_data->module_exit();
+            if(module_data->data->path!=NULL) g_free(module_data->data->path);
             g_module_close(module_data->module);
             rc_plugin_module_free(module_data);
             module_list = g_slist_delete_link(module_list, list_foreach);

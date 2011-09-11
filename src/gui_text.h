@@ -45,10 +45,23 @@ G_BEGIN_DECLS
 #define IS_RC_GUI_SCROLLED_TEXT_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), \
     RC_GUI_SCROLLED_TEXT_TYPE))
 
+/**
+ * RCGuiScrolledText:
+ * @widget: the parent widget
+ *
+ * The structure used in object.
+ */
 
 typedef struct RCGuiScrolledText {
     GtkWidget widget;
 }RCGuiScrolledText;
+
+/**
+ * RCGuiScrolledTextClass:
+ * @parent_class: parent widget class
+ *
+ * The class data.
+ */
 
 typedef struct RCGuiScrolledTextClass {
     GtkWidgetClass parent_class;

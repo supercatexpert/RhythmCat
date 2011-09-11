@@ -165,14 +165,9 @@ guint rc_cue_read_data(const gchar *input, RCCueInputType type,
             if(dir!=NULL)
             {
                 path = g_strndup(buf+6, strlen(buf)-7);
-                if(type==RC_CUE_INPUT_URI)
-                {
-                    tmp = g_build_filename(dir, path, NULL);
-                    data->file = g_filename_to_uri(tmp, NULL, NULL);
-                    g_free(tmp);
-                }
-                else
-                    data->file = g_build_filename(dir, path, NULL);
+                tmp = g_build_filename(dir, path, NULL);
+                data->file = g_filename_to_uri(tmp, NULL, NULL);
+                g_free(tmp);
                 g_free(path);
             }
             else

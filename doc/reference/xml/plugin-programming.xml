@@ -76,16 +76,25 @@ G_MODULE_EXPORT void rc_plugin_module_configure();
       <filename>"plugin.h"</filename>:
       <programlisting>
 typedef struct RCPluginModuleData {
+    guint32 magic_number;
     gchar *group_name;
+    gchar *path;
     gboolean resident;
+    GQuark id;
 }RCPluginModuleData;
       </programlisting>
-      The element group_name is used in the configuration file, the player
-      needs it the get the configuration data of the plugin by the group name,
-      it should be unique, or the configuration data may conflict with other
-      plugins. The element resident decides whether the plugin can be removed
-      while the player is running, set it to TRUE to prevent the player from
-      removing it.
+      The magic number must be equal to RC_PLUGIN_MAGIC_NUMBER. Use the macro
+      directly is recommended. If the magic number is invalid, the plugin will
+      not be loaded. The element group_name is used in the configuration file,
+      the player needs it the get the configuration data of the plugin by the
+      group name, it should be unique, or the configuration data may conflict
+      with other plugins. The path will be set if the player loaded the plugin
+      normally, the path of the plugin can be accessed by access this element.
+      The element resident decides whether the plugin can be removed while the
+      player is running, set it to TRUE to prevent the player from removing it.
+      The ID will be set when the plugin is loaded normally, the ID will be
+      uniqued as group_name. The fields that should be filled are magic_number,
+      group_name, and resident.
     </para>
     <para>
       If the plugin needs configuration, the function <link linkend="rc-plugin-module-configure"><function>rc_plugin_module_configure()</function></link>
@@ -114,8 +123,11 @@ typedef struct RCPluginModuleData {
 
 static RCPluginModuleData plugin_module_data =
 {
+    RC_PLUGIN_MAGIC_NUMBER /* magic_number */
     "ExamplePlugin", /* group_name */
-    FALSE /* resident */
+    NULL, /* path */
+    FALSE, /* resident */
+    0 /* id */
 };
 
 static GKeyFile *keyfile = NULL;

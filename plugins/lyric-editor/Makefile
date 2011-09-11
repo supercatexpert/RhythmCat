@@ -3,11 +3,13 @@ PLUGIN_NAME=lyriceditor.so
 INCS=
 SRCS=lyriceditor.c
 OBJS=${SRCS:.c=.o}
+INSTALL_NAME=lyric-editor
+INSTALL_DIR=~/.RhythmCat/Plugins/${INSTALL_NAME}
 
 LIBS=glib-2.0 gtk+-2.0 gstreamer-0.10 gtksourceview-2.0
 
 CFLAGS=`pkg-config --cflags ${LIBS}` -Wall -O2 -fPIC -I../../src/
-LDFLAGS=`pkg-config --libs ${LIBS}` -Wall -O2 -shared -fPIC
+LDFLAGS=`pkg-config --libs ${LIBS}` -Wall -O2 -shared -fPIC  -export-dynamic
 
 all: ${PLUGIN_NAME}
 
@@ -23,3 +25,10 @@ clean:
 	rm -f *.o ${PLUGIN_NAME}
 
 rebuild: clean all
+
+install:
+	mkdir -p ${INSTALL_DIR}
+	install -m 644 ${INSTALL_NAME}.conf ${INSTALL_DIR}
+	install -m 644 ${PLUGIN_NAME} ${INSTALL_DIR}
+
+

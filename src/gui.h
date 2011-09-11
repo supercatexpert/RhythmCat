@@ -144,6 +144,7 @@ GtkActionGroup *rc_gui_get_action_group();
 GtkWidget *rc_gui_get_main_window();
 const GdkPixbuf *rc_gui_get_icon_image();
 const GdkPixbuf *rc_gui_get_no_cover_image();
+const GdkPixbuf *rc_gui_get_cover_image();
 
 G_END_DECLS
 

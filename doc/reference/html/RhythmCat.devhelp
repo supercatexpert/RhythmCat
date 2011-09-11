@@ -8,7 +8,7 @@
         <sub name="Core" link="RhythmCat-Core.html"/>
         <sub name="Tag" link="RhythmCat-Tag.html"/>
         <sub name="CUE Parser" link="RhythmCat-CUE-Parser.html"/>
-        <sub name="Player Object" link="RCPlayer.html"/>
+        <sub name="Player Object" link="RhythmCat-RCPlayer.html"/>
         <sub name="Lyric" link="RhythmCat-Lyric.html"/>
         <sub name="Asynchronous Message Queue" link="RhythmCat-Asynchronous-Message-Queue.html"/>
         <sub name="Playlist" link="RhythmCat-Playlist.html"/>
@@ -18,7 +18,7 @@
       </sub>
       <sub name="Player UI" link="ch02.html">
         <sub name="Main UI" link="RhythmCat-Main-UI.html"/>
-        <sub name="Scrolledate Text Widget" link="RCGuiScrolledText.html"/>
+        <sub name="Scrolledate Text Widget" link="RhythmCat-RCGuiScrolledText.html"/>
         <sub name="Dialogs" link="RhythmCat-Dialogs.html"/>
         <sub name="Equalizer UI" link="RhythmCat-Equalizer-UI.html"/>
         <sub name="UI Styles and Themes" link="RhythmCat-UI-Styles-and-Themes.html"/>
@@ -83,23 +83,15 @@
     <function name="rc_cue_free ()" link="RhythmCat-CUE-Parser.html#rc-cue-free"/>
     <function name="rc_cue_get_track_num ()" link="RhythmCat-CUE-Parser.html#rc-cue-get-track-num"/>
     <function name="rc_cue_get_metadata ()" link="RhythmCat-CUE-Parser.html#rc-cue-get-metadata"/>
-    <function name="RC_PLAYER_TYPE" link="RCPlayer.html#RC-PLAYER-TYPE:CAPS"/>
-    <function name="RCPlayer" link="RCPlayer.html#RCPlayer-struct"/>
-    <function name="RCPlayerClass" link="RCPlayer.html#RCPlayerClass"/>
-    <function name="rc_player_new ()" link="RCPlayer.html#rc-player-new"/>
-    <function name="rc_player_object_init ()" link="RCPlayer.html#rc-player-object-init"/>
-    <function name="rc_player_object_get ()" link="RCPlayer.html#rc-player-object-get"/>
-    <function name="rc_player_object_signal_emit_simple ()" link="RCPlayer.html#rc-player-object-signal-emit-simple"/>
-    <function name="rc_player_object_signal_connect_simple ()" link="RCPlayer.html#rc-player-object-signal-connect-simple"/>
-    <function name="rc_player_object_signal_disconnect ()" link="RCPlayer.html#rc-player-object-signal-disconnect"/>
-    <function name="The &quot;cover-found&quot; signal" link="RCPlayer.html#RCPlayer-cover-found"/>
-    <function name="The &quot;cover-not-found&quot; signal" link="RCPlayer.html#RCPlayer-cover-not-found"/>
-    <function name="The &quot;lyric-found&quot; signal" link="RCPlayer.html#RCPlayer-lyric-found"/>
-    <function name="The &quot;lyric-not-found&quot; signal" link="RCPlayer.html#RCPlayer-lyric-not-found"/>
-    <function name="The &quot;player-continue&quot; signal" link="RCPlayer.html#RCPlayer-player-continue"/>
-    <function name="The &quot;player-pause&quot; signal" link="RCPlayer.html#RCPlayer-player-pause"/>
-    <function name="The &quot;player-play&quot; signal" link="RCPlayer.html#RCPlayer-player-play"/>
-    <function name="The &quot;player-stop&quot; signal" link="RCPlayer.html#RCPlayer-player-stop"/>
+    <function name="RC_PLAYER_TYPE" link="RhythmCat-RCPlayer.html#RC-PLAYER-TYPE:CAPS"/>
+    <function name="RCPlayer" link="RhythmCat-RCPlayer.html#RCPlayer"/>
+    <function name="RCPlayerClass" link="RhythmCat-RCPlayer.html#RCPlayerClass"/>
+    <function name="rc_player_new ()" link="RhythmCat-RCPlayer.html#rc-player-new"/>
+    <function name="rc_player_object_init ()" link="RhythmCat-RCPlayer.html#rc-player-object-init"/>
+    <function name="rc_player_object_get ()" link="RhythmCat-RCPlayer.html#rc-player-object-get"/>
+    <function name="rc_player_object_signal_emit_simple ()" link="RhythmCat-RCPlayer.html#rc-player-object-signal-emit-simple"/>
+    <function name="rc_player_object_signal_connect_simple ()" link="RhythmCat-RCPlayer.html#rc-player-object-signal-connect-simple"/>
+    <function name="rc_player_object_signal_disconnect ()" link="RhythmCat-RCPlayer.html#rc-player-object-signal-disconnect"/>
     <function name="RCLyricData" link="RhythmCat-Lyric.html#RCLyricData"/>
     <function name="rc_lrc_init ()" link="RhythmCat-Lyric.html#rc-lrc-init"/>
     <function name="rc_lrc_exit ()" link="RhythmCat-Lyric.html#rc-lrc-exit"/>
@@ -224,25 +216,22 @@
     <function name="rc_gui_get_main_window ()" link="RhythmCat-Main-UI.html#rc-gui-get-main-window"/>
     <function name="rc_gui_get_icon_image ()" link="RhythmCat-Main-UI.html#rc-gui-get-icon-image"/>
     <function name="rc_gui_get_no_cover_image ()" link="RhythmCat-Main-UI.html#rc-gui-get-no-cover-image"/>
-    <function name="RC_GUI_SCROLLED_TEXT_TYPE" link="RCGuiScrolledText.html#RC-GUI-SCROLLED-TEXT-TYPE:CAPS"/>
-    <function name="RC_GUI_SCROLLED_TEXT()" link="RCGuiScrolledText.html#RC-GUI-SCROLLED-TEXT:CAPS"/>
-    <function name="RC_GUI_SCROLLED_TEXT_CLASS()" link="RCGuiScrolledText.html#RC-GUI-SCROLLED-TEXT-CLASS:CAPS"/>
-    <function name="IS_RC_GUI_SCROLLED_TEXT()" link="RCGuiScrolledText.html#IS-RC-GUI-SCROLLED-TEXT:CAPS"/>
-    <function name="IS_RC_GUI_SCROLLED_TEXT_CLASS()" link="RCGuiScrolledText.html#IS-RC-GUI-SCROLLED-TEXT-CLASS:CAPS"/>
-    <function name="RCGuiScrolledText" link="RCGuiScrolledText.html#RCGuiScrolledText-struct"/>
-    <function name="RCGuiScrolledTextClass" link="RCGuiScrolledText.html#RCGuiScrolledTextClass"/>
-    <function name="rc_gui_scrolled_text_get_type ()" link="RCGuiScrolledText.html#rc-gui-scrolled-text-get-type"/>
-    <function name="rc_gui_scrolled_text_new ()" link="RCGuiScrolledText.html#rc-gui-scrolled-text-new"/>
-    <function name="rc_gui_scrolled_text_set_text ()" link="RCGuiScrolledText.html#rc-gui-scrolled-text-set-text"/>
-    <function name="rc_gui_scrolled_text_get_text ()" link="RCGuiScrolledText.html#rc-gui-scrolled-text-get-text"/>
-    <function name="rc_gui_scrolled_text_set_attributes ()" link="RCGuiScrolledText.html#rc-gui-scrolled-text-set-attributes"/>
-    <function name="rc_gui_scrolled_text_get_attributes ()" link="RCGuiScrolledText.html#rc-gui-scrolled-text-get-attributes"/>
-    <function name="rc_gui_scrolled_text_set_percent ()" link="RCGuiScrolledText.html#rc-gui-scrolled-text-set-percent"/>
-    <function name="rc_gui_scrolled_text_get_percent ()" link="RCGuiScrolledText.html#rc-gui-scrolled-text-get-percent"/>
-    <function name="rc_gui_scrolled_text_get_width ()" link="RCGuiScrolledText.html#rc-gui-scrolled-text-get-width"/>
-    <function name="The &quot;attributes&quot; property" link="RCGuiScrolledText.html#RCGuiScrolledText--attributes"/>
-    <function name="The &quot;percent&quot; property" link="RCGuiScrolledText.html#RCGuiScrolledText--percent"/>
-    <function name="The &quot;text&quot; property" link="RCGuiScrolledText.html#RCGuiScrolledText--text"/>
+    <function name="RC_GUI_SCROLLED_TEXT_TYPE" link="RhythmCat-RCGuiScrolledText.html#RC-GUI-SCROLLED-TEXT-TYPE:CAPS"/>
+    <function name="RC_GUI_SCROLLED_TEXT()" link="RhythmCat-RCGuiScrolledText.html#RC-GUI-SCROLLED-TEXT:CAPS"/>
+    <function name="RC_GUI_SCROLLED_TEXT_CLASS()" link="RhythmCat-RCGuiScrolledText.html#RC-GUI-SCROLLED-TEXT-CLASS:CAPS"/>
+    <function name="IS_RC_GUI_SCROLLED_TEXT()" link="RhythmCat-RCGuiScrolledText.html#IS-RC-GUI-SCROLLED-TEXT:CAPS"/>
+    <function name="IS_RC_GUI_SCROLLED_TEXT_CLASS()" link="RhythmCat-RCGuiScrolledText.html#IS-RC-GUI-SCROLLED-TEXT-CLASS:CAPS"/>
+    <function name="RCGuiScrolledText" link="RhythmCat-RCGuiScrolledText.html#RCGuiScrolledText"/>
+    <function name="RCGuiScrolledTextClass" link="RhythmCat-RCGuiScrolledText.html#RCGuiScrolledTextClass"/>
+    <function name="rc_gui_scrolled_text_get_type ()" link="RhythmCat-RCGuiScrolledText.html#rc-gui-scrolled-text-get-type"/>
+    <function name="rc_gui_scrolled_text_new ()" link="RhythmCat-RCGuiScrolledText.html#rc-gui-scrolled-text-new"/>
+    <function name="rc_gui_scrolled_text_set_text ()" link="RhythmCat-RCGuiScrolledText.html#rc-gui-scrolled-text-set-text"/>
+    <function name="rc_gui_scrolled_text_get_text ()" link="RhythmCat-RCGuiScrolledText.html#rc-gui-scrolled-text-get-text"/>
+    <function name="rc_gui_scrolled_text_set_attributes ()" link="RhythmCat-RCGuiScrolledText.html#rc-gui-scrolled-text-set-attributes"/>
+    <function name="rc_gui_scrolled_text_get_attributes ()" link="RhythmCat-RCGuiScrolledText.html#rc-gui-scrolled-text-get-attributes"/>
+    <function name="rc_gui_scrolled_text_set_percent ()" link="RhythmCat-RCGuiScrolledText.html#rc-gui-scrolled-text-set-percent"/>
+    <function name="rc_gui_scrolled_text_get_percent ()" link="RhythmCat-RCGuiScrolledText.html#rc-gui-scrolled-text-get-percent"/>
+    <function name="rc_gui_scrolled_text_get_width ()" link="RhythmCat-RCGuiScrolledText.html#rc-gui-scrolled-text-get-width"/>
     <function name="MAX_DIR_DEPTH" link="RhythmCat-Dialogs.html#MAX-DIR-DEPTH:CAPS"/>
     <function name="rc_gui_about_player ()" link="RhythmCat-Dialogs.html#rc-gui-about-player"/>
     <function name="rc_gui_show_message_dialog ()" link="RhythmCat-Dialogs.html#rc-gui-show-message-dialog"/>
@@ -286,13 +275,13 @@
     <function name="rc_gui_mini_normal_mode_clicked ()" link="RhythmCat-Mini-Mode-UI.html#rc-gui-mini-normal-mode-clicked"/>
     <function name="rc_gui_create_setting_window ()" link="RhythmCat-Settings-UI.html#rc-gui-create-setting-window"/>
     <function name="rc_gui_plugin_window_create ()" link="RhythmCat-Plugin-Configuration-UI.html#rc-gui-plugin-window-create"/>
-    <function name="Introduction" link="PluginProgramming.html#id548126"/>
-    <function name="Preparation" link="PluginProgramming.html#id518725"/>
-    <function name="Implement a simple plugin" link="PluginProgramming.html#id526059"/>
-    <function name="How to compile the plugin" link="PluginProgramming.html#id516196"/>
-    <function name="Write a plugin description file" link="PluginProgramming.html#id540938"/>
-    <function name="Make your custom plugin work" link="PluginProgramming.html#id485108"/>
-    <function name="Catch signals in the player" link="PluginProgramming.html#id521655"/>
-    <function name="About this manual" link="PluginProgramming.html#id540764"/>
+    <function name="Introduction" link="PluginProgramming.html#id572011"/>
+    <function name="Preparation" link="PluginProgramming.html#id511245"/>
+    <function name="Implement a simple plugin" link="PluginProgramming.html#id517582"/>
+    <function name="How to compile the plugin" link="PluginProgramming.html#id557409"/>
+    <function name="Write a plugin description file" link="PluginProgramming.html#id552585"/>
+    <function name="Make your custom plugin work" link="PluginProgramming.html#id562411"/>
+    <function name="Catch signals in the player" link="PluginProgramming.html#id546898"/>
+    <function name="About this manual" link="PluginProgramming.html#id544291"/>
   </functions>
 </book>

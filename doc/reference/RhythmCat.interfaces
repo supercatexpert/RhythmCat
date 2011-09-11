@@ -1,3 +1,0 @@
-GtkWidget AtkImplementorIface GtkBuildable
-RCGuiScrolledText AtkImplementorIface GtkBuildable
-GtkContainer AtkImplementorIface GtkBuildable

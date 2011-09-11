@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RhythmCat 1.0.0\n"
 "Report-Msgid-Bugs-To: http://code.google.com/p/rhythmcat/issues/list\n"
-"POT-Creation-Date: 2011-09-07 20:27+0800\n"
+"POT-Creation-Date: 2011-09-12 03:30+0800\n"
 "PO-Revision-Date: 2011-04-02 21:18+0800\n"
 "Last-Translator: SuperCat <supercatexpert@gmail.com>\n"
 "Language-Team: SuperCat <supercatexpert@gmail.com>\n"
@@ -16,27 +16,27 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/core.c:295 src/core.c:328
+#: src/core.c:277 src/core.c:310
 msgid "Effect plugins are missing!"
 msgstr "找不到效果插件!"
 
-#: src/core.c:295 src/core.c:328
+#: src/core.c:277 src/core.c:310
 msgid "Some effect plugins are missing, effects are not available now!"
 msgstr "一些效果插件不存在，特效將無法使用!"
 
-#: src/core.c:302
+#: src/core.c:284
 msgid "Critical Error!"
 msgstr "致命錯誤!"
 
-#: src/core.c:303
+#: src/core.c:285
 msgid "Failed to make playbin/playbin2 element!"
 msgstr "無法啟動playbin/playbin2元件"
 
-#: src/core.c:349
+#: src/core.c:331
 msgid "Link elements error!"
 msgstr "連接元件時錯誤!"
 
-#: src/core.c:349
+#: src/core.c:331
 msgid "Cannot link effect elements, effects are not available now!"
 msgstr "無法連接效果元件，特效將無法使用!"
 
@@ -432,39 +432,39 @@ msgstr "導入中……"
 msgid "Refreshing..."
 msgstr "正在刷新……"
 
-#: src/gui_dialog.c:121
+#: src/gui_dialog.c:136
 msgid "A music player based on GTK+ 3.0 & Gstreamer 0.10"
 msgstr "一個基於GTK+ 3.0和Gstreamer 0.10的音樂播放器"
 
-#: src/gui_dialog.c:124
+#: src/gui_dialog.c:139
 msgid "A music player based on GTK+ 2.0 & Gstreamer 0.10"
 msgstr "一個基於GTK+ 2.0和Gstreamer 0.10的音樂播放器"
 
-#: src/gui_dialog.c:179
+#: src/gui_dialog.c:194
 msgid "All supported music files(*.FLAC;*.OGG;*.MP3;*.WAV;*.WMA...)"
 msgstr "所有支持的格式(*.FLAC;*.OGG;*.MP3;*.WAV;*.WMA...)"
 
-#: src/gui_dialog.c:182
+#: src/gui_dialog.c:197
 msgid "Select the music you want to add..."
 msgstr "選擇需要添加的音樂"
 
-#: src/gui_dialog.c:232
+#: src/gui_dialog.c:247
 msgid "Select the directory you want to import..."
 msgstr "選擇需要導入的目錄"
 
-#: src/gui_dialog.c:272 src/gui_dialog.c:318
+#: src/gui_dialog.c:287 src/gui_dialog.c:333
 msgid "M3U Playlist(*.M3U, *.m3u)"
 msgstr "M3U 播放列表(*.M3U, *.m3u)"
 
-#: src/gui_dialog.c:275
+#: src/gui_dialog.c:290
 msgid "Save the playlist..."
 msgstr "保存到播放列表……"
 
-#: src/gui_dialog.c:321
+#: src/gui_dialog.c:336
 msgid "Load the playlist..."
 msgstr "從播放列表載入……"
 
-#: src/gui_dialog.c:364
+#: src/gui_dialog.c:379
 msgid "Select the directory you want to store the playlists..."
 msgstr "選擇保存播放列表的目錄"
 
@@ -684,10 +684,9 @@ msgstr ""
 msgid "Default Playlist"
 msgstr "默認播放列表"
 
-#: src/plugin.c:550
-msgid "Plugin Info"
-msgstr "插件資訊"
+#~ msgid "Plugin Info"
+#~ msgstr "插件資訊"
 
-#: src/plugin.c:551
-msgid "This plugin is resident, you should restart the player to disable it."
-msgstr "該插件是常駐的，你需要重啟播放器來禁用它。"
+#~ msgid ""
+#~ "This plugin is resident, you should restart the player to disable it."
+#~ msgstr "該插件是常駐的，你需要重啟播放器來禁用它。"

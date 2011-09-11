@@ -1,0 +1,276 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Player Object</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="index.html" title="RhythmCat Music Player Development Reference Manual">
+<link rel="up" href="ch01.html" title="Player Backend">
+<link rel="prev" href="RhythmCat-CUE-Parser.html" title="CUE Parser">
+<link rel="next" href="RhythmCat-Lyric.html" title="Lyric">
+<meta name="generator" content="GTK-Doc V1.15 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="RhythmCat-CUE-Parser.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">RhythmCat Music Player Development Reference Manual</th>
+<td><a accesskey="n" href="RhythmCat-Lyric.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#RhythmCat-RCPlayer.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#RhythmCat-RCPlayer.description" class="shortcut">Description</a>
+</td></tr>
+</table>
+<div class="refentry" title="Player Object">
+<a name="RhythmCat-RCPlayer"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="RhythmCat-RCPlayer.top_of_page"></a>Player Object</span></h2>
+<p>Player Object — The player object of the player.</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv" title="Synopsis">
+<a name="RhythmCat-RCPlayer.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">
+#include &lt;player_object.h&gt;
+
+#define             <a class="link" href="RhythmCat-RCPlayer.html#RC-PLAYER-TYPE:CAPS" title="RC_PLAYER_TYPE">RC_PLAYER_TYPE</a>
+                    <a class="link" href="RhythmCat-RCPlayer.html#RCPlayer" title="RCPlayer">RCPlayer</a>;
+                    <a class="link" href="RhythmCat-RCPlayer.html#RCPlayerClass" title="RCPlayerClass">RCPlayerClass</a>;
+<a class="link" href="RhythmCat-RCPlayer.html#RCPlayer" title="RCPlayer"><span class="returnvalue">RCPlayer</span></a> *          <a class="link" href="RhythmCat-RCPlayer.html#rc-player-new" title="rc_player_new ()">rc_player_new</a>                       ();
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-RCPlayer.html#rc-player-object-init" title="rc_player_object_init ()">rc_player_object_init</a>               ();
+<a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"><span class="returnvalue">GObject</span></a> *           <a class="link" href="RhythmCat-RCPlayer.html#rc-player-object-get" title="rc_player_object_get ()">rc_player_object_get</a>                ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-RCPlayer.html#rc-player-object-signal-emit-simple" title="rc_player_object_signal_emit_simple ()">rc_player_object_signal_emit_simple</a> (<em class="parameter"><code>const <span class="type">char</span> *name</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gulong"><span class="returnvalue">gulong</span></a>              <a class="link" href="RhythmCat-RCPlayer.html#rc-player-object-signal-connect-simple" title="rc_player_object_signal_connect_simple ()">rc_player_object_signal_connect_simple</a>
+                                                        (<em class="parameter"><code>const <span class="type">char</span> *name</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobject/gobject-Closures.html#GCallback"><span class="type">GCallback</span></a> callback</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-RCPlayer.html#rc-player-object-signal-disconnect" title="rc_player_object_signal_disconnect ()">rc_player_object_signal_disconnect</a>  (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gulong"><span class="type">gulong</span></a> id</code></em>);
+</pre>
+</div>
+<div class="refsect1" title="Description">
+<a name="RhythmCat-RCPlayer.description"></a><h2>Description</h2>
+<p>
+The player object of the player, used in player signal processing.
+</p>
+</div>
+<div class="refsect1" title="Details">
+<a name="RhythmCat-RCPlayer.details"></a><h2>Details</h2>
+<div class="refsect2" title="RC_PLAYER_TYPE">
+<a name="RC-PLAYER-TYPE:CAPS"></a><h3>RC_PLAYER_TYPE</h3>
+<pre class="programlisting">#define RC_PLAYER_TYPE (rc_player_get_type())
+</pre>
+</div>
+<hr>
+<div class="refsect2" title="RCPlayer">
+<a name="RCPlayer"></a><h3>RCPlayer</h3>
+<pre class="programlisting">typedef struct {
+    GObject parent;
+} RCPlayer;
+</pre>
+<p>
+The structure used in object.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> <em class="structfield"><code><a name="RCPlayer.parent"></a>parent</code></em>;</span></p></td>
+<td>the parent object
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="RCPlayerClass">
+<a name="RCPlayerClass"></a><h3>RCPlayerClass</h3>
+<pre class="programlisting">typedef struct {
+    GObjectClass parent_class;
+    void (*player_play)();
+    void (*player_stop)();
+    void (*player_pause)();
+    void (*player_continue)();
+    void (*lyric_found)();
+    void (*lyric_not_found)();
+    void (*cover_found)();
+    void (*cover_not_found)();
+} RCPlayerClass;
+</pre>
+<p>
+Provide signal process functions in the class.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObjectClass"><span class="type">GObjectClass</span></a> <em class="structfield"><code><a name="RCPlayerClass.parent-class"></a>parent_class</code></em>;</span></p></td>
+<td>parent class, not used
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="structfield"><code><a name="RCPlayerClass.player-play"></a>player_play</code></em> ()</span></p></td>
+<td>the function to call when the player starts playing
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="structfield"><code><a name="RCPlayerClass.player-stop"></a>player_stop</code></em> ()</span></p></td>
+<td>the function to call when the player stopped
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="structfield"><code><a name="RCPlayerClass.player-pause"></a>player_pause</code></em> ()</span></p></td>
+<td>the function to call when the player paused
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="structfield"><code><a name="RCPlayerClass.player-continue"></a>player_continue</code></em> ()</span></p></td>
+<td>the function to call when the player continues playing
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="structfield"><code><a name="RCPlayerClass.lyric-found"></a>lyric_found</code></em> ()</span></p></td>
+<td>the function to call when the lyric data is found
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="structfield"><code><a name="RCPlayerClass.lyric-not-found"></a>lyric_not_found</code></em> ()</span></p></td>
+<td>the function to call when the lyric data is not found
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="structfield"><code><a name="RCPlayerClass.cover-found"></a>cover_found</code></em> ()</span></p></td>
+<td>the function to call when the cover image is found
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="structfield"><code><a name="RCPlayerClass.cover-not-found"></a>cover_not_found</code></em> ()</span></p></td>
+<td>the function to call when the cover image is not found
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_player_new ()">
+<a name="rc-player-new"></a><h3>rc_player_new ()</h3>
+<pre class="programlisting"><a class="link" href="RhythmCat-RCPlayer.html#RCPlayer" title="RCPlayer"><span class="returnvalue">RCPlayer</span></a> *          rc_player_new                       ();</pre>
+<p>
+Return a new <a class="link" href="RhythmCat-RCPlayer.html#RCPlayer" title="RCPlayer"><span class="type">RCPlayer</span></a> object.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> A new <a class="link" href="RhythmCat-RCPlayer.html#RCPlayer" title="RCPlayer"><span class="type">RCPlayer</span></a> object.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_player_object_init ()">
+<a name="rc-player-object-init"></a><h3>rc_player_object_init ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_player_object_init               ();</pre>
+<p>
+Make a default <a class="link" href="RhythmCat-RCPlayer.html#RCPlayer" title="RCPlayer"><span class="type">RCPlayer</span></a> object for the player. Can be used only once.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> Whether the object is made.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_player_object_get ()">
+<a name="rc-player-object-get"></a><h3>rc_player_object_get ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"><span class="returnvalue">GObject</span></a> *           rc_player_object_get                ();</pre>
+<p>
+Return the default <a class="link" href="RhythmCat-RCPlayer.html#RCPlayer" title="RCPlayer"><span class="type">RCPlayer</span></a> object.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The default <a class="link" href="RhythmCat-RCPlayer.html#RCPlayer" title="RCPlayer"><span class="type">RCPlayer</span></a> object.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_player_object_signal_emit_simple ()">
+<a name="rc-player-object-signal-emit-simple"></a><h3>rc_player_object_signal_emit_simple ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_player_object_signal_emit_simple (<em class="parameter"><code>const <span class="type">char</span> *name</code></em>);</pre>
+<p>
+Emit a signal by the given name.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
+<td>the name of the signal
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_player_object_signal_connect_simple ()">
+<a name="rc-player-object-signal-connect-simple"></a><h3>rc_player_object_signal_connect_simple ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gulong"><span class="returnvalue">gulong</span></a>              rc_player_object_signal_connect_simple
+                                                        (<em class="parameter"><code>const <span class="type">char</span> *name</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobject/gobject-Closures.html#GCallback"><span class="type">GCallback</span></a> callback</code></em>);</pre>
+<p>
+Connect the GCallback function to the given signal for the default
+<a class="link" href="RhythmCat-RCPlayer.html#RCPlayer" title="RCPlayer"><span class="type">RCPlayer</span></a> object.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
+<td>the name of the signal
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>callback</code></em> :</span></p></td>
+<td>the the <a href="/usr/share/gtk-doc/html/gobject/gobject-Closures.html#GCallback"><span class="type">GCallback</span></a> to connect
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The handler ID.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_player_object_signal_disconnect ()">
+<a name="rc-player-object-signal-disconnect"></a><h3>rc_player_object_signal_disconnect ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_player_object_signal_disconnect  (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gulong"><span class="type">gulong</span></a> id</code></em>);</pre>
+<p>
+Disconnects thg handler from the default <a class="link" href="RhythmCat-RCPlayer.html#RCPlayer" title="RCPlayer"><span class="type">RCPlayer</span></a> object, so it will
+not be called during any future or currently ongoing emissions of the
+signal it has been connected to. The <em class="parameter"><code>id</code></em> becomes invalid and may be reused.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>id</code></em> :</span></p></td>
+<td>the handler ID
+</td>
+</tr></tbody>
+</table></div>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.15</div>
+</body>
+</html>

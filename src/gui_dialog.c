@@ -43,6 +43,21 @@
  */
 
 static const gchar *module_name = "GUI";
+static const gchar *about_license =
+    "RhythmCat is free software; you can redistribute it\n"
+    "and/or modify it under the terms of the GNU General\n"
+    "Public License as published by the Free Software\n"
+    "Foundation; either version 3 of the License, or\n"
+    "(at your option) any later version.\n\n"
+    "RhythmCat is distributed in the hope that it will be\n"
+    "useful, but WITHOUT ANY WARRANTY; without even the\n"
+    "implied warranty of MERCHANTABILITY or FITNESS FOR\n"
+    "A PARTICULAR PURPOSE.  See the GNU General Public\n"
+    "License for more details. \n\n"
+    "You should have received a copy of the GNU General\n"
+    "Public License along with RhythmCat; if not, write\n"
+    "to the Free Software Foundation, Inc., 51 Franklin\n"
+    "St, Fifth Floor, Boston, MA  02110-1301  USA.";
 
 static gboolean rc_gui_music_file_filter(const GtkFileFilterInfo *info,
     gpointer data)
@@ -124,9 +139,9 @@ void rc_gui_about_player()
             _("A music player based on GTK+ 2.0 & Gstreamer 0.10"));
     #endif
     gtk_about_dialog_set_license(GTK_ABOUT_DIALOG(about_dialog),
-        "The GNU General Public License (GPL) v3");
+        about_license);
     gtk_about_dialog_set_website(GTK_ABOUT_DIALOG(about_dialog),
-        "http://code.google.com/p/rhythmcat/");
+        "http://supercat-lab.org");
     gtk_dialog_run(GTK_DIALOG(about_dialog));
     gtk_widget_destroy(about_dialog);  
 }

@@ -61,7 +61,7 @@ a dynamic link library) plugin.
 <title>enum RCPluginType</title>
 <indexterm zone="RCPluginType"><primary>RCPluginType</primary></indexterm>
 <programlisting>typedef enum RCPluginType {
-    PLUGIN_TYPE_MODULE = 1,
+    PLUGIN_TYPE_MODULE = 1
 }RCPluginType;
 </programlisting>
 <para>
@@ -122,19 +122,34 @@ The plugin configuration data structure.
 <title>RCPluginModuleData</title>
 <indexterm zone="RCPluginModuleData"><primary>RCPluginModuleData</primary></indexterm>
 <programlisting>typedef struct {
+    guint32 magic_number;
     gchar *group_name;
+    gchar *path;
     gboolean resident;
+    GQuark id;
 } RCPluginModuleData;
 </programlisting>
 <para>
 The data structure of module.
 </para><variablelist role="struct">
+<varlistentry><term><link linkend="guint32"><type>guint32</type></link>&#160;<structfield id="RCPluginModuleData.magic-number">magic_number</structfield>;</term>
+<listitem><simpara>the magic number
+</simpara></listitem>
+</varlistentry>
 <varlistentry><term><link linkend="gchar"><type>gchar</type></link>&#160;*<structfield id="RCPluginModuleData.group-name">group_name</structfield>;</term>
 <listitem><simpara>the group name used in plugin configure file
 </simpara></listitem>
 </varlistentry>
+<varlistentry><term><link linkend="gchar"><type>gchar</type></link>&#160;*<structfield id="RCPluginModuleData.path">path</structfield>;</term>
+<listitem><simpara>the plugin path (can only be accessed when the plugin is running)
+</simpara></listitem>
+</varlistentry>
 <varlistentry><term><link linkend="gboolean"><type>gboolean</type></link>&#160;<structfield id="RCPluginModuleData.resident">resident</structfield>;</term>
 <listitem><simpara>whether the plugin can be removed while the player is running
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GQuark"><type>GQuark</type></link>&#160;<structfield id="RCPluginModuleData.id">id</structfield>;</term>
+<listitem><simpara>the unique ID when the plugin is running
 </simpara></listitem>
 </varlistentry>
 </variablelist></refsect2>

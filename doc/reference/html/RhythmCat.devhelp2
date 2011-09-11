@@ -8,7 +8,7 @@
         <sub name="Core" link="RhythmCat-Core.html"/>
         <sub name="Tag" link="RhythmCat-Tag.html"/>
         <sub name="CUE Parser" link="RhythmCat-CUE-Parser.html"/>
-        <sub name="Player Object" link="RCPlayer.html"/>
+        <sub name="Player Object" link="RhythmCat-RCPlayer.html"/>
         <sub name="Lyric" link="RhythmCat-Lyric.html"/>
         <sub name="Asynchronous Message Queue" link="RhythmCat-Asynchronous-Message-Queue.html"/>
         <sub name="Playlist" link="RhythmCat-Playlist.html"/>
@@ -18,7 +18,7 @@
       </sub>
       <sub name="Player UI" link="ch02.html">
         <sub name="Main UI" link="RhythmCat-Main-UI.html"/>
-        <sub name="Scrolledate Text Widget" link="RCGuiScrolledText.html"/>
+        <sub name="Scrolledate Text Widget" link="RhythmCat-RCGuiScrolledText.html"/>
         <sub name="Dialogs" link="RhythmCat-Dialogs.html"/>
         <sub name="Equalizer UI" link="RhythmCat-Equalizer-UI.html"/>
         <sub name="UI Styles and Themes" link="RhythmCat-UI-Styles-and-Themes.html"/>
@@ -83,23 +83,15 @@
     <keyword type="function" name="rc_cue_free ()" link="RhythmCat-CUE-Parser.html#rc-cue-free"/>
     <keyword type="function" name="rc_cue_get_track_num ()" link="RhythmCat-CUE-Parser.html#rc-cue-get-track-num"/>
     <keyword type="function" name="rc_cue_get_metadata ()" link="RhythmCat-CUE-Parser.html#rc-cue-get-metadata"/>
-    <keyword type="macro" name="RC_PLAYER_TYPE" link="RCPlayer.html#RC-PLAYER-TYPE:CAPS"/>
-    <keyword type="struct" name="RCPlayer" link="RCPlayer.html#RCPlayer-struct"/>
-    <keyword type="struct" name="RCPlayerClass" link="RCPlayer.html#RCPlayerClass"/>
-    <keyword type="function" name="rc_player_new ()" link="RCPlayer.html#rc-player-new"/>
-    <keyword type="function" name="rc_player_object_init ()" link="RCPlayer.html#rc-player-object-init"/>
-    <keyword type="function" name="rc_player_object_get ()" link="RCPlayer.html#rc-player-object-get"/>
-    <keyword type="function" name="rc_player_object_signal_emit_simple ()" link="RCPlayer.html#rc-player-object-signal-emit-simple"/>
-    <keyword type="function" name="rc_player_object_signal_connect_simple ()" link="RCPlayer.html#rc-player-object-signal-connect-simple"/>
-    <keyword type="function" name="rc_player_object_signal_disconnect ()" link="RCPlayer.html#rc-player-object-signal-disconnect"/>
-    <keyword type="signal" name="The &quot;cover-found&quot; signal" link="RCPlayer.html#RCPlayer-cover-found"/>
-    <keyword type="signal" name="The &quot;cover-not-found&quot; signal" link="RCPlayer.html#RCPlayer-cover-not-found"/>
-    <keyword type="signal" name="The &quot;lyric-found&quot; signal" link="RCPlayer.html#RCPlayer-lyric-found"/>
-    <keyword type="signal" name="The &quot;lyric-not-found&quot; signal" link="RCPlayer.html#RCPlayer-lyric-not-found"/>
-    <keyword type="signal" name="The &quot;player-continue&quot; signal" link="RCPlayer.html#RCPlayer-player-continue"/>
-    <keyword type="signal" name="The &quot;player-pause&quot; signal" link="RCPlayer.html#RCPlayer-player-pause"/>
-    <keyword type="signal" name="The &quot;player-play&quot; signal" link="RCPlayer.html#RCPlayer-player-play"/>
-    <keyword type="signal" name="The &quot;player-stop&quot; signal" link="RCPlayer.html#RCPlayer-player-stop"/>
+    <keyword type="macro" name="RC_PLAYER_TYPE" link="RhythmCat-RCPlayer.html#RC-PLAYER-TYPE:CAPS"/>
+    <keyword type="struct" name="RCPlayer" link="RhythmCat-RCPlayer.html#RCPlayer"/>
+    <keyword type="struct" name="RCPlayerClass" link="RhythmCat-RCPlayer.html#RCPlayerClass"/>
+    <keyword type="function" name="rc_player_new ()" link="RhythmCat-RCPlayer.html#rc-player-new"/>
+    <keyword type="function" name="rc_player_object_init ()" link="RhythmCat-RCPlayer.html#rc-player-object-init"/>
+    <keyword type="function" name="rc_player_object_get ()" link="RhythmCat-RCPlayer.html#rc-player-object-get"/>
+    <keyword type="function" name="rc_player_object_signal_emit_simple ()" link="RhythmCat-RCPlayer.html#rc-player-object-signal-emit-simple"/>
+    <keyword type="function" name="rc_player_object_signal_connect_simple ()" link="RhythmCat-RCPlayer.html#rc-player-object-signal-connect-simple"/>
+    <keyword type="function" name="rc_player_object_signal_disconnect ()" link="RhythmCat-RCPlayer.html#rc-player-object-signal-disconnect"/>
     <keyword type="struct" name="RCLyricData" link="RhythmCat-Lyric.html#RCLyricData"/>
     <keyword type="function" name="rc_lrc_init ()" link="RhythmCat-Lyric.html#rc-lrc-init"/>
     <keyword type="function" name="rc_lrc_exit ()" link="RhythmCat-Lyric.html#rc-lrc-exit"/>
@@ -224,25 +216,22 @@
     <keyword type="function" name="rc_gui_get_main_window ()" link="RhythmCat-Main-UI.html#rc-gui-get-main-window"/>
     <keyword type="function" name="rc_gui_get_icon_image ()" link="RhythmCat-Main-UI.html#rc-gui-get-icon-image"/>
     <keyword type="function" name="rc_gui_get_no_cover_image ()" link="RhythmCat-Main-UI.html#rc-gui-get-no-cover-image"/>
-    <keyword type="macro" name="RC_GUI_SCROLLED_TEXT_TYPE" link="RCGuiScrolledText.html#RC-GUI-SCROLLED-TEXT-TYPE:CAPS"/>
-    <keyword type="macro" name="RC_GUI_SCROLLED_TEXT()" link="RCGuiScrolledText.html#RC-GUI-SCROLLED-TEXT:CAPS"/>
-    <keyword type="macro" name="RC_GUI_SCROLLED_TEXT_CLASS()" link="RCGuiScrolledText.html#RC-GUI-SCROLLED-TEXT-CLASS:CAPS"/>
-    <keyword type="macro" name="IS_RC_GUI_SCROLLED_TEXT()" link="RCGuiScrolledText.html#IS-RC-GUI-SCROLLED-TEXT:CAPS"/>
-    <keyword type="macro" name="IS_RC_GUI_SCROLLED_TEXT_CLASS()" link="RCGuiScrolledText.html#IS-RC-GUI-SCROLLED-TEXT-CLASS:CAPS"/>
-    <keyword type="struct" name="RCGuiScrolledText" link="RCGuiScrolledText.html#RCGuiScrolledText-struct"/>
-    <keyword type="struct" name="RCGuiScrolledTextClass" link="RCGuiScrolledText.html#RCGuiScrolledTextClass"/>
-    <keyword type="function" name="rc_gui_scrolled_text_get_type ()" link="RCGuiScrolledText.html#rc-gui-scrolled-text-get-type"/>
-    <keyword type="function" name="rc_gui_scrolled_text_new ()" link="RCGuiScrolledText.html#rc-gui-scrolled-text-new"/>
-    <keyword type="function" name="rc_gui_scrolled_text_set_text ()" link="RCGuiScrolledText.html#rc-gui-scrolled-text-set-text"/>
-    <keyword type="function" name="rc_gui_scrolled_text_get_text ()" link="RCGuiScrolledText.html#rc-gui-scrolled-text-get-text"/>
-    <keyword type="function" name="rc_gui_scrolled_text_set_attributes ()" link="RCGuiScrolledText.html#rc-gui-scrolled-text-set-attributes"/>
-    <keyword type="function" name="rc_gui_scrolled_text_get_attributes ()" link="RCGuiScrolledText.html#rc-gui-scrolled-text-get-attributes"/>
-    <keyword type="function" name="rc_gui_scrolled_text_set_percent ()" link="RCGuiScrolledText.html#rc-gui-scrolled-text-set-percent"/>
-    <keyword type="function" name="rc_gui_scrolled_text_get_percent ()" link="RCGuiScrolledText.html#rc-gui-scrolled-text-get-percent"/>
-    <keyword type="function" name="rc_gui_scrolled_text_get_width ()" link="RCGuiScrolledText.html#rc-gui-scrolled-text-get-width"/>
-    <keyword type="property" name="The &quot;attributes&quot; property" link="RCGuiScrolledText.html#RCGuiScrolledText--attributes"/>
-    <keyword type="property" name="The &quot;percent&quot; property" link="RCGuiScrolledText.html#RCGuiScrolledText--percent"/>
-    <keyword type="property" name="The &quot;text&quot; property" link="RCGuiScrolledText.html#RCGuiScrolledText--text"/>
+    <keyword type="macro" name="RC_GUI_SCROLLED_TEXT_TYPE" link="RhythmCat-RCGuiScrolledText.html#RC-GUI-SCROLLED-TEXT-TYPE:CAPS"/>
+    <keyword type="macro" name="RC_GUI_SCROLLED_TEXT()" link="RhythmCat-RCGuiScrolledText.html#RC-GUI-SCROLLED-TEXT:CAPS"/>
+    <keyword type="macro" name="RC_GUI_SCROLLED_TEXT_CLASS()" link="RhythmCat-RCGuiScrolledText.html#RC-GUI-SCROLLED-TEXT-CLASS:CAPS"/>
+    <keyword type="macro" name="IS_RC_GUI_SCROLLED_TEXT()" link="RhythmCat-RCGuiScrolledText.html#IS-RC-GUI-SCROLLED-TEXT:CAPS"/>
+    <keyword type="macro" name="IS_RC_GUI_SCROLLED_TEXT_CLASS()" link="RhythmCat-RCGuiScrolledText.html#IS-RC-GUI-SCROLLED-TEXT-CLASS:CAPS"/>
+    <keyword type="struct" name="RCGuiScrolledText" link="RhythmCat-RCGuiScrolledText.html#RCGuiScrolledText"/>
+    <keyword type="struct" name="RCGuiScrolledTextClass" link="RhythmCat-RCGuiScrolledText.html#RCGuiScrolledTextClass"/>
+    <keyword type="function" name="rc_gui_scrolled_text_get_type ()" link="RhythmCat-RCGuiScrolledText.html#rc-gui-scrolled-text-get-type"/>
+    <keyword type="function" name="rc_gui_scrolled_text_new ()" link="RhythmCat-RCGuiScrolledText.html#rc-gui-scrolled-text-new"/>
+    <keyword type="function" name="rc_gui_scrolled_text_set_text ()" link="RhythmCat-RCGuiScrolledText.html#rc-gui-scrolled-text-set-text"/>
+    <keyword type="function" name="rc_gui_scrolled_text_get_text ()" link="RhythmCat-RCGuiScrolledText.html#rc-gui-scrolled-text-get-text"/>
+    <keyword type="function" name="rc_gui_scrolled_text_set_attributes ()" link="RhythmCat-RCGuiScrolledText.html#rc-gui-scrolled-text-set-attributes"/>
+    <keyword type="function" name="rc_gui_scrolled_text_get_attributes ()" link="RhythmCat-RCGuiScrolledText.html#rc-gui-scrolled-text-get-attributes"/>
+    <keyword type="function" name="rc_gui_scrolled_text_set_percent ()" link="RhythmCat-RCGuiScrolledText.html#rc-gui-scrolled-text-set-percent"/>
+    <keyword type="function" name="rc_gui_scrolled_text_get_percent ()" link="RhythmCat-RCGuiScrolledText.html#rc-gui-scrolled-text-get-percent"/>
+    <keyword type="function" name="rc_gui_scrolled_text_get_width ()" link="RhythmCat-RCGuiScrolledText.html#rc-gui-scrolled-text-get-width"/>
     <keyword type="macro" name="MAX_DIR_DEPTH" link="RhythmCat-Dialogs.html#MAX-DIR-DEPTH:CAPS"/>
     <keyword type="function" name="rc_gui_about_player ()" link="RhythmCat-Dialogs.html#rc-gui-about-player"/>
     <keyword type="function" name="rc_gui_show_message_dialog ()" link="RhythmCat-Dialogs.html#rc-gui-show-message-dialog"/>
@@ -286,14 +275,17 @@
     <keyword type="function" name="rc_gui_mini_normal_mode_clicked ()" link="RhythmCat-Mini-Mode-UI.html#rc-gui-mini-normal-mode-clicked"/>
     <keyword type="function" name="rc_gui_create_setting_window ()" link="RhythmCat-Settings-UI.html#rc-gui-create-setting-window"/>
     <keyword type="function" name="rc_gui_plugin_window_create ()" link="RhythmCat-Plugin-Configuration-UI.html#rc-gui-plugin-window-create"/>
-    <keyword type="" name="Introduction" link="PluginProgramming.html#id548126"/>
-    <keyword type="" name="Preparation" link="PluginProgramming.html#id518725"/>
-    <keyword type="" name="Implement a simple plugin" link="PluginProgramming.html#id526059"/>
-    <keyword type="" name="How to compile the plugin" link="PluginProgramming.html#id516196"/>
-    <keyword type="" name="Write a plugin description file" link="PluginProgramming.html#id540938"/>
-    <keyword type="" name="Make your custom plugin work" link="PluginProgramming.html#id485108"/>
-    <keyword type="" name="Catch signals in the player" link="PluginProgramming.html#id521655"/>
-    <keyword type="" name="About this manual" link="PluginProgramming.html#id540764"/>
+    <keyword type="" name="Introduction" link="PluginProgramming.html#id572011"/>
+    <keyword type="" name="Preparation" link="PluginProgramming.html#id511245"/>
+    <keyword type="" name="Implement a simple plugin" link="PluginProgramming.html#id517582"/>
+    <keyword type="" name="How to compile the plugin" link="PluginProgramming.html#id557409"/>
+    <keyword type="" name="Write a plugin description file" link="PluginProgramming.html#id552585"/>
+    <keyword type="" name="Make your custom plugin work" link="PluginProgramming.html#id562411"/>
+    <keyword type="" name="Catch signals in the player" link="PluginProgramming.html#id546898"/>
+    <keyword type="" name="About this manual" link="PluginProgramming.html#id544291"/>
+    <keyword type="constant" name="RC_CUE_INPUT_URI" link="RhythmCat-CUE-Parser.html#RC-CUE-INPUT-URI:CAPS"/>
+    <keyword type="constant" name="RC_CUE_INPUT_PATH" link="RhythmCat-CUE-Parser.html#RC-CUE-INPUT-PATH:CAPS"/>
+    <keyword type="constant" name="RC_CUE_INPUT_EMBEDED" link="RhythmCat-CUE-Parser.html#RC-CUE-INPUT-EMBEDED:CAPS"/>
     <keyword type="constant" name="MSG_TYPE_EMPTY" link="RhythmCat-Asynchronous-Message-Queue.html#MSG-TYPE-EMPTY:CAPS"/>
     <keyword type="constant" name="MSG_TYPE_TEST" link="RhythmCat-Asynchronous-Message-Queue.html#MSG-TYPE-TEST:CAPS"/>
     <keyword type="constant" name="MSG_TYPE_PL_INSERT" link="RhythmCat-Asynchronous-Message-Queue.html#MSG-TYPE-PL-INSERT:CAPS"/>

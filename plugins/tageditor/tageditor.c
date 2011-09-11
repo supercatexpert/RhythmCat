@@ -43,8 +43,11 @@
 
 static RCPluginModuleData plugin_module_data =
 {
+    RC_PLUGIN_MAGIC_NUMBER, /* magic_number */
     "TagEditor", /* group_name */
-    FALSE /* resident */
+    NULL, /* path */
+    FALSE, /* resident */
+    0 /* id */
 };
 
 typedef struct RCPluginTagUI
@@ -991,14 +994,16 @@ static void rc_plugin_tag_ui_init()
 
 G_MODULE_EXPORT const gchar *g_module_check_init(GModule *module)
 {
-    g_printf("TagEditor: Plugin loaded successfully!\n");
+    rc_debug_module_pmsg(plugin_module_data.group_name,
+        "Plugin loaded successfully!");
     keyfile = rc_set_get_plugin_configure();
     return NULL;
 }
 
 G_MODULE_EXPORT void g_module_unload(GModule *module)
 {
-    g_printf("TagEditor: Plugin exited!\n");
+    rc_debug_module_pmsg(plugin_module_data.group_name,
+        "Plugin exited!");
 }
 
 G_MODULE_EXPORT gint rc_plugin_module_init()

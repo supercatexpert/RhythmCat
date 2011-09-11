@@ -80,10 +80,9 @@ static void rc_core_plugin_install_result(GstInstallPluginsReturn result,
 static gboolean rc_core_bus_call(GstBus *bus, GstMessage *msg, gpointer data)
 {
     gchar *debug;
-    GstState old_state, new_state, pending_state;
+    GstState state;
     gchar *plugin_error_msg;
     GError *error;
-    static gint state_checker = -1;
     switch(GST_MESSAGE_TYPE(msg))
     {
         case GST_MESSAGE_EOS:
@@ -95,23 +94,12 @@ static gboolean rc_core_bus_call(GstBus *bus, GstMessage *msg, gpointer data)
             rc_debug_module_print(module_name, "Segment is done.");
             break;
         case GST_MESSAGE_STATE_CHANGED:
-            gst_message_parse_state_changed(msg, &old_state, &new_state,
-                &pending_state);
-            switch(new_state)
+            gst_message_parse_state_changed(msg, NULL, &state, NULL);
+            switch(state)
             {
                 case GST_STATE_PLAYING:
                     rc_gui_set_play_button_state(TRUE);
                     rc_gui_seek_scaler_enable();
-                    if(old_state==GST_STATE_PAUSED)
-                    {
-                        rc_player_object_signal_emit_simple(
-                            "player-continue");
-                    }
-                    else
-                    {
-                        rc_player_object_signal_emit_simple(
-                            "player-play");
-                    }
                     break;
                 case GST_STATE_PAUSED:
                     rc_gui_set_play_button_state(FALSE);
@@ -120,11 +108,7 @@ static gboolean rc_core_bus_call(GstBus *bus, GstMessage *msg, gpointer data)
                 default:
                     break;
             }
-            if(state_checker!=new_state)
-            {
-                rc_shell_signal_emit_simple("state-changed");
-                state_checker = new_state;
-            }
+            rc_shell_signal_emit_simple("state-changed");
             break;
         case GST_MESSAGE_ERROR:
             gst_message_parse_error(msg, &error, &debug);
@@ -143,8 +127,6 @@ static gboolean rc_core_bus_call(GstBus *bus, GstMessage *msg, gpointer data)
         case GST_MESSAGE_BUFFERING:
             break;
         case GST_MESSAGE_DURATION:
-            break;
-        case GST_MESSAGE_STREAM_STATUS:
             break;
         case GST_MESSAGE_NEW_CLOCK:
             rc_debug_module_print(module_name, "Get a new clock.");
@@ -470,6 +452,10 @@ gboolean rc_core_play()
     }
     flag = gst_element_set_state(rc_core.playbin, GST_STATE_PLAYING);
     if(!flag) return FALSE;
+    if(state==GST_STATE_PAUSED)
+        rc_player_object_signal_emit_simple("player-continue");
+    else
+        rc_player_object_signal_emit_simple("player-play");
     rc_debug_module_pmsg(module_name, "Start playing...");
     return TRUE;
 }
@@ -625,7 +611,7 @@ gint64 rc_core_get_music_length()
 {
     gint64 dura = 0;
     GstFormat fmt = GST_FORMAT_TIME;
-    if(rc_core.start_time>0 && rc_core.end_time>0)
+    if(rc_core.start_time>=0 && rc_core.end_time>0)
     {
         dura = rc_core.end_time - rc_core.start_time;
         if(dura>0) return dura;

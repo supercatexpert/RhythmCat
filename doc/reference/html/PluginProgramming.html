@@ -27,7 +27,7 @@
     and features. This manual can help you implement a plugin for the player.
   </p>
 <div class="refsect2" title="Introduction">
-<a name="id548126"></a><h3>Introduction</h3>
+<a name="id572011"></a><h3>Introduction</h3>
 <p>
       The plugin used in the player now is module, it is usually a shared-object
       (on Linux) or a dynamic linked library (on Windows). When the player loads
@@ -39,7 +39,7 @@
 </div>
 <hr>
 <div class="refsect2" title="Preparation">
-<a name="id518725"></a><h3>Preparation</h3>
+<a name="id511245"></a><h3>Preparation</h3>
 <p>
       Before you prepare to write the plugin, you should install development
       environment. GLib 2.0, GTK+ 2.0 and Gstreamer 0.10 and their development
@@ -49,7 +49,7 @@
 </div>
 <hr>
 <div class="refsect2" title="Implement a simple plugin">
-<a name="id526059"></a><h3>Implement a simple plugin</h3>
+<a name="id517582"></a><h3>Implement a simple plugin</h3>
 <p>
       The plugin needs the libraries to work, so you should include the header
       files. You can include them by the codes below:
@@ -97,17 +97,26 @@ G_MODULE_EXPORT void rc_plugin_module_configure();
       </p>
 <pre class="programlisting">
 typedef struct RCPluginModuleData {
+    guint32 magic_number;
     gchar *group_name;
+    gchar *path;
     gboolean resident;
+    GQuark id;
 }RCPluginModuleData;
       </pre>
 <p>
-      The element group_name is used in the configuration file, the player
-      needs it the get the configuration data of the plugin by the group name,
-      it should be unique, or the configuration data may conflict with other
-      plugins. The element resident decides whether the plugin can be removed
-      while the player is running, set it to TRUE to prevent the player from
-      removing it.
+      The magic number must be equal to RC_PLUGIN_MAGIC_NUMBER. Use the macro
+      directly is recommended. If the magic number is invalid, the plugin will
+      not be loaded. The element group_name is used in the configuration file,
+      the player needs it the get the configuration data of the plugin by the
+      group name, it should be unique, or the configuration data may conflict
+      with other plugins. The path will be set if the player loaded the plugin
+      normally, the path of the plugin can be accessed by access this element.
+      The element resident decides whether the plugin can be removed while the
+      player is running, set it to TRUE to prevent the player from removing it.
+      The ID will be set when the plugin is loaded normally, the ID will be
+      uniqued as group_name. The fields that should be filled are magic_number,
+      group_name, and resident.
     </p>
 <p>
       If the plugin needs configuration, the function <code class="function">rc_plugin_module_configure()</code>
@@ -126,7 +135,7 @@ typedef struct RCPluginModuleData {
       Here is an example plugin implemented below:
     </p>
 <div class="example">
-<a name="id480960"></a><p class="title"><b>Example 1. The example plugin</b></p>
+<a name="id527541"></a><p class="title"><b>Example 1. The example plugin</b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -200,7 +209,10 @@ typedef struct RCPluginModuleData {
 67
 68
 69
-70</pre></td>
+70
+71
+72
+73</pre></td>
         <td class="listing_code"><pre class="programlisting"><span class="preproc">#include &lt;glib.h&gt;</span>
 <span class="preproc">#include &lt;glib/gprintf.h&gt;</span>
 <span class="preproc">#include &lt;gst/gst.h&gt;</span>
@@ -209,8 +221,11 @@ typedef struct RCPluginModuleData {
 
 <span class="gtkdoc kwb">static</span> RCPluginModuleData plugin_module_data <span class="symbol">=</span>
 <span class="symbol">{</span>
+    RC_PLUGIN_MAGIC_NUMBER <span class="comment">/* magic_number */</span>
     <span class="string">&quot;ExamplePlugin&quot;</span><span class="symbol">,</span> <span class="comment">/* group_name */</span>
-    FALSE <span class="comment">/* resident */</span>
+    NULL<span class="symbol">,</span> <span class="comment">/* path */</span>
+    FALSE<span class="symbol">,</span> <span class="comment">/* resident */</span>
+    <span class="number">0</span> <span class="comment">/* id */</span>
 <span class="symbol">};</span>
 
 <span class="gtkdoc kwb">static</span> GKeyFile <span class="symbol">*</span>keyfile <span class="symbol">=</span> NULL<span class="symbol">;</span>
@@ -281,7 +296,7 @@ G_MODULE_EXPORT <span class="gtkdoc kwb">const</span> RCPluginModuleData <span c
 </div>
 <hr>
 <div class="refsect2" title="How to compile the plugin">
-<a name="id516196"></a><h3>How to compile the plugin</h3>
+<a name="id557409"></a><h3>How to compile the plugin</h3>
 <p>
        The plugin is a module, so you have to compile it into a library. On
        Linux, it is shared-object(.so). It is recommended to write a Makefile
@@ -324,7 +339,7 @@ rebuild: clean all
 </div>
 <hr>
 <div class="refsect2" title="Write a plugin description file">
-<a name="id540938"></a><h3>Write a plugin description file</h3>
+<a name="id552585"></a><h3>Write a plugin description file</h3>
 <p>
       Except the library file, the player also needs the description file to
       get necessary information about the plugin. You need to write a
@@ -334,7 +349,7 @@ rebuild: clean all
       Here is the description file of the example plugin mentioned above.
     </p>
 <div class="example">
-<a name="id549259"></a><p class="title"><b>Example 2. The description file of the example plugin</b></p>
+<a name="id524485"></a><p class="title"><b>Example 2. The description file of the example plugin</b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -366,7 +381,7 @@ Website<span class="symbol">=</span>http<span class="symbol">:</span><span class
 </div>
 <hr>
 <div class="refsect2" title="Make your custom plugin work">
-<a name="id485108"></a><h3>Make your custom plugin work</h3>
+<a name="id562411"></a><h3>Make your custom plugin work</h3>
 <p>
       Now you may have implemented the plugin, then you should put the files
       into the right directory. The player needs two files to make the plugin
@@ -391,7 +406,7 @@ ExamplePlugin
 </div>
 <hr>
 <div class="refsect2" title="Catch signals in the player">
-<a name="id521655"></a><h3>Catch signals in the player</h3>
+<a name="id546898"></a><h3>Catch signals in the player</h3>
 <p>
       Sometimes we need signals to know the working state of the player. When
       the player starts to play, or being stopped, it will emit signals. The
@@ -399,15 +414,15 @@ ExamplePlugin
       functions you implemented. If you want to use signals, you should include
       header file <code class="filename">"player_object.h"</code> first, then you can
       connect the signals to your callback functions by using
-      <a class="link" href="RCPlayer.html#rc-player-object-signal-connect-simple" title="rc_player_object_signal_connect_simple ()"><code class="function">rc_player_object_signal_connect_simple()</code></a>. The signal names are provided in
-      object <a class="link" href="RCPlayer.html" title="Player Object"><span class="type">RCPlayer</span></a>. This function will return the signal ID, and when you
+      <a class="link" href="RhythmCat-RCPlayer.html#rc-player-object-signal-connect-simple" title="rc_player_object_signal_connect_simple ()"><code class="function">rc_player_object_signal_connect_simple()</code></a>. The signal names are provided in
+      object <a class="link" href="RhythmCat-RCPlayer.html#RCPlayer" title="RCPlayer"><span class="type">RCPlayer</span></a>. This function will return the signal ID, and when you
       uninitialize your plugin, please remember remove the signal first, by using
-      function <a class="link" href="RCPlayer.html#rc-player-object-signal-disconnect" title="rc_player_object_signal_disconnect ()"><code class="function">rc_player_object_signal_disconnect()</code></a>.
+      function <a class="link" href="RhythmCat-RCPlayer.html#rc-player-object-signal-disconnect" title="rc_player_object_signal_disconnect ()"><code class="function">rc_player_object_signal_disconnect()</code></a>.
     </p>
 </div>
 <hr>
 <div class="refsect2" title="About this manual">
-<a name="id540764"></a><h3>About this manual</h3>
+<a name="id544291"></a><h3>About this manual</h3>
 <p>
       This manual helps you to make a usable plugin for RhythmCat Music Player.
       If you have any questions or problems, please leave issues on the project

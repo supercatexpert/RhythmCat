@@ -76,7 +76,7 @@ a dynamic link library) plugin.
 <div class="refsect2" title="enum RCPluginType">
 <a name="RCPluginType"></a><h3>enum RCPluginType</h3>
 <pre class="programlisting">typedef enum RCPluginType {
-    PLUGIN_TYPE_MODULE = 1,
+    PLUGIN_TYPE_MODULE = 1
 }RCPluginType;
 </pre>
 <p>
@@ -152,8 +152,11 @@ The plugin configuration data structure.
 <div class="refsect2" title="RCPluginModuleData">
 <a name="RCPluginModuleData"></a><h3>RCPluginModuleData</h3>
 <pre class="programlisting">typedef struct {
+    guint32 magic_number;
     gchar *group_name;
+    gchar *path;
     gboolean resident;
+    GQuark id;
 } RCPluginModuleData;
 </pre>
 <p>
@@ -163,13 +166,28 @@ The data structure of module.
 <col align="left" valign="top">
 <tbody>
 <tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint32"><span class="type">guint32</span></a> <em class="structfield"><code><a name="RCPluginModuleData.magic-number"></a>magic_number</code></em>;</span></p></td>
+<td>the magic number
+</td>
+</tr>
+<tr>
 <td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCPluginModuleData.group-name"></a>group_name</code></em>;</span></p></td>
 <td>the group name used in plugin configure file
 </td>
 </tr>
 <tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCPluginModuleData.path"></a>path</code></em>;</span></p></td>
+<td>the plugin path (can only be accessed when the plugin is running)
+</td>
+</tr>
+<tr>
 <td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> <em class="structfield"><code><a name="RCPluginModuleData.resident"></a>resident</code></em>;</span></p></td>
 <td>whether the plugin can be removed while the player is running
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Quarks.html#GQuark"><span class="type">GQuark</span></a> <em class="structfield"><code><a name="RCPluginModuleData.id"></a>id</code></em>;</span></p></td>
+<td>the unique ID when the plugin is running
 </td>
 </tr>
 </tbody>

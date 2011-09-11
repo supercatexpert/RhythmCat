@@ -1957,3 +1957,16 @@ const GdkPixbuf *rc_gui_get_no_cover_image()
     return rc_gui.no_cover_image;
 }
 
+/**
+ * rc_gui_get_cover_image:
+ *
+ * Return the image shows in the cover image widget.
+ *
+ * Returns: The image shows in the cover image widget.
+ */
+
+const GdkPixbuf *rc_gui_get_cover_image()
+{
+    return gtk_image_get_pixbuf(GTK_IMAGE(rc_gui.album_image));
+}
+
