@@ -41,6 +41,7 @@ bin_PROGRAMS = RhythmCat$(EXEEXT)
 @USE_GTK3_TRUE@am__append_4 = @GTK3_LIBS@
 @USE_GTK3_FALSE@am__append_5 = @GTK2_CFLAGS@
 @USE_GTK3_FALSE@am__append_6 = @GTK2_LIBS@
+@DISABLE_DBUS_TRUE@am__append_7 = -DDISABLE_DBUS=1
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -235,7 +236,7 @@ RhythmCat_SOURCES = core.c lyric.c playlist.c tag.c settings.c plugin.c \
 
 INCLUDES = @GLIB2_CFLAGS@ @DBUS_GLIB_CFLAGS@ @GSTREAMER_CFLAGS@ \
 	-DLOCALEDIR=\"$(localedir)\" $(am__append_1) $(am__append_2) \
-	$(am__append_3) $(am__append_5)
+	$(am__append_3) $(am__append_5) $(am__append_7)
 RhythmCat_LDADD = @GLIB2_LIBS@ @DBUS_GLIB_LIBS@ @GSTREAMER_LIBS@ \
 	$(am__append_4) $(am__append_6)
 all: all-am
@@ -555,9 +556,9 @@ uninstall-am: uninstall-binPROGRAMS
 	uninstall-am uninstall-binPROGRAMS
 
 
-shell_glue.h: shell.xml
-	$(DBUSBINDINGTOOL) --prefix=rc_shell --mode=glib-server \
-            --output=$@ $^
+@DISABLE_DBUS_FALSE@shell_glue.h: shell.xml
+@DISABLE_DBUS_FALSE@	$(DBUSBINDINGTOOL) --prefix=rc_shell --mode=glib-server \
+@DISABLE_DBUS_FALSE@            --output=$@ $^
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

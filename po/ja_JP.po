@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RhythmCat 1.0.0\n"
 "Report-Msgid-Bugs-To: http://code.google.com/p/rhythmcat/issues/list\n"
-"POT-Creation-Date: 2011-09-12 03:30+0800\n"
+"POT-Creation-Date: 2011-09-14 03:51+0800\n"
 "PO-Revision-Date: 2011-04-02 14:54+0800\n"
 "Last-Translator: SuperCat <supercatexpert@gmail.com>\n"
 "Language-Team: SuperCat <supercatexpert@gmail.com>\n"
@@ -414,8 +414,8 @@ msgstr "ステレオ"
 msgid "%d channels"
 msgstr "%d チャネル"
 
-#: src/gui.c:1406 src/playlist.c:414 src/playlist.c:493 src/playlist.c:683
-#: src/playlist.c:829
+#: src/gui.c:1406 src/playlist.c:416 src/playlist.c:495 src/playlist.c:685
+#: src/playlist.c:831
 msgid "Unknown Title"
 msgstr "不明なタイトル"
 
@@ -665,19 +665,19 @@ msgstr "長さ"
 msgid "Playlist %d"
 msgstr "プレーレスト %d"
 
-#: src/player.c:294
+#: src/player.c:302
 msgid "Enable debug mode"
 msgstr "ミニモードを有効する"
 
-#: src/player.c:296
+#: src/player.c:304
 msgid "Use malloc function in stardard C library"
 msgstr "C言語の標準ライブラリのmallocを使う"
 
-#: src/player.c:298
+#: src/player.c:306
 msgid "[URI...]"
 msgstr ""
 
-#: src/player.c:348
+#: src/player.c:358
 #, c-format
 msgid ""
 "%s\n"
@@ -686,7 +686,7 @@ msgstr ""
 "%s\n"
 "'%s --help'を使って、ヘルプのオプションを全て表示する。\n"
 
-#: src/playlist.c:294
+#: src/playlist.c:296
 msgid "Default Playlist"
 msgstr "デフォルトプレーリスト"
 

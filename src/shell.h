@@ -77,6 +77,8 @@ gboolean rc_shell_get_current_track(RCShell *shell, gchar **uri,
     guint *channel);
 gboolean rc_shell_get_current_lyric_text(RCShell *shell, gchar **text,
     GError **error);
+gboolean rc_shell_set_lyric_file(RCShell *shell, gchar *file,
+    GError **error);
 
 G_END_DECLS
 

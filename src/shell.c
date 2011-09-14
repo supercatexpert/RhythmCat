@@ -30,6 +30,7 @@
 #include "gui.h"
 #include "tag.h"
 #include "lyric.h"
+#include "player_object.h"
 
 /**
  * SECTION: shell
@@ -265,5 +266,17 @@ gboolean rc_shell_get_current_lyric_text(RCShell *shell, gchar **text,
     else
         *text = NULL;
     return TRUE;
+}
+
+gboolean rc_shell_set_lyric_file(RCShell *shell, gchar *file,
+    GError **error)
+{
+    gboolean flag;
+    flag = rc_lrc_read_from_file(file);
+    if(flag)
+        rc_player_object_signal_emit_simple("lyric-found");
+    else
+        rc_player_object_signal_emit_simple("lyric-not-found");
+    return flag;
 }
 

@@ -398,7 +398,7 @@ RCMusicMetaData *rc_tag_read_metadata(const gchar *uri)
         return NULL;
     }
     while(state_ret==GST_STATE_CHANGE_ASYNC && !mmd->eos &&
-        changeTimeout < 5) 
+        changeTimeout < 10) 
     {
         msg = gst_bus_timed_pop(bus, 1 * GST_SECOND);
         if(msg!=NULL) 

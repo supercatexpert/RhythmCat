@@ -23,8 +23,6 @@
  * Boston, MA  02110-1301  USA
  */
 
-#include <dbus/dbus.h>
-#include <dbus/dbus-glib.h>
 #include <limits.h>
 #include "player.h"
 #include "core.h"
@@ -36,7 +34,6 @@
 #include "debug.h"
 #include "msg.h"
 #include "lyric.h"
-#include "shell_glue.h"
 #include "player_object.h"
 #include "gui_eq.h"
 #include "gui_treeview.h"
@@ -45,6 +42,13 @@
 #ifdef G_OS_WIN32
     #include <windows.h>
 #endif
+
+#ifndef DISABLE_DBUS
+    #include <dbus/dbus.h>
+    #include <dbus/dbus-glib.h>
+    #include "shell_glue.h"
+#endif
+
 
 /**
  * SECTION: player
@@ -63,7 +67,7 @@
 #endif
 
 static const gchar rc_player_program_name[] = "RhythmCat Music Player";
-static const gchar rc_player_build_date[] = "110912";
+static const gchar rc_player_build_date[] = "110914";
 static const gchar rc_player_version[] = "1.0.0 beta 3";
 static const gboolean rc_player_stable_flag = FALSE;
 static const gchar *rc_player_support_formatx = "(.FLAC|.OGG|.MP3|.WMA|.WAV|"
@@ -179,6 +183,8 @@ static gchar *rc_player_get_program_data_dir(const gchar *argv0)
     return data_dir;
 }
 
+#ifndef DISABLE_DBUS
+
 static gboolean rc_player_dbus_init(gchar **remaining_args)
 {
     DBusGConnection *session_bus;
@@ -278,6 +284,8 @@ static gboolean rc_player_dbus_init(gchar **remaining_args)
     return TRUE;
 }
 
+#endif
+
 /**
  * rc_player_init:
  * @argc: address of the argc parameter of your main() function
@@ -328,7 +336,9 @@ void rc_player_init(int *argc, char **argv[])
     if(!g_thread_supported()) g_thread_init(NULL);
     gdk_threads_init();
     g_type_init();
-    dbus_g_thread_init();
+    #ifndef DISABLE_DBUS
+        dbus_g_thread_init();
+    #endif
     if(rc_player_locale_dir==NULL)
         bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
     else
@@ -359,7 +369,9 @@ void rc_player_init(int *argc, char **argv[])
     if(error!=NULL) g_error_free(error);
     gst_init(argc, argv);
     rc_shell_object_init();
-    rc_player_dbus_init(rc_player_remaining_args);
+    #ifndef DISABLE_DBUS
+        rc_player_dbus_init(rc_player_remaining_args);
+    #endif
     rc_gui_style_refresh();
     rc_gui_init();
     rc_core_init();

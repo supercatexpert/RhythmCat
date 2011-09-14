@@ -6,13 +6,10 @@ OBJS=${SRCS:.c=.o}
 INSTALL_NAME=pytest
 INSTALL_DIR=~/.RhythmCat/Plugins/${INSTALL_NAME}
 
-LIBS=glib-2.0 gtk+-2.0 gstreamer-0.10 pygtk-2.0 pygobject-2.0
-PYTHON_VER=python2.6
+LIBS=glib-2.0 gtk+-2.0 gstreamer-0.10 python3
 
-CFLAGS=`pkg-config --cflags ${LIBS}` -Wall -O2 -fPIC -I../../src/ \
-    -I/usr/include/${PYTHON_VER}
-LDFLAGS=`pkg-config --libs ${LIBS}` -L/usr/lib/${PYTHON_VER}/config \
-    -Wall -O2 -shared -fPIC  -l${PYTHON_VER} -export-dynamic
+CFLAGS=`pkg-config --cflags ${LIBS}` -Wall -O2 -fPIC -I../../src/
+LDFLAGS=`pkg-config --libs ${LIBS}` -Wall -O2 -shared -fPIC -export-dynamic
 
 all: ${PLUGIN_NAME}
 

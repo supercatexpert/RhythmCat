@@ -79,4 +79,9 @@
         * Added a Python plugin (only for experiment).
         * Added more features on plugin support.
 
+2011-09-13  SuperCat    <supercatexpert@gmail.com>
+        * D-Bus can be disabled totally when being compiled (by using
+          --disable-dbus).
+        * Lyric file can be set by using D-Bus interface now.
+
 

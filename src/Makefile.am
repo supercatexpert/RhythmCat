@@ -1,8 +1,13 @@
 bin_PROGRAMS = RhythmCat
 
+if DISABLE_DBUS
+
+else
 shell_glue.h: shell.xml
 	$(DBUSBINDINGTOOL) --prefix=rc_shell --mode=glib-server \
             --output=$@ $^
+
+endif
 
 RhythmCat_SOURCES = core.c lyric.c playlist.c tag.c settings.c plugin.c \
     shell.c msg.c debug.c player.c player_object.c gui_text.c gui.c \
@@ -34,4 +39,10 @@ else
     INCLUDES += @GTK2_CFLAGS@
     RhythmCat_LDADD += @GTK2_LIBS@
 endif
+
+if DISABLE_DBUS
+    INCLUDES += -DDISABLE_DBUS=1
+endif
+
+
 

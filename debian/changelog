@@ -1,5 +1,5 @@
-rhythmcat (1.0.0-beta2~110802) unstable; urgency=low
+rhythmcat (1.0.0-beta3~110914) unstable; urgency=low
 
-  * Fixed some bugs. (Closes: #1200)
+  * Fixed some bugs. (Closes: #1500)
 
- -- SuperCat <supercatexpert@gmail.com>  Tue, 08 Aug 2011 17:05:32 +0800
+ -- SuperCat <supercatexpert@gmail.com>  Wed, 14 Aug 2011 01:05:32 +0800

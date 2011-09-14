@@ -65,14 +65,16 @@ typedef struct RCPlistImportData {
     GtkListStore *store;
 }RCPlistImportData;
 
+#define RC_PLIST_JOB_THREAD_NUM 1
+
 /* Variables */
 static const gchar *module_name = "Plist";
 static gchar play_list_setting_file[] = "playlist.dat";
 static gchar *default_list_name = "[Default]";
 static RCPlistData rc_plist;
-static GThread *plist_import_threads[2];
+static GThread *plist_import_threads[RC_PLIST_JOB_THREAD_NUM];
 static GAsyncQueue *plist_import_job_queue;
-static const gint plist_import_thread_num = 2;
+static const gint plist_import_thread_num = RC_PLIST_JOB_THREAD_NUM;
 static gboolean plist_import_job_flag = TRUE;
 static GCancellable *plist_import_thread_cancel = NULL;
 
@@ -497,10 +499,10 @@ void rc_plist_list2_refresh_item(const gchar *uri, const gchar *title,
     time_min = seclength / 60;
     time_sec = seclength % 60;
     g_snprintf(new_length, 63, "%02d:%02d", time_min, time_sec);
-    gtk_list_store_set(pl_store, &iter, PLIST2_URI, uri, PLIST2_STATE, NULL,
-        PLIST2_TITLE, new_title, PLIST2_ORITITLE, title, PLIST2_ARTIST,
-        artist, PLIST2_ALBUM, album, PLIST2_LENGTH, new_length,
-        PLIST2_TRACKNO, trackno, -1);
+    gtk_list_store_set(pl_store, &iter, PLIST2_URI, uri, PLIST2_TITLE,
+        new_title, PLIST2_ORITITLE, title, PLIST2_ARTIST, artist,
+        PLIST2_ALBUM, album, PLIST2_LENGTH, new_length, PLIST2_TRACKNO,
+        trackno, -1);
     if(new_title!=NULL) g_free(new_title);
 }
 

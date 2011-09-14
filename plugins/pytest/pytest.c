@@ -23,11 +23,10 @@
  * Boston, MA  02110-1301  USA
  */
 
-#include <pygobject.h>
-#include <pygtk/pygtk.h>
 #include <Python.h>
 #include <pythonrun.h>
 #include <signal.h>
+#include <wchar.h>
 #include <glib.h>
 #include <glib/gprintf.h>
 #include <glib/gi18n.h>
@@ -56,19 +55,11 @@ static GKeyFile *keyfile = NULL;
 static GModule *self_module = NULL;
 static const gchar *py_module = "pytest.py";
 
-static void rc_plugin_module_pygtk_init()
-{
-    init_pygtk();
-}
-
 static gint rc_plugin_module_python_init()
 {
     gint ret;
-    char *argv[] = {"rhythmcat", "rhythmcat", NULL };
+    wchar_t *argv[] = {L"rhythmcat", L"rhythmcat", NULL };
     struct sigaction old_sigint;
-    PyObject *pygtk, *mdict, *require;
-    PyObject *gtk, *pygtk_version, *pygtk_required_version;
-    PyObject *gettext;
     if(Py_IsInitialized())
     {
         rc_debug_module_pmsg(plugin_module_data.group_name,
@@ -91,70 +82,6 @@ static gint rc_plugin_module_python_init()
         return 2;
     }
     PySys_SetArgv(1, argv);
-    pygtk = PyImport_ImportModule("pygtk");
-    if(pygtk==NULL)
-    {
-        rc_debug_module_perror(plugin_module_data.group_name,
-            "Cannot not import PyGtk!");
-        PyErr_Print();
-        return 3;
-    }
-    mdict = PyModule_GetDict(pygtk);
-    require = PyDict_GetItemString(mdict, "require");
-    PyObject_CallObject(require, Py_BuildValue("(S)",
-        PyString_FromString("2.0")));
-    if(PyErr_Occurred())
-    {
-        rc_debug_module_perror(plugin_module_data.group_name,
-            "Require PyGtk 2.0 failed!");
-        PyErr_Print();
-        return 3;
-    }
-    if(pygobject_init(2, 16, 0)==NULL)
-    {
-        rc_debug_module_perror(plugin_module_data.group_name,
-           "Could not initialize PyGObject!");
-        PyErr_Print();
-        return 4;
-    }
-    pyg_disable_warning_redirections();
-    rc_plugin_module_pygtk_init();
-    if(PyErr_Occurred())
-    {
-        rc_debug_module_perror(plugin_module_data.group_name,
-            "Cannot not initialize PyGtk!");
-        PyErr_Print();
-        return 5;
-    }
-    pyg_enable_threads();
-    gtk = PyImport_ImportModule("gtk");
-    if(gtk==NULL)
-    {
-        rc_debug_module_perror(plugin_module_data.group_name,
-            "Cannot not import GTK!");
-        PyErr_Print();
-        return 5;
-    }
-    mdict = PyModule_GetDict(gtk);
-    pygtk_version = PyDict_GetItemString(mdict, "pygtk_version");
-    pygtk_required_version = Py_BuildValue("(iii)", 2, 8, 0);
-    if(PyObject_Compare(pygtk_version, pygtk_required_version)==-1)
-    {
-        rc_debug_module_perror(plugin_module_data.group_name,
-            "PyGTK %s required, but %s found.",
-            PyString_AsString(PyObject_Repr(pygtk_required_version)),
-            PyString_AsString(PyObject_Repr(pygtk_version)));
-        Py_DECREF(pygtk_required_version);
-        return 6;
-    }
-    gettext = PyImport_ImportModule("gettext");
-    if(gettext==NULL)
-    {
-        rc_debug_module_perror(plugin_module_data.group_name,
-            "Cannot not import gettext");
-        PyErr_Print();
-        return 7;
-    }
     return 0;
 }
 
@@ -202,6 +129,20 @@ static gint rc_plugin_module_python_run(const gchar *filename)
         return 3;
     }
     return 0;
+}
+
+static PyObject *rc_plugin_module_python_run_function(PyObject *module,
+    const gchar *name, const gchar *format, ...)
+{
+    PyObject *func_object, *arg_object, *ret_object;
+    func_object = PyObject_GetAttrString(module, name);
+    if(func_object==NULL) return NULL;
+    va_list args;
+    va_start(args, format);
+    arg_object = Py_VaBuildValue(format, args);
+    va_end(args);
+    ret_object = PyObject_CallObject(func_object, arg_object);
+    return ret_object;
 }
 
 G_MODULE_EXPORT const gchar *g_module_check_init(GModule *module)
