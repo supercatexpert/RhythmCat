@@ -328,7 +328,7 @@ static void rc_gui_notebook_page_switched(GtkNotebook *notebook,
         {
             page_data = list_foreach->data;
             if(page_data->view_widget==child)
-                page_num = page_data->id + 2;
+                page_num = page_data->id + 3;
         }
     }
     gtk_radio_action_set_current_value(GTK_RADIO_ACTION(
@@ -356,7 +356,7 @@ static void rc_gui_view_menu_clicked(GtkAction *action, GtkRadioAction *current)
     }
     else
     {
-        value-=2;
+        value-=3;
         for(list_foreach=rc_gui_view_page_list;list_foreach!=NULL;
             list_foreach=g_slist_next(list_foreach))
         {
@@ -1778,7 +1778,7 @@ guint rc_gui_view_add_page(const gchar *name, const gchar *title, GtkWidget *wid
     GtkWidget *label;
     if(name==NULL || title==NULL || widget==NULL) return 0;
     id = gtk_ui_manager_new_merge_id(rc_gui.main_ui);
-    action = gtk_radio_action_new(name, title, title, NULL, 2+id);
+    action = gtk_radio_action_new(name, title, title, NULL, 3+id);
     group = gtk_radio_action_get_group(GTK_RADIO_ACTION(
         gtk_ui_manager_get_action(rc_gui.main_ui,
         "/RCMenuBar/ViewMenu/ViewPlaylist")));
@@ -1820,7 +1820,7 @@ guint rc_gui_view_add_page_with_label(const gchar *name, const gchar *title,
     GtkWidget *label;
     if(name==NULL || title==NULL || widget==NULL) return 0;
     id = gtk_ui_manager_new_merge_id(rc_gui.main_ui);
-    action = gtk_radio_action_new(name, title, title, NULL, 2+id);
+    action = gtk_radio_action_new(name, title, title, NULL, 3+id);
     group = gtk_radio_action_get_group(GTK_RADIO_ACTION(
         gtk_ui_manager_get_action(rc_gui.main_ui,
         "/RCMenuBar/ViewMenu/ViewPlaylist")));

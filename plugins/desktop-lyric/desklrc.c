@@ -40,15 +40,16 @@
 
 static RCPluginModuleData plugin_module_data =
 {
-    RC_PLUGIN_MAGIC_NUMBER, /* magic_number */
+    .magic_number = RC_PLUGIN_MAGIC_NUMBER,
     #ifdef USE_GTK3
-        "DeskLrcGtk3", /* group_name */
+        .group_name = "DeskLrcGtk3",
     #else
-        "DeskLrcGtk2", /* group_name */
+        .group_name = "DeskLrcGtk2",
     #endif
-    NULL, /* path */
-    FALSE, /* resident */
-    0 /* id */
+    .path = NULL,
+    .resident = FALSE,
+    .id = 0,
+    .busy_flag = FALSE
 };
 
 static GKeyFile *keyfile = NULL;
@@ -70,6 +71,57 @@ static gboolean osd_lyric_draw_stroke = TRUE;
 static gulong lyric_found_signal = 0;
 static gulong lyric_stop_signal = 0;
 static gulong lyric_refresh_timeout = 0;
+static GKeyFile *translation_keyfile = NULL;
+static const gchar *translation_string =
+    "[Translation]\n"
+    "CannotStart=Cannot start Desktop Lyric\n"
+    "CannotStart[zh_CN]=无法启动桌面歌词\n"
+    "CannotStart[zh_TW]=無法啟動桌面歌詞\n"
+    "NeedGTK3=This plugin need GTK+ 3.0 or newer version.\n"
+    "NeedGTK3[zh_CN]=这个插件需要GTK+ 3.0或更新的版本。\n"
+    "NeedGTK3[zh_TW]=這個插件需要GTK+ 3.0或更新的版本。\n"
+    "NeedGTK2=This plugin need GTK+ 2.12 or newer GTK+ 2 version, "
+        "somehow this plugin doesn't work on GTK+ 3.0.\n"
+    "NeedGTK2[zh_CN]=这个插件需要在GTK+ 2.12或更新的版本上工作，但无法在GTK+ 3.0上工作。\n"
+    "NeedGTK2[zh_TW]=這個插件需要在GTK+ 2.12或更新的版本上工作，但無法在GTK+ 3.0上工作。\n"
+    "NeedCompostion=This plugin need composition support to work! "
+        "Please check if your window manager support it.\n"
+    "NeedCompostion[zh_CN]=这个插件需要混合特效才能工作！请检查您的窗口管理器是否支持。\n"
+    "NeedCompostion[zh_TW]=這個插件需要混合特效才能工作！請檢查您的窗口管理器是否支持。\n"
+    "Preferences=Desktop Lyric Preferences\n"
+    "Preferences[zh_CN]=桌面歌词首选项\n"
+    "Preferences[zh_TW]=桌面歌詞首選項\n"
+    "PrefFont=Font: \n"
+    "PrefFont[zh_CN]=字体: \n"
+    "PrefFont[zh_TW]=字體: \n"
+    "PrefNormColor1=Normal Color 1: \n"
+    "PrefNormColor1[zh_CN]=背景色1: \n"
+    "PrefNormColor1[zh_TW]=背景色1: \n"
+    "PrefNormColor2=Normal Color 2: \n"
+    "PrefNormColor2[zh_CN]=背景色2: \n"
+    "PrefNormColor2[zh_TW]=背景色2: \n"
+    "PrefHLColor1=Highlight Color 1: \n"
+    "PrefHLColor1[zh_CN]=高亮色1: \n"
+    "PrefHLColor1[zh_TW]=高亮色1: \n"
+    "PrefHLColor2=Highlight Color 1: \n"
+    "PrefHLColor2[zh_CN]=高亮色1: \n"
+    "PrefHLColor2[zh_TW]=高亮色1: \n"
+    "PrefWindowWidth=OSD Window Width: \n"
+    "PrefWindowWidth[zh_CN]=歌词条宽度: \n"
+    "PrefWindowWidth[zh_TW]=歌詞條寬度: \n"
+    "PrefWindowMovable=Set the OSD Window movable\n"
+    "PrefWindowMovable[zh_CN]=歌词条可被移动\n"
+    "PrefWindowMovable[zh_TW]=歌詞條可被移動\n"
+    "PrefLyricCentered=Set the lyric text centered\n"
+    "PrefLyricCentered[zh_CN]=居中显示歌词文字\n"
+    "PrefLyricCentered[zh_TW]=居中顯示歌詞文字\n"
+    "PrefDrawStrokes=Draw strokes on the lyric text\n"
+    "PrefDrawStrokes[zh_CN]=显示歌词文字勾边效果\n"
+    "PrefDrawStrokes[zh_TW]=顯示歌詞文字勾邊效果\n"
+    "PrefShowTwoLine=Show two lines of lyric text\n"
+    "PrefShowTwoLine[zh_CN]=显示双行歌词文字\n"
+    "PrefShowTwoLine[zh_TW]=顯示雙行歌詞文字\n"
+;
 
 static void rc_plugin_desklrc_show(cairo_t *cr)
 {
@@ -682,11 +734,21 @@ G_MODULE_EXPORT const gchar *g_module_check_init(GModule *module)
     rc_debug_module_pmsg(plugin_module_data.group_name,
         "Plugin loaded successfully!");
     keyfile = rc_set_get_plugin_configure();
+    translation_keyfile = g_key_file_new();
+    if(!g_key_file_load_from_data(translation_keyfile, translation_string,
+        -1, G_KEY_FILE_NONE, NULL))
+    {
+        rc_debug_module_perror(plugin_module_data.group_name,
+            "Cannot load translation data!");
+    }
     return NULL;
 }
 
 G_MODULE_EXPORT void g_module_unload(GModule *module)
 {
+    if(desklrc_font!=NULL) g_free(desklrc_font);
+    if(translation_keyfile!=NULL)
+        g_key_file_free(translation_keyfile);
     rc_debug_module_pmsg(plugin_module_data.group_name,
         "Plugin exited!");
 }
@@ -694,34 +756,70 @@ G_MODULE_EXPORT void g_module_unload(GModule *module)
 G_MODULE_EXPORT gint rc_plugin_module_init()
 {
     GdkScreen *screen;
-    screen = gdk_screen_get_default();
+    gchar *title, *message;
     #ifdef USE_GTK3
         if(gtk_major_version<3)
         {
-            rc_debug_perror("DeskLRC-ERROR: This plugin need GTK+ 3.0 or "
+            title = g_key_file_get_locale_string(translation_keyfile, 
+                "Translation", "CannotStart", NULL, NULL);
+            message = g_key_file_get_locale_string(translation_keyfile,
+                "Translation", "NeedGTK3", NULL, NULL);
+            if(title==NULL || strlen(title)==0)
+                title = g_strdup("Cannot start Desktop Lyric");
+            if(message==NULL || strlen(message)==0)
+                message = g_strdup("This plugin need GTK+ 3.0 or "
+                    "newer version.");
+            rc_debug_perror("LRCShow-ERROR: This plugin need GTK+ 3.0 or "
                 "newer version.\n");
-            rc_gui_show_message_dialog(GTK_MESSAGE_ERROR,
-                _("Cannot start Desktop Lyric"),
-                _("This plugin need GTK+ 3.0 or newer version."));
+            rc_gui_show_message_dialog(GTK_MESSAGE_ERROR, title,
+                message);
+            g_free(title);
+            g_free(message);
             return 1;
         }
     #else
-        if(gtk_major_version!=2 || gtk_minor_version<20)
+        if(gtk_major_version!=2 || gtk_minor_version<12)
         {
-            rc_gui_show_message_dialog(GTK_MESSAGE_ERROR,
-                _("Cannot start Desktop Lyric"),
-                _(" This plugin need GTK+ 2.20 or newer GTK+ 2 version, "
-                "somehow this plugin doesn't work on GTK+ 3.0."));
-            rc_debug_perror("DeskLRC-ERROR: This plugin need GTK+ 2.20 or "
-                "newer GTK+ 2 version, somehow this plugin doesn't work on "
-                "GTK+ 3.0.\n");
+            title = g_key_file_get_locale_string(translation_keyfile, 
+                "Translation", "CannotStart", NULL, NULL);
+            message = g_key_file_get_locale_string(translation_keyfile,
+                "Translation", "NeedGTK2", NULL, NULL);
+            if(title==NULL || strlen(title)==0)
+                title = g_strdup("Cannot start Desktop Lyric");
+            if(message==NULL || strlen(message)==0)
+                message = g_strdup("This plugin need GTK+ 2.12 or newer "
+                    "GTK+ 2 version, somehow this plugin doesn't work on "
+                    "GTK+ 3.0.");
+            rc_debug_module_perror(plugin_module_data.group_name,
+                "This plugin need GTK+ 2.20 or newer version, somehow "
+                "it doesn't work on GTK+ 3.0.");
+            rc_gui_show_message_dialog(GTK_MESSAGE_ERROR, title,
+                message);
+            g_free(title);
+            g_free(message);
             return 1;
         }
     #endif
+    screen = gdk_screen_get_default();
     if(!gdk_screen_is_composited(screen))
     {
-        rc_debug_perror("DeskLRC-ERROR: This plugin need composition support "
-            "to work! Please check if your window manager support it.\n");
+
+        title = g_key_file_get_locale_string(translation_keyfile, 
+            "Translation", "CannotStart", NULL, NULL);
+        message = g_key_file_get_locale_string(translation_keyfile,
+            "Translation", "NeedCompostion", NULL, NULL);
+        if(title==NULL || strlen(title)==0)
+            title = g_strdup("Cannot start Desktop Lyric");
+        if(message==NULL || strlen(message)==0)
+            message = g_strdup("This plugin need composition support to "
+                "work! Please check if your window manager support it.");
+        rc_debug_module_perror(plugin_module_data.group_name,
+            "This plugin need composition support to work! "
+            "Please check if your window manager support it.");
+        rc_gui_show_message_dialog(GTK_MESSAGE_ERROR, title,
+            message);
+        g_free(title);
+        g_free(message);
         return 2;
     }
     rc_plugin_desklrc_init();
@@ -737,7 +835,6 @@ G_MODULE_EXPORT void rc_plugin_module_exit()
     rc_plugin_desklrc_save_conf();
     g_source_remove(lyric_refresh_timeout);
     gtk_widget_destroy(desklrc_window);
-    if(desklrc_font!=NULL) g_free(desklrc_font);
     rc_player_object_signal_disconnect(lyric_found_signal);
     rc_player_object_signal_disconnect(lyric_stop_signal);
 }
@@ -759,18 +856,57 @@ G_MODULE_EXPORT void rc_plugin_module_configure()
     GtkWidget *draw_stroke_checkbox;
     GtkWidget *two_line_mode_checkbox;
     GdkColor color;
+    gchar *string = NULL;
     gint i, result;
-    dialog = gtk_dialog_new_with_buttons(_("Desktop Lyric Preferences"), NULL,
+    rc_plugin_desklrc_load_conf();
+    string = g_key_file_get_locale_string(translation_keyfile, "Translation",
+        "Preferences", NULL, NULL);
+    if(string==NULL || strlen(string)==0)
+        string = g_strdup("Desktop Lyric Preferences");
+    dialog = gtk_dialog_new_with_buttons(string, NULL,
         GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT, GTK_STOCK_OK,
         GTK_RESPONSE_ACCEPT, GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT, NULL);
+    g_free(string);
     table = gtk_table_new(2, 10, FALSE);
-    label[0] = gtk_label_new(_("Font: "));
-    label[1] = gtk_label_new(_("Normal Color 1: "));
-    label[2] = gtk_label_new(_("Normal Color 2: "));
-    label[3] = gtk_label_new(_("Highlight Color 1: "));
-    label[4] = gtk_label_new(_("Highlight Color 2: "));
-    label[5] = gtk_label_new(_("OSD Window Width: "));
-    font_button = gtk_font_button_new_with_font(desklrc_font);
+    string = g_key_file_get_locale_string(translation_keyfile, "Translation",
+        "PrefFont", NULL, NULL);
+    if(string==NULL || strlen(string)==0) string = g_strdup("Font: ");
+    label[0] = gtk_label_new(string);
+    g_free(string);
+    string = g_key_file_get_locale_string(translation_keyfile, "Translation",
+        "PrefNormColor1", NULL, NULL);
+    if(string==NULL || strlen(string)==0)
+        string = g_strdup("Normal Color 1: ");
+    label[1] = gtk_label_new(string);
+    g_free(string);
+    string = g_key_file_get_locale_string(translation_keyfile, "Translation",
+        "PrefNormColor2", NULL, NULL);
+    if(string==NULL || strlen(string)==0)
+        string = g_strdup("Normal Color 2: ");
+    label[2] = gtk_label_new(string);
+    g_free(string);
+    string = g_key_file_get_locale_string(translation_keyfile, "Translation",
+        "PrefHLColor1", NULL, NULL);
+    if(string==NULL || strlen(string)==0)
+        string = g_strdup("Highlight Color 1: ");
+    label[3] = gtk_label_new(string);
+    g_free(string);
+    string = g_key_file_get_locale_string(translation_keyfile, "Translation",
+        "PrefHLColor2", NULL, NULL);
+    if(string==NULL || strlen(string)==0)
+        string = g_strdup("Highlight Color 2: ");
+    label[4] = gtk_label_new(string);
+    g_free(string);
+    string = g_key_file_get_locale_string(translation_keyfile, "Translation",
+        "PrefWindowWidth", NULL, NULL);
+    if(string==NULL || strlen(string)==0)
+        string = g_strdup("OSD Window Width: ");
+    label[5] = gtk_label_new(string);
+    g_free(string);
+    if(desklrc_font!=NULL)
+        font_button = gtk_font_button_new_with_font(desklrc_font);
+    else
+        font_button = gtk_font_button_new();
     color.red = desklrc_bg_color1[0] * 0xFFFF;
     color.green = desklrc_bg_color1[1] * 0xFFFF;
     color.blue = desklrc_bg_color1[2] * 0xFFFF;
@@ -788,14 +924,35 @@ G_MODULE_EXPORT void rc_plugin_module_configure()
     color.blue = desklrc_fg_color2[2] * 0xFFFF;
     highlight_color_button2 = gtk_color_button_new_with_color(&color);
     window_width_spin = gtk_spin_button_new_with_range(0, 4000, 1);
+    string = g_key_file_get_locale_string(translation_keyfile, "Translation",
+        "PrefWindowMovable", NULL, NULL);
+    if(string==NULL || strlen(string)==0)
+        string = g_strdup("Set the OSD Window movable");
     window_movable_checkbox = gtk_check_button_new_with_mnemonic(
-        _("Set the OSD Window movable"));
+        string);
+    g_free(string);
+    string = g_key_file_get_locale_string(translation_keyfile, "Translation",
+        "PrefLyricCentered", NULL, NULL);
+    if(string==NULL || strlen(string)==0)
+        string = g_strdup("Set the lyric text centered");
     window_centered_checkbox = gtk_check_button_new_with_mnemonic(
         _("Set the lyric text centered"));
+    g_free(string);
+    string = g_key_file_get_locale_string(translation_keyfile, "Translation",
+        "PrefDrawStrokes", NULL, NULL);
+    if(string==NULL || strlen(string)==0)
+        string = g_strdup("Draw strokes on the lyric text");
     draw_stroke_checkbox = gtk_check_button_new_with_mnemonic(
-        _("Draw strokes on the lyric text"));
+        string);
+    g_free(string);
+    string = g_key_file_get_locale_string(translation_keyfile, "Translation",
+        "PrefShowTwoLine", NULL, NULL);
+    if(string==NULL || strlen(string)==0)
+        string = g_strdup("Show two lines of lyric text");
+
     two_line_mode_checkbox = gtk_check_button_new_with_mnemonic(
         _("Show two lines of lyric text"));
+    g_free(string);
     for(i=0;i<6;i++)
         gtk_misc_set_alignment(GTK_MISC(label[i]), 0.0, 0.5);
     gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(window_width_spin), FALSE);

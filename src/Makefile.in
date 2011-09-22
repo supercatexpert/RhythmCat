@@ -37,11 +37,10 @@ host_triplet = @host@
 bin_PROGRAMS = RhythmCat$(EXEEXT)
 @DEBUG_MODE_TRUE@am__append_1 = -DDEBUG_MODE=1 -g
 @USE_MAEMO5_TRUE@am__append_2 = -DUSE_MAEMO5=1
-@USE_GTK3_TRUE@am__append_3 = @GTK3_CFLAGS@ -DUSE_GTK3=1
-@USE_GTK3_TRUE@am__append_4 = @GTK3_LIBS@
-@USE_GTK3_FALSE@am__append_5 = @GTK2_CFLAGS@
-@USE_GTK3_FALSE@am__append_6 = @GTK2_LIBS@
-@DISABLE_DBUS_TRUE@am__append_7 = -DDISABLE_DBUS=1
+@USE_GTK3_TRUE@am__append_3 = -DUSE_GTK3=1
+@DISABLE_DBUS_TRUE@am__append_4 = -DDISABLE_DBUS=1
+@DISABLE_DBUS_FALSE@am__append_5 = @DBUS_GLIB_CFLAGS@
+@DISABLE_DBUS_FALSE@am__append_6 = @DBUS_GLIB_LIBS@
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -69,7 +68,7 @@ am_RhythmCat_OBJECTS = core.$(OBJEXT) lyric.$(OBJEXT) \
 	main.$(OBJEXT)
 RhythmCat_OBJECTS = $(am_RhythmCat_OBJECTS)
 am__DEPENDENCIES_1 =
-RhythmCat_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
+RhythmCat_DEPENDENCIES = $(am__DEPENDENCIES_1)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -118,13 +117,11 @@ GMSGFMT_015 = @GMSGFMT_015@
 GREP = @GREP@
 GSTREAMER_CFLAGS = @GSTREAMER_CFLAGS@
 GSTREAMER_LIBS = @GSTREAMER_LIBS@
-GTK2_CFLAGS = @GTK2_CFLAGS@
-GTK2_LIBS = @GTK2_LIBS@
-GTK3_CFLAGS = @GTK3_CFLAGS@
-GTK3_LIBS = @GTK3_LIBS@
 GTKDOC_CHECK = @GTKDOC_CHECK@
 GTKDOC_MKPDF = @GTKDOC_MKPDF@
 GTKDOC_REBASE = @GTKDOC_REBASE@
+GTK_CFLAGS = @GTK_CFLAGS@
+GTK_LIBS = @GTK_LIBS@
 HTML_DIR = @HTML_DIR@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
@@ -227,18 +224,18 @@ top_srcdir = @top_srcdir@
 RhythmCat_SOURCES = core.c lyric.c playlist.c tag.c settings.c plugin.c \
     shell.c msg.c debug.c player.c player_object.c gui_text.c gui.c \
     gui_treeview.c gui_style.c gui_dialog.c gui_eq.c gui_plugin.c \
-    gui_setting.c gui_mini.c cue.c main.c \
+    gui_setting.c gui_mini.c cue.c main.c tagc.o \
     core.h lyric.h playlist.h tag.h settings.h plugin.h \
     shell.h msg.h debug.h player.h player_object.h gui_text.h gui.h \
     gui_treeview.h gui_style.h gui_dialog.h gui_eq.h gui_plugin.h \
     gui_setting.h gui_mini.h cue.h shell_glue.h shell.xml \
     imgs/img_icon.xpm imgs/img_nocov.xpm
 
-INCLUDES = @GLIB2_CFLAGS@ @DBUS_GLIB_CFLAGS@ @GSTREAMER_CFLAGS@ \
+INCLUDES = @GLIB2_CFLAGS@ @GTK_CFLAGS@ @GSTREAMER_CFLAGS@ \
 	-DLOCALEDIR=\"$(localedir)\" $(am__append_1) $(am__append_2) \
-	$(am__append_3) $(am__append_5) $(am__append_7)
-RhythmCat_LDADD = @GLIB2_LIBS@ @DBUS_GLIB_LIBS@ @GSTREAMER_LIBS@ \
-	$(am__append_4) $(am__append_6)
+	$(am__append_3) $(am__append_4) $(am__append_5)
+RhythmCat_LDADD = @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ \
+	$(am__append_6)
 all: all-am
 
 .SUFFIXES:

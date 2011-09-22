@@ -1,6 +1,10 @@
 <MACRO>
 <NAME>RC_PLUGIN_MAGIC_NUMBER</NAME>
-#define RC_PLUGIN_MAGIC_NUMBER 0x100B090B
+#define RC_PLUGIN_MAGIC_NUMBER 0x100B0916
+</MACRO>
+<MACRO>
+<NAME>RC_PLUGIN_OLD_MAGIC_NUMBER</NAME>
+#define RC_PLUGIN_OLD_MAGIC_NUMBER 0x100B090B
 </MACRO>
 <ENUM>
 <NAME>RCPluginType</NAME>
@@ -28,6 +32,7 @@ typedef struct RCPluginModuleData {
     gchar *path;
     gboolean resident;
     GQuark id;
+    gboolean busy_flag;
 }RCPluginModuleData;
 </STRUCT>
 <FUNCTION>
@@ -344,6 +349,7 @@ typedef struct RCCoreData {
     GstElement *vol_plugin;
     gint64 start_time;
     gint64 end_time;
+    gboolean full_mode;
     guint ver_major;
     guint ver_minor;
     guint ver_micro;

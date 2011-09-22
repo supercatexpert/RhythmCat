@@ -127,6 +127,7 @@ The plugin configuration data structure.
     gchar *path;
     gboolean resident;
     GQuark id;
+    gboolean busy_flag;
 } RCPluginModuleData;
 </programlisting>
 <para>
@@ -150,6 +151,10 @@ The data structure of module.
 </varlistentry>
 <varlistentry><term><link linkend="GQuark"><type>GQuark</type></link>&#160;<structfield id="RCPluginModuleData.id">id</structfield>;</term>
 <listitem><simpara>the unique ID when the plugin is running
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gboolean"><type>gboolean</type></link>&#160;<structfield id="RCPluginModuleData.busy-flag">busy_flag</structfield>;</term>
+<listitem><simpara>whether the plugin is busy (cannot be interruped)
 </simpara></listitem>
 </varlistentry>
 </variablelist></refsect2>

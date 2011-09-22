@@ -526,7 +526,8 @@ static gboolean rc_plugin_module_load(const gchar *filename)
     }
     module_data->module = module;
     module_data->data = module_data->module_data();
-    if(module_data->data->magic_number>RC_PLUGIN_MAGIC_NUMBER)
+    if(module_data->data->magic_number>RC_PLUGIN_MAGIC_NUMBER ||
+        module_data->data->magic_number<=RC_PLUGIN_OLD_MAGIC_NUMBER)
     {
         rc_debug_module_perror(module_name, "Invalid magic number!");
         g_free(module_data);
@@ -537,6 +538,7 @@ static gboolean rc_plugin_module_load(const gchar *filename)
     module_data->resident = module_data->data->resident;
     module_data->data->id = module_data->id;
     module_data->path = g_strdup(filename);
+    module_data->data->busy_flag = FALSE;
     module_data->data->path = g_strdup(filename);
     if(module_data->resident)
         g_module_make_resident(module_data->module);
@@ -565,6 +567,12 @@ static void rc_plugin_module_close(const gchar *filename)
         module_data = list_foreach->data;
         if(g_strcmp0(module_data->path, filename)==0)
         {
+            if(module_data->data->busy_flag)
+            {
+                rc_debug_module_pmsg(module_name,
+                    "This plugin is busy working, please close it later.");
+                break;
+            }
             group_name = module_data->data->group_name;
             g_key_file_set_boolean(plugin_configure, group_name, "Enabled",
                 FALSE);

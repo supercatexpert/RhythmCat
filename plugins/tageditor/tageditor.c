@@ -43,11 +43,12 @@
 
 static RCPluginModuleData plugin_module_data =
 {
-    RC_PLUGIN_MAGIC_NUMBER, /* magic_number */
-    "TagEditor", /* group_name */
-    NULL, /* path */
-    FALSE, /* resident */
-    0 /* id */
+    .magic_number = RC_PLUGIN_MAGIC_NUMBER,
+    .group_name = "TagEditor",
+    .path = NULL,
+    .resident = FALSE,
+    .id = 0,
+    .busy_flag = FALSE
 };
 
 typedef struct RCPluginTagUI

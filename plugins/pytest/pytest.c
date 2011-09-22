@@ -44,11 +44,12 @@
 
 static RCPluginModuleData plugin_module_data =
 {
-    RC_PLUGIN_MAGIC_NUMBER, /* magic_number */
-    "PyTest", /* group_name */
-    NULL, /* path */
-    FALSE, /* resident */
-    0 /* id */
+    .magic_number = RC_PLUGIN_MAGIC_NUMBER,
+    .group_name = "PyTest",
+    .path = NULL,
+    .resident = FALSE,
+    .id = 0,
+    .busy_flag = FALSE
 };
 
 static GKeyFile *keyfile = NULL;

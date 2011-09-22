@@ -363,7 +363,11 @@ void rc_core_init()
         rc_core.eq_plugin = audio_equalizer;
         /* Use Volume Plugin to avoid the bug in Gstreamer 0.10.28. */
         rc_core.vol_plugin = volume_plugin;
+        rc_core.full_mode = TRUE;
+        rc_debug_module_pmsg(module_name, "Full mode enabled.");
     }
+    else
+        rc_debug_module_pmsg(module_name, "Safe mode enabled.");
     bus = gst_pipeline_get_bus(GST_PIPELINE(play));
     gst_bus_add_watch(bus, (GstBusFunc)rc_core_bus_call, &rc_core);
     gst_object_unref(bus);

@@ -71,12 +71,11 @@ typedef struct RCPlistImportData {
 static const gchar *module_name = "Plist";
 static gchar play_list_setting_file[] = "playlist.dat";
 static gchar *default_list_name = "[Default]";
-static RCPlistData rc_plist;
+static RCPlistData rc_plist = {0};
 static GThread *plist_import_threads[RC_PLIST_JOB_THREAD_NUM];
-static GAsyncQueue *plist_import_job_queue;
+static GAsyncQueue *plist_import_job_queue = NULL;
 static const gint plist_import_thread_num = RC_PLIST_JOB_THREAD_NUM;
 static gboolean plist_import_job_flag = TRUE;
-static GCancellable *plist_import_thread_cancel = NULL;
 
 /*
  * Process import jobs.
@@ -92,7 +91,6 @@ static gpointer rc_plist_import_job_func(gpointer data)
     gchar *cue_uri = NULL;
     gint track_num;
     guint i;
-    plist_import_thread_cancel = g_cancellable_new();
     rc_debug_module_pmsg(module_name, "Job thread started!");
     while(plist_import_job_flag)
     {
@@ -328,13 +326,11 @@ gboolean rc_plist_init()
 
 void rc_plist_exit()
 {
+    RCPlistImportData *import_data = NULL;
     gint list_count = 0;
     plist_import_job_flag = FALSE;
-    if(plist_import_thread_cancel!=NULL)
-    {
-        g_cancellable_cancel(plist_import_thread_cancel);
-        g_object_unref(plist_import_thread_cancel);
-    }
+    import_data = g_new0(RCPlistImportData, 1);
+    g_async_queue_push(plist_import_job_queue, import_data);
     for(list_count=rc_plist_get_list1_length()-1;list_count>=0;list_count--)
     {
         rc_plist_remove_list(list_count);

@@ -64,6 +64,7 @@ The core part of the player, it uses Gstreamer as backend to play audio files.
     GstElement *vol_plugin;
     gint64 start_time;
     gint64 end_time;
+    gboolean full_mode;
     guint ver_major;
     guint ver_minor;
     guint ver_micro;
@@ -95,6 +96,10 @@ The data of the core.
 </varlistentry>
 <varlistentry><term><link linkend="gint64"><type>gint64</type></link>&#160;<structfield id="RCCoreData.end-time">end_time</structfield>;</term>
 <listitem><simpara>the end time used in segment playing
+</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gboolean"><type>gboolean</type></link>&#160;<structfield id="RCCoreData.full-mode">full_mode</structfield>;</term>
+<listitem><simpara>whether the full function mode is supported
 </simpara></listitem>
 </varlistentry>
 <varlistentry><term><link linkend="guint"><type>guint</type></link>&#160;<structfield id="RCCoreData.ver-major">ver_major</structfield>;</term>

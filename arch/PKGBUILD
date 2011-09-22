@@ -1,0 +1,27 @@
+# Maintainer: SuperCat <supercatexpert@gmail.com>
+# Contributor: SuperCat <supercatexpert@gmail.com>
+pkgname=rhythmcat
+pkgver=1.0.0
+pkgrel=1
+pkgdesc="a Music Player with Plugin Support"
+arch=(i686 x86_64)
+url="http://supercat-lab.org"
+license=('GPL')
+groups=
+provides=
+depends=('gtk3' 'dbus' 'dbus-core' 'dbus-glib' 'glib2' 'gstreamer0.10' 'gstreamer0.10-base' 'gstreamer0.10-base-plugins' 'gstreamer0.10-good' 'gstreamer0.10-good-plugins')
+makedepends=('autoconf' 'automake' 'gcc' 'gtk-doc')
+conflicts=
+replaces=
+backup=
+install=('RhythmCat.install')
+sources=(rhythmcat-1.0.0.tar.gz)
+md5sums=('4da370ab7bc1ed50e90b4248cd7165f4')
+
+build() {
+  cd $startdir/src/$pkgname-$pkgver
+  ./configure --prefix=/usr --enable-gtk3
+  make || return 1
+  make prefix=$startdir/pkg/usr install
+}
+

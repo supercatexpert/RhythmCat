@@ -40,15 +40,16 @@
 
 static RCPluginModuleData plugin_module_data =
 {
-    RC_PLUGIN_MAGIC_NUMBER, /* magic_number */
+    .magic_number = RC_PLUGIN_MAGIC_NUMBER,
     #ifdef USE_GTK3
-        "LyricEditorGtk3", /* group_name */
+        .group_name = "LyricEditorGtk3",
     #else
-        "LyricEditorGtk2", /* group_name */
+        .group_name = "LyricEditorGtk2",
     #endif
-    NULL, /* path */
-    TRUE, /* resident */
-    0 /* id */
+    .path = NULL,
+    .resident = TRUE,
+    .id = 0,
+    .busy_flag = FALSE
 };
 
 static GKeyFile *keyfile = NULL;
@@ -492,7 +493,9 @@ static void rc_plugin_editor_tool_init()
     editor_tool_item[8] = gtk_tool_button_new_from_stock(GTK_STOCK_REMOVE);
     gtk_toolbar_set_icon_size(GTK_TOOLBAR(editor_toolbar),
         GTK_ICON_SIZE_MENU);
-    gtk_toolbar_set_tooltips(GTK_TOOLBAR(editor_toolbar), TRUE);
+    #ifndef USE_GTK3
+        gtk_toolbar_set_tooltips(GTK_TOOLBAR(editor_toolbar), TRUE);
+    #endif
     gtk_tool_button_set_label(GTK_TOOL_BUTTON(editor_tool_item[0]), 
         _("New"));
     gtk_tool_button_set_label(GTK_TOOL_BUTTON(editor_tool_item[1]), 

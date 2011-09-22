@@ -157,6 +157,7 @@ The plugin configuration data structure.
     gchar *path;
     gboolean resident;
     GQuark id;
+    gboolean busy_flag;
 } RCPluginModuleData;
 </pre>
 <p>
@@ -188,6 +189,11 @@ The data structure of module.
 <tr>
 <td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Quarks.html#GQuark"><span class="type">GQuark</span></a> <em class="structfield"><code><a name="RCPluginModuleData.id"></a>id</code></em>;</span></p></td>
 <td>the unique ID when the plugin is running
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> <em class="structfield"><code><a name="RCPluginModuleData.busy-flag"></a>busy_flag</code></em>;</span></p></td>
+<td>whether the plugin is busy (cannot be interruped)
 </td>
 </tr>
 </tbody>

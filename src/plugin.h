@@ -31,7 +31,8 @@
 
 G_BEGIN_DECLS
 
-#define RC_PLUGIN_MAGIC_NUMBER 0x100B090B
+#define RC_PLUGIN_MAGIC_NUMBER 0x100B0916
+#define RC_PLUGIN_OLD_MAGIC_NUMBER 0x100B090B
 
 /**
  * RCPluginType:
@@ -74,6 +75,7 @@ typedef struct RCPluginConfData {
  * @path: the plugin path (can only be accessed when the plugin is running)
  * @resident: whether the plugin can be removed while the player is running
  * @id: the unique ID when the plugin is running
+ * @busy_flag: whether the plugin is busy (cannot be interruped)
  *
  * The data structure of module.
  */
@@ -84,6 +86,7 @@ typedef struct RCPluginModuleData {
     gchar *path;
     gboolean resident;
     GQuark id;
+    gboolean busy_flag;
 }RCPluginModuleData;
 
 /* Function */

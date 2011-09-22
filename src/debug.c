@@ -165,7 +165,7 @@ gint rc_debug_module_print(const gchar *module_name, const gchar *format,
     va_list arg_ptr;
     va_start(arg_ptr, format);
     if(!debug_flag) return 0;
-    new_format = g_strdup_printf("%s: %s\n", module_name, format);
+    new_format = g_strdup_printf("%s-DEBUG: %s\n", module_name, format);
     result = g_vfprintf(stdout, new_format, arg_ptr);
     g_free(new_format);
     return result;

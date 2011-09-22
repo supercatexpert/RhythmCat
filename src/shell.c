@@ -166,7 +166,7 @@ gboolean rc_shell_set_position(RCShell *shell, gint64 pos, GError **error)
 gboolean rc_shell_get_duration(RCShell *shell, gint64 *dura, GError **error)
 {
     if(dura!=NULL)
-        *dura = rc_core_get_play_position();
+        *dura = rc_core_get_music_length();
     else return FALSE;
     return TRUE;
 }

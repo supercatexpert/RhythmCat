@@ -60,25 +60,70 @@ typedef struct _GuiLrcData
 
 static RCPluginModuleData plugin_module_data =
 {
-    RC_PLUGIN_MAGIC_NUMBER, /* magic_number */
+    .magic_number = RC_PLUGIN_MAGIC_NUMBER,
     #ifdef USE_GTK3
-        "LyricShowGtk3", /* group_name */
+        .group_name = "LyricShowGtk3",
     #else
-        "LyricShowGtk2", /* group_name */
+        .group_name = "LyricShowGtk2",
     #endif
-    NULL, /* path */
-    FALSE, /* resident */
-    0 /* id */
+    .path = NULL,
+    .resident = FALSE,
+    .id = 0,
+    .busy_flag = FALSE
 };
+
+#define GETTEXT_PACKAGE "LyricShow"
 
 static gulong lyric_found_signal, lyric_stop_signal;
 static GuiLrcData rc_glrc;
 static guint id = 0;
 static guint timeout_id = 0;
 static GKeyFile *keyfile = NULL;
+static GKeyFile *translation_keyfile = NULL;
+static const gchar *translation_string =
+    "[Translation]\n"
+    "LyricShowMenu=_Lyric Show\n"
+    "LyricShowMenu[zh_CN]=歌词秀(_L)\n"
+    "LyricShowMenu[zh_TW]=歌詞秀(_L)\n"
+    "LyricShowLabel=Lyric Show\n"
+    "LyricShowLabel[zh_CN]=歌词秀\n"
+    "LyricShowLabel[zh_TW]=歌詞秀\n"
+    "CannotStart=Cannot start Lyric Show\n"
+    "CannotStart[zh_CN]=无法启动歌词秀\n"
+    "CannotStart[zh_TW]=無法啟動歌詞秀\n"
+    "NeedGTK3=This plugin need GTK+ 3.0 or newer version.\n"
+    "NeedGTK3[zh_CN]=这个插件需要GTK+ 3.0或更新的版本。\n"
+    "NeedGTK3[zh_TW]=這個插件需要GTK+ 3.0或更新的版本。\n"
+    "NeedGTK2=This plugin need GTK+ 2.12 or newer GTK+ 2 version, "
+        "somehow this plugin doesn't work on GTK+ 3.0.\n"
+    "NeedGTK2[zh_CN]=这个插件需要在GTK+ 2.12或更新的版本上工作，但无法在GTK+ 3.0上工作。\n"
+    "NeedGTK2[zh_TW]=這個插件需要在GTK+ 2.12或更新的版本上工作，但無法在GTK+ 3.0上工作。\n"
+    "Preferences=Lyric Show Preferences\n"
+    "Preferences[zh_CN]=歌词秀首选项\n"
+    "Preferences[zh_TW]=歌詞秀首選項\n"
+    "PrefFont=Font: \n"
+    "PrefFont[zh_CN]=字体: \n"
+    "PrefFont[zh_TW]=字體: \n"
+    "PrefLineSpace=Line spacing: \n"
+    "PrefLineSpace[zh_CN]=行间距: \n"
+    "PrefLineSpace[zh_TW]=行間距: \n"
+    "PrefBGColor=Background Color: \n"
+    "PrefBGColor[zh_CN]=背景色: \n"
+    "PrefBGColor[zh_TW]=背景色: \n"
+    "PrefFGColor=Frontground Color: \n"
+    "PrefFGColor[zh_CN]=前景色: \n"
+    "PrefFGColor[zh_TW]=前景色: \n"
+    "PrefHLColor=Highlight Color: \n"
+    "PrefHLColor[zh_CN]=高亮色: \n"
+    "PrefHLColor[zh_TW]=高亮色: \n"
+    "PrefShowWindow=Show lyric show in a single window\n"
+    "PrefShowWindow[zh_CN]=在独立的窗口中显示歌词\n"
+    "PrefShowWindow[zh_TW]=在獨立的窗口中顯示歌詞\n"
+;
 
 static void rc_plugin_lrc_show_set_single_mode(gboolean flag)
 {
+    gchar *menu, *label;
     if(flag)
     {
         if(id>0)
@@ -101,8 +146,20 @@ static void rc_plugin_lrc_show_set_single_mode(gboolean flag)
                 rc_glrc.lrc_scene);
         }
         if(id==0)
+        {
+            menu = g_key_file_get_locale_string(translation_keyfile, 
+                "Translation", "LyricShowMenu", NULL, NULL);
+            if(menu==NULL || strlen(menu)==0)
+                menu = g_strdup("_Lyric Show");
+            label = g_key_file_get_locale_string(translation_keyfile, 
+                "Translation", "LyricShowLabel", NULL, NULL);
+            if(label==NULL || strlen(label)==0)
+                label = g_strdup("Lyric Show");
             id = rc_gui_view_add_page_with_label("ViewPageLyric",
-                _("_Lyric Show"), _("Lyric Show"), rc_glrc.lrc_scene);
+                menu, label, rc_glrc.lrc_scene);
+            g_free(menu);
+            g_free(label);
+        }
         gtk_widget_show_all(rc_glrc.lrc_scene);
     }
 }
@@ -521,12 +578,23 @@ G_MODULE_EXPORT const gchar *g_module_check_init(GModule *module)
 {
     rc_debug_module_pmsg(plugin_module_data.group_name,
         "Plugin loaded successfully!");
+    translation_keyfile = g_key_file_new();
+    if(!g_key_file_load_from_data(translation_keyfile, translation_string,
+        -1, G_KEY_FILE_NONE, NULL))
+    {
+        rc_debug_module_perror(plugin_module_data.group_name,
+            "Cannot load translation data!");
+    }
     keyfile = rc_set_get_plugin_configure();
     return NULL;
 }
 
 G_MODULE_EXPORT void g_module_unload(GModule *module)
 {
+    if(translation_keyfile!=NULL)
+        g_key_file_free(translation_keyfile);
+    if(rc_glrc.lyric_font!=NULL)
+        g_free(rc_glrc.lyric_font);
     rc_debug_module_pmsg(plugin_module_data.group_name,
         "Plugin exited!");
 }
@@ -543,25 +611,47 @@ static void rc_plugin_lrcshow_stop()
 
 G_MODULE_EXPORT gint rc_plugin_module_init()
 {
+    gchar *title, *message;
     #ifdef USE_GTK3
         if(gtk_major_version<3)
         {
+            title = g_key_file_get_locale_string(translation_keyfile, 
+                "Translation", "CannotStart", NULL, NULL);
+            message = g_key_file_get_locale_string(translation_keyfile,
+                "Translation", "NeedGTK3", NULL, NULL);
+            if(title==NULL || strlen(title)==0)
+                title = g_strdup("Cannot start Lyric Show");
+            if(message==NULL || strlen(message)==0)
+                message = g_strdup("This plugin need GTK+ 3.0 or "
+                    "newer version.");
             rc_debug_perror("LRCShow-ERROR: This plugin need GTK+ 3.0 or "
                 "newer version.\n");
-            rc_gui_show_message_dialog(GTK_MESSAGE_ERROR,
-                _("Cannot start Lyric Show"),
-                _("This plugin need GTK+ 3.0 or newer version."));
+            rc_gui_show_message_dialog(GTK_MESSAGE_ERROR, title,
+                message);
+            g_free(title);
+            g_free(message);
             return 1;
         }
     #else
-        if(gtk_major_version!=2 || gtk_minor_version<20)
+        if(gtk_major_version!=2 || gtk_minor_version<12)
         {
-            rc_gui_show_message_dialog(GTK_MESSAGE_ERROR,
-                _("Cannot start Lyric Show"),
-                _(" This plugin need GTK+ 2.20 or newer GTK+ 2 version, "
-                "somehow this plugin doesn't work on GTK+ 3.0."));
-            rc_debug_perror("LRCShow-ERROR: This plugin need GTK+ 2.20 or "
-                "newer version, somehow it doesn't work on GTK+ 3.0.\n");
+            title = g_key_file_get_locale_string(translation_keyfile, 
+                "Translation", "CannotStart", NULL, NULL);
+            message = g_key_file_get_locale_string(translation_keyfile,
+                "Translation", "NeedGTK2", NULL, NULL);
+            if(title==NULL || strlen(title)==0)
+                title = g_strdup("Cannot start Lyric Show");
+            if(message==NULL || strlen(message)==0)
+                message = g_strdup("This plugin need GTK+ 2.12 or newer "
+                    "GTK+ 2 version, somehow this plugin doesn't work on "
+                    "GTK+ 3.0.");
+            rc_debug_module_perror(plugin_module_data.group_name,
+                "This plugin need GTK+ 2.20 or newer version, somehow "
+                "it doesn't work on GTK+ 3.0.");
+            rc_gui_show_message_dialog(GTK_MESSAGE_ERROR, title,
+                message);
+            g_free(title);
+            g_free(message);
             return 1;
         }
     #endif
@@ -582,6 +672,7 @@ G_MODULE_EXPORT void rc_plugin_module_exit()
     gtk_widget_destroy(rc_glrc.lrc_swindow);
     if(id>0) rc_gui_view_remove_page(id);
     g_free(rc_glrc.lyric_font);
+    bzero(&rc_glrc, sizeof(GuiLrcData));
 }
 
 G_MODULE_EXPORT void rc_plugin_module_configure()
@@ -597,20 +688,57 @@ G_MODULE_EXPORT void rc_plugin_module_configure()
     GtkWidget *hi_color_button;
     GtkWidget *single_window_checkbutton;
     GdkColor color;
+    gchar *string = NULL;
     gint i, result;
-    dialog = gtk_dialog_new_with_buttons(_("Lyric Show Preferences"), NULL,
+    rc_plugin_lrcshow_load_conf();
+    string = g_key_file_get_locale_string(translation_keyfile, "Translation",
+        "Preferences", NULL, NULL);
+    if(string==NULL || strlen(string)==0)
+        string = g_strdup("Lyric Show Preferences");
+    dialog = gtk_dialog_new_with_buttons(string, NULL,
         GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT, GTK_STOCK_OK,
         GTK_RESPONSE_ACCEPT, GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT, NULL);
+    g_free(string);
     table = gtk_table_new(2, 6, FALSE);
-    label[0] = gtk_label_new(_("Font: "));
-    label[1] = gtk_label_new(_("Line spacing: "));
-    label[2] = gtk_label_new(_("Background Color: "));
-    label[3] = gtk_label_new(_("Frontground Color: "));
-    label[4] = gtk_label_new(_("Highlight Color: "));
-    font_button = gtk_font_button_new_with_font(rc_glrc.lyric_font);
+    string = g_key_file_get_locale_string(translation_keyfile, "Translation",
+        "PrefFont", NULL, NULL);
+    if(string==NULL || strlen(string)==0) string = g_strdup("Font: ");
+    label[0] = gtk_label_new(string);
+    g_free(string);
+    string = g_key_file_get_locale_string(translation_keyfile, "Translation",
+        "PrefLineSpace", NULL, NULL);
+    if(string==NULL || strlen(string)==0) string = g_strdup("Line spacing: ");
+    label[1] = gtk_label_new(string);
+    g_free(string);
+    string = g_key_file_get_locale_string(translation_keyfile, "Translation",
+        "PrefBGColor", NULL, NULL);
+    if(string==NULL || strlen(string)==0)
+        string = g_strdup("Background Color: ");
+    label[2] = gtk_label_new(string);
+    g_free(string);
+    string = g_key_file_get_locale_string(translation_keyfile, "Translation",
+        "PrefFGColor", NULL, NULL);
+    if(string==NULL || strlen(string)==0)
+        string = g_strdup("Frontground Color: ");
+    label[3] = gtk_label_new(string);
+    g_free(string);
+    string = g_key_file_get_locale_string(translation_keyfile, "Translation",
+        "PrefHLColor", NULL, NULL);
+    if(string==NULL || strlen(string)==0)
+        string = g_strdup("Highlight Color: ");
+    label[4] = gtk_label_new(string);
+    g_free(string);
+    if(rc_glrc.lyric_font!=NULL)
+        font_button = gtk_font_button_new_with_font(rc_glrc.lyric_font);
+    else
+        font_button = gtk_font_button_new();
     space_spin = gtk_spin_button_new_with_range(0, 100, 1);
-    single_window_checkbutton = gtk_check_button_new_with_mnemonic(
-        _("Show lyric show in a single window"));
+    string = g_key_file_get_locale_string(translation_keyfile, "Translation",
+        "PrefShowWindow", NULL, NULL);
+    if(string==NULL || strlen(string)==0)
+        string = g_strdup("Show lyric show in a single window");
+    single_window_checkbutton = gtk_check_button_new_with_mnemonic(string);
+    g_free(string);
     color.red = rc_glrc.background[0] * 0xFFFF;
     color.green = rc_glrc.background[1] * 0xFFFF;
     color.blue = rc_glrc.background[2] * 0xFFFF;
