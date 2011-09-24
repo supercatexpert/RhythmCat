@@ -419,7 +419,7 @@ RCPluginConfData *rc_plugin_conf_load(const gchar *filename)
         plugin_typenum = PLUGIN_TYPE_MODULE;
     }
     else goto error_out;
-    plugin_data = g_malloc0(sizeof(RCPluginConfData));
+    plugin_data = g_new0(RCPluginConfData, 1);
     plugin_data->path = plugin_path;
     if(plugin_name!=NULL)
     {
@@ -496,7 +496,7 @@ static gboolean rc_plugin_module_load(const gchar *filename)
             g_module_error());
         return FALSE;
     }
-    module_data = g_malloc0(sizeof(RCModuleData));
+    module_data = g_new0(RCModuleData, 1);
     if(!g_module_symbol(module, "rc_plugin_module_init",
         (gpointer *)&module_data->module_init))
     {

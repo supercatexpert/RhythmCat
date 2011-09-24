@@ -303,7 +303,6 @@ rc_player_get_data_dir
 rc_player_get_home_dir
 rc_player_get_locale
 rc_player_check_supported_format
-rc_player_get_elapsed_time
 </SECTION>
 
 <SECTION>

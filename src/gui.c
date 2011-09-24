@@ -853,7 +853,6 @@ static const gchar *rc_ui_info =
     "      </menu>"
     "    </menu>"
     "    <menu action='HelpMenu'>"
-    "      <menuitem action='HelpContents'/>"
     "      <menuitem action='HelpAbout'/>"
     "    </menu>"
     "  </menubar>"
@@ -1790,7 +1789,7 @@ guint rc_gui_view_add_page(const gchar *name, const gchar *title, GtkWidget *wid
     label = gtk_label_new(name);
     gtk_notebook_append_page(GTK_NOTEBOOK(rc_gui.plist_notebook), widget,
         label);
-    page_data = g_malloc0(sizeof(RCGuiViewPageData));
+    page_data = g_new0(RCGuiViewPageData, 1);
     page_data->id = id;
     page_data->view_widget = widget;
     page_data->action = GTK_ACTION(action);
@@ -1832,7 +1831,7 @@ guint rc_gui_view_add_page_with_label(const gchar *name, const gchar *title,
     label = gtk_label_new(label_text);
     gtk_notebook_append_page(GTK_NOTEBOOK(rc_gui.plist_notebook), widget,
         label);
-    page_data = g_malloc0(sizeof(RCGuiViewPageData));
+    page_data = g_new0(RCGuiViewPageData, 1);
     page_data->id = id;
     page_data->view_widget = widget;
     page_data->action = GTK_ACTION(action);

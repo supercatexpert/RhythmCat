@@ -210,7 +210,7 @@ void rc_msg_init()
 void rc_msg_push(RCMsgType type, gpointer data)
 {
     RCMsgData *msg;
-    msg = g_malloc(sizeof(RCMsgData));
+    msg = g_new0(RCMsgData, 1);
     msg->type = type;
     msg->data = data;
     g_async_queue_push(msg_queue, msg);

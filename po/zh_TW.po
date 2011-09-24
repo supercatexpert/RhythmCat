@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RhythmCat 1.0.0\n"
 "Report-Msgid-Bugs-To: http://code.google.com/p/rhythmcat/issues/list\n"
-"POT-Creation-Date: 2011-09-14 03:51+0800\n"
+"POT-Creation-Date: 2011-09-24 23:20+0800\n"
 "PO-Revision-Date: 2011-04-02 21:18+0800\n"
 "Last-Translator: SuperCat <supercatexpert@gmail.com>\n"
 "Language-Team: SuperCat <supercatexpert@gmail.com>\n"
@@ -376,59 +376,59 @@ msgstr "總在最上"
 msgid "Always on top"
 msgstr "總是處於所有窗口的最上方"
 
-#: src/gui.c:1027
+#: src/gui.c:1026
 msgid "Equalizer"
 msgstr "均衡器"
 
-#: src/gui.c:1028
+#: src/gui.c:1027
 msgid "Playlists"
 msgstr "播放列表"
 
-#: src/gui.c:1376
+#: src/gui.c:1375
 msgid "Unknown Format"
 msgstr "未知格式"
 
-#: src/gui.c:1380
+#: src/gui.c:1379
 #, c-format
 msgid "%d kbps "
 msgstr "%d 千比特/秒 "
 
-#: src/gui.c:1384
+#: src/gui.c:1383
 #, c-format
 msgid "%d Hz "
 msgstr "%d Hz "
 
-#: src/gui.c:1391
+#: src/gui.c:1390
 msgid "Mono"
 msgstr "單聲道"
 
-#: src/gui.c:1395
+#: src/gui.c:1394
 msgid "Stereo"
 msgstr "立體聲"
 
-#: src/gui.c:1399
+#: src/gui.c:1398
 #, c-format
 msgid "%d channels"
 msgstr "%d 聲道"
 
-#: src/gui.c:1406 src/playlist.c:416 src/playlist.c:495 src/playlist.c:685
-#: src/playlist.c:831
+#: src/gui.c:1405 src/playlist.c:412 src/playlist.c:491 src/playlist.c:680
+#: src/playlist.c:823
 msgid "Unknown Title"
 msgstr "未知標題"
 
-#: src/gui.c:1410
+#: src/gui.c:1409
 msgid "Unknown Artist"
 msgstr "未知藝術家"
 
-#: src/gui.c:1414
+#: src/gui.c:1413
 msgid "Unknown Album"
 msgstr "未知專輯"
 
-#: src/gui.c:1699
+#: src/gui.c:1698
 msgid "Importing..."
 msgstr "導入中……"
 
-#: src/gui.c:1703
+#: src/gui.c:1702
 msgid "Refreshing..."
 msgstr "正在刷新……"
 
@@ -659,19 +659,19 @@ msgstr "長度"
 msgid "Playlist %d"
 msgstr "播放列表 %d"
 
-#: src/player.c:302
+#: src/player.c:303
 msgid "Enable debug mode"
 msgstr "啟用調試模式"
 
-#: src/player.c:304
+#: src/player.c:305
 msgid "Use malloc function in stardard C library"
 msgstr "使用標準C函式庫中的malloc函式"
 
-#: src/player.c:306
+#: src/player.c:307
 msgid "[URI...]"
 msgstr ""
 
-#: src/player.c:358
+#: src/player.c:361
 #, c-format
 msgid ""
 "%s\n"
@@ -680,7 +680,7 @@ msgstr ""
 "%s\n"
 "運行 '%s --help' 來查看全部的可用命令行參數列表。\n"
 
-#: src/playlist.c:296
+#: src/playlist.c:294
 msgid "Default Playlist"
 msgstr "默認播放列表"
 

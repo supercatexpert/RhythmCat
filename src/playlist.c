@@ -116,7 +116,7 @@ static gpointer rc_plist_import_job_func(gpointer data)
                         if(mmd->uri!=NULL) g_free(mmd->uri);
                         mmd->uri = g_strdup_printf("%s:%d",
                             import_data->uri, i+1);
-                        msg = g_malloc0(sizeof(RCMsgPlistData));
+                        msg = g_new0(RCMsgPlistData, 1);
                         msg->list2_index = import_data->list2_index;
                         if(import_data->list2_index>=0)
                             msg->list2_index += i;
@@ -149,7 +149,7 @@ static gpointer rc_plist_import_job_func(gpointer data)
                         {
                             if(mmd->uri!=NULL) g_free(mmd->uri);
                                 mmd->uri = g_strdup(import_data->uri);
-                            msg = g_malloc0(sizeof(RCMsgPlistData));
+                            msg = g_new0(RCMsgPlistData, 1);
                             msg->list2_index = import_data->list2_index;
                             msg->store = import_data->store;
                             msg->reference = import_data->reference;
@@ -203,7 +203,7 @@ static gpointer rc_plist_import_job_func(gpointer data)
                             mmd);
                         if(cue_mmd!=NULL)
                         {
-                            msg = g_malloc0(sizeof(RCMsgPlistData));
+                            msg = g_new0(RCMsgPlistData, 1);
                             msg->list2_index = import_data->list2_index;
                             msg->store = import_data->store;
                             msg->reference = import_data->reference;
@@ -222,7 +222,7 @@ static gpointer rc_plist_import_job_func(gpointer data)
                         {
                             cue_mmd = rc_cue_get_metadata(&cue_data, i, mmd);
                             if(cue_mmd==NULL) continue;
-                            msg = g_malloc0(sizeof(RCMsgPlistData));
+                            msg = g_new0(RCMsgPlistData, 1);
                             msg->list2_index = import_data->list2_index;
                             if(import_data->list2_index>=0)
                                 msg->list2_index += i;
@@ -259,7 +259,7 @@ static gpointer rc_plist_import_job_func(gpointer data)
                 g_free(import_data);
                 continue;
             }
-            msg = g_malloc0(sizeof(RCMsgPlistData));
+            msg = g_new0(RCMsgPlistData, 1);
             msg->list2_index = import_data->list2_index;
             msg->reference = import_data->reference;
             msg->store = import_data->store;
@@ -356,7 +356,7 @@ gboolean rc_plist_insert_music(const gchar *uri, gint list1_index,
     RCPlistImportData *import_data;
     store = rc_plist_get_list_store(list1_index);
     if(store==NULL) return FALSE;
-    import_data = g_malloc0(sizeof(RCPlistImportData));
+    import_data = g_new0(RCPlistImportData, 1);
     import_data->uri = g_strdup(uri);
     import_data->store = rc_plist_get_list_store(list1_index);
     import_data->list2_index = list2_index;
@@ -585,7 +585,6 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
     gint trackno = -1;
     gchar *list_uri = NULL;
     gchar *list_title = NULL;
-    gchar *album_name = NULL;
     gchar list_timelen[64];
     gchar *music_dir = NULL, *lyric_dir = NULL, *image_dir = NULL;
     gchar *lyric_filename = NULL;
@@ -680,8 +679,6 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
         else
             list_title = g_strdup(_("Unknown Title"));
     }
-    if(mmd_new->album!=NULL)
-        album_name = g_strdup(mmd_new->album);
     rc_core_set_uri(mmd_new->uri);
     if(cue_flag)
     {
@@ -727,14 +724,14 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
     rc_plist.list2_reference = gtk_tree_row_reference_new(GTK_TREE_MODEL(
         list_store), path);
     gtk_tree_path_free(path);
-    rc_tag_free(mmd_new);
     if(list_title!=NULL) g_free(list_title);
     rc_shell_signal_emit_simple("music-started");
     /* Search extra info for the music file in local filesystem. */
     rc_lrc_clean_data();
     if(fpathname==NULL)
     {
-        if(album_name!=NULL) g_free(album_name);
+        rc_tag_free(mmd_new);
+        if(realname!=NULL) g_free(realname);
         return TRUE;
     }
     music_dir = g_path_get_dirname(fpathname);
@@ -759,12 +756,12 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
         rc_player_object_signal_emit_simple("lyric-not-found");
     }
     if(lyric_filename!=NULL) g_free(lyric_filename);
-    if(!image_flag && album_name!=NULL)
+    if(!image_flag && mmd_new->album!=NULL)
     {
-        cover_filename = rc_tag_find_file(music_dir, album_name,
+        cover_filename = rc_tag_find_file(music_dir, mmd_new->album,
             ".BMP|.JPG|.JPEG|.PNG");
         if(cover_filename==NULL)
-            cover_filename = rc_tag_find_file(image_dir, album_name,
+            cover_filename = rc_tag_find_file(image_dir, mmd_new->album,
                 ".BMP|.JPG|.JPEG|.PNG");
         g_free(image_dir);
         if(cover_filename!=NULL && rc_gui_set_cover_image_by_file(
@@ -781,7 +778,7 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
         rc_player_object_signal_emit_simple("cover-not-found");
     g_free(music_dir);
     g_free(realname);
-    if(album_name!=NULL) g_free(album_name);
+    rc_tag_free(mmd_new);
     return TRUE;
 }
 
@@ -797,7 +794,6 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
 gboolean rc_plist_play_by_uri(const gchar *uri)
 {
     gchar *list_title = NULL;
-    gchar *album_name = NULL;
     gchar *music_dir = NULL, *lyric_dir = NULL, *image_dir = NULL;
     gchar *lyric_filename = NULL;
     gchar *cover_filename = NULL;
@@ -826,8 +822,6 @@ gboolean rc_plist_play_by_uri(const gchar *uri)
         else
             list_title = g_strdup(_("Unknown Title"));
     }
-    if(mmd_new->album!=NULL)
-        album_name = g_strdup(mmd_new->album);
     rc_core_set_uri(mmd_new->uri);
     rc_gui_set_cover_image_by_file(NULL);
     rc_tag_set_playing_metadata(mmd_new);
@@ -848,15 +842,14 @@ gboolean rc_plist_play_by_uri(const gchar *uri)
         image_flag = TRUE;
         rc_debug_module_print(module_name, "Found cover image in tag!");
     }
-
-    rc_tag_free(mmd_new);
     if(list_title!=NULL) g_free(list_title);
     rc_shell_signal_emit_simple("music-started");
     /* Search extra info for the music file in local filesystem. */
     rc_lrc_clean_data();
     if(fpathname==NULL)
     {
-        if(album_name!=NULL) g_free(album_name);
+        rc_tag_free(mmd_new);
+        if(realname!=NULL) g_free(realname);
         return TRUE;
     }
     music_dir = g_path_get_dirname(fpathname);
@@ -881,12 +874,12 @@ gboolean rc_plist_play_by_uri(const gchar *uri)
         rc_player_object_signal_emit_simple("lyric-not-found");
     }
     if(lyric_filename!=NULL) g_free(lyric_filename);
-    if(!image_flag && album_name!=NULL)
+    if(!image_flag && mmd_new->album!=NULL)
     {
-        cover_filename = rc_tag_find_file(music_dir, album_name,
+        cover_filename = rc_tag_find_file(music_dir, mmd_new->album,
             ".BMP|.JPG|.JPEG|.PNG");
         if(cover_filename==NULL)
-            cover_filename = rc_tag_find_file(image_dir, album_name,
+            cover_filename = rc_tag_find_file(image_dir, mmd_new->album,
                 ".BMP|.JPG|.JPEG|.PNG");
         g_free(image_dir);
         if(cover_filename!=NULL && rc_gui_set_cover_image_by_file(
@@ -898,7 +891,7 @@ gboolean rc_plist_play_by_uri(const gchar *uri)
     }
     g_free(music_dir);
     g_free(realname);
-    if(album_name!=NULL) g_free(album_name);
+    rc_tag_free(mmd_new);
     return TRUE;
 }
 
@@ -1130,7 +1123,7 @@ gboolean rc_plist_play_next(gboolean flag)
         {
             list1_length = rc_plist_get_list1_length();
             list2_length = 0;
-            indices = g_malloc(list1_length*sizeof(gint));
+            indices = g_new(gint, list1_length);
             for(i=0;i<list1_length;i++)
             {
                 indices[i] = rc_plist_get_list2_length(i);
@@ -1841,7 +1834,7 @@ gboolean rc_plist_list2_refresh(gint list1_index)
         reference = gtk_tree_row_reference_new(model, path);
         gtk_tree_path_free(path);
         if(reference==NULL) continue;
-        refresh_data = g_malloc0(sizeof(RCPlistImportData));
+        refresh_data = g_new0(RCPlistImportData, 1);
         gtk_tree_model_get(model, &iter, PLIST2_URI, &refresh_data->uri, -1);
         refresh_data->reference = reference;
         refresh_data->refresh_flag = TRUE;

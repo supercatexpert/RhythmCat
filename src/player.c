@@ -67,7 +67,7 @@
 #endif
 
 static const gchar rc_player_program_name[] = "RhythmCat Music Player";
-static const gchar rc_player_build_date[] = "110922";
+static const gchar rc_player_build_date[] = "110924";
 static const gchar rc_player_version[] = "1.0.0 RC 1";
 static const gboolean rc_player_stable_flag = FALSE;
 static const gchar *rc_player_support_formatx = "(.FLAC|.OGG|.MP3|.WMA|.WAV|"
@@ -88,7 +88,8 @@ static gchar *rc_player_conf_dir = NULL;
 static const gchar *rc_player_data_dir = NULL;
 static const gchar *rc_player_home_dir = NULL;
 static const gchar *rc_player_locale_dir = NULL;
-static const gchar *rc_player_locale = NULL; 
+static const gchar *rc_player_locale = NULL;
+static GTimer *rc_player_timer = NULL;
 
 static gchar *rc_player_get_program_data_dir(const gchar *argv0)
 {
@@ -346,6 +347,8 @@ void rc_player_init(int *argc, char **argv[])
     bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
     textdomain(GETTEXT_PACKAGE);
     rc_player_locale = g_strdup(setlocale(LC_ALL, NULL));
+    rc_player_timer = g_timer_new();
+    g_timer_start(rc_player_timer);
     rc_debug_pmsg("\n***** RhythmCat Process Messages *****\n");
     rc_debug_pmsg("Starting RhythmCat, version: %s\n", rc_player_version);
     if(!rc_player_stable_flag)
@@ -429,6 +432,7 @@ void rc_player_exit()
     rc_core_exit();
     rc_set_exit();
     rc_plist_exit();
+    g_timer_destroy(rc_player_timer);
     gtk_main_quit();
 }
 
@@ -590,7 +594,20 @@ gboolean rc_player_check_supported_format(const gchar *filename)
         G_REGEX_CASELESS, 0);
 }
 
+/**
+ * rc_player_get_elapsed_time:
+ * 
+ * Get the elapsed time since the player was started.
+ *
+ * Returns: The elapsed time.
+ */
 
-
+gdouble rc_player_get_elapsed_time()
+{
+    if(rc_player_timer!=NULL)
+        return g_timer_elapsed(rc_player_timer, NULL);
+    else
+        return 0.0;
+}
 
 

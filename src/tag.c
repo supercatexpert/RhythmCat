@@ -169,6 +169,14 @@ static gboolean rc_tag_bus_handler(GstBus *bus, GstMessage *message,
                     mmd->image = tag_image;
                 }
             }
+            if(gst_tag_list_get_buffer(tags, GST_TAG_PREVIEW_IMAGE, &tag_image))
+            {
+                if(tag_image==NULL)
+                {
+                    mmd->image = tag_image;
+                }
+                else gst_buffer_unref(tag_image);
+            }
             if(gst_tag_list_get_uint(tags, GST_TAG_BITRATE, &bitrates))
                 if(bitrates>0) mmd->bitrate = bitrates;
             if(gst_tag_list_get_uint(tags, GST_TAG_TRACK_NUMBER, &tracknum))
@@ -367,7 +375,7 @@ RCMusicMetaData *rc_tag_read_metadata(const gchar *uri)
             g_free(encoding);
         }
     }
-    mmd = g_malloc0(sizeof(RCMusicMetaData));
+    mmd = g_new0(RCMusicMetaData, 1);
     mmd->uri = g_strdup(uri);
     urisrc = gst_element_make_from_uri(GST_URI_SRC, mmd->uri, "urisrc");
     if(urisrc==NULL)

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RhythmCat 1.0.0\n"
 "Report-Msgid-Bugs-To: http://code.google.com/p/rhythmcat/issues/list\n"
-"POT-Creation-Date: 2011-09-14 03:51+0800\n"
+"POT-Creation-Date: 2011-09-24 23:20+0800\n"
 "PO-Revision-Date: 2011-04-02 14:54+0800\n"
 "Last-Translator: SuperCat <supercatexpert@gmail.com>\n"
 "Language-Team: SuperCat <supercatexpert@gmail.com>\n"
@@ -379,59 +379,59 @@ msgstr "常に最上に表示する(_T)"
 msgid "Always on top"
 msgstr "常に最上に表示します"
 
-#: src/gui.c:1027
+#: src/gui.c:1026
 msgid "Equalizer"
 msgstr "イコライザー"
 
-#: src/gui.c:1028
+#: src/gui.c:1027
 msgid "Playlists"
 msgstr "プレイリスト"
 
-#: src/gui.c:1376
+#: src/gui.c:1375
 msgid "Unknown Format"
 msgstr "不明なフォーマット"
 
-#: src/gui.c:1380
+#: src/gui.c:1379
 #, c-format
 msgid "%d kbps "
 msgstr "%d kbps　"
 
-#: src/gui.c:1384
+#: src/gui.c:1383
 #, c-format
 msgid "%d Hz "
 msgstr "%d Hz "
 
-#: src/gui.c:1391
+#: src/gui.c:1390
 msgid "Mono"
 msgstr "モノ"
 
-#: src/gui.c:1395
+#: src/gui.c:1394
 msgid "Stereo"
 msgstr "ステレオ"
 
-#: src/gui.c:1399
+#: src/gui.c:1398
 #, c-format
 msgid "%d channels"
 msgstr "%d チャネル"
 
-#: src/gui.c:1406 src/playlist.c:416 src/playlist.c:495 src/playlist.c:685
-#: src/playlist.c:831
+#: src/gui.c:1405 src/playlist.c:412 src/playlist.c:491 src/playlist.c:680
+#: src/playlist.c:823
 msgid "Unknown Title"
 msgstr "不明なタイトル"
 
-#: src/gui.c:1410
+#: src/gui.c:1409
 msgid "Unknown Artist"
 msgstr "不明なアーティスト"
 
-#: src/gui.c:1414
+#: src/gui.c:1413
 msgid "Unknown Album"
 msgstr "不明なアルバム"
 
-#: src/gui.c:1699
+#: src/gui.c:1698
 msgid "Importing..."
 msgstr "インポート中…"
 
-#: src/gui.c:1703
+#: src/gui.c:1702
 msgid "Refreshing..."
 msgstr "リフレシュ中…"
 
@@ -665,19 +665,19 @@ msgstr "長さ"
 msgid "Playlist %d"
 msgstr "プレーレスト %d"
 
-#: src/player.c:302
+#: src/player.c:303
 msgid "Enable debug mode"
 msgstr "ミニモードを有効する"
 
-#: src/player.c:304
+#: src/player.c:305
 msgid "Use malloc function in stardard C library"
 msgstr "C言語の標準ライブラリのmallocを使う"
 
-#: src/player.c:306
+#: src/player.c:307
 msgid "[URI...]"
 msgstr ""
 
-#: src/player.c:358
+#: src/player.c:361
 #, c-format
 msgid ""
 "%s\n"
@@ -686,7 +686,7 @@ msgstr ""
 "%s\n"
 "'%s --help'を使って、ヘルプのオプションを全て表示する。\n"
 
-#: src/playlist.c:296
+#: src/playlist.c:294
 msgid "Default Playlist"
 msgstr "デフォルトプレーリスト"
 

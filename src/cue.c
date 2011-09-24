@@ -136,7 +136,7 @@ guint rc_cue_read_data(const gchar *input, RCCueInputType type,
         return 0;
     }
     cue_tmp_length = strlen(cue_tmp_data);
-    cue_new_data = g_malloc0(sizeof(gchar) * cue_tmp_length);
+    cue_new_data = g_new0(gchar, cue_tmp_length);
     for(i=0;i<cue_tmp_length;i++)
     {
         chr = cue_tmp_data[i];
@@ -194,7 +194,7 @@ guint rc_cue_read_data(const gchar *input, RCCueInputType type,
             G_REGEX_CASELESS, 0))
         {
             track_num++;
-            cue_track_data = g_malloc0(sizeof(RCCueTrack));
+            cue_track_data = g_new0(RCCueTrack, 1);
             sscanf(line, "%*s%d", &(cue_track_data->index));
             track_list = g_slist_append(track_list, cue_track_data);
         }
@@ -265,7 +265,7 @@ guint rc_cue_read_data(const gchar *input, RCCueInputType type,
     g_free(cue_new_data);
     g_regex_unref(data_regex);
     i = 0;
-    cue_track_array = g_malloc0(sizeof(RCCueTrack) * track_num);
+    cue_track_array = g_new0(RCCueTrack, track_num);
     for(list_foreach=track_list;list_foreach!=NULL;
         list_foreach=g_slist_next(list_foreach))
     {
@@ -370,7 +370,7 @@ struct RCMusicMetaData *rc_cue_get_metadata(RCCueData *cue_data,
     }
     if(track_num<0 || track_num>=cue_data->length) return NULL;
     track = cue_data->track + track_num;
-    mmd = g_malloc0(sizeof(RCMusicMetaData));
+    mmd = g_new0(RCMusicMetaData, 1);
     if(track->title!=NULL)
         mmd->title = g_strdup(track->title);
     else

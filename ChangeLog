@@ -84,4 +84,7 @@
           --disable-dbus).
         * Lyric file can be set by using D-Bus interface now.
 
+2011-09-24  SuperCat    <supercatexpert@gmail.com>
+        * Fixed some bugs.
+        * Added lyric crawler plugin.
 

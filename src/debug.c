@@ -25,7 +25,7 @@
 
 #include <stdlib.h>
 #include "debug.h"
-
+#include "player.h"
 
 /**
  * SECTION: debug

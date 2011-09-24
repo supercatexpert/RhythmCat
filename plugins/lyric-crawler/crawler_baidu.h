@@ -1,7 +1,8 @@
 /*
- * Player Declaration
+ * Lyric Crawler Baidu Module Declaration
+ * Get Lyric from Baidu Music.
  *
- * player.h
+ * crawler_baidu.h
  * This file is part of <RhythmCat>
  *
  * Copyright (C) 2010 - SuperCat, license: GPL v3
@@ -22,35 +23,19 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef HAVE_PLAYER_H
-#define HAVE_PLAYER_H
+#ifndef HAVE_RC_CRAWLER_BAIDU
+#define HAVE_RC_CRAWLER_BAIDU
 
 #include <glib.h>
-#include <gtk/gtk.h>
-#include <gst/gst.h>
+#include <gmodule.h>
+#include "crawler_common.h"
 
-G_BEGIN_DECLS
-
-#define GETTEXT_PACKAGE "RhythmCat"
-
-void rc_player_init(int *argc, char **argv[]);
-void rc_player_main();
-void rc_player_exit();
-const gchar *rc_player_get_program_name();
-const gchar *const *rc_player_get_authors();
-const gchar *const *rc_player_get_documenters();
-const gchar *const *rc_player_get_artists();
-const gchar *rc_player_get_build_date();
-const gchar *rc_player_get_version();
-gboolean rc_player_get_stable_flag();
-const gchar *rc_player_get_conf_dir();
-const gchar *rc_player_get_data_dir();
-const gchar *rc_player_get_home_dir();
-const gchar *rc_player_get_locale();
-gboolean rc_player_check_supported_format(const gchar *filename);
-gdouble rc_player_get_elapsed_time();
-
-G_END_DECLS
+G_MODULE_EXPORT const gchar *g_module_check_init(GModule *module);
+G_MODULE_EXPORT void g_module_unload(GModule *module);
+G_MODULE_EXPORT const RCLyricCrawlerModuleData *rc_crawler_module_get_data();
+G_MODULE_EXPORT GSList *rc_crawler_module_get_url_list(const gchar *title,
+    const gchar *artist);
 
 #endif
+
 

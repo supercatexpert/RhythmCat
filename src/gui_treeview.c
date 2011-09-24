@@ -72,7 +72,7 @@ static void rc_gui_list2_block_selection(GtkWidget *widget, gboolean block,
         "multidrag-where");
     if(where==NULL)
     {
-        where = g_malloc(2*sizeof(gint));
+        where = g_new(gint, 2);
         g_object_set_data_full(G_OBJECT(rc_ui->list2_tree_view),
             "multidrag-where", where, g_free);
     }
@@ -217,7 +217,7 @@ static void rc_gui_list2_dnd_data_received(GtkWidget *widget,
                 sizeof(path_list));
             if(path_list==NULL) break;
             length = g_list_length(path_list);
-            indices = g_malloc(length*sizeof(gint));
+            indices = g_new(gint, length);
             for(path_list_foreach=path_list;path_list_foreach!=NULL;
                 path_list_foreach=g_list_next(path_list_foreach))
             {
@@ -233,7 +233,7 @@ static void rc_gui_list2_dnd_data_received(GtkWidget *widget,
             list_length = gtk_tree_model_iter_n_children(
                 rc_ui->list2_tree_model, NULL);
             if(target<0) target = list_length;
-            reorder_array = g_malloc0(list_length * sizeof(gint));
+            reorder_array = g_new0(gint, list_length);
             i = 0;
             j = 0;
             count = 0;
@@ -424,7 +424,7 @@ static void rc_gui_list1_dnd_data_received(GtkWidget *widget,
             length = g_list_length(path_list);
             path_list = g_list_sort_with_data(path_list, (GCompareDataFunc)
                 gtk_tree_path_compare, NULL);
-            path_array = g_malloc0(length*sizeof(GtkTreePath *));
+            path_array = g_new0(GtkTreePath *, length);
             for(list_foreach=path_list, i=0;list_foreach!=NULL;
                 list_foreach=g_list_next(list_foreach), i++)
             {
@@ -632,14 +632,14 @@ void rc_gui_treeview_init()
     gtk_cell_renderer_set_fixed_size(rc_ui->renderer_text[0], 80, -1);
     gtk_cell_renderer_set_fixed_size(rc_ui->renderer_text[1], 120, -1);
     gtk_cell_renderer_set_fixed_size(rc_ui->renderer_text[4], 55, -1);
-    g_object_set(G_OBJECT(rc_ui->renderer_text[0]), "ellipsize", PANGO_ELLIPSIZE_END,
-        "ellipsize-set", TRUE, NULL);
-    g_object_set(G_OBJECT(rc_ui->renderer_text[1]), "ellipsize", PANGO_ELLIPSIZE_END,
-        "ellipsize-set", TRUE, NULL);
-    g_object_set(G_OBJECT(rc_ui->renderer_text[2]),"ellipsize",PANGO_ELLIPSIZE_END,
-        "ellipsize-set", TRUE, NULL);
-    g_object_set(G_OBJECT(rc_ui->renderer_text[3]),"ellipsize",PANGO_ELLIPSIZE_END,
-        "ellipsize-set", TRUE, NULL);
+    g_object_set(G_OBJECT(rc_ui->renderer_text[0]), "ellipsize", 
+        PANGO_ELLIPSIZE_END, "ellipsize-set", TRUE, NULL);
+    g_object_set(G_OBJECT(rc_ui->renderer_text[1]), "ellipsize", 
+        PANGO_ELLIPSIZE_END, "ellipsize-set", TRUE, NULL);
+    g_object_set(G_OBJECT(rc_ui->renderer_text[2]), "ellipsize", 
+        PANGO_ELLIPSIZE_END, "ellipsize-set", TRUE, NULL);
+    g_object_set(G_OBJECT(rc_ui->renderer_text[3]),"ellipsize",
+        PANGO_ELLIPSIZE_END, "ellipsize-set", TRUE, NULL);
     g_object_set(G_OBJECT(rc_ui->renderer_text[4]), "xalign", 1.0, "width-chars", 5,
         NULL);
     gtk_cell_renderer_set_fixed_size(rc_ui->renderer_pixbuf[0], 16, -1);
@@ -656,10 +656,10 @@ void rc_gui_treeview_init()
         FALSE);
     gtk_tree_view_column_pack_start(list1_column, rc_ui->renderer_text[0],
         TRUE);
-    gtk_tree_view_column_add_attribute(list1_column,rc_ui->renderer_pixbuf[0],
-        "stock-id", PLIST1_STATE);
-    gtk_tree_view_column_add_attribute(list1_column,rc_ui->renderer_text[0],
-        "text", PLIST1_NAME);
+    gtk_tree_view_column_add_attribute(list1_column, 
+        rc_ui->renderer_pixbuf[0], "stock-id", PLIST1_STATE);
+    gtk_tree_view_column_add_attribute(list1_column,
+        rc_ui->renderer_text[0], "text", PLIST1_NAME);
     gtk_tree_view_append_column(GTK_TREE_VIEW(rc_ui->list1_tree_view),
         list1_column);
     gtk_tree_view_column_set_expand(list1_column, TRUE);

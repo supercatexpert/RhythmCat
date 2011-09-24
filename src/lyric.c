@@ -90,7 +90,7 @@ static GSList *rc_lrc_add_line(GSList *list, gchar *line)
         splitstr = line_data_array[sptnum];
         if(sscanf(splitstr, "%d:%lf", &minute, &second)==2)
         {
-            time = g_malloc(sizeof(guint64));
+            time = g_new0(guint64, 1);
             *time = minute * 6000 + (int)(second * 100);
             time_list = g_slist_append(time_list, time);
             tagnum++;
@@ -108,7 +108,7 @@ static GSList *rc_lrc_add_line(GSList *list, gchar *line)
         for(i=0;i<tagnum;i++)
         {
             time = g_slist_nth_data(time_foreach, 0);
-            lrc_data = g_malloc0(sizeof(RCLyricData));
+            lrc_data = g_new0(RCLyricData, 1);
             lrc_data->time = *time;
             if(text!=NULL)
                 lrc_data->text = g_strdup(text);
@@ -255,7 +255,7 @@ gboolean rc_lrc_read_from_file(const gchar *filename)
         lrc_text_data = NULL;
         return FALSE;
     }
-    new_text = g_malloc0(length * sizeof(gchar));
+    new_text = g_new0(gchar, length);
     for(i=0;i<length;i++)
     {
         chr = lrc_text_data[i];
@@ -284,7 +284,7 @@ gboolean rc_lrc_read_from_file(const gchar *filename)
     g_strfreev(text_data_array);
     if(lyric_line_list==NULL) return FALSE;
     lrc_line_length = g_slist_length(lyric_line_list);
-    lrc_line_array = g_malloc(sizeof(RCLyricData *) * (lrc_line_length+1));
+    lrc_line_array = g_new(RCLyricData *, lrc_line_length+1);
     lrc_line_array[lrc_line_length] = NULL;
     for(lyric_list_foreach=lyric_line_list, i=0;lyric_list_foreach!=NULL;
         lyric_list_foreach=g_slist_next(lyric_list_foreach), i++)

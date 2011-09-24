@@ -1,7 +1,8 @@
 /*
- * Player Declaration
+ * Lyric Crawler Common Module Header
+ * Provide common service for Lyric Crawler modules.
  *
- * player.h
+ * crawler_common.h
  * This file is part of <RhythmCat>
  *
  * Copyright (C) 2010 - SuperCat, license: GPL v3
@@ -22,35 +23,34 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef HAVE_PLAYER_H
-#define HAVE_PLAYER_H
+#ifndef HAVE_RC_CRAWLER_COMMON
+#define HAVE_RC_CRAWLER_COMMON
 
 #include <glib.h>
-#include <gtk/gtk.h>
-#include <gst/gst.h>
+#include <curl/curl.h>
+#include <gmodule.h>
 
-G_BEGIN_DECLS
+#define RC_CRAWLER_MODULE_MAGIC_NUMBER 0x03110919
 
-#define GETTEXT_PACKAGE "RhythmCat"
+typedef struct RCLyricCrawlerModuleData
+{
+    guint32 magic_number;
+    const gchar *name;
+    const gchar *desc;
+}RCLyricCrawlerModuleData;
 
-void rc_player_init(int *argc, char **argv[]);
-void rc_player_main();
-void rc_player_exit();
-const gchar *rc_player_get_program_name();
-const gchar *const *rc_player_get_authors();
-const gchar *const *rc_player_get_documenters();
-const gchar *const *rc_player_get_artists();
-const gchar *rc_player_get_build_date();
-const gchar *rc_player_get_version();
-gboolean rc_player_get_stable_flag();
-const gchar *rc_player_get_conf_dir();
-const gchar *rc_player_get_data_dir();
-const gchar *rc_player_get_home_dir();
-const gchar *rc_player_get_locale();
-gboolean rc_player_check_supported_format(const gchar *filename);
-gdouble rc_player_get_elapsed_time();
+typedef struct RCLyriCrawlerSearchData
+{
+    gchar *title;
+    gchar *artist;
+    gchar *url;
+}RCLyriCrawlerSearchData;
 
-G_END_DECLS
+gboolean rc_crawler_common_download_file(const gchar *url, const gchar *file);
+gboolean rc_crawler_common_post_data(const gchar *url, const gchar *refer,
+    const gchar *user_agent, const gchar *post_data, gsize post_len,
+    const gchar *file);
+void rc_crawler_common_operation_cancel();
 
 #endif
 
