@@ -144,5 +144,9 @@ G_MODULE_EXPORT GSList *rc_crawler_module_get_url_list(const gchar *title,
     return lrc_url_list;
 }
 
-
+G_MODULE_EXPORT gboolean rc_crawler_module_download_file(const gchar *url,
+    const gchar *file)
+{
+    return rc_crawler_common_download_file(url, file);
+}
 

@@ -1346,7 +1346,7 @@ void rc_gui_set_play_button_state(gboolean state)
 /**
  * rc_gui_music_info_set_data:
  * @title: the title to set
- * @data: the metadata, the type should be RCMetaData (defined in tag.h)
+ * @data: the metadata
  *
  * Set the data in the information labels.
  */

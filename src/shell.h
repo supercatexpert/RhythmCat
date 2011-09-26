@@ -28,8 +28,6 @@
 #include <glib.h>
 #include <gtk/gtk.h>
 #include <gst/gst.h>
-#include <dbus/dbus.h>
-#include <dbus/dbus-glib.h>
 
 G_BEGIN_DECLS
 

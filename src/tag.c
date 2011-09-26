@@ -601,3 +601,249 @@ gchar *rc_tag_find_file(const gchar *dirname, const gchar *str,
     return rfilename;
 }
 
+/**
+ * rc_tag_search_lyric_file:
+ * @dirname: the directory name
+ * @mmd: the metadata
+ *
+ * Search lyric file in given directory by the given metadata.
+ *
+ * Returns: The file name which is found in the directory, NULL if not found,
+ * free after usage.
+ */
+
+gchar *rc_tag_search_lyric_file(const gchar *dirname,
+    const RCMusicMetaData *mmd)
+{
+    gchar *result = NULL;
+    GRegex *realname_regex = NULL;
+    GRegex *artist_title_regex = NULL;
+    GRegex *title_artist_regex = NULL;
+    GRegex *title_only_regex = NULL;
+    gchar *path = NULL;
+    gchar *realname = NULL;
+    gchar *realname_pattern = NULL;
+    gchar *tmp, *string;
+    GDir *gdir;
+    const gchar *fname_foreach = NULL;
+    const gchar *match_result = NULL;
+    guint level = 0;
+    if(dirname==NULL || mmd==NULL) return NULL;
+    gdir = g_dir_open(dirname, 0, NULL);
+    if(gdir==NULL) return NULL;
+    if(mmd->uri!=NULL)
+        path = g_filename_from_uri(mmd->uri, NULL, NULL);
+    if(path!=NULL)
+    {
+        realname = rc_tag_get_name_from_fpath(path);
+        g_free(path);
+    }
+    if(realname!=NULL)
+    {
+        tmp = g_regex_escape_string(realname, -1);
+        realname_pattern = g_strdup_printf("^(%s)(\\.LRC)$", tmp);
+        g_free(tmp);
+        realname_regex = g_regex_new(realname_pattern, G_REGEX_CASELESS,
+            0, NULL);
+        g_free(realname);
+        g_free(realname_pattern);
+    }
+    if(mmd->title!=NULL && strlen(mmd->title)>0 && mmd->artist!=NULL &&
+        strlen(mmd->artist)>0)
+    {
+        tmp = g_strdup_printf("%s - %s", mmd->artist, mmd->title);
+        string = g_regex_escape_string(tmp, -1);
+        g_free(tmp);
+        tmp = g_strdup_printf("^(%s)(\\.LRC)$", string);
+        g_free(string);
+        artist_title_regex = g_regex_new(tmp, G_REGEX_CASELESS,
+            0, NULL);
+        g_free(tmp);
+        tmp = g_strdup_printf("%s - %s", mmd->title, mmd->artist);
+        string = g_regex_escape_string(tmp, -1);
+        g_free(tmp);
+        tmp = g_strdup_printf("^(%s)(\\.LRC)$", string);
+        g_free(string);
+        title_artist_regex = g_regex_new(tmp, G_REGEX_CASELESS,
+            0, NULL);
+        g_free(tmp);
+    }
+    if(mmd->title!=NULL && strlen(mmd->title)>0)
+    {
+        tmp = g_regex_escape_string(mmd->title, -1);
+        string = g_strdup_printf("^(%s)(\\.LRC)$", tmp);
+        g_free(tmp);
+        title_only_regex = g_regex_new(string, G_REGEX_CASELESS,
+            0, NULL);
+        g_free(string);
+    }
+    while((fname_foreach=g_dir_read_name(gdir))!=NULL)
+    {
+        if(realname_regex!=NULL)
+        {
+            if(g_regex_match(realname_regex, fname_foreach, 0, NULL))
+            {
+                match_result = fname_foreach;
+                level = 4;
+                break;
+            }
+        }
+        if(artist_title_regex!=NULL)
+        {
+            if(g_regex_match(artist_title_regex, fname_foreach, 0, NULL) &&
+                level<3)
+            {
+                match_result = fname_foreach;
+                level = 3;
+            }
+        }
+        if(title_artist_regex!=NULL)
+        {
+            if(g_regex_match(title_artist_regex, fname_foreach, 0, NULL) &&
+                level<2)
+            {
+                match_result = fname_foreach;
+                level = 2;
+            }
+        }
+        if(title_only_regex!=NULL)
+        {
+            if(g_regex_match(title_only_regex, fname_foreach, 0, NULL) &&
+                level<1)
+            {
+                match_result = fname_foreach;
+                level = 1;
+            }
+        }
+    }
+    if(realname_regex!=NULL) g_regex_unref(realname_regex);
+    if(artist_title_regex!=NULL) g_regex_unref(artist_title_regex);
+    if(title_artist_regex!=NULL) g_regex_unref(title_artist_regex);
+    if(title_only_regex!=NULL) g_regex_unref(title_only_regex);
+    if(match_result!=NULL)
+        result = g_build_filename(dirname, match_result, NULL);
+    g_dir_close(gdir);
+    return result;
+}
+
+/**
+ * rc_tag_search_album_file:
+ * @dirname: the directory name
+ * @mmd: the metadata
+ *
+ * Search album image file in given directory by the given metadata.
+ *
+ * Returns: The file name which is found in the directory, NULL if not found,
+ * free after usage.
+ */
+
+gchar *rc_tag_search_album_file(const gchar *dirname,
+    const RCMusicMetaData *mmd)
+{
+    gchar *result = NULL;
+    GRegex *realname_regex = NULL;
+    GRegex *artist_regex = NULL;
+    GRegex *title_regex = NULL;
+    GRegex *album_regex = NULL;
+    gchar *path = NULL;
+    gchar *realname = NULL;
+    gchar *realname_pattern = NULL;
+    gchar *tmp, *string;
+    GDir *gdir;
+    const gchar *fname_foreach = NULL;
+    const gchar *match_result = NULL;
+    guint level = 0;
+    if(dirname==NULL || mmd==NULL) return NULL;
+    gdir = g_dir_open(dirname, 0, NULL);
+    if(gdir==NULL) return NULL;
+    if(mmd->uri!=NULL)
+        path = g_filename_from_uri(mmd->uri, NULL, NULL);
+    if(path!=NULL)
+    {
+        realname = rc_tag_get_name_from_fpath(path);
+        g_free(path);
+    }
+    if(realname!=NULL)
+    {
+        tmp = g_regex_escape_string(realname, -1);
+        realname_pattern = g_strdup_printf("^(%s)\\.(BMP|JPG|JPEG|PNG)$",
+            tmp);
+        g_free(tmp);
+        realname_regex = g_regex_new(realname_pattern, G_REGEX_CASELESS,
+            0, NULL);
+        g_free(realname);
+        g_free(realname_pattern);
+    }
+    if(mmd->title!=NULL && strlen(mmd->title)>0)
+    {
+        string = g_regex_escape_string(mmd->title, -1);
+        tmp = g_strdup_printf("^(%s)\\.(BMP|JPG|JPEG|PNG)$", string);
+        g_free(string);
+        title_regex = g_regex_new(tmp, G_REGEX_CASELESS, 0, NULL);
+        g_free(tmp);
+    }
+    if(mmd->artist!=NULL && strlen(mmd->artist)>0)
+    {
+        string = g_regex_escape_string(mmd->artist, -1);
+        tmp = g_strdup_printf("^(%s)\\.(BMP|JPG|JPEG|PNG)$", string);
+        g_free(string);
+        artist_regex = g_regex_new(tmp, G_REGEX_CASELESS, 0, NULL);
+        g_free(tmp);
+    }
+    if(mmd->album!=NULL && strlen(mmd->album)>0)
+    {
+        string = g_regex_escape_string(mmd->album, -1);
+        tmp = g_strdup_printf("^(%s)\\.(BMP|JPG|JPEG|PNG)$", string);
+        g_free(string);
+        album_regex = g_regex_new(tmp, G_REGEX_CASELESS, 0, NULL);
+        g_free(tmp);
+    }
+    while((fname_foreach=g_dir_read_name(gdir))!=NULL)
+    {
+        if(realname_regex!=NULL)
+        {
+            if(g_regex_match(realname_regex, fname_foreach, 0, NULL))
+            {
+                match_result = fname_foreach;
+                level = 4;
+                break;
+            }
+        }
+        if(title_regex!=NULL)
+        {
+            if(g_regex_match(title_regex, fname_foreach, 0, NULL) &&
+                level<3)
+            {
+                match_result = fname_foreach;
+                level = 3;
+            }
+        }
+        if(album_regex!=NULL)
+        {
+            if(g_regex_match(album_regex, fname_foreach, 0, NULL) &&
+                level<2)
+            {
+                match_result = fname_foreach;
+                level = 2;
+            }
+        }
+        if(artist_regex!=NULL)
+        {
+            if(g_regex_match(artist_regex, fname_foreach, 0, NULL) &&
+                level<1)
+            {
+                match_result = fname_foreach;
+                level = 1;
+            }
+        }
+    }
+    if(realname_regex!=NULL) g_regex_unref(realname_regex);
+    if(artist_regex!=NULL) g_regex_unref(artist_regex);
+    if(title_regex!=NULL) g_regex_unref(title_regex);
+    if(album_regex!=NULL) g_regex_unref(album_regex);
+    if(match_result!=NULL)
+        result = g_build_filename(dirname, match_result, NULL);
+    g_dir_close(gdir);
+    return result;
+}
+

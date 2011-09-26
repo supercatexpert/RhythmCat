@@ -86,6 +86,10 @@ const RCMusicMetaData *rc_tag_get_playing_metadata();
 gchar *rc_tag_get_name_from_fpath(const gchar *filename);
 gchar *rc_tag_find_file(const gchar *dirname, const gchar *str,
     const gchar *extname);
+gchar *rc_tag_search_lyric_file(const gchar *dirname,
+    const RCMusicMetaData *mmd);
+gchar *rc_tag_search_album_file(const gchar *dirname,
+    const RCMusicMetaData *mmd);
 
 G_END_DECLS
 

@@ -44,11 +44,14 @@
 typedef GSList *(*RCLyricCrawlerGetUrlListFunc)(const gchar *title,
     const gchar *artist);
 typedef const RCLyricCrawlerModuleData *(*RCLyricCrawlerModuleGetData)();
+typedef gboolean (*RCLyricCrawlerModuleDownFileFunc)(const gchar *url,
+    const gchar *file);
 typedef struct RCLyricModuleData
 {
     GModule *module;
     const RCLyricCrawlerModuleData *module_data;
     RCLyricCrawlerGetUrlListFunc search_get_url_list;
+    RCLyricCrawlerModuleDownFileFunc download_file;
 }RCLyricModuleData;
 
 static RCPluginModuleData plugin_module_data = 
@@ -260,7 +263,8 @@ static gpointer rc_plugin_module_down_lyric_thread_func(gpointer data)
 {
     gchar **args = (gchar **)data;
     gboolean flag;
-    if(args==NULL || args[0]==NULL || args[1]==NULL)
+    if(args==NULL || args[0]==NULL || args[1]==NULL ||
+        current_crawler_module_data==NULL)
     {
         if(args[0]!=NULL) g_free(args[0]);
         if(args[1]!=NULL) g_free(args[1]);
@@ -271,7 +275,7 @@ static gpointer rc_plugin_module_down_lyric_thread_func(gpointer data)
     }
     rc_debug_module_pmsg(plugin_module_data.group_name,
         "Download Thread started, downloading lyric file....");
-    flag = rc_crawler_common_download_file(args[0], args[1]);
+    flag = current_crawler_module_data->download_file(args[0], args[1]);
     if(flag)
         rc_debug_module_pmsg(plugin_module_data.group_name,
             "Download lyric file successfully. :)");
@@ -330,6 +334,7 @@ static gboolean rc_plugin_module_load_lyric_search_module(const gchar *file)
 {
     GModule *module = NULL;
     RCLyricCrawlerGetUrlListFunc get_url_list_func;
+    RCLyricCrawlerModuleDownFileFunc down_file_func;
     RCLyricCrawlerModuleGetData get_module_data;
     RCLyricModuleData *lyric_module_data = NULL;
     const RCLyricCrawlerModuleData *crawler_module_data = NULL;
@@ -354,10 +359,17 @@ static gboolean rc_plugin_module_load_lyric_search_module(const gchar *file)
         g_module_close(module);
         return FALSE;
     }
+    if(!g_module_symbol(module, "rc_crawler_module_download_file",
+        (gpointer *)&down_file_func))
+    {
+        g_module_close(module);
+        return FALSE;
+    }
     lyric_module_data = g_new(RCLyricModuleData, 1);
     lyric_module_data->module = module;
     lyric_module_data->module_data = crawler_module_data;
     lyric_module_data->search_get_url_list = get_url_list_func;
+    lyric_module_data->download_file = down_file_func;
     rc_debug_module_pmsg(plugin_module_data.group_name,
         "Loaded lyric crawler module: %s", crawler_module_data->name);
     lyric_search_module_list = g_slist_append(lyric_search_module_list,

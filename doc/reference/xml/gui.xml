@@ -410,7 +410,7 @@ Set the data in the information labels.
 <listitem><simpara>the title to set
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>data</parameter>&#160;:</term>
-<listitem><simpara>the metadata, the type should be RCMetaData (defined in tag.h)
+<listitem><simpara>the metadata
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="rc-gui-time-label-set-text" role="function">

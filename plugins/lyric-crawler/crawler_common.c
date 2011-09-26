@@ -59,6 +59,9 @@ gboolean rc_crawler_common_download_file(const gchar *url, const gchar *file)
     }
     crawler_download_cancel_flag = FALSE;
     res = curl_easy_setopt(curl, CURLOPT_URL, url);
+    res = curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
+    res = curl_easy_setopt(curl, CURLOPT_USERAGENT, "Mozilla/5.0 "
+        "(X11; Linux x86_64; rv:6.0.0) Gecko/20100101 Firefox/6.0.0");
     res = curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION,
         &rc_crawler_common_download_write_cb);
     res = curl_easy_setopt(curl, CURLOPT_WRITEDATA, &fp);

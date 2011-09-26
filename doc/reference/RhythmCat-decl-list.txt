@@ -50,6 +50,8 @@ rc_tag_set_playing_metadata
 rc_tag_get_playing_metadata
 rc_tag_get_name_from_fpath
 rc_tag_find_file
+rc_tag_search_lyric_file
+rc_tag_search_album_file
 </SECTION>
 
 <SECTION>

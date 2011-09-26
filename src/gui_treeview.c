@@ -554,7 +554,7 @@ static gboolean rc_gui_list2_popup_menu(GtkWidget *widget,
     if(event->button!=3 && event->button!=1) return FALSE;
     if(event->button==1)
     {
-        if(event->state & (GDK_SHIFT_MASK|GDK_CONTROL_MASK)) return FALSE;
+        if(event->state & (GDK_SHIFT_MASK | GDK_CONTROL_MASK)) return FALSE;
         if(!gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(
             rc_ui->list2_tree_view), event->x, event->y, &path, NULL,
             NULL, NULL))
@@ -785,12 +785,12 @@ void rc_gui_select_list2(gint list_index)
 
 void rc_gui_list1_new_list()
 {
-    static gint count = 1;
+    static guint count = 1;
     GtkTreeIter iter;
     gint length = 0;
     gint index;
     gchar new_name[64];
-    snprintf(new_name, 63, _("Playlist %d"), count);
+    snprintf(new_name, 63, _("Playlist %u"), count);
     count++;
     length = rc_plist_get_list1_length();
     if(gtk_tree_selection_get_selected(rc_ui->list1_selection ,NULL, &iter))

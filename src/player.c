@@ -67,7 +67,7 @@
 #endif
 
 static const gchar rc_player_program_name[] = "RhythmCat Music Player";
-static const gchar rc_player_build_date[] = "110924";
+static const gchar rc_player_build_date[] = "110926";
 static const gchar rc_player_version[] = "1.0.0 RC 1";
 static const gboolean rc_player_stable_flag = FALSE;
 static const gchar *rc_player_support_formatx = "(.FLAC|.OGG|.MP3|.WMA|.WAV|"
@@ -119,7 +119,8 @@ static gchar *rc_player_get_program_data_dir(const gchar *argv0)
             g_free(exec_path);
             exec_path = NULL;
         }
-    #elif G_OS_WIN32
+    #endif
+    #ifdef G_OS_WIN32
         bzero(full_path, PATH_MAX);
         GetModuleFileName(NULL, full_path, PATH_MAX);
         bin_dir = g_strdup(full_path);

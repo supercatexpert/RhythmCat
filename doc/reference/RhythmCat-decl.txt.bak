@@ -1252,6 +1252,11 @@ int *argc, char **argv[]
 const gchar *filename 
 </FUNCTION>
 <FUNCTION>
+<NAME>rc_player_get_elapsed_time</NAME>
+<RETURNS>gdouble </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
 <NAME>rc_set_init</NAME>
 <RETURNS>void </RETURNS>
  

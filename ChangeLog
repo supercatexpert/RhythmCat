@@ -88,3 +88,8 @@
         * Fixed some bugs.
         * Added lyric crawler plugin.
 
+2011-09-25  SuperCat    <supercatexpert@gmail.com>
+        * Fixed some bugs, can be compiled on Win32 now.
+        * Enhanced lyric and cover image file search functions.
+
+

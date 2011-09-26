@@ -726,12 +726,12 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
     gtk_tree_path_free(path);
     if(list_title!=NULL) g_free(list_title);
     rc_shell_signal_emit_simple("music-started");
+    if(realname!=NULL) g_free(realname);
     /* Search extra info for the music file in local filesystem. */
     rc_lrc_clean_data();
     if(fpathname==NULL)
     {
         rc_tag_free(mmd_new);
-        if(realname!=NULL) g_free(realname);
         return TRUE;
     }
     music_dir = g_path_get_dirname(fpathname);
@@ -739,9 +739,9 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
     lyric_dir = g_build_filename(rc_player_get_conf_dir(), "Lyrics", NULL);
     image_dir = g_build_filename(rc_player_get_conf_dir(), "AlbumImages",
         NULL);
-    lyric_filename = rc_tag_find_file(music_dir, realname, ".LRC");
+    lyric_filename = rc_tag_search_lyric_file(music_dir, mmd_new);
     if(lyric_filename==NULL)
-        lyric_filename = rc_tag_find_file(lyric_dir, realname, ".LRC");
+        lyric_filename = rc_tag_search_lyric_file(lyric_dir, mmd_new);
     g_free(lyric_dir);
     if(lyric_filename!=NULL && rc_lrc_read_from_file(lyric_filename))
     {
@@ -756,14 +756,11 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
         rc_player_object_signal_emit_simple("lyric-not-found");
     }
     if(lyric_filename!=NULL) g_free(lyric_filename);
-    if(!image_flag && mmd_new->album!=NULL)
+    if(!image_flag)
     {
-        cover_filename = rc_tag_find_file(music_dir, mmd_new->album,
-            ".BMP|.JPG|.JPEG|.PNG");
+        cover_filename = rc_tag_search_album_file(music_dir, mmd_new);
         if(cover_filename==NULL)
-            cover_filename = rc_tag_find_file(image_dir, mmd_new->album,
-                ".BMP|.JPG|.JPEG|.PNG");
-        g_free(image_dir);
+            cover_filename = rc_tag_search_album_file(image_dir, mmd_new);
         if(cover_filename!=NULL && rc_gui_set_cover_image_by_file(
             cover_filename))
         {
@@ -772,12 +769,12 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
             image_flag = TRUE;
         }
     }
+    g_free(image_dir);
     if(image_flag)
         rc_player_object_signal_emit_simple("cover-found");
     else
         rc_player_object_signal_emit_simple("cover-not-found");
     g_free(music_dir);
-    g_free(realname);
     rc_tag_free(mmd_new);
     return TRUE;
 }
@@ -844,12 +841,12 @@ gboolean rc_plist_play_by_uri(const gchar *uri)
     }
     if(list_title!=NULL) g_free(list_title);
     rc_shell_signal_emit_simple("music-started");
+    if(realname!=NULL) g_free(realname);
     /* Search extra info for the music file in local filesystem. */
     rc_lrc_clean_data();
     if(fpathname==NULL)
     {
         rc_tag_free(mmd_new);
-        if(realname!=NULL) g_free(realname);
         return TRUE;
     }
     music_dir = g_path_get_dirname(fpathname);
@@ -857,9 +854,9 @@ gboolean rc_plist_play_by_uri(const gchar *uri)
     lyric_dir = g_build_filename(rc_player_get_conf_dir(), "Lyrics", NULL);
     image_dir = g_build_filename(rc_player_get_conf_dir(), "AlbumImages",
         NULL);
-    lyric_filename = rc_tag_find_file(music_dir, realname, ".LRC");
+    lyric_filename = rc_tag_search_lyric_file(music_dir, mmd_new);
     if(lyric_filename==NULL)
-        lyric_filename = rc_tag_find_file(lyric_dir, realname, ".LRC");
+        lyric_filename = rc_tag_search_lyric_file(lyric_dir, mmd_new);
     g_free(lyric_dir);
     if(lyric_filename!=NULL && rc_lrc_read_from_file(lyric_filename))
     {
@@ -874,23 +871,25 @@ gboolean rc_plist_play_by_uri(const gchar *uri)
         rc_player_object_signal_emit_simple("lyric-not-found");
     }
     if(lyric_filename!=NULL) g_free(lyric_filename);
-    if(!image_flag && mmd_new->album!=NULL)
+    if(!image_flag)
     {
-        cover_filename = rc_tag_find_file(music_dir, mmd_new->album,
-            ".BMP|.JPG|.JPEG|.PNG");
+        cover_filename = rc_tag_search_album_file(music_dir, mmd_new);
         if(cover_filename==NULL)
-            cover_filename = rc_tag_find_file(image_dir, mmd_new->album,
-                ".BMP|.JPG|.JPEG|.PNG");
-        g_free(image_dir);
+            cover_filename = rc_tag_search_album_file(image_dir, mmd_new);
         if(cover_filename!=NULL && rc_gui_set_cover_image_by_file(
             cover_filename))
         {
             rc_debug_module_print(module_name, "Found cover image file: %s.",
                 cover_filename);
+            image_flag = TRUE;
         }
     }
+    g_free(image_dir);
+    if(image_flag)
+        rc_player_object_signal_emit_simple("cover-found");
+    else
+        rc_player_object_signal_emit_simple("cover-not-found");
     g_free(music_dir);
-    g_free(realname);
     rc_tag_free(mmd_new);
     return TRUE;
 }

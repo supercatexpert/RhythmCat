@@ -2,3 +2,5 @@ RC_PLUGIN_MAGIC_NUMBER
 RC_PLUGIN_OLD_MAGIC_NUMBER
 rc_gui_get_cover_image
 rc_player_get_elapsed_time
+rc_tag_search_album_file
+rc_tag_search_lyric_file

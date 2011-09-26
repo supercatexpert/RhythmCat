@@ -152,6 +152,16 @@ const gchar *filename
 <RETURNS>gchar *</RETURNS>
 const gchar *dirname, const gchar *str, const gchar *extname 
 </FUNCTION>
+<FUNCTION>
+<NAME>rc_tag_search_lyric_file</NAME>
+<RETURNS>gchar *</RETURNS>
+const gchar *dirname, const RCMusicMetaData *mmd 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_tag_search_album_file</NAME>
+<RETURNS>gchar *</RETURNS>
+const gchar *dirname, const RCMusicMetaData *mmd 
+</FUNCTION>
 <STRUCT>
 <NAME>RCMusicMetaData</NAME>
 struct RCMusicMetaData;

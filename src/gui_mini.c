@@ -62,11 +62,10 @@ static gboolean rc_gui_mini_window_drag(GtkWidget *widget, GdkEvent *event,
     #else
         window = rc_mini.mini_window->window;
     #endif
-    if(event->button.button==1)
+    switch(event->type)
     {
-        switch(event->type)
-        {
-            case GDK_BUTTON_PRESS:
+        case GDK_BUTTON_PRESS:
+            if(event->button.button==1)
             {
                 bx = event->button.x;
                 by = event->button.y;
@@ -76,7 +75,8 @@ static gboolean rc_gui_mini_window_drag(GtkWidget *widget, GdkEvent *event,
                 gdk_cursor_unref(cursor);
                 break;
             }
-            case GDK_BUTTON_RELEASE:
+        case GDK_BUTTON_RELEASE:
+            if(event->button.button==1)
             {
                 drag_flag = FALSE;
                 cursor = gdk_cursor_new(GDK_ARROW);
@@ -84,23 +84,20 @@ static gboolean rc_gui_mini_window_drag(GtkWidget *widget, GdkEvent *event,
                 gdk_cursor_unref(cursor);
                 break;
             }
-            case GDK_MOTION_NOTIFY:
+        case GDK_MOTION_NOTIFY:
+            if(drag_flag)
             {
-                if(drag_flag)
-                {
-                    gtk_window_get_position(GTK_WINDOW(rc_mini.mini_window),
-                        &x, &y);
-                    tx = x + event->button.x - bx;
-                    ty = y + event->button.y - by;
-                    gtk_window_move(GTK_WINDOW(rc_mini.mini_window), tx, ty);
-                    rc_set_set_integer("Player", "MiniWindowX", tx);
-                    rc_set_set_integer("Player", "MiniWindowY", ty);
-                }
-                break;
-            }	
-            default:
-                break;
-        }
+                gtk_window_get_position(GTK_WINDOW(rc_mini.mini_window),
+                    &x, &y);
+                tx = x + event->button.x - bx;
+                ty = y + event->button.y - by;
+                gtk_window_move(GTK_WINDOW(rc_mini.mini_window), tx, ty);
+                rc_set_set_integer("Player", "MiniWindowX", tx);
+                rc_set_set_integer("Player", "MiniWindowY", ty);
+            }
+            break;
+        default:
+            break;
     }
     return FALSE;
 }
@@ -182,24 +179,19 @@ static gboolean rc_gui_mini_window_resize(GtkWidget *widget, GdkEvent *event,
         switch(event->type)
         {
             case GDK_BUTTON_PRESS:
-            {
                 bx = event->button.x;
                 resize_flag = TRUE;
                 cursor = gdk_cursor_new(GDK_RIGHT_SIDE);
                 gdk_window_set_cursor(window, cursor);
                 gdk_cursor_unref(cursor);
                 break;
-            }
             case GDK_BUTTON_RELEASE:
-            {
                 resize_flag = FALSE;
                 cursor = gdk_cursor_new(GDK_ARROW);
                 gdk_window_set_cursor(window, cursor);
                 gdk_cursor_unref(cursor);
                 break;
-            }
             case GDK_MOTION_NOTIFY:
-            {
                 if(resize_flag)
                 {
                     gtk_window_get_size(GTK_WINDOW(rc_mini.mini_window),
@@ -210,7 +202,6 @@ static gboolean rc_gui_mini_window_resize(GtkWidget *widget, GdkEvent *event,
                     rc_set_set_integer("Player", "MiniWindowWidth", width);
                 }
                 break;
-            }	
             default:
                 break;
         }
@@ -310,15 +301,15 @@ void rc_gui_mini_init()
         GTK_WIDGET_SET_FLAGS(rc_mini.info_fixed, !GTK_NO_WINDOW);
         GTK_WIDGET_SET_FLAGS(rc_mini.lrc_fixed, !GTK_NO_WINDOW);
     #endif
-    gtk_widget_add_events(rc_mini.mini_window,
+    gtk_widget_add_events(rc_mini.mini_window, GDK_ENTER_NOTIFY_MASK |
         GDK_LEAVE_NOTIFY_MASK | GDK_BUTTON_PRESS_MASK |
         GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK |
         GDK_POINTER_MOTION_HINT_MASK);
-    gtk_widget_add_events(rc_mini.info_fixed,
+    gtk_widget_add_events(rc_mini.info_fixed, GDK_ENTER_NOTIFY_MASK |
         GDK_LEAVE_NOTIFY_MASK | GDK_BUTTON_PRESS_MASK |
         GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK |
         GDK_POINTER_MOTION_HINT_MASK);
-    gtk_widget_add_events(rc_mini.lrc_fixed,
+    gtk_widget_add_events(rc_mini.lrc_fixed, GDK_ENTER_NOTIFY_MASK |
         GDK_LEAVE_NOTIFY_MASK | GDK_BUTTON_PRESS_MASK |
         GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK |
         GDK_POINTER_MOTION_HINT_MASK);
