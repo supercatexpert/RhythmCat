@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RhythmCat 1.0.0\n"
 "Report-Msgid-Bugs-To: http://code.google.com/p/rhythmcat/issues/list\n"
-"POT-Creation-Date: 2011-09-26 22:14+0800\n"
+"POT-Creation-Date: 2011-09-27 20:51+0800\n"
 "PO-Revision-Date: 2011-04-02 21:18+0800\n"
 "Last-Translator: SuperCat <supercatexpert@gmail.com>\n"
 "Language-Team: SuperCat <supercatexpert@gmail.com>\n"
@@ -16,27 +16,27 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/core.c:277 src/core.c:310
+#: src/core.c:257 src/core.c:290
 msgid "Effect plugins are missing!"
 msgstr "找不到效果插件!"
 
-#: src/core.c:277 src/core.c:310
+#: src/core.c:257 src/core.c:290
 msgid "Some effect plugins are missing, effects are not available now!"
 msgstr "一些效果插件不存在，特效將無法使用!"
 
-#: src/core.c:284
+#: src/core.c:264
 msgid "Critical Error!"
 msgstr "致命錯誤!"
 
-#: src/core.c:285
+#: src/core.c:265
 msgid "Failed to make playbin/playbin2 element!"
 msgstr "無法啟動playbin/playbin2元件"
 
-#: src/core.c:331
+#: src/core.c:311
 msgid "Link elements error!"
 msgstr "連接元件時錯誤!"
 
-#: src/core.c:331
+#: src/core.c:311
 msgid "Cannot link effect elements, effects are not available now!"
 msgstr "無法連接效果元件，特效將無法使用!"
 
@@ -411,8 +411,8 @@ msgstr "立體聲"
 msgid "%d channels"
 msgstr "%d 聲道"
 
-#: src/gui.c:1405 src/playlist.c:412 src/playlist.c:491 src/playlist.c:680
-#: src/playlist.c:820
+#: src/gui.c:1405 src/playlist.c:412 src/playlist.c:491 src/playlist.c:751
+#: src/playlist.c:853
 msgid "Unknown Title"
 msgstr "未知標題"
 
@@ -564,85 +564,89 @@ msgstr "<b>作者:</b>"
 msgid "<b>Site:</b>"
 msgstr "<b>網站:</b>"
 
-#: src/gui_setting.c:90
+#: src/gui_setting.c:92
 msgid "General"
 msgstr "常規"
 
-#: src/gui_setting.c:92
+#: src/gui_setting.c:94
 msgid "Playlist"
 msgstr "播放列表"
 
-#: src/gui_setting.c:94
+#: src/gui_setting.c:96
 msgid "Appearance"
 msgstr "外觀"
 
-#: src/gui_setting.c:180
+#: src/gui_setting.c:191
 msgid "<b>General</b>"
 msgstr "<b>常規</b>"
 
-#: src/gui_setting.c:185
+#: src/gui_setting.c:196
 msgid "Auto _play on startup"
 msgstr "啟動時自動開始播放(_P)"
 
-#: src/gui_setting.c:187
+#: src/gui_setting.c:198
 msgid "_Load the last playing position"
 msgstr "載入上次播放的音樂(_L)"
 
-#: src/gui_setting.c:189
+#: src/gui_setting.c:200
 msgid "Minimize to _tray"
 msgstr "最小化到系統託盤(_T)"
 
-#: src/gui_setting.c:191
+#: src/gui_setting.c:202
 msgid "Auto _minimize when startup"
 msgstr "啟動時自動最小化(_M)"
 
-#: src/gui_setting.c:193
+#: src/gui_setting.c:204
 msgid "Minimize the window if the _close button is clicked"
 msgstr "當點擊關閉按鈕時，最小化窗口(_C)"
 
-#: src/gui_setting.c:231
+#: src/gui_setting.c:207
+msgid "Enable _D-Bus controller"
+msgstr "啟用D-Bus控制器(_D)"
+
+#: src/gui_setting.c:255
 msgid "<b>Playlist</b>"
 msgstr "<b>播放列表</b>"
 
-#: src/gui_setting.c:236
+#: src/gui_setting.c:260
 msgid "<b>Metadata</b>"
 msgstr "<b>元數據</b>"
 
-#: src/gui_setting.c:240
+#: src/gui_setting.c:264
 msgid "ID3 Tag fallback character encodings"
 msgstr "ID3標籤備選編碼"
 
-#: src/gui_setting.c:241
+#: src/gui_setting.c:265
 msgid "Lyric text fallback character encodings"
 msgstr "歌詞文本備選編碼"
 
-#: src/gui_setting.c:243
+#: src/gui_setting.c:267
 msgid "Auto _remove invalid music file"
 msgstr "自動移除失效的音樂檔"
 
-#: src/gui_setting.c:261
+#: src/gui_setting.c:285
 msgid "_Auto encoding detect (use system language settings)"
 msgstr "自動探測編碼(使用系統語言設置)"
 
-#: src/gui_setting.c:348
+#: src/gui_setting.c:372
 msgid "<b>Theme</b>"
 msgstr "<b>主題</b>"
 
-#: src/gui_setting.c:349
+#: src/gui_setting.c:373
 msgid "<b>Preview</b>"
 msgstr "<b>預覽:</b>"
 
-#: src/gui_setting.c:367
+#: src/gui_setting.c:391
 msgid "None"
 msgstr "無"
 
-#: src/gui_setting.c:390
+#: src/gui_setting.c:414
 msgid ""
 "Please notice that you should restart the player if you have disabled the "
 "style or the style does not work properly."
 msgstr "請注意: 當您禁用了主題或者主題工作不正常時，可能需要重啟播放器。"
 
-#: src/gui_setting.c:442
+#: src/gui_setting.c:466
 msgid "Settings"
 msgstr "設定"
 

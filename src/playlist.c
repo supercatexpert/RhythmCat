@@ -565,6 +565,117 @@ void rc_plist_list2_mark_invalid_item(GtkTreeRowReference *reference)
         -1);    
 }
 
+static inline gboolean rc_plist_play_load_lyric(const RCMusicMetaData *mmd_new)
+{
+    gchar *fpathname = NULL;
+    gchar *music_dir = NULL;
+    gchar *lyric_dir = NULL;
+    gchar *lyric_filename = NULL;
+    gboolean flag = FALSE;
+    if(mmd_new==NULL) return FALSE;
+    rc_lrc_clean_data();
+    fpathname = g_filename_from_uri(mmd_new->uri, NULL, NULL);
+    if(fpathname==NULL) return FALSE;
+    music_dir = g_path_get_dirname(fpathname);
+    g_free(fpathname);
+    lyric_dir = g_build_filename(rc_player_get_conf_dir(), "Lyrics", NULL);
+    lyric_filename = rc_tag_search_lyric_file(music_dir, mmd_new);
+    if(lyric_filename==NULL)
+        lyric_filename = rc_tag_search_lyric_file(lyric_dir, mmd_new);
+    g_free(lyric_dir);
+    if(lyric_filename!=NULL && rc_lrc_read_from_file(lyric_filename))
+    {
+        rc_debug_module_print(module_name, "Found lyric file: %s, "
+            "enable the lyric show.", lyric_filename);
+        rc_player_object_signal_emit_simple("lyric-found");
+        flag = TRUE;
+    }
+    else
+    {
+        rc_debug_module_print(module_name, "Not found lyric file, disable "
+            "the lyric show.");
+        rc_player_object_signal_emit_simple("lyric-not-found");
+    }
+    if(lyric_filename!=NULL) g_free(lyric_filename);
+    if(music_dir!=NULL) g_free(music_dir);
+    return flag;
+}
+
+static inline gboolean rc_plist_play_load_image(const RCMusicMetaData *mmd_new)
+{
+    gboolean flag = FALSE;
+    gchar *image_dir = NULL;
+    gchar *music_dir = NULL;
+    gchar *fpathname = NULL;
+    gchar *cover_filename = NULL;
+    if(mmd_new==NULL) return FALSE;
+    fpathname = g_filename_from_uri(mmd_new->uri, NULL, NULL);
+    if(fpathname==NULL) return FALSE;
+    music_dir = g_path_get_dirname(fpathname);
+    g_free(fpathname);
+    image_dir = g_build_filename(rc_player_get_conf_dir(), "AlbumImages",
+        NULL);
+    cover_filename = rc_tag_search_album_file(music_dir, mmd_new);
+    if(cover_filename==NULL)
+        cover_filename = rc_tag_search_album_file(image_dir, mmd_new);
+    if(cover_filename!=NULL && rc_gui_set_cover_image_by_file(
+        cover_filename))
+    {
+        rc_debug_module_print(module_name, "Found cover image file: %s.",
+            cover_filename);
+        flag = TRUE;
+    }
+    if(music_dir!=NULL) g_free(music_dir);
+    if(image_dir!=NULL) g_free(image_dir);
+    return flag;
+}
+
+static inline gboolean rc_plist_play_load_cue(const gchar *list_uri,
+    gint64 *start_time, RCMusicMetaData **mmd_new)
+{
+    RCCueData cue_data;
+    gint trackno;
+    gchar *cue_uri = NULL;
+    gboolean flag = FALSE;
+    RCMusicMetaData *cue_mmd = NULL;
+    if(list_uri==NULL || start_time==NULL || mmd_new==NULL)
+        return FALSE;
+    if(!rc_cue_get_track_num(list_uri, &cue_uri, &trackno)) return FALSE;
+    if(g_regex_match_simple("(.CUE)$", cue_uri, G_REGEX_CASELESS, 0))
+    {
+        if(rc_cue_read_data(cue_uri, RC_CUE_INPUT_URI, &cue_data)>0)
+        {
+            *mmd_new = rc_cue_get_metadata(&cue_data, trackno-1, NULL);
+            if((*mmd_new)->uri!=NULL) g_free((*mmd_new)->uri);
+            (*mmd_new)->uri = g_strdup(cue_data.file);
+            flag = TRUE;
+            *start_time = cue_data.track[trackno-1].time1;
+        }
+        rc_cue_free(&cue_data);
+    }
+    else
+    {
+         cue_mmd = rc_tag_read_metadata(cue_uri);
+         if(cue_mmd!=NULL && cue_mmd->audio_flag && cue_mmd->emb_cue!=NULL)
+         {
+             if(rc_cue_read_data(cue_mmd->emb_cue, RC_CUE_INPUT_EMBEDED,
+                 &cue_data)>0)
+             {
+                 *mmd_new = rc_cue_get_metadata(&cue_data, trackno-1,
+                     cue_mmd);
+                 if((*mmd_new)->uri!=NULL) g_free((*mmd_new)->uri);
+                 (*mmd_new)->uri = g_strdup(cue_uri);
+                 flag = TRUE;
+                 *start_time = cue_data.track[trackno-1].time1;
+             }
+             rc_cue_free(&cue_data);
+         }
+         if(cue_mmd!=NULL) rc_tag_free(cue_mmd);
+    }
+    g_free(cue_uri);
+    return flag;
+}
+
 /**
  * rc_plist_play_by_index:
  * @list_index: the index of the playlist
@@ -586,17 +697,12 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
     gchar *list_uri = NULL;
     gchar *list_title = NULL;
     gchar list_timelen[64];
-    gchar *music_dir = NULL, *lyric_dir = NULL, *image_dir = NULL;
-    gchar *lyric_filename = NULL;
-    gchar *cover_filename = NULL;
     gchar *fpathname = NULL;
     gchar *realname = NULL;
-    RCMusicMetaData *mmd_new = NULL, *cue_mmd = NULL;
+    RCMusicMetaData *mmd_new = NULL;
     gboolean image_flag = FALSE;
-    gchar *cue_uri;
-    RCCueData cue_data;
     gint64 cue_start_time = 0;
-    gboolean cue_flag = TRUE;
+    gboolean cue_flag = FALSE;
     list_store = rc_plist_get_list_store(list_index);
     path = gtk_tree_path_new_from_indices(music_index, -1);
     if(!gtk_tree_model_get_iter(GTK_TREE_MODEL(list_store), &iter, path))
@@ -612,44 +718,8 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
     {
         return FALSE;
     }
-    if(rc_cue_get_track_num(list_uri, &cue_uri, &trackno))
-    {
-        if(g_regex_match_simple("(.CUE)$", cue_uri, G_REGEX_CASELESS, 0))
-        {
-            if(rc_cue_read_data(cue_uri, RC_CUE_INPUT_URI,
-                &cue_data)>0)
-            {
-                mmd_new = rc_cue_get_metadata(&cue_data, trackno-1, NULL);
-                if(mmd_new->uri!=NULL) g_free(mmd_new->uri);
-                mmd_new->uri = g_strdup(cue_data.file);
-                cue_flag = TRUE;
-                cue_start_time = cue_data.track[trackno-1].time1;
-            }
-            rc_cue_free(&cue_data);
-        }
-        else
-        {
-             cue_mmd = rc_tag_read_metadata(cue_uri);
-             if(cue_mmd!=NULL && cue_mmd->audio_flag &&
-                 cue_mmd->emb_cue!=NULL)
-             {
-                 if(rc_cue_read_data(cue_mmd->emb_cue, RC_CUE_INPUT_EMBEDED,
-                     &cue_data)>0)
-                 {
-                     mmd_new = rc_cue_get_metadata(&cue_data, trackno-1,
-                         cue_mmd);
-                     if(mmd_new->uri!=NULL) g_free(mmd_new->uri);
-                     mmd_new->uri = g_strdup(cue_uri);
-                     cue_flag = TRUE;
-                     cue_start_time = cue_data.track[trackno-1].time1;
-                 }
-                 rc_cue_free(&cue_data);
-             }
-             if(cue_mmd!=NULL) rc_tag_free(cue_mmd);
-        }
-        g_free(cue_uri);
-    }
-    else
+    cue_flag = rc_plist_play_load_cue(list_uri, &cue_start_time, &mmd_new);
+    if(!cue_flag)
         mmd_new = rc_tag_read_metadata(list_uri);
     g_free(list_uri);
     if(mmd_new==NULL || !mmd_new->audio_flag)
@@ -669,6 +739,7 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
     if(fpathname!=NULL)
     {
         realname = rc_tag_get_name_from_fpath(fpathname);
+        g_free(fpathname);
     }
     if(mmd_new->title!=NULL && strlen(mmd_new->title)>0)
         list_title = g_strdup(mmd_new->title);
@@ -728,53 +799,13 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
     rc_shell_signal_emit_simple("music-started");
     if(realname!=NULL) g_free(realname);
     /* Search extra info for the music file in local filesystem. */
-    rc_lrc_clean_data();
-    if(fpathname==NULL)
-    {
-        rc_tag_free(mmd_new);
-        return TRUE;
-    }
-    music_dir = g_path_get_dirname(fpathname);
-    g_free(fpathname);
-    lyric_dir = g_build_filename(rc_player_get_conf_dir(), "Lyrics", NULL);
-    image_dir = g_build_filename(rc_player_get_conf_dir(), "AlbumImages",
-        NULL);
-    lyric_filename = rc_tag_search_lyric_file(music_dir, mmd_new);
-    if(lyric_filename==NULL)
-        lyric_filename = rc_tag_search_lyric_file(lyric_dir, mmd_new);
-    g_free(lyric_dir);
-    if(lyric_filename!=NULL && rc_lrc_read_from_file(lyric_filename))
-    {
-        rc_debug_module_print(module_name, "Found lyric file: %s, "
-            "enable the lyric show.", lyric_filename);
-        rc_player_object_signal_emit_simple("lyric-found");
-    }
-    else
-    {
-        rc_debug_module_print(module_name, "Not found lyric file, disable "
-            "the lyric show.");
-        rc_player_object_signal_emit_simple("lyric-not-found");
-    }
-    if(lyric_filename!=NULL) g_free(lyric_filename);
+    rc_plist_play_load_lyric(mmd_new);
     if(!image_flag)
-    {
-        cover_filename = rc_tag_search_album_file(music_dir, mmd_new);
-        if(cover_filename==NULL)
-            cover_filename = rc_tag_search_album_file(image_dir, mmd_new);
-        if(cover_filename!=NULL && rc_gui_set_cover_image_by_file(
-            cover_filename))
-        {
-            rc_debug_module_print(module_name, "Found cover image file: %s.",
-                cover_filename);
-            image_flag = TRUE;
-        }
-    }
-    g_free(image_dir);
+        image_flag = rc_plist_play_load_image(mmd_new);
     if(image_flag)
         rc_player_object_signal_emit_simple("cover-found");
     else
         rc_player_object_signal_emit_simple("cover-not-found");
-    g_free(music_dir);
     rc_tag_free(mmd_new);
     return TRUE;
 }
@@ -791,15 +822,16 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
 gboolean rc_plist_play_by_uri(const gchar *uri)
 {
     gchar *list_title = NULL;
-    gchar *music_dir = NULL, *lyric_dir = NULL, *image_dir = NULL;
-    gchar *lyric_filename = NULL;
-    gchar *cover_filename = NULL;
     gchar *fpathname = NULL;
     gchar *realname = NULL;
     RCMusicMetaData *mmd_new = NULL;
     gboolean image_flag = FALSE;
+    gint64 cue_start_time = 0;
+    gboolean cue_flag = TRUE;
     if(uri==NULL) return FALSE;
-    mmd_new = rc_tag_read_metadata(uri);
+    cue_flag = rc_plist_play_load_cue(uri, &cue_start_time, &mmd_new);
+    if(!cue_flag)
+        mmd_new = rc_tag_read_metadata(uri);
     if(mmd_new==NULL || !mmd_new->audio_flag)
     {
         rc_debug_module_perror(module_name, "Cannot open the music!");
@@ -809,6 +841,7 @@ gboolean rc_plist_play_by_uri(const gchar *uri)
     if(fpathname!=NULL)
     {
         realname = rc_tag_get_name_from_fpath(fpathname);
+        g_free(fpathname);
     }
     if(mmd_new->title!=NULL && strlen(mmd_new->title)>0)
         list_title = g_strdup(mmd_new->title);
@@ -820,6 +853,13 @@ gboolean rc_plist_play_by_uri(const gchar *uri)
             list_title = g_strdup(_("Unknown Title"));
     }
     rc_core_set_uri(mmd_new->uri);
+    if(cue_flag)
+    {
+        rc_core_set_play_segment(cue_start_time,
+            cue_start_time + mmd_new->length);
+    }
+    else
+        rc_core_set_play_segment(-1, -1);
     rc_gui_set_cover_image_by_file(NULL);
     rc_tag_set_playing_metadata(mmd_new);
     if(rc_plist.list1_reference!=NULL)
@@ -843,53 +883,13 @@ gboolean rc_plist_play_by_uri(const gchar *uri)
     rc_shell_signal_emit_simple("music-started");
     if(realname!=NULL) g_free(realname);
     /* Search extra info for the music file in local filesystem. */
-    rc_lrc_clean_data();
-    if(fpathname==NULL)
-    {
-        rc_tag_free(mmd_new);
-        return TRUE;
-    }
-    music_dir = g_path_get_dirname(fpathname);
-    g_free(fpathname);
-    lyric_dir = g_build_filename(rc_player_get_conf_dir(), "Lyrics", NULL);
-    image_dir = g_build_filename(rc_player_get_conf_dir(), "AlbumImages",
-        NULL);
-    lyric_filename = rc_tag_search_lyric_file(music_dir, mmd_new);
-    if(lyric_filename==NULL)
-        lyric_filename = rc_tag_search_lyric_file(lyric_dir, mmd_new);
-    g_free(lyric_dir);
-    if(lyric_filename!=NULL && rc_lrc_read_from_file(lyric_filename))
-    {
-        rc_debug_module_print(module_name, "Found lyric file: %s, "
-            "enable the lyric show.", lyric_filename);
-        rc_player_object_signal_emit_simple("lyric-found");
-    }
-    else
-    {
-        rc_debug_module_print(module_name, "Not found lyric file, disable "
-            "the lyric show.");
-        rc_player_object_signal_emit_simple("lyric-not-found");
-    }
-    if(lyric_filename!=NULL) g_free(lyric_filename);
+    rc_plist_play_load_lyric(mmd_new);
     if(!image_flag)
-    {
-        cover_filename = rc_tag_search_album_file(music_dir, mmd_new);
-        if(cover_filename==NULL)
-            cover_filename = rc_tag_search_album_file(image_dir, mmd_new);
-        if(cover_filename!=NULL && rc_gui_set_cover_image_by_file(
-            cover_filename))
-        {
-            rc_debug_module_print(module_name, "Found cover image file: %s.",
-                cover_filename);
-            image_flag = TRUE;
-        }
-    }
-    g_free(image_dir);
+        image_flag = rc_plist_play_load_image(mmd_new);
     if(image_flag)
         rc_player_object_signal_emit_simple("cover-found");
     else
         rc_player_object_signal_emit_simple("cover-not-found");
-    g_free(music_dir);
     rc_tag_free(mmd_new);
     return TRUE;
 }

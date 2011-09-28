@@ -48,6 +48,7 @@ GType rc_shell_get_type(void);
 RCShell *rc_shell_new();
 gboolean rc_shell_object_init();
 GObject *rc_shell_get_object();
+void rc_shell_set_dbus_switch(gboolean option);
 void rc_shell_signal_emit_simple(const char *name);
 gboolean rc_shell_load_uri(RCShell *shell, const gchar *uri, GError **error);
 gboolean rc_shell_play(RCShell *shell, GError **error);

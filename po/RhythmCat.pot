@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RhythmCat 1.0.0\n"
 "Report-Msgid-Bugs-To: http://code.google.com/p/rhythmcat/issues/list\n"
-"POT-Creation-Date: 2011-09-26 22:14+0800\n"
+"POT-Creation-Date: 2011-09-27 20:51+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,27 +17,27 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/core.c:277 src/core.c:310
+#: src/core.c:257 src/core.c:290
 msgid "Effect plugins are missing!"
 msgstr ""
 
-#: src/core.c:277 src/core.c:310
+#: src/core.c:257 src/core.c:290
 msgid "Some effect plugins are missing, effects are not available now!"
 msgstr ""
 
-#: src/core.c:284
+#: src/core.c:264
 msgid "Critical Error!"
 msgstr ""
 
-#: src/core.c:285
+#: src/core.c:265
 msgid "Failed to make playbin/playbin2 element!"
 msgstr ""
 
-#: src/core.c:331
+#: src/core.c:311
 msgid "Link elements error!"
 msgstr ""
 
-#: src/core.c:331
+#: src/core.c:311
 msgid "Cannot link effect elements, effects are not available now!"
 msgstr ""
 
@@ -412,8 +412,8 @@ msgstr ""
 msgid "%d channels"
 msgstr ""
 
-#: src/gui.c:1405 src/playlist.c:412 src/playlist.c:491 src/playlist.c:680
-#: src/playlist.c:820
+#: src/gui.c:1405 src/playlist.c:412 src/playlist.c:491 src/playlist.c:751
+#: src/playlist.c:853
 msgid "Unknown Title"
 msgstr ""
 
@@ -565,85 +565,89 @@ msgstr ""
 msgid "<b>Site:</b>"
 msgstr ""
 
-#: src/gui_setting.c:90
+#: src/gui_setting.c:92
 msgid "General"
 msgstr ""
 
-#: src/gui_setting.c:92
+#: src/gui_setting.c:94
 msgid "Playlist"
 msgstr ""
 
-#: src/gui_setting.c:94
+#: src/gui_setting.c:96
 msgid "Appearance"
 msgstr ""
 
-#: src/gui_setting.c:180
+#: src/gui_setting.c:191
 msgid "<b>General</b>"
 msgstr ""
 
-#: src/gui_setting.c:185
+#: src/gui_setting.c:196
 msgid "Auto _play on startup"
 msgstr ""
 
-#: src/gui_setting.c:187
+#: src/gui_setting.c:198
 msgid "_Load the last playing position"
 msgstr ""
 
-#: src/gui_setting.c:189
+#: src/gui_setting.c:200
 msgid "Minimize to _tray"
 msgstr ""
 
-#: src/gui_setting.c:191
+#: src/gui_setting.c:202
 msgid "Auto _minimize when startup"
 msgstr ""
 
-#: src/gui_setting.c:193
+#: src/gui_setting.c:204
 msgid "Minimize the window if the _close button is clicked"
 msgstr ""
 
-#: src/gui_setting.c:231
+#: src/gui_setting.c:207
+msgid "Enable _D-Bus controller"
+msgstr ""
+
+#: src/gui_setting.c:255
 msgid "<b>Playlist</b>"
 msgstr ""
 
-#: src/gui_setting.c:236
+#: src/gui_setting.c:260
 msgid "<b>Metadata</b>"
 msgstr ""
 
-#: src/gui_setting.c:240
+#: src/gui_setting.c:264
 msgid "ID3 Tag fallback character encodings"
 msgstr ""
 
-#: src/gui_setting.c:241
+#: src/gui_setting.c:265
 msgid "Lyric text fallback character encodings"
 msgstr ""
 
-#: src/gui_setting.c:243
+#: src/gui_setting.c:267
 msgid "Auto _remove invalid music file"
 msgstr ""
 
-#: src/gui_setting.c:261
+#: src/gui_setting.c:285
 msgid "_Auto encoding detect (use system language settings)"
 msgstr ""
 
-#: src/gui_setting.c:348
+#: src/gui_setting.c:372
 msgid "<b>Theme</b>"
 msgstr ""
 
-#: src/gui_setting.c:349
+#: src/gui_setting.c:373
 msgid "<b>Preview</b>"
 msgstr ""
 
-#: src/gui_setting.c:367
+#: src/gui_setting.c:391
 msgid "None"
 msgstr ""
 
-#: src/gui_setting.c:390
+#: src/gui_setting.c:414
 msgid ""
 "Please notice that you should restart the player if you have disabled the "
 "style or the style does not work properly."
 msgstr ""
 
-#: src/gui_setting.c:442
+#: src/gui_setting.c:466
 msgid "Settings"
 msgstr ""
 

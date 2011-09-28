@@ -79,6 +79,7 @@ void rc_set_init()
     rc_set_set_integer("Player", "RandomMode", 0);
     rc_set_set_double("Player", "Volume", 1.0);
     rc_set_set_integer("Player", "EQStyle", 0);
+    rc_set_set_boolean("Player", "DBusSwitch", TRUE);
     rc_set_set_double_list("Player", "EQ", eq_array, 10);
     rc_set_set_string("Appearance", "StylePath", "");
     rc_set_set_boolean("Metadata", "AutoEncodingDetect", TRUE);

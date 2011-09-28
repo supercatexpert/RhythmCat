@@ -165,9 +165,6 @@ static gboolean rc_core_pad_buffer_probe_cb(GstPad *pad, GstBuffer *buf,
     gpointer data)
 {
     GstMessage *msg;
-    GstStructure* structure;
-    gint channel, depth;
-    gint sz, frames;
     gint64 pos = (gint64)GST_BUFFER_TIMESTAMP(buf);
     gint64 len = rc_core_get_music_length();
     if(rc_core.end_time>0)
@@ -189,23 +186,6 @@ static gboolean rc_core_pad_buffer_probe_cb(GstPad *pad, GstBuffer *buf,
         if(!gst_element_post_message(rc_core.playbin, msg))
             rc_core_stop();   
     }
-    structure = gst_caps_get_structure(GST_BUFFER_CAPS(buf), 0);
-    gst_structure_get_int(structure, "channels", &channel);
-    gst_structure_get_int(structure, "depth", &depth);
-    /* g_printf("Structure: %s\n", gst_structure_to_string(structure)); */
-    /* Calculate the number of samples in the buffer. */
-    sz = GST_BUFFER_SIZE(buf) / (depth / 8);
-    /* Number of frames is the number of samples in each channel. */
-    frames = sz / channel;
-    /*
-    g_printf("Buffer size: %u\n", GST_BUFFER_SIZE(buf));
-    g_printf("Buffer data1: %08X\n", *(unsigned int *)GST_BUFFER_DATA(buf));
-    */
-    /*
-    g_printf("Pos: %u\n", (guint)(GST_BUFFER_TIMESTAMP(buf) / GST_SECOND));
-    g_printf("Dura: %u\n", (guint)(GST_BUFFER_DURATION(buf) / GST_SECOND));
-    */
-    /* The buffer probe callback, may be used in CUE support? */
     return TRUE;
 }
 

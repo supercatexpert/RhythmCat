@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RhythmCat 1.0.0\n"
 "Report-Msgid-Bugs-To: http://code.google.com/p/rhythmcat/issues/list\n"
-"POT-Creation-Date: 2011-09-26 22:14+0800\n"
+"POT-Creation-Date: 2011-09-27 20:51+0800\n"
 "PO-Revision-Date: 2011-04-02 14:54+0800\n"
 "Last-Translator: SuperCat <supercatexpert@gmail.com>\n"
 "Language-Team: SuperCat <supercatexpert@gmail.com>\n"
@@ -17,27 +17,27 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/core.c:277 src/core.c:310
+#: src/core.c:257 src/core.c:290
 msgid "Effect plugins are missing!"
 msgstr "効果プラグインはありません"
 
-#: src/core.c:277 src/core.c:310
+#: src/core.c:257 src/core.c:290
 msgid "Some effect plugins are missing, effects are not available now!"
 msgstr "一部の効果プラグインはありません、サウンドエフェクトは使用不能です。"
 
-#: src/core.c:284
+#: src/core.c:264
 msgid "Critical Error!"
 msgstr "致命的なエラー"
 
-#: src/core.c:285
+#: src/core.c:265
 msgid "Failed to make playbin/playbin2 element!"
 msgstr "playbin/playbin2エレメントの生成に失敗しました。"
 
-#: src/core.c:331
+#: src/core.c:311
 msgid "Link elements error!"
 msgstr "エレメントのリンクのエラー。"
 
-#: src/core.c:331
+#: src/core.c:311
 msgid "Cannot link effect elements, effects are not available now!"
 msgstr ""
 "効果のエレメントをリンクするのことができません、サウンドエフェクトは使用不能"
@@ -414,8 +414,8 @@ msgstr "ステレオ"
 msgid "%d channels"
 msgstr "%d チャネル"
 
-#: src/gui.c:1405 src/playlist.c:412 src/playlist.c:491 src/playlist.c:680
-#: src/playlist.c:820
+#: src/gui.c:1405 src/playlist.c:412 src/playlist.c:491 src/playlist.c:751
+#: src/playlist.c:853
 msgid "Unknown Title"
 msgstr "不明なタイトル"
 
@@ -568,79 +568,83 @@ msgstr "<b>著者:</b>"
 msgid "<b>Site:</b>"
 msgstr "<b>サイト:</b>"
 
-#: src/gui_setting.c:90
+#: src/gui_setting.c:92
 msgid "General"
 msgstr "通常"
 
-#: src/gui_setting.c:92
+#: src/gui_setting.c:94
 msgid "Playlist"
 msgstr "プレーリスト"
 
-#: src/gui_setting.c:94
+#: src/gui_setting.c:96
 msgid "Appearance"
 msgstr "外観"
 
-#: src/gui_setting.c:180
+#: src/gui_setting.c:191
 msgid "<b>General</b>"
 msgstr "<b>通常</b>"
 
-#: src/gui_setting.c:185
+#: src/gui_setting.c:196
 msgid "Auto _play on startup"
 msgstr "起動時に自動再生する(_P)"
 
-#: src/gui_setting.c:187
+#: src/gui_setting.c:198
 msgid "_Load the last playing position"
 msgstr "前回停止した位置から再生する(_L)"
 
-#: src/gui_setting.c:189
+#: src/gui_setting.c:200
 msgid "Minimize to _tray"
 msgstr "トレーに最小化する(_T)"
 
-#: src/gui_setting.c:191
+#: src/gui_setting.c:202
 msgid "Auto _minimize when startup"
 msgstr "起動時に自動的に最小化する(_M)"
 
-#: src/gui_setting.c:193
+#: src/gui_setting.c:204
 msgid "Minimize the window if the _close button is clicked"
 msgstr "ウィンドウを閉じられた場合、ウィンドウを最小化する(_C)"
 
-#: src/gui_setting.c:231
+#: src/gui_setting.c:207
+msgid "Enable _D-Bus controller"
+msgstr "D-Busコントローラーを有効する(_D)"
+
+#: src/gui_setting.c:255
 msgid "<b>Playlist</b>"
 msgstr "<b>プレーリスト</b>"
 
-#: src/gui_setting.c:236
+#: src/gui_setting.c:260
 msgid "<b>Metadata</b>"
 msgstr "<b>メタデータ</b>"
 
-#: src/gui_setting.c:240
+#: src/gui_setting.c:264
 msgid "ID3 Tag fallback character encodings"
 msgstr "ID3タグのフォールバックエンコード"
 
-#: src/gui_setting.c:241
+#: src/gui_setting.c:265
 msgid "Lyric text fallback character encodings"
 msgstr "歌詞のフォールバックエンコード"
 
-#: src/gui_setting.c:243
+#: src/gui_setting.c:267
 msgid "Auto _remove invalid music file"
 msgstr "無効の音楽を自動的に削除する(_R)"
 
-#: src/gui_setting.c:261
+#: src/gui_setting.c:285
 msgid "_Auto encoding detect (use system language settings)"
 msgstr "エンコードを自動的に検出する (システムの言語設定を使う) (_A)"
 
-#: src/gui_setting.c:348
+#: src/gui_setting.c:372
 msgid "<b>Theme</b>"
 msgstr "<b>テーマ</b>"
 
-#: src/gui_setting.c:349
+#: src/gui_setting.c:373
 msgid "<b>Preview</b>"
 msgstr "<b>プレビュー</b>"
 
-#: src/gui_setting.c:367
+#: src/gui_setting.c:391
 msgid "None"
 msgstr "無し"
 
-#: src/gui_setting.c:390
+#: src/gui_setting.c:414
 msgid ""
 "Please notice that you should restart the player if you have disabled the "
 "style or the style does not work properly."
@@ -648,7 +652,7 @@ msgstr ""
 "ヒント: スタイルを無効にする、またはスタイルは動作しないの場合、このプレーヤ"
 "を再起動してください。"
 
-#: src/gui_setting.c:442
+#: src/gui_setting.c:466
 msgid "Settings"
 msgstr "設定"
 

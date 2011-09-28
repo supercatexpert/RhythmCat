@@ -31,6 +31,7 @@
 #include "tag.h"
 #include "lyric.h"
 #include "player_object.h"
+#include "settings.h"
 
 /**
  * SECTION: shell
@@ -54,6 +55,7 @@ enum
 static const gchar *module_name = "Shell";
 static gint object_signals[LAST_SIGNAL] = {0};
 static GObject *shell_object = NULL;
+static gboolean shell_dbus_switch = TRUE;
 
 static void rc_shell_init(RCShell *obj)
 {
@@ -87,6 +89,7 @@ gboolean rc_shell_object_init()
     if(shell_object!=NULL) return TRUE;
     shell_object = G_OBJECT(rc_shell_new());
     if(shell_object==NULL) return FALSE;
+    shell_dbus_switch = rc_set_get_boolean("Player", "DBusSwitch", NULL);
     return TRUE;
 }
 
@@ -95,14 +98,21 @@ GObject *rc_shell_get_object()
     return shell_object;
 }
 
+void rc_shell_set_dbus_switch(gboolean option)
+{
+    shell_dbus_switch = option;
+}
+
 void rc_shell_signal_emit_simple(const char *name)
 {
     if(shell_object==NULL) return;
+    if(!shell_dbus_switch) return;
     g_signal_emit_by_name(shell_object, name, G_TYPE_NONE);
 }
 
 gboolean rc_shell_load_uri(RCShell *shell, const gchar *uri, GError **error)
 {
+    if(!shell_dbus_switch) return FALSE;
     if(uri==NULL) return FALSE;
     rc_debug_module_print(module_name, "Load URI from remote: %s", uri);
     return rc_plist_load_uri_from_remote(uri);
@@ -112,7 +122,9 @@ gboolean rc_shell_play(RCShell *shell, GError **error)
 {
     gint list1_index = 0, list2_index = 0;
     gboolean flag = FALSE;
-    GstState state = rc_core_get_play_state();
+    GstState state;
+    if(!shell_dbus_switch) return FALSE;
+    state = rc_core_get_play_state();
     if(state==GST_STATE_PLAYING) return TRUE;
     rc_plist_play_get_index(&list1_index, &list2_index);
     if(rc_core_get_play_state()!=GST_STATE_PAUSED)
@@ -123,27 +135,32 @@ gboolean rc_shell_play(RCShell *shell, GError **error)
 
 gboolean rc_shell_pause(RCShell *shell, GError **error)
 {
+    if(!shell_dbus_switch) return FALSE;
     return rc_core_pause();
 }
 
 gboolean rc_shell_stop(RCShell *shell, GError **error)
 {
+    if(!shell_dbus_switch) return FALSE;
     rc_core_stop();
     return TRUE;
 }
 
 gboolean rc_shell_prev(RCShell *shell, GError **error)
 {
+    if(!shell_dbus_switch) return FALSE;
     return rc_plist_play_prev();
 }
 
 gboolean rc_shell_next(RCShell *shell, GError **error)
 {
+    if(!shell_dbus_switch) return FALSE;
     return rc_plist_play_next(FALSE);
 }
 
 gboolean rc_shell_get_state(RCShell *shell, gint *state, GError **error)
 {
+    if(!shell_dbus_switch) return FALSE;
     if(state!=NULL)
         *state = rc_core_get_play_state();
     else return FALSE;
@@ -152,6 +169,7 @@ gboolean rc_shell_get_state(RCShell *shell, gint *state, GError **error)
 
 gboolean rc_shell_get_position(RCShell *shell, gint64 *pos, GError **error)
 {
+    if(!shell_dbus_switch) return FALSE;
     if(pos!=NULL)
         *pos = rc_core_get_play_position();
     else return FALSE;
@@ -160,11 +178,13 @@ gboolean rc_shell_get_position(RCShell *shell, gint64 *pos, GError **error)
 
 gboolean rc_shell_set_position(RCShell *shell, gint64 pos, GError **error)
 {
+    if(!shell_dbus_switch) return FALSE;
     return rc_core_set_play_position(pos);
 }
 
 gboolean rc_shell_get_duration(RCShell *shell, gint64 *dura, GError **error)
 {
+    if(!shell_dbus_switch) return FALSE;
     if(dura!=NULL)
         *dura = rc_core_get_music_length();
     else return FALSE;
@@ -173,6 +193,7 @@ gboolean rc_shell_get_duration(RCShell *shell, gint64 *dura, GError **error)
 
 gboolean rc_shell_get_volume(RCShell *shell, gdouble *vol, GError **error)
 {
+    if(!shell_dbus_switch) return FALSE;
     if(vol!=NULL)
         *vol = rc_core_get_volume() / 100;
     else return FALSE;
@@ -181,29 +202,34 @@ gboolean rc_shell_get_volume(RCShell *shell, gdouble *vol, GError **error)
 
 gboolean rc_shell_set_volume(RCShell *shell, gdouble vol, GError **error)
 {
+    if(!shell_dbus_switch) return FALSE;
     return rc_core_set_volume(vol * 100);
 }
 
 gboolean rc_shell_get_repeat_mode(RCShell *shell, gint *repeat, GError **error)
 {
+    if(!shell_dbus_switch) return FALSE;
     rc_plist_get_play_mode(repeat, NULL);
     return TRUE;
 }
 
 gboolean rc_shell_set_repeat_mode(RCShell *shell, gint repeat, GError **error)
 {
+    if(!shell_dbus_switch) return FALSE;
     rc_plist_set_play_mode(repeat, -1);
     return TRUE;
 }
 
 gboolean rc_shell_get_random_mode(RCShell *shell, gint *random, GError **error)
 {
+    if(!shell_dbus_switch) return FALSE;
     rc_plist_get_play_mode(NULL, random);
     return TRUE;
 }
 
 gboolean rc_shell_set_random_mode(RCShell *shell, gint random, GError **error)
 {
+    if(!shell_dbus_switch) return FALSE;
     rc_plist_set_play_mode(-1, random);
     return TRUE;
 }
@@ -214,6 +240,7 @@ gboolean rc_shell_get_current_track(RCShell *shell, gchar **uri,
     guint *channel)
 {
     const RCMusicMetaData *md;
+    if(!shell_dbus_switch) return FALSE;
     md = rc_tag_get_playing_metadata();
     if(uri!=NULL)
     {
@@ -257,6 +284,7 @@ gboolean rc_shell_get_current_lyric_text(RCShell *shell, gchar **text,
     GError **error)
 {
     const RCLyricData *lyric_data;
+    if(!shell_dbus_switch) return FALSE;
     if(text==NULL) return FALSE;
     lyric_data = rc_lrc_get_line_now();
     if(lyric_data!=NULL)
@@ -272,6 +300,7 @@ gboolean rc_shell_set_lyric_file(RCShell *shell, gchar *file,
     GError **error)
 {
     gboolean flag;
+    if(!shell_dbus_switch) return FALSE;
     flag = rc_lrc_read_from_file(file);
     if(flag)
         rc_player_object_signal_emit_simple("lyric-found");

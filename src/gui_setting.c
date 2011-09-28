@@ -28,6 +28,7 @@
 #include "gui_style.h"
 #include "player.h"
 #include "settings.h"
+#include "shell.h"
 
 /**
  * SECTION: gui_setting
@@ -57,6 +58,7 @@ static GtkWidget *setting_pl_enc_entry; /* Tag Encoding */
 static GtkWidget *setting_lr_enc_entry; /* Lyric Encoding */
 static GtkWidget *setting_ap_sty_combobox; /* Style Combobox */
 static GtkWidget *setting_ap_sty_image; /* Style Preview Image */
+static GtkWidget *setting_db_swt_checkbox; /* D-Bus switch */
 static GtkTreeModel *setting_tree_model;
 static gboolean setting_changed = FALSE;
 
@@ -143,6 +145,11 @@ static void rc_gui_setting_apply(GtkButton *widget, gpointer data)
     rc_set_set_boolean("Playlist", "AutoClean",
         gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
         setting_at_cln_checkbox)));
+    #ifndef DISABLE_DBUS
+        rc_set_set_boolean("Player", "DBusSwitch",
+            gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
+            setting_db_swt_checkbox)));
+    #endif
     rc_set_set_boolean("Metadata", "AutoEncodingDetect",
         gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
         setting_at_det_checkbox)));
@@ -168,6 +175,10 @@ static void rc_gui_setting_apply(GtkButton *widget, gpointer data)
         }
         rc_gui_style_refresh();
     }
+    #ifndef DISABLE_DBUS
+        rc_shell_set_dbus_switch(gtk_toggle_button_get_active(
+            GTK_TOGGLE_BUTTON(setting_db_swt_checkbox)));
+    #endif
     rc_gui_close_setting_window(widget, data);
 }
 
@@ -191,6 +202,10 @@ static void rc_gui_create_setting_general()
         _("Auto _minimize when startup"));
     setting_min_cl_checkbox = gtk_check_button_new_with_mnemonic(
         _("Minimize the window if the _close button is clicked"));
+    #ifndef DISABLE_DBUS
+        setting_db_swt_checkbox = gtk_check_button_new_with_mnemonic(
+            _("Enable _D-Bus controller"));
+    #endif
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(setting_at_ply_checkbox),
         rc_set_get_boolean("Player", "AutoPlay", NULL));
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(setting_ld_last_checkbox),
@@ -201,6 +216,11 @@ static void rc_gui_create_setting_general()
         rc_set_get_boolean("Player", "AutoMinimize", NULL));
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(setting_min_cl_checkbox),
         rc_set_get_boolean("Player", "MinimizeWhenClose", NULL));
+    #ifndef DISABLE_DBUS
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(
+            setting_db_swt_checkbox), rc_set_get_boolean("Player",
+            "DBusSwitch", NULL));
+    #endif
     vbox1 = gtk_vbox_new(FALSE, 2);
     gtk_box_pack_start(GTK_BOX(vbox1), setting_at_ply_checkbox,
         FALSE, FALSE, 0);
@@ -212,6 +232,10 @@ static void rc_gui_create_setting_general()
         FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(vbox1), setting_min_cl_checkbox,
         FALSE, FALSE, 0);
+    #ifndef DISABLE_DBUS
+        gtk_box_pack_start(GTK_BOX(vbox1), setting_db_swt_checkbox,
+            FALSE, FALSE, 0);
+    #endif
     gtk_container_add(GTK_CONTAINER(general_frame), vbox1);
     gtk_box_pack_start(GTK_BOX(setting_nb_pages[0]), general_frame,
         FALSE, FALSE, 0);
