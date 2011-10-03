@@ -32,6 +32,10 @@ const <link linkend="RCMusicMetaData"><returnvalue>RCMusicMetaData</returnvalue>
 <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *             <link linkend="rc-tag-find-file">rc_tag_find_file</link>                    (<parameter>const <link linkend="gchar"><type>gchar</type></link> *dirname</parameter>,
                                                          <parameter>const <link linkend="gchar"><type>gchar</type></link> *str</parameter>,
                                                          <parameter>const <link linkend="gchar"><type>gchar</type></link> *extname</parameter>);
+<link linkend="gchar"><returnvalue>gchar</returnvalue></link> *             <link linkend="rc-tag-search-lyric-file">rc_tag_search_lyric_file</link>            (<parameter>const <link linkend="gchar"><type>gchar</type></link> *dirname</parameter>,
+                                                         <parameter>const <link linkend="RCMusicMetaData"><type>RCMusicMetaData</type></link> *mmd</parameter>);
+<link linkend="gchar"><returnvalue>gchar</returnvalue></link> *             <link linkend="rc-tag-search-album-file">rc_tag_search_album_file</link>            (<parameter>const <link linkend="gchar"><type>gchar</type></link> *dirname</parameter>,
+                                                         <parameter>const <link linkend="RCMusicMetaData"><type>RCMusicMetaData</type></link> *mmd</parameter>);
 </synopsis>
 </refsynopsisdiv>
 
@@ -215,6 +219,42 @@ Find a file in the directory by extension name and prefix string.
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>extname</parameter>&#160;:</term>
 <listitem><simpara>the extenstion name of the file
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The file name which is found in the directory, NULL if not found,
+free after usage.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-tag-search-lyric-file" role="function">
+<title>rc_tag_search_lyric_file ()</title>
+<indexterm zone="rc-tag-search-lyric-file"><primary>rc_tag_search_lyric_file</primary></indexterm>
+<programlisting><link linkend="gchar"><returnvalue>gchar</returnvalue></link> *             rc_tag_search_lyric_file            (<parameter>const <link linkend="gchar"><type>gchar</type></link> *dirname</parameter>,
+                                                         <parameter>const <link linkend="RCMusicMetaData"><type>RCMusicMetaData</type></link> *mmd</parameter>);</programlisting>
+<para>
+Search lyric file in given directory by the given metadata.
+</para><variablelist role="params">
+<varlistentry><term><parameter>dirname</parameter>&#160;:</term>
+<listitem><simpara>the directory name
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>mmd</parameter>&#160;:</term>
+<listitem><simpara>the metadata
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The file name which is found in the directory, NULL if not found,
+free after usage.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-tag-search-album-file" role="function">
+<title>rc_tag_search_album_file ()</title>
+<indexterm zone="rc-tag-search-album-file"><primary>rc_tag_search_album_file</primary></indexterm>
+<programlisting><link linkend="gchar"><returnvalue>gchar</returnvalue></link> *             rc_tag_search_album_file            (<parameter>const <link linkend="gchar"><type>gchar</type></link> *dirname</parameter>,
+                                                         <parameter>const <link linkend="RCMusicMetaData"><type>RCMusicMetaData</type></link> *mmd</parameter>);</programlisting>
+<para>
+Search album image file in given directory by the given metadata.
+</para><variablelist role="params">
+<varlistentry><term><parameter>dirname</parameter>&#160;:</term>
+<listitem><simpara>the directory name
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>mmd</parameter>&#160;:</term>
+<listitem><simpara>the metadata
 </simpara></listitem></varlistentry>
 <varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The file name which is found in the directory, NULL if not found,
 free after usage.

@@ -41,6 +41,7 @@ const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       <lin
 const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       <link linkend="rc-player-get-home-dir">rc_player_get_home_dir</link>              ();
 const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       <link linkend="rc-player-get-locale">rc_player_get_locale</link>                ();
 <link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-player-check-supported-format">rc_player_check_supported_format</link>    (<parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>);
+<link linkend="gdouble"><returnvalue>gdouble</returnvalue></link>             <link linkend="rc-player-get-elapsed-time">rc_player_get_elapsed_time</link>          ();
 </synopsis>
 </refsynopsisdiv>
 
@@ -208,6 +209,16 @@ Check whether the given file is supported by the player.
 <listitem><simpara>the filename to check
 </simpara></listitem></varlistentry>
 <varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> Whether the file is supported.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-player-get-elapsed-time" role="function">
+<title>rc_player_get_elapsed_time ()</title>
+<indexterm zone="rc-player-get-elapsed-time"><primary>rc_player_get_elapsed_time</primary></indexterm>
+<programlisting><link linkend="gdouble"><returnvalue>gdouble</returnvalue></link>             rc_player_get_elapsed_time          ();</programlisting>
+<para>
+Get the elapsed time since the player was started.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The elapsed time.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 

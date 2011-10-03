@@ -1,0 +1,17 @@
+GObject
+  GInitiallyUnowned
+    GtkObject
+      GtkWidget
+        RCGuiScrolledText
+        GtkContainer
+  RCPlayer
+  GtkStyle
+  GdkDrawable
+    GdkWindow
+  GdkDragContext
+  GtkTooltip
+  GdkScreen
+GInterface
+  GTypePlugin
+  AtkImplementorIface
+  GtkBuildable

@@ -47,6 +47,8 @@ void rc_gui_open_music_directory();
 void rc_gui_save_playlist_dialog();
 void rc_gui_load_playlist_dialog();
 void rc_gui_save_all_playlists_dialog();
+void rc_gui_bind_lyric_file_dialog();
+void rc_gui_bind_album_file_dialog();
 
 G_END_DECLS
 

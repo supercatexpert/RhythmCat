@@ -21,6 +21,8 @@ RB_PLAYER_GET_CLASS
 
 <SECTION>
 <FILE>plugin</FILE>
+RC_PLUGIN_MAGIC_NUMBER
+RC_PLUGIN_OLD_MAGIC_NUMBER
 RCPluginType
 RCPluginConfData
 RCPluginModuleData
@@ -48,6 +50,8 @@ rc_tag_set_playing_metadata
 rc_tag_get_playing_metadata
 rc_tag_get_name_from_fpath
 rc_tag_find_file
+rc_tag_search_lyric_file
+rc_tag_search_album_file
 </SECTION>
 
 <SECTION>
@@ -136,6 +140,8 @@ rc_gui_open_music_directory
 rc_gui_save_playlist_dialog
 rc_gui_load_playlist_dialog
 rc_gui_save_all_playlists_dialog
+rc_gui_bind_lyric_file_dialog
+rc_gui_bind_album_file_dialog
 </SECTION>
 
 <SECTION>
@@ -259,6 +265,7 @@ rc_gui_get_action_group
 rc_gui_get_main_window
 rc_gui_get_icon_image
 rc_gui_get_no_cover_image
+rc_gui_get_cover_image
 </SECTION>
 
 <SECTION>
@@ -300,6 +307,7 @@ rc_player_get_data_dir
 rc_player_get_home_dir
 rc_player_get_locale
 rc_player_check_supported_format
+rc_player_get_elapsed_time
 </SECTION>
 
 <SECTION>

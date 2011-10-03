@@ -143,8 +143,10 @@ The enum type to show the columns in ListStore1.
     PLIST2_ALBUM = 5,
     PLIST2_LENGTH = 6,
     PLIST2_TRACKNO = 7,
-    PLIST2_EXTRA = 8,
-    PLIST2_LAST = 9
+    PLIST2_LRCFILE = 8,
+    PLIST2_ALBFILE = 9,
+    PLIST2_EXTRA = 10,
+    PLIST2_LAST = 11
 }RCPlist2Column;
 </programlisting>
 <para>
@@ -188,6 +190,16 @@ The enum type to show the columns in ListStore2.
 <varlistentry id="PLIST2-TRACKNO:CAPS" role="constant">
 <term><literal>PLIST2_TRACKNO</literal></term>
 <listitem><simpara>the track number of the music
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="PLIST2-LRCFILE:CAPS" role="constant">
+<term><literal>PLIST2_LRCFILE</literal></term>
+<listitem><simpara>the lyric file binded to the music
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="PLIST2-ALBFILE:CAPS" role="constant">
+<term><literal>PLIST2_ALBFILE</literal></term>
+<listitem><simpara>the album file binded to the music
 </simpara></listitem>
 </varlistentry>
 <varlistentry id="PLIST2-EXTRA:CAPS" role="constant">

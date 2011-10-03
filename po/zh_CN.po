@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RhythmCat 1.0.0\n"
 "Report-Msgid-Bugs-To: http://code.google.com/p/rhythmcat/issues/list\n"
-"POT-Creation-Date: 2011-09-27 20:51+0800\n"
+"POT-Creation-Date: 2011-10-03 23:56+0800\n"
 "PO-Revision-Date: 2011-04-02 21:19+0800\n"
 "Last-Translator: SuperCat <supercatexpert@gmail.com>\n"
 "Language-Team: SuperCat <supercatexpert@gmail.com>\n"
@@ -68,27 +68,27 @@ msgstr "重复播放(_R)"
 msgid "Ran_dom"
 msgstr "随机播放(_D)"
 
-#: src/gui.c:567 src/gui.c:667
+#: src/gui.c:567 src/gui.c:675
 msgid "_New Playlist"
 msgstr "新建播放列表(_N)"
 
-#: src/gui.c:568 src/gui.c:668
+#: src/gui.c:568 src/gui.c:676
 msgid "Create a new playlist"
 msgstr "新建一个播放列表"
 
-#: src/gui.c:571 src/gui.c:683
+#: src/gui.c:571 src/gui.c:691
 msgid "Import _Music"
 msgstr "导入音乐(_M)"
 
-#: src/gui.c:572 src/gui.c:684
+#: src/gui.c:572 src/gui.c:692
 msgid "Import music file"
 msgstr "导入音乐文件"
 
-#: src/gui.c:575 src/gui.c:687
+#: src/gui.c:575 src/gui.c:695
 msgid "Import _Playlist"
 msgstr "导入播放列表(_P)"
 
-#: src/gui.c:576 src/gui.c:688
+#: src/gui.c:576 src/gui.c:696
 msgid "Import music from playlist"
 msgstr "从播放列表中导入音乐"
 
@@ -104,7 +104,7 @@ msgstr "从文件夹中导入全部音乐"
 msgid "_Export Playlist"
 msgstr "导出播放列表(_E)"
 
-#: src/gui.c:584 src/gui.c:680
+#: src/gui.c:584 src/gui.c:688
 msgid "Export music to a playlist"
 msgstr "导出当前播放列表"
 
@@ -116,15 +116,15 @@ msgstr "导出全部播放列表(_A)"
 msgid "Export all playlists to a folder"
 msgstr "导出全部播放列表到一个目录"
 
-#: src/gui.c:591 src/gui.c:731
+#: src/gui.c:591 src/gui.c:747
 msgid "_Quit"
 msgstr "退出(_Q)"
 
-#: src/gui.c:592 src/gui.c:732
+#: src/gui.c:592 src/gui.c:748
 msgid "Quit this player"
 msgstr "退出播放器"
 
-#: src/gui.c:595 src/gui.c:671
+#: src/gui.c:595 src/gui.c:679
 msgid "Re_name Playlist"
 msgstr "重命名播放列表(_N)"
 
@@ -132,303 +132,319 @@ msgstr "重命名播放列表(_N)"
 msgid "Rename the playlist"
 msgstr "重命名播放列表"
 
-#: src/gui.c:599 src/gui.c:675
+#: src/gui.c:599 src/gui.c:683
 msgid "R_emove Playlist"
 msgstr "移除播放列表(_E)"
 
-#: src/gui.c:600 src/gui.c:676
+#: src/gui.c:600 src/gui.c:684
 msgid "Remove the playlist"
 msgstr "移除播放列表"
 
-#: src/gui.c:603
+#: src/gui.c:603 src/gui.c:703
+msgid "Bind _lyric file"
+msgstr "绑定歌词文件(_L)"
+
+#: src/gui.c:604 src/gui.c:704
+msgid "Bind lyric file to the selected music"
+msgstr "将歌词绑定到所选音乐"
+
+#: src/gui.c:607 src/gui.c:707
+msgid "Bind al_bum file"
+msgstr "绑定专辑图片文件(_B)"
+
+#: src/gui.c:608 src/gui.c:708
+msgid "Bind album file to the selected music"
+msgstr "将专辑图片文件绑定到所选音乐"
+
+#: src/gui.c:611
 msgid "_Remove Music"
 msgstr "移除音乐(_R)"
 
-#: src/gui.c:604 src/gui.c:696
+#: src/gui.c:612 src/gui.c:712
 msgid "Remove music from playlist"
 msgstr "从播放列表中移除音乐"
 
-#: src/gui.c:607 src/gui.c:691
+#: src/gui.c:615 src/gui.c:699
 msgid "Select _All"
 msgstr "全选(_A)"
 
-#: src/gui.c:608 src/gui.c:692
+#: src/gui.c:616 src/gui.c:700
 msgid "Select all music in the playlist"
 msgstr "选择播放列表中的全部音乐"
 
-#: src/gui.c:611 src/gui.c:699
+#: src/gui.c:619 src/gui.c:715
 msgid "Re_fresh Playlist"
 msgstr "刷新播放列表(_F)"
 
-#: src/gui.c:612 src/gui.c:700
+#: src/gui.c:620 src/gui.c:716
 msgid "Refresh music information in the playlist"
 msgstr "刷新播放列表中音乐的信息"
 
-#: src/gui.c:615
+#: src/gui.c:623
 msgid "Plu_gins"
 msgstr "插件(_G)"
 
-#: src/gui.c:616
+#: src/gui.c:624
 msgid "Configure plugins"
 msgstr "设置插件"
 
-#: src/gui.c:619
+#: src/gui.c:627
 msgid "_Preferences"
 msgstr "首选项(_P)"
 
-#: src/gui.c:620
+#: src/gui.c:628
 msgid "Configure the player"
 msgstr "配置播放器"
 
-#: src/gui.c:623
+#: src/gui.c:631
 msgid "_Mini Mode"
 msgstr "迷你模式(_M)"
 
-#: src/gui.c:624
+#: src/gui.c:632
 msgid "Enable mini mode"
 msgstr "启用迷你模式"
 
-#: src/gui.c:627 src/gui.c:703
+#: src/gui.c:635 src/gui.c:719
 msgid "_Play/Pause"
 msgstr "播放/暂停(_P)"
 
-#: src/gui.c:628 src/gui.c:704
+#: src/gui.c:636 src/gui.c:720
 msgid "Play or pause the music"
 msgstr "播放或者暂停当前音乐"
 
-#: src/gui.c:631 src/gui.c:707
+#: src/gui.c:639 src/gui.c:723
 msgid "_Stop"
 msgstr "停止(_S)"
 
-#: src/gui.c:632 src/gui.c:708
+#: src/gui.c:640 src/gui.c:724
 msgid "Stop the music"
 msgstr "停止播放"
 
-#: src/gui.c:635 src/gui.c:711
+#: src/gui.c:643 src/gui.c:727
 msgid "Pre_vious"
 msgstr "上一首(_V)"
 
-#: src/gui.c:636 src/gui.c:712
+#: src/gui.c:644 src/gui.c:728
 msgid "Play previous music"
 msgstr "播放上一首音乐"
 
-#: src/gui.c:639 src/gui.c:715
+#: src/gui.c:647 src/gui.c:731
 msgid "_Next"
 msgstr "下一首(_N)"
 
-#: src/gui.c:640 src/gui.c:716
+#: src/gui.c:648 src/gui.c:732
 msgid "Play next music"
 msgstr "播放下一首音乐"
 
-#: src/gui.c:643
+#: src/gui.c:651
 msgid "_Backward"
 msgstr "后退(_B)"
 
-#: src/gui.c:644
+#: src/gui.c:652
 msgid "Backward 5 seconds"
 msgstr "后退5秒"
 
-#: src/gui.c:647
+#: src/gui.c:655
 msgid "_Forward"
 msgstr "前进(_F)"
 
-#: src/gui.c:648
+#: src/gui.c:656
 msgid "Forward 5 seconds"
 msgstr "前进5秒"
 
-#: src/gui.c:651
+#: src/gui.c:659
 msgid "_Increase Volume"
 msgstr "升高音量(_I)"
 
-#: src/gui.c:652
+#: src/gui.c:660
 msgid "Increase the volume"
 msgstr "升高音量"
 
-#: src/gui.c:655
+#: src/gui.c:663
 msgid "_Decrease Volume"
 msgstr "降低音量(_D)"
 
-#: src/gui.c:656
+#: src/gui.c:664
 msgid "Decrease the volume"
 msgstr "降低音量"
 
-#: src/gui.c:659
+#: src/gui.c:667
 msgid "_Contents"
 msgstr "目录(_C)"
 
-#: src/gui.c:660
+#: src/gui.c:668
 msgid "Get help contents"
 msgstr "获取帮助信息"
 
-#: src/gui.c:663 src/gui.c:727
+#: src/gui.c:671 src/gui.c:743
 msgid "_About"
 msgstr "关于(_A)"
 
-#: src/gui.c:664 src/gui.c:728
+#: src/gui.c:672 src/gui.c:744
 msgid "About this player"
 msgstr "关于这个播放器"
 
-#: src/gui.c:672
+#: src/gui.c:680
 msgid "Raname the playlist"
 msgstr "重命名播放列表"
 
-#: src/gui.c:679
+#: src/gui.c:687
 msgid "E_xport Playlist"
 msgstr "导出播放列表(_X)"
 
-#: src/gui.c:695
+#: src/gui.c:711
 msgid "R_emove Music"
 msgstr "移除音乐(_E)"
 
-#: src/gui.c:719
+#: src/gui.c:735
 msgid "S_how Player"
 msgstr "显示播放器(_H)"
 
-#: src/gui.c:720
+#: src/gui.c:736
 msgid "Show the window of player"
 msgstr "显示播放器窗口"
 
-#: src/gui.c:723
+#: src/gui.c:739
 msgid "_Mode Switch"
 msgstr "模式切换(_M)"
 
-#: src/gui.c:724
+#: src/gui.c:740
 msgid "Switch between normal mode and mini mode"
 msgstr "在完整模式和迷你模式间切换"
 
-#: src/gui.c:741
+#: src/gui.c:757
 msgid "_Playlists"
 msgstr "播放列表(_P)"
 
-#: src/gui.c:742
+#: src/gui.c:758
 msgid "Show playlists"
 msgstr "显示播放列表"
 
-#: src/gui.c:744
+#: src/gui.c:760
 msgid "_Equalizer"
 msgstr "均衡器(_E)"
 
-#: src/gui.c:745
+#: src/gui.c:761
 msgid "Show equalizer"
 msgstr "显示均衡器"
 
-#: src/gui.c:753
+#: src/gui.c:769
 msgid "_No Repeat"
 msgstr "不重复(_N)"
 
-#: src/gui.c:754
+#: src/gui.c:770
 msgid "No repeat"
 msgstr "不重复"
 
-#: src/gui.c:756
+#: src/gui.c:772
 msgid "Single _Music Repeat"
 msgstr "单首循环(_M)"
 
-#: src/gui.c:757
+#: src/gui.c:773
 msgid "Repeat playing single music"
 msgstr "重复播放单首音乐"
 
-#: src/gui.c:759
+#: src/gui.c:775
 msgid "Single _Playlist Repeat"
 msgstr "单播放列表循环(_P)"
 
-#: src/gui.c:760
+#: src/gui.c:776
 msgid "Repeat playing single playlist"
 msgstr "重复播放当前播放列表"
 
-#: src/gui.c:762
+#: src/gui.c:778
 msgid "_All Playlists Repeat"
 msgstr "全部播放列表循环(_A)"
 
-#: src/gui.c:763
+#: src/gui.c:779
 msgid "Repeat playing all playlists"
 msgstr "循环播放全部的播放列表"
 
-#: src/gui.c:771
+#: src/gui.c:787
 msgid "_No Random"
 msgstr "不随机(_N)"
 
-#: src/gui.c:772
+#: src/gui.c:788
 msgid "No random playing"
 msgstr "不随机播放"
 
-#: src/gui.c:774
+#: src/gui.c:790
 msgid "_Single Playlist Random"
 msgstr "单播放列表随机播放"
 
-#: src/gui.c:775
+#: src/gui.c:791
 msgid "Random playing a music in the playlist"
 msgstr "随机播放当前播放列表内的音乐"
 
-#: src/gui.c:777
+#: src/gui.c:793
 msgid "_All Playlists Random"
 msgstr "所有播放列表随机播放"
 
-#: src/gui.c:778
+#: src/gui.c:794
 msgid "Random playing a music in all playlists"
 msgstr "随机播放全部播放列表内的音乐"
 
-#: src/gui.c:786 src/gui.c:790
+#: src/gui.c:802 src/gui.c:806
 msgid "Always On _Top"
 msgstr "总在最上"
 
-#: src/gui.c:787 src/gui.c:791
+#: src/gui.c:803 src/gui.c:807
 msgid "Always on top"
 msgstr "总是处于所有窗口的最上方"
 
-#: src/gui.c:1026
+#: src/gui.c:1076
 msgid "Equalizer"
 msgstr "均衡器"
 
-#: src/gui.c:1027
+#: src/gui.c:1077
 msgid "Playlists"
 msgstr "播放列表"
 
-#: src/gui.c:1375
+#: src/gui.c:1425
 msgid "Unknown Format"
 msgstr "未知格式"
 
-#: src/gui.c:1379
+#: src/gui.c:1429
 #, c-format
 msgid "%d kbps "
 msgstr "%d 千比特/秒 "
 
-#: src/gui.c:1383
+#: src/gui.c:1433
 #, c-format
 msgid "%d Hz "
 msgstr "%d Hz "
 
-#: src/gui.c:1390
+#: src/gui.c:1440
 msgid "Mono"
 msgstr "单声道"
 
-#: src/gui.c:1394
+#: src/gui.c:1444
 msgid "Stereo"
 msgstr "立体声"
 
-#: src/gui.c:1398
+#: src/gui.c:1448
 #, c-format
 msgid "%d channels"
 msgstr "%d 声道"
 
-#: src/gui.c:1405 src/playlist.c:412 src/playlist.c:491 src/playlist.c:751
-#: src/playlist.c:853
+#: src/gui.c:1455 src/playlist.c:412 src/playlist.c:491 src/playlist.c:773
+#: src/playlist.c:884
 msgid "Unknown Title"
 msgstr "未知标题"
 
-#: src/gui.c:1409
+#: src/gui.c:1459
 msgid "Unknown Artist"
 msgstr "未知艺术家"
 
-#: src/gui.c:1413
+#: src/gui.c:1463
 msgid "Unknown Album"
 msgstr "未知专辑"
 
-#: src/gui.c:1698
+#: src/gui.c:1748
 msgid "Importing..."
 msgstr "导入中……"
 
-#: src/gui.c:1702
+#: src/gui.c:1752
 msgid "Refreshing..."
 msgstr "正在刷新……"
 
@@ -467,6 +483,46 @@ msgstr "从播放列表载入……"
 #: src/gui_dialog.c:379
 msgid "Select the directory you want to store the playlists..."
 msgstr "选择保存播放列表的目录"
+
+#: src/gui_dialog.c:434
+msgid "Set lyric file binding"
+msgstr "设置歌词文件绑定"
+
+#: src/gui_dialog.c:439
+msgid "_Bind lyric file to the music"
+msgstr "绑定歌词文件到音乐(_B)"
+
+#: src/gui_dialog.c:441
+msgid "_Do not bind lyric file"
+msgstr "不绑定歌词文件(_D)"
+
+#: src/gui_dialog.c:442
+msgid "Select a lyric file"
+msgstr "选择一个歌词文件"
+
+#: src/gui_dialog.c:454
+msgid "Lyric File (*.LRC)"
+msgstr "歌词文件 (*.LRC)"
+
+#: src/gui_dialog.c:519
+msgid "Set album file binding"
+msgstr "设置专辑图片文件绑定"
+
+#: src/gui_dialog.c:524
+msgid "_Bind album image file to the music"
+msgstr "绑定专辑图片文件到音乐(_B)"
+
+#: src/gui_dialog.c:526
+msgid "_Do not bind album file"
+msgstr "不绑定专辑图片文件(_D)"
+
+#: src/gui_dialog.c:527
+msgid "Select a album image file"
+msgstr "选择一个图片文件"
+
+#: src/gui_dialog.c:540
+msgid "Image File (*.JPG, *.BMP, *.PNG)..."
+msgstr "图像文件 (*.JPG, *.BMP, *.PNG)..."
 
 #: src/gui_eq.c:101 src/gui_eq.c:163
 msgid "EQ Setting File(*.EQF, *.eqf)"
@@ -650,18 +706,18 @@ msgstr "请注意: 当您禁用了主题或者主题工作不正常时，可能�
 msgid "Settings"
 msgstr "设定"
 
-#: src/gui_treeview.c:651
+#: src/gui_treeview.c:656
 msgid "Title"
 msgstr "标题"
 
-#: src/gui_treeview.c:653
+#: src/gui_treeview.c:658
 msgid "Length"
 msgstr "长度"
 
-#: src/gui_treeview.c:793
-#, fuzzy, c-format
+#: src/gui_treeview.c:798
+#, c-format
 msgid "Playlist %u"
-msgstr "播放列表 %d"
+msgstr "播放列表 %u"
 
 #: src/player.c:304
 msgid "Enable debug mode"

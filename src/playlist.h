@@ -46,6 +46,8 @@ typedef enum RCPlist1Column {
  * @PLIST2_ALBUM: the album of the music
  * @PLIST2_LENGTH: the time length of the music
  * @PLIST2_TRACKNO: the track number of the music
+ * @PLIST2_LRCFILE: the lyric file binded to the music
+ * @PLIST2_ALBFILE: the album file binded to the music
  * @PLIST2_EXTRA: the extra data of the music
  * @PLIST2_LAST: the column number of list2
  *
@@ -61,8 +63,10 @@ typedef enum RCPlist2Column {
     PLIST2_ALBUM = 5,
     PLIST2_LENGTH = 6,
     PLIST2_TRACKNO = 7,
-    PLIST2_EXTRA = 8,
-    PLIST2_LAST = 9
+    PLIST2_LRCFILE = 8,
+    PLIST2_ALBFILE = 9,
+    PLIST2_EXTRA = 10,
+    PLIST2_LAST = 11
 }RCPlist2Column;
 
 /* Functions */

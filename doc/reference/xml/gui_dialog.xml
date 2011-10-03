@@ -34,6 +34,8 @@
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-save-playlist-dialog">rc_gui_save_playlist_dialog</link>         ();
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-load-playlist-dialog">rc_gui_load_playlist_dialog</link>         ();
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-save-all-playlists-dialog">rc_gui_save_all_playlists_dialog</link>    ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-bind-lyric-file-dialog">rc_gui_bind_lyric_file_dialog</link>       ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-bind-album-file-dialog">rc_gui_bind_album_file_dialog</link>       ();
 </synopsis>
 </refsynopsisdiv>
 
@@ -120,6 +122,20 @@ playlist file.
 <para>
 Show a playlist export dialog for exporting all playlists in the player
 to playlist files, then putting these files into the given directory.
+</para></refsect2>
+<refsect2 id="rc-gui-bind-lyric-file-dialog" role="function">
+<title>rc_gui_bind_lyric_file_dialog ()</title>
+<indexterm zone="rc-gui-bind-lyric-file-dialog"><primary>rc_gui_bind_lyric_file_dialog</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_bind_lyric_file_dialog       ();</programlisting>
+<para>
+Show a dialog to set the lyric binding state of a music item.
+</para></refsect2>
+<refsect2 id="rc-gui-bind-album-file-dialog" role="function">
+<title>rc_gui_bind_album_file_dialog ()</title>
+<indexterm zone="rc-gui-bind-album-file-dialog"><primary>rc_gui_bind_album_file_dialog</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_bind_album_file_dialog       ();</programlisting>
+<para>
+Show a dialog to set the album image binding state of a music item.
 </para></refsect2>
 
 </refsect1>

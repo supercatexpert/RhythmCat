@@ -580,21 +580,26 @@ static gboolean rc_gui_list2_popup_menu(GtkWidget *widget,
 static gboolean rc_gui_list2_button_release_event(GtkWidget *widget,
     GdkEventButton *event, gpointer data)
 {
+    GtkTreePath *path = NULL;
+    GtkTreeViewColumn *col;
+    gint x, y;
     gint *where = g_object_get_data(G_OBJECT(rc_ui->list2_tree_view),
         "multidrag-where");
     if(where && where[0] != -1)
     {
-        const int x = where[0], y = where[1];
+        x = where[0];
+        y = where[1];
         rc_gui_list2_block_selection(widget, TRUE, -1, -1);
         if(x==event->x && y==event->y)
         {
-            GtkTreePath *path = NULL;
-            GtkTreeViewColumn *col;
+
             if(gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(
                 rc_ui->list2_tree_view), event->x, event->y, &path, &col,
-        NULL, NULL))
-             gtk_tree_view_set_cursor(GTK_TREE_VIEW(
+                NULL, NULL))
+            {
+                gtk_tree_view_set_cursor(GTK_TREE_VIEW(
                     rc_ui->list2_tree_view), path, col, FALSE);
+            }
             if(path) gtk_tree_path_free(path);
         }
     }

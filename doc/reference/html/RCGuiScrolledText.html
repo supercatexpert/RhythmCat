@@ -1,0 +1,392 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Scrolledate Text Widget</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="index.html" title="RhythmCat Music Player Development Reference Manual">
+<link rel="up" href="ch02.html" title="Player UI">
+<link rel="prev" href="RhythmCat-Main-UI.html" title="Main UI">
+<link rel="next" href="RhythmCat-Dialogs.html" title="Dialogs">
+<meta name="generator" content="GTK-Doc V1.15 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="RhythmCat-Main-UI.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="ch02.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">RhythmCat Music Player Development Reference Manual</th>
+<td><a accesskey="n" href="RhythmCat-Dialogs.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#RCGuiScrolledText.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#RCGuiScrolledText.description" class="shortcut">Description</a>
+                   | 
+                  <a href="#RCGuiScrolledText.object-hierarchy" class="shortcut">Object Hierarchy</a>
+                   | 
+                  <a href="#RCGuiScrolledText.implemented-interfaces" class="shortcut">Implemented Interfaces</a>
+                   | 
+                  <a href="#RCGuiScrolledText.properties" class="shortcut">Properties</a>
+</td></tr>
+</table>
+<div class="refentry" title="Scrolledate Text Widget">
+<a name="RCGuiScrolledText"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="RCGuiScrolledText.top_of_page"></a>Scrolledate Text Widget</span></h2>
+<p>Scrolledate Text Widget — An scrollable text widget in the player.</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv" title="Synopsis">
+<a name="RCGuiScrolledText.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">
+#include &lt;gui_text.h&gt;
+
+#define             <a class="link" href="RCGuiScrolledText.html#RC-GUI-SCROLLED-TEXT-TYPE:CAPS" title="RC_GUI_SCROLLED_TEXT_TYPE">RC_GUI_SCROLLED_TEXT_TYPE</a>
+#define             <a class="link" href="RCGuiScrolledText.html#RC-GUI-SCROLLED-TEXT:CAPS" title="RC_GUI_SCROLLED_TEXT()">RC_GUI_SCROLLED_TEXT</a>                (obj)
+#define             <a class="link" href="RCGuiScrolledText.html#RC-GUI-SCROLLED-TEXT-CLASS:CAPS" title="RC_GUI_SCROLLED_TEXT_CLASS()">RC_GUI_SCROLLED_TEXT_CLASS</a>          (klass)
+#define             <a class="link" href="RCGuiScrolledText.html#IS-RC-GUI-SCROLLED-TEXT:CAPS" title="IS_RC_GUI_SCROLLED_TEXT()">IS_RC_GUI_SCROLLED_TEXT</a>             (obj)
+#define             <a class="link" href="RCGuiScrolledText.html#IS-RC-GUI-SCROLLED-TEXT-CLASS:CAPS" title="IS_RC_GUI_SCROLLED_TEXT_CLASS()">IS_RC_GUI_SCROLLED_TEXT_CLASS</a>       (klass)
+                    <a class="link" href="RCGuiScrolledText.html#RCGuiScrolledText-struct" title="RCGuiScrolledText">RCGuiScrolledText</a>;
+                    <a class="link" href="RCGuiScrolledText.html#RCGuiScrolledTextClass" title="RCGuiScrolledTextClass">RCGuiScrolledTextClass</a>;
+<a href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"><span class="returnvalue">GType</span></a>               <a class="link" href="RCGuiScrolledText.html#rc-gui-scrolled-text-get-type" title="rc_gui_scrolled_text_get_type ()">rc_gui_scrolled_text_get_type</a>       ();
+<a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="returnvalue">GtkWidget</span></a> *         <a class="link" href="RCGuiScrolledText.html#rc-gui-scrolled-text-new" title="rc_gui_scrolled_text_new ()">rc_gui_scrolled_text_new</a>            ();
+<span class="returnvalue">void</span>                <a class="link" href="RCGuiScrolledText.html#rc-gui-scrolled-text-set-text" title="rc_gui_scrolled_text_set_text ()">rc_gui_scrolled_text_set_text</a>       (<em class="parameter"><code><a class="link" href="RCGuiScrolledText.html" title="Scrolledate Text Widget"><span class="type">RCGuiScrolledText</span></a> *widget</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *text</code></em>);
+const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="RCGuiScrolledText.html#rc-gui-scrolled-text-get-text" title="rc_gui_scrolled_text_get_text ()">rc_gui_scrolled_text_get_text</a>       (<em class="parameter"><code><a class="link" href="RCGuiScrolledText.html" title="Scrolledate Text Widget"><span class="type">RCGuiScrolledText</span></a> *widget</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCGuiScrolledText.html#rc-gui-scrolled-text-set-attributes" title="rc_gui_scrolled_text_set_attributes ()">rc_gui_scrolled_text_set_attributes</a> (<em class="parameter"><code><a class="link" href="RCGuiScrolledText.html" title="Scrolledate Text Widget"><span class="type">RCGuiScrolledText</span></a> *widget</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/pango/pango-Text-Attributes.html#PangoAttrList"><span class="type">PangoAttrList</span></a> *attrs</code></em>);
+<a href="/usr/share/gtk-doc/html/pango/pango-Text-Attributes.html#PangoAttrList"><span class="returnvalue">PangoAttrList</span></a> *     <a class="link" href="RCGuiScrolledText.html#rc-gui-scrolled-text-get-attributes" title="rc_gui_scrolled_text_get_attributes ()">rc_gui_scrolled_text_get_attributes</a> (<em class="parameter"><code><a class="link" href="RCGuiScrolledText.html" title="Scrolledate Text Widget"><span class="type">RCGuiScrolledText</span></a> *widget</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCGuiScrolledText.html#rc-gui-scrolled-text-set-percent" title="rc_gui_scrolled_text_set_percent ()">rc_gui_scrolled_text_set_percent</a>    (<em class="parameter"><code><a class="link" href="RCGuiScrolledText.html" title="Scrolledate Text Widget"><span class="type">RCGuiScrolledText</span></a> *widget</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> percent</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"><span class="returnvalue">gdouble</span></a>             <a class="link" href="RCGuiScrolledText.html#rc-gui-scrolled-text-get-percent" title="rc_gui_scrolled_text_get_percent ()">rc_gui_scrolled_text_get_percent</a>    (<em class="parameter"><code><a class="link" href="RCGuiScrolledText.html" title="Scrolledate Text Widget"><span class="type">RCGuiScrolledText</span></a> *widget</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="RCGuiScrolledText.html#rc-gui-scrolled-text-get-width" title="rc_gui_scrolled_text_get_width ()">rc_gui_scrolled_text_get_width</a>      (<em class="parameter"><code><a class="link" href="RCGuiScrolledText.html" title="Scrolledate Text Widget"><span class="type">RCGuiScrolledText</span></a> *widget</code></em>);
+</pre>
+</div>
+<div class="refsect1" title="Object Hierarchy">
+<a name="RCGuiScrolledText.object-hierarchy"></a><h2>Object Hierarchy</h2>
+<pre class="synopsis">
+  <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+   +----<a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+         +----<a href="/usr/share/gtk-doc/html/gtk/GtkObject.html">GtkObject</a>
+               +----<a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html">GtkWidget</a>
+                     +----RCGuiScrolledText
+</pre>
+</div>
+<div class="refsect1" title="Implemented Interfaces">
+<a name="RCGuiScrolledText.implemented-interfaces"></a><h2>Implemented Interfaces</h2>
+<p>
+RCGuiScrolledText implements
+ AtkImplementorIface and  <a href="/usr/share/gtk-doc/html/gtk/gtk-gtkbuildable.html#GtkBuildable">GtkBuildable</a>.</p>
+</div>
+<div class="refsect1" title="Properties">
+<a name="RCGuiScrolledText.properties"></a><h2>Properties</h2>
+<pre class="synopsis">
+  "<a class="link" href="RCGuiScrolledText.html#RCGuiScrolledText--attributes" title='The "attributes" property'>attributes</a>"               <a href="/usr/share/gtk-doc/html/pango/pango-Text-Attributes.html#PangoAttrList"><span class="type">PangoAttrList</span></a>*        : Read / Write
+  "<a class="link" href="RCGuiScrolledText.html#RCGuiScrolledText--percent" title='The "percent" property'>percent</a>"                  <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a>               : Read / Write
+  "<a class="link" href="RCGuiScrolledText.html#RCGuiScrolledText--text" title='The "text" property'>text</a>"                     <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read / Write
+</pre>
+</div>
+<div class="refsect1" title="Description">
+<a name="RCGuiScrolledText.description"></a><h2>Description</h2>
+<p>
+An scrolledate text widget in the player.
+</p>
+</div>
+<div class="refsect1" title="Details">
+<a name="RCGuiScrolledText.details"></a><h2>Details</h2>
+<div class="refsect2" title="RC_GUI_SCROLLED_TEXT_TYPE">
+<a name="RC-GUI-SCROLLED-TEXT-TYPE:CAPS"></a><h3>RC_GUI_SCROLLED_TEXT_TYPE</h3>
+<pre class="programlisting">#define RC_GUI_SCROLLED_TEXT_TYPE (rc_gui_scrolled_text_get_type())
+</pre>
+</div>
+<hr>
+<div class="refsect2" title="RC_GUI_SCROLLED_TEXT()">
+<a name="RC-GUI-SCROLLED-TEXT:CAPS"></a><h3>RC_GUI_SCROLLED_TEXT()</h3>
+<pre class="programlisting">#define             RC_GUI_SCROLLED_TEXT(obj)</pre>
+</div>
+<hr>
+<div class="refsect2" title="RC_GUI_SCROLLED_TEXT_CLASS()">
+<a name="RC-GUI-SCROLLED-TEXT-CLASS:CAPS"></a><h3>RC_GUI_SCROLLED_TEXT_CLASS()</h3>
+<pre class="programlisting">#define             RC_GUI_SCROLLED_TEXT_CLASS(klass)</pre>
+</div>
+<hr>
+<div class="refsect2" title="IS_RC_GUI_SCROLLED_TEXT()">
+<a name="IS-RC-GUI-SCROLLED-TEXT:CAPS"></a><h3>IS_RC_GUI_SCROLLED_TEXT()</h3>
+<pre class="programlisting">#define             IS_RC_GUI_SCROLLED_TEXT(obj)</pre>
+</div>
+<hr>
+<div class="refsect2" title="IS_RC_GUI_SCROLLED_TEXT_CLASS()">
+<a name="IS-RC-GUI-SCROLLED-TEXT-CLASS:CAPS"></a><h3>IS_RC_GUI_SCROLLED_TEXT_CLASS()</h3>
+<pre class="programlisting">#define             IS_RC_GUI_SCROLLED_TEXT_CLASS(klass)</pre>
+</div>
+<hr>
+<div class="refsect2" title="RCGuiScrolledText">
+<a name="RCGuiScrolledText-struct"></a><h3>RCGuiScrolledText</h3>
+<pre class="programlisting">typedef struct _RCGuiScrolledText RCGuiScrolledText;</pre>
+<p>
+The structure used in object.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="RCGuiScrolledTextClass">
+<a name="RCGuiScrolledTextClass"></a><h3>RCGuiScrolledTextClass</h3>
+<pre class="programlisting">typedef struct {
+    GtkWidgetClass parent_class;
+} RCGuiScrolledTextClass;
+</pre>
+<p>
+The class data.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html#GtkWidgetClass"><span class="type">GtkWidgetClass</span></a> <em class="structfield"><code><a name="RCGuiScrolledTextClass.parent-class"></a>parent_class</code></em>;</span></p></td>
+<td>parent widget class
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_scrolled_text_get_type ()">
+<a name="rc-gui-scrolled-text-get-type"></a><h3>rc_gui_scrolled_text_get_type ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"><span class="returnvalue">GType</span></a>               rc_gui_scrolled_text_get_type       ();</pre>
+<p>
+Return the <a href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"><span class="type">GType</span></a> of the <a class="link" href="RCGuiScrolledText.html" title="Scrolledate Text Widget"><span class="type">RCGuiScrolledText</span></a> class.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The <a href="/usr/share/gtk-doc/html/gobject/gobject-Type-Information.html#GType"><span class="type">GType</span></a> of the <a class="link" href="RCGuiScrolledText.html" title="Scrolledate Text Widget"><span class="type">RCGuiScrolledText</span></a> class.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_scrolled_text_new ()">
+<a name="rc-gui-scrolled-text-new"></a><h3>rc_gui_scrolled_text_new ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="returnvalue">GtkWidget</span></a> *         rc_gui_scrolled_text_new            ();</pre>
+<p>
+Return a new <a class="link" href="RCGuiScrolledText.html" title="Scrolledate Text Widget"><span class="type">RCGuiScrolledText</span></a> widget.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> A new <a class="link" href="RCGuiScrolledText.html" title="Scrolledate Text Widget"><span class="type">RCGuiScrolledText</span></a> widget.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_scrolled_text_set_text ()">
+<a name="rc-gui-scrolled-text-set-text"></a><h3>rc_gui_scrolled_text_set_text ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_scrolled_text_set_text       (<em class="parameter"><code><a class="link" href="RCGuiScrolledText.html" title="Scrolledate Text Widget"><span class="type">RCGuiScrolledText</span></a> *widget</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *text</code></em>);</pre>
+<p>
+Set the text to show in the widget.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>widget</code></em> :</span></p></td>
+<td>the RCGuiScrolledText widget to set
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>text</code></em> :</span></p></td>
+<td>the text to set
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_scrolled_text_get_text ()">
+<a name="rc-gui-scrolled-text-get-text"></a><h3>rc_gui_scrolled_text_get_text ()</h3>
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       rc_gui_scrolled_text_get_text       (<em class="parameter"><code><a class="link" href="RCGuiScrolledText.html" title="Scrolledate Text Widget"><span class="type">RCGuiScrolledText</span></a> *widget</code></em>);</pre>
+<p>
+Return the text in the widget.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>widget</code></em> :</span></p></td>
+<td>the RCGuiScrolledText widget
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The text in the widget, do not modify or free it.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_scrolled_text_set_attributes ()">
+<a name="rc-gui-scrolled-text-set-attributes"></a><h3>rc_gui_scrolled_text_set_attributes ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_scrolled_text_set_attributes (<em class="parameter"><code><a class="link" href="RCGuiScrolledText.html" title="Scrolledate Text Widget"><span class="type">RCGuiScrolledText</span></a> *widget</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/pango/pango-Text-Attributes.html#PangoAttrList"><span class="type">PangoAttrList</span></a> *attrs</code></em>);</pre>
+<p>
+Sets a PangoAttrList; the attributes in the list are applied to the
+text in the widget.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>widget</code></em> :</span></p></td>
+<td>the RCGuiScrolledText widget
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>attrs</code></em> :</span></p></td>
+<td>the PangoAttrList to set
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_scrolled_text_get_attributes ()">
+<a name="rc-gui-scrolled-text-get-attributes"></a><h3>rc_gui_scrolled_text_get_attributes ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/pango/pango-Text-Attributes.html#PangoAttrList"><span class="returnvalue">PangoAttrList</span></a> *     rc_gui_scrolled_text_get_attributes (<em class="parameter"><code><a class="link" href="RCGuiScrolledText.html" title="Scrolledate Text Widget"><span class="type">RCGuiScrolledText</span></a> *widget</code></em>);</pre>
+<p>
+Get the attribute list that was set on the widget.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>widget</code></em> :</span></p></td>
+<td>the RCGuiScrolledText widget
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The attribute list, or NULL if none was set.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_scrolled_text_set_percent ()">
+<a name="rc-gui-scrolled-text-set-percent"></a><h3>rc_gui_scrolled_text_set_percent ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_scrolled_text_set_percent    (<em class="parameter"><code><a class="link" href="RCGuiScrolledText.html" title="Scrolledate Text Widget"><span class="type">RCGuiScrolledText</span></a> *widget</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> percent</code></em>);</pre>
+<p>
+Set the horizon percentage of the text show in the widget, if the text in
+the widget is longer than the width of the widget.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>widget</code></em> :</span></p></td>
+<td>the RCGuiScrolledText widget to set
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>percent</code></em> :</span></p></td>
+<td>the horizon percentage of the text show in the widget, must
+be between 0.0 and 1.0
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_scrolled_text_get_percent ()">
+<a name="rc-gui-scrolled-text-get-percent"></a><h3>rc_gui_scrolled_text_get_percent ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"><span class="returnvalue">gdouble</span></a>             rc_gui_scrolled_text_get_percent    (<em class="parameter"><code><a class="link" href="RCGuiScrolledText.html" title="Scrolledate Text Widget"><span class="type">RCGuiScrolledText</span></a> *widget</code></em>);</pre>
+<p>
+Get the horizon percentage of the text show in the widget.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>widget</code></em> :</span></p></td>
+<td>the RCGuiScrolledText widget
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The horizon percentage of the text show in the widget.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_scrolled_text_get_width ()">
+<a name="rc-gui-scrolled-text-get-width"></a><h3>rc_gui_scrolled_text_get_width ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                rc_gui_scrolled_text_get_width      (<em class="parameter"><code><a class="link" href="RCGuiScrolledText.html" title="Scrolledate Text Widget"><span class="type">RCGuiScrolledText</span></a> *widget</code></em>);</pre>
+<p>
+Get the text width in the widget.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>widget</code></em> :</span></p></td>
+<td>the RCGuiScrolledText widget
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The text width in the widget.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<div class="refsect1" title="Property Details">
+<a name="RCGuiScrolledText.property-details"></a><h2>Property Details</h2>
+<div class="refsect2" title='The "attributes" property'>
+<a name="RCGuiScrolledText--attributes"></a><h3>The <code class="literal">"attributes"</code> property</h3>
+<pre class="programlisting">  "attributes"               <a href="/usr/share/gtk-doc/html/pango/pango-Text-Attributes.html#PangoAttrList"><span class="type">PangoAttrList</span></a>*        : Read / Write</pre>
+<p>
+Sets the text of the widget to show.
+</p>
+</div>
+<hr>
+<div class="refsect2" title='The "percent" property'>
+<a name="RCGuiScrolledText--percent"></a><h3>The <code class="literal">"percent"</code> property</h3>
+<pre class="programlisting">  "percent"                  <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a>               : Read / Write</pre>
+<p>
+Sets the percentage of text movement.
+</p>
+<p>Allowed values: [0,1]</p>
+<p>Default value: 0</p>
+</div>
+<hr>
+<div class="refsect2" title='The "text" property'>
+<a name="RCGuiScrolledText--text"></a><h3>The <code class="literal">"text"</code> property</h3>
+<pre class="programlisting">  "text"                     <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>*                : Read / Write</pre>
+<p>
+Sets the text of the widget to show.
+</p>
+<p>Default value: NULL</p>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.15</div>
+</body>
+</html>

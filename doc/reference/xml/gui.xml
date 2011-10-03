@@ -55,6 +55,7 @@
 <link linkend="GtkWidget"><returnvalue>GtkWidget</returnvalue></link> *         <link linkend="rc-gui-get-main-window">rc_gui_get_main_window</link>              ();
 const <link linkend="GdkPixbuf"><returnvalue>GdkPixbuf</returnvalue></link> *   <link linkend="rc-gui-get-icon-image">rc_gui_get_icon_image</link>               ();
 const <link linkend="GdkPixbuf"><returnvalue>GdkPixbuf</returnvalue></link> *   <link linkend="rc-gui-get-no-cover-image">rc_gui_get_no_cover_image</link>           ();
+const <link linkend="GdkPixbuf"><returnvalue>GdkPixbuf</returnvalue></link> *   <link linkend="rc-gui-get-cover-image">rc_gui_get_cover_image</link>              ();
 </synopsis>
 </refsynopsisdiv>
 
@@ -635,6 +636,16 @@ Return the icon image.
 Return the image shows when the cover image is not found.
 </para><variablelist role="params">
 <varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The images shows when the cover image is not found.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-gui-get-cover-image" role="function">
+<title>rc_gui_get_cover_image ()</title>
+<indexterm zone="rc-gui-get-cover-image"><primary>rc_gui_get_cover_image</primary></indexterm>
+<programlisting>const <link linkend="GdkPixbuf"><returnvalue>GdkPixbuf</returnvalue></link> *   rc_gui_get_cover_image              ();</programlisting>
+<para>
+Return the image shows in the cover image widget.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> The image shows in the cover image widget.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 

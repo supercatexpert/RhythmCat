@@ -11,7 +11,7 @@ Developing platform:
 Operating System: Debian Squeeze/6.0 for AMD64
 Compiler: gcc 4.4.5
 Programming Language: C
-Dependent Libraries: GTK+-2.0(>=2.20) Gstreamer-0.10 
+Dependent Libraries: GTK+-2.0(>=2.14) Gstreamer-0.10 
                      Gstreamer-plugins-base-0.10 Gstreamer-plugins-good-0.10
 
 Developing stage:
@@ -77,7 +77,7 @@ And compile the plugins by command "make -f Makefile3" instead.
 
 This program is just in alpha stage. We provide no WARRANTY. 
 If you found any bugs, please send an e-mail to me, and report the bugs you
-found. My e-mail: supercatexpert@gmail.com. Or send the Issue on the 
+found. My e-mail: supercatexpert@gmail.com . Or send the Issue on the 
 Google Code project page.
 
 中文说明
@@ -92,7 +92,7 @@ RhythmCat 是一个可以在Linux平台下工作的音乐播放器。它不只�
 操作系统: Debian Squeeze/6.0 for AMD64
 编译器: gcc 4.4.5
 编程语言: C
-依赖的库: GTK+-2.0(>=2.20) Gstreamer-0.10 Gstreamer-plugins-base-0.10
+依赖的库: GTK+-2.0(>=2.14) Gstreamer-0.10 Gstreamer-plugins-base-0.10
          Gstreamer-plugins-good-0.10
 开发阶段:
 
@@ -152,5 +152,5 @@ sudo make install
 
 这个程序尚处于Alpha开发阶段，我们不为该程序提供任何保证。
 如果您发现了本程序的任何一个BUG，请给我发送E-Mail，并且汇报您发现的BUG。我的E-Mail:
-supercatexpert@gmail.com。或者您可以在Google Code页面上发布Issue。
+supercatexpert@gmail.com 。或者您可以在Google Code页面上发布Issue。
 

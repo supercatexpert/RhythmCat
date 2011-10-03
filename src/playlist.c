@@ -565,7 +565,8 @@ void rc_plist_list2_mark_invalid_item(GtkTreeRowReference *reference)
         -1);    
 }
 
-static inline gboolean rc_plist_play_load_lyric(const RCMusicMetaData *mmd_new)
+static inline gboolean rc_plist_play_load_lyric(const RCMusicMetaData *mmd_new,
+    const gchar *bind_file)
 {
     gchar *fpathname = NULL;
     gchar *music_dir = NULL;
@@ -579,7 +580,16 @@ static inline gboolean rc_plist_play_load_lyric(const RCMusicMetaData *mmd_new)
     music_dir = g_path_get_dirname(fpathname);
     g_free(fpathname);
     lyric_dir = g_build_filename(rc_player_get_conf_dir(), "Lyrics", NULL);
-    lyric_filename = rc_tag_search_lyric_file(music_dir, mmd_new);
+    if(bind_file!=NULL)
+    {
+        if(g_file_test(bind_file, G_FILE_TEST_EXISTS |
+            G_FILE_TEST_IS_REGULAR))
+        {
+            lyric_filename = g_strdup(bind_file);
+        }
+    }
+    if(lyric_filename==NULL)
+        lyric_filename = rc_tag_search_lyric_file(music_dir, mmd_new);
     if(lyric_filename==NULL)
         lyric_filename = rc_tag_search_lyric_file(lyric_dir, mmd_new);
     g_free(lyric_dir);
@@ -601,7 +611,8 @@ static inline gboolean rc_plist_play_load_lyric(const RCMusicMetaData *mmd_new)
     return flag;
 }
 
-static inline gboolean rc_plist_play_load_image(const RCMusicMetaData *mmd_new)
+static inline gboolean rc_plist_play_load_image(const RCMusicMetaData *mmd_new,
+    const gchar *bind_file)
 {
     gboolean flag = FALSE;
     gchar *image_dir = NULL;
@@ -615,7 +626,16 @@ static inline gboolean rc_plist_play_load_image(const RCMusicMetaData *mmd_new)
     g_free(fpathname);
     image_dir = g_build_filename(rc_player_get_conf_dir(), "AlbumImages",
         NULL);
-    cover_filename = rc_tag_search_album_file(music_dir, mmd_new);
+    if(bind_file!=NULL)
+    {
+        if(g_file_test(bind_file, G_FILE_TEST_EXISTS |
+            G_FILE_TEST_IS_REGULAR))
+        {
+            cover_filename = g_strdup(bind_file);
+        }
+    }
+    if(cover_filename==NULL)
+        cover_filename = rc_tag_search_album_file(music_dir, mmd_new);
     if(cover_filename==NULL)
         cover_filename = rc_tag_search_album_file(image_dir, mmd_new);
     if(cover_filename!=NULL && rc_gui_set_cover_image_by_file(
@@ -696,6 +716,8 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
     gint trackno = -1;
     gchar *list_uri = NULL;
     gchar *list_title = NULL;
+    gchar *list_lyric_file = NULL;
+    gchar *list_album_file = NULL;
     gchar list_timelen[64];
     gchar *fpathname = NULL;
     gchar *realname = NULL;
@@ -799,14 +821,23 @@ gboolean rc_plist_play_by_index(gint list_index, gint music_index)
     rc_shell_signal_emit_simple("music-started");
     if(realname!=NULL) g_free(realname);
     /* Search extra info for the music file in local filesystem. */
-    rc_plist_play_load_lyric(mmd_new);
+    path = gtk_tree_path_new_from_indices(music_index, -1);
+    if(gtk_tree_model_get_iter(GTK_TREE_MODEL(list_store), &iter, path))
+    {
+        gtk_tree_model_get(GTK_TREE_MODEL(list_store), &iter, PLIST2_LRCFILE,
+            &list_lyric_file, PLIST2_ALBFILE, &list_album_file, -1);
+    }
+    gtk_tree_path_free(path);
+    rc_plist_play_load_lyric(mmd_new, list_lyric_file);
     if(!image_flag)
-        image_flag = rc_plist_play_load_image(mmd_new);
+        image_flag = rc_plist_play_load_image(mmd_new, list_album_file);
     if(image_flag)
         rc_player_object_signal_emit_simple("cover-found");
     else
         rc_player_object_signal_emit_simple("cover-not-found");
     rc_tag_free(mmd_new);
+    if(list_lyric_file!=NULL) g_free(list_lyric_file);
+    if(list_album_file!=NULL) g_free(list_album_file);
     return TRUE;
 }
 
@@ -883,9 +914,9 @@ gboolean rc_plist_play_by_uri(const gchar *uri)
     rc_shell_signal_emit_simple("music-started");
     if(realname!=NULL) g_free(realname);
     /* Search extra info for the music file in local filesystem. */
-    rc_plist_play_load_lyric(mmd_new);
+    rc_plist_play_load_lyric(mmd_new, NULL);
     if(!image_flag)
-        image_flag = rc_plist_play_load_image(mmd_new);
+        image_flag = rc_plist_play_load_image(mmd_new, NULL);
     if(image_flag)
         rc_player_object_signal_emit_simple("cover-found");
     else
@@ -1202,7 +1233,8 @@ gboolean rc_plist_insert_list(const gchar *listname, gint index)
     GtkTreeIter iter;
     pl_store = gtk_list_store_new(PLIST2_LAST, G_TYPE_STRING, G_TYPE_STRING,
         G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING,
-        G_TYPE_STRING, G_TYPE_INT, G_TYPE_STRING);
+        G_TYPE_STRING, G_TYPE_INT, G_TYPE_STRING, G_TYPE_STRING,
+        G_TYPE_STRING);
     if(index>=0)
         gtk_list_store_insert(rc_plist.list_store, &iter, index);
     else
@@ -1400,6 +1432,10 @@ gboolean rc_plist_load_playlist_setting()
             gtk_list_store_set(pl_store, &iter, PLIST2_TRACKNO, trackno, -1);
 
         }
+        else if(strncmp(line, "LF=", 3)==0)
+            gtk_list_store_set(pl_store, &iter, PLIST2_LRCFILE, line+3, -1);
+        else if(strncmp(line, "AF=", 3)==0)
+            gtk_list_store_set(pl_store, &iter, PLIST2_ALBFILE, line+3, -1);
         else if(strncmp(line, "EX=", 3)==0)
             gtk_list_store_set(pl_store, &iter, PLIST2_EXTRA, line+3, -1);
         else if(strncmp(line, "LI=", 3)==0) /* list (name) */
@@ -1442,7 +1478,7 @@ gboolean rc_plist_save_playlist_setting()
     guint listnum = 0, musicnum = 0;
     gint list1_index, list2_index;
     gchar *list_uri, *list_title, *list_artist, *list_album, *list_time;
-    gchar *list_ori_title, *list_extra;
+    gchar *list_ori_title, *list_lrcfile, *list_albfile, *list_extra;
     gchar *plist_set_file_full_path;
     gint list_trackno = -1;    
     if(list_length<1) return FALSE;
@@ -1473,7 +1509,9 @@ gboolean rc_plist_save_playlist_setting()
                         PLIST2_ORITITLE, &list_ori_title, PLIST2_ARTIST,
                         &list_artist, PLIST2_ALBUM, &list_album,
                         PLIST2_LENGTH, &list_time, PLIST2_TRACKNO,
-                        &list_trackno, PLIST2_EXTRA, &list_extra, -1);
+                        &list_trackno, PLIST2_LRCFILE, &list_lrcfile,
+                        PLIST2_ALBFILE, &list_albfile, PLIST2_EXTRA,
+                        &list_extra, -1);
                     sscanf(list_time, "%d:%d", &time_min, &time_sec);
                     time_length = (time_min * 60 + time_sec) * 100;
                     fprintf(fp, "UR=%s\n", list_uri);
@@ -1490,7 +1528,11 @@ gboolean rc_plist_save_playlist_setting()
                         fprintf(fp, "AL=\n");
                     fprintf(fp, "TL=%lld\n", time_length);
                     fprintf(fp, "TN=%d\n", list_trackno);
-                    if(list_extra!=NULL)
+                    if(list_lrcfile!=NULL && strlen(list_lrcfile)>0)
+                        fprintf(fp, "LF=%s\n", list_lrcfile);
+                    if(list_albfile!=NULL && strlen(list_albfile)>0)
+                        fprintf(fp, "LF=%s\n", list_albfile);
+                    if(list_extra!=NULL && strlen(list_extra)>0)
                         fprintf(fp, "EX=%s\n", list_extra);
                     else
                         fprintf(fp, "EX=\n");
@@ -1500,6 +1542,8 @@ gboolean rc_plist_save_playlist_setting()
                     if(list_album!=NULL) g_free(list_album);
                     if(list_time!=NULL) g_free(list_time);
                     if(list_ori_title!=NULL) g_free(list_ori_title);
+                    if(list_lrcfile!=NULL) g_free(list_lrcfile);
+                    if(list_albfile!=NULL) g_free(list_albfile);
                     if(list_extra!=NULL) g_free(list_extra);
                     musicnum++;
                 }

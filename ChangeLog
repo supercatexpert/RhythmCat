@@ -92,4 +92,6 @@
         * Fixed some bugs, can be compiled on Win32 now.
         * Enhanced lyric and cover image file search functions.
 
+2011-10-03  SuperCat    <supercatexpert@gmail.com>
+        * Added lyric and album image file binding.
 

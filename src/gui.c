@@ -599,6 +599,14 @@ static GtkActionEntry rc_menu_entries[] =
       N_("R_emove Playlist"), NULL,
       N_("Remove the playlist"),
       G_CALLBACK(rc_gui_list1_delete_list) },
+    { "EditBindLyric", GTK_STOCK_REMOVE,
+      N_("Bind _lyric file"), NULL,
+      N_("Bind lyric file to the selected music"),
+      G_CALLBACK(rc_gui_bind_lyric_file_dialog) },
+    { "EditBindAlbum", GTK_STOCK_REMOVE,
+      N_("Bind al_bum file"), NULL,
+      N_("Bind album file to the selected music"),
+      G_CALLBACK(rc_gui_bind_album_file_dialog) },
     { "EditRemoveMusic", GTK_STOCK_DELETE,
       N_("_Remove Music"), NULL,
       N_("Remove music from playlist"),
@@ -691,6 +699,14 @@ static GtkActionEntry rc_menu_entries[] =
       N_("Select _All"), NULL,
       N_("Select all music in the playlist"),
       G_CALLBACK(rc_gui_list2_select_all) },
+    { "List2BindLyric", GTK_STOCK_REMOVE,
+      N_("Bind _lyric file"), NULL,
+      N_("Bind lyric file to the selected music"),
+      G_CALLBACK(rc_gui_bind_lyric_file_dialog) },
+    { "List2BindAlbum", GTK_STOCK_REMOVE,
+      N_("Bind al_bum file"), NULL,
+      N_("Bind album file to the selected music"),
+      G_CALLBACK(rc_gui_bind_album_file_dialog) },
     { "List2RemoveMusic", GTK_STOCK_REMOVE,
       N_("R_emove Music"), NULL,
       N_("Remove music from playlist"),
@@ -813,6 +829,8 @@ static const gchar *rc_ui_info =
     "      <menuitem action='EditRenameList'/>"
     "      <menuitem action='EditRemoveList'/>"
     "      <separator name='EditSep1'/>"
+    "      <menuitem action='EditBindLyric'/>"
+    "      <menuitem action='EditBindAlbum'/>"
     "      <menuitem action='EditRemoveMusic'/>"
     "      <menuitem action='EditSelectAll'/>"
     "      <menuitem action='EditRefreshList'/>"
@@ -867,6 +885,8 @@ static const gchar *rc_ui_info =
     "    <menuitem action='List2ImportList'/>"
     "    <separator name='List2Sep1'/>"
     "    <menuitem action='List2SelectAll'/>"
+    "    <menuitem action='List2BindLyric'/>"
+    "    <menuitem action='List2BindAlbum'/>"
     "    <menuitem action='List2RemoveMusic'/>"
     "    <separator name='List2Sep2'/>"
     "    <menuitem action='List2RefreshList'/>"
@@ -966,6 +986,28 @@ static void rc_gui_set_list2_menu()
         if(rc_gui.status_task_length==0)
             gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
                 "/List2PopupMenu/List2RefreshList"), TRUE);
+        if(value==1)
+        {
+            gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+                "/RCMenuBar/EditMenu/EditBindLyric"), TRUE);
+            gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+                "/RCMenuBar/EditMenu/EditBindAlbum"), TRUE);
+            gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+                "/List2PopupMenu/List2BindLyric"), TRUE);
+            gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+                "/List2PopupMenu/List2BindAlbum"), TRUE);
+        }
+        else
+        {
+            gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+                "/RCMenuBar/EditMenu/EditBindLyric"), FALSE);
+            gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+                "/RCMenuBar/EditMenu/EditBindAlbum"), FALSE);
+            gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+                "/List2PopupMenu/List2BindLyric"), FALSE);
+            gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+                "/List2PopupMenu/List2BindAlbum"), FALSE);
+        }
     }
     else
     {
@@ -975,6 +1017,14 @@ static void rc_gui_set_list2_menu()
             "/List2PopupMenu/List2RemoveMusic"), FALSE);
         gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
             "/List2PopupMenu/List2RefreshList"), FALSE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+            "/RCMenuBar/EditMenu/EditBindLyric"), FALSE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+            "/RCMenuBar/EditMenu/EditBindAlbum"), FALSE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+            "/List2PopupMenu/List2BindLyric"), FALSE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(rc_gui.main_ui,
+            "/List2PopupMenu/List2BindAlbum"), FALSE);
     }
 }
 

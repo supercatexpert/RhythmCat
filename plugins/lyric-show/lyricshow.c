@@ -94,10 +94,10 @@ static const gchar *translation_string =
     "NeedGTK3=This plugin need GTK+ 3.0 or newer version.\n"
     "NeedGTK3[zh_CN]=这个插件需要GTK+ 3.0或更新的版本。\n"
     "NeedGTK3[zh_TW]=這個插件需要GTK+ 3.0或更新的版本。\n"
-    "NeedGTK2=This plugin need GTK+ 2.12 or newer GTK+ 2 version, "
+    "NeedGTK2=This plugin need GTK+ 2.14 or newer GTK+ 2 version, "
         "somehow this plugin doesn't work on GTK+ 3.0.\n"
-    "NeedGTK2[zh_CN]=这个插件需要在GTK+ 2.12或更新的版本上工作，但无法在GTK+ 3.0上工作。\n"
-    "NeedGTK2[zh_TW]=這個插件需要在GTK+ 2.12或更新的版本上工作，但無法在GTK+ 3.0上工作。\n"
+    "NeedGTK2[zh_CN]=这个插件需要在GTK+ 2.14或更新的版本上工作，但无法在GTK+ 3.0上工作。\n"
+    "NeedGTK2[zh_TW]=這個插件需要在GTK+ 2.14或更新的版本上工作，但無法在GTK+ 3.0上工作。\n"
     "Preferences=Lyric Show Preferences\n"
     "Preferences[zh_CN]=歌词秀首选项\n"
     "Preferences[zh_TW]=歌詞秀首選項\n"
@@ -633,7 +633,7 @@ G_MODULE_EXPORT gint rc_plugin_module_init()
             return 1;
         }
     #else
-        if(gtk_major_version!=2 || gtk_minor_version<12)
+        if(gtk_major_version!=2 || gtk_minor_version<14)
         {
             title = g_key_file_get_locale_string(translation_keyfile, 
                 "Translation", "CannotStart", NULL, NULL);
@@ -642,7 +642,7 @@ G_MODULE_EXPORT gint rc_plugin_module_init()
             if(title==NULL || strlen(title)==0)
                 title = g_strdup("Cannot start Lyric Show");
             if(message==NULL || strlen(message)==0)
-                message = g_strdup("This plugin need GTK+ 2.12 or newer "
+                message = g_strdup("This plugin need GTK+ 2.14 or newer "
                     "GTK+ 2 version, somehow this plugin doesn't work on "
                     "GTK+ 3.0.");
             rc_debug_module_perror(plugin_module_data.group_name,

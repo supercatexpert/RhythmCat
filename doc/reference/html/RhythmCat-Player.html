@@ -58,6 +58,7 @@ const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span c
 const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="RhythmCat-Player.html#rc-player-get-home-dir" title="rc_player_get_home_dir ()">rc_player_get_home_dir</a>              ();
 const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="RhythmCat-Player.html#rc-player-get-locale" title="rc_player_get_locale ()">rc_player_get_locale</a>                ();
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Player.html#rc-player-check-supported-format" title="rc_player_check_supported_format ()">rc_player_check_supported_format</a>    (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"><span class="returnvalue">gdouble</span></a>             <a class="link" href="RhythmCat-Player.html#rc-player-get-elapsed-time" title="rc_player_get_elapsed_time ()">rc_player_get_elapsed_time</a>          ();
 </pre>
 </div>
 <div class="refsect1" title="Description">
@@ -310,6 +311,22 @@ Check whether the given file is supported by the player.
 </td>
 </tr>
 </tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_player_get_elapsed_time ()">
+<a name="rc-player-get-elapsed-time"></a><h3>rc_player_get_elapsed_time ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"><span class="returnvalue">gdouble</span></a>             rc_player_get_elapsed_time          ();</pre>
+<p>
+Get the elapsed time since the player was started.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The elapsed time.
+</td>
+</tr></tbody>
 </table></div>
 </div>
 </div>

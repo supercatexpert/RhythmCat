@@ -4,9 +4,9 @@
 [
   <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
 ]>
-<refentry id="RhythmCat-RCPlayer">
+<refentry id="RCPlayer">
 <refmeta>
-<refentrytitle role="top_of_page" id="RhythmCat-RCPlayer.top_of_page">Player Object</refentrytitle>
+<refentrytitle role="top_of_page" id="RCPlayer.top_of_page">Player Object</refentrytitle>
 <manvolnum>3</manvolnum>
 <refmiscinfo>
   RHYTHMCAT Library
@@ -17,14 +17,14 @@
 <refpurpose>The player object of the player.</refpurpose>
 </refnamediv>
 
-<refsynopsisdiv id="RhythmCat-RCPlayer.synopsis" role="synopsis">
+<refsynopsisdiv id="RCPlayer.synopsis" role="synopsis">
 <title role="synopsis.title">Synopsis</title>
 
 <synopsis>
 #include &lt;player_object.h&gt;
 
 #define             <link linkend="RC-PLAYER-TYPE:CAPS">RC_PLAYER_TYPE</link>
-                    <link linkend="RCPlayer">RCPlayer</link>;
+                    <link linkend="RCPlayer-struct">RCPlayer</link>;
                     <link linkend="RCPlayerClass">RCPlayerClass</link>;
 <link linkend="RCPlayer"><returnvalue>RCPlayer</returnvalue></link> *          <link linkend="rc-player-new">rc_player_new</link>                       ();
 <link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-player-object-init">rc_player_object_init</link>               ();
@@ -36,14 +36,34 @@
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-player-object-signal-disconnect">rc_player_object_signal_disconnect</link>  (<parameter><link linkend="gulong"><type>gulong</type></link> id</parameter>);
 </synopsis>
 </refsynopsisdiv>
+<refsect1 id="RCPlayer.object-hierarchy" role="object_hierarchy">
+<title role="object_hierarchy.title">Object Hierarchy</title>
+<synopsis>
+  <link linkend="GObject">GObject</link>
+   +----RCPlayer
+</synopsis>
+</refsect1>
+<refsect1 id="RCPlayer.signals" role="signal_proto">
+<title role="signal_proto.title">Signals</title>
+<synopsis>
+  &quot;<link linkend="RCPlayer-cover-found">cover-found</link>&quot;                                    : Run First
+  &quot;<link linkend="RCPlayer-cover-not-found">cover-not-found</link>&quot;                                : Run First
+  &quot;<link linkend="RCPlayer-lyric-found">lyric-found</link>&quot;                                    : Run First
+  &quot;<link linkend="RCPlayer-lyric-not-found">lyric-not-found</link>&quot;                                : Run First
+  &quot;<link linkend="RCPlayer-player-continue">player-continue</link>&quot;                                : Run First
+  &quot;<link linkend="RCPlayer-player-pause">player-pause</link>&quot;                                   : Run First
+  &quot;<link linkend="RCPlayer-player-play">player-play</link>&quot;                                    : Run First
+  &quot;<link linkend="RCPlayer-player-stop">player-stop</link>&quot;                                    : Run First
+</synopsis>
+</refsect1>
 
-<refsect1 id="RhythmCat-RCPlayer.description" role="desc">
+<refsect1 id="RCPlayer.description" role="desc">
 <title role="desc.title">Description</title>
 <para>
 The player object of the player, used in player signal processing.
 </para>
 </refsect1>
-<refsect1 id="RhythmCat-RCPlayer.details" role="details">
+<refsect1 id="RCPlayer.details" role="details">
 <title role="details.title">Details</title>
 <refsect2 id="RC-PLAYER-TYPE:CAPS" role="macro">
 <title>RC_PLAYER_TYPE</title>
@@ -51,20 +71,13 @@ The player object of the player, used in player signal processing.
 <programlisting>#define RC_PLAYER_TYPE (rc_player_get_type())
 </programlisting>
 </refsect2>
-<refsect2 id="RCPlayer" role="struct">
+<refsect2 id="RCPlayer-struct" role="struct">
 <title>RCPlayer</title>
-<indexterm zone="RCPlayer"><primary>RCPlayer</primary></indexterm>
-<programlisting>typedef struct {
-    GObject parent;
-} RCPlayer;
-</programlisting>
+<indexterm zone="RCPlayer-struct"><primary>RCPlayer</primary></indexterm>
+<programlisting>typedef struct _RCPlayer RCPlayer;</programlisting>
 <para>
 The structure used in object.
 </para><variablelist role="struct">
-<varlistentry><term><link linkend="GObject"><type>GObject</type></link>&#160;<structfield id="RCPlayer.parent">parent</structfield>;</term>
-<listitem><simpara>the parent object
-</simpara></listitem>
-</varlistentry>
 </variablelist></refsect2>
 <refsect2 id="RCPlayerClass" role="struct">
 <title>RCPlayerClass</title>
@@ -195,6 +208,86 @@ signal it has been connected to. The <parameter>id</parameter> becomes invalid a
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 
+</refsect1>
+<refsect1 id="RCPlayer.signal-details" role="signals">
+<title role="signals.title">Signal Details</title>
+<refsect2 id="RCPlayer-cover-found" role="signal"><title>The <literal>&quot;cover-found&quot;</literal> signal</title>
+<indexterm zone="RCPlayer-cover-found"><primary>RCPlayer::cover-found</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                user_function                      (<link linkend="RCPlayer"><type>RCPlayer</type></link> *arg0,
+                                                        <link linkend="gpointer"><type>gpointer</type></link>  user_data)      : Run First</programlisting>
+<para>
+Emitted when the cover image is found at the moment the player
+starts playing.
+</para><variablelist role="params">
+<varlistentry><term><parameter>user_data</parameter>&#160;:</term>
+<listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
+</variablelist></refsect2><refsect2 id="RCPlayer-cover-not-found" role="signal"><title>The <literal>&quot;cover-not-found&quot;</literal> signal</title>
+<indexterm zone="RCPlayer-cover-not-found"><primary>RCPlayer::cover-not-found</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                user_function                      (<link linkend="RCPlayer"><type>RCPlayer</type></link> *arg0,
+                                                        <link linkend="gpointer"><type>gpointer</type></link>  user_data)      : Run First</programlisting>
+<para>
+Emitted when the cover image is not found at the moment the player
+starts playing.
+</para><variablelist role="params">
+<varlistentry><term><parameter>user_data</parameter>&#160;:</term>
+<listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
+</variablelist></refsect2><refsect2 id="RCPlayer-lyric-found" role="signal"><title>The <literal>&quot;lyric-found&quot;</literal> signal</title>
+<indexterm zone="RCPlayer-lyric-found"><primary>RCPlayer::lyric-found</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                user_function                      (<link linkend="RCPlayer"><type>RCPlayer</type></link> *arg0,
+                                                        <link linkend="gpointer"><type>gpointer</type></link>  user_data)      : Run First</programlisting>
+<para>
+Emitted when the lyric is found at the moment the player
+starts playing.
+</para><variablelist role="params">
+<varlistentry><term><parameter>user_data</parameter>&#160;:</term>
+<listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
+</variablelist></refsect2><refsect2 id="RCPlayer-lyric-not-found" role="signal"><title>The <literal>&quot;lyric-not-found&quot;</literal> signal</title>
+<indexterm zone="RCPlayer-lyric-not-found"><primary>RCPlayer::lyric-not-found</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                user_function                      (<link linkend="RCPlayer"><type>RCPlayer</type></link> *arg0,
+                                                        <link linkend="gpointer"><type>gpointer</type></link>  user_data)      : Run First</programlisting>
+<para>
+Emitted when the lyric is not found at the moment the player
+starts playing.
+</para><variablelist role="params">
+<varlistentry><term><parameter>user_data</parameter>&#160;:</term>
+<listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
+</variablelist></refsect2><refsect2 id="RCPlayer-player-continue" role="signal"><title>The <literal>&quot;player-continue&quot;</literal> signal</title>
+<indexterm zone="RCPlayer-player-continue"><primary>RCPlayer::player-continue</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                user_function                      (<link linkend="RCPlayer"><type>RCPlayer</type></link> *arg0,
+                                                        <link linkend="gpointer"><type>gpointer</type></link>  user_data)      : Run First</programlisting>
+<para>
+Emitted after the player paused.
+</para><variablelist role="params">
+<varlistentry><term><parameter>user_data</parameter>&#160;:</term>
+<listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
+</variablelist></refsect2><refsect2 id="RCPlayer-player-pause" role="signal"><title>The <literal>&quot;player-pause&quot;</literal> signal</title>
+<indexterm zone="RCPlayer-player-pause"><primary>RCPlayer::player-pause</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                user_function                      (<link linkend="RCPlayer"><type>RCPlayer</type></link> *arg0,
+                                                        <link linkend="gpointer"><type>gpointer</type></link>  user_data)      : Run First</programlisting>
+<para>
+Emitted after the player paused.
+</para><variablelist role="params">
+<varlistentry><term><parameter>user_data</parameter>&#160;:</term>
+<listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
+</variablelist></refsect2><refsect2 id="RCPlayer-player-play" role="signal"><title>The <literal>&quot;player-play&quot;</literal> signal</title>
+<indexterm zone="RCPlayer-player-play"><primary>RCPlayer::player-play</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                user_function                      (<link linkend="RCPlayer"><type>RCPlayer</type></link> *arg0,
+                                                        <link linkend="gpointer"><type>gpointer</type></link>  user_data)      : Run First</programlisting>
+<para>
+Emitted after the player starts playing.
+</para><variablelist role="params">
+<varlistentry><term><parameter>user_data</parameter>&#160;:</term>
+<listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
+</variablelist></refsect2><refsect2 id="RCPlayer-player-stop" role="signal"><title>The <literal>&quot;player-stop&quot;</literal> signal</title>
+<indexterm zone="RCPlayer-player-stop"><primary>RCPlayer::player-stop</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                user_function                      (<link linkend="RCPlayer"><type>RCPlayer</type></link> *arg0,
+                                                        <link linkend="gpointer"><type>gpointer</type></link>  user_data)      : Run First</programlisting>
+<para>
+Emitted after the player stopped.
+</para><variablelist role="params">
+<varlistentry><term><parameter>user_data</parameter>&#160;:</term>
+<listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
 </refsect1>
 
 </refentry>

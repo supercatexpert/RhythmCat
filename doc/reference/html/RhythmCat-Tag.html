@@ -49,6 +49,10 @@ const <a class="link" href="RhythmCat-Tag.html#RCMusicMetaData" title="RCMusicMe
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             <a class="link" href="RhythmCat-Tag.html#rc-tag-find-file" title="rc_tag_find_file ()">rc_tag_find_file</a>                    (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *dirname</code></em>,
                                                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *str</code></em>,
                                                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *extname</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             <a class="link" href="RhythmCat-Tag.html#rc-tag-search-lyric-file" title="rc_tag_search_lyric_file ()">rc_tag_search_lyric_file</a>            (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *dirname</code></em>,
+                                                         <em class="parameter"><code>const <a class="link" href="RhythmCat-Tag.html#RCMusicMetaData" title="RCMusicMetaData"><span class="type">RCMusicMetaData</span></a> *mmd</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             <a class="link" href="RhythmCat-Tag.html#rc-tag-search-album-file" title="rc_tag_search_album_file ()">rc_tag_search_album_file</a>            (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *dirname</code></em>,
+                                                         <em class="parameter"><code>const <a class="link" href="RhythmCat-Tag.html#RCMusicMetaData" title="RCMusicMetaData"><span class="type">RCMusicMetaData</span></a> *mmd</code></em>);
 </pre>
 </div>
 <div class="refsect1" title="Description">
@@ -296,6 +300,66 @@ Find a file in the directory by extension name and prefix string.
 <tr>
 <td><p><span class="term"><em class="parameter"><code>extname</code></em> :</span></p></td>
 <td>the extenstion name of the file
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The file name which is found in the directory, NULL if not found,
+free after usage.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_tag_search_lyric_file ()">
+<a name="rc-tag-search-lyric-file"></a><h3>rc_tag_search_lyric_file ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             rc_tag_search_lyric_file            (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *dirname</code></em>,
+                                                         <em class="parameter"><code>const <a class="link" href="RhythmCat-Tag.html#RCMusicMetaData" title="RCMusicMetaData"><span class="type">RCMusicMetaData</span></a> *mmd</code></em>);</pre>
+<p>
+Search lyric file in given directory by the given metadata.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>dirname</code></em> :</span></p></td>
+<td>the directory name
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>mmd</code></em> :</span></p></td>
+<td>the metadata
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The file name which is found in the directory, NULL if not found,
+free after usage.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_tag_search_album_file ()">
+<a name="rc-tag-search-album-file"></a><h3>rc_tag_search_album_file ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             rc_tag_search_album_file            (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *dirname</code></em>,
+                                                         <em class="parameter"><code>const <a class="link" href="RhythmCat-Tag.html#RCMusicMetaData" title="RCMusicMetaData"><span class="type">RCMusicMetaData</span></a> *mmd</code></em>);</pre>
+<p>
+Search album image file in given directory by the given metadata.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>dirname</code></em> :</span></p></td>
+<td>the directory name
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>mmd</code></em> :</span></p></td>
+<td>the metadata
 </td>
 </tr>
 <tr>

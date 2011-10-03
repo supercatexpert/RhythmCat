@@ -40,6 +40,8 @@
 <pre class="synopsis">
 #include &lt;plugin.h&gt;
 
+#define             <a class="link" href="RhythmCat-Plugin-Support.html#RC-PLUGIN-MAGIC-NUMBER:CAPS" title="RC_PLUGIN_MAGIC_NUMBER">RC_PLUGIN_MAGIC_NUMBER</a>
+#define             <a class="link" href="RhythmCat-Plugin-Support.html#RC-PLUGIN-OLD-MAGIC-NUMBER:CAPS" title="RC_PLUGIN_OLD_MAGIC_NUMBER">RC_PLUGIN_OLD_MAGIC_NUMBER</a>
 enum                <a class="link" href="RhythmCat-Plugin-Support.html#RCPluginType" title="enum RCPluginType">RCPluginType</a>;
                     <a class="link" href="RhythmCat-Plugin-Support.html#RCPluginConfData" title="RCPluginConfData">RCPluginConfData</a>;
                     <a class="link" href="RhythmCat-Plugin-Support.html#RCPluginModuleData" title="RCPluginModuleData">RCPluginModuleData</a>;
@@ -73,6 +75,18 @@ a dynamic link library) plugin.
 </div>
 <div class="refsect1" title="Details">
 <a name="RhythmCat-Plugin-Support.details"></a><h2>Details</h2>
+<div class="refsect2" title="RC_PLUGIN_MAGIC_NUMBER">
+<a name="RC-PLUGIN-MAGIC-NUMBER:CAPS"></a><h3>RC_PLUGIN_MAGIC_NUMBER</h3>
+<pre class="programlisting">#define RC_PLUGIN_MAGIC_NUMBER 0x100B0916
+</pre>
+</div>
+<hr>
+<div class="refsect2" title="RC_PLUGIN_OLD_MAGIC_NUMBER">
+<a name="RC-PLUGIN-OLD-MAGIC-NUMBER:CAPS"></a><h3>RC_PLUGIN_OLD_MAGIC_NUMBER</h3>
+<pre class="programlisting">#define RC_PLUGIN_OLD_MAGIC_NUMBER 0x100B090B
+</pre>
+</div>
+<hr>
 <div class="refsect2" title="enum RCPluginType">
 <a name="RCPluginType"></a><h3>enum RCPluginType</h3>
 <pre class="programlisting">typedef enum RCPluginType {

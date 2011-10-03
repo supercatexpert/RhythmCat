@@ -140,6 +140,8 @@ rc_gui_open_music_directory
 rc_gui_save_playlist_dialog
 rc_gui_load_playlist_dialog
 rc_gui_save_all_playlists_dialog
+rc_gui_bind_lyric_file_dialog
+rc_gui_bind_album_file_dialog
 </SECTION>
 
 <SECTION>

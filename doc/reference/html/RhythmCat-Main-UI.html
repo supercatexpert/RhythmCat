@@ -7,7 +7,7 @@
 <link rel="home" href="index.html" title="RhythmCat Music Player Development Reference Manual">
 <link rel="up" href="ch02.html" title="Player UI">
 <link rel="prev" href="ch02.html" title="Player UI">
-<link rel="next" href="RhythmCat-RCGuiScrolledText.html" title="Scrolledate Text Widget">
+<link rel="next" href="RCGuiScrolledText.html" title="Scrolledate Text Widget">
 <meta name="generator" content="GTK-Doc V1.15 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
@@ -18,7 +18,7 @@
 <td><a accesskey="u" href="ch02.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
 <th width="100%" align="center">RhythmCat Music Player Development Reference Manual</th>
-<td><a accesskey="n" href="RhythmCat-RCGuiScrolledText.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="RCGuiScrolledText.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
 <a href="#RhythmCat-Main-UI.synopsis" class="shortcut">Top</a>
@@ -72,6 +72,7 @@
 <a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="returnvalue">GtkWidget</span></a> *         <a class="link" href="RhythmCat-Main-UI.html#rc-gui-get-main-window" title="rc_gui_get_main_window ()">rc_gui_get_main_window</a>              ();
 const <a href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-gdk-pixbuf.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *   <a class="link" href="RhythmCat-Main-UI.html#rc-gui-get-icon-image" title="rc_gui_get_icon_image ()">rc_gui_get_icon_image</a>               ();
 const <a href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-gdk-pixbuf.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *   <a class="link" href="RhythmCat-Main-UI.html#rc-gui-get-no-cover-image" title="rc_gui_get_no_cover_image ()">rc_gui_get_no_cover_image</a>           ();
+const <a href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-gdk-pixbuf.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *   <a class="link" href="RhythmCat-Main-UI.html#rc-gui-get-cover-image" title="rc_gui_get_cover_image ()">rc_gui_get_cover_image</a>              ();
 </pre>
 </div>
 <div class="refsect1" title="Description">
@@ -863,6 +864,22 @@ Return the image shows when the cover image is not found.
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td> The images shows when the cover image is not found.
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_get_cover_image ()">
+<a name="rc-gui-get-cover-image"></a><h3>rc_gui_get_cover_image ()</h3>
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-gdk-pixbuf.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *   rc_gui_get_cover_image              ();</pre>
+<p>
+Return the image shows in the cover image widget.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The image shows in the cover image widget.
 </td>
 </tr></tbody>
 </table></div>

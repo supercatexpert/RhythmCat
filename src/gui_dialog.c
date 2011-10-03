@@ -396,6 +396,7 @@ void rc_gui_save_all_playlists_dialog()
                 list_name = g_strdelimit(list_name, "/\\*?|\"<>", ' ');
                 file_name = g_strdup_printf("%s%c%s.M3U", directory_name,
                     G_DIR_SEPARATOR, list_name);
+                g_free(list_name);
                 rc_plist_save_playlist(file_name, i);
                 g_free(file_name);
             }
@@ -407,5 +408,179 @@ void rc_gui_save_all_playlists_dialog()
         default: break;
     }
     gtk_widget_destroy(file_chooser);
+}
+
+/**
+ * rc_gui_bind_lyric_file_dialog:
+ *
+ * Show a dialog to set the lyric binding state of a music item.
+ */
+
+void rc_gui_bind_lyric_file_dialog()
+{
+    GtkWidget *dialog;
+    GtkWidget *vbox;
+    GtkWidget *vbox2;
+    GtkWidget *radio_buttons[2];
+    GtkWidget *filebutton;
+    GtkTreeIter iter;
+    gint ret;
+    gchar *lrc_file;
+    GtkListStore *store;
+    GtkFileFilter *file_filter;
+    if(!rc_gui_list2_get_cursor(&iter))
+        return;
+    store = GTK_LIST_STORE(rc_gui_list2_get_model());
+    dialog = gtk_dialog_new_with_buttons(_("Set lyric file binding"),
+        GTK_WINDOW(rc_gui_get_main_window()), GTK_DIALOG_MODAL |
+        GTK_DIALOG_DESTROY_WITH_PARENT, GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
+        GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT, NULL);
+    radio_buttons[0] = gtk_radio_button_new_with_mnemonic(NULL,
+        _("_Bind lyric file to the music"));
+    radio_buttons[1] = gtk_radio_button_new_with_mnemonic_from_widget(
+        GTK_RADIO_BUTTON(radio_buttons[0]), _("_Do not bind lyric file"));
+    filebutton = gtk_file_chooser_button_new(_("Select a lyric file"),
+        GTK_FILE_CHOOSER_ACTION_OPEN);
+    #ifdef USE_GTK3
+        vbox = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
+    #else
+        vbox = GTK_DIALOG(dialog)->vbox;
+    #endif
+    vbox2 = gtk_vbox_new(FALSE, 2);
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(radio_buttons[1]), TRUE);
+    gtk_tree_model_get(GTK_TREE_MODEL(store), &iter, PLIST2_LRCFILE,
+        &lrc_file, -1);
+    file_filter = gtk_file_filter_new();
+    gtk_file_filter_set_name(file_filter, _("Lyric File (*.LRC)"));
+    gtk_file_filter_add_pattern(file_filter, "*.[L,l][R,r][C,c]");
+    gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(filebutton),
+        rc_player_get_home_dir());
+    gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(filebutton), file_filter);
+    if(lrc_file!=NULL)
+    {
+        if(strlen(lrc_file)>0)
+        {
+            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(radio_buttons[0]),
+                TRUE);
+            gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(filebutton),
+                lrc_file);
+        }
+        g_free(lrc_file);
+    }
+    gtk_box_pack_start(GTK_BOX(vbox2), radio_buttons[0], FALSE, FALSE, 2);
+    gtk_box_pack_start(GTK_BOX(vbox2), filebutton, FALSE, FALSE, 2);
+    gtk_box_pack_start(GTK_BOX(vbox), vbox2, FALSE, FALSE, 2);
+    gtk_box_pack_start(GTK_BOX(vbox), radio_buttons[1], FALSE, FALSE, 2);
+    gtk_widget_set_size_request(dialog, 300, -1);
+    gtk_widget_show_all(vbox);
+    ret = gtk_dialog_run(GTK_DIALOG(dialog));
+    if(ret==GTK_RESPONSE_ACCEPT)
+    {
+        if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radio_buttons[0])))
+        {
+            lrc_file = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(
+                filebutton));
+            if(lrc_file!=NULL)
+            {
+                gtk_list_store_set(store, &iter, PLIST2_LRCFILE,
+                    lrc_file, -1);
+                g_free(lrc_file);
+            }
+        }
+        else
+        {
+            gtk_list_store_set(store, &iter, PLIST2_LRCFILE, NULL, -1);
+        }
+    }
+    gtk_widget_destroy(dialog);
+}
+
+/**
+ * rc_gui_bind_album_file_dialog:
+ *
+ * Show a dialog to set the album image binding state of a music item.
+ */
+
+void rc_gui_bind_album_file_dialog()
+{
+    GtkWidget *dialog;
+    GtkWidget *vbox;
+    GtkWidget *vbox2;
+    GtkWidget *radio_buttons[2];
+    GtkWidget *filebutton;
+    GtkTreeIter iter;
+    gint ret;
+    gchar *album_file;
+    GtkListStore *store;
+    GtkFileFilter *file_filter;
+    if(!rc_gui_list2_get_cursor(&iter))
+        return;
+    store = GTK_LIST_STORE(rc_gui_list2_get_model());
+    dialog = gtk_dialog_new_with_buttons(_("Set album file binding"),
+        GTK_WINDOW(rc_gui_get_main_window()), GTK_DIALOG_MODAL |
+        GTK_DIALOG_DESTROY_WITH_PARENT, GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
+        GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT, NULL);
+    radio_buttons[0] = gtk_radio_button_new_with_mnemonic(NULL,
+        _("_Bind album image file to the music"));
+    radio_buttons[1] = gtk_radio_button_new_with_mnemonic_from_widget(
+        GTK_RADIO_BUTTON(radio_buttons[0]), _("_Do not bind album file"));
+    filebutton = gtk_file_chooser_button_new(_("Select a album image file"),
+        GTK_FILE_CHOOSER_ACTION_OPEN);
+    #ifdef USE_GTK3
+        vbox = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
+    #else
+        vbox = GTK_DIALOG(dialog)->vbox;
+    #endif
+    vbox2 = gtk_vbox_new(FALSE, 2);
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(radio_buttons[1]), TRUE);
+    gtk_tree_model_get(GTK_TREE_MODEL(store), &iter, PLIST2_ALBFILE,
+        &album_file, -1);
+    file_filter = gtk_file_filter_new();
+    gtk_file_filter_set_name(file_filter,
+        _("Image File (*.JPG, *.BMP, *.PNG)..."));
+    gtk_file_filter_add_pattern(file_filter, "*.[J,j][P,p][G,g]");
+    gtk_file_filter_add_pattern(file_filter, "*.[J,j][P,p][E,e][G,g]");
+    gtk_file_filter_add_pattern(file_filter, "*.[B,b][M,m][P,p]");
+    gtk_file_filter_add_pattern(file_filter, "*.[P,p][N,n][G,g]");
+    gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(filebutton),
+        rc_player_get_home_dir());
+    gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(filebutton), file_filter);
+    if(album_file!=NULL)
+    {
+        if(strlen(album_file)>0)
+        {
+            gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(radio_buttons[0]),
+                TRUE);
+            gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(filebutton),
+                album_file);
+        }
+        g_free(album_file);
+    }
+    gtk_box_pack_start(GTK_BOX(vbox2), radio_buttons[0], FALSE, FALSE, 2);
+    gtk_box_pack_start(GTK_BOX(vbox2), filebutton, FALSE, FALSE, 2);
+    gtk_box_pack_start(GTK_BOX(vbox), vbox2, FALSE, FALSE, 2);
+    gtk_box_pack_start(GTK_BOX(vbox), radio_buttons[1], FALSE, FALSE, 2);
+    gtk_widget_set_size_request(dialog, 300, -1);
+    gtk_widget_show_all(vbox);
+    ret = gtk_dialog_run(GTK_DIALOG(dialog));
+    if(ret==GTK_RESPONSE_ACCEPT)
+    {
+        if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radio_buttons[0])))
+        {
+            album_file = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(
+                filebutton));
+            if(album_file!=NULL)
+            {
+                gtk_list_store_set(store, &iter, PLIST2_ALBFILE,
+                    album_file, -1);
+                g_free(album_file);
+            }
+        }
+        else
+        {
+            gtk_list_store_set(store, &iter, PLIST2_ALBFILE, NULL, -1);
+        }
+    }
+    gtk_widget_destroy(dialog);
 }
 
