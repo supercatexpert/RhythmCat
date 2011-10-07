@@ -378,7 +378,13 @@ void rc_player_init(int *argc, char **argv[])
     #ifndef DISABLE_DBUS
         rc_player_dbus_init(rc_player_remaining_args);
     #endif
-    rc_gui_style_refresh();
+    string = rc_set_get_string("Appearance", "StylePath", NULL);
+    if(string!=NULL)
+    {
+        if(strlen(string)>1)
+            rc_gui_style_refresh();
+        g_free(string);
+    }
     rc_gui_init();
     rc_core_init();
     rc_gui_eq_data_init();
