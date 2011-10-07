@@ -66,6 +66,8 @@ void rc_set_set_integer_list(const gchar *group_name, const gchar *key,
     gint list[], gsize length);
 void rc_set_set_double_list(const gchar *group_name, const gchar *key,
     gdouble list[], gsize length);
+gboolean rc_set_has_key(const gchar *group_name, gchar *key,
+    GError **error);
 gboolean rc_set_load_setting(const gchar *filename);
 void rc_set_save_setting(const gchar *filename);
 GKeyFile *rc_set_get_plugin_configure();

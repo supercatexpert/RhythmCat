@@ -106,6 +106,7 @@ rc_debug_pmsg
 rc_debug_module_pmsg
 rc_debug_module_print
 rc_debug_module_perror
+rc_debug_print_mem_profile
 </SECTION>
 
 <SECTION>
@@ -330,6 +331,7 @@ rc_set_set_string_list
 rc_set_set_boolean_list
 rc_set_set_integer_list
 rc_set_set_double_list
+rc_set_has_key
 rc_set_load_setting
 rc_set_save_setting
 rc_set_get_plugin_configure

@@ -350,6 +350,11 @@ const gchar *module_name, const gchar *format, ...
 <RETURNS>gint </RETURNS>
 const gchar *module_name, const gchar *format, ... 
 </FUNCTION>
+<FUNCTION>
+<NAME>rc_debug_print_mem_profile</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
 <STRUCT>
 <NAME>RCCoreData</NAME>
 typedef struct RCCoreData {
@@ -1367,6 +1372,11 @@ const gchar *group_name, const gchar *key, gint list[], gsize length
 <NAME>rc_set_set_double_list</NAME>
 <RETURNS>void </RETURNS>
 const gchar *group_name, const gchar *key, gdouble list[], gsize length 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_set_has_key</NAME>
+<RETURNS>gboolean </RETURNS>
+const gchar *group_name, gchar *key, GError **error 
 </FUNCTION>
 <FUNCTION>
 <NAME>rc_set_load_setting</NAME>

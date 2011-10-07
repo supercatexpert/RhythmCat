@@ -40,6 +40,7 @@
 <indexentry><primaryie linkends="rc-debug-perror"><link linkend="rc-debug-perror">rc_debug_perror</link>, function in <link linkend="RhythmCat-Debug">Debug</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-debug-pmsg"><link linkend="rc-debug-pmsg">rc_debug_pmsg</link>, function in <link linkend="RhythmCat-Debug">Debug</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-debug-print"><link linkend="rc-debug-print">rc_debug_print</link>, function in <link linkend="RhythmCat-Debug">Debug</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-debug-print-mem-profile"><link linkend="rc-debug-print-mem-profile">rc_debug_print_mem_profile</link>, function in <link linkend="RhythmCat-Debug">Debug</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-debug-set-mode"><link linkend="rc-debug-set-mode">rc_debug_set_mode</link>, function in <link linkend="RhythmCat-Debug">Debug</link></primaryie></indexentry>
 </indexdiv>
 <indexdiv><title>G</title>
@@ -257,6 +258,7 @@
 <indexentry><primaryie linkends="rc-set-get-plugin-configure"><link linkend="rc-set-get-plugin-configure">rc_set_get_plugin_configure</link>, function in <link linkend="RhythmCat-Settings">Settings</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-set-get-string"><link linkend="rc-set-get-string">rc_set_get_string</link>, function in <link linkend="RhythmCat-Settings">Settings</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-set-get-string-list"><link linkend="rc-set-get-string-list">rc_set_get_string_list</link>, function in <link linkend="RhythmCat-Settings">Settings</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rc-set-has-key"><link linkend="rc-set-has-key">rc_set_has_key</link>, function in <link linkend="RhythmCat-Settings">Settings</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-set-init"><link linkend="rc-set-init">rc_set_init</link>, function in <link linkend="RhythmCat-Settings">Settings</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-set-load-setting"><link linkend="rc-set-load-setting">rc_set_load_setting</link>, function in <link linkend="RhythmCat-Settings">Settings</link></primaryie></indexentry>
 <indexentry><primaryie linkends="rc-set-save-setting"><link linkend="rc-set-save-setting">rc_set_save_setting</link>, function in <link linkend="RhythmCat-Settings">Settings</link></primaryie></indexentry>

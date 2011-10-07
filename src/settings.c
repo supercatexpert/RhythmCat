@@ -128,6 +128,8 @@ void rc_set_init()
             "Maybe it is not exist?");
     }
     g_free(conf_file);
+    if(!rc_set_has_key("Player", "DBusSwitch", NULL))
+        rc_set_set_boolean("Player", "DBusSwitch", TRUE);
 }
 
 /**
@@ -428,6 +430,23 @@ void rc_set_set_double_list(const gchar *group_name, const gchar *key,
     gdouble list[], gsize length)
 {
     g_key_file_set_double_list(rc_configure, group_name, key, list, length);
+}
+
+/**
+ * rc_set_has_key:
+ * @group_name: a group name
+ * @key: a key
+ * @error: return location for a GError
+ *
+ * Looks whether the key file has the key in the group.
+ *
+ * Returns: TRUE if key is a part of group_name, FALSE otherwise.
+ */
+
+gboolean rc_set_has_key(const gchar *group_name, gchar *key,
+    GError **error)
+{
+    return g_key_file_has_key(rc_configure, group_name, key, error);
 }
 
 /**

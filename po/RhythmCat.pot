@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RhythmCat 1.0.0\n"
 "Report-Msgid-Bugs-To: http://code.google.com/p/rhythmcat/issues/list\n"
-"POT-Creation-Date: 2011-10-03 23:56+0800\n"
+"POT-Creation-Date: 2011-10-07 22:27+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -732,7 +732,7 @@ msgstr ""
 msgid "[URI...]"
 msgstr ""
 
-#: src/player.c:362
+#: src/player.c:364
 #, c-format
 msgid ""
 "%s\n"

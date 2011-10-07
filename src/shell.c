@@ -309,3 +309,10 @@ gboolean rc_shell_set_lyric_file(RCShell *shell, gchar *file,
     return flag;
 }
 
+gboolean rc_shell_show_mem_profile(RCShell *shell, GError **error)
+{
+    if(!shell_dbus_switch) return FALSE;
+    rc_debug_print_mem_profile();
+    return TRUE;
+}
+

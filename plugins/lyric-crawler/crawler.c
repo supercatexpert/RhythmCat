@@ -153,6 +153,24 @@ static const gchar *translation_string =
     "LyricResultDownloadFail=Failed to downloaded\n"
     "LyricResultDownloadFail[zh_CN]=下载失败\n"
     "LyricResultDownloadFail[zh_TW]=下載失敗\n"
+    "LyricProxySetting=Proxy Settings\n"
+    "LyricProxySetting[zh_CN]=代理设置\n"
+    "LyricProxySetting[zh_TW]=代理設定\n"
+    "LyricProxyTypeLabel=Proxy Type: \n"
+    "LyricProxyTypeLabel[zh_CN]=代理类型: \n"
+    "LyricProxyTypeLabel[zh_TW]=代理類型: \n"
+    "LyricProxyAddrLabel=Address: \n"
+    "LyricProxyAddrLabel[zh_CN]=地址: \n"
+    "LyricProxyAddrLabel[zh_TW]=地址: \n"
+    "LyricProxyPortLabel=Port: \n"
+    "LyricProxyPortLabel[zh_CN]=端口: \n"
+    "LyricProxyPortLabel[zh_TW]=端口: \n"
+    "LyricProxyUserLabel=User name: \n"
+    "LyricProxyUserLabel[zh_CN]=用户名: \n"
+    "LyricProxyUserLabel[zh_TW]=用戶名: \n"
+    "LyricProxyPasswdLabel=Password: \n"
+    "LyricProxyPasswdLabel[zh_CN]=密码: \n"
+    "LyricProxyPasswdLabel[zh_TW]=密碼: \n"
 ;
 
 G_MODULE_EXPORT const gchar *g_module_check_init(GModule *module);
@@ -192,7 +210,7 @@ static gboolean rc_plugin_module_search_idle_func(gpointer data)
     GtkTreeIter iter;
     gchar *string, *tmp;
     guint len = 0;
-    RCLyriCrawlerSearchData *search_data;
+    RCLyricCrawlerSearchData *search_data;
     gtk_list_store_clear(lyric_result_store);
     for(list_foreach=list;list_foreach!=NULL;
         list_foreach=g_slist_next(list_foreach))
@@ -486,6 +504,230 @@ static void rc_plugin_module_download_button_clicked(GtkButton *button,
 
 }
 
+static void rc_plugin_module_set_proxy_cb()
+{
+    GtkWidget *dialog;
+    GtkWidget *vbox;
+    GtkWidget *hbox1, *hbox2;
+    GtkWidget *table;
+    GtkWidget *proxy_type_label;
+    GtkWidget *proxy_addr_label;
+    GtkWidget *proxy_port_label;
+    GtkWidget *proxy_user_label;
+    GtkWidget *proxy_pass_label;
+    GtkWidget *proxy_type_combobox;
+    GtkWidget *proxy_addr_entry;
+    GtkWidget *proxy_port_spin;
+    GtkWidget *proxy_user_entry;
+    GtkWidget *proxy_pass_entry;
+    GtkListStore *list_store;
+    GtkTreeIter iter;
+    GtkCellRenderer *renderer;
+    gchar *string;
+    gint ret, type;
+    const gchar *proxy_addr_text;
+    const gchar *proxy_user_text;
+    const gchar *proxy_pass_text;
+    string = g_key_file_get_locale_string(translation_keyfile, "Translation",
+        "LyricProxySetting", NULL, NULL);
+    if(string==NULL || strlen(string)==0)
+        string = g_strdup("Proxy Settings");
+    dialog = gtk_dialog_new_with_buttons(string, NULL,
+        GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT, GTK_STOCK_OK,
+        GTK_RESPONSE_ACCEPT, GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT, NULL);
+    g_free(string);
+    string = g_key_file_get_locale_string(translation_keyfile, "Translation",
+        "LyricProxyTypeLabel", NULL, NULL);
+    if(string==NULL || strlen(string)==0)
+        string = g_strdup("Proxy Type: ");
+    proxy_type_label = gtk_label_new(string);
+    g_free(string);
+    string = g_key_file_get_locale_string(translation_keyfile, "Translation",
+        "LyricProxyAddrLabel", NULL, NULL);
+    if(string==NULL || strlen(string)==0)
+        string = g_strdup("Address: ");
+    proxy_addr_label = gtk_label_new(string);
+    g_free(string);
+    string = g_key_file_get_locale_string(translation_keyfile, "Translation",
+        "LyricProxyPortLabel", NULL, NULL);
+    if(string==NULL || strlen(string)==0)
+        string = g_strdup("Port: ");
+    proxy_port_label = gtk_label_new(string);
+    g_free(string);
+    string = g_key_file_get_locale_string(translation_keyfile, "Translation",
+        "LyricProxyUserLabel", NULL, NULL);
+    if(string==NULL || strlen(string)==0)
+        string = g_strdup("User name: ");
+    proxy_user_label = gtk_label_new(string);
+    g_free(string);
+    string = g_key_file_get_locale_string(translation_keyfile, "Translation",
+        "LyricProxyPasswdLabel", NULL, NULL);
+    if(string==NULL || strlen(string)==0)
+        string = g_strdup("Password: ");
+    proxy_pass_label = gtk_label_new(string);
+    g_free(string);
+    list_store = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_INT);
+    gtk_list_store_append(list_store, &iter);
+    gtk_list_store_set(list_store, &iter, 0, "HTTP", 1, 0, -1);
+    gtk_list_store_append(list_store, &iter);
+    gtk_list_store_set(list_store, &iter, 0, "HTTP (1.0)", 1, 1, -1);
+    gtk_list_store_append(list_store, &iter);
+    gtk_list_store_set(list_store, &iter, 0, "Socks 4", 1, 2, -1);
+    gtk_list_store_append(list_store, &iter);
+    gtk_list_store_set(list_store, &iter, 0, "Socks 4a", 1, 3, -1);
+    gtk_list_store_append(list_store, &iter);
+    gtk_list_store_set(list_store, &iter, 0, "Socks 5", 1, 4, -1);
+    gtk_list_store_append(list_store, &iter);
+    gtk_list_store_set(list_store, &iter, 0, "Socks 5 (Hostname)", 1, 5, -1);
+    proxy_type_combobox = gtk_combo_box_new_with_model(
+        GTK_TREE_MODEL(list_store));
+    g_object_unref(list_store);
+    renderer = gtk_cell_renderer_text_new();
+    gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(proxy_type_combobox),
+        renderer, TRUE);
+    gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(proxy_type_combobox),
+        renderer, "text", 0, NULL);
+    proxy_addr_entry = gtk_entry_new();
+    proxy_user_entry = gtk_entry_new();
+    proxy_pass_entry = gtk_entry_new();
+    proxy_port_spin = gtk_spin_button_new_with_range(0, 65535, 1);
+    gtk_entry_set_visibility(GTK_ENTRY(proxy_pass_entry), FALSE);
+    gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(proxy_port_spin), FALSE);
+    string = g_key_file_get_string(keyfile, plugin_module_data.group_name,
+        "LyricProxyAddress", NULL);
+    if(string!=NULL)
+    {
+        if(strlen(string)>0)
+            gtk_entry_set_text(GTK_ENTRY(proxy_addr_entry), string);
+        g_free(string);
+    }
+    ret = g_key_file_get_integer(keyfile, plugin_module_data.group_name,
+        "LyricProxyType", NULL);
+    switch(ret)
+    {
+        case CURLPROXY_HTTP:
+            type = 0;
+            break;
+        case CURLPROXY_HTTP_1_0:
+            type = 1;
+            break;
+        case CURLPROXY_SOCKS4:
+            type = 2;
+            break;
+        case CURLPROXY_SOCKS4A:
+            type = 3;
+            break;
+        case CURLPROXY_SOCKS5:
+            type = 4;
+            break;
+        case CURLPROXY_SOCKS5_HOSTNAME:
+            type = 5;
+            break;
+        default:
+            type = 0;
+    }
+    gtk_combo_box_set_active(GTK_COMBO_BOX(proxy_type_combobox), type);
+    ret = g_key_file_get_integer(keyfile, plugin_module_data.group_name,
+        "LyricProxyPort", NULL);
+    if(ret<0 || ret>65535) ret = 0;
+    gtk_spin_button_set_value(GTK_SPIN_BUTTON(proxy_port_spin), ret);
+    string = g_key_file_get_string(keyfile, plugin_module_data.group_name,
+        "LyricProxyUser", NULL);
+    if(string!=NULL)
+    {
+        if(strlen(string)>0)
+            gtk_entry_set_text(GTK_ENTRY(proxy_user_entry), string);
+        g_free(string);
+    }
+    string = g_key_file_get_string(keyfile, plugin_module_data.group_name,
+        "LyricProxyPassword", NULL);
+    if(string!=NULL)
+    {
+        if(strlen(string)>0)
+            gtk_entry_set_text(GTK_ENTRY(proxy_pass_entry), string);
+        g_free(string);
+    }
+    hbox1 = gtk_hbox_new(FALSE, 2);
+    hbox2 = gtk_hbox_new(FALSE, 2);
+    table = gtk_table_new(2, 2, FALSE);
+    #ifdef USE_GTK3
+        vbox = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
+    #else
+        vbox = GTK_DIALOG(dialog)->vbox;
+    #endif
+    gtk_box_pack_start(GTK_BOX(hbox1), proxy_type_label, FALSE, FALSE, 2);
+    gtk_box_pack_start(GTK_BOX(hbox1), proxy_type_combobox, TRUE, TRUE, 2);
+    gtk_box_pack_start(GTK_BOX(hbox2), proxy_addr_label, FALSE, FALSE, 2);
+    gtk_box_pack_start(GTK_BOX(hbox2), proxy_addr_entry, TRUE, TRUE, 2);
+    gtk_box_pack_start(GTK_BOX(hbox2), proxy_port_label, FALSE, FALSE, 2);
+    gtk_box_pack_start(GTK_BOX(hbox2), proxy_port_spin, FALSE, FALSE, 2);
+    gtk_table_attach(GTK_TABLE(table), proxy_user_label, 0, 1, 0, 1,
+        0, 0, 2, 2);
+    gtk_table_attach(GTK_TABLE(table), proxy_user_entry, 1, 2, 0, 1,
+        GTK_FILL | GTK_EXPAND, 0, 2, 2);
+    gtk_table_attach(GTK_TABLE(table), proxy_pass_label, 0, 1, 1, 2,
+        0, 0, 2, 2);
+    gtk_table_attach(GTK_TABLE(table), proxy_pass_entry, 1, 2, 1, 2,
+        GTK_FILL | GTK_EXPAND, 0, 2, 2);
+    gtk_box_pack_start(GTK_BOX(vbox), hbox1, FALSE, FALSE, 2);
+    gtk_box_pack_start(GTK_BOX(vbox), hbox2, FALSE, FALSE, 2);
+    gtk_box_pack_start(GTK_BOX(vbox), table, FALSE, FALSE, 2);
+    gtk_widget_show_all(vbox);
+    ret = gtk_dialog_run(GTK_DIALOG(dialog));
+    if(ret==GTK_RESPONSE_ACCEPT)
+    {
+        ret = gtk_combo_box_get_active(GTK_COMBO_BOX(proxy_type_combobox));
+        switch(ret)
+        {
+            case 0:
+                type = CURLPROXY_HTTP;
+                break;
+            case 1:
+                type = CURLPROXY_HTTP_1_0;
+                break;
+            case 2:
+                type = CURLPROXY_SOCKS4;
+                break;
+            case 3:
+                type = CURLPROXY_SOCKS4A;
+                break;
+            case 4:
+                type = CURLPROXY_SOCKS5;
+                break;
+            case 5:
+                type = CURLPROXY_SOCKS5_HOSTNAME;
+                break;
+            default:
+                type = CURLPROXY_HTTP;
+        }
+        proxy_addr_text = gtk_entry_get_text(GTK_ENTRY(proxy_addr_entry));
+        proxy_user_text = gtk_entry_get_text(GTK_ENTRY(proxy_user_entry));
+        proxy_pass_text = gtk_entry_get_text(GTK_ENTRY(proxy_pass_entry));
+        ret = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(
+            proxy_port_spin));
+        g_key_file_set_string(keyfile, plugin_module_data.group_name,
+            "LyricProxyAddress", proxy_addr_text);
+        g_key_file_set_integer(keyfile, plugin_module_data.group_name,
+            "LyricProxyType", type);
+        g_key_file_set_integer(keyfile, plugin_module_data.group_name,
+            "LyricProxyPort", ret);
+        g_key_file_set_string(keyfile, plugin_module_data.group_name,
+            "LyricProxyUser", proxy_user_text);
+        g_key_file_set_string(keyfile, plugin_module_data.group_name,
+            "LyricProxyPassword", proxy_pass_text);
+        if(proxy_addr_text!=NULL && strlen(proxy_addr_text)<1)
+            proxy_addr_text = NULL;
+        if(proxy_user_text!=NULL && strlen(proxy_user_text)<1)
+            proxy_user_text = NULL;
+        if(proxy_pass_text!=NULL && strlen(proxy_pass_text)<1)
+            proxy_pass_text = NULL;
+        rc_crawler_common_set_proxy(type, proxy_addr_text, ret,
+            proxy_user_text, proxy_pass_text);
+    }
+    gtk_widget_destroy(dialog);
+    
+}
+
 static void rc_plugin_module_auto_search_check_button_cb(GtkWidget *widget,
     gpointer data)
 {
@@ -712,6 +954,8 @@ static void rc_plugin_module_search_lyric_window_init()
         G_CALLBACK(rc_plugin_moudle_get_playing_tag_cb), NULL);
     g_signal_connect(G_OBJECT(lyric_search_button), "clicked",
         G_CALLBACK(rc_plugin_module_search_button_clicked), NULL);
+    g_signal_connect(G_OBJECT(lyric_proxy_button), "clicked",
+        G_CALLBACK(rc_plugin_module_set_proxy_cb), NULL);
     g_signal_connect(G_OBJECT(lyric_download_button), "clicked",
         G_CALLBACK(rc_plugin_module_download_button_clicked), NULL);
     g_signal_connect(G_OBJECT(lyric_close_button), "clicked",
@@ -771,6 +1015,11 @@ G_MODULE_EXPORT gint rc_plugin_module_init()
     guint i;
     GError *error = NULL;
     gboolean flag;
+    gint proxy_type;
+    gchar *proxy_addr;
+    gint proxy_port;
+    gchar *proxy_user;
+    gchar *proxy_passwd;
     #ifdef USE_GTK3
         if(gtk_major_version<3)
         {
@@ -783,8 +1032,8 @@ G_MODULE_EXPORT gint rc_plugin_module_init()
             if(message==NULL || strlen(message)==0)
                 message = g_strdup("This plugin need GTK+ 3.0 or "
                     "newer version.");
-            rc_debug_perror("LRCShow-ERROR: This plugin need GTK+ 3.0 or "
-                "newer version.\n");
+            rc_debug_module_perror(plugin_module_data.group_name,
+                "This plugin need GTK+ 3.0 or newer version.");
             rc_gui_show_message_dialog(GTK_MESSAGE_ERROR, title,
                 message);
             g_free(title);
@@ -799,7 +1048,7 @@ G_MODULE_EXPORT gint rc_plugin_module_init()
             message = g_key_file_get_locale_string(translation_keyfile,
                 "Translation", "NeedGTK2", NULL, NULL);
             if(title==NULL || strlen(title)==0)
-                title = g_strdup("Cannot start Lyric Show");
+                title = g_strdup("Cannot start Lyric Crawler");
             if(message==NULL || strlen(message)==0)
                 message = g_strdup("This plugin need GTK+ 2.12 or newer "
                     "GTK+ 2 version, somehow this plugin doesn't work on "
@@ -911,6 +1160,24 @@ G_MODULE_EXPORT gint rc_plugin_module_init()
     gtk_action_group_add_actions(rc_gui_get_action_group(),
         &entry, 1, NULL);
     g_free(title);
+    proxy_addr = g_key_file_get_string(keyfile, plugin_module_data.group_name,
+        "LyricProxyAddress", NULL);
+    if(proxy_addr!=NULL)
+    {
+        proxy_type = g_key_file_get_integer(keyfile,
+            plugin_module_data.group_name, "LyricProxyType", NULL);
+        proxy_port = g_key_file_get_integer(keyfile,
+            plugin_module_data.group_name, "LyricProxyPort", NULL);
+        proxy_user = g_key_file_get_string(keyfile,
+            plugin_module_data.group_name, "LyricProxyUser", NULL);
+        proxy_passwd = g_key_file_get_string(keyfile,
+            plugin_module_data.group_name, "LyricProxyPassword", NULL);
+        rc_crawler_common_set_proxy(proxy_type, proxy_addr, proxy_port,
+            proxy_user, proxy_passwd);
+        g_free(proxy_addr);
+        if(proxy_user!=NULL) g_free(proxy_user);
+        if(proxy_passwd!=NULL) g_free(proxy_passwd);
+    }
     return 0;
 }
 

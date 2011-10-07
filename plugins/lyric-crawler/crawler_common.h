@@ -39,18 +39,20 @@ typedef struct RCLyricCrawlerModuleData
     const gchar *desc;
 }RCLyricCrawlerModuleData;
 
-typedef struct RCLyriCrawlerSearchData
+typedef struct RCLyricCrawlerSearchData
 {
     gchar *title;
     gchar *artist;
     gchar *url;
-}RCLyriCrawlerSearchData;
+}RCLyricCrawlerSearchData;
 
 gboolean rc_crawler_common_download_file(const gchar *url, const gchar *file);
 gboolean rc_crawler_common_post_data(const gchar *url, const gchar *refer,
     const gchar *user_agent, const gchar *post_data, gsize post_len,
     const gchar *file);
 void rc_crawler_common_operation_cancel();
+void rc_crawler_common_set_proxy(gint type, const gchar *addr, guint16 port,
+    const gchar *username, const gchar *passwd);
 
 #endif
 

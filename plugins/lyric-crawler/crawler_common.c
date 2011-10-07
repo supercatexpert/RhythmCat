@@ -28,7 +28,11 @@
 #include <string.h>
 #include "crawler_common.h"
 
-static gboolean crawler_download_cancel_flag;
+static gboolean crawler_download_cancel_flag = FALSE;
+static gint crawler_proxy_type = -1;
+static gchar *crawler_proxy_address = NULL;
+static guint16 crawler_proxy_port = 0;
+static gchar *crawler_proxy_userpwd = NULL;
 
 static size_t rc_crawler_common_download_write_cb(void *buffer,
     size_t size, size_t nmemb, void *userdata)
@@ -58,13 +62,20 @@ gboolean rc_crawler_common_download_file(const gchar *url, const gchar *file)
         return FALSE;
     }
     crawler_download_cancel_flag = FALSE;
-    res = curl_easy_setopt(curl, CURLOPT_URL, url);
-    res = curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
-    res = curl_easy_setopt(curl, CURLOPT_USERAGENT, "Mozilla/5.0 "
+    curl_easy_setopt(curl, CURLOPT_URL, url);
+    if(crawler_proxy_address!=NULL)
+    {
+        curl_easy_setopt(curl, CURLOPT_PROXYTYPE,  crawler_proxy_type);
+        curl_easy_setopt(curl, CURLOPT_PROXY, crawler_proxy_address);
+        curl_easy_setopt(curl, CURLOPT_PROXYPORT,  crawler_proxy_port);
+        curl_easy_setopt(curl, CURLOPT_PROXYUSERPWD, crawler_proxy_userpwd);
+    }
+    curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
+    curl_easy_setopt(curl, CURLOPT_USERAGENT, "Mozilla/5.0 "
         "(X11; Linux x86_64; rv:6.0.0) Gecko/20100101 Firefox/6.0.0");
-    res = curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION,
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION,
         &rc_crawler_common_download_write_cb);
-    res = curl_easy_setopt(curl, CURLOPT_WRITEDATA, &fp);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &fp);
     res = curl_easy_perform(curl);
     if(res==CURLE_OK)
     {      
@@ -98,19 +109,26 @@ gboolean rc_crawler_common_post_data(const gchar *url, const gchar *refer,
         return FALSE;
     }
     crawler_download_cancel_flag = FALSE;
-    res = curl_easy_setopt(curl, CURLOPT_URL, url);
+    curl_easy_setopt(curl, CURLOPT_URL, url);
+    if(crawler_proxy_address!=NULL)
+    {
+        curl_easy_setopt(curl, CURLOPT_PROXYTYPE,  crawler_proxy_type);
+        curl_easy_setopt(curl, CURLOPT_PROXY, crawler_proxy_address);
+        curl_easy_setopt(curl, CURLOPT_PROXYPORT,  crawler_proxy_port);
+        curl_easy_setopt(curl, CURLOPT_PROXYUSERPWD, crawler_proxy_userpwd);
+    }
     if(refer!=NULL)
-        res = curl_easy_setopt(curl, CURLOPT_REFERER, refer);
+        curl_easy_setopt(curl, CURLOPT_REFERER, refer);
     if(user_agent!=NULL)
-        res = curl_easy_setopt(curl, CURLOPT_USERAGENT, user_agent);
+        curl_easy_setopt(curl, CURLOPT_USERAGENT, user_agent);
     if(post_data!=NULL)
     {
-        res = curl_easy_setopt(curl, CURLOPT_POSTFIELDS, post_data);
-        res = curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, post_len);
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, post_data);
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, post_len);
     }
-    res = curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION,
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION,
         &rc_crawler_common_download_write_cb);
-    res = curl_easy_setopt(curl, CURLOPT_WRITEDATA, &fp);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &fp);
     res = curl_easy_perform(curl);
     if(res==CURLE_OK)
     {      
@@ -127,5 +145,25 @@ void rc_crawler_common_operation_cancel()
 {
     if(!crawler_download_cancel_flag)
         crawler_download_cancel_flag = TRUE;
+}
+
+void rc_crawler_common_set_proxy(gint type, const gchar *addr, guint16 port,
+    const gchar *username, const gchar *passwd)
+{
+    if(crawler_proxy_address!=NULL) g_free(crawler_proxy_address);
+    if(crawler_proxy_userpwd!=NULL) g_free(crawler_proxy_userpwd);
+    crawler_proxy_address = NULL;
+    crawler_proxy_userpwd = NULL;
+    if(addr==NULL)
+    {
+        crawler_proxy_type = -1;
+        crawler_proxy_port = 0;
+        return;        
+    }
+    crawler_proxy_type = type;
+    crawler_proxy_address = g_strdup(addr);
+    crawler_proxy_port = port;
+    if(username!=NULL && passwd!=NULL)
+        crawler_proxy_userpwd = g_strdup_printf("%s:%s", username, passwd);
 }
 

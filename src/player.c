@@ -67,7 +67,7 @@
 #endif
 
 static const gchar rc_player_program_name[] = "RhythmCat Music Player";
-static const gchar rc_player_build_date[] = "111004";
+static const gchar rc_player_build_date[] = "111008";
 static const gchar rc_player_version[] = "1.0.0 RC 1";
 static const gboolean rc_player_stable_flag = FALSE;
 static const gchar *rc_player_support_formatx = "(.FLAC|.OGG|.MP3|.WMA|.WAV|"
@@ -308,11 +308,13 @@ void rc_player_init(int *argc, char **argv[])
             &rc_player_remaining_args, NULL, N_("[URI...]")},
         {NULL}
     };
-    const gchar *homedir = g_getenv("HOME");
+    const gchar *homedir;
     gchar *string = NULL;
     GError *error = NULL;
     if(rc_player_malloc_flag)
         g_slice_set_config(G_SLICE_CONFIG_ALWAYS_MALLOC, TRUE);
+    g_mem_set_vtable(glib_mem_profiler_table);
+    homedir = g_getenv("HOME");
     g_set_application_name("RhythmCat");
     if(homedir==NULL) homedir = g_get_home_dir();
     rc_player_home_dir = homedir;

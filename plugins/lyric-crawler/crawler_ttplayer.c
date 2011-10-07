@@ -95,7 +95,7 @@ static void rc_crawler_module_xml_parse_start(GMarkupParseContext *context,
     gchar *url;
     GSList *list = *(GSList **)user_data;
     gchar *tmp;
-    RCLyriCrawlerSearchData *search_data;
+    RCLyricCrawlerSearchData *search_data;
     if(g_strcmp0(element_name, "lrc")==0)
     {
         for(i=0;attribute_names[i]!=NULL;i++)
@@ -128,7 +128,7 @@ static void rc_crawler_module_xml_parse_start(GMarkupParseContext *context,
                 lrc_base_url, id,
                 rc_crawler_module_ttplayer_calc_download_code(id, tmp));
             g_free(tmp);
-            search_data = g_new0(RCLyriCrawlerSearchData, 1);
+            search_data = g_new0(RCLyricCrawlerSearchData, 1);
             search_data->title = title;
             search_data->artist = artist;
             search_data->url = url;

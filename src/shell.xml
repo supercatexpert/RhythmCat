@@ -61,6 +61,7 @@
     <method name="SetLyricFile">
       <arg direction="in" name="file" type="s"/>
     </method>
+    <method name="ShowMemProfile"/>
     <signal name="StateChanged"/>
     <signal name="MusicStarted"/>
     <signal name="LyricLineChanged"/>

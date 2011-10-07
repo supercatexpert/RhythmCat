@@ -202,6 +202,7 @@
 <ANCHOR id="rc-set-set-boolean-list" href="RhythmCat/RhythmCat-Settings.html#rc-set-set-boolean-list">
 <ANCHOR id="rc-set-set-integer-list" href="RhythmCat/RhythmCat-Settings.html#rc-set-set-integer-list">
 <ANCHOR id="rc-set-set-double-list" href="RhythmCat/RhythmCat-Settings.html#rc-set-set-double-list">
+<ANCHOR id="rc-set-has-key" href="RhythmCat/RhythmCat-Settings.html#rc-set-has-key">
 <ANCHOR id="rc-set-load-setting" href="RhythmCat/RhythmCat-Settings.html#rc-set-load-setting">
 <ANCHOR id="rc-set-save-setting" href="RhythmCat/RhythmCat-Settings.html#rc-set-save-setting">
 <ANCHOR id="rc-set-get-plugin-configure" href="RhythmCat/RhythmCat-Settings.html#rc-set-get-plugin-configure">
@@ -241,6 +242,7 @@
 <ANCHOR id="rc-debug-module-pmsg" href="RhythmCat/RhythmCat-Debug.html#rc-debug-module-pmsg">
 <ANCHOR id="rc-debug-module-print" href="RhythmCat/RhythmCat-Debug.html#rc-debug-module-print">
 <ANCHOR id="rc-debug-module-perror" href="RhythmCat/RhythmCat-Debug.html#rc-debug-module-perror">
+<ANCHOR id="rc-debug-print-mem-profile" href="RhythmCat/RhythmCat-Debug.html#rc-debug-print-mem-profile">
 <ANCHOR id="RhythmCat-Main-UI" href="RhythmCat/RhythmCat-Main-UI.html">
 <ANCHOR id="RhythmCat-Main-UI.synopsis" href="RhythmCat/RhythmCat-Main-UI.html#RhythmCat-Main-UI.synopsis">
 <ANCHOR id="RhythmCat-Main-UI.description" href="RhythmCat/RhythmCat-Main-UI.html#RhythmCat-Main-UI.description">

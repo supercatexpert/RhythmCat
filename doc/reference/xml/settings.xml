@@ -81,6 +81,9 @@
                                                          <parameter>const <link linkend="gchar"><type>gchar</type></link> *key</parameter>,
                                                          <parameter><link linkend="gdouble"><type>gdouble</type></link> list[]</parameter>,
                                                          <parameter><link linkend="gsize"><type>gsize</type></link> length</parameter>);
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-set-has-key">rc_set_has_key</link>                      (<parameter>const <link linkend="gchar"><type>gchar</type></link> *group_name</parameter>,
+                                                         <parameter><link linkend="gchar"><type>gchar</type></link> *key</parameter>,
+                                                         <parameter><link linkend="GError"><type>GError</type></link> **error</parameter>);
 <link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-set-load-setting">rc_set_load_setting</link>                 (<parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>);
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-set-save-setting">rc_set_save_setting</link>                 (<parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>);
 <link linkend="GKeyFile"><returnvalue>GKeyFile</returnvalue></link> *          <link linkend="rc-set-get-plugin-configure">rc_set_get_plugin_configure</link>         ();
@@ -477,6 +480,27 @@ be found then it is created. If group_name is NULL, the start_group is used.
 </simpara></listitem></varlistentry>
 <varlistentry><term><parameter>length</parameter>&#160;:</term>
 <listitem><simpara>number of double values in list
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-set-has-key" role="function">
+<title>rc_set_has_key ()</title>
+<indexterm zone="rc-set-has-key"><primary>rc_set_has_key</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rc_set_has_key                      (<parameter>const <link linkend="gchar"><type>gchar</type></link> *group_name</parameter>,
+                                                         <parameter><link linkend="gchar"><type>gchar</type></link> *key</parameter>,
+                                                         <parameter><link linkend="GError"><type>GError</type></link> **error</parameter>);</programlisting>
+<para>
+Looks whether the key file has the key in the group.
+</para><variablelist role="params">
+<varlistentry><term><parameter>group_name</parameter>&#160;:</term>
+<listitem><simpara>a group name
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>key</parameter>&#160;:</term>
+<listitem><simpara>a key
+</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>error</parameter>&#160;:</term>
+<listitem><simpara>return location for a GError
+</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> TRUE if key is a part of group_name, FALSE otherwise.
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="rc-set-load-setting" role="function">

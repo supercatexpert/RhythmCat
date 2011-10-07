@@ -60,7 +60,7 @@ G_MODULE_EXPORT GSList *rc_crawler_module_get_url_list(const gchar *title,
     gsize xml_len;
     gchar *esc_title = NULL, *esc_artist = NULL, *url = NULL;
     GSList *lrc_url_list = NULL;
-    RCLyriCrawlerSearchData *lrc_url_data;
+    RCLyricCrawlerSearchData *lrc_url_data;
     GRegex *down_regex, *title_regex, *artist_regex;
     GMatchInfo *down_match_info, *title_match_info, *artist_match_info;
     if(title==NULL && artist==NULL) return NULL;
@@ -127,7 +127,7 @@ G_MODULE_EXPORT GSList *rc_crawler_module_get_url_list(const gchar *title,
             if(esc_artist!=NULL) g_free(esc_artist);
             continue;
         }
-        lrc_url_data = g_new0(RCLyriCrawlerSearchData, 1);
+        lrc_url_data = g_new0(RCLyricCrawlerSearchData, 1);
         lrc_url_data->url = g_strdup(url+9);
         g_free(url);
         if(esc_title!=NULL)

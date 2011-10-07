@@ -54,6 +54,6 @@ rm -rf %{buildroot}
 %{_datadir}/applications/%{name}.desktop
 
 %changelog
-* Wed Sep 14 2011 SuperCat <supercatexpert@gmail.com> - 1.0.0-Beta3~110914
-- The 1.0.0-Beta3 Version Package.
+* Sat Oct 8 2011 SuperCat <supercatexpert@gmail.com> - 1.0.0-RC1~111008
+- The 1.0.0-RC1 Version Package.
 

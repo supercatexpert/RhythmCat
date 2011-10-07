@@ -195,3 +195,15 @@ gint rc_debug_module_perror(const gchar *module_name, const gchar *format,
     return result;
 }
 
+/**
+ * rc_debug_print_mem_profile:
+ *
+ * Print a summary of memory usage.
+ */
+
+void rc_debug_print_mem_profile()
+{
+    g_printf("Memory usage summary: \n");
+    g_mem_profile();
+}
+

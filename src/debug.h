@@ -45,6 +45,7 @@ gint rc_debug_module_print(const gchar *module_name, const gchar *format,
     ...);
 gint rc_debug_module_perror(const gchar *module_name, const gchar *format,
     ...);
+void rc_debug_print_mem_profile();
 
 G_END_DECLS
 
