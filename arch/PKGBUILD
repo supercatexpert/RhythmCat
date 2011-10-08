@@ -2,7 +2,7 @@
 # Contributor: SuperCat <supercatexpert@gmail.com>
 pkgname=rhythmcat
 pkgver=1.0.0
-pkgrel=1
+pkgrel=2
 pkgdesc="a Music Player with Plugin Support"
 arch=(i686 x86_64)
 url="http://supercat-lab.org"
@@ -16,7 +16,7 @@ replaces=
 backup=
 install=('RhythmCat.install')
 sources=(rhythmcat-1.0.0.tar.gz)
-md5sums=('4da370ab7bc1ed50e90b4248cd7165f4')
+md5sums=('42012bc09b166791a6f73d273cf903d5')
 
 build() {
   cd $startdir/src/$pkgname-$pkgver

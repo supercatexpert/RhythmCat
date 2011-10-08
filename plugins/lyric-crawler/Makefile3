@@ -9,7 +9,7 @@ INSTALL_DIR=~/.RhythmCat/Plugins/${INSTALL_NAME}
 LIBS=glib-2.0 gmodule-2.0 gtk+-3.0 gstreamer-0.10 gthread-2.0 libcurl
 MODULE_LIBS=glib-2.0 gmodule-2.0 libcurl
 
-CFLAGS=`pkg-config --cflags ${LIBS}` -Wall -O2 -fPIC -I../../src/
+CFLAGS=`pkg-config --cflags ${LIBS}` -Wall -O2 -fPIC -I../../src/ -DUSE_GTK3=1
 LDFLAGS=`pkg-config --libs ${LIBS}` -Wall -O2 -shared -fPIC -export-dynamic
 MODULE_FLAGS=`pkg-config --cflags --libs ${MODULE_LIBS}` -Wall -O2 -shared \
     -fPIC -export-dynamic
