@@ -2,7 +2,7 @@
 
 Name: RhythmCat
 Version: 1.0.0
-Release: Beta3
+Release: RC1
 Summary: A Music Player with Plugin Support
 Source0: %{name}-%{version}.tar.gz
 License: GPLv3
