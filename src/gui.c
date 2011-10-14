@@ -190,6 +190,13 @@ static gboolean rc_gui_seek_scale_button_pressed(GtkWidget *widget,
 {
     if(event->button==3) return TRUE;
     rc_gui.update_seek_scale_flag = FALSE;
+
+    /* HACK: we want the behaviour you get with the middle button, so we
+     * mangle the event.  clicking with other buttons moves the slider in
+     * step increments, clicking with the middle button moves the slider to
+     * the location of the click.
+     */
+    event->button = 2;
     return FALSE;
 }
 
@@ -201,11 +208,13 @@ static gboolean rc_gui_seek_scale_button_released(GtkWidget *widget,
     GdkEventButton *event, gpointer data)
 {
     gdouble percent = gtk_range_get_value(GTK_RANGE(rc_gui.time_scroll_bar));
+
+    /* HACK: see slider_press_callback */
+    event->button = 2;
     rc_gui.update_seek_scale_flag = TRUE;
     rc_core_set_play_position_by_percent(percent);
     return FALSE;
 }
-
 
 /*
  * Detect if the value of the scale bar is changed.
@@ -1286,8 +1295,8 @@ gboolean rc_gui_init()
         g_object_set(rc_gui.control_buttons[i], "can-focus", FALSE, NULL);
     }
     gtk_label_set_justify(GTK_LABEL(rc_gui.time_label), GTK_JUSTIFY_RIGHT);
-    position_adjustment = (GtkAdjustment *)gtk_adjustment_new(0.0, 0.0, 105.0,
-        1.0, 2.0, 5.0);
+    position_adjustment = (GtkAdjustment *)gtk_adjustment_new(0.0, 0.0, 100.0,
+        1.0, 2.0, 0.0);
     rc_gui.time_scroll_bar = gtk_hscale_new(GTK_ADJUSTMENT(
         position_adjustment));
     gtk_scale_set_draw_value(GTK_SCALE(rc_gui.time_scroll_bar), FALSE);

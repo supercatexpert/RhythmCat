@@ -11,7 +11,7 @@ Developing platform:
 Operating System: Debian Squeeze/6.0 for AMD64
 Compiler: gcc 4.4.5
 Programming Language: C
-Dependent Libraries: GTK+-2.0(>=2.14) Gstreamer-0.10 
+Dependent Libraries: GTK+-2.0(>=2.14) Gstreamer-0.10 libdbus-glib-1-dev
                      Gstreamer-plugins-base-0.10 Gstreamer-plugins-good-0.10
 
 Developing stage:
@@ -48,7 +48,7 @@ Debian/Ubuntu, you can run the commands below to help you install the packages
 that the compiling needed: 
 
 sudo apt-get install build-essential libgtk2.0-dev libgstreamer0.10-dev \
-    libgstreamer-plugins-base0.10-dev 
+    libgstreamer-plugins-base0.10-dev libdbus-glib-1-dev
 
 If you want to play MP3 or other Restricted Format, please install Gstreamer
 Bad & Ugly plugins. In Debian/Ubuntu, you can just run:
@@ -93,7 +93,7 @@ RhythmCat 是一个可以在Linux平台下工作的音乐播放器。它不只�
 编译器: gcc 4.4.5
 编程语言: C
 依赖的库: GTK+-2.0(>=2.14) Gstreamer-0.10 Gstreamer-plugins-base-0.10
-         Gstreamer-plugins-good-0.10
+         Gstreamer-plugins-good-0.10 libdbus-glib-1-dev
 开发阶段:
 
 Alpha / 完成中。
@@ -126,7 +126,7 @@ git clone git://github.com/supercatexpert/RhythmCat.git
 您需要安装编译环境。在Debian/Ubuntu下，您可以运行下面的命令来安装编译所需要的包: 
 
 sudo apt-get install build-essential libgtk2.0-dev libgstreamer0.10-dev \
-    libgstreamer-plugins-base0.10-dev 
+    libgstreamer-plugins-base0.10-dev libdbus-glib-1-dev
 
 如果您需要播放MP3等版权受限的格式，请安装Gstreamer Bad 和 Ugly 插件。在Debian/Ubuntu下，
 您可以运行以下命令来安装这些包: 

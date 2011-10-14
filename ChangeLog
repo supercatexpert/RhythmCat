@@ -98,4 +98,7 @@
 2011-10-07  SuperCat    <supercatexpert@gmail.com>
         * Added proxy settings in lyric crawler plugin.
 
+2011-10-14  SuperCat    <supercatexpert@gmail.com>
+        * Disabled function g_mem_set_vtable() when the debug mode is
+          not enabled (prevent from large amounts usage of memory).
 
