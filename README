@@ -29,11 +29,11 @@ Or read the COPYING file in the source archive.
 
 How to install this program:
 
-The source codes of latest version can be downloaded by SVN:
+The source codes of latest version can be downloaded by Git:
 
-svn checkout http://rhythmcat.googlecode.com/svn/trunk/ rhythmcat-read-only
+git clone https://code.google.com/p/rhythmcat/
 
-Or get the latest version by Git:
+Or get the latest version from Github:
 
 git clone git://github.com/supercatexpert/RhythmCat.git
 
@@ -75,7 +75,7 @@ sudo make install
 
 And compile the plugins by command "make -f Makefile3" instead.
 
-This program is just in alpha stage. We provide no WARRANTY. 
+This program is in Release Candidate stage now. We provide no WARRANTY. 
 If you found any bugs, please send an e-mail to me, and report the bugs you
 found. My e-mail: supercatexpert@gmail.com . Or send the Issue on the 
 Google Code project page.
@@ -112,11 +112,11 @@ http://www.gnu.org/licenses/gpl.txt
 
 如何安装这个程序:
 
-最新版本的源代码可以通过SVN获取:
+最新版本的源代码需通过Git获取:
 
-svn checkout http://rhythmcat.googlecode.com/svn/trunk/ rhythmcat-read-only
+git clone https://code.google.com/p/rhythmcat/ 
 
-或者通过Git获取:
+或者从Github站点上获取:
 
 git clone git://github.com/supercatexpert/RhythmCat.git
 
@@ -150,7 +150,7 @@ sudo make install
 
 并且使用make -f Makefile3命令编译插件。
 
-这个程序尚处于Alpha开发阶段，我们不为该程序提供任何保证。
+这个程序目前处于RC阶段，我们不为该程序提供任何保证。
 如果您发现了本程序的任何一个BUG，请给我发送E-Mail，并且汇报您发现的BUG。我的E-Mail:
 supercatexpert@gmail.com 。或者您可以在Google Code页面上发布Issue。
 
