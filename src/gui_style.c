@@ -179,12 +179,13 @@ void rc_gui_style_refresh()
             g_free(path);
             if(file!=NULL)
             {
-                provider = gtk_css_provider_get_default();
+                provider = gtk_css_provider_new();
                 gtk_css_provider_load_from_file(provider, file, NULL);
                 gtk_style_context_add_provider_for_screen(screen,
                     GTK_STYLE_PROVIDER(provider),
                     GTK_STYLE_PROVIDER_PRIORITY_USER);
                 gtk_style_context_reset_widgets(screen);
+                g_object_unref(provider);
             }
         }
         else
@@ -193,6 +194,7 @@ void rc_gui_style_refresh()
             gtk_style_context_add_provider_for_screen(screen,
                 GTK_STYLE_PROVIDER(provider),
                 GTK_STYLE_PROVIDER_PRIORITY_USER);
+            g_object_unref(provider);
         }
         if(string!=NULL) g_free(string);
     #else

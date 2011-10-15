@@ -146,6 +146,7 @@ GtkVolumeButton#RCVolumeButton:insensitive
 
 GtkWindow#RCMiniWindow GtkButton,
 GtkComboBox#RCEQCombobox,
+GtkComboBox#RCEQCombobox GtkButton,
 GtkButton#RCEQSaveButton,
 GtkButton#RCEQImportButton
 {
@@ -186,8 +187,8 @@ GtkButton#RCEQImportButton:prelight
 
 GtkHScale#RCTimeScalerBar
 {
-    -GtkScale-slider-length: 14;
-    -GtkRange-slider-width: 14;
+    -GtkScale-slider-length: 16;
+    -GtkRange-slider-width: 16;
     -GtkRange-trough-border: 0;
     -GtkScale-slider-border: 0;
     background-color: #707070;
@@ -226,7 +227,7 @@ GtkVScale#RCEQScaler:insensitive
 GtkHScale#RCTimeScalerBar.slider
 {
     border-width: 0;
-    border-radius: 0;
+    border-radius: 10;
     border-color: #C6C6C6;
     background-image: -gtk-gradient (radial,
         center center, 0, center center, 1,
@@ -236,7 +237,7 @@ GtkHScale#RCTimeScalerBar.slider
 GtkHScale#RCTimeScalerBar.slider:insensitive
 {
     border-width: 0;
-    border-radius: 0;
+    border-radius: 10;
     border-color: #888888;
     background-image: -gtk-gradient (radial,
         center center, 0, center center, 1,
@@ -246,7 +247,7 @@ GtkHScale#RCTimeScalerBar.slider:insensitive
 GtkHScale#RCTimeScalerBar.slider:prelight
 {
     border-width: 0;
-    border-radius: 0;
+    border-radius: 10;
     border-color: #E3E3E3;
     background-image: -gtk-gradient (radial,
         center center, 0, center center, 1,
@@ -256,7 +257,7 @@ GtkHScale#RCTimeScalerBar.slider:prelight
 GtkHScale#RCTimeScalerBar.slider:active
 {
     border-width: 0;
-    border-radius: 0;
+    border-radius: 10;
     border-color: #9E9E9E;
     background-image: -gtk-gradient (radial,
         center center, 0, center center, 1,
