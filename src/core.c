@@ -370,6 +370,9 @@ void rc_core_init()
 
 void rc_core_exit()
 {
+    gdouble volume = rc_core_get_volume() / 100;
+    if(volume>1.0 || volume<0.0) volume = 1.0;
+    rc_set_set_double("Player", "Volume", volume);
     gst_element_set_state(rc_core.playbin, GST_STATE_NULL);
     gst_object_unref(rc_core.playbin);
 }

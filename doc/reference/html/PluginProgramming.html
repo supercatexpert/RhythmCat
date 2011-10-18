@@ -27,7 +27,7 @@
     and features. This manual can help you implement a plugin for the player.
   </p>
 <div class="refsect2" title="Introduction">
-<a name="id630063"></a><h3>Introduction</h3>
+<a name="id626718"></a><h3>Introduction</h3>
 <p>
       The plugin used in the player now is module, it is usually a shared-object
       (on Linux) or a dynamic linked library (on Windows). When the player loads
@@ -39,7 +39,7 @@
 </div>
 <hr>
 <div class="refsect2" title="Preparation">
-<a name="id574159"></a><h3>Preparation</h3>
+<a name="id570814"></a><h3>Preparation</h3>
 <p>
       Before you prepare to write the plugin, you should install development
       environment. GLib 2.0, GTK+ 2.0 and Gstreamer 0.10 and their development
@@ -49,7 +49,7 @@
 </div>
 <hr>
 <div class="refsect2" title="Implement a simple plugin">
-<a name="id568559"></a><h3>Implement a simple plugin</h3>
+<a name="id565214"></a><h3>Implement a simple plugin</h3>
 <p>
       The plugin needs the libraries to work, so you should include the header
       files. You can include them by the codes below:
@@ -136,7 +136,7 @@ typedef struct RCPluginModuleData {
       Here is an example plugin implemented below:
     </p>
 <div class="example">
-<a name="id638019"></a><p class="title"><b>Example 1. The example plugin</b></p>
+<a name="id634674"></a><p class="title"><b>Example 1. The example plugin</b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -299,7 +299,7 @@ G_MODULE_EXPORT <span class="gtkdoc kwb">const</span> RCPluginModuleData <span c
 </div>
 <hr>
 <div class="refsect2" title="How to compile the plugin">
-<a name="id575580"></a><h3>How to compile the plugin</h3>
+<a name="id572235"></a><h3>How to compile the plugin</h3>
 <p>
        The plugin is a module, so you have to compile it into a library. On
        Linux, it is shared-object(.so). It is recommended to write a Makefile
@@ -342,7 +342,7 @@ rebuild: clean all
 </div>
 <hr>
 <div class="refsect2" title="Write a plugin description file">
-<a name="id570990"></a><h3>Write a plugin description file</h3>
+<a name="id567645"></a><h3>Write a plugin description file</h3>
 <p>
       Except the library file, the player also needs the description file to
       get necessary information about the plugin. You need to write a
@@ -352,7 +352,7 @@ rebuild: clean all
       Here is the description file of the example plugin mentioned above.
     </p>
 <div class="example">
-<a name="id606819"></a><p class="title"><b>Example 2. The description file of the example plugin</b></p>
+<a name="id603474"></a><p class="title"><b>Example 2. The description file of the example plugin</b></p>
 <div class="example-contents">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -384,7 +384,7 @@ Website<span class="symbol">=</span>http<span class="symbol">:</span><span class
 </div>
 <hr>
 <div class="refsect2" title="Make your custom plugin work">
-<a name="id571402"></a><h3>Make your custom plugin work</h3>
+<a name="id568057"></a><h3>Make your custom plugin work</h3>
 <p>
       Now you may have implemented the plugin, then you should put the files
       into the right directory. The player needs two files to make the plugin
@@ -409,7 +409,7 @@ ExamplePlugin
 </div>
 <hr>
 <div class="refsect2" title="Catch signals in the player">
-<a name="id605872"></a><h3>Catch signals in the player</h3>
+<a name="id602527"></a><h3>Catch signals in the player</h3>
 <p>
       Sometimes we need signals to know the working state of the player. When
       the player starts to play, or being stopped, it will emit signals. The
@@ -425,7 +425,7 @@ ExamplePlugin
 </div>
 <hr>
 <div class="refsect2" title="About this manual">
-<a name="id593457"></a><h3>About this manual</h3>
+<a name="id590112"></a><h3>About this manual</h3>
 <p>
       This manual helps you to make a usable plugin for RhythmCat Music Player.
       If you have any questions or problems, please leave issues on the project

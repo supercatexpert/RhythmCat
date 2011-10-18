@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RhythmCat 1.0.0\n"
 "Report-Msgid-Bugs-To: http://code.google.com/p/rhythmcat/issues/list\n"
-"POT-Creation-Date: 2011-10-07 22:27+0800\n"
+"POT-Creation-Date: 2011-10-18 15:33+0800\n"
 "PO-Revision-Date: 2011-04-02 14:54+0800\n"
 "Last-Translator: SuperCat <supercatexpert@gmail.com>\n"
 "Language-Team: SuperCat <supercatexpert@gmail.com>\n"
@@ -43,411 +43,411 @@ msgstr ""
 "効果のエレメントをリンクするのことができません、サウンドエフェクトは使用不能"
 "です。"
 
-#: src/gui.c:559
+#: src/gui.c:568
 msgid "_File"
 msgstr "ファイル(_F)"
 
-#: src/gui.c:560
+#: src/gui.c:569
 msgid "_Edit"
 msgstr "編集(_E)"
 
-#: src/gui.c:561
+#: src/gui.c:570
 msgid "_View"
 msgstr "表示(_V)"
 
-#: src/gui.c:562
+#: src/gui.c:571
 msgid "_Control"
 msgstr "コントロール(_C)"
 
-#: src/gui.c:563
+#: src/gui.c:572
 msgid "_Help"
 msgstr "ヘルプ(_H)"
 
-#: src/gui.c:564
+#: src/gui.c:573
 msgid "_Repeat"
 msgstr "リピート(_R)"
 
-#: src/gui.c:565
+#: src/gui.c:574
 msgid "Ran_dom"
 msgstr "ランダム(_D)"
 
-#: src/gui.c:567 src/gui.c:675
+#: src/gui.c:576 src/gui.c:684
 msgid "_New Playlist"
 msgstr "新しいプレイリスト(_N)"
 
-#: src/gui.c:568 src/gui.c:676
+#: src/gui.c:577 src/gui.c:685
 msgid "Create a new playlist"
 msgstr "新しいプレイリストを生成します"
 
-#: src/gui.c:571 src/gui.c:691
+#: src/gui.c:580 src/gui.c:700
 msgid "Import _Music"
 msgstr "ファイルのインポート(_M)"
 
-#: src/gui.c:572 src/gui.c:692
+#: src/gui.c:581 src/gui.c:701
 msgid "Import music file"
 msgstr "音楽ファイルをインポートします"
 
-#: src/gui.c:575 src/gui.c:695
+#: src/gui.c:584 src/gui.c:704
 msgid "Import _Playlist"
 msgstr "プレイリストのインポート(_P)"
 
-#: src/gui.c:576 src/gui.c:696
+#: src/gui.c:585 src/gui.c:705
 msgid "Import music from playlist"
 msgstr "プレイリストから音楽ファイルをインポートします"
 
-#: src/gui.c:579
+#: src/gui.c:588
 msgid "Import _Folder"
 msgstr "フォルダのインポート(_F)"
 
-#: src/gui.c:580
+#: src/gui.c:589
 msgid "Import all music from folder"
 msgstr "フォルダ中の全ての音楽ファイルをインポートします"
 
-#: src/gui.c:583
+#: src/gui.c:592
 msgid "_Export Playlist"
 msgstr "プレイリストのエクスポート(_E)"
 
-#: src/gui.c:584 src/gui.c:688
+#: src/gui.c:593 src/gui.c:697
 msgid "Export music to a playlist"
 msgstr "プレイリストファイルまで音楽リストをエクスポートします"
 
-#: src/gui.c:587
+#: src/gui.c:596
 msgid "Export _All Playlists"
 msgstr "全てのプレイリストのエクスポート(_A)"
 
-#: src/gui.c:588
+#: src/gui.c:597
 msgid "Export all playlists to a folder"
 msgstr "フォルダまで全てのプレイリストをエクスポートします"
 
-#: src/gui.c:591 src/gui.c:747
+#: src/gui.c:600 src/gui.c:756
 msgid "_Quit"
 msgstr "終了(_Q)"
 
-#: src/gui.c:592 src/gui.c:748
+#: src/gui.c:601 src/gui.c:757
 msgid "Quit this player"
 msgstr "このプレーヤを終了します"
 
-#: src/gui.c:595 src/gui.c:679
+#: src/gui.c:604 src/gui.c:688
 msgid "Re_name Playlist"
 msgstr "プレイリストの名前の変更(_N)"
 
-#: src/gui.c:596
+#: src/gui.c:605
 msgid "Rename the playlist"
 msgstr "プレイリストの名前を変更します"
 
-#: src/gui.c:599 src/gui.c:683
+#: src/gui.c:608 src/gui.c:692
 msgid "R_emove Playlist"
 msgstr "プレイリストの削除(_E)"
 
-#: src/gui.c:600 src/gui.c:684
+#: src/gui.c:609 src/gui.c:693
 msgid "Remove the playlist"
 msgstr "プレイリストを削除します"
 
-#: src/gui.c:603 src/gui.c:703
+#: src/gui.c:612 src/gui.c:712
 msgid "Bind _lyric file"
 msgstr "歌詞に繋げる(_L)"
 
-#: src/gui.c:604 src/gui.c:704
+#: src/gui.c:613 src/gui.c:713
 msgid "Bind lyric file to the selected music"
 msgstr "選定された音楽を歌詞に繋げます"
 
-#: src/gui.c:607 src/gui.c:707
+#: src/gui.c:616 src/gui.c:716
 msgid "Bind al_bum file"
 msgstr "アルバムイメージに繋げる(_B)"
 
-#: src/gui.c:608 src/gui.c:708
+#: src/gui.c:617 src/gui.c:717
 msgid "Bind album file to the selected music"
 msgstr "選定された音楽をアルバムイメージに繋げます"
 
-#: src/gui.c:611
+#: src/gui.c:620
 msgid "_Remove Music"
 msgstr "プレイリストから削除する(_R)"
 
-#: src/gui.c:612 src/gui.c:712
+#: src/gui.c:621 src/gui.c:721
 msgid "Remove music from playlist"
 msgstr "プレイリストから削除します"
 
-#: src/gui.c:615 src/gui.c:699
+#: src/gui.c:624 src/gui.c:708
 msgid "Select _All"
 msgstr "すべて選択(_A)"
 
-#: src/gui.c:616 src/gui.c:700
+#: src/gui.c:625 src/gui.c:709
 msgid "Select all music in the playlist"
 msgstr "そのプレーリスト中の全ての音楽を選択します"
 
-#: src/gui.c:619 src/gui.c:715
+#: src/gui.c:628 src/gui.c:724
 msgid "Re_fresh Playlist"
 msgstr "プレイリストのリフレッシュ(_F)"
 
-#: src/gui.c:620 src/gui.c:716
+#: src/gui.c:629 src/gui.c:725
 msgid "Refresh music information in the playlist"
 msgstr "そのプレイリストの中の音楽の情報をリフレッシュします"
 
-#: src/gui.c:623
+#: src/gui.c:632
 msgid "Plu_gins"
 msgstr "プラグイン(_G)"
 
-#: src/gui.c:624
+#: src/gui.c:633
 msgid "Configure plugins"
 msgstr "プラグインの設定"
 
-#: src/gui.c:627
+#: src/gui.c:636
 msgid "_Preferences"
 msgstr "設定(_P)"
 
-#: src/gui.c:628
+#: src/gui.c:637
 msgid "Configure the player"
 msgstr "このプレーヤを設定します"
 
-#: src/gui.c:631
+#: src/gui.c:640
 msgid "_Mini Mode"
 msgstr "ミニモード"
 
-#: src/gui.c:632
+#: src/gui.c:641
 msgid "Enable mini mode"
 msgstr "ミニモードを有効します"
 
-#: src/gui.c:635 src/gui.c:719
+#: src/gui.c:644 src/gui.c:728
 msgid "_Play/Pause"
 msgstr "再生/ポース(_P)"
 
-#: src/gui.c:636 src/gui.c:720
+#: src/gui.c:645 src/gui.c:729
 msgid "Play or pause the music"
 msgstr "音楽を再生します、またはポースします"
 
-#: src/gui.c:639 src/gui.c:723
+#: src/gui.c:648 src/gui.c:732
 msgid "_Stop"
 msgstr "停止(_S)"
 
-#: src/gui.c:640 src/gui.c:724
+#: src/gui.c:649 src/gui.c:733
 msgid "Stop the music"
 msgstr "音楽の再生を停止します"
 
-#: src/gui.c:643 src/gui.c:727
+#: src/gui.c:652 src/gui.c:736
 msgid "Pre_vious"
 msgstr "前へ(_V)"
 
-#: src/gui.c:644 src/gui.c:728
+#: src/gui.c:653 src/gui.c:737
 msgid "Play previous music"
 msgstr "前の音楽を再生します"
 
-#: src/gui.c:647 src/gui.c:731
+#: src/gui.c:656 src/gui.c:740
 msgid "_Next"
 msgstr "次へ(_N)"
 
-#: src/gui.c:648 src/gui.c:732
+#: src/gui.c:657 src/gui.c:741
 msgid "Play next music"
 msgstr "次の音楽を再生します"
 
-#: src/gui.c:651
+#: src/gui.c:660
 msgid "_Backward"
 msgstr "巻き戻し(_B)"
 
-#: src/gui.c:652
+#: src/gui.c:661
 msgid "Backward 5 seconds"
 msgstr "5秒巻き戻し"
 
-#: src/gui.c:655
+#: src/gui.c:664
 msgid "_Forward"
 msgstr "早送り(_F)"
 
-#: src/gui.c:656
+#: src/gui.c:665
 msgid "Forward 5 seconds"
 msgstr "5秒早送り"
 
-#: src/gui.c:659
+#: src/gui.c:668
 msgid "_Increase Volume"
 msgstr "音量を上げる(_I)"
 
-#: src/gui.c:660
+#: src/gui.c:669
 msgid "Increase the volume"
 msgstr "音量を上げる"
 
-#: src/gui.c:663
+#: src/gui.c:672
 msgid "_Decrease Volume"
 msgstr "音量を下げる(_D)"
 
-#: src/gui.c:664
+#: src/gui.c:673
 msgid "Decrease the volume"
 msgstr "音量を下げる"
 
-#: src/gui.c:667
+#: src/gui.c:676
 msgid "_Contents"
 msgstr "目次(_C)"
 
-#: src/gui.c:668
+#: src/gui.c:677
 msgid "Get help contents"
 msgstr "目次"
 
-#: src/gui.c:671 src/gui.c:743
+#: src/gui.c:680 src/gui.c:752
 msgid "_About"
 msgstr "情報(_A)"
 
-#: src/gui.c:672 src/gui.c:744
+#: src/gui.c:681 src/gui.c:753
 msgid "About this player"
 msgstr "このプレーヤの情報"
 
-#: src/gui.c:680
+#: src/gui.c:689
 msgid "Raname the playlist"
 msgstr "プレイリストの名前を変更します"
 
-#: src/gui.c:687
+#: src/gui.c:696
 msgid "E_xport Playlist"
 msgstr "プレイリストのエクスポート(_X)"
 
-#: src/gui.c:711
+#: src/gui.c:720
 msgid "R_emove Music"
 msgstr "音楽の削除(_E)"
 
-#: src/gui.c:735
+#: src/gui.c:744
 msgid "S_how Player"
 msgstr "プレーヤを表現します"
 
-#: src/gui.c:736
+#: src/gui.c:745
 msgid "Show the window of player"
 msgstr "プレーヤのウィンドウを表現します"
 
-#: src/gui.c:739
+#: src/gui.c:748
 msgid "_Mode Switch"
 msgstr "モードスウィッチ(_M)"
 
-#: src/gui.c:740
+#: src/gui.c:749
 msgid "Switch between normal mode and mini mode"
 msgstr "モードスウィッチ"
 
-#: src/gui.c:757
+#: src/gui.c:766
 msgid "_Playlists"
 msgstr "プレイリスト(_P)"
 
-#: src/gui.c:758
+#: src/gui.c:767
 msgid "Show playlists"
 msgstr "プレイリストを表現します"
 
-#: src/gui.c:760
+#: src/gui.c:769
 msgid "_Equalizer"
 msgstr "イコライザー(_E)"
 
-#: src/gui.c:761
+#: src/gui.c:770
 msgid "Show equalizer"
 msgstr "イコライザーを表現します"
 
-#: src/gui.c:769
+#: src/gui.c:778
 msgid "_No Repeat"
 msgstr "リピートしない(_N)"
 
-#: src/gui.c:770
+#: src/gui.c:779
 msgid "No repeat"
 msgstr "リピートしない"
 
-#: src/gui.c:772
+#: src/gui.c:781
 msgid "Single _Music Repeat"
 msgstr "一つの音楽をリピートする(_M)"
 
-#: src/gui.c:773
+#: src/gui.c:782
 msgid "Repeat playing single music"
 msgstr "一つの音楽をリピートします"
 
-#: src/gui.c:775
+#: src/gui.c:784
 msgid "Single _Playlist Repeat"
 msgstr "一つのプレーリストをリピートする_P)"
 
-#: src/gui.c:776
+#: src/gui.c:785
 msgid "Repeat playing single playlist"
 msgstr "一つのプレーリストをリピートします"
 
-#: src/gui.c:778
+#: src/gui.c:787
 msgid "_All Playlists Repeat"
 msgstr "全てのプレイリストをリピートする(_A)"
 
-#: src/gui.c:779
+#: src/gui.c:788
 msgid "Repeat playing all playlists"
 msgstr "全てのプレイリストをリピートします"
 
-#: src/gui.c:787
+#: src/gui.c:796
 msgid "_No Random"
 msgstr "ランダムしない"
 
-#: src/gui.c:788
+#: src/gui.c:797
 msgid "No random playing"
 msgstr "ランダムしない"
 
-#: src/gui.c:790
+#: src/gui.c:799
 msgid "_Single Playlist Random"
 msgstr "一つのプレーリストをランダム再生する(_S)"
 
-#: src/gui.c:791
+#: src/gui.c:800
 msgid "Random playing a music in the playlist"
 msgstr "一つのプレーリストの中にランダム再生します"
 
-#: src/gui.c:793
+#: src/gui.c:802
 msgid "_All Playlists Random"
 msgstr "全てのプレーリストをランダム再生する(_A)"
 
-#: src/gui.c:794
+#: src/gui.c:803
 msgid "Random playing a music in all playlists"
 msgstr "全てのプレーリストの中にランダム再生します"
 
-#: src/gui.c:802 src/gui.c:806
+#: src/gui.c:811 src/gui.c:815
 msgid "Always On _Top"
 msgstr "常に最上に表示する(_T)"
 
-#: src/gui.c:803 src/gui.c:807
+#: src/gui.c:812 src/gui.c:816
 msgid "Always on top"
 msgstr "常に最上に表示します"
 
-#: src/gui.c:1076
+#: src/gui.c:1085
 msgid "Equalizer"
 msgstr "イコライザー"
 
-#: src/gui.c:1077
+#: src/gui.c:1086
 msgid "Playlists"
 msgstr "プレイリスト"
 
-#: src/gui.c:1425
+#: src/gui.c:1434
 msgid "Unknown Format"
 msgstr "不明なフォーマット"
 
-#: src/gui.c:1429
+#: src/gui.c:1438
 #, c-format
 msgid "%d kbps "
 msgstr "%d kbps　"
 
-#: src/gui.c:1433
+#: src/gui.c:1442
 #, c-format
 msgid "%d Hz "
 msgstr "%d Hz "
 
-#: src/gui.c:1440
+#: src/gui.c:1449
 msgid "Mono"
 msgstr "モノ"
 
-#: src/gui.c:1444
+#: src/gui.c:1453
 msgid "Stereo"
 msgstr "ステレオ"
 
-#: src/gui.c:1448
+#: src/gui.c:1457
 #, c-format
 msgid "%d channels"
 msgstr "%d チャネル"
 
-#: src/gui.c:1455 src/playlist.c:412 src/playlist.c:491 src/playlist.c:773
+#: src/gui.c:1464 src/playlist.c:412 src/playlist.c:491 src/playlist.c:773
 #: src/playlist.c:884
 msgid "Unknown Title"
 msgstr "不明なタイトル"
 
-#: src/gui.c:1459
+#: src/gui.c:1468
 msgid "Unknown Artist"
 msgstr "不明なアーティスト"
 
-#: src/gui.c:1463
+#: src/gui.c:1472
 msgid "Unknown Album"
 msgstr "不明なアルバム"
 
-#: src/gui.c:1748
+#: src/gui.c:1757
 msgid "Importing..."
 msgstr "インポート中…"
 
-#: src/gui.c:1752
+#: src/gui.c:1761
 msgid "Refreshing..."
 msgstr "リフレシュ中…"
 
@@ -737,7 +737,7 @@ msgstr "C言語の標準ライブラリのmallocを使う"
 msgid "[URI...]"
 msgstr ""
 
-#: src/player.c:364
+#: src/player.c:365
 #, c-format
 msgid ""
 "%s\n"

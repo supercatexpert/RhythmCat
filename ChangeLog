@@ -102,3 +102,11 @@
         * Disabled function g_mem_set_vtable() when the debug mode is
           not enabled (prevent from large amounts usage of memory).
 
+2011-10-17  SuperCat    <supercatexpert@gmail.com>
+        * Enhanced custom theme system, fixed the abnormal theme bug in GTK+ 3.2,
+          and themes can be switched without restart the player in both GTK+ 2
+          and GTK+ 3 version.
+
+2011-10-18  SuperCat    <supercatexpert@gmail.com>
+        * Fixed a bug that the player won't save the volume when being closed.
+

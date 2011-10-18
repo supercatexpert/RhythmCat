@@ -42,7 +42,6 @@
  */
 
 static const gchar *module_name = "GUI";
-static gchar *rc_system_default_rc_file = NULL;
 
 /**
  * rc_gui_style_init:
@@ -167,7 +166,7 @@ void rc_gui_style_refresh()
     string = rc_set_get_string("Appearance", "StylePath", NULL);
     if(string==NULL) return;
     #ifdef USE_GTK3
-        GtkCssProvider *provider;
+        static GtkCssProvider *provider = NULL;
         GFile *file;
         GdkScreen *screen;
         screen = gdk_screen_get_default();
@@ -179,37 +178,49 @@ void rc_gui_style_refresh()
             g_free(path);
             if(file!=NULL)
             {
-                provider = gtk_css_provider_new();
+                if(provider==NULL)
+                    provider = gtk_css_provider_new();
                 gtk_css_provider_load_from_file(provider, file, NULL);
                 gtk_style_context_add_provider_for_screen(screen,
                     GTK_STYLE_PROVIDER(provider),
                     GTK_STYLE_PROVIDER_PRIORITY_USER);
                 gtk_style_context_reset_widgets(screen);
-                g_object_unref(provider);
             }
         }
         else
         {
-            provider = gtk_css_provider_get_default();
-            gtk_style_context_add_provider_for_screen(screen,
-                GTK_STYLE_PROVIDER(provider),
-                GTK_STYLE_PROVIDER_PRIORITY_USER);
-            g_object_unref(provider);
+            if(provider!=NULL)
+            {
+                gtk_style_context_remove_provider_for_screen(screen,
+                    GTK_STYLE_PROVIDER(provider));
+                g_object_unref(provider);
+                provider = NULL;
+            }
+            gtk_style_context_reset_widgets(screen);
         }
         if(string!=NULL) g_free(string);
     #else
         GtkSettings *settings;
+        static gchar **default_list = NULL;
+        gchar **tmp_list;
+        guint i = 0, len = 0;
         settings = gtk_settings_get_default();
-        if(rc_system_default_rc_file==NULL)
+        if(default_list==NULL)
         {
-            g_object_get(G_OBJECT(settings), "gtk-theme-name",
-                &rc_system_default_rc_file, NULL);
+            tmp_list = gtk_rc_get_default_files();
+            len = g_strv_length(tmp_list);
+            default_list = g_new0(gchar *, len+1);
+            for(i=0;i<len;i++)
+            {
+                default_list[i] = g_strdup(tmp_list[i]);
+            }
         }
         if(string!=NULL && strlen(string)>0)
         {
             path = g_build_filename(string, "gtkrc", NULL);
             rc_debug_module_pmsg(module_name, "Loading GTK2 RC File: %s", path);
-            gtk_rc_parse(path);
+            gtk_rc_set_default_files(default_list);
+            gtk_rc_add_default_file(path);
             if(settings!=NULL)
             {
                 gtk_rc_reparse_all_for_settings(settings, TRUE);
@@ -219,12 +230,13 @@ void rc_gui_style_refresh()
         }
         else
         {
+            gtk_rc_set_default_files(default_list);
             if(settings!=NULL)
-            {
+            {    
                 gtk_rc_reset_styles(settings);
-                gtk_rc_parse(rc_system_default_rc_file);
                 gtk_rc_reparse_all_for_settings(settings, TRUE);
             }
+            gtk_rc_reparse_all();
         }
         if(string!=NULL) g_free(string);
     #endif
