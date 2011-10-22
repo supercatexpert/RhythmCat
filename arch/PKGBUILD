@@ -2,8 +2,8 @@
 # Contributor: SuperCat <supercatexpert@gmail.com>
 pkgname=rhythmcat
 pkgver=1.0.0
-pkgrel=2
-pkgdesc="a Music Player with Plugin Support"
+pkgrel=3
+pkgdesc="A Music Player with Plugin Support"
 arch=(i686 x86_64)
 url="http://supercat-lab.org"
 license=('GPL')
@@ -19,7 +19,7 @@ sources=(rhythmcat-1.0.0.tar.gz)
 md5sums=('42012bc09b166791a6f73d273cf903d5')
 
 build() {
-  cd $startdir/src/$pkgname-$pkgver
+  cd $startdir/$pkgname-$pkgver
   ./configure --prefix=/usr --enable-gtk3
   make || return 1
   make prefix=$startdir/pkg/usr install

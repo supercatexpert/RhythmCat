@@ -2,15 +2,15 @@
 
 Name: RhythmCat
 Version: 1.0.0
-Release: RC1
+Release: RC2
 Summary: A Music Player with Plugin Support
 Source0: %{name}-%{version}.tar.gz
 License: GPLv3
 Group: Application/Multimedia
 URL: http://code.google.com/p/rhythmcat
 
-Requires: gtk2 gstreamer gstreamer-plugins-base gstreamer-plugins-good
-BuildRequires: gtk2-devel gstreamer-devel gstreamer-plugins-base-devel desktop-file-utils
+Requires: gtk3 gstreamer gstreamer-plugins-base gstreamer-plugins-good
+BuildRequires: gtk3-devel gstreamer-devel gstreamer-plugins-base-devel desktop-file-utils
 
 %description
 RhythmCat Music Player is a music player which can be
@@ -22,7 +22,7 @@ window, it can extend its functions by plugins...
 %setup -q -n %{name}-%{version}
 
 %build
-./configure --prefix=/usr
+./configure --prefix=/usr --enable-gtk3
 make %{_smp_mflags}
 
 %install
@@ -54,6 +54,6 @@ rm -rf %{buildroot}
 %{_datadir}/applications/%{name}.desktop
 
 %changelog
-* Sat Oct 8 2011 SuperCat <supercatexpert@gmail.com> - 1.0.0-RC1~111008
-- The 1.0.0-RC1 Version Package.
+* Sat Oct 22 2011 SuperCat <supercatexpert@gmail.com> - 1.0.0-RC2~111022
+- The 1.0.0-RC2 Version Package.
 

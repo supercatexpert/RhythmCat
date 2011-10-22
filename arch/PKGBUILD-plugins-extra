@@ -1,0 +1,38 @@
+# Maintainer: SuperCat <supercatexpert@gmail.com>
+# Contributor: SuperCat <supercatexpert@gmail.com>
+pkgname=rhythmcat-plugins-extra
+pkgver=1.0.0
+pkgrel=1
+pkgdesc="The extra plugins for RhythmCat Music Player"
+arch=(i686 x86_64)
+url="http://supercat-lab.org"
+license=('GPL')
+groups=
+provides=
+depends=('gtk3' 'dbus' 'dbus-core' 'dbus-glib' 'glib2' 'gstreamer0.10' 'gstreamer0.10-base' 'gstreamer0.10-base-plugins' 'gstreamer0.10-good' 'gstreamer0.10-good-plugins' 'rhythmcat' 'gtksourceview3')
+makedepends=('autoconf' 'automake' 'gcc' 'gtk-doc')
+conflicts=
+replaces=
+backup=
+sources=(rhythmcat-1.0.0.tar.gz)
+
+build() {
+  cd $startdir/rhythmcat-1.0.0/plugins/extra
+  echo "Making plugin Lyric-Editor..."
+  cd lyric-editor
+  make -f Makefile3 || return 1
+  make INSTALL_DIR=$startdir/pkg/usr/share/RhythmCat/plugins/lyric-editor install
+  cd ..
+
+  echo "Making plugin Tag-Editor..."
+  cd tageditor
+  make -f Makefile3 || return 1
+  make INSTALL_DIR=$startdir/pkg/usr/share/RhythmCat/plugins/tageditor install
+  cd ..
+
+  echo "Making plugin Lyric-Crawler..."
+  cd lyric-crawler
+  make -f Makefile3 || return 1
+  make INSTALL_DIR=$startdir/pkg/usr/share/RhythmCat/plugins/lyric-crawler install
+}
+

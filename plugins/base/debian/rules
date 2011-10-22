@@ -1,0 +1,36 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+# Sample debian/rules that uses debhelper.
+# This file was originally written by Joey Hess and Craig Small.
+# As a special exception, when this file is copied by dh-make into a
+# dh-make output file, you may use that output file without restriction.
+# This special exception was added by Craig Small in version 0.37 of dh-make.
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+PACKAGE = $(firstword $(shell dh_listpackages))
+TMP     = $(CURDIR)/debian/$(PACKAGE)
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+
+override_dh_auto_clean:
+	cd lyric-show; make clean
+	cd desktop-lyric; make clean
+	cd notify; make clean
+
+override_dh_auto_build:
+	cd lyric-show; make
+	cd desktop-lyric; make
+	cd notify; make
+
+override_dh_auto_install:
+	cd lyric-show; make INSTALL_DIR=$(TMP)/usr/share/RhythmCat/plugins/lyric-show install
+	cd desktop-lyric; make INSTALL_DIR=$(TMP)/usr/share/RhythmCat/plugins/desktop-lyric install
+	cd notify; make INSTALL_DIR=$(TMP)/usr/share/RhythmCat/plugins/notify install
+	
+override_dh_installdocs:
+

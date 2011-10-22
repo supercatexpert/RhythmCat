@@ -170,7 +170,9 @@ static guint rc_gui_plugin_load_info()
     GtkListStore *plugin_list_store = GTK_LIST_STORE(plugin_list_model);
     RCPluginConfData *plugin_data = NULL;
     rc_plugin_list_free();
-    rc_plugin_search_dir("plugins");
+    dir_name = g_build_filename(rc_player_get_data_dir(), "plugins", NULL);
+    rc_plugin_search_dir(dir_name);
+    g_free(dir_name);
     dir_name = g_build_filename(rc_player_get_conf_dir(), "Plugins", NULL);
     rc_plugin_search_dir(dir_name);
     g_free(dir_name);

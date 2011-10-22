@@ -1,0 +1,18 @@
+Source: rhythmcat-plugins-extra
+Section: sound
+Priority: extra
+Maintainer: SuperCat Expert <supercatexpert@gmail.com>
+Build-Depends: debhelper (>= 7.0.50~), autotools-dev, libgtk2.0-dev(>= 2.14), libgstreamer0.10-dev, libdbus-glib-1-dev, libgstreamer-plugins-base0.10-dev, libgtksourceview2.0-dev, libcurl4-gnutls-dev | libcurl4-openssl-dev
+Standards-Version: 3.8.4
+Homepage: <http://code.google.com/p/rhythmcat>
+#Vcs-Git: git://git.debian.org/collab-maint/rhythmcat.git
+#Vcs-Browser: http://git.debian.org/?p=collab-maint/rhythmcat.git;a=summary
+
+Package: rhythmcat-plugins-extra
+Architecture: any
+Depends: rhythmcat(>=1.0.0)
+Description: The extra plugins for RhythmCat Music Player.
+ It provides:
+ * Lyric editor plugin
+ * Tag editor plugin
+ * Lyric Crawler plugin

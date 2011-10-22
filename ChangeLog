@@ -110,3 +110,8 @@
 2011-10-18  SuperCat    <supercatexpert@gmail.com>
         * Fixed a bug that the player won't save the volume when being closed.
 
+2011-10-22  SuperCat    <supercatexpert@gmail.com>
+        * Wrote some scripts to package the plugins.
+        * The version is now 1.0.0-RC2, it will be the last RC version. So the
+          stable version is to be released in the next time.
+

@@ -1,4 +1,4 @@
-Source: rhythmcat
+Source: rhythmcat-plugins-base
 Section: sound
 Priority: extra
 Maintainer: SuperCat Expert <supercatexpert@gmail.com>
@@ -8,11 +8,11 @@ Homepage: <http://code.google.com/p/rhythmcat>
 #Vcs-Git: git://git.debian.org/collab-maint/rhythmcat.git
 #Vcs-Browser: http://git.debian.org/?p=collab-maint/rhythmcat.git;a=summary
 
-Package: rhythmcat
+Package: rhythmcat-plugins-base
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Music Player with Plugin Support
- RhythmCat Music Player is a music player which can be
- running under Linux. It can be used as a normal music 
- player, and it can also show lyrics in the player 
- window, it can extend its functions by plugins... 
+Depends: rhythmcat(>=1.0.0)
+Description: The base plugins for RhythmCat Music Player.
+ It provides:
+ * Lyric show plugin
+ * Desktop lyric show plugin
+ * Notify plugin 
