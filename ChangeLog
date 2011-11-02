@@ -115,3 +115,7 @@
         * The version is now 1.0.0-RC2, it will be the last RC version. So the
           stable version is to be released in the next time.
 
+2011-11-02  SuperCat    <supercatexpert@gmail.com>
+        * Added auto-play feature when the player is started with commandline
+          arguments.
+

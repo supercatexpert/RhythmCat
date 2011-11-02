@@ -75,6 +75,8 @@ void rc_plist_exit();
 gboolean rc_plist_insert_list(const gchar *listname, gint index);
 gboolean rc_plist_insert_music(const gchar *uri, gint list1_index,
     gint list2_index);
+gboolean rc_plist_insert_music_play(const gchar *uri, gint list1_index,
+    gint list2_index);
 void rc_plist_list2_insert_item(const gchar *uri, const gchar *title,
     const gchar *artist, const gchar *album, gint64 length, gint trackno,
     GtkListStore *store, gint list2_index);
@@ -105,6 +107,7 @@ void rc_plist_save_playlist(const gchar *s_filename, gint index);
 void rc_plist_load_playlist(const gchar *s_filename, gint index);
 GtkListStore *rc_plist_get_list_store(gint index);
 GtkListStore *rc_plist_get_list_head();
+gint rc_plist_get_list_index(GtkListStore *list_store);
 gboolean rc_plist_list2_refresh(gint list1_index);
 gint rc_plist_import_job_get_length();
 void rc_plist_import_job_cancel();

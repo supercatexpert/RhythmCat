@@ -54,6 +54,8 @@
 <a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="returnvalue">GtkTreeModel</span></a> *      <a class="link" href="RhythmCat-Playlist-Views-UI.html#rc-gui-list2-get-model" title="rc_gui_list2_get_model ()">rc_gui_list2_get_model</a>              ();
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist-Views-UI.html#rc-gui-list1-get-cursor" title="rc_gui_list1_get_cursor ()">rc_gui_list1_get_cursor</a>             (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *iter</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist-Views-UI.html#rc-gui-list2-get-cursor" title="rc_gui_list2_get_cursor ()">rc_gui_list2_get_cursor</a>             (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *iter</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist-Views-UI.html#rc-gui-list1-scroll-to-index" title="rc_gui_list1_scroll_to_index ()">rc_gui_list1_scroll_to_index</a>        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list_index</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist-Views-UI.html#rc-gui-list2-scroll-to-index" title="rc_gui_list2_scroll_to_index ()">rc_gui_list2_scroll_to_index</a>        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list_index</code></em>);
 </pre>
 </div>
 <div class="refsect1" title="Description">
@@ -243,6 +245,38 @@ Get the GtkTreeIter of the selected item.
 </td>
 </tr>
 </tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_list1_scroll_to_index ()">
+<a name="rc-gui-list1-scroll-to-index"></a><h3>rc_gui_list1_scroll_to_index ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_list1_scroll_to_index        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list_index</code></em>);</pre>
+<p>
+Make the list scrolled to the given index.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>list_index</code></em> :</span></p></td>
+<td>the index of the item
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_gui_list2_scroll_to_index ()">
+<a name="rc-gui-list2-scroll-to-index"></a><h3>rc_gui_list2_scroll_to_index ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_gui_list2_scroll_to_index        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list_index</code></em>);</pre>
+<p>
+Make the playlist scrolled to the given index
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>list_index</code></em> :</span></p></td>
+<td>the index of the item
+</td>
+</tr></tbody>
 </table></div>
 </div>
 </div>

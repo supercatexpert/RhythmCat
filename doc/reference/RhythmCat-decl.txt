@@ -675,6 +675,11 @@ const gchar *listname, gint index
 const gchar *uri, gint list1_index, gint list2_index 
 </FUNCTION>
 <FUNCTION>
+<NAME>rc_plist_insert_music_play</NAME>
+<RETURNS>gboolean </RETURNS>
+const gchar *uri, gint list1_index, gint list2_index 
+</FUNCTION>
+<FUNCTION>
 <NAME>rc_plist_list2_insert_item</NAME>
 <RETURNS>void </RETURNS>
 const gchar *uri, const gchar *title, const gchar *artist, const gchar *album, gint64 length, gint trackno, GtkListStore *store, gint list2_index 
@@ -798,6 +803,11 @@ gint index
 <NAME>rc_plist_get_list_head</NAME>
 <RETURNS>GtkListStore *</RETURNS>
  
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_plist_get_list_index</NAME>
+<RETURNS>gint </RETURNS>
+GtkListStore *list_store 
 </FUNCTION>
 <FUNCTION>
 <NAME>rc_plist_list2_refresh</NAME>
@@ -974,6 +984,16 @@ GtkTreeIter *iter
 <NAME>rc_gui_list2_get_cursor</NAME>
 <RETURNS>gboolean </RETURNS>
 GtkTreeIter *iter 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_list1_scroll_to_index</NAME>
+<RETURNS>void </RETURNS>
+gint list_index 
+</FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_list2_scroll_to_index</NAME>
+<RETURNS>void </RETURNS>
+gint list_index 
 </FUNCTION>
 <STRUCT>
 <NAME>RCGuiData</NAME>

@@ -49,6 +49,9 @@ enum                <a class="link" href="RhythmCat-Playlist.html#RCPlist2Column
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist.html#rc-plist-insert-music" title="rc_plist_insert_music ()">rc_plist_insert_music</a>               (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list1_index</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list2_index</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist.html#rc-plist-insert-music-play" title="rc_plist_insert_music_play ()">rc_plist_insert_music_play</a>          (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list1_index</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list2_index</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-list2-insert-item" title="rc_plist_list2_insert_item ()">rc_plist_list2_insert_item</a>          (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>,
                                                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *title</code></em>,
                                                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *artist</code></em>,
@@ -97,6 +100,7 @@ enum                <a class="link" href="RhythmCat-Playlist.html#RCPlist2Column
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);
 <a href="/usr/share/gtk-doc/html/gtk/GtkListStore.html"><span class="returnvalue">GtkListStore</span></a> *      <a class="link" href="RhythmCat-Playlist.html#rc-plist-get-list-store" title="rc_plist_get_list_store ()">rc_plist_get_list_store</a>             (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> index</code></em>);
 <a href="/usr/share/gtk-doc/html/gtk/GtkListStore.html"><span class="returnvalue">GtkListStore</span></a> *      <a class="link" href="RhythmCat-Playlist.html#rc-plist-get-list-head" title="rc_plist_get_list_head ()">rc_plist_get_list_head</a>              ();
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-get-list-index" title="rc_plist_get_list_index ()">rc_plist_get_list_index</a>             (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkListStore.html"><span class="type">GtkListStore</span></a> *list_store</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Playlist.html#rc-plist-list2-refresh" title="rc_plist_list2_refresh ()">rc_plist_list2_refresh</a>              (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list1_index</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-import-job-get-length" title="rc_plist_import_job_get_length ()">rc_plist_import_job_get_length</a>      ();
 <span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Playlist.html#rc-plist-import-job-cancel" title="rc_plist_import_job_cancel ()">rc_plist_import_job_cancel</a>          ();
@@ -299,6 +303,42 @@ Insert a new playlist into the playlist.
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list2_index</code></em>);</pre>
 <p>
 Import music by given URI to the playlist.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>uri</code></em> :</span></p></td>
+<td>the URI of the music
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>list1_index</code></em> :</span></p></td>
+<td>the index of the playlists to insert to
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>list2_index</code></em> :</span></p></td>
+<td>the position where the music insert to, -1 to append to
+the last
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> Whether the insertion succeeds.
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_plist_insert_music_play ()">
+<a name="rc-plist-insert-music-play"></a><h3>rc_plist_insert_music_play ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_plist_insert_music_play          (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list1_index</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> list2_index</code></em>);</pre>
+<p>
+Import music by given URI to the playlist, and then play it.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -927,6 +967,29 @@ Return the GtkListStore of the playlists.
 <td> The GtkListStore of the playlists.
 </td>
 </tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2" title="rc_plist_get_list_index ()">
+<a name="rc-plist-get-list-index"></a><h3>rc_plist_get_list_index ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                rc_plist_get_list_index             (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkListStore.html"><span class="type">GtkListStore</span></a> *list_store</code></em>);</pre>
+<p>
+Return the index of the GtkListStore in the playlists.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>list_store</code></em> :</span></p></td>
+<td>the list_store pointer
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td> The index of the GtkListStore, -1 if not found.
+</td>
+</tr>
+</tbody>
 </table></div>
 </div>
 <hr>

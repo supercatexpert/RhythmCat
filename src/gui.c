@@ -1810,6 +1810,8 @@ void rc_gui_status_progress_set_progress()
         return;
     }
     percent = (gdouble)(completed_num) / rc_gui.status_task_length;
+    if(percent>1.0) percent = 1.0;
+    if(percent<0.0) percent = 0.0;
     g_snprintf(text, 63, "%u / %u", completed_num, rc_gui.status_task_length);
     gtk_progress_bar_set_text(GTK_PROGRESS_BAR(rc_gui.status_progress), text);
     gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(rc_gui.status_progress),

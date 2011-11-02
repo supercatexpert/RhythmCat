@@ -1002,3 +1002,37 @@ gboolean rc_gui_list2_get_cursor(GtkTreeIter *iter)
     return flag;
 }
 
+/**
+ * rc_gui_list1_scroll_to_index:
+ * @list_index: the index of the item
+ *
+ * Make the list scrolled to the given index.
+ */
+
+void rc_gui_list1_scroll_to_index(gint list_index)
+{
+    GtkTreePath *path;
+    if(list_index<0 || list_index>=rc_plist_get_list1_length()) return;
+    path = gtk_tree_path_new_from_indices(list_index,-1);
+    gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(rc_ui->list1_tree_view), path,
+        NULL, FALSE, 0.0, 0.0);
+    gtk_tree_path_free(path);
+}
+
+/**
+ * rc_gui_list2_scroll_to_index:
+ * @list_index: the index of the item
+ *
+ * Make the playlist scrolled to the given index
+ */
+
+void rc_gui_list2_scroll_to_index(gint list_index)
+{
+    GtkTreePath *path;
+    if(list_index<0) return;
+    path = gtk_tree_path_new_from_indices(list_index, -1);
+    gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(rc_ui->list2_tree_view), path,
+        NULL, FALSE, 0.0, 0.0);
+    gtk_tree_path_free(path);
+}
+

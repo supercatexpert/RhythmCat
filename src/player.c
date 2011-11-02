@@ -67,9 +67,9 @@
 #endif
 
 static const gchar rc_player_program_name[] = "RhythmCat Music Player";
-static const gchar rc_player_build_date[] = "111022";
-static const gchar rc_player_version[] = "1.0.0 RC 2";
-static const gboolean rc_player_stable_flag = FALSE;
+static const gchar rc_player_build_date[] = "111102";
+static const gchar rc_player_version[] = "1.0.0";
+static const gboolean rc_player_stable_flag = TRUE;
 static const gchar *rc_player_support_formatx = "(.FLAC|.OGG|.MP3|.WMA|.WAV|"
     ".OGA|.OGM|.APE|.AAC|.AC3|.MIDI|.MP2|.MID|.M4A|.CUE)$";
 static GRegex *rc_player_support_format_regex = NULL;

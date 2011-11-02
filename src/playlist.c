@@ -61,6 +61,7 @@ typedef struct RCPlistImportData {
     gint list2_index;
     gboolean refresh_flag;
     gboolean auto_clean;
+    gboolean play_flag;
     GtkTreeRowReference *reference;
     GtkListStore *store;
 }RCPlistImportData;
@@ -122,6 +123,8 @@ static gpointer rc_plist_import_job_func(gpointer data)
                             msg->list2_index += i;
                         msg->store = import_data->store;
                         msg->mmd = mmd;
+                        if(i==0)
+                            msg->play_flag = import_data->play_flag;
                         rc_msg_push(MSG_TYPE_PL_INSERT, msg);
                     }
                     rc_tag_free(cue_mmd);
@@ -154,6 +157,7 @@ static gpointer rc_plist_import_job_func(gpointer data)
                             msg->store = import_data->store;
                             msg->reference = import_data->reference;
                             msg->mmd = mmd;
+                            msg->play_flag = import_data->play_flag;
                             if(!import_data->refresh_flag)
                                 rc_msg_push(MSG_TYPE_PL_INSERT, msg);
                             else
@@ -228,12 +232,13 @@ static gpointer rc_plist_import_job_func(gpointer data)
                                 msg->list2_index += i;
                             msg->store = import_data->store;
                             msg->mmd = cue_mmd;
+                            if(i==0)
+                                msg->play_flag = import_data->play_flag;
                             rc_msg_push(MSG_TYPE_PL_INSERT, msg);
                         }
                     }
                     else
                         rc_msg_push(MSG_TYPE_EMPTY, NULL);
-
                 }
                 else
                     rc_msg_push(MSG_TYPE_EMPTY, NULL);
@@ -264,6 +269,7 @@ static gpointer rc_plist_import_job_func(gpointer data)
             msg->reference = import_data->reference;
             msg->store = import_data->store;
             msg->mmd = mmd;
+            msg->play_flag = import_data->play_flag;
             if(!import_data->refresh_flag)
                 rc_msg_push(MSG_TYPE_PL_INSERT, msg);
             else
@@ -361,6 +367,35 @@ gboolean rc_plist_insert_music(const gchar *uri, gint list1_index,
     import_data->store = rc_plist_get_list_store(list1_index);
     import_data->list2_index = list2_index;
     import_data->refresh_flag = FALSE;
+    g_async_queue_push(plist_import_job_queue, import_data);
+    return TRUE;
+}
+
+/**
+ * rc_plist_insert_music_play:
+ * @uri: the URI of the music
+ * @list1_index: the index of the playlists to insert to
+ * @list2_index: the position where the music insert to, -1 to append to
+ * the last
+ *
+ * Import music by given URI to the playlist, and then play it.
+ *
+ * Returns: Whether the insertion succeeds.
+ */
+
+gboolean rc_plist_insert_music_play(const gchar *uri, gint list1_index,
+    gint list2_index)
+{
+    GtkListStore *store;
+    RCPlistImportData *import_data;
+    store = rc_plist_get_list_store(list1_index);
+    if(store==NULL) return FALSE;
+    import_data = g_new0(RCPlistImportData, 1);
+    import_data->uri = g_strdup(uri);
+    import_data->store = rc_plist_get_list_store(list1_index);
+    import_data->list2_index = list2_index;
+    import_data->refresh_flag = FALSE;
+    import_data->play_flag = TRUE;
     g_async_queue_push(plist_import_job_queue, import_data);
     return TRUE;
 }
@@ -1847,6 +1882,41 @@ GtkListStore *rc_plist_get_list_head()
 }
 
 /**
+ * rc_plist_get_list_index:
+ * @list_store: the list_store pointer
+ *
+ * Return the index of the GtkListStore in the playlists.
+ *
+ * Returns: The index of the GtkListStore, -1 if not found.
+ */
+
+gint rc_plist_get_list_index(GtkListStore *list_store)
+{
+    GtkListStore *pl_store;
+    GtkTreeIter iter;
+    gint value = -1;
+    gint i = 0;
+    if(list_store==NULL) return -1;
+    if(!gtk_tree_model_get_iter_first(GTK_TREE_MODEL(rc_plist.list_store),
+        &iter))
+        return -1;
+    do
+    {
+        gtk_tree_model_get(GTK_TREE_MODEL(rc_plist.list_store), &iter,
+            PLIST1_STORE, &pl_store, -1);
+        if(pl_store==list_store)
+        {
+            value = i;
+            break;
+        }
+        i++;
+    }
+    while(gtk_tree_model_iter_next(GTK_TREE_MODEL(rc_plist.list_store),
+        &iter));
+    return value;
+}
+
+/**
  * rc_plist_list2_refresh:
  * @list1_index: the index of the playlist to refresh
  *
@@ -1940,10 +2010,15 @@ void rc_plist_load_argument(char *argv[])
     gint i = 0;
     gint list_index = -1;
     gint music_index = 0;
+    gint skip_index = 0;
     gchar *uri = NULL;
     GtkTreeIter iter;
     gchar *list_name;
+    gchar *list_uri;
+    gboolean first_load = TRUE;
+    gboolean skip_flag = FALSE;
     GFile *gfile;
+    GtkListStore *default_store = NULL;
     if(!gtk_tree_model_get_iter_first(GTK_TREE_MODEL(rc_plist.list_store), 
         &iter)) return;
     i = 0;
@@ -1951,9 +2026,13 @@ void rc_plist_load_argument(char *argv[])
     {
         gtk_tree_model_get(GTK_TREE_MODEL(rc_plist.list_store), &iter,
             PLIST1_NAME, &list_name, -1);
-        if(strncmp(list_name, default_list_name, 512)==0)
+        if(g_strcmp0(list_name, default_list_name)==0)
         {
             list_index = i;
+            g_free(list_name);
+            gtk_tree_model_get(GTK_TREE_MODEL(rc_plist.list_store), &iter,
+                PLIST1_STORE, &default_store, -1);
+            break;
         }
         g_free(list_name);
         i++;
@@ -1972,12 +2051,52 @@ void rc_plist_load_argument(char *argv[])
         g_object_unref(gfile);
         if(uri!=NULL)
         {
-            rc_plist_insert_music(uri, list_index, music_index);
+            skip_flag = FALSE;
+            if(default_store!=NULL && gtk_tree_model_get_iter_first(
+               GTK_TREE_MODEL(default_store), &iter))
+            {
+                do
+                {
+                    gtk_tree_model_get(GTK_TREE_MODEL(default_store), &iter,
+                        PLIST2_URI, &list_uri, -1);
+                    if(list_uri!=NULL)
+                    {
+                        if(g_strcmp0(list_uri, uri)==0)
+                        {
+                            skip_flag = TRUE;
+                            break;
+                        }
+                        g_free(list_uri);
+                    }
+                    skip_index++;
+                }
+                while(gtk_tree_model_iter_next(GTK_TREE_MODEL(default_store),
+                    &iter));
+            }
+            if(skip_flag)
+            {
+                if(first_load)
+                {
+                    rc_plist_play_by_index(list_index, skip_index);
+                    rc_core_play();
+                    first_load = FALSE;
+                }
+                g_free(uri);
+                continue;
+            }
+            if(first_load)
+            {
+                rc_plist_insert_music_play(uri, list_index, music_index);
+                first_load = FALSE;
+            }
+            else
+                rc_plist_insert_music(uri, list_index, music_index);
             music_index++;
             g_free(uri);
         }
     }
     rc_gui_select_list1(list_index);
+    rc_gui_list1_scroll_to_index(list_index);
 }
 
 /**

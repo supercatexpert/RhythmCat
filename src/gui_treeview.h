@@ -45,6 +45,8 @@ GtkTreeModel *rc_gui_list1_get_model();
 GtkTreeModel *rc_gui_list2_get_model();
 gboolean rc_gui_list1_get_cursor(GtkTreeIter *iter);
 gboolean rc_gui_list2_get_cursor(GtkTreeIter *iter);
+void rc_gui_list1_scroll_to_index(gint list_index);
+void rc_gui_list2_scroll_to_index(gint list_index);
 
 G_END_DECLS
 

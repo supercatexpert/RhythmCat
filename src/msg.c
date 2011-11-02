@@ -138,6 +138,8 @@ static void rc_msg_process_func(gpointer data, gpointer user_data)
     RCMsgData *msg = (RCMsgData *)data;
     RCMusicMetaData *mmd;
     RCMsgPlistData *plist_msg;
+    gint list1_index = 0;
+    gboolean flag = FALSE;
     if(data!=NULL)
     {
         switch(msg->type)
@@ -152,6 +154,16 @@ static void rc_msg_process_func(gpointer data, gpointer user_data)
                     mmd->artist, mmd->album, mmd->length, mmd->tracknum,
                     plist_msg->store, plist_msg->list2_index);
                 rc_tag_free(mmd);
+                if(plist_msg->play_flag)
+                {
+                    list1_index = rc_plist_get_list_index(plist_msg->store);
+                    if(list1_index>=0)
+                    {
+                        flag = rc_plist_play_by_index(list1_index,
+                            plist_msg->list2_index);
+                        if(flag) rc_core_play();
+                    }
+                }
                 g_free(plist_msg);
                 rc_gui_status_progress_set_progress();
                 break;

@@ -150,6 +150,7 @@
 <ANCHOR id="rc-plist-exit" href="RhythmCat/RhythmCat-Playlist.html#rc-plist-exit">
 <ANCHOR id="rc-plist-insert-list" href="RhythmCat/RhythmCat-Playlist.html#rc-plist-insert-list">
 <ANCHOR id="rc-plist-insert-music" href="RhythmCat/RhythmCat-Playlist.html#rc-plist-insert-music">
+<ANCHOR id="rc-plist-insert-music-play" href="RhythmCat/RhythmCat-Playlist.html#rc-plist-insert-music-play">
 <ANCHOR id="rc-plist-list2-insert-item" href="RhythmCat/RhythmCat-Playlist.html#rc-plist-list2-insert-item">
 <ANCHOR id="rc-plist-list2-refresh-item" href="RhythmCat/RhythmCat-Playlist.html#rc-plist-list2-refresh-item">
 <ANCHOR id="rc-plist-list2-remove-item" href="RhythmCat/RhythmCat-Playlist.html#rc-plist-list2-remove-item">
@@ -175,6 +176,7 @@
 <ANCHOR id="rc-plist-load-playlist" href="RhythmCat/RhythmCat-Playlist.html#rc-plist-load-playlist">
 <ANCHOR id="rc-plist-get-list-store" href="RhythmCat/RhythmCat-Playlist.html#rc-plist-get-list-store">
 <ANCHOR id="rc-plist-get-list-head" href="RhythmCat/RhythmCat-Playlist.html#rc-plist-get-list-head">
+<ANCHOR id="rc-plist-get-list-index" href="RhythmCat/RhythmCat-Playlist.html#rc-plist-get-list-index">
 <ANCHOR id="rc-plist-list2-refresh" href="RhythmCat/RhythmCat-Playlist.html#rc-plist-list2-refresh">
 <ANCHOR id="rc-plist-import-job-get-length" href="RhythmCat/RhythmCat-Playlist.html#rc-plist-import-job-get-length">
 <ANCHOR id="rc-plist-import-job-cancel" href="RhythmCat/RhythmCat-Playlist.html#rc-plist-import-job-cancel">
@@ -347,6 +349,8 @@
 <ANCHOR id="rc-gui-list2-get-model" href="RhythmCat/RhythmCat-Playlist-Views-UI.html#rc-gui-list2-get-model">
 <ANCHOR id="rc-gui-list1-get-cursor" href="RhythmCat/RhythmCat-Playlist-Views-UI.html#rc-gui-list1-get-cursor">
 <ANCHOR id="rc-gui-list2-get-cursor" href="RhythmCat/RhythmCat-Playlist-Views-UI.html#rc-gui-list2-get-cursor">
+<ANCHOR id="rc-gui-list1-scroll-to-index" href="RhythmCat/RhythmCat-Playlist-Views-UI.html#rc-gui-list1-scroll-to-index">
+<ANCHOR id="rc-gui-list2-scroll-to-index" href="RhythmCat/RhythmCat-Playlist-Views-UI.html#rc-gui-list2-scroll-to-index">
 <ANCHOR id="RhythmCat-Mini-Mode-UI" href="RhythmCat/RhythmCat-Mini-Mode-UI.html">
 <ANCHOR id="RhythmCat-Mini-Mode-UI.synopsis" href="RhythmCat/RhythmCat-Mini-Mode-UI.html#RhythmCat-Mini-Mode-UI.synopsis">
 <ANCHOR id="RhythmCat-Mini-Mode-UI.description" href="RhythmCat/RhythmCat-Mini-Mode-UI.html#RhythmCat-Mini-Mode-UI.description">

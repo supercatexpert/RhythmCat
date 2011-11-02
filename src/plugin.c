@@ -157,7 +157,8 @@ void rc_plugin_exit()
             module_data->path);
         g_key_file_set_integer(plugin_configure, group_name, "Type",
             PLUGIN_TYPE_MODULE);
-        module_data->module_exit();
+        if(!module_data->suspend)
+            module_data->module_exit();
         g_module_close(module_data->module);
         rc_plugin_module_free(module_data);
     }

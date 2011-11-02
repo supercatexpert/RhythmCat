@@ -37,6 +37,8 @@
 <link linkend="GtkTreeModel"><returnvalue>GtkTreeModel</returnvalue></link> *      <link linkend="rc-gui-list2-get-model">rc_gui_list2_get_model</link>              ();
 <link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-gui-list1-get-cursor">rc_gui_list1_get_cursor</link>             (<parameter><link linkend="GtkTreeIter"><type>GtkTreeIter</type></link> *iter</parameter>);
 <link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rc-gui-list2-get-cursor">rc_gui_list2_get_cursor</link>             (<parameter><link linkend="GtkTreeIter"><type>GtkTreeIter</type></link> *iter</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-list1-scroll-to-index">rc_gui_list1_scroll_to_index</link>        (<parameter><link linkend="gint"><type>gint</type></link> list_index</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-list2-scroll-to-index">rc_gui_list2_scroll_to_index</link>        (<parameter><link linkend="gint"><type>gint</type></link> list_index</parameter>);
 </synopsis>
 </refsynopsisdiv>
 
@@ -173,6 +175,28 @@ Get the GtkTreeIter of the selected item.
 <listitem><simpara>the uninitialized GtkTreeIter
 </simpara></listitem></varlistentry>
 <varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara> TRUE, if iter was set.
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-gui-list1-scroll-to-index" role="function">
+<title>rc_gui_list1_scroll_to_index ()</title>
+<indexterm zone="rc-gui-list1-scroll-to-index"><primary>rc_gui_list1_scroll_to_index</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_list1_scroll_to_index        (<parameter><link linkend="gint"><type>gint</type></link> list_index</parameter>);</programlisting>
+<para>
+Make the list scrolled to the given index.
+</para><variablelist role="params">
+<varlistentry><term><parameter>list_index</parameter>&#160;:</term>
+<listitem><simpara>the index of the item
+</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rc-gui-list2-scroll-to-index" role="function">
+<title>rc_gui_list2_scroll_to_index ()</title>
+<indexterm zone="rc-gui-list2-scroll-to-index"><primary>rc_gui_list2_scroll_to_index</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_list2_scroll_to_index        (<parameter><link linkend="gint"><type>gint</type></link> list_index</parameter>);</programlisting>
+<para>
+Make the playlist scrolled to the given index
+</para><variablelist role="params">
+<varlistentry><term><parameter>list_index</parameter>&#160;:</term>
+<listitem><simpara>the index of the item
 </simpara></listitem></varlistentry>
 </variablelist></refsect2>
 

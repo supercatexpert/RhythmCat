@@ -126,6 +126,7 @@
     <function name="rc_plist_exit ()" link="RhythmCat-Playlist.html#rc-plist-exit"/>
     <function name="rc_plist_insert_list ()" link="RhythmCat-Playlist.html#rc-plist-insert-list"/>
     <function name="rc_plist_insert_music ()" link="RhythmCat-Playlist.html#rc-plist-insert-music"/>
+    <function name="rc_plist_insert_music_play ()" link="RhythmCat-Playlist.html#rc-plist-insert-music-play"/>
     <function name="rc_plist_list2_insert_item ()" link="RhythmCat-Playlist.html#rc-plist-list2-insert-item"/>
     <function name="rc_plist_list2_refresh_item ()" link="RhythmCat-Playlist.html#rc-plist-list2-refresh-item"/>
     <function name="rc_plist_list2_remove_item ()" link="RhythmCat-Playlist.html#rc-plist-list2-remove-item"/>
@@ -151,6 +152,7 @@
     <function name="rc_plist_load_playlist ()" link="RhythmCat-Playlist.html#rc-plist-load-playlist"/>
     <function name="rc_plist_get_list_store ()" link="RhythmCat-Playlist.html#rc-plist-get-list-store"/>
     <function name="rc_plist_get_list_head ()" link="RhythmCat-Playlist.html#rc-plist-get-list-head"/>
+    <function name="rc_plist_get_list_index ()" link="RhythmCat-Playlist.html#rc-plist-get-list-index"/>
     <function name="rc_plist_list2_refresh ()" link="RhythmCat-Playlist.html#rc-plist-list2-refresh"/>
     <function name="rc_plist_import_job_get_length ()" link="RhythmCat-Playlist.html#rc-plist-import-job-get-length"/>
     <function name="rc_plist_import_job_cancel ()" link="RhythmCat-Playlist.html#rc-plist-import-job-cancel"/>
@@ -282,6 +284,8 @@
     <function name="rc_gui_list2_get_model ()" link="RhythmCat-Playlist-Views-UI.html#rc-gui-list2-get-model"/>
     <function name="rc_gui_list1_get_cursor ()" link="RhythmCat-Playlist-Views-UI.html#rc-gui-list1-get-cursor"/>
     <function name="rc_gui_list2_get_cursor ()" link="RhythmCat-Playlist-Views-UI.html#rc-gui-list2-get-cursor"/>
+    <function name="rc_gui_list1_scroll_to_index ()" link="RhythmCat-Playlist-Views-UI.html#rc-gui-list1-scroll-to-index"/>
+    <function name="rc_gui_list2_scroll_to_index ()" link="RhythmCat-Playlist-Views-UI.html#rc-gui-list2-scroll-to-index"/>
     <function name="rc_gui_mini_init ()" link="RhythmCat-Mini-Mode-UI.html#rc-gui-mini-init"/>
     <function name="rc_gui_mini_get_data ()" link="RhythmCat-Mini-Mode-UI.html#rc-gui-mini-get-data"/>
     <function name="rc_gui_mini_set_info_text ()" link="RhythmCat-Mini-Mode-UI.html#rc-gui-mini-set-info-text"/>
@@ -296,13 +300,13 @@
     <function name="rc_gui_mini_normal_mode_clicked ()" link="RhythmCat-Mini-Mode-UI.html#rc-gui-mini-normal-mode-clicked"/>
     <function name="rc_gui_create_setting_window ()" link="RhythmCat-Settings-UI.html#rc-gui-create-setting-window"/>
     <function name="rc_gui_plugin_window_create ()" link="RhythmCat-Plugin-Configuration-UI.html#rc-gui-plugin-window-create"/>
-    <function name="Introduction" link="PluginProgramming.html#id626718"/>
-    <function name="Preparation" link="PluginProgramming.html#id570814"/>
-    <function name="Implement a simple plugin" link="PluginProgramming.html#id565214"/>
-    <function name="How to compile the plugin" link="PluginProgramming.html#id572235"/>
-    <function name="Write a plugin description file" link="PluginProgramming.html#id567645"/>
-    <function name="Make your custom plugin work" link="PluginProgramming.html#id568057"/>
-    <function name="Catch signals in the player" link="PluginProgramming.html#id602527"/>
-    <function name="About this manual" link="PluginProgramming.html#id590112"/>
+    <function name="Introduction" link="PluginProgramming.html#id623651"/>
+    <function name="Preparation" link="PluginProgramming.html#id601377"/>
+    <function name="Implement a simple plugin" link="PluginProgramming.html#id655988"/>
+    <function name="How to compile the plugin" link="PluginProgramming.html#id610104"/>
+    <function name="Write a plugin description file" link="PluginProgramming.html#id655820"/>
+    <function name="Make your custom plugin work" link="PluginProgramming.html#id653648"/>
+    <function name="Catch signals in the player" link="PluginProgramming.html#id625028"/>
+    <function name="About this manual" link="PluginProgramming.html#id601851"/>
   </functions>
 </book>

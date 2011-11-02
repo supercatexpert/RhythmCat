@@ -51,6 +51,7 @@ typedef void (*RCMsgAsyncQueueWatchFunc)(gpointer item, gpointer data);
  * @reference: the GtkTreeRowReference, used in list2 refresh operation
  * @store: the GtkListStore, used in list2 refresh operation
  * @mmd: the metadata
+ * @play_flag: play the inserted music when the insert operation finished
  *
  * The playlist item message data used in playlist operation.
  */
@@ -61,6 +62,7 @@ typedef struct RCMsgPlistData
     GtkTreeRowReference *reference;
     GtkListStore *store;
     struct RCMusicMetaData *mmd;
+    gboolean play_flag;
 }RCMsgPlistData;
 
 /**
