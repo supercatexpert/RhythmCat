@@ -29,6 +29,7 @@
 #include "gui.h"
 #include "playlist.h"
 #include "settings.h"
+#include "signal.h"
 #include "shell.h"
 #include "plugin.h"
 #include "debug.h"
@@ -425,6 +426,7 @@ void rc_player_init(int *argc, char **argv[])
 
 void rc_player_main()
 {
+    rc_signal_register();
     gtk_main();
 }
 

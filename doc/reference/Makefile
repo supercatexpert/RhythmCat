@@ -43,7 +43,12 @@ DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	$(top_srcdir)/gtk-doc.make
 subdir = doc/reference
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/configure.in
+am__aclocal_m4_deps = $(top_srcdir)/m4/gettext.m4 \
+	$(top_srcdir)/m4/gtk-doc.m4 $(top_srcdir)/m4/iconv.m4 \
+	$(top_srcdir)/m4/lib-ld.m4 $(top_srcdir)/m4/lib-link.m4 \
+	$(top_srcdir)/m4/lib-prefix.m4 $(top_srcdir)/m4/nls.m4 \
+	$(top_srcdir)/m4/po.m4 $(top_srcdir)/m4/progtest.m4 \
+	$(top_srcdir)/configure.in
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -53,18 +58,18 @@ CONFIG_CLEAN_VPATH_FILES =
 SOURCES =
 DIST_SOURCES =
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-ACLOCAL = ${SHELL} /home/supercat/Project/RhythmCat/Sources/missing --run aclocal-1.11
-AMTAR = ${SHELL} /home/supercat/Project/RhythmCat/Sources/missing --run tar
-AUTOCONF = ${SHELL} /home/supercat/Project/RhythmCat/Sources/missing --run autoconf
-AUTOHEADER = ${SHELL} /home/supercat/Project/RhythmCat/Sources/missing --run autoheader
-AUTOMAKE = ${SHELL} /home/supercat/Project/RhythmCat/Sources/missing --run automake-1.11
+ACLOCAL = ${SHELL} /home/mike/Projects/Clone/RhythmCat/missing --run aclocal-1.11
+AMTAR = ${SHELL} /home/mike/Projects/Clone/RhythmCat/missing --run tar
+AUTOCONF = ${SHELL} /home/mike/Projects/Clone/RhythmCat/missing --run autoconf
+AUTOHEADER = ${SHELL} /home/mike/Projects/Clone/RhythmCat/missing --run autoheader
+AUTOMAKE = ${SHELL} /home/mike/Projects/Clone/RhythmCat/missing --run automake-1.11
 AWK = gawk
 CATALOGS =  zh_CN.gmo zh_TW.gmo ja_JP.gmo
 CATOBJEXT = .gmo
-CC = gcc
+CC = clang
 CCDEPMODE = depmode=gcc3
 CFLAGS = -Wall -O3 -DINSTALL_PATH=\"${datarootdir}/RhythmCat/\"
-CPP = gcc -E
+CPP = clang -E
 CPPFLAGS = 
 CYGPATH_W = echo
 DATADIRNAME = share
@@ -91,10 +96,10 @@ GSTREAMER_LIBS = -pthread -lgstpbutils-0.10 -lgstreamer-0.10 -lgobject-2.0 -lgmo
 GTKDOC_CHECK = /usr/bin/gtkdoc-check
 GTKDOC_MKPDF = /usr/bin/gtkdoc-mkpdf
 GTKDOC_REBASE = /usr/bin/gtkdoc-rebase
-GTK_CFLAGS = -pthread -I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/gio-unix-2.0/ -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng12 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include  
-GTK_LIBS = -pthread -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lpangoft2-1.0 -lgdk_pixbuf-2.0 -lm -lpangocairo-1.0 -lcairo -lgio-2.0 -lpango-1.0 -lfreetype -lfontconfig -lgobject-2.0 -lgmodule-2.0 -lgthread-2.0 -lrt -lglib-2.0  
+GTK_CFLAGS = -pthread -I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng14  
+GTK_LIBS = -pthread -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lgio-2.0 -lpangoft2-1.0 -lpangocairo-1.0 -lgdk_pixbuf-2.0 -lcairo -lpango-1.0 -lfreetype -lfontconfig -lgobject-2.0 -lgmodule-2.0 -lgthread-2.0 -lrt -lglib-2.0  
 HTML_DIR = ${datadir}/gtk-doc/html
-INSTALL = /usr/bin/install -c
+INSTALL = /bin/install -c
 INSTALL_DATA = ${INSTALL} -m 644
 INSTALL_PROGRAM = ${INSTALL}
 INSTALL_SCRIPT = ${INSTALL}
@@ -111,7 +116,7 @@ LN_S = ln -s
 LTLIBICONV = -liconv
 LTLIBINTL = 
 LTLIBOBJS = 
-MAKEINFO = ${SHELL} /home/supercat/Project/RhythmCat/Sources/missing --run makeinfo
+MAKEINFO = ${SHELL} /home/mike/Projects/Clone/RhythmCat/missing --run makeinfo
 MKDIR_P = /bin/mkdir -p
 MKINSTALLDIRS = ./mkinstalldirs
 MSGFMT = /usr/bin/msgfmt
@@ -135,18 +140,18 @@ POSUB = po
 PO_IN_DATADIR_FALSE = 
 PO_IN_DATADIR_TRUE = 
 SET_MAKE = 
-SHELL = /bin/bash
+SHELL = /bin/sh
 STRIP = 
 USE_NLS = yes
 VERSION = 1.0.0
 XGETTEXT = /usr/bin/xgettext
 XGETTEXT_015 = /usr/bin/xgettext
 XGETTEXT_EXTRA_OPTIONS = 
-abs_builddir = /home/supercat/Project/RhythmCat/Sources/doc/reference
-abs_srcdir = /home/supercat/Project/RhythmCat/Sources/doc/reference
-abs_top_builddir = /home/supercat/Project/RhythmCat/Sources
-abs_top_srcdir = /home/supercat/Project/RhythmCat/Sources
-ac_ct_CC = gcc
+abs_builddir = /home/mike/Projects/Clone/RhythmCat/doc/reference
+abs_srcdir = /home/mike/Projects/Clone/RhythmCat/doc/reference
+abs_top_builddir = /home/mike/Projects/Clone/RhythmCat
+abs_top_srcdir = /home/mike/Projects/Clone/RhythmCat
+ac_ct_CC = clang
 am__include = include
 am__leading_dot = .
 am__quote = 
@@ -172,7 +177,7 @@ host_vendor = unknown
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /home/supercat/Project/RhythmCat/Sources/install-sh
+install_sh = ${SHELL} /home/mike/Projects/Clone/RhythmCat/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -181,7 +186,7 @@ mandir = ${datarootdir}/man
 mkdir_p = /bin/mkdir -p
 oldincludedir = /usr/include
 pdfdir = ${docdir}
-prefix = /opt/amd64/RhythmCat
+prefix = /usr/local
 program_transform_name = s,x,x,
 psdir = ${docdir}
 sbindir = ${exec_prefix}/sbin
@@ -268,10 +273,10 @@ expand_content_files = plugin-programming.xml
 # signals and properties.
 # e.g. GTKDOC_CFLAGS=-I$(top_srcdir) -I$(top_builddir) $(GTK_DEBUG_FLAGS)
 # e.g. GTKDOC_LIBS=$(top_builddir)/gtk/$(gtktargetlib)
-GTKDOC_CFLAGS = -I-pthread -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include   -I-pthread -I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/gio-unix-2.0/ -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng12 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include   -I-pthread -I/usr/include/gstreamer-0.10 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/libxml2   \
+GTKDOC_CFLAGS = -I-pthread -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include   -I-pthread -I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng14   -I-pthread -I/usr/include/gstreamer-0.10 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/libxml2   \
     -I$(top_srcdir)/src
 
-GTKDOC_LIBS = -pthread -Wl,--export-dynamic -lgio-2.0 -lgobject-2.0 -lgmodule-2.0 -lgthread-2.0 -lrt -lglib-2.0   -pthread -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lpangoft2-1.0 -lgdk_pixbuf-2.0 -lm -lpangocairo-1.0 -lcairo -lgio-2.0 -lpango-1.0 -lfreetype -lfontconfig -lgobject-2.0 -lgmodule-2.0 -lgthread-2.0 -lrt -lglib-2.0   $(top_srcdir)/src/player_object.o \
+GTKDOC_LIBS = -pthread -Wl,--export-dynamic -lgio-2.0 -lgobject-2.0 -lgmodule-2.0 -lgthread-2.0 -lrt -lglib-2.0   -pthread -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lgio-2.0 -lpangoft2-1.0 -lpangocairo-1.0 -lgdk_pixbuf-2.0 -lcairo -lpango-1.0 -lfreetype -lfontconfig -lgobject-2.0 -lgmodule-2.0 -lgthread-2.0 -lrt -lglib-2.0   $(top_srcdir)/src/player_object.o \
     $(top_srcdir)/src/gui_text.o
 
 GTKDOC_CC = $(CC) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -312,10 +317,10 @@ REPORT_FILES = \
 	$(DOC_MODULE)-unused.txt
 
 CLEANFILES = $(SCANOBJ_FILES) $(REPORT_FILES) $(DOC_STAMPS)
-#HTML_BUILD_STAMP = 
-HTML_BUILD_STAMP = html-build.stamp
-PDF_BUILD_STAMP = 
-#PDF_BUILD_STAMP = pdf-build.stamp
+##HTML_BUILD_STAMP = 
+#HTML_BUILD_STAMP = html-build.stamp
+#PDF_BUILD_STAMP = 
+##PDF_BUILD_STAMP = pdf-build.stamp
 all: all-am
 
 .SUFFIXES:
@@ -502,8 +507,8 @@ uninstall-am: uninstall-local
 	uninstall-local
 
 
-all-local: $(HTML_BUILD_STAMP) $(PDF_BUILD_STAMP)
-#all-local:
+#all-local: $(HTML_BUILD_STAMP) $(PDF_BUILD_STAMP)
+all-local:
 
 docs: $(HTML_BUILD_STAMP) $(PDF_BUILD_STAMP)
 
@@ -633,10 +638,10 @@ uninstall-local:
 #
 # Require gtk-doc when making dist
 #
-dist-check-gtkdoc:
 #dist-check-gtkdoc:
-#	@echo "*** gtk-doc must be installed and enabled in order to make dist"
-#	@false
+dist-check-gtkdoc:
+	@echo "*** gtk-doc must be installed and enabled in order to make dist"
+	@false
 
 dist-hook: dist-check-gtkdoc dist-hook-local
 	mkdir $(distdir)/html
