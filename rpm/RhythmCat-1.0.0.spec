@@ -2,7 +2,7 @@
 
 Name: RhythmCat
 Version: 1.0.0
-Release: RC2
+Release: 1
 Summary: A Music Player with Plugin Support
 Source0: %{name}-%{version}.tar.gz
 License: GPLv3
@@ -54,6 +54,6 @@ rm -rf %{buildroot}
 %{_datadir}/applications/%{name}.desktop
 
 %changelog
-* Sat Oct 22 2011 SuperCat <supercatexpert@gmail.com> - 1.0.0-RC2~111022
-- The 1.0.0-RC2 Version Package.
+* Sat Nov 19 2011 SuperCat <supercatexpert@gmail.com> - 1.0.0-1
+- The 1.0.0-1 Stable Version Package.
 

@@ -119,3 +119,7 @@
         * Added auto-play feature when the player is started with commandline
           arguments.
 
+2011-11-11  SuperCat    <supercatexpert@gmail.com>
+        * Added music locator plugin.
+        * Fixed some bugs.
+

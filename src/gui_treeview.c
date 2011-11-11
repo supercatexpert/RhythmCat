@@ -996,6 +996,7 @@ gboolean rc_gui_list2_get_cursor(GtkTreeIter *iter)
     gboolean flag;
     gtk_tree_view_get_cursor(GTK_TREE_VIEW(rc_ui->list2_tree_view), &path,
         NULL);
+    if(path==NULL) return FALSE;
     flag = gtk_tree_model_get_iter(GTK_TREE_MODEL(rc_ui->list2_tree_model),
         iter, path);
     gtk_tree_path_free(path);

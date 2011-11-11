@@ -15,4 +15,5 @@ Description: The base plugins for RhythmCat Music Player.
  It provides:
  * Lyric show plugin
  * Desktop lyric show plugin
- * Notify plugin 
+ * Notify plugin
+ * Music locator plugin

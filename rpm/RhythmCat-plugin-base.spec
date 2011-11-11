@@ -2,7 +2,7 @@
 
 Name: RhythmCat-pluings-base
 Version: 1.0.0
-Release: RC2
+Release: 1
 Summary: The base plugins for RhythmCat Music Player
 Source0: RhythmCat-1.0.0.tar.gz
 License: GPLv3
@@ -32,6 +32,9 @@ cd ..
 cd notify
 make %{_smp_mflags} -f Makefile3
 cd ..
+cd music-locator
+make %{_smp_mflags} -f Makefile3
+cd ..
 
 %install
 rm -rf %{buildroot}
@@ -45,6 +48,9 @@ make -f Makefile3 INSTALL_DIR=%{buildroot}/usr/share/RhythmCat/plugins/desktop-l
 cd ..
 cd notify
 make -f Makefile3 INSTALL_DIR=%{buildroot}/usr/share/RhythmCat/plugins/notify install
+cd ..
+cd music-locator
+make -f Makefile3 INSTALL_DIR=%{buildroot}/usr/share/RhythmCat/plugins/music-locator install
 cd ..
 
 %post
@@ -63,6 +69,6 @@ rm -rf %{buildroot}
 %{_datadir}/RhythmCat/plugins/notify/*
 
 %changelog
-* Sat Oct 22 2011 SuperCat <supercatexpert@gmail.com> - 1.0.0-RC2~111022
-- The 1.0.0-RC2 Version Package.
+* Sat Nov 19 2011 SuperCat <supercatexpert@gmail.com> - 1.0.0-1
+- The 1.0.0-1 Stable Version Package.
 

@@ -2,7 +2,7 @@
 # Contributor: SuperCat <supercatexpert@gmail.com>
 pkgname=rhythmcat-plugins-base
 pkgver=1.0.0
-pkgrel=1
+pkgrel=2
 pkgdesc="The base plugins for RhythmCat Music Player"
 arch=(i686 x86_64)
 url="http://supercat-lab.org"
@@ -35,5 +35,10 @@ build() {
   cd notify
   make -f Makefile3 || return 1
   make INSTALL_DIR=$startdir/pkg/usr/share/RhythmCat/plugins/notify install
+
+  echo "Making plugin Music-Locator..."
+  cd music-locator
+  make -f Makefile3 || return 1
+  make INSTALL_DIR=$startdir/pkg/usr/share/RhythmCat/plugins/music-locator install
 }
 

@@ -72,8 +72,6 @@ static RCPluginModuleData plugin_module_data =
     .busy_flag = FALSE
 };
 
-#define GETTEXT_PACKAGE "LyricShow"
-
 static gulong lyric_found_signal, lyric_stop_signal;
 static GuiLrcData rc_glrc;
 static guint id = 0;

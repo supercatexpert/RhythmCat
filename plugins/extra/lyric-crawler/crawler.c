@@ -54,6 +54,13 @@ typedef struct RCLyricModuleData
     RCLyricCrawlerModuleDownFileFunc download_file;
 }RCLyricModuleData;
 
+typedef struct RCLyricDownResultData
+{
+    gboolean result;
+    gboolean auto_flag;
+    gchar *path;
+}RCLyricDownResultData;
+
 static RCPluginModuleData plugin_module_data = 
 {
     .magic_number = RC_PLUGIN_MAGIC_NUMBER,
@@ -71,6 +78,7 @@ static GtkListStore *lyric_search_module_store = NULL;
 static gulong lyric_missing_signal = 0;
 static RCLyricModuleData *current_crawler_module_data = NULL;
 static gboolean lyric_auto_search = TRUE;
+static gboolean lyric_auto_search_mode = FALSE;
 static GThread *lyric_search_thread = NULL;
 static GThread *lyric_down_thread = NULL;
 static GtkWidget *lyric_search_window = NULL;
@@ -211,6 +219,7 @@ static gboolean rc_plugin_module_search_idle_func(gpointer data)
     gchar *string, *tmp;
     guint len = 0;
     RCLyricCrawlerSearchData *search_data;
+    GtkTreePath *path;
     gtk_list_store_clear(lyric_result_store);
     for(list_foreach=list;list_foreach!=NULL;
         list_foreach=g_slist_next(list_foreach))
@@ -237,6 +246,10 @@ static gboolean rc_plugin_module_search_idle_func(gpointer data)
         g_free(string);
         gtk_label_set_text(GTK_LABEL(lyric_result_label), tmp);
         g_free(tmp);
+        path = gtk_tree_path_new_first();
+        gtk_tree_view_set_cursor(GTK_TREE_VIEW(lyric_result_treeview), path,
+            NULL, FALSE);
+        gtk_tree_path_free(path);
         if(lyric_search_window!=NULL)
             gtk_widget_show_all(lyric_search_window);
     }
@@ -255,8 +268,10 @@ static gboolean rc_plugin_module_search_idle_func(gpointer data)
 static gboolean rc_plugin_module_download_idle_func(gpointer data)
 {
     gchar *string;
-    gboolean flag = GPOINTER_TO_UINT(data);
-    if(flag)
+    RCLyricDownResultData *down_data = (RCLyricDownResultData *)data;
+    gboolean flag;
+    if(data==NULL) return FALSE;
+    if(down_data->result)
     {
         string = g_key_file_get_locale_string(translation_keyfile,
             "Translation", "LyricResultDownload", NULL, NULL);
@@ -264,6 +279,14 @@ static gboolean rc_plugin_module_download_idle_func(gpointer data)
             string = g_strdup("Downloaded successfully");
         gtk_label_set_text(GTK_LABEL(lyric_result_label), string);
         g_free(string);
+        if(down_data->auto_flag && down_data->path!=NULL)
+        {
+            flag = rc_lrc_read_from_file(down_data->path);
+            if(flag)
+            {
+                 rc_player_object_signal_emit_simple("lyric-found");
+            }
+        }
     }
     else
     {
@@ -274,6 +297,8 @@ static gboolean rc_plugin_module_download_idle_func(gpointer data)
         gtk_label_set_text(GTK_LABEL(lyric_result_label), string);
         g_free(string);
     }
+    if(down_data->path!=NULL) g_free(down_data->path);
+    g_free(down_data);
     return FALSE;
 }
 
@@ -281,6 +306,7 @@ static gpointer rc_plugin_module_down_lyric_thread_func(gpointer data)
 {
     gchar **args = (gchar **)data;
     gboolean flag;
+    RCLyricDownResultData *down_data;
     if(args==NULL || args[0]==NULL || args[1]==NULL ||
         current_crawler_module_data==NULL)
     {
@@ -300,7 +326,12 @@ static gpointer rc_plugin_module_down_lyric_thread_func(gpointer data)
     else
         rc_debug_module_pmsg(plugin_module_data.group_name,
             "Cannot download or write lyric file. :(");
-    g_idle_add(rc_plugin_module_download_idle_func, GUINT_TO_POINTER(flag));
+    down_data = g_new0(RCLyricDownResultData, 1);
+    down_data->result = flag;
+    down_data->auto_flag = lyric_auto_search_mode;
+    down_data->path = g_strdup(args[1]);
+    lyric_auto_search_mode = FALSE;
+    g_idle_add(rc_plugin_module_download_idle_func, down_data);
     if(args[0]!=NULL) g_free(args[0]);
     if(args[1]!=NULL) g_free(args[1]);
     g_free(args);
@@ -990,6 +1021,7 @@ static void rc_plugin_module_auto_search_lyric_cb()
     g_free(tmp);
     gtk_entry_set_text(GTK_ENTRY(lyric_save_file_entry), string);
     g_free(string);
+    lyric_auto_search_mode = TRUE;
     gtk_button_clicked(GTK_BUTTON(lyric_search_button));
 }
 

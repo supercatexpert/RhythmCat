@@ -32,7 +32,7 @@ PKG_CHECK_MODULES([GSTREAMER], [gstreamer-0.10 >= 0.10.15, \
     gstreamer-pbutils-0.10 >= 0.10.15])
 
 # Checks for header files.
-AC_CHECK_HEADERS([stdlib.h string.h unistd.h stdio.h limits.h])
+AC_CHECK_HEADERS([stdlib.h string.h unistd.h stdio.h limits.h signal.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_TYPE_PID_T

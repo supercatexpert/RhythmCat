@@ -2,7 +2,7 @@
 
 Name: RhythmCat-pluings-extra
 Version: 1.0.0
-Release: RC2
+Release: 1
 Summary: The base plugins for RhythmCat Music Player
 Source0: RhythmCat-1.0.0.tar.gz
 License: GPLv3
@@ -63,6 +63,6 @@ rm -rf %{buildroot}
 %{_datadir}/RhythmCat/plugins/lyric-crawler/*
 
 %changelog
-* Sat Oct 22 2011 SuperCat <supercatexpert@gmail.com> - 1.0.0-RC2~111022
-- The 1.0.0-RC2 Version Package.
+* Sat Nov 19 2011 SuperCat <supercatexpert@gmail.com> - 1.0.0-1
+- The 1.0.0-1 Version Package.
 
