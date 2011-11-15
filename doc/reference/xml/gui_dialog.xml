@@ -36,6 +36,7 @@
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-save-all-playlists-dialog">rc_gui_save_all_playlists_dialog</link>    ();
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-bind-lyric-file-dialog">rc_gui_bind_lyric_file_dialog</link>       ();
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-bind-album-file-dialog">rc_gui_bind_album_file_dialog</link>       ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rc-gui-show-supported-format-dialog">rc_gui_show_supported_format_dialog</link> ();
 </synopsis>
 </refsynopsisdiv>
 
@@ -136,6 +137,13 @@ Show a dialog to set the lyric binding state of a music item.
 <programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_bind_album_file_dialog       ();</programlisting>
 <para>
 Show a dialog to set the album image binding state of a music item.
+</para></refsect2>
+<refsect2 id="rc-gui-show-supported-format-dialog" role="function">
+<title>rc_gui_show_supported_format_dialog ()</title>
+<indexterm zone="rc-gui-show-supported-format-dialog"><primary>rc_gui_show_supported_format_dialog</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rc_gui_show_supported_format_dialog ();</programlisting>
+<para>
+Show a dialog to show the supported music format by the player.
 </para></refsect2>
 
 </refsect1>

@@ -365,7 +365,7 @@ static void rc_plugin_module_search_window_init()
     gtk_window_set_title(GTK_WINDOW(search_window), string);
     g_free(string);
     gtk_button_box_set_layout(GTK_BUTTON_BOX(button_hbox), GTK_BUTTONBOX_END);
-    gtk_button_box_set_spacing(GTK_BUTTON_BOX(button_hbox), 5);
+    gtk_box_set_spacing(GTK_BOX(button_hbox), 5);
     gtk_widget_set_size_request(search_window, 300, -1);
     gtk_window_set_resizable(GTK_WINDOW(search_window), FALSE);
     gtk_box_pack_start(GTK_BOX(key_hbox), key_label, FALSE, FALSE, 3);

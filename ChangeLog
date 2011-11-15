@@ -123,3 +123,11 @@
         * Added music locator plugin.
         * Fixed some bugs.
 
+2011-11-14  SuperCat    <supercatexpert@gmail.com>
+        * Users can check the supported audio format by this music player now.
+        * Added more audio formats to supported format list.
+        * Added some error message with dialogs. So that the user can know the
+          reason for the errors without using terminals.
+
+
+

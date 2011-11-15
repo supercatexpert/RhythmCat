@@ -60,7 +60,7 @@ static void rc_core_plugin_install_result(GstInstallPluginsReturn result,
             break;
         case GST_INSTALL_PLUGINS_NOT_FOUND:
             rc_debug_module_perror(module_name,
-                "Cannot found necessary plugin!");
+                "Cannot find necessary plugin!");
             break;
         case GST_INSTALL_PLUGINS_ERROR:
             rc_debug_module_perror(module_name, "Cannot install plugin!");
@@ -191,36 +191,85 @@ static gboolean rc_core_pad_buffer_probe_cb(GstPad *pad, GstBuffer *buf,
 
 static gboolean rc_core_plugin_check()
 {
-    GstElementFactory *playbin, *fakesink, *equalizer, *audiosink, *convert;
-    GstElementFactory *volume;
-    gboolean flag = FALSE;
-    playbin = gst_element_factory_find("playbin2");
-    if(playbin==NULL)
-        playbin = gst_element_factory_find("playbin");
-    if(playbin==NULL)
+    if(gst_default_registry_check_feature_version("playbin2", 0, 10, 0))
+        rc_debug_module_pmsg(module_name, "Check playbin2... OK!");
+    else
     {
-        g_assert("Core-CRITICAL: Failed to make playbin/playbin2 element!\n");
-        exit(1);
+        rc_debug_module_pmsg(module_name, "Check playbin2... Not found!");
+        if(gst_default_registry_check_feature_version("playbin", 0, 10, 0))
+            rc_debug_module_pmsg(module_name, "Check playbin... OK!");
+        else
+        {
+            rc_debug_module_pmsg(module_name, "Check playbin... Not found!");
+            rc_debug_module_perror(module_name, "Cannot find necessary "
+                "plugin playbin/playbin2, abort!");
+            rc_gui_show_message_dialog(GTK_MESSAGE_ERROR,
+                _("Critical Error!"), _("Cannot find necessary plugin: %s, "
+               "abort!"), "playbin/playbin2");
+            abort();
+        }
     }
-    gst_object_unref(GST_OBJECT(playbin));
-    fakesink = gst_element_factory_find("fakesink");
-    if(fakesink==NULL)
+    if(gst_default_registry_check_feature_version("decodebin2", 0, 10, 0))
+        rc_debug_module_pmsg(module_name, "Check decodebin2... OK!");
+    else
     {
-        g_assert("Core-CRITICAL: Failed to make fakesink element!\n");
-        exit(1);
+        rc_debug_module_pmsg(module_name, "Check decodebin2... Not found!");
+        if(gst_default_registry_check_feature_version("decodebin", 0, 10, 0))
+            rc_debug_module_pmsg(module_name, "Check decodebin... OK!");
+        else
+        {
+            rc_debug_module_pmsg(module_name, "Check docodebin... Not found!");
+            rc_debug_module_perror(module_name, "Cannot find necessary "
+                "plugin decodebin/decodebin2, abort!");
+            rc_gui_show_message_dialog(GTK_MESSAGE_ERROR,
+                _("Critical Error!"), _("Cannot find necessary plugin: %s, "
+               "abort!"), "decodebin/decodebin2");
+            abort();
+        }
     }
-    gst_object_unref(GST_OBJECT(fakesink));
-    equalizer = gst_element_factory_find("equalizer-10bands");
-    audiosink = gst_element_factory_find("autoaudiosink");
-    volume = gst_element_factory_find("volume");
-    convert = gst_element_factory_find("audioconvert");
-    if(equalizer!=NULL && audiosink!=NULL && volume!=NULL && convert!=NULL)
-        flag = TRUE;
-    if(equalizer!=NULL) gst_object_unref(equalizer);
-    if(audiosink!=NULL) gst_object_unref(audiosink);
-    if(volume!=NULL) gst_object_unref(volume);
-    if(convert!=NULL) gst_object_unref(convert);
-    return flag;
+    if(gst_default_registry_check_feature_version("fakesink", 0, 10, 0))
+        rc_debug_module_pmsg(module_name, "Check fakesink... OK!");
+    else
+    {
+        rc_debug_module_pmsg(module_name, "Check fakesink... Not found!");
+        rc_debug_module_perror(module_name, "Cannot find necessary plugin "
+            "fakesink, abort!");
+        rc_gui_show_message_dialog(GTK_MESSAGE_ERROR, _("Critical Error!"),
+            _("Cannot find necessary plugin: %s, abort!"), "fakesink");
+        abort();
+    }
+    if(gst_default_registry_check_feature_version("autoaudiosink", 0, 10, 0))
+        rc_debug_module_pmsg(module_name, "Check autoaudiosink... OK!");
+    else
+    {
+        rc_debug_module_pmsg(module_name, "Check autoaudiosink... "
+            "Not found!");
+        return FALSE;
+    }
+    if(gst_default_registry_check_feature_version("equalizer-10bands", 0, 10,
+        0))
+        rc_debug_module_pmsg(module_name, "Check equalizer-10bands... OK!");
+    else
+    {
+        rc_debug_module_pmsg(module_name, "Check equalizer-10bands... "
+            "Not found!");
+        return FALSE;
+    }
+    if(gst_default_registry_check_feature_version("volume", 0, 10, 0))
+        rc_debug_module_pmsg(module_name, "Check volume... OK!");
+    else
+    {
+        rc_debug_module_pmsg(module_name, "Check volume... Not found!");
+        return FALSE;
+    }
+    if(gst_default_registry_check_feature_version("audioconvert", 0, 10, 0))
+        rc_debug_module_pmsg(module_name, "Check audioconvert... OK!");
+    else
+    {
+        rc_debug_module_pmsg(module_name, "Check audioconvert... Not found!");
+        return FALSE;
+    }
+    return TRUE;
 }
 
 /**

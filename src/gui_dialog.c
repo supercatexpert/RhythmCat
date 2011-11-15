@@ -584,3 +584,179 @@ void rc_gui_bind_album_file_dialog()
     gtk_widget_destroy(dialog);
 }
 
+static void rc_gui_show_supported_format_dialog_destroy_cb(GtkWidget *widget,
+    gpointer data)
+{
+    *(GtkWidget **)data = NULL;
+}
+
+static void rc_gui_show_supported_format_dialog_close_cb(GtkWidget *widget,
+    gpointer data)
+{
+    gtk_widget_destroy(GTK_WIDGET(data));
+}
+
+/**
+ * rc_gui_show_supported_format_dialog:
+ *
+ * Show a dialog to show the supported music format by the player.
+ */
+
+void rc_gui_show_supported_format_dialog()
+{
+    static GtkWidget *dialog = NULL;
+    GtkWidget *main_vbox;
+    GtkWidget *button_hbox;
+    GtkWidget *scrolled_window;
+    GtkWidget *treeview;
+    GtkWidget *close_button;
+    GtkListStore *list_store;
+    GtkTreeViewColumn *columns[2];
+    GtkCellRenderer *renderers[2];
+    GtkTreeIter iter;
+    gboolean flag;
+    gint i;
+    if(dialog!=NULL)
+    {
+        gtk_widget_show_all(dialog);
+        return;
+    }
+    dialog = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    list_store = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_BOOLEAN);
+    renderers[0] = gtk_cell_renderer_text_new();
+    renderers[1] = gtk_cell_renderer_toggle_new();
+    columns[0] = gtk_tree_view_column_new_with_attributes(
+        _("Format"), renderers[0], "text", 0, NULL);
+    columns[1] = gtk_tree_view_column_new_with_attributes(
+        _("Supported"), renderers[1], "active", 1, NULL);
+    gtk_tree_view_column_set_expand(columns[0], TRUE);
+    treeview = gtk_tree_view_new_with_model(GTK_TREE_MODEL(list_store));
+    for(i=0;i<2;i++)
+        gtk_tree_view_append_column(GTK_TREE_VIEW(treeview), columns[i]);
+    close_button = gtk_button_new_from_stock(GTK_STOCK_CLOSE);
+    scrolled_window = gtk_scrolled_window_new(NULL, NULL);
+    main_vbox = gtk_vbox_new(FALSE, 2);
+    button_hbox = gtk_hbutton_box_new();
+    gtk_window_set_transient_for(GTK_WINDOW(dialog),
+        GTK_WINDOW(rc_gui_get_main_window()));
+    gtk_window_set_destroy_with_parent(GTK_WINDOW(dialog), TRUE);
+    gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER_ON_PARENT);
+    gtk_window_set_title(GTK_WINDOW(dialog), _("Supported Audio Format"));
+    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolled_window),
+        GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+    gtk_button_box_set_layout(GTK_BUTTON_BOX(button_hbox), GTK_BUTTONBOX_END);
+    gtk_box_set_spacing(GTK_BOX(button_hbox), 5);
+    gtk_widget_set_size_request(dialog, 300, 200);
+    gtk_window_set_resizable(GTK_WINDOW(dialog), FALSE);
+    gtk_container_add(GTK_CONTAINER(scrolled_window), treeview);
+    gtk_box_pack_start(GTK_BOX(button_hbox), close_button, FALSE, FALSE, 2);
+    gtk_box_pack_start(GTK_BOX(main_vbox), scrolled_window, TRUE, TRUE, 2);
+    gtk_box_pack_start(GTK_BOX(main_vbox), button_hbox, FALSE, FALSE, 2);
+    gtk_container_add(GTK_CONTAINER(dialog), main_vbox);
+    g_signal_connect(G_OBJECT(close_button), "clicked",
+        G_CALLBACK(rc_gui_show_supported_format_dialog_close_cb), dialog);
+    g_signal_connect(G_OBJECT(dialog), "destroy",
+        G_CALLBACK(rc_gui_show_supported_format_dialog_destroy_cb), &dialog);
+
+    /* Check FLAC support */
+    gtk_list_store_append(list_store, &iter);
+    flag = gst_default_registry_check_feature_version("flacdec", 0, 10, 0);
+    if(!flag)
+    {
+        flag = gst_default_registry_check_feature_version("ffdec_flac", 0,
+            10, 0);
+    }
+    gtk_list_store_set(list_store, &iter, 0, "FLAC", 1, flag, -1);
+
+    /* Check OGG Vorbis support */
+    gtk_list_store_append(list_store, &iter);
+    flag = gst_default_registry_check_feature_version("oggdemux", 0, 10, 0)
+        && gst_default_registry_check_feature_version("vorbisdec", 0, 10, 0);
+    gtk_list_store_set(list_store, &iter, 0, "OGG Vorbis", 1, flag, -1);
+
+    /* Check MP3 support */
+    gtk_list_store_append(list_store, &iter);
+    flag = gst_default_registry_check_feature_version("flump3dec", 0, 10, 0);
+    if(!flag)
+    {
+        flag = gst_default_registry_check_feature_version("mad", 0, 10, 0);
+    }
+    if(!flag)
+    {
+        flag = gst_default_registry_check_feature_version("ffdec_mp3", 0,
+            10, 0);
+    }
+    gtk_list_store_set(list_store, &iter, 0, "MP3", 1, flag, -1);
+
+    /* Check WMA support */
+    gtk_list_store_append(list_store, &iter);
+    flag = gst_default_registry_check_feature_version("fluwmadec", 0, 10, 0);
+    if(!flag)
+    {
+        flag = gst_default_registry_check_feature_version("ffdec_wmapro", 0,
+            10, 0) && gst_default_registry_check_feature_version("ffdec_wmav1",
+            0, 10, 0) && gst_default_registry_check_feature_version(
+            "ffdec_wmav2", 0, 10, 0) &&
+            gst_default_registry_check_feature_version("ffdec_wmavoice", 0,
+            10, 0);
+    }
+    if(!flag)
+    {
+        flag = gst_default_registry_check_feature_version("ffdec_mp3", 0,
+            10, 0);
+    }
+    gtk_list_store_set(list_store, &iter, 0, "WMA", 1, flag, -1);
+
+    /* Check Wavpack support */
+    gtk_list_store_append(list_store, &iter);
+    flag = gst_default_registry_check_feature_version("wavpackdec", 0, 10, 0);
+    gtk_list_store_set(list_store, &iter, 0, "Wavpack", 1, flag, -1);
+
+    /* Check APE support */
+    gtk_list_store_append(list_store, &iter);
+    flag = gst_default_registry_check_feature_version("ffdec_ape", 0, 10, 0)
+        && gst_default_registry_check_feature_version("ffdemux_ape", 0, 10, 0);
+    gtk_list_store_set(list_store, &iter, 0, "APE", 1, flag, -1);
+
+    /* Check TTA support */
+    gtk_list_store_append(list_store, &iter);
+    flag = gst_default_registry_check_feature_version("ttadec", 0, 10, 0) &&
+        gst_default_registry_check_feature_version("ttaparse", 0, 10, 0);
+    if(!flag)
+    {
+        flag = gst_default_registry_check_feature_version("ffdemux_tta", 0,
+            10, 0) && gst_default_registry_check_feature_version("ffdec_tta",
+            0, 10, 0);
+    }
+    gtk_list_store_set(list_store, &iter, 0, "TTA", 1, flag, -1);
+
+    /* Check AAC support */
+    gtk_list_store_append(list_store, &iter);
+    flag = gst_default_registry_check_feature_version("fluaacdec", 0, 10, 0);
+    if(!flag)
+    {
+        flag = gst_default_registry_check_feature_version("ffdec_aac", 0,
+            10, 0);
+    }
+    gtk_list_store_set(list_store, &iter, 0, "AAC", 1, flag, -1);
+
+    /* Check AC3 support */
+    gtk_list_store_append(list_store, &iter);
+    flag = gst_default_registry_check_feature_version("ffdec_ac3", 0, 10, 0);
+    gtk_list_store_set(list_store, &iter, 0, "AC3", 1, flag, -1);
+
+    /* Check MIDI support */
+    gtk_list_store_append(list_store, &iter);
+    flag = gst_default_registry_check_feature_version("fluidsynth", 0, 10, 0);
+    if(!flag)
+    {
+        flag = gst_default_registry_check_feature_version("wildmidi", 0,
+            10, 0);
+    }
+    gtk_list_store_set(list_store, &iter, 0, "MIDI", 1, flag, -1);
+
+    g_object_unref(G_OBJECT(list_store));
+    gtk_widget_show_all(dialog);
+}
+
+

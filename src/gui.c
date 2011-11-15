@@ -672,14 +672,14 @@ static GtkActionEntry rc_menu_entries[] =
       N_("_Decrease Volume"), "<control>Down",
       N_("Decrease the volume"),
       G_CALLBACK(rc_gui_vol_down_menu_clicked) },
-    { "HelpContents", GTK_STOCK_HELP,
-      N_("_Contents"), "F1",
-      N_("Get help contents"),
-      NULL },
     { "HelpAbout", GTK_STOCK_ABOUT,
       N_("_About"), NULL,
       N_("About this player"),
       G_CALLBACK(rc_gui_about_player) },
+    { "HelpSupportedFormat", NULL,
+      N_("_Supported Format"), NULL,
+      N_("Check the supported music format of this player"),
+      G_CALLBACK(rc_gui_show_supported_format_dialog) },
     { "List1NewList", GTK_STOCK_NEW,
       N_("_New Playlist"), NULL,
       N_("Create a new playlist"),
@@ -881,6 +881,7 @@ static const gchar *rc_ui_info =
     "    </menu>"
     "    <menu action='HelpMenu'>"
     "      <menuitem action='HelpAbout'/>"
+    "      <menuitem action='HelpSupportedFormat'/>"
     "    </menu>"
     "  </menubar>"
     "  <popup action='List1PopupMenu'>"

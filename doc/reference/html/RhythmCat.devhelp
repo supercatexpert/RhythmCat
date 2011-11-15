@@ -263,6 +263,7 @@
     <function name="rc_gui_save_all_playlists_dialog ()" link="RhythmCat-Dialogs.html#rc-gui-save-all-playlists-dialog"/>
     <function name="rc_gui_bind_lyric_file_dialog ()" link="RhythmCat-Dialogs.html#rc-gui-bind-lyric-file-dialog"/>
     <function name="rc_gui_bind_album_file_dialog ()" link="RhythmCat-Dialogs.html#rc-gui-bind-album-file-dialog"/>
+    <function name="rc_gui_show_supported_format_dialog ()" link="RhythmCat-Dialogs.html#rc-gui-show-supported-format-dialog"/>
     <function name="RCGuiEQData" link="RhythmCat-Equalizer-UI.html#RCGuiEQData"/>
     <function name="rc_gui_eq_data_init ()" link="RhythmCat-Equalizer-UI.html#rc-gui-eq-data-init"/>
     <function name="rc_gui_eq_init ()" link="RhythmCat-Equalizer-UI.html#rc-gui-eq-init"/>
@@ -300,13 +301,13 @@
     <function name="rc_gui_mini_normal_mode_clicked ()" link="RhythmCat-Mini-Mode-UI.html#rc-gui-mini-normal-mode-clicked"/>
     <function name="rc_gui_create_setting_window ()" link="RhythmCat-Settings-UI.html#rc-gui-create-setting-window"/>
     <function name="rc_gui_plugin_window_create ()" link="RhythmCat-Plugin-Configuration-UI.html#rc-gui-plugin-window-create"/>
-    <function name="Introduction" link="PluginProgramming.html#id559651"/>
-    <function name="Preparation" link="PluginProgramming.html#id537377"/>
-    <function name="Implement a simple plugin" link="PluginProgramming.html#id591988"/>
-    <function name="How to compile the plugin" link="PluginProgramming.html#id546104"/>
-    <function name="Write a plugin description file" link="PluginProgramming.html#id591820"/>
-    <function name="Make your custom plugin work" link="PluginProgramming.html#id589648"/>
-    <function name="Catch signals in the player" link="PluginProgramming.html#id561028"/>
-    <function name="About this manual" link="PluginProgramming.html#id537851"/>
+    <function name="Introduction" link="PluginProgramming.html#id365263"/>
+    <function name="Preparation" link="PluginProgramming.html#id389772"/>
+    <function name="Implement a simple plugin" link="PluginProgramming.html#id396535"/>
+    <function name="How to compile the plugin" link="PluginProgramming.html#id373793"/>
+    <function name="Write a plugin description file" link="PluginProgramming.html#id433123"/>
+    <function name="Make your custom plugin work" link="PluginProgramming.html#id386940"/>
+    <function name="Catch signals in the player" link="PluginProgramming.html#id366461"/>
+    <function name="About this manual" link="PluginProgramming.html#id422541"/>
   </functions>
 </book>

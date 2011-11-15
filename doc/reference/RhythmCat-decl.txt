@@ -505,6 +505,11 @@ GtkMessageType type, const gchar *title, const gchar *format, ...
 <RETURNS>void </RETURNS>
  
 </FUNCTION>
+<FUNCTION>
+<NAME>rc_gui_show_supported_format_dialog</NAME>
+<RETURNS>void </RETURNS>
+ 
+</FUNCTION>
 <STRUCT>
 <NAME>RCGuiEQData</NAME>
 typedef struct RCGuiEQData {

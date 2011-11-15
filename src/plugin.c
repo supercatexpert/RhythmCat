@@ -479,6 +479,7 @@ static gboolean rc_plugin_module_load(const gchar *filename)
     RCModuleData *module_data;
     gint retval = 0;
     module_data = rc_plugin_module_get_running(filename);
+    const gchar *error_msg;
     if(module_data!=NULL)
     {
         if(module_data->resident && module_data->suspend)
@@ -493,8 +494,12 @@ static gboolean rc_plugin_module_load(const gchar *filename)
     module = g_module_open(filename, G_MODULE_BIND_LAZY);
     if(module==NULL)
     {
+        error_msg = g_module_error();
         rc_debug_module_perror(module_name, "Cannot load plugin: %s",
-            g_module_error());
+            error_msg);
+        rc_gui_show_message_dialog(GTK_MESSAGE_ERROR,
+            _("Cannot load plugin!"), _("Cannot load plugin: %s"),
+            error_msg);
         return FALSE;
     }
     module_data = g_new0(RCModuleData, 1);
@@ -503,7 +508,10 @@ static gboolean rc_plugin_module_load(const gchar *filename)
     {
         g_free(module_data);
         g_module_close(module);
-        rc_debug_module_perror(module_name, "Cannot found entry function: "
+        rc_debug_module_perror(module_name, "Cannot find entry function: "
+            "rc_plugin_module_init()!");
+        rc_gui_show_message_dialog(GTK_MESSAGE_ERROR,
+            _("Cannot load plugin!"), _("Cannot find entry function: %s"),
             "rc_plugin_module_init()!");
         return FALSE;
     }
@@ -512,7 +520,10 @@ static gboolean rc_plugin_module_load(const gchar *filename)
     {
         g_free(module_data);
         g_module_close(module);
-        rc_debug_module_perror(module_name, "Cannot found entry function: "
+        rc_debug_module_perror(module_name, "Cannot find entry function: "
+            "rc_plugin_module_exit()!");
+        rc_gui_show_message_dialog(GTK_MESSAGE_ERROR,
+            _("Cannot load plugin!"), _("Cannot find entry function: %s"),
             "rc_plugin_module_exit()!");
         return FALSE;
     }
@@ -521,7 +532,10 @@ static gboolean rc_plugin_module_load(const gchar *filename)
     {
         g_free(module_data);
         g_module_close(module);
-        rc_debug_module_perror(module_name, "Cannot found entry function: "
+        rc_debug_module_perror(module_name, "Cannot find entry function: "
+            "rc_plugin_module_data()!");
+        rc_gui_show_message_dialog(GTK_MESSAGE_ERROR,
+            _("Cannot load plugin!"), _("Cannot find entry function: %s"),
             "rc_plugin_module_data()!");
         return FALSE;
     }
@@ -531,6 +545,9 @@ static gboolean rc_plugin_module_load(const gchar *filename)
         module_data->data->magic_number<=RC_PLUGIN_OLD_MAGIC_NUMBER)
     {
         rc_debug_module_perror(module_name, "Invalid magic number!");
+        rc_gui_show_message_dialog(GTK_MESSAGE_ERROR,
+            _("Cannot load plugin!"), _("Invalid magic number! "
+            "The version of this plugin may not compatible with the player"));
         g_free(module_data);
         g_module_close(module);
         return FALSE;

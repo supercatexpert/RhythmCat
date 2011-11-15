@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RhythmCat 1.0.0\n"
 "Report-Msgid-Bugs-To: http://code.google.com/p/rhythmcat/issues/list\n"
-"POT-Creation-Date: 2011-11-12 00:06+0800\n"
+"POT-Creation-Date: 2011-11-15 16:50+0800\n"
 "PO-Revision-Date: 2011-04-02 16:51+0800\n"
 "Last-Translator: SuperCat <supercatexpert@gmail.com>\n"
 "Language-Team: SuperCat <supercatexpert@gmail.com>\n"
@@ -16,27 +16,32 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/core.c:257 src/core.c:290
-msgid "Effect plugins are missing!"
-msgstr ""
-
-#: src/core.c:257 src/core.c:290
-msgid "Some effect plugins are missing, effects are not available now!"
-msgstr ""
-
-#: src/core.c:264
+#: src/core.c:207 src/core.c:225 src/core.c:237 src/core.c:313
 msgid "Critical Error!"
 msgstr ""
 
-#: src/core.c:265
+#: src/core.c:207 src/core.c:225 src/core.c:238
+#, c-format
+msgid "Cannot find necessary plugin: %s, abort!"
+msgstr ""
+
+#: src/core.c:306 src/core.c:339
+msgid "Effect plugins are missing!"
+msgstr ""
+
+#: src/core.c:306 src/core.c:339
+msgid "Some effect plugins are missing, effects are not available now!"
+msgstr ""
+
+#: src/core.c:314
 msgid "Failed to make playbin/playbin2 element!"
 msgstr ""
 
-#: src/core.c:311
+#: src/core.c:360
 msgid "Link elements error!"
 msgstr ""
 
-#: src/core.c:311
+#: src/core.c:360
 msgid "Cannot link effect elements, effects are not available now!"
 msgstr ""
 
@@ -268,20 +273,20 @@ msgstr ""
 msgid "Decrease the volume"
 msgstr ""
 
-#: src/gui.c:676
-msgid "_Contents"
-msgstr ""
-
-#: src/gui.c:677
-msgid "Get help contents"
-msgstr ""
-
-#: src/gui.c:680 src/gui.c:752
+#: src/gui.c:676 src/gui.c:752
 msgid "_About"
 msgstr ""
 
-#: src/gui.c:681 src/gui.c:753
+#: src/gui.c:677 src/gui.c:753
 msgid "About this player"
+msgstr ""
+
+#: src/gui.c:680
+msgid "_Supported Format"
+msgstr ""
+
+#: src/gui.c:681
+msgid "Check the supported music format of this player"
 msgstr ""
 
 #: src/gui.c:689
@@ -392,59 +397,59 @@ msgstr ""
 msgid "Always on top"
 msgstr ""
 
-#: src/gui.c:1085
+#: src/gui.c:1086
 msgid "Equalizer"
 msgstr ""
 
-#: src/gui.c:1086
+#: src/gui.c:1087
 msgid "Playlists"
 msgstr ""
 
-#: src/gui.c:1434
+#: src/gui.c:1435
 msgid "Unknown Format"
 msgstr ""
 
-#: src/gui.c:1438
+#: src/gui.c:1439
 #, c-format
 msgid "%d kbps "
 msgstr ""
 
-#: src/gui.c:1442
+#: src/gui.c:1443
 #, c-format
 msgid "%d Hz "
 msgstr ""
 
-#: src/gui.c:1449
+#: src/gui.c:1450
 msgid "Mono"
 msgstr ""
 
-#: src/gui.c:1453
+#: src/gui.c:1454
 msgid "Stereo"
 msgstr ""
 
-#: src/gui.c:1457
+#: src/gui.c:1458
 #, c-format
 msgid "%d channels"
 msgstr ""
 
-#: src/gui.c:1464 src/playlist.c:447 src/playlist.c:526 src/playlist.c:808
+#: src/gui.c:1465 src/playlist.c:447 src/playlist.c:526 src/playlist.c:808
 #: src/playlist.c:919
 msgid "Unknown Title"
 msgstr ""
 
-#: src/gui.c:1468
+#: src/gui.c:1469
 msgid "Unknown Artist"
 msgstr ""
 
-#: src/gui.c:1472
+#: src/gui.c:1473
 msgid "Unknown Album"
 msgstr ""
 
-#: src/gui.c:1757
+#: src/gui.c:1758
 msgid "Importing..."
 msgstr ""
 
-#: src/gui.c:1761
+#: src/gui.c:1762
 msgid "Refreshing..."
 msgstr ""
 
@@ -522,6 +527,18 @@ msgstr ""
 
 #: src/gui_dialog.c:540
 msgid "Image File (*.JPG, *.BMP, *.PNG)..."
+msgstr ""
+
+#: src/gui_dialog.c:629
+msgid "Format"
+msgstr ""
+
+#: src/gui_dialog.c:631
+msgid "Supported"
+msgstr ""
+
+#: src/gui_dialog.c:644
+msgid "Supported Audio Format"
 msgstr ""
 
 #: src/gui_eq.c:101 src/gui_eq.c:163
@@ -727,10 +744,6 @@ msgstr ""
 msgid "Use malloc function in stardard C library"
 msgstr ""
 
-#: src/player.c:309
-msgid "[URI...]"
-msgstr ""
-
 #: src/player.c:366
 #, c-format
 msgid ""
@@ -740,4 +753,25 @@ msgstr ""
 
 #: src/playlist.c:300
 msgid "Default Playlist"
+msgstr ""
+
+#: src/plugin.c:501 src/plugin.c:514 src/plugin.c:526 src/plugin.c:538
+#: src/plugin.c:549
+msgid "Cannot load plugin!"
+msgstr ""
+
+#: src/plugin.c:501
+#, c-format
+msgid "Cannot load plugin: %s"
+msgstr ""
+
+#: src/plugin.c:514 src/plugin.c:526 src/plugin.c:538
+#, c-format
+msgid "Cannot find entry function: %s"
+msgstr ""
+
+#: src/plugin.c:549
+msgid ""
+"Invalid magic number! The version of this plugin may not compatible with the "
+"player"
 msgstr ""

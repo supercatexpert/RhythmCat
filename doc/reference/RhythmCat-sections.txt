@@ -143,6 +143,7 @@ rc_gui_load_playlist_dialog
 rc_gui_save_all_playlists_dialog
 rc_gui_bind_lyric_file_dialog
 rc_gui_bind_album_file_dialog
+rc_gui_show_supported_format_dialog
 </SECTION>
 
 <SECTION>

@@ -68,11 +68,11 @@
 #endif
 
 static const gchar rc_player_program_name[] = "RhythmCat Music Player";
-static const gchar rc_player_build_date[] = "111111";
+static const gchar rc_player_build_date[] = "111114";
 static const gchar rc_player_version[] = "1.0.0";
 static const gboolean rc_player_stable_flag = TRUE;
 static const gchar *rc_player_support_formatx = "(.FLAC|.OGG|.MP3|.WMA|.WAV|"
-    ".OGA|.OGM|.APE|.AAC|.AC3|.MIDI|.MP2|.MID|.M4A|.CUE)$";
+    ".OGA|.OGM|.APE|.AAC|.AC3|.MIDI|.MP2|.MID|.M4A|.CUE|.WV|.WVP|.TTA)$";
 static GRegex *rc_player_support_format_regex = NULL;
 static const gchar rc_player_dbus_name[] = "org.supercat.RhythmCat";
 static const gchar rc_player_dbus_path_shell[] =
@@ -306,7 +306,7 @@ void rc_player_init(int *argc, char **argv[])
         {"use-std-malloc", 0, 0, G_OPTION_ARG_NONE, &rc_player_malloc_flag,
             N_("Use malloc function in stardard C library"), NULL},
         {G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_STRING_ARRAY,
-            &rc_player_remaining_args, NULL, N_("[URI...]")},
+            &rc_player_remaining_args, NULL, "[URI...]"},
         {NULL}
     };
     const gchar *homedir;

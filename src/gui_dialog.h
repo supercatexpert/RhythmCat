@@ -49,6 +49,7 @@ void rc_gui_load_playlist_dialog();
 void rc_gui_save_all_playlists_dialog();
 void rc_gui_bind_lyric_file_dialog();
 void rc_gui_bind_album_file_dialog();
+void rc_gui_show_supported_format_dialog();
 
 G_END_DECLS
 
