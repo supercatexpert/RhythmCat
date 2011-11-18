@@ -2,7 +2,7 @@
 # Contributor: SuperCat <supercatexpert@gmail.com>
 pkgname=rhythmcat-plugins-extra
 pkgver=1.0.0
-pkgrel=2
+pkgrel=1
 pkgdesc="The extra plugins for RhythmCat Music Player"
 arch=(i686 x86_64)
 url="http://supercat-lab.org"

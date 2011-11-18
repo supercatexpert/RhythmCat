@@ -27,7 +27,7 @@ override_dh_auto_build:
 	cd lyric-show; make
 	cd desktop-lyric; make
 	cd notify; make
-        cd music-locator; make
+	cd music-locator; make
 
 override_dh_auto_install:
 	cd lyric-show; make INSTALL_DIR=$(TMP)/usr/share/RhythmCat/plugins/lyric-show install

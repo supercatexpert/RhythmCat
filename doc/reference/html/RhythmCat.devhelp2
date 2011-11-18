@@ -301,14 +301,14 @@
     <keyword type="function" name="rc_gui_mini_normal_mode_clicked ()" link="RhythmCat-Mini-Mode-UI.html#rc-gui-mini-normal-mode-clicked"/>
     <keyword type="function" name="rc_gui_create_setting_window ()" link="RhythmCat-Settings-UI.html#rc-gui-create-setting-window"/>
     <keyword type="function" name="rc_gui_plugin_window_create ()" link="RhythmCat-Plugin-Configuration-UI.html#rc-gui-plugin-window-create"/>
-    <keyword type="" name="Introduction" link="PluginProgramming.html#id365263"/>
-    <keyword type="" name="Preparation" link="PluginProgramming.html#id389772"/>
-    <keyword type="" name="Implement a simple plugin" link="PluginProgramming.html#id396535"/>
-    <keyword type="" name="How to compile the plugin" link="PluginProgramming.html#id373793"/>
-    <keyword type="" name="Write a plugin description file" link="PluginProgramming.html#id433123"/>
-    <keyword type="" name="Make your custom plugin work" link="PluginProgramming.html#id386940"/>
-    <keyword type="" name="Catch signals in the player" link="PluginProgramming.html#id366461"/>
-    <keyword type="" name="About this manual" link="PluginProgramming.html#id422541"/>
+    <keyword type="" name="Introduction" link="PluginProgramming.html#id578187"/>
+    <keyword type="" name="Preparation" link="PluginProgramming.html#id602695"/>
+    <keyword type="" name="Implement a simple plugin" link="PluginProgramming.html#id609459"/>
+    <keyword type="" name="How to compile the plugin" link="PluginProgramming.html#id586717"/>
+    <keyword type="" name="Write a plugin description file" link="PluginProgramming.html#id646047"/>
+    <keyword type="" name="Make your custom plugin work" link="PluginProgramming.html#id599864"/>
+    <keyword type="" name="Catch signals in the player" link="PluginProgramming.html#id579384"/>
+    <keyword type="" name="About this manual" link="PluginProgramming.html#id635464"/>
     <keyword type="constant" name="RC_CUE_INPUT_URI" link="RhythmCat-CUE-Parser.html#RC-CUE-INPUT-URI:CAPS"/>
     <keyword type="constant" name="RC_CUE_INPUT_PATH" link="RhythmCat-CUE-Parser.html#RC-CUE-INPUT-PATH:CAPS"/>
     <keyword type="constant" name="RC_CUE_INPUT_EMBEDED" link="RhythmCat-CUE-Parser.html#RC-CUE-INPUT-EMBEDED:CAPS"/>

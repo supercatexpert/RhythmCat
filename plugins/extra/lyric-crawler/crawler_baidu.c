@@ -71,6 +71,7 @@ static void rc_crawler_module_xml_parse_text(GMarkupParseContext *context,
 {
     gint lrcid, newid;
     gchar *new_url;
+    RCLyricCrawlerSearchData *search_data;
     GSList *list = *(GSList **)user_data;
     if(lrcid_flag)
     {
@@ -79,7 +80,11 @@ static void rc_crawler_module_xml_parse_text(GMarkupParseContext *context,
             newid = lrcid / 100;
             new_url = g_strdup_printf("%s%d/%d.lrc", lrc_base_url,
                 newid, lrcid);
-            list = g_slist_append(list, new_url);
+            search_data = g_new0(RCLyricCrawlerSearchData, 1);
+            search_data->title = g_strdup("--");
+            search_data->artist = g_strdup("--");
+            search_data->url = new_url;
+            list = g_slist_append(list, search_data);
             *(GSList **)user_data = list;
         }
     }

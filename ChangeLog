@@ -129,5 +129,7 @@
         * Added some error message with dialogs. So that the user can know the
           reason for the errors without using terminals.
 
+2011-11-18  SuperCat    <supercatexpert@gmail.com>
+        * The first stable release version.
 
 

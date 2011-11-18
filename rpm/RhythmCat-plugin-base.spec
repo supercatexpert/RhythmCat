@@ -1,6 +1,6 @@
 # RhythmCat base plugins RPM SPEC File
 
-Name: RhythmCat-pluings-base
+Name: RhythmCat-plugins-base
 Version: 1.0.0
 Release: 1
 Summary: The base plugins for RhythmCat Music Player
