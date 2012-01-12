@@ -514,7 +514,8 @@ static void rc_gui_tray_icon_popup(GtkStatusIcon *status_icon, guint button,
     guint activate_time, gpointer data)  
 {
     gtk_menu_popup(GTK_MENU(gtk_ui_manager_get_widget(rc_gui.main_ui,
-        "/TrayPopupMenu")), NULL, NULL, NULL, NULL, 3, activate_time);
+        "/TrayPopupMenu")), NULL, NULL, gtk_status_icon_position_menu,
+        status_icon, 3, activate_time);
 }
 
 /*
@@ -1248,6 +1249,9 @@ gboolean rc_gui_init()
     gtk_window_set_geometry_hints(GTK_WINDOW(rc_gui.main_window), 
         GTK_WIDGET(rc_gui.main_window), &main_window_hints, GDK_HINT_MIN_SIZE);
     gtk_widget_set_name(rc_gui.main_window, "RCMainWindow");
+    #ifdef USE_GTK3
+        gtk_window_set_has_resize_grip(GTK_WINDOW(rc_gui.main_window), FALSE);
+    #endif
     g_object_set(gtk_settings_get_default(), "gtk-icon-sizes", 
         "gtk-small-toolbar=24,24:gtk-large-toolbar=16,16", NULL);
     gtk_misc_set_alignment(GTK_MISC(rc_gui.title_label), 0.0, 0.5);
@@ -1256,10 +1260,14 @@ gboolean rc_gui_init()
     gtk_misc_set_alignment(GTK_MISC(rc_gui.info_label), 0.0, 0.5);
     gtk_misc_set_alignment(GTK_MISC(rc_gui.time_label), 1.0, 0.5);
     gtk_misc_set_alignment(GTK_MISC(rc_gui.length_label), 1.0, 0.5);
-    gtk_label_set_ellipsize(GTK_LABEL(rc_gui.title_label), PANGO_ELLIPSIZE_END);
-    gtk_label_set_ellipsize(GTK_LABEL(rc_gui.artist_label), PANGO_ELLIPSIZE_END);
-    gtk_label_set_ellipsize(GTK_LABEL(rc_gui.album_label), PANGO_ELLIPSIZE_END);
-    gtk_label_set_ellipsize(GTK_LABEL(rc_gui.info_label), PANGO_ELLIPSIZE_END);
+    gtk_label_set_ellipsize(GTK_LABEL(rc_gui.title_label),
+        PANGO_ELLIPSIZE_END);
+    gtk_label_set_ellipsize(GTK_LABEL(rc_gui.artist_label),
+        PANGO_ELLIPSIZE_END);
+    gtk_label_set_ellipsize(GTK_LABEL(rc_gui.album_label),
+        PANGO_ELLIPSIZE_END);
+    gtk_label_set_ellipsize(GTK_LABEL(rc_gui.info_label),
+        PANGO_ELLIPSIZE_END);
     gtk_widget_set_name(rc_gui.title_label, "RCTitleLabel");
     gtk_widget_set_name(rc_gui.artist_label, "RCArtistLabel");
     gtk_widget_set_name(rc_gui.album_label, "RCAlbumLabel");

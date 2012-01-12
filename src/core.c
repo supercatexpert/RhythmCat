@@ -80,7 +80,7 @@ static void rc_core_plugin_install_result(GstInstallPluginsReturn result,
 static gboolean rc_core_bus_call(GstBus *bus, GstMessage *msg, gpointer data)
 {
     gchar *debug;
-    GstState state;
+    GstState state, pending;
     gchar *plugin_error_msg;
     GError *error;
     switch(GST_MESSAGE_TYPE(msg))
@@ -94,7 +94,8 @@ static gboolean rc_core_bus_call(GstBus *bus, GstMessage *msg, gpointer data)
             rc_debug_module_print(module_name, "Segment is done.");
             break;
         case GST_MESSAGE_STATE_CHANGED:
-            gst_message_parse_state_changed(msg, NULL, &state, NULL);
+            gst_message_parse_state_changed(msg, NULL, &state, &pending);
+            if(pending!=GST_STATE_VOID_PENDING) break;
             switch(state)
             {
                 case GST_STATE_PLAYING:
@@ -108,6 +109,7 @@ static gboolean rc_core_bus_call(GstBus *bus, GstMessage *msg, gpointer data)
                 default:
                     break;
             }
+            rc_core.last_state = state;
             rc_shell_signal_emit_simple("state-changed");
             break;
         case GST_MESSAGE_ERROR:

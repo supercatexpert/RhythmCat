@@ -88,7 +88,6 @@ static gpointer rc_plist_import_job_func(gpointer data)
     RCMsgPlistData *msg;
     RCPlistImportData *import_data;
     RCCueData cue_data;
-    gboolean cue_flag, cue_embeded_flag;
     gchar *cue_uri = NULL;
     gint track_num;
     guint i;
@@ -99,8 +98,6 @@ static gpointer rc_plist_import_job_func(gpointer data)
         if(import_data==NULL) continue;
         if(import_data->uri!=NULL)
         {
-            cue_flag = FALSE;
-            cue_embeded_flag = FALSE;
             cue_uri = NULL;
             if(g_regex_match_simple("(.CUE)$", import_data->uri,
                 G_REGEX_CASELESS, 0) && !import_data->refresh_flag)
@@ -108,7 +105,6 @@ static gpointer rc_plist_import_job_func(gpointer data)
                 if(rc_cue_read_data(import_data->uri, RC_CUE_INPUT_URI,
                     &cue_data)>0)
                 {
-                    cue_flag = TRUE;
                     cue_mmd = rc_tag_read_metadata(cue_data.file);
                     for(i=0;i<cue_data.length;i++)
                     {
@@ -139,14 +135,13 @@ static gpointer rc_plist_import_job_func(gpointer data)
             track_num = 0;
             if(rc_cue_get_track_num(import_data->uri, &cue_uri, &track_num))
             {
+                mmd = NULL;
                 if(g_regex_match_simple("(.CUE)$", cue_uri, G_REGEX_CASELESS,
                     0))
                 {
-                    mmd = NULL;
                     if(rc_cue_read_data(cue_uri, RC_CUE_INPUT_URI,
                         &cue_data)>0)
                     {
-                        cue_flag = TRUE;
                         mmd = rc_cue_get_metadata(&cue_data, track_num-1, NULL);
                         if(mmd!=NULL)
                         {
@@ -201,8 +196,6 @@ static gpointer rc_plist_import_job_func(gpointer data)
                 {
                     if(track_num>0)
                     {
-                        cue_flag = TRUE;
-                        cue_embeded_flag = TRUE;
                         cue_mmd = rc_cue_get_metadata(&cue_data, track_num-1,
                             mmd);
                         if(cue_mmd!=NULL)
@@ -220,8 +213,6 @@ static gpointer rc_plist_import_job_func(gpointer data)
                     }
                     else if(!import_data->refresh_flag)
                     {
-                        cue_flag = TRUE;
-                        cue_embeded_flag = TRUE;
                         for(i=0;i<cue_data.length;i++)
                         {
                             cue_mmd = rc_cue_get_metadata(&cue_data, i, mmd);

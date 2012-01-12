@@ -132,4 +132,7 @@
 2011-11-18  SuperCat    <supercatexpert@gmail.com>
         * The first stable release version.
 
+2011-12-11  SuperCat    <supercatexpert@gmail.com>
+        * Fixed abnormal GTK3 style in GTK+ 3.2.
+        * Use GTK+ 3 as default UI library instead of GTK+ 2 now.
 

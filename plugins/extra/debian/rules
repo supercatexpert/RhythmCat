@@ -18,19 +18,19 @@ TMP     = $(CURDIR)/debian/$(PACKAGE)
 override_dh_auto_configure:
 
 override_dh_auto_clean:
-	cd lyric-editor; make clean
-	cd tageditor; make clean
-	cd lyric-crawler; make clean
+	cd lyric-editor; make -f Makefile3 clean
+	cd tageditor; make -f Makefile3 clean
+	cd lyric-crawler; make -f Makefile3 clean
 
 override_dh_auto_build:
-	cd lyric-editor; make
-	cd tageditor; make
-	cd lyric-crawler; make
+	cd lyric-editor; make -f Makefile3
+	cd tageditor; make -f Makefile3
+	cd lyric-crawler; make -f Makefile3
 
 override_dh_auto_install:
-	cd lyric-editor; make INSTALL_DIR=$(TMP)/usr/share/RhythmCat/plugins/lyric-editor install
-	cd tageditor; make INSTALL_DIR=$(TMP)/usr/share/RhythmCat/plugins/tageditor install
-	cd lyric-crawler; make INSTALL_DIR=$(TMP)/usr/share/RhythmCat/plugins/lyric-crawler install
+	cd lyric-editor; make -f Makefile3 INSTALL_DIR=$(TMP)/usr/share/RhythmCat/plugins/lyric-editor install
+	cd tageditor; make -f Makefile3 INSTALL_DIR=$(TMP)/usr/share/RhythmCat/plugins/tageditor install
+	cd lyric-crawler; make -f Makefile3 INSTALL_DIR=$(TMP)/usr/share/RhythmCat/plugins/lyric-crawler install
 	
 override_dh_installdocs:
 

@@ -77,7 +77,7 @@ static void rc_gui_list2_block_selection(GtkWidget *widget, gboolean block,
             "multidrag-where", where, g_free);
     }
     where[0] = x;
-    where[1] = y;  
+    where[1] = y; 
 }
 
 /*
@@ -199,7 +199,6 @@ static void rc_gui_list2_dnd_data_received(GtkWidget *widget,
     gchar **uri_array = NULL;
     gchar *uri = NULL;
     guint count = 0;
-    gboolean flag = FALSE;
     gtk_tree_view_get_dest_row_at_pos(GTK_TREE_VIEW(
         rc_ui->list2_tree_view), x,y, &path_drop, &pos);
     if(path_drop!=NULL)
@@ -257,7 +256,8 @@ static void rc_gui_list2_dnd_data_received(GtkWidget *widget,
                         reorder_array[i] = indices[k];
                         i++;
                     }
-                    reorder_array[i] = target;
+                    if(i<list_length)
+                        reorder_array[i] = target;
                     i++;
                     count++;
                     insert_flag = TRUE;
@@ -291,7 +291,7 @@ static void rc_gui_list2_dnd_data_received(GtkWidget *widget,
                 uri = uri_array[count];
                 if(rc_player_check_supported_format(uri))
                 {
-                    flag = rc_plist_insert_music(uri, 
+                    rc_plist_insert_music(uri, 
                         rc_gui_list1_get_selected_index(), target);
                     target++;
                     insert_num++;
@@ -330,8 +330,8 @@ static void rc_gui_list2_dnd_data_get(GtkWidget *widget,
     path_list = gtk_tree_selection_get_selected_rows(
         rc_ui->list2_selection, NULL);
     if(path_list==NULL) return;
-    gtk_selection_data_set(sdata,gdk_atom_intern("Playlist index array",
-        FALSE),8,(void *)&path_list,sizeof(GList *));
+    gtk_selection_data_set(sdata, gdk_atom_intern("Playlist index array",
+        FALSE), 8, (void *)&path_list, sizeof(GList *));
 }
 
 /*

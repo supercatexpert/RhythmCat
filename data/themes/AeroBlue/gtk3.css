@@ -331,24 +331,28 @@ GtkVScale#RCEQScaler.scale-has-marks-above.slider.vertical
         to (shade (#888A85, 1.35)));
 }
 
-GtkWindow#RCMainWindow GtkVScrollbar
+GtkScrolledWindow#RCListScrolledWindow GtkVScrollbar
 {
     background-color: #707070;
+}
+
+GtkScrolledWindow#RCListScrolledWindow .scrollbar
+{
     -GtkRange-trough-border: 0;
-    -GtkRange-slider-width: 15;
-    -GtkRange-stepper-size: 15;
+    -GtkRange-slider-width: 12;
+    -GtkRange-stepper-size: 12;
     -GtkScrollbar-min-slider-length: 30;
 }
 
-GtkWindow#RCMainWindow.scrollbar.trough
+GtkScrolledWindow#RCListScrolledWindow .scrollbar.trough
 {
     border-width: 0;
     border-radius: 0;
     background-color: #F0F0F0;
 }
 
-GtkWindow#RCMainWindow.scrollbar.slider,
-GtkWindow#RCMainWindow.scrollbar.slider:insensitive
+GtkScrolledWindow#RCListScrolledWindow .scrollbar.slider,
+GtkScrolledWindow#RCListScrolledWindow .scrollbar.slider:insensitive
 {
     border-radius: 6;
     border-width: 0;
@@ -360,8 +364,8 @@ GtkWindow#RCMainWindow.scrollbar.slider:insensitive
         color-stop(1, #7DB5FA));
 }
 
-GtkWindow#RCMainWindow.scrollbar.slider:prelight,
-GtkWindow#RCMainWindow.scrollbar.slider:active
+GtkScrolledWindow#RCListScrolledWindow .scrollbar.slider:prelight,
+GtkScrolledWindow#RCListScrolledWindow .scrollbar.slider:active
 {
     border-radius: 6;
     border-width: 0;
@@ -373,29 +377,29 @@ GtkWindow#RCMainWindow.scrollbar.slider:active
         color-stop(1, #A4CBFC));
 }
 
-GtkWindow#RCMainWindow.scrollbar.button
+GtkScrolledWindow#RCListScrolledWindow .scrollbar.button
 {
     border-width: 0;
     background-color: #F0F0F0;
     color: #101010;
 }
 
-GtkWindow#RCMainWindow.scrollbar.button:insensitive
+GtkScrolledWindow#RCListScrolledWindow .scrollbar.button:insensitive
 {
     border-width: 0;
     background-color: #F0F0F0;
     color: #C0C0C0;
 }
 
-GtkWindow#RCMainWindow.scrollbar.button:prelight,
-GtkWindow#RCMainWindow.scrollbar.button:active
+GtkScrolledWindow#RCListScrolledWindow .scrollbar.button:prelight,
+GtkScrolledWindow#RCListScrolledWindow .scrollbar.button:active
 {
     border-width: 0;
     background-color: #F0F0F0;
     color: #505050;
 }
 
-GtkWindow#RCMainWindow GtkHScrollbar
+GtkScrolledWindow#RCListScrolledWindow GtkHScrollbar
 {
     background-color: #F0F0F0;
 }

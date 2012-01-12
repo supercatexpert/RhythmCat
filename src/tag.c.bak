@@ -53,11 +53,37 @@ typedef struct RCTagDecodedPadData
     gboolean non_audio_flag;
 }RCTagDecodedPadData;
 
+static void rc_tag_plugin_install_result(GstInstallPluginsReturn result,
+    gpointer data)
+{
+    switch(result)
+    {
+        case GST_INSTALL_PLUGINS_SUCCESS:
+            rc_debug_module_pmsg(module_name,
+                "Install plugin successfully!");
+            break;
+        case GST_INSTALL_PLUGINS_NOT_FOUND:
+            rc_debug_module_perror(module_name,
+                "Cannot found necessary plugin!");
+            break;
+        case GST_INSTALL_PLUGINS_ERROR:
+            rc_debug_module_perror(module_name,
+                "Cannot install plugin!");
+            break;
+        case GST_INSTALL_PLUGINS_USER_ABORT:
+            rc_debug_module_perror(module_name, "User abouted!\n");
+            break;
+        default:
+            rc_debug_module_perror(module_name, "Cannot install plugin!\n");
+    }
+}
+
 /*
- * Get tag from GstTagList.
+ * Gstreamer message bus for tag reading.
  */
 
-static void rc_tag_get_tag(const GstTagList *tags, RCMusicMetaData *mmd)
+static gboolean rc_tag_bus_handler(GstBus *bus, GstMessage *message,
+    RCMusicMetaData *mmd)
 {
     gchar *tag_title = NULL;
     gchar *tag_artist = NULL;
@@ -70,86 +96,162 @@ static void rc_tag_get_tag(const GstTagList *tags, RCMusicMetaData *mmd)
     guint tracknum = 0;
     guint tag_cue_num = 0;
     guint i = 0;
-    if(mmd==NULL || mmd->uri==NULL || tags==NULL) return;
-    if(gst_tag_list_get_string(tags, GST_TAG_AUDIO_CODEC,
-        &tag_filetype))
+    gchar *plugin_error_msg = NULL;
+    GstTagList *tags = NULL;
+    if(mmd==NULL) return FALSE;
+    if(mmd->uri==NULL) return FALSE;
+    switch(GST_MESSAGE_TYPE(message)) 
     {
-        if(tag_filetype!=NULL)
+        case GST_MESSAGE_EOS:
         {
-            if(mmd->file_type!=NULL) g_free(mmd->file_type);
-            mmd->file_type = g_strdup(tag_filetype);
-            g_free(tag_filetype);
+            mmd->eos = TRUE;
+            return TRUE;
         }
-    }
-    if(gst_tag_list_get_string(tags, GST_TAG_TITLE, &tag_title))
-    {
-        if(tag_title!=NULL)
+        case GST_MESSAGE_ERROR:
         {
-            if(mmd->title!=NULL) g_free(mmd->title);
-            mmd->title = g_strdup(tag_title);
-            g_free(tag_title);
+            mmd->eos = TRUE;
+            return TRUE;
         }
-    }
-    if(gst_tag_list_get_string(tags, GST_TAG_ARTIST, &tag_artist))
-    {
-        if(tag_artist!=NULL)
+        case GST_MESSAGE_TAG:
         {
-            if(mmd->artist!=NULL) g_free(mmd->artist);
-            mmd->artist = g_strdup(tag_artist);
-            g_free(tag_artist);
-        }
-    }
-    if(gst_tag_list_get_string(tags, GST_TAG_ALBUM, &tag_album))
-    {
-        if(tag_album!=NULL)
-        {
-            if(mmd->album!=NULL) g_free(mmd->album);
-            mmd->album = g_strdup(tag_album);
-            g_free(tag_album);
-        }
-    }
-    if(gst_tag_list_get_string(tags, GST_TAG_COMMENT, &tag_comment))
-    {
-        if(tag_comment!=NULL)
-        {
-            if(mmd->comment!=NULL) g_free(mmd->comment);
-            mmd->comment = g_strdup(tag_comment);
-            g_free(tag_comment);
-        }
-    }
-    if(gst_tag_list_get_buffer(tags, GST_TAG_IMAGE, &tag_image))
-    {
-        if(tag_image!=NULL)
-        {
-            if(mmd->image!=NULL) gst_buffer_unref(mmd->image);
-            mmd->image = tag_image;
-        }
-    }
-    if(gst_tag_list_get_buffer(tags, GST_TAG_PREVIEW_IMAGE, &tag_image))
-    {
-        if(tag_image==NULL)
-            mmd->image = tag_image;
-        else
-            gst_buffer_unref(tag_image);
-    }
-    if(gst_tag_list_get_uint(tags, GST_TAG_NOMINAL_BITRATE, &bitrates))
-        if(bitrates>0) mmd->bitrate = bitrates;
-    if(gst_tag_list_get_uint(tags, GST_TAG_TRACK_NUMBER, &tracknum))
-        mmd->tracknum = tracknum;
-    tag_cue_num = gst_tag_list_get_tag_size(tags, GST_TAG_EXTENDED_COMMENT);
-    for(i=0;i<tag_cue_num && mmd->emb_cue==NULL;i++)
-    {
-        if(gst_tag_list_get_string_index(tags, GST_TAG_EXTENDED_COMMENT, i,
-            &tag_cuelist))
-        {
-            if(!strncmp(tag_cuelist, "cuesheet=", 9))
+            gst_message_parse_tag(message, &tags);
+            if(gst_tag_list_get_string(tags, GST_TAG_AUDIO_CODEC,
+                &tag_filetype))
             {
-                if(mmd->emb_cue!=NULL) g_free(mmd->emb_cue);
-                mmd->emb_cue = g_strdup(tag_cuelist+9);
+                if(tag_filetype!=NULL)
+                {
+                    if(mmd->file_type!=NULL) g_free(mmd->file_type);
+                    mmd->file_type = g_strdup(tag_filetype);
+                    g_free(tag_filetype);
+                }
             }
-            if(tag_cuelist!=NULL) g_free(tag_cuelist);
+            if(gst_tag_list_get_string(tags, GST_TAG_TITLE, &tag_title))
+            {
+                if(tag_title!=NULL)
+                {
+                    if(mmd->title!=NULL) g_free(mmd->title);
+                    mmd->title = g_strdup(tag_title);
+                    g_free(tag_title);
+                }
+            }
+            if(gst_tag_list_get_string(tags, GST_TAG_ARTIST, &tag_artist))
+            {
+                if(tag_artist!=NULL)
+                {
+                    if(mmd->artist!=NULL) g_free(mmd->artist);
+                    mmd->artist = g_strdup(tag_artist);
+                    g_free(tag_artist);
+                }
+            }
+            if(gst_tag_list_get_string(tags, GST_TAG_ALBUM, &tag_album))
+            {
+                if(tag_album!=NULL)
+                {
+                    if(mmd->album!=NULL) g_free(mmd->album);
+                    mmd->album = g_strdup(tag_album);
+                    g_free(tag_album);
+                }
+            }
+            if(gst_tag_list_get_string(tags, GST_TAG_COMMENT, &tag_comment))
+            {
+                if(tag_comment!=NULL)
+                {
+                    if(mmd->comment!=NULL) g_free(mmd->comment);
+                    mmd->comment = g_strdup(tag_comment);
+                    g_free(tag_comment);
+                }
+            }
+            if(gst_tag_list_get_buffer(tags, GST_TAG_IMAGE, &tag_image))
+            {
+                if(tag_image!=NULL)
+                {
+                    if(mmd->image!=NULL) gst_buffer_unref(mmd->image);
+                    mmd->image = tag_image;
+                }
+            }
+            if(gst_tag_list_get_buffer(tags, GST_TAG_PREVIEW_IMAGE, &tag_image))
+            {
+                if(tag_image==NULL)
+                {
+                    mmd->image = tag_image;
+                }
+                else gst_buffer_unref(tag_image);
+            }
+            if(gst_tag_list_get_uint(tags, GST_TAG_BITRATE, &bitrates))
+                if(bitrates>0) mmd->bitrate = bitrates;
+            if(gst_tag_list_get_uint(tags, GST_TAG_TRACK_NUMBER, &tracknum))
+                mmd->tracknum = tracknum;
+            tag_cue_num = gst_tag_list_get_tag_size(tags,
+                GST_TAG_EXTENDED_COMMENT);
+            for(i=0;i<tag_cue_num && mmd->emb_cue==NULL;i++)
+            {
+                if(gst_tag_list_get_string_index(tags, 
+                    GST_TAG_EXTENDED_COMMENT, i, &tag_cuelist))
+                {
+                    if(!strncmp(tag_cuelist, "cuesheet=", 9))
+                    {
+                        if(mmd->emb_cue!=NULL) g_free(mmd->emb_cue);
+                        mmd->emb_cue = g_strdup(tag_cuelist+9);
+                    }
+                    if(tag_cuelist!=NULL) g_free(tag_cuelist);
+                }
+            }
+            gst_tag_list_free(tags);
+            return TRUE;
+            break;
         }
+        case GST_MESSAGE_ELEMENT:
+        {
+            if(gst_is_missing_plugin_message(message))
+            {
+                rc_debug_module_perror(module_name, "Missing plugin to open "
+                    "the media file!");
+                if(gst_install_plugins_supported())
+                {
+                    rc_debug_module_pmsg(module_name, "Trying to install necessary "
+                        "plugin.");
+                    plugin_error_msg =
+                        gst_missing_plugin_message_get_installer_detail(
+                            message);
+                    gst_install_plugins_async(&plugin_error_msg, NULL,
+                        rc_tag_plugin_install_result, NULL);
+                    g_free(plugin_error_msg);
+                }
+            }
+            break;
+        }
+        default: break;
     }
+    return FALSE;
+}
+
+/*
+ * The event loop for tag reading.
+ */
+
+static void rc_tag_event_loop(RCMusicMetaData *mmd, GstElement *element,
+    gboolean block)
+{
+    GstBus *bus;
+    GstMessage *message;
+    gboolean done = FALSE;
+    bus = gst_element_get_bus(element);
+    g_return_if_fail(bus!=NULL);
+    while(!done && !mmd->eos)
+    {
+        if(block)
+            message = gst_bus_timed_pop(bus, GST_CLOCK_TIME_NONE);
+        else
+            message = gst_bus_pop(bus);
+        if(message==NULL)
+        {
+            gst_object_unref(bus);
+            return;
+        }
+        done = rc_tag_bus_handler(bus, message, mmd);
+        gst_message_unref(message);
+    }
+    gst_object_unref(bus);
 }
 
 /*
@@ -227,13 +329,14 @@ RCMusicMetaData *rc_tag_read_metadata(const gchar *uri)
     GstPad *sink_pad;
     GstCaps *caps;
     GstStructure *structure;
+    gint changeTimeout = 0;
     gint64 dura = 0;
     GstStateChangeReturn state_ret;
     GstMessage *msg;
     GstFormat fmt = GST_FORMAT_TIME;
+    GstBus *bus;
     RCMusicMetaData *mmd;
     RCTagDecodedPadData decoded_pad_data;
-    GstTagList *tags = NULL;
     gchar *encoding;
     const gchar *locale;
     if(uri==NULL)
@@ -293,6 +396,7 @@ RCMusicMetaData *rc_tag_read_metadata(const gchar *uri)
     gst_element_link(urisrc, decodebin);
     g_signal_connect(decodebin, "new-decoded-pad",
         G_CALLBACK(rc_tag_gst_new_decoded_pad_cb), &decoded_pad_data);
+    bus = gst_pipeline_get_bus(GST_PIPELINE(pipeline));
     gst_element_set_state(pipeline, GST_STATE_NULL);
     state_ret = gst_element_set_state(pipeline, GST_STATE_PAUSED);
     if(!state_ret)
@@ -301,21 +405,23 @@ RCMusicMetaData *rc_tag_read_metadata(const gchar *uri)
         g_free(mmd);
         return NULL;
     }
-    while(1)
+    while(state_ret==GST_STATE_CHANGE_ASYNC && !mmd->eos &&
+        changeTimeout < 10) 
     {
-        msg = gst_bus_timed_pop_filtered(GST_ELEMENT_BUS(pipeline),
-            GST_CLOCK_TIME_NONE, GST_MESSAGE_ASYNC_DONE | GST_MESSAGE_TAG |
-            GST_MESSAGE_ERROR);
-        if(GST_MESSAGE_TYPE(msg)!=GST_MESSAGE_TAG)
-            break;
-        gst_message_parse_tag(msg, &tags);
-        rc_tag_get_tag(tags, mmd);
-        gst_tag_list_free(tags);
-        gst_message_unref(msg);
+        msg = gst_bus_timed_pop(bus, 1 * GST_SECOND);
+        if(msg!=NULL) 
+        {
+            rc_tag_bus_handler(bus, msg, mmd);
+            gst_message_unref(msg);
+            changeTimeout = 0;
+        }
+        else changeTimeout++;
+        state_ret = gst_element_get_state(pipeline, NULL, NULL, 0);
     }
-    if(GST_MESSAGE_TYPE(msg)==GST_MESSAGE_ERROR)
-        rc_debug_module_perror(module_name, "Cannot get tag!");
-    gst_message_unref(msg);
+    gst_object_unref(bus);
+    rc_tag_event_loop(mmd, pipeline, FALSE);
+    if(state_ret!=GST_STATE_CHANGE_SUCCESS)
+        gst_element_set_state(pipeline, GST_STATE_NULL);
     gst_element_query_duration(pipeline, &fmt, &dura);
     sink_pad = gst_element_get_static_pad(fakesink, "sink");
     if(sink_pad!=NULL)

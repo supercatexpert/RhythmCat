@@ -41,6 +41,7 @@ G_BEGIN_DECLS
  * @start_time: the start time used in segment playing
  * @end_time: the end time used in segment playing
  * @full_mode: whether the full function mode is supported
+ * @last_state: the last state of the player
  * @ver_major: the major version number of GStreamer
  * @ver_minor: the minor version number of GStreamer
  * @ver_micro: the micro version number of GStreamer
@@ -57,6 +58,7 @@ typedef struct RCCoreData {
     gint64 start_time;
     gint64 end_time;
     gboolean full_mode;
+    GstState last_state;
     guint ver_major;
     guint ver_minor;
     guint ver_micro;

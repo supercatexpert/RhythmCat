@@ -2,8 +2,8 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.61])
-AC_INIT([RhythmCat], [1.0.0], [http://code.google.com/p/rhythmcat/issues/list])
-AM_INIT_AUTOMAKE(RhythmCat, 1.0.0)
+AC_INIT([RhythmCat], [1.0.1], [http://code.google.com/p/rhythmcat/issues/list])
+AM_INIT_AUTOMAKE(RhythmCat, 1.0.1)
 AC_CONFIG_SRCDIR([src/main.c])
 AC_CONFIG_HEADERS([config.h])
 
@@ -51,16 +51,24 @@ AM_GNU_GETTEXT_VERSION([0.18.1])
 AM_GNU_GETTEXT([external])
 
 # Checks for features
-AC_ARG_ENABLE(debug, [  --enable-debug          enable debug mode], \
+AC_ARG_ENABLE(debug, AS_HELP_STRING([--enable-debug], [enable debug mode]), \
     enable_debug=yes,)
 AM_CONDITIONAL(DEBUG_MODE, test "x$enable_debug" = "xyes")
 
-AC_ARG_ENABLE(maemo5, [  --enable-maemo5         enable Maemo5 compatiblity], \
+AC_ARG_ENABLE(maemo5, AS_HELP_STRING([--enable-maemo5], [enable Maemo5 compatiblity]), \
     enable_maemo5=yes,)
 AM_CONDITIONAL(USE_MAEMO5, test "x$enable_maemo5" = "xyes")
 
-AC_ARG_ENABLE(gtk3, [  --enable-gtk3           use gtk+ 3.0 instead of gtk+ 2.0], \
-    enable_gtk3=yes,)
+PKG_CHECK_MODULES([GTK], [gtk+-3.0 >= 3.0.0], have_gtk3=yes, have_gtk3=no)
+if test "x$enable_gtk3" = "xno"; then
+    have_gtk3=no
+fi
+if test "x$have_gtk3" = "xyes"; then
+    enable_gtk3=yes
+fi
+
+AC_ARG_ENABLE(gtk3, AS_HELP_STRING([--enable-gtk3], \
+    [use gtk+ 3.0 instead of gtk+ 2.0 [[default=yes]]]), enable_gtk3=yes, enable_gtk3=no)
 if test "x$enable_gtk3" = "xyes"; then
     PKG_CHECK_MODULES([GTK], [gtk+-3.0 >= 3.0.0])
 else
@@ -68,8 +76,8 @@ else
 fi
 AM_CONDITIONAL(USE_GTK3, test "x$enable_gtk3" = "xyes")
 
-AC_ARG_ENABLE(dbus, [  --disable-dbus          disable D-Bus modules], \
-    disable_dbus=yes,)
+AC_ARG_ENABLE(dbus, AS_HELP_STRING([--disable-dbus], \
+    [disable D-Bus modules]), disable_dbus=yes,)
 if test "x$disable_dbus" != "xyes"; then
     PKG_CHECK_MODULES([DBUS_GLIB], [dbus-glib-1 >= 0.76])
 fi

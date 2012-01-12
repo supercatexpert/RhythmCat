@@ -74,7 +74,7 @@ CPPFLAGS =
 CYGPATH_W = echo
 DATADIRNAME = share
 DBUSBINDINGTOOL = /usr/bin/dbus-binding-tool
-DBUS_GLIB_CFLAGS = -pthread -I/usr/include/dbus-1.0 -I/usr/lib/dbus-1.0/include -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include  
+DBUS_GLIB_CFLAGS = -pthread -I/usr/include/dbus-1.0 -I/usr/lib/x86_64-linux-gnu/dbus-1.0/include -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include  
 DBUS_GLIB_LIBS = -pthread -ldbus-glib-1 -ldbus-1 -lpthread -lgobject-2.0 -lgthread-2.0 -lrt -lglib-2.0  
 DEFS = -DHAVE_CONFIG_H
 DEPDIR = .deps
@@ -85,19 +85,19 @@ EGREP = /bin/grep -E
 EXEEXT = 
 GETTEXT_MACRO_VERSION = 0.18
 GETTEXT_PACKAGE = RhythmCat
-GLIB2_CFLAGS = -pthread -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include  
+GLIB2_CFLAGS = -pthread -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include  
 GLIB2_LIBS = -pthread -Wl,--export-dynamic -lgio-2.0 -lgobject-2.0 -lgmodule-2.0 -lgthread-2.0 -lrt -lglib-2.0  
 GMOFILES =  zh_CN.gmo zh_TW.gmo ja_JP.gmo
 GMSGFMT = /usr/bin/msgfmt
 GMSGFMT_015 = /usr/bin/msgfmt
 GREP = /bin/grep
-GSTREAMER_CFLAGS = -pthread -I/usr/include/gstreamer-0.10 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/libxml2  
+GSTREAMER_CFLAGS = -pthread -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/gstreamer-0.10 -I/usr/include/libxml2  
 GSTREAMER_LIBS = -pthread -lgstpbutils-0.10 -lgstreamer-0.10 -lgobject-2.0 -lgmodule-2.0 -lxml2 -lgthread-2.0 -lrt -lglib-2.0  
-GTKDOC_CHECK = /usr/bin/gtkdoc-check
-GTKDOC_MKPDF = /usr/bin/gtkdoc-mkpdf
-GTKDOC_REBASE = /usr/bin/gtkdoc-rebase
-GTK_CFLAGS = -pthread -I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/gio-unix-2.0/ -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng12 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include  
-GTK_LIBS = -pthread -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lpangoft2-1.0 -lgdk_pixbuf-2.0 -lm -lpangocairo-1.0 -lcairo -lgio-2.0 -lpango-1.0 -lfreetype -lfontconfig -lgobject-2.0 -lgmodule-2.0 -lgthread-2.0 -lrt -lglib-2.0  
+GTKDOC_CHECK = 
+GTKDOC_MKPDF = 
+GTKDOC_REBASE = true
+GTK_CFLAGS = -pthread -DGSEAL_ENABLE -I/usr/include/atk-1.0 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/pango-1.0 -I/usr/include/gio-unix-2.0/ -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng12 -I/usr/include/gtk-3.0 -I/usr/include/cairo  
+GTK_LIBS = -pthread -lgtk-3 -lgdk-3 -latk-1.0 -lcairo-gobject -lgio-2.0 -lpangoft2-1.0 -lpangocairo-1.0 -lgdk_pixbuf-2.0 -lcairo -lpango-1.0 -lfreetype -lfontconfig -lgobject-2.0 -lgmodule-2.0 -lgthread-2.0 -lrt -lglib-2.0  
 HTML_DIR = ${datadir}/gtk-doc/html
 INSTALL = /usr/bin/install -c
 INSTALL_DATA = ${INSTALL} -m 644
@@ -127,10 +127,10 @@ OBJEXT = o
 PACKAGE = RhythmCat
 PACKAGE_BUGREPORT = http://code.google.com/p/rhythmcat/issues/list
 PACKAGE_NAME = RhythmCat
-PACKAGE_STRING = RhythmCat 1.0.0
+PACKAGE_STRING = RhythmCat 1.0.1
 PACKAGE_TARNAME = rhythmcat
 PACKAGE_URL = 
-PACKAGE_VERSION = 1.0.0
+PACKAGE_VERSION = 1.0.1
 PATH_SEPARATOR = :
 PKG_CONFIG = /usr/bin/pkg-config
 PKG_CONFIG_LIBDIR = 
@@ -273,10 +273,10 @@ expand_content_files = plugin-programming.xml
 # signals and properties.
 # e.g. GTKDOC_CFLAGS=-I$(top_srcdir) -I$(top_builddir) $(GTK_DEBUG_FLAGS)
 # e.g. GTKDOC_LIBS=$(top_builddir)/gtk/$(gtktargetlib)
-GTKDOC_CFLAGS = -I-pthread -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include   -I-pthread -I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/gio-unix-2.0/ -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng12 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include   -I-pthread -I/usr/include/gstreamer-0.10 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/libxml2   \
+GTKDOC_CFLAGS = -I-pthread -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include   -I-pthread -DGSEAL_ENABLE -I/usr/include/atk-1.0 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/pango-1.0 -I/usr/include/gio-unix-2.0/ -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng12 -I/usr/include/gtk-3.0 -I/usr/include/cairo   -I-pthread -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/gstreamer-0.10 -I/usr/include/libxml2   \
     -I$(top_srcdir)/src
 
-GTKDOC_LIBS = -pthread -Wl,--export-dynamic -lgio-2.0 -lgobject-2.0 -lgmodule-2.0 -lgthread-2.0 -lrt -lglib-2.0   -pthread -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lpangoft2-1.0 -lgdk_pixbuf-2.0 -lm -lpangocairo-1.0 -lcairo -lgio-2.0 -lpango-1.0 -lfreetype -lfontconfig -lgobject-2.0 -lgmodule-2.0 -lgthread-2.0 -lrt -lglib-2.0   $(top_srcdir)/src/player_object.o \
+GTKDOC_LIBS = -pthread -Wl,--export-dynamic -lgio-2.0 -lgobject-2.0 -lgmodule-2.0 -lgthread-2.0 -lrt -lglib-2.0   -pthread -lgtk-3 -lgdk-3 -latk-1.0 -lcairo-gobject -lgio-2.0 -lpangoft2-1.0 -lpangocairo-1.0 -lgdk_pixbuf-2.0 -lcairo -lpango-1.0 -lfreetype -lfontconfig -lgobject-2.0 -lgmodule-2.0 -lgthread-2.0 -lrt -lglib-2.0   $(top_srcdir)/src/player_object.o \
     $(top_srcdir)/src/gui_text.o
 
 GTKDOC_CC = $(CC) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -317,10 +317,10 @@ REPORT_FILES = \
 	$(DOC_MODULE)-unused.txt
 
 CLEANFILES = $(SCANOBJ_FILES) $(REPORT_FILES) $(DOC_STAMPS)
-#HTML_BUILD_STAMP = 
-HTML_BUILD_STAMP = html-build.stamp
-PDF_BUILD_STAMP = 
-#PDF_BUILD_STAMP = pdf-build.stamp
+##HTML_BUILD_STAMP = 
+#HTML_BUILD_STAMP = html-build.stamp
+#PDF_BUILD_STAMP = 
+##PDF_BUILD_STAMP = pdf-build.stamp
 all: all-am
 
 .SUFFIXES:
@@ -507,8 +507,8 @@ uninstall-am: uninstall-local
 	uninstall-local
 
 
-all-local: $(HTML_BUILD_STAMP) $(PDF_BUILD_STAMP)
-#all-local:
+#all-local: $(HTML_BUILD_STAMP) $(PDF_BUILD_STAMP)
+all-local:
 
 docs: $(HTML_BUILD_STAMP) $(PDF_BUILD_STAMP)
 
@@ -638,10 +638,10 @@ uninstall-local:
 #
 # Require gtk-doc when making dist
 #
-dist-check-gtkdoc:
 #dist-check-gtkdoc:
-#	@echo "*** gtk-doc must be installed and enabled in order to make dist"
-#	@false
+dist-check-gtkdoc:
+	@echo "*** gtk-doc must be installed and enabled in order to make dist"
+	@false
 
 dist-hook: dist-check-gtkdoc dist-hook-local
 	mkdir $(distdir)/html

@@ -1,7 +1,7 @@
 # RhythmCat RPM SPEC File
 
 Name: RhythmCat
-Version: 1.0.0
+Version: 1.0.1
 Release: 1
 Summary: A Music Player with Plugin Support
 Source0: %{name}-%{version}.tar.gz
@@ -54,6 +54,6 @@ rm -rf %{buildroot}
 %{_datadir}/applications/%{name}.desktop
 
 %changelog
-* Sat Nov 19 2011 SuperCat <supercatexpert@gmail.com> - 1.0.0-1
-- The 1.0.0-1 Stable Version Package.
+* Thu Jan 12 2011 SuperCat <supercatexpert@gmail.com> - 1.0.1-1
+- The 1.0.1-1 Stable Version Package.
 
