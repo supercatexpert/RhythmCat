@@ -1941,6 +1941,83 @@ static void rc_ui_window_refresh_all_action(GSimpleAction *action,
     rclib_db_refresh_all();
 }
 
+static void rc_ui_window_show_error(const gchar *message,
+    const GError *error)
+{
+    GtkAlertDialog *dialog;
+    dialog = gtk_alert_dialog_new("%s", message);
+    if(error!=NULL) gtk_alert_dialog_set_detail(dialog, error->message);
+    gtk_alert_dialog_show(dialog, GTK_WINDOW(window_priv.window));
+    g_object_unref(dialog);
+}
+
+static void rc_ui_window_remove_missing_cb(GObject *source,
+    GAsyncResult *result, gpointer data)
+{
+    GSimpleAction *action = data;
+    GError *error = NULL;
+    gchar *text;
+    gint removed;
+    removed = rclib_db_remove_missing_items_finish(result, &error);
+    g_simple_action_set_enabled(action, TRUE);
+    g_object_unref(action);
+    if(window_priv.window==NULL) return;
+    if(removed<0)
+    {
+        rc_ui_window_show_error(_("Cannot check the files."), error);
+        g_clear_error(&error);
+        return;
+    }
+    if(removed==0)
+        text = g_strdup(_("No missing files are found."));
+    else
+    {
+        text = g_strdup_printf(g_dngettext(NULL, "Removed %d item whose "
+            "file is missing.", "Removed %d items whose files are missing.",
+            removed), removed);
+    }
+    gtk_label_set_text(GTK_LABEL(window_priv.status_label), text);
+    g_free(text);
+}
+
+static void rc_ui_window_remove_missing_confirm_cb(GObject *source,
+    GAsyncResult *result, gpointer data)
+{
+    GSimpleAction *action = data;
+    gint button;
+    button = gtk_alert_dialog_choose_finish(GTK_ALERT_DIALOG(source),
+        result, NULL);
+    if(button!=1 || window_priv.window==NULL)
+    {
+        g_object_unref(action);
+        return;
+    }
+    /* Disabled until the check is finished */
+    g_simple_action_set_enabled(action, FALSE);
+    gtk_label_set_text(GTK_LABEL(window_priv.status_label),
+        _("Checking files…"));
+    rclib_db_remove_missing_items_async(NULL, rc_ui_window_remove_missing_cb,
+        action);
+}
+
+static void rc_ui_window_remove_missing_action(GSimpleAction *action,
+    GVariant *parameter, gpointer data)
+{
+    GtkAlertDialog *dialog;
+    const gchar *buttons[] = {_("_Cancel"), _("_Remove"), NULL};
+    dialog = gtk_alert_dialog_new("%s", _("Remove missing files?"));
+    gtk_alert_dialog_set_detail(dialog, _("Items in the music library and "
+        "the playlists whose audio files do not exist any more will be "
+        "removed. Files on removable drives or network shares which are "
+        "not mounted are also treated as missing."));
+    gtk_alert_dialog_set_buttons(dialog, buttons);
+    gtk_alert_dialog_set_cancel_button(dialog, 0);
+    gtk_alert_dialog_set_default_button(dialog, 0);
+    gtk_alert_dialog_choose(dialog, GTK_WINDOW(window_priv.window), NULL,
+        rc_ui_window_remove_missing_confirm_cb, g_object_ref(action));
+    g_object_unref(dialog);
+}
+
 static void rc_ui_window_cancel_import_action(GSimpleAction *action,
     GVariant *parameter, gpointer data)
 {
@@ -2003,16 +2080,6 @@ static gboolean rc_ui_window_drop_cb(GtkDropTarget *target,
         rc_ui_window_import_files((GFile **)&foreach->data, 1);
     g_slist_free(files);
     return TRUE;
-}
-
-static void rc_ui_window_show_error(const gchar *message,
-    const GError *error)
-{
-    GtkAlertDialog *dialog;
-    dialog = gtk_alert_dialog_new("%s", message);
-    if(error!=NULL) gtk_alert_dialog_set_detail(dialog, error->message);
-    gtk_alert_dialog_show(dialog, GTK_WINDOW(window_priv.window));
-    g_object_unref(dialog);
 }
 
 static GListModel *rc_ui_window_get_playlist_filters()
@@ -2168,6 +2235,8 @@ static const GActionEntry window_actions[] = {
     {"import-folder", rc_ui_window_import_folder_action, NULL, NULL, NULL},
     {"refresh-all", rc_ui_window_refresh_all_action, NULL, NULL, NULL},
     {"cancel-import", rc_ui_window_cancel_import_action, NULL, NULL, NULL},
+    {"remove-missing", rc_ui_window_remove_missing_action, NULL, NULL,
+        NULL},
     {"load-playlist", rc_ui_window_load_playlist_action, NULL, NULL, NULL},
     {"save-playlist", rc_ui_window_save_playlist_action, NULL, NULL, NULL},
     {"settings", rc_ui_window_settings_action, NULL, NULL, NULL},

@@ -24,6 +24,7 @@
 
 #include <glib.h>
 #include <glib-object.h>
+#include <gio/gio.h>
 #include "rclib-plist.h"
 #include "rclib-core.h"
 
@@ -202,6 +203,10 @@ gboolean rclib_db_load(GError **error);
 guint rclib_db_get_import_pending();
 void rclib_db_import_cancel();
 void rclib_db_refresh_all();
+void rclib_db_remove_missing_items_async(GCancellable *cancellable,
+    GAsyncReadyCallback callback, gpointer data);
+gint rclib_db_remove_missing_items_finish(GAsyncResult *result,
+    GError **error);
 
 /* Items */
 RCLibDbItem *rclib_db_item_new();

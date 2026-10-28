@@ -64,6 +64,8 @@ the icon is also installed as the application icon.
     `~/.local/share/RhythmCat3/library.json.gz`. The file is replaced
     atomically and autosaved after changes.
 * Metadata:
+  * Items whose audio files are missing can be removed from the library
+    and all playlists (checked in a background thread).
   * Read asynchronously with `GstDiscoverer` when files or folders are
     imported. Pending imports can be cancelled; the items already imported
     are kept.
@@ -72,7 +74,8 @@ the icon is also installed as the application icon.
   * Legacy ID3 tags (ID3v1, or ID3v2 marked as ISO-8859-1) are decoded
     with the configurable fallback encoding list before Latin-1 is tried.
 * CUE sheets: external `.cue` files and embedded `CUESHEET` tags. Missing
-  audio files are looked up by base name with common extensions. Non-UTF-8
+  audio files are looked up by base name with common extensions; tracks
+  whose audio files still cannot be found are not imported. Non-UTF-8
   sheets are decoded with the fallback encoding list.
 * Playlist files: M3U (including extended M3U), M3U8, PLS and XSPF.
   * Load a file as a new playlist (named by the title in the file, or the
@@ -131,6 +134,10 @@ the icon is also installed as the application icon.
   selected items, all selected items are moved together and keep their
   order. Dropping below the last item moves them to the end. The up/down
   buttons move a single item.
+* "Remove Missing Files…" in the menu removes the items in the library and
+  all playlists whose audio files do not exist any more (after a
+  confirmation). The files are checked in a background thread; remote
+  streams are kept.
 * Load a playlist file as a new playlist, or save the shown track list
   to a playlist file (buttons below the playlist sidebar, or the menu).
 * Settings: style, lyric display, update metadata when playing, and the

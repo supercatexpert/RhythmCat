@@ -25,6 +25,10 @@
         <attribute name="action">win.refresh-all</attribute>
       </item>
       <item>
+        <attribute name="label" translatable="yes">Remove _Missing Files…</attribute>
+        <attribute name="action">win.remove-missing</attribute>
+      </item>
+      <item>
         <attribute name="label" translatable="yes">_Cancel Import</attribute>
         <attribute name="action">win.cancel-import</attribute>
       </item>

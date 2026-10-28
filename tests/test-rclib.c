@@ -886,6 +886,124 @@ static void test_plist_db()
     g_free(db_file);
 }
 
+static void test_remove_missing_cb(GObject *source, GAsyncResult *result,
+    gpointer data)
+{
+    gint *removed = data;
+    GError *error = NULL;
+    *removed = rclib_db_remove_missing_items_finish(result, &error);
+    g_assert_no_error(error);
+}
+
+static void test_remove_missing()
+{
+    RCLibDbPlaylist *playlist;
+    RCLibDbItem *item;
+    gchar *db_file, *uri, *path;
+    gint removed = -2;
+    db_file = g_build_filename(test_dir, "missing.json.gz", NULL);
+    g_assert_true(rclib_db_init(db_file));
+    playlist = rclib_db_playlist_new("Missing", -1);
+    uri = test_make_wav("exists.wav");
+    item = test_make_item(uri, "Exists", NULL, NULL, 0);
+    rclib_db_library_add_item(item);
+    rclib_db_playlist_add_item(playlist, item, -1);
+    rclib_db_item_unref(item);
+    g_free(uri);
+    uri = test_make_wav("deleted.wav");
+    item = test_make_item(uri, "Deleted", NULL, NULL, 0);
+    rclib_db_library_add_item(item);
+    rclib_db_playlist_add_item(playlist, item, -1);
+    rclib_db_playlist_add_item(playlist, item, -1);
+    rclib_db_item_unref(item);
+    path = g_filename_from_uri(uri, NULL, NULL);
+    g_assert_cmpint(g_remove(path), ==, 0);
+    g_free(path);
+    g_free(uri);
+    item = test_make_item("http://radio.example.com/stream", "Radio", NULL,
+        NULL, 0);
+    rclib_db_playlist_add_item(playlist, item, -1);
+    rclib_db_item_unref(item);
+    g_assert_cmpuint(rclib_db_library_get_items()->len, ==, 2);
+    g_assert_cmpuint(playlist->items->len, ==, 4);
+
+    rclib_db_remove_missing_items_async(NULL, test_remove_missing_cb,
+        &removed);
+    while(removed==-2) g_main_context_iteration(NULL, TRUE);
+    g_assert_cmpint(removed, ==, 3);
+    g_assert_cmpuint(rclib_db_library_get_items()->len, ==, 1);
+    item = g_ptr_array_index(rclib_db_library_get_items(), 0);
+    g_assert_cmpstr(item->title, ==, "Exists");
+    g_assert_cmpuint(playlist->items->len, ==, 2);
+    item = g_ptr_array_index(playlist->items, 0);
+    g_assert_cmpstr(item->title, ==, "Exists");
+    item = g_ptr_array_index(playlist->items, 1);
+    g_assert_cmpstr(item->title, ==, "Radio");
+
+    /* Nothing to remove */
+    removed = -2;
+    rclib_db_remove_missing_items_async(NULL, test_remove_missing_cb,
+        &removed);
+    while(removed==-2) g_main_context_iteration(NULL, TRUE);
+    g_assert_cmpint(removed, ==, 0);
+    rclib_db_exit();
+    g_free(db_file);
+}
+
+static void test_cue_missing()
+{
+    RCLibDbPlaylist *playlist;
+    RCLibDbItem *item;
+    gchar *db_file, *dir, *path, *uri;
+    db_file = g_build_filename(test_dir, "cue-missing.json.gz", NULL);
+    g_assert_true(rclib_tag_init());
+    g_assert_true(rclib_db_init(db_file));
+    dir = g_build_filename(test_dir, "cue-missing", NULL);
+    g_assert_cmpint(g_mkdir_with_parents(dir, 0700), ==, 0);
+    g_free(test_make_wav("cue-missing/disc1.wav"));
+    playlist = rclib_db_playlist_new("CUE", -1);
+
+    /* Two audio files, the second one does not exist */
+    path = g_build_filename(dir, "two.cue", NULL);
+    g_assert_true(g_file_set_contents(path,
+        "FILE \"disc1.wav\" WAVE\n"
+        "  TRACK 01 AUDIO\n    TITLE \"A\"\n    INDEX 01 00:00:00\n"
+        "  TRACK 02 AUDIO\n    TITLE \"B\"\n    INDEX 01 00:00:03\n"
+        "FILE \"disc2.wav\" WAVE\n"
+        "  TRACK 03 AUDIO\n    TITLE \"C\"\n    INDEX 01 00:00:00\n",
+        -1, NULL));
+    uri = g_filename_to_uri(path, NULL, NULL);
+    rclib_db_import_uri(playlist, uri, -1);
+    test_import_wait(5000);
+    g_assert_cmpuint(playlist->items->len, ==, 2);
+    item = g_ptr_array_index(playlist->items, 0);
+    g_assert_cmpstr(item->title, ==, "A");
+    item = g_ptr_array_index(playlist->items, 1);
+    g_assert_cmpstr(item->title, ==, "B");
+    g_free(uri);
+    g_free(path);
+
+    /* The audio file does not exist, nothing is imported */
+    path = g_build_filename(dir, "missing.cue", NULL);
+    g_assert_true(g_file_set_contents(path,
+        "FILE \"missing.flac\" WAVE\n"
+        "  TRACK 01 AUDIO\n    INDEX 01 00:00:00\n"
+        "  TRACK 02 AUDIO\n    INDEX 01 00:01:00\n", -1, NULL));
+    uri = g_filename_to_uri(path, NULL, NULL);
+    rclib_db_import_uri(NULL, uri, -1);
+    rclib_db_import_uri(playlist, uri, -1);
+    test_import_wait(5000);
+    g_assert_cmpuint(rclib_db_library_get_items()->len, ==, 0);
+    g_assert_cmpuint(playlist->items->len, ==, 2);
+    g_free(uri);
+    g_free(path);
+
+    rclib_db_exit();
+    rclib_tag_exit();
+    g_free(dir);
+    g_free(db_file);
+}
+
 static void test_instance()
 {
     GError *error = NULL;
@@ -917,6 +1035,8 @@ int main(int argc, char *argv[])
     g_test_add_func("/plist/parse", test_plist_parse);
     g_test_add_func("/plist/write", test_plist_write);
     g_test_add_func("/plist/db", test_plist_db);
+    g_test_add_func("/db/remove-missing", test_remove_missing);
+    g_test_add_func("/db/cue-missing", test_cue_missing);
     g_test_add_func("/instance/lock", test_instance);
     g_test_add_func("/core/equalizer", test_eq);
     g_test_add_func("/player/next", test_player_next);

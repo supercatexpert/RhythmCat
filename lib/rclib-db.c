@@ -264,17 +264,43 @@ static void rclib_db_item_set_metadata(RCLibDbItem *item,
     if(metadata->bitrate>0) item->bitrate = metadata->bitrate;
 }
 
+/* Check whether the audio file of the CUE track exists, remote files
+ * are not checked. The result of the last file is cached, because the
+ * tracks in a CUE sheet usually share the same file. */
+static gboolean rclib_db_cue_audio_exists(const gchar *uri,
+    gchar **last_uri, gboolean *last_exists)
+{
+    GFile *file;
+    if(uri==NULL) return FALSE;
+    if(!g_str_has_prefix(uri, "file:")) return TRUE;
+    if(g_strcmp0(uri, *last_uri)==0) return *last_exists;
+    file = g_file_new_for_uri(uri);
+    *last_exists = g_file_query_exists(file, NULL);
+    g_object_unref(file);
+    g_free(*last_uri);
+    *last_uri = g_strdup(uri);
+    if(!*last_exists)
+        g_message("Skip CUE tracks of missing audio file %s", uri);
+    return *last_exists;
+}
+
 /* Import the tracks in the CUE sheet, only the track with index
- * @track is imported if @track is larger than 0. */
+ * @track is imported if @track is larger than 0. For external CUE
+ * sheets, the tracks whose audio files do not exist are skipped. */
 static void rclib_db_import_cue_data(RCLibDbPlaylist *playlist,
     const RCLibCueData *cue, RCLibDbItemType type, const gchar *cue_uri,
     gint track, gint position, const RCLibTagMetadata *metadata)
 {
     RCLibDbItem *item;
+    gchar *last_uri = NULL;
+    gboolean last_exists = FALSE;
     guint i;
     for(i=0;i<cue->length;i++)
     {
         if(track>0 && cue->tracks[i].index!=track) continue;
+        if(type==RCLIB_DB_ITEM_TYPE_CUE && !rclib_db_cue_audio_exists(
+            cue->tracks[i].uri, &last_uri, &last_exists))
+            continue;
         item = rclib_db_item_new();
         item->type = type;
         item->uri = g_strdup(cue->tracks[i].uri);
@@ -299,6 +325,7 @@ static void rclib_db_import_cue_data(RCLibDbPlaylist *playlist,
         }
         rclib_db_item_unref(item);
     }
+    g_free(last_uri);
 }
 
 static void rclib_db_import_process();
@@ -1181,6 +1208,134 @@ void rclib_db_refresh_all()
         for(j=0;j<playlist->items->len;j++)
             rclib_db_item_refresh(g_ptr_array_index(playlist->items, j));
     }
+}
+
+typedef struct RCLibDbCheckData
+{
+    GPtrArray *items;
+    GPtrArray *uris;
+    gboolean *missing;
+}RCLibDbCheckData;
+
+static void rclib_db_check_data_free(gpointer data)
+{
+    RCLibDbCheckData *check_data = data;
+    g_ptr_array_unref(check_data->items);
+    g_ptr_array_unref(check_data->uris);
+    g_free(check_data->missing);
+    g_free(check_data);
+}
+
+static void rclib_db_check_add_items(RCLibDbCheckData *check_data,
+    const GPtrArray *items)
+{
+    RCLibDbItem *item;
+    guint i;
+    for(i=0;i<items->len;i++)
+    {
+        item = g_ptr_array_index(items, i);
+        /* Remote streams are not checked */
+        if(item->uri==NULL || !g_str_has_prefix(item->uri, "file:"))
+            continue;
+        g_ptr_array_add(check_data->items, rclib_db_item_ref(item));
+        g_ptr_array_add(check_data->uris, g_strdup(item->uri));
+    }
+}
+
+static void rclib_db_check_thread(GTask *task, gpointer source,
+    gpointer task_data, GCancellable *cancellable)
+{
+    RCLibDbCheckData *check_data = task_data;
+    GFile *file;
+    guint i;
+    for(i=0;i<check_data->uris->len;i++)
+    {
+        if(g_cancellable_is_cancelled(cancellable)) break;
+        file = g_file_new_for_uri(g_ptr_array_index(check_data->uris, i));
+        check_data->missing[i] = !g_file_query_exists(file, cancellable);
+        g_object_unref(file);
+    }
+    if(!g_task_return_error_if_cancelled(task))
+        g_task_return_boolean(task, TRUE);
+}
+
+/**
+ * rclib_db_remove_missing_items_async:
+ * @cancellable: (allow-none): a #GCancellable, or %NULL
+ * @callback: (scope async): the callback when the operation is finished
+ * @data: the user data for the callback
+ *
+ * Remove the items in the music library and the playlists whose audio
+ * files do not exist any more. The files are checked in a thread, call
+ * rclib_db_remove_missing_items_finish() in the callback to get the
+ * result. Remote streams are not checked.
+ */
+
+void rclib_db_remove_missing_items_async(GCancellable *cancellable,
+    GAsyncReadyCallback callback, gpointer data)
+{
+    RCLibDbPrivate *priv = rclib_db_get_priv();
+    RCLibDbCheckData *check_data;
+    GTask *task;
+    guint i;
+    task = g_task_new(NULL, cancellable, callback, data);
+    g_task_set_source_tag(task, rclib_db_remove_missing_items_async);
+    if(priv==NULL)
+    {
+        g_task_return_new_error(task, G_IO_ERROR,
+            G_IO_ERROR_NOT_INITIALIZED,
+            _("The database is not initialized."));
+        g_object_unref(task);
+        return;
+    }
+    check_data = g_new0(RCLibDbCheckData, 1);
+    check_data->items = g_ptr_array_new_with_free_func(
+        (GDestroyNotify)rclib_db_item_unref);
+    check_data->uris = g_ptr_array_new_with_free_func(g_free);
+    rclib_db_check_add_items(check_data, priv->library);
+    for(i=0;i<priv->playlists->len;i++)
+    {
+        rclib_db_check_add_items(check_data, ((RCLibDbPlaylist *)
+            g_ptr_array_index(priv->playlists, i))->items);
+    }
+    check_data->missing = g_new0(gboolean, check_data->uris->len + 1);
+    g_task_set_task_data(task, check_data, rclib_db_check_data_free);
+    g_task_run_in_thread(task, rclib_db_check_thread);
+    g_object_unref(task);
+}
+
+/**
+ * rclib_db_remove_missing_items_finish:
+ * @result: the #GAsyncResult
+ * @error: (allow-none): return location for a #GError, or %NULL
+ *
+ * Finish rclib_db_remove_missing_items_async(), the items whose files
+ * do not exist are removed here.
+ *
+ * Returns: The number of removed items, -1 if the operation failed or
+ *     is cancelled.
+ */
+
+gint rclib_db_remove_missing_items_finish(GAsyncResult *result,
+    GError **error)
+{
+    RCLibDbCheckData *check_data;
+    RCLibDbItem *item;
+    gint removed = 0;
+    guint i;
+    g_return_val_if_fail(g_task_is_valid(result, NULL), -1);
+    if(!g_task_propagate_boolean(G_TASK(result), error)) return -1;
+    if(rclib_db_get_priv()==NULL) return -1;
+    check_data = g_task_get_task_data(G_TASK(result));
+    for(i=0;i<check_data->items->len;i++)
+    {
+        if(!check_data->missing[i]) continue;
+        item = g_ptr_array_index(check_data->items, i);
+        /* The item may be removed while checking */
+        if(item->removed) continue;
+        if(rclib_db_remove_item(item)) removed++;
+    }
+    return removed;
 }
 
 /**
