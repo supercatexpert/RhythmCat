@@ -1,0 +1,31 @@
+.TH RHYTHMCAT-TUI 1 "2026-10-29" "RhythmCat 3.0.0" "User Commands"
+.SH NAME
+rhythmcat-tui \- music player (terminal frontend)
+.SH SYNOPSIS
+.B rhythmcat\-tui
+.RI [ FILE ...]
+.SH DESCRIPTION
+.B rhythmcat\-tui
+is the ncurses frontend of the RhythmCat music player. It plays music
+and manages the music library and user playlists in a terminal.
+.PP
+Audio files, CUE sheets, playlist files and folders given as
+.I FILE
+arguments are imported into the music library.
+.PP
+Press
+.B ?
+in the program to show all keys. Only one frontend of RhythmCat can run
+at the same time.
+.SH FILES
+.TP
+.I ~/.config/RhythmCat3/settings.conf
+The settings.
+.TP
+.I ~/.local/share/RhythmCat3/library.json.gz
+The music library and the playlists.
+.TP
+.I ~/.cache/RhythmCat3/tui.log
+The log output.
+.SH SEE ALSO
+.BR rhythmcat (1)

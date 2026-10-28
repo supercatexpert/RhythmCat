@@ -1,0 +1,36 @@
+.TH RHYTHMCAT 1 "2026-10-29" "RhythmCat 3.0.0" "User Commands"
+.SH NAME
+rhythmcat \- music player (GTK 4 frontend)
+.SH SYNOPSIS
+.B rhythmcat
+.RI [ OPTION ...]
+.RI [ FILE ...]
+.SH DESCRIPTION
+.B rhythmcat
+is the GTK 4 frontend of the RhythmCat music player. It plays music,
+manages the music library and user playlists, reads CUE sheets and
+playlist files (M3U, M3U8, PLS, XSPF), shows synchronized lyrics and has
+a 10-band equalizer.
+.PP
+Audio files, CUE sheets, playlist files and folders given as
+.I FILE
+arguments are imported into the music library.
+.PP
+Only one frontend of RhythmCat can run at the same time. If another one
+is already running, an error message is shown.
+.SH OPTIONS
+.TP
+.BR \-h ", " \-\-help
+Show the help options.
+.TP
+.B \-\-help\-all
+Show all help options.
+.SH FILES
+.TP
+.I ~/.config/RhythmCat3/settings.conf
+The settings.
+.TP
+.I ~/.local/share/RhythmCat3/library.json.gz
+The music library and the playlists.
+.SH SEE ALSO
+.BR rhythmcat\-tui (1)

@@ -1,0 +1,3 @@
+usr/include/rhythmcat3
+usr/lib/${DEB_HOST_MULTIARCH}/librhythmcat3.so
+usr/lib/${DEB_HOST_MULTIARCH}/pkgconfig/rhythmcat3.pc

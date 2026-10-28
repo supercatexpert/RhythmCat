@@ -28,6 +28,18 @@ meson test -C build          # unit tests for the core library
 sudo ninja -C build install
 ```
 
+Debian packages can be built from the `debian/` directory (needs
+`dpkg-dev`, `debhelper` and the build dependencies listed in
+`debian/control`):
+
+```sh
+dpkg-buildpackage -us -uc -b
+```
+
+The packages are written to the parent directory: `librhythmcat3-3` (the
+core library), `librhythmcat3-dev` (headers and pkg-config file),
+`rhythmcat` (the GTK4 frontend) and `rhythmcat-tui` (the ncurses frontend).
+
 Build options (`meson configure build -D<option>=<value>`):
 
 | Option    | Default | Description                                  |

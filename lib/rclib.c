@@ -115,6 +115,6 @@ const gchar *rclib_get_version()
 
 const gchar *rclib_get_build_date()
 {
-    return __DATE__;
+    return BUILD_DATE;
 }
 

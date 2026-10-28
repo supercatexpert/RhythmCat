@@ -1,0 +1,83 @@
+Source: rhythmcat
+Section: sound
+Priority: optional
+Maintainer: Kyosuke Nekoyashiki <supercatexpert@gmail.com>
+Build-Depends: debhelper-compat (= 13),
+               meson,
+               ninja-build,
+               pkgconf,
+               gettext,
+               libglib2.0-dev (>= 2.74),
+               libgstreamer1.0-dev,
+               libgstreamer-plugins-base1.0-dev,
+               libjson-c-dev (>= 0.15),
+               libgtk-4-dev (>= 4.12),
+               libncurses-dev,
+               gstreamer1.0-plugins-base <!nocheck>,
+               gstreamer1.0-plugins-good <!nocheck>,
+Standards-Version: 4.7.2
+Rules-Requires-Root: no
+
+Package: librhythmcat3-3
+Section: libs
+Architecture: any
+Multi-Arch: same
+Depends: gstreamer1.0-plugins-base,
+         ${misc:Depends},
+         ${shlibs:Depends},
+Recommends: gstreamer1.0-plugins-good,
+Suggests: gstreamer1.0-libav,
+          gstreamer1.0-plugins-bad,
+          gstreamer1.0-plugins-ugly,
+Description: RhythmCat music player - core library
+ RhythmCat is a music player based on GLib, GStreamer and json-c, with a
+ GTK 4 frontend and an ncurses frontend.
+ .
+ This package contains the core library, which plays audio and manages
+ the music library, playlists, metadata, CUE sheets, lyrics, playlist
+ files and the equalizer.
+
+Package: librhythmcat3-dev
+Section: libdevel
+Architecture: any
+Multi-Arch: same
+Depends: librhythmcat3-3 (= ${binary:Version}),
+         libglib2.0-dev (>= 2.74),
+         libgstreamer1.0-dev,
+         ${misc:Depends},
+Description: RhythmCat music player - development files
+ RhythmCat is a music player based on GLib, GStreamer and json-c, with a
+ GTK 4 frontend and an ncurses frontend.
+ .
+ This package contains the header files and the pkg-config file of the
+ core library.
+
+Package: rhythmcat
+Architecture: any
+Depends: librhythmcat3-3 (= ${binary:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends},
+Suggests: rhythmcat-tui,
+Description: RhythmCat music player - GTK 4 frontend
+ RhythmCat is a music player based on GLib, GStreamer and json-c.
+ .
+ Features:
+  * music library grouped by artist or album, and user playlists
+  * CUE sheets (external and embedded) and legacy tag encodings
+  * synchronized lyrics (LRC, SRT, WebVTT, ASS)
+  * M3U, M3U8, PLS and XSPF playlist files
+  * 10-band equalizer with presets
+ .
+ This package contains the GTK 4 frontend.
+
+Package: rhythmcat-tui
+Architecture: any
+Depends: librhythmcat3-3 (= ${binary:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends},
+Suggests: rhythmcat,
+Description: RhythmCat music player - terminal frontend
+ RhythmCat is a music player based on GLib, GStreamer and json-c.
+ .
+ This package contains the ncurses frontend, which plays music and
+ manages the music library and playlists in a terminal.

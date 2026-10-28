@@ -31,6 +31,11 @@ conf.set_quoted('PACKAGE_NAME', meson.project_name())
 conf.set_quoted('PACKAGE_VERSION', meson.project_version())
 conf.set_quoted('LOCALEDIR', get_option('prefix') / get_option('localedir'))
 conf.set_quoted('APPLICATION_ID', 'org.supercat.RhythmCat3')
+# The build date, SOURCE_DATE_EPOCH is used for reproducible builds
+build_date = run_command('sh', '-c',
+  'LC_ALL=C date -u -d "@${SOURCE_DATE_EPOCH:-$(date +%s)}" "+%b %e %Y"',
+  check: true).stdout().strip()
+conf.set_quoted('BUILD_DATE', build_date)
 configure_file(output: 'config.h', configuration: conf)
 config_inc = include_directories('.')
 

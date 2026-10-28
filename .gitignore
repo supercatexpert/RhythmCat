@@ -1,3 +1,15 @@
 build/
 .cache/
 req.txt
+# Debian package build
+obj-*/
+debian/.debhelper/
+debian/debhelper-build-stamp
+debian/files
+debian/*.substvars
+debian/*.debhelper.log
+debian/librhythmcat3-3/
+debian/librhythmcat3-dev/
+debian/rhythmcat/
+debian/rhythmcat-tui/
+debian/tmp/
