@@ -74,6 +74,7 @@ typedef struct RCTuiPrivate
     RCLibDbGroupMode group_mode;
     gboolean sources_dirty;
     gboolean tracks_dirty;
+    gboolean checking_files;
     gboolean show_help;
     gchar *message;
     gint64 message_time;
@@ -602,6 +603,7 @@ static void rc_tui_draw_help(gint top, gint height)
         N_("  N / R / D  New / rename / delete playlist"),
         N_("  L / W      Load a playlist file / save the track list to a file"),
         N_("  u / U      Refresh metadata of the track / all tracks"),
+        N_("  M          Remove items whose files are missing"),
         N_("  l          Toggle lyric display"),
         N_("  q          Quit                    ?   Close this help"),
         NULL
@@ -857,6 +859,41 @@ static void rc_tui_delete_playlist_cb(const gchar *text, gpointer data)
         return;
     rc_tui_set_message(_("Playlist “%s” is deleted."), playlist->name);
     rclib_db_playlist_remove(playlist);
+}
+
+static void rc_tui_remove_missing_ready_cb(GObject *source,
+    GAsyncResult *result, gpointer data)
+{
+    GError *error = NULL;
+    gint removed;
+    tui_priv.checking_files = FALSE;
+    removed = rclib_db_remove_missing_items_finish(result, &error);
+    if(removed<0)
+    {
+        rc_tui_set_message(_("Cannot check the files: %s"), error!=NULL ?
+            error->message : _("unknown error"));
+        g_clear_error(&error);
+    }
+    else if(removed==0)
+        rc_tui_set_message(_("No missing files are found."));
+    else
+    {
+        rc_tui_set_message(g_dngettext(NULL, "Removed %d item whose file "
+            "is missing.", "Removed %d items whose files are missing.",
+            removed), removed);
+    }
+    rc_tui_queue_redraw();
+}
+
+static void rc_tui_remove_missing_cb(const gchar *text, gpointer data)
+{
+    if(g_ascii_strcasecmp(text, "y")!=0 &&
+        g_ascii_strcasecmp(text, "yes")!=0)
+        return;
+    tui_priv.checking_files = TRUE;
+    rc_tui_set_message(_("Checking files…"));
+    rclib_db_remove_missing_items_async(NULL,
+        rc_tui_remove_missing_ready_cb, NULL);
 }
 
 static void rc_tui_add_to_playlist_cb(const gchar *text, gpointer data)
@@ -1179,6 +1216,16 @@ static void rc_tui_handle_key(gint ret, wint_t key)
                 rclib_db_playlist_ref(source->playlist),
                 (GDestroyNotify)rclib_db_playlist_unref);
             g_free(label);
+            break;
+        case 'M':
+            if(priv->checking_files)
+            {
+                rc_tui_set_message(_("Checking files…"));
+                break;
+            }
+            rc_tui_prompt(_("Remove the items whose files are missing from "
+                "the library and all playlists? (y/N): "), NULL,
+                rc_tui_remove_missing_cb, NULL, NULL);
             break;
         case 'u':
             item = rc_tui_get_track();

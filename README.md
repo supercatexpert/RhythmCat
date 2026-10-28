@@ -154,7 +154,8 @@ the icon is also installed as the application icon.
 Press `?` in the program for the key list. Main keys: Enter play, Space
 pause, `r` repeat mode, `n`/`p` next/previous, ←/→ seek, `+`/`-` volume,
 `g` grouping, `a` add a file/folder/playlist file, `c` cancel import,
-`L`/`W` load/save a playlist file, `A` add to playlist, `N`/`R`/`D` new/rename/delete
-playlist, `J`/`K` reorder, `e` equalizer on/off, `E` next equalizer preset,
-`q` quit. The header shows the current equalizer preset. Log output goes to
+`L`/`W` load/save a playlist file, `M` remove missing files, `A` add to
+playlist, `N`/`R`/`D` new/rename/delete playlist, `J`/`K` reorder, `e`
+equalizer on/off, `E` next equalizer preset, `q` quit. The header shows
+the current equalizer preset. Log output goes to
 `~/.cache/RhythmCat3/tui.log`.
