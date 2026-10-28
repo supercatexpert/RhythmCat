@@ -390,8 +390,12 @@ static void rc_tui_draw_sources(gint top, gint height, gint width)
 {
     RCTuiPrivate *priv = &tui_priv;
     RCTuiSource *source;
+    RCLibDbItem *current;
+    RCLibDbPlaylist *playing = NULL;
     gchar *text;
     gint i, row, attr;
+    current = rclib_player_get_current_item();
+    if(current!=NULL && !current->removed) playing = current->playlist;
     if(priv->source_cursor<priv->source_scroll)
         priv->source_scroll = priv->source_cursor;
     if(priv->source_cursor>=priv->source_scroll+height)
@@ -411,6 +415,13 @@ static void rc_tui_draw_sources(gint top, gint height, gint width)
         {
             attr = A_BOLD | A_UNDERLINE;
             text = g_strdup(source->label);
+        }
+        else if(source->type==RC_TUI_SOURCE_PLAYLIST && playing!=NULL &&
+            source->playlist==playing)
+        {
+            /* The playlist of the playing item */
+            attr = A_BOLD;
+            text = g_strdup_printf("> %s", source->label);
         }
         else text = g_strdup_printf("  %s", source->label);
         if(i==priv->source_cursor)

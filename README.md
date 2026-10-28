@@ -145,6 +145,8 @@ ninja -C build install
   a seek bar, and synced lyrics (previous/current/next line).
 * Library sidebar with grouping, and a playlist sidebar with new, rename,
   delete and move up/down.
+  The playlist of the playing track is shown in bold (in the ncurses
+  frontend, also marked with `>`).
 * A button next to the random button shows or hides the library and
   playlist area. When it is hidden, the window shrinks to a compact
   player; the choice is remembered.

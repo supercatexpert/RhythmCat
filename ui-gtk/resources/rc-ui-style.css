@@ -49,3 +49,8 @@ button.rc-status-button {
     min-height: 0;
     padding: 0 6px;
 }
+
+/* The playlist which the playing item belongs to */
+label.rc-playing-source {
+    font-weight: bold;
+}

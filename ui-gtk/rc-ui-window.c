@@ -857,7 +857,31 @@ static GtkWidget *rc_ui_window_make_row(const gchar *text,
     gtk_widget_set_hexpand(label, TRUE);
     gtk_box_append(GTK_BOX(box), label);
     gtk_list_box_row_set_child(GTK_LIST_BOX_ROW(row), box);
+    g_object_set_data(G_OBJECT(row), "rc-label", label);
     return row;
+}
+
+/* Show the playlist of the playing item in bold */
+static void rc_ui_window_update_playing_playlist()
+{
+    RCUiWindowPrivate *priv = &window_priv;
+    RCLibDbPlaylist *playing = NULL;
+    GtkListBoxRow *row;
+    GtkWidget *label;
+    gint i;
+    if(priv->playing_item!=NULL && !priv->playing_item->removed)
+        playing = priv->playing_item->playlist;
+    for(i=0;(row=gtk_list_box_get_row_at_index(GTK_LIST_BOX(
+        priv->playlist_listbox), i))!=NULL;i++)
+    {
+        label = g_object_get_data(G_OBJECT(row), "rc-label");
+        if(label==NULL) continue;
+        if(playing!=NULL && g_object_get_data(G_OBJECT(row),
+            "rc-playlist")==playing)
+            gtk_widget_add_css_class(label, "rc-playing-source");
+        else
+            gtk_widget_remove_css_class(label, "rc-playing-source");
+    }
 }
 
 static void rc_ui_window_reload_groups()
@@ -958,6 +982,7 @@ static void rc_ui_window_reload_playlists()
     }
     gtk_widget_set_sensitive(priv->add_to_playlist_button,
         playlists!=NULL && playlists->len>0);
+    rc_ui_window_update_playing_playlist();
     priv->updating_lists = FALSE;
 }
 
@@ -1609,6 +1634,7 @@ static void rc_ui_window_core_uri_changed_cb(GObject *core,
         rclib_db_item_unref(old);
     }
     if(item!=NULL) rc_ui_window_refresh_item(item);
+    rc_ui_window_update_playing_playlist();
     rc_ui_window_set_cover(NULL);
     rc_ui_window_update_info();
     rc_ui_window_load_lyric();
@@ -1741,6 +1767,7 @@ static void rc_ui_window_db_playlist_item_removed_cb(GObject *db,
     RCLibDbPlaylist *playlist, RCLibDbItem *item, gint index, gpointer data)
 {
     RCUiWindowPrivate *priv = &window_priv;
+    if(item==priv->playing_item) rc_ui_window_update_playing_playlist();
     if(priv->view_type!=RC_UI_VIEW_PLAYLIST ||
         playlist!=priv->view_playlist)
         return;
