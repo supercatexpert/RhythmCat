@@ -199,6 +199,7 @@ void rclib_db_signal_disconnect(gulong handler_id);
 gboolean rclib_db_save(GError **error);
 gboolean rclib_db_load(GError **error);
 guint rclib_db_get_import_pending();
+void rclib_db_import_cancel();
 void rclib_db_refresh_all();
 
 /* Items */

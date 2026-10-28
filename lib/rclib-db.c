@@ -51,6 +51,7 @@
 
 #define RCLIB_DB_FORMAT_VERSION 1
 #define RCLIB_DB_AUTOSAVE_DELAY 10
+#define RCLIB_DB_IMPORT_RUNNING_MAX 2
 
 struct _RCLibDbPrivate
 {
@@ -58,7 +59,10 @@ struct _RCLibDbPrivate
     GPtrArray *library;
     GHashTable *library_table;
     GPtrArray *playlists;
-    guint import_pending;
+    GQueue *import_queue;
+    GPtrArray *import_running;
+    guint import_scanning;
+    GCancellable *import_cancellable;
     gboolean dirty;
     guint save_timeout_id;
 };
@@ -66,7 +70,9 @@ struct _RCLibDbPrivate
 typedef struct RCLibDbImportData
 {
     RCLibDbPlaylist *playlist;
+    gchar *uri;
     gint position;
+    gboolean cancelled;
 }RCLibDbImportData;
 
 typedef struct RCLibDbDirectoryData
@@ -137,15 +143,20 @@ static gchar *rclib_db_item_get_key(const RCLibDbItem *item)
     return g_strdup_printf("%s\n%d", item->uri, item->cue_track);
 }
 
-static void rclib_db_import_pending_add(gint delta)
+static void rclib_db_import_updated()
 {
-    RCLibDbPrivate *priv = rclib_db_get_priv();
-    if(priv==NULL) return;
-    if(delta<0 && (guint)(-delta)>priv->import_pending)
-        priv->import_pending = 0;
-    else priv->import_pending += delta;
+    if(db_instance==NULL) return;
     g_signal_emit(db_instance, db_signals[SIGNAL_IMPORT_UPDATED], 0,
-        priv->import_pending);
+        rclib_db_get_import_pending());
+}
+
+static void rclib_db_import_data_free(RCLibDbImportData *import_data)
+{
+    if(import_data==NULL) return;
+    if(import_data->playlist!=NULL)
+        rclib_db_playlist_unref(import_data->playlist);
+    g_free(import_data->uri);
+    g_free(import_data);
 }
 
 static void rclib_db_item_changed(RCLibDbItem *item)
@@ -282,14 +293,25 @@ static void rclib_db_import_cue_data(RCLibDbPlaylist *playlist,
     }
 }
 
+static void rclib_db_import_process();
+
 static void rclib_db_import_cb(const gchar *uri,
     const RCLibTagMetadata *metadata, const GError *error, gpointer data)
 {
     RCLibDbImportData *import_data = data;
+    RCLibDbPrivate *priv;
     RCLibDbItem *item;
     RCLibCueData *cue;
     gchar **encodings;
-    rclib_db_import_pending_add(-1);
+    /* The import is cancelled, the result is dropped */
+    if(import_data->cancelled)
+    {
+        rclib_db_import_data_free(import_data);
+        return;
+    }
+    priv = rclib_db_get_priv();
+    if(priv!=NULL)
+        g_ptr_array_remove_fast(priv->import_running, import_data);
     if(metadata==NULL)
     {
         if(error==NULL || !g_error_matches(error, G_IO_ERROR,
@@ -323,9 +345,46 @@ static void rclib_db_import_cb(const gchar *uri,
         rclib_db_insert_item(import_data->playlist, item,
             import_data->position);
     }
-    if(import_data->playlist!=NULL)
-        rclib_db_playlist_unref(import_data->playlist);
-    g_free(import_data);
+    rclib_db_import_data_free(import_data);
+    if(priv==NULL) return;
+    if(error!=NULL && g_error_matches(error, G_IO_ERROR,
+        G_IO_ERROR_CANCELLED))
+    {
+        /* The metadata reader is stopped, do not start new requests */
+        rclib_db_import_cancel();
+        return;
+    }
+    rclib_db_import_process();
+    rclib_db_import_updated();
+}
+
+/* Start reading the metadata of the files in the import queue, only a
+ * few requests are sent to the metadata reader at the same time, so
+ * that the import can be cancelled quickly. */
+static void rclib_db_import_process()
+{
+    RCLibDbPrivate *priv = rclib_db_get_priv();
+    RCLibDbImportData *import_data;
+    if(priv==NULL) return;
+    while(priv->import_running->len<RCLIB_DB_IMPORT_RUNNING_MAX &&
+        !g_queue_is_empty(priv->import_queue))
+    {
+        import_data = g_queue_pop_head(priv->import_queue);
+        if(import_data->playlist!=NULL && import_data->playlist->removed)
+        {
+            rclib_db_import_data_free(import_data);
+            continue;
+        }
+        if(import_data->playlist==NULL &&
+            rclib_db_library_has_uri(import_data->uri))
+        {
+            rclib_db_import_data_free(import_data);
+            continue;
+        }
+        g_ptr_array_add(priv->import_running, import_data);
+        rclib_tag_read_metadata_async(import_data->uri,
+            rclib_db_import_cb, import_data);
+    }
 }
 
 static void rclib_db_refresh_cb(const gchar *uri,
@@ -536,6 +595,11 @@ static void rclib_db_finalize(GObject *object)
     RCLibDbPrivate *priv = RCLIB_DB(object)->priv;
     if(priv->save_timeout_id>0)
         g_source_remove(priv->save_timeout_id);
+    g_queue_free_full(priv->import_queue,
+        (GDestroyNotify)rclib_db_import_data_free);
+    g_ptr_array_free(priv->import_running, TRUE);
+    g_cancellable_cancel(priv->import_cancellable);
+    g_object_unref(priv->import_cancellable);
     g_ptr_array_free(priv->playlists, TRUE);
     g_hash_table_destroy(priv->library_table);
     g_ptr_array_free(priv->library, TRUE);
@@ -725,6 +789,9 @@ static void rclib_db_instance_init(RCLibDb *db)
         g_free, NULL);
     priv->playlists = g_ptr_array_new_with_free_func(
         (GDestroyNotify)rclib_db_playlist_unref);
+    priv->import_queue = g_queue_new();
+    priv->import_running = g_ptr_array_new();
+    priv->import_cancellable = g_cancellable_new();
 }
 
 GType rclib_db_get_type()
@@ -809,6 +876,7 @@ void rclib_db_exit()
 {
     GError *error = NULL;
     if(db_instance==NULL) return;
+    rclib_db_import_cancel();
     if(!rclib_db_save(&error))
     {
         g_warning("Cannot save the database: %s", error->message);
@@ -993,7 +1061,40 @@ guint rclib_db_get_import_pending()
 {
     RCLibDbPrivate *priv = rclib_db_get_priv();
     if(priv==NULL) return 0;
-    return priv->import_pending;
+    return g_queue_get_length(priv->import_queue) +
+        priv->import_running->len + priv->import_scanning;
+}
+
+/**
+ * rclib_db_import_cancel:
+ *
+ * Cancel all pending imports. The files which are not imported yet will
+ * be skipped, folders which are being scanned will not be imported.
+ * The items which are already imported are kept.
+ */
+
+void rclib_db_import_cancel()
+{
+    RCLibDbPrivate *priv = rclib_db_get_priv();
+    RCLibDbImportData *import_data;
+    guint i;
+    if(priv==NULL) return;
+    if(rclib_db_get_import_pending()==0) return;
+    g_queue_free_full(priv->import_queue,
+        (GDestroyNotify)rclib_db_import_data_free);
+    priv->import_queue = g_queue_new();
+    /* The running requests are freed in the callback */
+    for(i=0;i<priv->import_running->len;i++)
+    {
+        import_data = g_ptr_array_index(priv->import_running, i);
+        import_data->cancelled = TRUE;
+    }
+    g_ptr_array_set_size(priv->import_running, 0);
+    g_cancellable_cancel(priv->import_cancellable);
+    g_object_unref(priv->import_cancellable);
+    priv->import_cancellable = g_cancellable_new();
+    priv->import_scanning = 0;
+    rclib_db_import_updated();
 }
 
 /**
@@ -1250,25 +1351,15 @@ const GPtrArray *rclib_db_library_get_items()
     return priv->library;
 }
 
-/**
- * rclib_db_import_uri:
- * @playlist: (allow-none): the playlist, %NULL for the music library
- * @uri: the URI of the audio file or CUE sheet
- * @position: the insert position, -1 to append
- *
- * Import a file into the music library or a playlist. The metadata is
- * read asynchronously, the item will be added after the metadata is
- * read. If the file is a CUE sheet, all tracks in it will be imported.
- */
-
-void rclib_db_import_uri(RCLibDbPlaylist *playlist, const gchar *uri,
-    gint position)
+static gboolean rclib_db_import_queue_uri(RCLibDbPlaylist *playlist,
+    const gchar *uri, gint position)
 {
+    RCLibDbPrivate *priv = rclib_db_get_priv();
     RCLibDbImportData *import_data;
     RCLibCueData *cue;
     gchar **encodings;
     GError *error = NULL;
-    if(db_instance==NULL || uri==NULL) return;
+    if(priv==NULL || uri==NULL) return FALSE;
     if(rclib_util_is_cue_sheet(uri))
     {
         encodings = rclib_cue_get_encodings();
@@ -1280,20 +1371,41 @@ void rclib_db_import_uri(RCLibDbPlaylist *playlist, const gchar *uri,
             g_message("Cannot import CUE sheet %s: %s", uri,
                 error!=NULL ? error->message : "unknown error");
             g_clear_error(&error);
-            return;
+            return FALSE;
         }
         rclib_db_import_cue_data(playlist, cue, RCLIB_DB_ITEM_TYPE_CUE,
             uri, position, NULL);
         rclib_cue_data_free(cue);
-        return;
+        return FALSE;
     }
-    if(playlist==NULL && rclib_db_library_has_uri(uri)) return;
+    if(playlist==NULL && rclib_db_library_has_uri(uri)) return FALSE;
     import_data = g_new0(RCLibDbImportData, 1);
     import_data->playlist = playlist!=NULL ?
         rclib_db_playlist_ref(playlist) : NULL;
+    import_data->uri = g_strdup(uri);
     import_data->position = position;
-    rclib_db_import_pending_add(1);
-    rclib_tag_read_metadata_async(uri, rclib_db_import_cb, import_data);
+    g_queue_push_tail(priv->import_queue, import_data);
+    return TRUE;
+}
+
+/**
+ * rclib_db_import_uri:
+ * @playlist: (allow-none): the playlist, %NULL for the music library
+ * @uri: the URI of the audio file or CUE sheet
+ * @position: the insert position, -1 to append
+ *
+ * Import a file into the music library or a playlist. The metadata is
+ * read asynchronously, the item will be added after the metadata is
+ * read. If the file is a CUE sheet, all tracks in it will be imported.
+ * Pending imports can be cancelled by rclib_db_import_cancel().
+ */
+
+void rclib_db_import_uri(RCLibDbPlaylist *playlist, const gchar *uri,
+    gint position)
+{
+    if(!rclib_db_import_queue_uri(playlist, uri, position)) return;
+    rclib_db_import_process();
+    rclib_db_import_updated();
 }
 
 static gint rclib_db_uri_compare(gconstpointer a, gconstpointer b)
@@ -1383,14 +1495,20 @@ static void rclib_db_directory_ready_cb(GObject *source,
     GAsyncResult *result, gpointer data)
 {
     RCLibDbDirectoryData *dir_data = g_task_get_task_data(G_TASK(result));
+    RCLibDbPrivate *priv = rclib_db_get_priv();
     guint i;
-    rclib_db_import_pending_add(-1);
-    if(db_instance==NULL) return;
+    /* The import is cancelled, the scanning count is already reset */
+    if(priv==NULL || g_cancellable_is_cancelled(g_task_get_cancellable(
+        G_TASK(result))))
+        return;
+    if(priv->import_scanning>0) priv->import_scanning--;
     for(i=0;i<dir_data->uris->len;i++)
     {
-        rclib_db_import_uri(dir_data->playlist, g_ptr_array_index(
+        rclib_db_import_queue_uri(dir_data->playlist, g_ptr_array_index(
             dir_data->uris, i), -1);
     }
+    rclib_db_import_process();
+    rclib_db_import_updated();
 }
 
 static void rclib_db_directory_data_free(gpointer data)
@@ -1416,19 +1534,22 @@ static void rclib_db_directory_data_free(gpointer data)
 void rclib_db_import_directory(RCLibDbPlaylist *playlist,
     const gchar *uri)
 {
+    RCLibDbPrivate *priv = rclib_db_get_priv();
     RCLibDbDirectoryData *dir_data;
     GTask *task;
-    if(db_instance==NULL || uri==NULL) return;
+    if(priv==NULL || uri==NULL) return;
     dir_data = g_new0(RCLibDbDirectoryData, 1);
     dir_data->playlist = playlist!=NULL ? rclib_db_playlist_ref(playlist) :
         NULL;
     dir_data->uri = g_strdup(uri);
     dir_data->uris = g_ptr_array_new_with_free_func(g_free);
-    rclib_db_import_pending_add(1);
-    task = g_task_new(NULL, NULL, rclib_db_directory_ready_cb, NULL);
+    priv->import_scanning++;
+    task = g_task_new(NULL, priv->import_cancellable,
+        rclib_db_directory_ready_cb, NULL);
     g_task_set_task_data(task, dir_data, rclib_db_directory_data_free);
     g_task_run_in_thread(task, rclib_db_directory_thread);
     g_object_unref(task);
+    rclib_db_import_updated();
 }
 
 /**

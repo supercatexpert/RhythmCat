@@ -16,6 +16,10 @@
         <attribute name="label" translatable="yes">_Refresh All Metadata</attribute>
         <attribute name="action">win.refresh-all</attribute>
       </item>
+      <item>
+        <attribute name="label" translatable="yes">_Cancel Import</attribute>
+        <attribute name="action">win.cancel-import</attribute>
+      </item>
     </section>
     <section>
       <item>
@@ -537,17 +541,38 @@
           <object class="GtkSeparator"/>
         </child>
         <child>
-          <object class="GtkLabel" id="status_label">
-            <property name="xalign">0</property>
+          <object class="GtkBox">
+            <property name="orientation">horizontal</property>
+            <property name="spacing">6</property>
             <property name="margin-start">10</property>
-            <property name="margin-end">10</property>
-            <property name="margin-top">4</property>
-            <property name="margin-bottom">4</property>
-            <property name="ellipsize">end</property>
-            <style>
-              <class name="dim-label"/>
-              <class name="caption"/>
-            </style>
+            <property name="margin-end">6</property>
+            <child>
+              <object class="GtkLabel" id="status_label">
+                <property name="xalign">0</property>
+                <property name="hexpand">True</property>
+                <property name="margin-top">4</property>
+                <property name="margin-bottom">4</property>
+                <property name="ellipsize">end</property>
+                <style>
+                  <class name="dim-label"/>
+                  <class name="caption"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="import_cancel_button">
+                <property name="visible">False</property>
+                <property name="valign">center</property>
+                <property name="label" translatable="yes">Cancel Import</property>
+                <property name="tooltip-text" translatable="yes">Cancel the pending imports</property>
+                <property name="action-name">win.cancel-import</property>
+                <style>
+                  <class name="flat"/>
+                  <class name="caption"/>
+                  <class name="rc-status-button"/>
+                </style>
+              </object>
+            </child>
           </object>
         </child>
       </object>

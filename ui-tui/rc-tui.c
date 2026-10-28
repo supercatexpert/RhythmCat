@@ -275,7 +275,15 @@ static void rc_tui_rebuild_tracks()
 {
     RCTuiPrivate *priv = &tui_priv;
     RCTuiSource *source = rc_tui_get_source();
+    RCLibDbItem *old_item = NULL;
     guint i;
+    /* Keep the cursor on the same item if it is still in the list */
+    if(priv->tracks!=NULL && priv->track_cursor>=0 &&
+        (guint)priv->track_cursor<priv->tracks->len)
+    {
+        old_item = rclib_db_item_ref(g_ptr_array_index(priv->tracks,
+            priv->track_cursor));
+    }
     if(priv->tracks!=NULL) g_ptr_array_unref(priv->tracks);
     if(source!=NULL && source->type==RC_TUI_SOURCE_PLAYLIST)
     {
@@ -296,6 +304,12 @@ static void rc_tui_rebuild_tracks()
     {
         priv->tracks = rclib_db_library_get_group_items(
             RCLIB_DB_GROUP_NONE, NULL);
+    }
+    if(old_item!=NULL)
+    {
+        if(g_ptr_array_find(priv->tracks, old_item, &i))
+            priv->track_cursor = i;
+        rclib_db_item_unref(old_item);
     }
     if(priv->track_cursor>=(gint)priv->tracks->len)
         priv->track_cursor = (gint)priv->tracks->len - 1;
@@ -581,6 +595,7 @@ static void rc_tui_draw_help(gint top, gint height)
         N_("  Tab        Switch between sources and tracks"),
         N_("  g          Cycle library grouping (none, artist, album)"),
         N_("  a          Add a file, CUE sheet or folder"),
+        N_("  c          Cancel the pending imports"),
         N_("  A          Add the selected track to a playlist"),
         N_("  d / Del    Remove the selected track"),
         N_("  J / K      Move the selected track or playlist down / up"),
@@ -1027,6 +1042,13 @@ static void rc_tui_handle_key(gint ret, wint_t key)
             rc_tui_prompt(label, NULL, rc_tui_add_path_cb, NULL, NULL);
             g_free(label);
             break;
+        case 'c':
+            if(rclib_db_get_import_pending()>0)
+            {
+                rclib_db_import_cancel();
+                rc_tui_set_message(_("Import cancelled."));
+            }
+            break;
         case 'A':
             item = rc_tui_get_track();
             if(item==NULL) break;
@@ -1134,7 +1156,8 @@ static void rc_tui_db_tracks_changed_cb(gpointer data)
 static void rc_tui_db_import_cb(GObject *db, guint pending, gpointer data)
 {
     if(pending>0)
-        rc_tui_set_message(_("Importing (%u pending)…"), pending);
+        rc_tui_set_message(_("Importing (%u pending, press c to cancel)…"),
+            pending);
     else
         rc_tui_set_message(_("Import finished."));
     rc_tui_queue_redraw();

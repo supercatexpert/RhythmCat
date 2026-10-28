@@ -81,6 +81,7 @@ typedef struct RCUiWindowPrivate
     GtkWidget *item_down_button;
     GtkWidget *track_view;
     GtkWidget *status_label;
+    GtkWidget *import_cancel_button;
     GtkWidget *dark_toggle;
     GListStore *track_store;
     GtkMultiSelection *track_selection;
@@ -90,6 +91,8 @@ typedef struct RCUiWindowPrivate
     RCLibDbGroupMode group_mode;
     gboolean group_all;
     const gchar *group;
+    GPtrArray *groups;
+    RCLibDbGroupMode groups_mode;
     RCLibDbPlaylist *view_playlist;
     RCLibDbItem *playing_item;
     RCLibLyricData *lyric;
@@ -199,11 +202,35 @@ static void rc_ui_window_update_source_label()
         priv->view_type==RC_UI_VIEW_PLAYLIST);
 }
 
-static void rc_ui_window_set_tracks(const GPtrArray *items)
+static void rc_ui_window_replace_tracks(const GPtrArray *items,
+    gboolean keep_selection)
 {
     RCUiWindowPrivate *priv = &window_priv;
+    GtkSelectionModel *model = GTK_SELECTION_MODEL(priv->track_selection);
+    GHashTable *selected;
     GPtrArray *objects;
-    guint i;
+    GtkBitset *selection;
+    GtkBitsetIter iter;
+    RCUiTrack *track;
+    guint i, pos;
+    selected = g_hash_table_new(g_direct_hash, g_direct_equal);
+    if(keep_selection)
+    {
+        selection = gtk_selection_model_get_selection(model);
+        if(gtk_bitset_iter_init_first(&iter, selection, &pos))
+        {
+            do
+            {
+                track = g_list_model_get_item(G_LIST_MODEL(
+                    priv->track_store), pos);
+                if(track==NULL) continue;
+                g_hash_table_add(selected, rc_ui_track_get_item(track));
+                g_object_unref(track);
+            }
+            while(gtk_bitset_iter_next(&iter, &pos));
+        }
+        gtk_bitset_unref(selection);
+    }
     objects = g_ptr_array_new_with_free_func(g_object_unref);
     for(i=0;items!=NULL && i<items->len;i++)
         g_ptr_array_add(objects, rc_ui_track_new(g_ptr_array_index(items,
@@ -211,16 +238,113 @@ static void rc_ui_window_set_tracks(const GPtrArray *items)
     g_list_store_splice(priv->track_store, 0, g_list_model_get_n_items(
         G_LIST_MODEL(priv->track_store)), objects->pdata, objects->len);
     g_ptr_array_unref(objects);
+    for(i=0;items!=NULL && i<items->len &&
+        g_hash_table_size(selected)>0;i++)
+    {
+        if(g_hash_table_contains(selected, g_ptr_array_index(items, i)))
+            gtk_selection_model_select_item(model, i, FALSE);
+    }
+    g_hash_table_destroy(selected);
 }
 
-static void rc_ui_window_reload_tracks()
+/* Update the track list to show the items. If @update is TRUE, only the
+ * changed rows are removed or inserted, so the selection and the
+ * scrolling position are kept while the list is changing (for example,
+ * when importing files). */
+static void rc_ui_window_set_tracks(const GPtrArray *items, gboolean update)
+{
+    RCUiWindowPrivate *priv = &window_priv;
+    GListModel *list = G_LIST_MODEL(priv->track_store);
+    GHashTable *table;
+    GPtrArray *objects;
+    RCUiTrack *track;
+    RCLibDbItem *item;
+    guint i, pos, n, end;
+    gboolean same;
+    n = g_list_model_get_n_items(list);
+    if(!update || n==0 || items==NULL)
+    {
+        rc_ui_window_replace_tracks(items, FALSE);
+        return;
+    }
+    /* Remove the rows which are not in the new list */
+    table = g_hash_table_new(g_direct_hash, g_direct_equal);
+    for(i=0;i<items->len;i++)
+        g_hash_table_add(table, g_ptr_array_index(items, i));
+    end = n;
+    for(pos=n;pos>0;pos--)
+    {
+        track = g_list_model_get_item(list, pos-1);
+        same = g_hash_table_contains(table, rc_ui_track_get_item(track));
+        g_object_unref(track);
+        if(same)
+        {
+            if(end>pos)
+                g_list_store_splice(priv->track_store, pos, end-pos, NULL, 0);
+            end = pos-1;
+        }
+    }
+    if(end>0) g_list_store_splice(priv->track_store, 0, end, NULL, 0);
+    /* The remaining rows */
+    g_hash_table_remove_all(table);
+    n = g_list_model_get_n_items(list);
+    for(pos=0;pos<n;pos++)
+    {
+        track = g_list_model_get_item(list, pos);
+        g_hash_table_add(table, rc_ui_track_get_item(track));
+        g_object_unref(track);
+    }
+    /* Insert the new rows */
+    pos = 0;
+    i = 0;
+    while(i<items->len)
+    {
+        item = g_ptr_array_index(items, i);
+        if(pos<n)
+        {
+            track = g_list_model_get_item(list, pos);
+            same = rc_ui_track_get_item(track)==item;
+            g_object_unref(track);
+            if(same)
+            {
+                pos++;
+                i++;
+                continue;
+            }
+        }
+        if(g_hash_table_contains(table, item))
+        {
+            /* The order is changed, replace all rows */
+            g_hash_table_destroy(table);
+            rc_ui_window_replace_tracks(items, TRUE);
+            return;
+        }
+        objects = g_ptr_array_new_with_free_func(g_object_unref);
+        while(i<items->len && !g_hash_table_contains(table,
+            g_ptr_array_index(items, i)))
+        {
+            g_ptr_array_add(objects, rc_ui_track_new(g_ptr_array_index(
+                items, i)));
+            i++;
+        }
+        g_list_store_splice(priv->track_store, pos, 0, objects->pdata,
+            objects->len);
+        pos += objects->len;
+        n += objects->len;
+        g_ptr_array_unref(objects);
+    }
+    if(pos<n) g_list_store_splice(priv->track_store, pos, n-pos, NULL, 0);
+    g_hash_table_destroy(table);
+}
+
+static void rc_ui_window_reload_tracks(gboolean update)
 {
     RCUiWindowPrivate *priv = &window_priv;
     GPtrArray *items;
     if(priv->view_type==RC_UI_VIEW_PLAYLIST && priv->view_playlist!=NULL &&
         !priv->view_playlist->removed)
     {
-        rc_ui_window_set_tracks(priv->view_playlist->items);
+        rc_ui_window_set_tracks(priv->view_playlist->items, update);
     }
     else
     {
@@ -231,7 +355,7 @@ static void rc_ui_window_reload_tracks()
         else
             items = rclib_db_library_get_group_items(priv->group_mode,
                 priv->group);
-        rc_ui_window_set_tracks(items);
+        rc_ui_window_set_tracks(items, update);
         g_ptr_array_unref(items);
     }
     rc_ui_window_update_source_label();
@@ -743,6 +867,26 @@ static void rc_ui_window_reload_groups()
     GPtrArray *groups;
     const gchar *group, *icon;
     guint i;
+    groups = rclib_db_library_get_groups(priv->group_mode);
+    if(priv->groups!=NULL && priv->groups_mode==priv->group_mode &&
+        priv->groups->len==groups->len)
+    {
+        /* The groups are interned strings */
+        for(i=0;i<groups->len;i++)
+        {
+            if(g_ptr_array_index(groups, i)!=g_ptr_array_index(
+                priv->groups, i))
+                break;
+        }
+        if(i==groups->len)
+        {
+            g_ptr_array_unref(groups);
+            return;
+        }
+    }
+    if(priv->groups!=NULL) g_ptr_array_unref(priv->groups);
+    priv->groups = g_ptr_array_ref(groups);
+    priv->groups_mode = priv->group_mode;
     priv->updating_lists = TRUE;
     gtk_list_box_remove_all(GTK_LIST_BOX(priv->group_listbox));
     row = rc_ui_window_make_row(_("All Tracks"),
@@ -753,7 +897,6 @@ static void rc_ui_window_reload_groups()
         selected = row;
     icon = priv->group_mode==RCLIB_DB_GROUP_ARTIST ?
         "avatar-default-symbolic" : "media-optical-symbolic";
-    groups = rclib_db_library_get_groups(priv->group_mode);
     for(i=0;i<groups->len;i++)
     {
         group = g_ptr_array_index(groups, i);
@@ -827,7 +970,7 @@ static void rc_ui_window_set_view_playlist(RCLibDbPlaylist *playlist)
         NULL;
     priv->view_type = playlist!=NULL ? RC_UI_VIEW_PLAYLIST :
         RC_UI_VIEW_LIBRARY;
-    rc_ui_window_reload_tracks();
+    rc_ui_window_reload_tracks(FALSE);
 }
 
 static void rc_ui_window_group_selected_cb(GtkListBox *listbox,
@@ -894,7 +1037,7 @@ static gboolean rc_ui_window_library_refresh_cb(gpointer data)
     priv->library_refresh_id = 0;
     rc_ui_window_reload_groups();
     if(priv->view_type==RC_UI_VIEW_LIBRARY)
-        rc_ui_window_reload_tracks();
+        rc_ui_window_reload_tracks(TRUE);
     return G_SOURCE_REMOVE;
 }
 
@@ -1425,6 +1568,7 @@ static void rc_ui_window_update_status()
 {
     RCUiWindowPrivate *priv = &window_priv;
     const GPtrArray *library, *playlists;
+    GAction *action;
     guint pending;
     gchar *text, *count;
     library = rclib_db_library_get_items();
@@ -1442,6 +1586,11 @@ static void rc_ui_window_update_status()
     }
     else gtk_label_set_text(GTK_LABEL(priv->status_label), count);
     g_free(count);
+    gtk_widget_set_visible(priv->import_cancel_button, pending>0);
+    action = g_action_map_lookup_action(G_ACTION_MAP(priv->window),
+        "cancel-import");
+    if(action!=NULL)
+        g_simple_action_set_enabled(G_SIMPLE_ACTION(action), pending>0);
 }
 
 /* ----- Core signal handlers ----- */
@@ -1790,6 +1939,12 @@ static void rc_ui_window_refresh_all_action(GSimpleAction *action,
     rclib_db_refresh_all();
 }
 
+static void rc_ui_window_cancel_import_action(GSimpleAction *action,
+    GVariant *parameter, gpointer data)
+{
+    rclib_db_import_cancel();
+}
+
 static void rc_ui_window_settings_action(GSimpleAction *action,
     GVariant *parameter, gpointer data)
 {
@@ -1856,6 +2011,7 @@ static const GActionEntry window_actions[] = {
     {"import-files", rc_ui_window_import_files_action, NULL, NULL, NULL},
     {"import-folder", rc_ui_window_import_folder_action, NULL, NULL, NULL},
     {"refresh-all", rc_ui_window_refresh_all_action, NULL, NULL, NULL},
+    {"cancel-import", rc_ui_window_cancel_import_action, NULL, NULL, NULL},
     {"settings", rc_ui_window_settings_action, NULL, NULL, NULL},
     {"equalizer", rc_ui_window_equalizer_action, NULL, NULL, NULL},
     {"about", rc_ui_window_about_action, NULL, NULL, NULL},
@@ -1924,6 +2080,8 @@ GtkWidget *rc_ui_window_init(GtkApplication *app)
     priv->item_down_button = rc_ui_window_get_object("item_down_button");
     priv->track_view = rc_ui_window_get_object("track_view");
     priv->status_label = rc_ui_window_get_object("status_label");
+    priv->import_cancel_button = rc_ui_window_get_object(
+        "import_cancel_button");
     priv->dark_toggle = rc_ui_window_get_object("dark_toggle");
     gtk_window_set_application(GTK_WINDOW(priv->window), app);
     g_action_map_add_action_entries(G_ACTION_MAP(priv->window),
@@ -2078,7 +2236,7 @@ GtkWidget *rc_ui_window_init(GtkApplication *app)
 
     rc_ui_window_reload_groups();
     rc_ui_window_reload_playlists();
-    rc_ui_window_reload_tracks();
+    rc_ui_window_reload_tracks(FALSE);
     rc_ui_window_set_cover(NULL);
     rc_ui_window_update_info();
     rc_ui_window_load_lyric();
@@ -2135,6 +2293,7 @@ void rc_ui_window_cleanup()
         rclib_db_playlist_unref(priv->view_playlist);
     if(priv->playing_item!=NULL) rclib_db_item_unref(priv->playing_item);
     if(priv->lyric!=NULL) rclib_lyric_data_free(priv->lyric);
+    g_clear_pointer(&priv->groups, g_ptr_array_unref);
     g_clear_object(&priv->track_selection);
     g_clear_object(&priv->track_store);
     g_clear_object(&priv->playlist_menu);

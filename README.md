@@ -65,7 +65,8 @@ the icon is also installed as the application icon.
     atomically and autosaved after changes.
 * Metadata:
   * Read asynchronously with `GstDiscoverer` when files or folders are
-    imported.
+    imported. Pending imports can be cancelled; the items already imported
+    are kept.
   * Updated from stream tags while a track plays (configurable), or
     refreshed on demand for selected items or the whole database.
   * Legacy ID3 tags (ID3v1, or ID3v2 marked as ISO-8859-1) are decoded
@@ -104,7 +105,10 @@ the icon is also installed as the application icon.
   playlist area. When it is hidden, the window shrinks to a compact
   player; the choice is remembered.
 * Track list: import files or folders (also by drag and drop), add to
-  playlist, remove, reorder, refresh metadata.
+  playlist, remove, reorder, refresh metadata. The list is updated in place
+  while importing, so the selection is kept and tracks can be played.
+  While files are being imported, a "Cancel Import" button is shown in
+  the status bar (also in the menu).
 * Reorder playlist items by long press dragging: press and hold an item for
   half a second until it is selected, then drag it to the new position (a
   line shows where it will be placed). If the item is one of several
@@ -124,7 +128,7 @@ the icon is also installed as the application icon.
 
 Press `?` in the program for the key list. Main keys: Enter play, Space
 pause, `r` repeat mode, `n`/`p` next/previous, ←/→ seek, `+`/`-` volume,
-`g` grouping, `a` add a file/folder, `A` add to playlist, `N`/`R`/`D` new/rename/delete
+`g` grouping, `a` add a file/folder, `c` cancel import, `A` add to playlist, `N`/`R`/`D` new/rename/delete
 playlist, `J`/`K` reorder, `e` equalizer on/off, `E` next equalizer preset,
 `q` quit. The header shows the current equalizer preset. Log output goes to
 `~/.cache/RhythmCat3/tui.log`.

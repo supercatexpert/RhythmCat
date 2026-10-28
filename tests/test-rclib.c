@@ -470,6 +470,81 @@ static void test_player_next()
     g_free(db_file);
 }
 
+static void test_import_wait(guint timeout_ms)
+{
+    gint64 end = g_get_monotonic_time() + timeout_ms * 1000;
+    while(rclib_db_get_import_pending()>0 && g_get_monotonic_time()<end)
+        g_main_context_iteration(NULL, FALSE);
+}
+
+static void test_import_cancel()
+{
+    RCLibDbPlaylist *playlist;
+    gchar *db_file, *dir, *name, *uri, *path;
+    guint i;
+    db_file = g_build_filename(test_dir, "import.json.gz", NULL);
+    g_assert_true(rclib_tag_init());
+    g_assert_true(rclib_db_init(db_file));
+    dir = g_build_filename(test_dir, "import", NULL);
+    g_assert_cmpint(g_mkdir_with_parents(dir, 0700), ==, 0);
+    for(i=0;i<20;i++)
+    {
+        name = g_strdup_printf("import/%02u.wav", i);
+        g_free(test_make_wav(name));
+        g_free(name);
+    }
+    playlist = rclib_db_playlist_new("Import", -1);
+
+    /* Import a folder, then cancel it */
+    uri = g_filename_to_uri(dir, NULL, NULL);
+    rclib_db_import_directory(playlist, uri);
+    g_assert_cmpuint(rclib_db_get_import_pending(), >, 0);
+    rclib_db_import_cancel();
+    g_assert_cmpuint(rclib_db_get_import_pending(), ==, 0);
+    test_import_wait(2000);
+    g_assert_cmpuint(playlist->items->len, ==, 0);
+
+    /* Import files, the first ones are imported before cancelling */
+    for(i=0;i<20;i++)
+    {
+        name = g_strdup_printf("%02u.wav", i);
+        path = g_build_filename(dir, name, NULL);
+        g_free(uri);
+        uri = g_filename_to_uri(path, NULL, NULL);
+        rclib_db_import_uri(playlist, uri, -1);
+        g_free(path);
+        g_free(name);
+    }
+    g_assert_cmpuint(rclib_db_get_import_pending(), ==, 20);
+    while(playlist->items->len<2 && rclib_db_get_import_pending()>0)
+        g_main_context_iteration(NULL, TRUE);
+    rclib_db_import_cancel();
+    g_assert_cmpuint(rclib_db_get_import_pending(), ==, 0);
+    i = playlist->items->len;
+    g_assert_cmpuint(i, >=, 2);
+    g_assert_cmpuint(i, <, 20);
+    /* The running requests are dropped */
+    test_import_wait(1000);
+    while(g_main_context_iteration(NULL, FALSE));
+    g_usleep(500000);
+    while(g_main_context_iteration(NULL, FALSE));
+    g_assert_cmpuint(playlist->items->len, ==, i);
+
+    /* Import again without cancelling */
+    g_free(uri);
+    uri = g_filename_to_uri(dir, NULL, NULL);
+    rclib_db_import_directory(playlist, uri);
+    test_import_wait(20000);
+    g_assert_cmpuint(rclib_db_get_import_pending(), ==, 0);
+    g_assert_cmpuint(playlist->items->len, ==, i+20);
+
+    rclib_db_exit();
+    rclib_tag_exit();
+    g_free(uri);
+    g_free(dir);
+    g_free(db_file);
+}
+
 static void test_instance()
 {
     GError *error = NULL;
@@ -497,6 +572,7 @@ int main(int argc, char *argv[])
     g_test_add_func("/lyric/srt", test_lyric_srt);
     g_test_add_func("/lyric/vtt-ass", test_lyric_vtt_ass);
     g_test_add_func("/db/library-playlist", test_db);
+    g_test_add_func("/db/import-cancel", test_import_cancel);
     g_test_add_func("/instance/lock", test_instance);
     g_test_add_func("/core/equalizer", test_eq);
     g_test_add_func("/player/next", test_player_next);
