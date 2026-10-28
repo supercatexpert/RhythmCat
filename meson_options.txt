@@ -1,0 +1,4 @@
+option('gtk', type: 'feature', value: 'auto',
+  description: 'Build the GTK4 frontend')
+option('ncurses', type: 'feature', value: 'auto',
+  description: 'Build the ncurses frontend')

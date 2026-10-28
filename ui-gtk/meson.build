@@ -1,0 +1,20 @@
+rc_ui_resources = gnome.compile_resources('rc-ui-resources',
+  'resources' / 'rc-ui.gresource.xml',
+  source_dir: ['resources', '..' / 'data' / 'artwork'],
+  c_name: 'rc_ui',
+)
+
+executable('rhythmcat3',
+  'main.c',
+  'rc-ui-equalizer.c',
+  'rc-ui-main.c',
+  'rc-ui-settings.c',
+  'rc-ui-style.c',
+  'rc-ui-track.c',
+  'rc-ui-window.c',
+  rc_ui_resources,
+  dependencies: [rclib_dep, gtk_dep],
+  include_directories: config_inc,
+  c_args: ['-DG_LOG_DOMAIN="RhythmCat3-GTK"'],
+  install: true,
+)

@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- RhythmCat 3 settings window, this file is part of RhythmCat Music Player (GTK4 Version), license: GPL v3 -->
+<interface>
+  <requires lib="gtk" version="4.12"/>
+  <object class="GtkWindow" id="settings_window">
+    <property name="title" translatable="yes">Settings</property>
+    <property name="modal">True</property>
+    <property name="default-width">520</property>
+    <property name="hide-on-close">False</property>
+    <child>
+      <object class="GtkBox">
+        <property name="orientation">vertical</property>
+        <property name="spacing">18</property>
+        <property name="margin-start">18</property>
+        <property name="margin-end">18</property>
+        <property name="margin-top">18</property>
+        <property name="margin-bottom">18</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="label" translatable="yes">Appearance</property>
+            <property name="xalign">0</property>
+            <style>
+              <class name="heading"/>
+            </style>
+          </object>
+        </child>
+        <child>
+          <object class="GtkGrid">
+            <property name="row-spacing">10</property>
+            <property name="column-spacing">12</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="yes">Style</property>
+                <property name="xalign">0</property>
+                <property name="hexpand">True</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">0</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkDropDown" id="color_scheme_dropdown">
+                <property name="model">
+                  <object class="GtkStringList">
+                    <items>
+                      <item translatable="yes">Follow System</item>
+                      <item translatable="yes">Light</item>
+                      <item translatable="yes">Dark</item>
+                    </items>
+                  </object>
+                </property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">0</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="yes">Show lyrics</property>
+                <property name="xalign">0</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">1</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkSwitch" id="lyric_switch">
+                <property name="halign">end</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">1</property>
+                </layout>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkLabel">
+            <property name="label" translatable="yes">Metadata</property>
+            <property name="xalign">0</property>
+            <style>
+              <class name="heading"/>
+            </style>
+          </object>
+        </child>
+        <child>
+          <object class="GtkGrid">
+            <property name="row-spacing">10</property>
+            <property name="column-spacing">12</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="yes">Update metadata when playing</property>
+                <property name="xalign">0</property>
+                <property name="hexpand">True</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">0</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkSwitch" id="update_switch">
+                <property name="halign">end</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">0</property>
+                </layout>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkLabel">
+            <property name="label" translatable="yes">Fallback Encodings</property>
+            <property name="xalign">0</property>
+            <style>
+              <class name="heading"/>
+            </style>
+          </object>
+        </child>
+        <child>
+          <object class="GtkLabel">
+            <property name="label" translatable="yes">Text which is not valid UTF-8 will be decoded with these encodings in order. Separate encodings with commas or semicolons, for example: GB18030, BIG5, SHIFT_JIS.</property>
+            <property name="xalign">0</property>
+            <property name="wrap">True</property>
+            <property name="max-width-chars">60</property>
+            <style>
+              <class name="dim-label"/>
+            </style>
+          </object>
+        </child>
+        <child>
+          <object class="GtkGrid">
+            <property name="row-spacing">10</property>
+            <property name="column-spacing">12</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="yes">Legacy ID3 tags</property>
+                <property name="xalign">0</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">0</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkEntry" id="id3_entry">
+                <property name="hexpand">True</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">0</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="yes">CUE sheets</property>
+                <property name="xalign">0</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">1</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkEntry" id="cue_entry">
+                <property name="hexpand">True</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">1</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="yes">Lyric files</property>
+                <property name="xalign">0</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">2</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkEntry" id="lyric_entry">
+                <property name="hexpand">True</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">2</property>
+                </layout>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkLabel" id="encoding_status_label">
+            <property name="xalign">0</property>
+            <property name="wrap">True</property>
+            <property name="max-width-chars">60</property>
+            <style>
+              <class name="caption"/>
+            </style>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="halign">end</property>
+            <property name="spacing">8</property>
+            <child>
+              <object class="GtkButton" id="reset_button">
+                <property name="label" translatable="yes">Reset Encodings</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="close_button">
+                <property name="label" translatable="yes">_Close</property>
+                <property name="use-underline">True</property>
+                <style>
+                  <class name="suggested-action"/>
+                </style>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

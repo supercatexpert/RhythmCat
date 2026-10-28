@@ -1,0 +1,6 @@
+lib/rclib-cue.c
+lib/rclib-db.c
+lib/rclib-instance.c
+lib/rclib-lyric.c
+lib/rclib-tag.c
+lib/rclib-core.c

@@ -1,0 +1,39 @@
+/* RhythmCat 3 style sheet, this file is part of RhythmCat Music Player (GTK4 Version), license: GPL v3 */
+
+.title-label {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.cover {
+    border-radius: 8px;
+}
+
+.lyric-current {
+    font-size: 1.25em;
+    font-weight: bold;
+}
+
+.lyric-other {
+    opacity: 0.55;
+}
+
+.player-panel scale.horizontal trough {
+    min-height: 6px;
+}
+
+/* Drop position indicator when reordering playlist items, the whole row
+ * is highlighted instead of the cell under the pointer */
+columnview label:drop(active),
+columnview image:drop(active) {
+    box-shadow: none;
+    outline: none;
+}
+
+columnview row.rc-drop-above {
+    box-shadow: inset 0 2px 0 0 currentColor;
+}
+
+columnview row.rc-drop-below {
+    box-shadow: inset 0 -2px 0 0 currentColor;
+}

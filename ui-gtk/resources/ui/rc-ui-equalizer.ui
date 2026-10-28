@@ -1,0 +1,588 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- RhythmCat 3 equalizer window, this file is part of RhythmCat Music Player (GTK4 Version), license: GPL v3 -->
+<interface>
+  <requires lib="gtk" version="4.12"/>
+  <object class="GtkWindow" id="equalizer_window">
+    <property name="title" translatable="yes">Equalizer</property>
+    <property name="resizable">False</property>
+    <child>
+      <object class="GtkBox">
+        <property name="orientation">vertical</property>
+        <property name="spacing">14</property>
+        <property name="margin-start">18</property>
+        <property name="margin-end">18</property>
+        <property name="margin-top">18</property>
+        <property name="margin-bottom">18</property>
+        <child>
+          <object class="GtkBox">
+            <property name="spacing">12</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="yes">Enable equalizer</property>
+                <property name="xalign">0</property>
+                <property name="hexpand">True</property>
+                <style>
+                  <class name="heading"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkSwitch" id="eq_switch">
+                <property name="valign">center</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="spacing">8</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="yes">Preset</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkDropDown" id="preset_dropdown">
+                <property name="hexpand">True</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="reset_button">
+                <property name="label" translatable="yes">Reset Custom</property>
+                <property name="tooltip-text" translatable="yes">Set all bands of the custom preset to 0 dB</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox" id="bands_box">
+            <property name="homogeneous">True</property>
+            <property name="spacing">4</property>
+            <child>
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
+                <property name="spacing">4</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label" translatable="yes">dB</property>
+                    <style>
+                      <class name="caption"/>
+                      <class name="dim-label"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="orientation">vertical</property>
+                    <property name="height-request">200</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label">+12</property>
+                        <property name="vexpand">True</property>
+                        <property name="valign">start</property>
+                        <style>
+                          <class name="caption"/>
+                          <class name="dim-label"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label">0</property>
+                        <property name="vexpand">True</property>
+                        <style>
+                          <class name="caption"/>
+                          <class name="dim-label"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label">-12</property>
+                        <property name="vexpand">True</property>
+                        <property name="valign">end</property>
+                        <style>
+                          <class name="caption"/>
+                          <class name="dim-label"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label" translatable="yes">Hz</property>
+                    <style>
+                      <class name="caption"/>
+                      <class name="dim-label"/>
+                    </style>
+                  </object>
+                </child>
+              </object>
+            </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">4</property>
+                    <child>
+                      <object class="GtkLabel" id="band_value_0">
+                        <property name="label">0</property>
+                        <property name="width-chars">5</property>
+                        <style>
+                          <class name="numeric"/>
+                          <class name="caption"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkScale" id="band_scale_0">
+                        <property name="orientation">vertical</property>
+                        <property name="inverted">True</property>
+                        <property name="draw-value">False</property>
+                        <property name="has-origin">False</property>
+                        <property name="round-digits">1</property>
+                        <property name="height-request">200</property>
+                        <property name="halign">center</property>
+                        <property name="adjustment">
+                          <object class="GtkAdjustment">
+                            <property name="lower">-12</property>
+                            <property name="upper">12</property>
+                            <property name="step-increment">0.5</property>
+                            <property name="page-increment">3</property>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label">29</property>
+                        <style>
+                          <class name="caption"/>
+                          <class name="dim-label"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">4</property>
+                    <child>
+                      <object class="GtkLabel" id="band_value_1">
+                        <property name="label">0</property>
+                        <property name="width-chars">5</property>
+                        <style>
+                          <class name="numeric"/>
+                          <class name="caption"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkScale" id="band_scale_1">
+                        <property name="orientation">vertical</property>
+                        <property name="inverted">True</property>
+                        <property name="draw-value">False</property>
+                        <property name="has-origin">False</property>
+                        <property name="round-digits">1</property>
+                        <property name="height-request">200</property>
+                        <property name="halign">center</property>
+                        <property name="adjustment">
+                          <object class="GtkAdjustment">
+                            <property name="lower">-12</property>
+                            <property name="upper">12</property>
+                            <property name="step-increment">0.5</property>
+                            <property name="page-increment">3</property>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label">59</property>
+                        <style>
+                          <class name="caption"/>
+                          <class name="dim-label"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">4</property>
+                    <child>
+                      <object class="GtkLabel" id="band_value_2">
+                        <property name="label">0</property>
+                        <property name="width-chars">5</property>
+                        <style>
+                          <class name="numeric"/>
+                          <class name="caption"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkScale" id="band_scale_2">
+                        <property name="orientation">vertical</property>
+                        <property name="inverted">True</property>
+                        <property name="draw-value">False</property>
+                        <property name="has-origin">False</property>
+                        <property name="round-digits">1</property>
+                        <property name="height-request">200</property>
+                        <property name="halign">center</property>
+                        <property name="adjustment">
+                          <object class="GtkAdjustment">
+                            <property name="lower">-12</property>
+                            <property name="upper">12</property>
+                            <property name="step-increment">0.5</property>
+                            <property name="page-increment">3</property>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label">119</property>
+                        <style>
+                          <class name="caption"/>
+                          <class name="dim-label"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">4</property>
+                    <child>
+                      <object class="GtkLabel" id="band_value_3">
+                        <property name="label">0</property>
+                        <property name="width-chars">5</property>
+                        <style>
+                          <class name="numeric"/>
+                          <class name="caption"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkScale" id="band_scale_3">
+                        <property name="orientation">vertical</property>
+                        <property name="inverted">True</property>
+                        <property name="draw-value">False</property>
+                        <property name="has-origin">False</property>
+                        <property name="round-digits">1</property>
+                        <property name="height-request">200</property>
+                        <property name="halign">center</property>
+                        <property name="adjustment">
+                          <object class="GtkAdjustment">
+                            <property name="lower">-12</property>
+                            <property name="upper">12</property>
+                            <property name="step-increment">0.5</property>
+                            <property name="page-increment">3</property>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label">237</property>
+                        <style>
+                          <class name="caption"/>
+                          <class name="dim-label"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">4</property>
+                    <child>
+                      <object class="GtkLabel" id="band_value_4">
+                        <property name="label">0</property>
+                        <property name="width-chars">5</property>
+                        <style>
+                          <class name="numeric"/>
+                          <class name="caption"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkScale" id="band_scale_4">
+                        <property name="orientation">vertical</property>
+                        <property name="inverted">True</property>
+                        <property name="draw-value">False</property>
+                        <property name="has-origin">False</property>
+                        <property name="round-digits">1</property>
+                        <property name="height-request">200</property>
+                        <property name="halign">center</property>
+                        <property name="adjustment">
+                          <object class="GtkAdjustment">
+                            <property name="lower">-12</property>
+                            <property name="upper">12</property>
+                            <property name="step-increment">0.5</property>
+                            <property name="page-increment">3</property>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label">474</property>
+                        <style>
+                          <class name="caption"/>
+                          <class name="dim-label"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">4</property>
+                    <child>
+                      <object class="GtkLabel" id="band_value_5">
+                        <property name="label">0</property>
+                        <property name="width-chars">5</property>
+                        <style>
+                          <class name="numeric"/>
+                          <class name="caption"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkScale" id="band_scale_5">
+                        <property name="orientation">vertical</property>
+                        <property name="inverted">True</property>
+                        <property name="draw-value">False</property>
+                        <property name="has-origin">False</property>
+                        <property name="round-digits">1</property>
+                        <property name="height-request">200</property>
+                        <property name="halign">center</property>
+                        <property name="adjustment">
+                          <object class="GtkAdjustment">
+                            <property name="lower">-12</property>
+                            <property name="upper">12</property>
+                            <property name="step-increment">0.5</property>
+                            <property name="page-increment">3</property>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label">947</property>
+                        <style>
+                          <class name="caption"/>
+                          <class name="dim-label"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">4</property>
+                    <child>
+                      <object class="GtkLabel" id="band_value_6">
+                        <property name="label">0</property>
+                        <property name="width-chars">5</property>
+                        <style>
+                          <class name="numeric"/>
+                          <class name="caption"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkScale" id="band_scale_6">
+                        <property name="orientation">vertical</property>
+                        <property name="inverted">True</property>
+                        <property name="draw-value">False</property>
+                        <property name="has-origin">False</property>
+                        <property name="round-digits">1</property>
+                        <property name="height-request">200</property>
+                        <property name="halign">center</property>
+                        <property name="adjustment">
+                          <object class="GtkAdjustment">
+                            <property name="lower">-12</property>
+                            <property name="upper">12</property>
+                            <property name="step-increment">0.5</property>
+                            <property name="page-increment">3</property>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label">1.9k</property>
+                        <style>
+                          <class name="caption"/>
+                          <class name="dim-label"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">4</property>
+                    <child>
+                      <object class="GtkLabel" id="band_value_7">
+                        <property name="label">0</property>
+                        <property name="width-chars">5</property>
+                        <style>
+                          <class name="numeric"/>
+                          <class name="caption"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkScale" id="band_scale_7">
+                        <property name="orientation">vertical</property>
+                        <property name="inverted">True</property>
+                        <property name="draw-value">False</property>
+                        <property name="has-origin">False</property>
+                        <property name="round-digits">1</property>
+                        <property name="height-request">200</property>
+                        <property name="halign">center</property>
+                        <property name="adjustment">
+                          <object class="GtkAdjustment">
+                            <property name="lower">-12</property>
+                            <property name="upper">12</property>
+                            <property name="step-increment">0.5</property>
+                            <property name="page-increment">3</property>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label">3.8k</property>
+                        <style>
+                          <class name="caption"/>
+                          <class name="dim-label"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">4</property>
+                    <child>
+                      <object class="GtkLabel" id="band_value_8">
+                        <property name="label">0</property>
+                        <property name="width-chars">5</property>
+                        <style>
+                          <class name="numeric"/>
+                          <class name="caption"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkScale" id="band_scale_8">
+                        <property name="orientation">vertical</property>
+                        <property name="inverted">True</property>
+                        <property name="draw-value">False</property>
+                        <property name="has-origin">False</property>
+                        <property name="round-digits">1</property>
+                        <property name="height-request">200</property>
+                        <property name="halign">center</property>
+                        <property name="adjustment">
+                          <object class="GtkAdjustment">
+                            <property name="lower">-12</property>
+                            <property name="upper">12</property>
+                            <property name="step-increment">0.5</property>
+                            <property name="page-increment">3</property>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label">7.5k</property>
+                        <style>
+                          <class name="caption"/>
+                          <class name="dim-label"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">4</property>
+                    <child>
+                      <object class="GtkLabel" id="band_value_9">
+                        <property name="label">0</property>
+                        <property name="width-chars">5</property>
+                        <style>
+                          <class name="numeric"/>
+                          <class name="caption"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkScale" id="band_scale_9">
+                        <property name="orientation">vertical</property>
+                        <property name="inverted">True</property>
+                        <property name="draw-value">False</property>
+                        <property name="has-origin">False</property>
+                        <property name="round-digits">1</property>
+                        <property name="height-request">200</property>
+                        <property name="halign">center</property>
+                        <property name="adjustment">
+                          <object class="GtkAdjustment">
+                            <property name="lower">-12</property>
+                            <property name="upper">12</property>
+                            <property name="step-increment">0.5</property>
+                            <property name="page-increment">3</property>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label">15k</property>
+                        <style>
+                          <class name="caption"/>
+                          <class name="dim-label"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkLabel">
+            <property name="label" translatable="yes">Moving a slider changes the custom preset.</property>
+            <property name="xalign">0</property>
+            <style>
+              <class name="caption"/>
+              <class name="dim-label"/>
+            </style>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton" id="close_button">
+            <property name="label" translatable="yes">_Close</property>
+            <property name="use-underline">True</property>
+            <property name="halign">end</property>
+            <style>
+              <class name="suggested-action"/>
+            </style>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

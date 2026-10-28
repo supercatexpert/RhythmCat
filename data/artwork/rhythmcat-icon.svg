@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- RhythmCat icon: "Note Cat" -->
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <defs>
+    <radialGradient id="bg" cx="0.35" cy="0.3" r="0.8">
+      <stop offset="0" stop-color="#FFE29A"/>
+      <stop offset="1" stop-color="#FF9F43"/>
+    </radialGradient>
+  </defs>
+  <circle cx="128" cy="128" r="120" fill="url(#bg)"/>
+  <path d="M150 186V40C168 52 198 62 198 100C198 120 188 130 178 136C184 122 184 98 164 86V178Z" fill="#2D1E2F"/>
+  <g transform="rotate(-18 112 176)">
+    <path d="M62 178C62 154 72 144 78 140L80 112L102 132C108 131 116 131 122 132L144 112L146 140C152 144 162 154 162 178C162 204 140 218 112 218C84 218 62 204 62 178Z" fill="#2D1E2F"/>
+    <path d="M86 122L87 136L97 133Z M138 122L137 136L127 133Z" fill="#FF8FA3"/>
+    <ellipse cx="96" cy="176" rx="8" ry="10" fill="#FFE29A"/>
+    <ellipse cx="128" cy="176" rx="8" ry="10" fill="#FFE29A"/>
+    <ellipse cx="97" cy="177" rx="3" ry="7" fill="#2D1E2F"/>
+    <ellipse cx="129" cy="177" rx="3" ry="7" fill="#2D1E2F"/>
+    <path d="M107 192H117L112 198Z" fill="#FF8FA3"/>
+  </g>
+  <path d="M74 210C44 214 30 190 44 172" fill="none" stroke="#2D1E2F" stroke-width="9" stroke-linecap="round"/>
+</svg>

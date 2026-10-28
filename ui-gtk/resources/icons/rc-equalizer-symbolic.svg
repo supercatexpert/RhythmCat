@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- RhythmCat equalizer icon, this file is part of RhythmCat Music Player (GTK4 Version), license: GPL v3 -->
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+  <g fill="#2e3436">
+    <rect x="2" y="1" width="2" height="14" rx="1" opacity="0.35"/>
+    <rect x="7" y="1" width="2" height="14" rx="1" opacity="0.35"/>
+    <rect x="12" y="1" width="2" height="14" rx="1" opacity="0.35"/>
+    <rect x="0.5" y="8" width="5" height="3" rx="1.5"/>
+    <rect x="5.5" y="3" width="5" height="3" rx="1.5"/>
+    <rect x="10.5" y="10" width="5" height="3" rx="1.5"/>
+  </g>
+</svg>

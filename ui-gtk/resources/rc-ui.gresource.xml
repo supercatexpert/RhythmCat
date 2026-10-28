@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/org/supercat/RhythmCat3">
+    <file preprocess="xml-stripblanks">ui/rc-ui-window.ui</file>
+    <file preprocess="xml-stripblanks">ui/rc-ui-settings.ui</file>
+    <file preprocess="xml-stripblanks">ui/rc-ui-equalizer.ui</file>
+    <file alias="icons/scalable/actions/rc-equalizer-symbolic.svg">icons/rc-equalizer-symbolic.svg</file>
+    <file>rc-ui-style.css</file>
+    <file alias="images/rhythmcat.svg">rhythmcat-icon.svg</file>
+    <file alias="images/default-cover.svg">rhythmcat-cover.svg</file>
+    <file alias="icons/scalable/apps/org.supercat.RhythmCat3.svg">rhythmcat-icon.svg</file>
+  </gresource>
+</gresources>

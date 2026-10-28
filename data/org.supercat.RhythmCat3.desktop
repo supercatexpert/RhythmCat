@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=RhythmCat
+GenericName=Music Player
+Comment=Play and organize your music
+Exec=rhythmcat3 %U
+Icon=org.supercat.RhythmCat3
+Terminal=false
+Categories=GTK;AudioVideo;Audio;Player;
+MimeType=audio/mpeg;audio/x-vorbis+ogg;audio/ogg;audio/flac;audio/x-flac;audio/x-wav;audio/x-ape;audio/mp4;audio/x-wavpack;application/x-cue;
+Keywords=music;audio;player;playlist;
+StartupNotify=true
