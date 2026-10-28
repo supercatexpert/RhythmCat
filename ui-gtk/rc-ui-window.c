@@ -45,8 +45,13 @@ enum
     RC_UI_COLUMN_TITLE,
     RC_UI_COLUMN_ARTIST,
     RC_UI_COLUMN_ALBUM,
-    RC_UI_COLUMN_DURATION
+    RC_UI_COLUMN_DURATION,
+    RC_UI_COLUMN_COUNT
 };
+
+#define RC_UI_COLUMN_FLEXIBLE_COUNT 3
+#define RC_UI_COLUMN_MIN_WIDTH 60
+#define RC_UI_COLUMN_MIN_FIXED_WIDTH 40
 
 typedef struct RCUiWindowPrivate
 {
@@ -108,6 +113,11 @@ typedef struct RCUiWindowPrivate
     guint progress_timer_id;
     guint library_refresh_id;
     guint group_refresh_id;
+    GtkColumnViewColumn *columns[RC_UI_COLUMN_COUNT];
+    gdouble column_ratios[RC_UI_COLUMN_FLEXIBLE_COUNT];
+    gint column_view_width;
+    gboolean column_updating;
+    guint column_layout_id;
     gulong volume_handler_id;
     gulong random_handler_id;
     gulong dark_handler_id;
@@ -807,8 +817,146 @@ static void rc_ui_window_column_unbind_cb(
     g_object_set_data(G_OBJECT(list_item), "rc-handler", NULL);
 }
 
+/*
+ * The title, artist and album columns share the width of the track view
+ * by ratios. The columns do not use the expand property of
+ * GtkColumnView, because the extra width given to expanding columns
+ * makes the resizing not follow the pointer, and the widths set by
+ * resizing are kept when the window becomes smaller. Instead, the
+ * widths are set by the program when the width of the view changes.
+ * When the border on the right side of one of these columns is dragged,
+ * the column after the border gets or gives the width, so the total
+ * width is not changed.
+ */
+
+static gboolean rc_ui_window_is_flexible_column(gint column)
+{
+    return column>=RC_UI_COLUMN_TITLE && column<=RC_UI_COLUMN_ALBUM;
+}
+
+static gint rc_ui_window_get_column_width(gint column)
+{
+    return gtk_column_view_column_get_fixed_width(
+        window_priv.columns[column]);
+}
+
+static void rc_ui_window_set_column_width(gint column, gint width)
+{
+    RCUiWindowPrivate *priv = &window_priv;
+    if(rc_ui_window_get_column_width(column)==width) return;
+    priv->column_updating = TRUE;
+    gtk_column_view_column_set_fixed_width(priv->columns[column], width);
+    priv->column_updating = FALSE;
+}
+
+/* Get the width for the title, artist and album columns */
+static gint rc_ui_window_get_flexible_width()
+{
+    RCUiWindowPrivate *priv = &window_priv;
+    gint width = priv->column_view_width, column;
+    for(column=0;column<RC_UI_COLUMN_COUNT;column++)
+    {
+        if(!rc_ui_window_is_flexible_column(column))
+            width -= MAX(rc_ui_window_get_column_width(column), 0);
+    }
+    return MAX(width, RC_UI_COLUMN_FLEXIBLE_COUNT *
+        RC_UI_COLUMN_MIN_WIDTH);
+}
+
+static void rc_ui_window_update_column_ratios()
+{
+    RCUiWindowPrivate *priv = &window_priv;
+    gint i, total = 0;
+    for(i=0;i<RC_UI_COLUMN_FLEXIBLE_COUNT;i++)
+        total += rc_ui_window_get_column_width(RC_UI_COLUMN_TITLE+i);
+    if(total<=0) return;
+    for(i=0;i<RC_UI_COLUMN_FLEXIBLE_COUNT;i++)
+    {
+        priv->column_ratios[i] = (gdouble)rc_ui_window_get_column_width(
+            RC_UI_COLUMN_TITLE+i) / total;
+    }
+}
+
+static void rc_ui_window_layout_columns()
+{
+    RCUiWindowPrivate *priv = &window_priv;
+    gint i, width, used = 0, space;
+    if(priv->column_view_width<=0) return;
+    space = rc_ui_window_get_flexible_width();
+    for(i=0;i<RC_UI_COLUMN_FLEXIBLE_COUNT;i++)
+    {
+        if(i==RC_UI_COLUMN_FLEXIBLE_COUNT-1)
+            width = space - used;
+        else
+            width = (gint)(space * priv->column_ratios[i] + 0.5);
+        width = MAX(width, RC_UI_COLUMN_MIN_WIDTH);
+        used += width;
+        rc_ui_window_set_column_width(RC_UI_COLUMN_TITLE+i, width);
+    }
+}
+
+static gboolean rc_ui_window_layout_columns_cb(gpointer data)
+{
+    window_priv.column_layout_id = 0;
+    rc_ui_window_layout_columns();
+    return G_SOURCE_REMOVE;
+}
+
+/* Changing the column widths while the view is being allocated is not
+ * allowed, so the layout is done later */
+static void rc_ui_window_schedule_column_layout()
+{
+    RCUiWindowPrivate *priv = &window_priv;
+    if(priv->column_layout_id>0) return;
+    priv->column_layout_id = g_idle_add(rc_ui_window_layout_columns_cb,
+        NULL);
+}
+
+static void rc_ui_window_view_width_cb(GtkAdjustment *adjustment,
+    GParamSpec *pspec, gpointer data)
+{
+    RCUiWindowPrivate *priv = &window_priv;
+    gint width = (gint)gtk_adjustment_get_page_size(adjustment);
+    if(width<=0 || width==priv->column_view_width) return;
+    priv->column_view_width = width;
+    rc_ui_window_schedule_column_layout();
+}
+
+static void rc_ui_window_column_width_cb(GtkColumnViewColumn *view_column,
+    GParamSpec *pspec, gpointer data)
+{
+    RCUiWindowPrivate *priv = &window_priv;
+    gint column = GPOINTER_TO_INT(data);
+    gint neighbor, i, rest, width, min;
+    if(priv->column_updating || priv->column_view_width<=0) return;
+    if(!rc_ui_window_is_flexible_column(column))
+    {
+        rc_ui_window_schedule_column_layout();
+        return;
+    }
+    /* The column on the right side of the dragged border gives or gets
+     * the width, so the border follows the pointer */
+    neighbor = column + 1;
+    rest = priv->column_view_width;
+    for(i=0;i<RC_UI_COLUMN_COUNT;i++)
+    {
+        if(i!=column && i!=neighbor)
+            rest -= rc_ui_window_get_column_width(i);
+    }
+    min = rc_ui_window_is_flexible_column(neighbor) ?
+        RC_UI_COLUMN_MIN_WIDTH : RC_UI_COLUMN_MIN_FIXED_WIDTH;
+    width = rc_ui_window_get_column_width(column);
+    if(width>rest-min)
+    {
+        width = MAX(rest-min, RC_UI_COLUMN_MIN_WIDTH);
+        rc_ui_window_set_column_width(column, width);
+    }
+    rc_ui_window_set_column_width(neighbor, MAX(rest-width, min));
+    rc_ui_window_update_column_ratios();
+}
+
 static void rc_ui_window_add_column(const gchar *title, gint column,
-    gboolean expand, gint width)
+    gint width)
 {
     RCUiWindowPrivate *priv = &window_priv;
     GtkListItemFactory *factory;
@@ -821,12 +969,14 @@ static void rc_ui_window_add_column(const gchar *title, gint column,
     g_signal_connect(factory, "unbind",
         G_CALLBACK(rc_ui_window_column_unbind_cb), GINT_TO_POINTER(column));
     view_column = gtk_column_view_column_new(title, factory);
-    gtk_column_view_column_set_expand(view_column, expand);
     gtk_column_view_column_set_resizable(view_column, column!=
         RC_UI_COLUMN_PLAYING);
-    if(width>0) gtk_column_view_column_set_fixed_width(view_column, width);
+    gtk_column_view_column_set_fixed_width(view_column, width);
+    g_signal_connect(view_column, "notify::fixed-width",
+        G_CALLBACK(rc_ui_window_column_width_cb), GINT_TO_POINTER(column));
     gtk_column_view_append_column(GTK_COLUMN_VIEW(priv->track_view),
         view_column);
+    priv->columns[column] = view_column;
     g_object_unref(view_column);
 }
 
@@ -2352,12 +2502,18 @@ GtkWidget *rc_ui_window_init(GtkApplication *app)
         g_object_ref(priv->track_store)));
     gtk_column_view_set_model(GTK_COLUMN_VIEW(priv->track_view),
         GTK_SELECTION_MODEL(priv->track_selection));
-    rc_ui_window_add_column("", RC_UI_COLUMN_PLAYING, FALSE, 36);
-    rc_ui_window_add_column(_("#"), RC_UI_COLUMN_TRACK, FALSE, 50);
-    rc_ui_window_add_column(_("Title"), RC_UI_COLUMN_TITLE, TRUE, -1);
-    rc_ui_window_add_column(_("Artist"), RC_UI_COLUMN_ARTIST, TRUE, -1);
-    rc_ui_window_add_column(_("Album"), RC_UI_COLUMN_ALBUM, TRUE, -1);
-    rc_ui_window_add_column(_("Length"), RC_UI_COLUMN_DURATION, FALSE, 80);
+    rc_ui_window_add_column("", RC_UI_COLUMN_PLAYING, 36);
+    rc_ui_window_add_column(_("#"), RC_UI_COLUMN_TRACK, 50);
+    rc_ui_window_add_column(_("Title"), RC_UI_COLUMN_TITLE, 200);
+    rc_ui_window_add_column(_("Artist"), RC_UI_COLUMN_ARTIST, 150);
+    rc_ui_window_add_column(_("Album"), RC_UI_COLUMN_ALBUM, 150);
+    rc_ui_window_add_column(_("Length"), RC_UI_COLUMN_DURATION, 80);
+    priv->column_ratios[0] = 0.4;
+    priv->column_ratios[1] = 0.3;
+    priv->column_ratios[2] = 0.3;
+    g_signal_connect(gtk_scrollable_get_hadjustment(GTK_SCROLLABLE(
+        priv->track_view)), "notify::page-size",
+        G_CALLBACK(rc_ui_window_view_width_cb), NULL);
     g_signal_connect(priv->track_view, "activate",
         G_CALLBACK(rc_ui_window_track_activate_cb), NULL);
     drop_target = gtk_drop_target_new(GDK_TYPE_FILE_LIST, GDK_ACTION_COPY);
@@ -2541,6 +2697,7 @@ void rc_ui_window_cleanup()
     if(priv->library_refresh_id>0)
         g_source_remove(priv->library_refresh_id);
     if(priv->group_refresh_id>0) g_source_remove(priv->group_refresh_id);
+    if(priv->column_layout_id>0) g_source_remove(priv->column_layout_id);
     rc_ui_window_cancel_long_press();
     rc_ui_window_clear_drag();
     if(priv->view_playlist!=NULL)
