@@ -351,8 +351,8 @@ static void rc_tui_draw_header()
     RCTuiPrivate *priv = &tui_priv;
     static const gchar *group_names[] = {N_("No Grouping"),
         N_("By Artist"), N_("By Album")};
-    static const gchar *repeat_names[] = {N_("Off"), N_("All"),
-        N_("Track")};
+    static const gchar *repeat_names[] = {N_("Off"), N_("List"),
+        N_("Track"), N_("All")};
     const gchar *eq_name;
     gchar *text, *preset;
     preset = rclib_player_get_eq_preset();
@@ -574,7 +574,8 @@ static void rc_tui_draw_help(gint top, gint height)
         N_("  n / p      Next / previous track"),
         N_("  Left/Right Seek backward / forward (5 seconds)"),
         N_("  + / -      Volume up / down"),
-        N_("  r          Cycle repeat mode       z   Toggle random mode"),
+        N_("  r          Cycle repeat mode (off, list, all, track)"),
+        N_("  z          Toggle random mode"),
         N_("  e          Toggle equalizer        E   Next equalizer preset"),
         N_("Library and playlists"),
         N_("  Tab        Switch between sources and tracks"),
@@ -990,8 +991,8 @@ static void rc_tui_handle_key(gint ret, wint_t key)
                 RC_TUI_VOLUME_STEP);
             break;
         case 'r':
-            rclib_player_set_repeat_mode((rclib_player_get_repeat_mode()+1)
-                % 3);
+            rclib_player_set_repeat_mode(rclib_player_get_next_repeat_mode(
+                rclib_player_get_repeat_mode()));
             break;
         case 'z':
             rclib_player_set_random_mode(!rclib_player_get_random_mode());

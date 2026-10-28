@@ -75,25 +75,58 @@ static void rclib_player_history_push(RCLibDbItem *item)
         rclib_db_item_unref(g_queue_pop_head(&player_history));
 }
 
-static RCLibDbItem *rclib_player_find_next(RCLibDbItem *current,
-    gboolean wrap)
+/* Find the first item of the first non-empty playlist in the range
+ * [from, to) of the playlist list. */
+static RCLibDbItem *rclib_player_find_playlist_start(guint from, guint to)
 {
-    gint index, length;
+    const GPtrArray *playlists = rclib_db_get_playlists();
+    RCLibDbPlaylist *playlist;
+    guint i;
+    for(i=from;playlists!=NULL && i<to && i<playlists->len;i++)
+    {
+        playlist = g_ptr_array_index(playlists, i);
+        if(playlist->items->len>0)
+            return g_ptr_array_index(playlist->items, 0);
+    }
+    return NULL;
+}
+
+/* Find the next item of the current item by the repeat mode and the
+ * random mode. In random mode, a random item in the same list is chosen.
+ * After the last item of a playlist, the first item of the next playlist
+ * is chosen, unless the repeat mode is #RCLIB_PLAYER_REPEAT_LIST. */
+static RCLibDbItem *rclib_player_find_next(RCLibDbItem *current,
+    RCLibPlayerRepeatMode mode)
+{
+    RCLibDbItem *next;
+    gint index, length, playlist_index;
     length = rclib_player_get_list_length(current);
     if(length<=0) return NULL;
     index = rclib_db_item_get_index(current);
     if(index<0) return NULL;
     if(rclib_player_get_random_mode() && length>1)
     {
-        gint next = g_random_int_range(0, length-1);
-        if(next>=index) next++;
-        return rclib_player_get_item_at(current, next);
+        gint random = g_random_int_range(0, length-1);
+        if(random>=index) random++;
+        return rclib_player_get_item_at(current, random);
     }
     if(index+1<length)
         return rclib_player_get_item_at(current, index+1);
-    if(wrap)
+    if(mode==RCLIB_PLAYER_REPEAT_LIST)
         return rclib_player_get_item_at(current, 0);
-    return NULL;
+    if(current->playlist==NULL)
+    {
+        /* The music library is the only list */
+        if(mode==RCLIB_PLAYER_REPEAT_ALL)
+            return rclib_player_get_item_at(current, 0);
+        return NULL;
+    }
+    playlist_index = rclib_db_playlist_get_index(current->playlist);
+    if(playlist_index<0) return NULL;
+    next = rclib_player_find_playlist_start(playlist_index+1, G_MAXUINT);
+    if(next==NULL && mode==RCLIB_PLAYER_REPEAT_ALL)
+        next = rclib_player_find_playlist_start(0, playlist_index+1);
+    return next;
 }
 
 static void rclib_player_eos_cb(GObject *core, gpointer data)
@@ -110,8 +143,7 @@ static void rclib_player_eos_cb(GObject *core, gpointer data)
         rclib_player_play_item(current);
         return;
     }
-    next = rclib_player_find_next(current,
-        rclib_player_get_repeat_mode()==RCLIB_PLAYER_REPEAT_LIST);
+    next = rclib_player_find_next(current, rclib_player_get_repeat_mode());
     if(next!=NULL)
     {
         rclib_player_history_push(current);
@@ -261,9 +293,14 @@ gboolean rclib_player_play_pause()
 /**
  * rclib_player_play_next:
  *
- * Play the next item.
+ * Play the next item. After the last item of a playlist, the first item
+ * of the next playlist will be played, unless the repeat mode is
+ * #RCLIB_PLAYER_REPEAT_LIST (repeat the current playlist). After the last
+ * playlist, the first playlist will be played only if the repeat mode is
+ * #RCLIB_PLAYER_REPEAT_ALL.
  *
- * Returns: Whether the operation succeeded.
+ * Returns: Whether the operation succeeded, %FALSE if there is no next
+ *     item.
  */
 
 gboolean rclib_player_play_next()
@@ -271,7 +308,7 @@ gboolean rclib_player_play_next()
     RCLibDbItem *current, *next;
     current = rclib_player_get_current_item();
     if(current==NULL || !rclib_db_item_is_valid(current)) return FALSE;
-    next = rclib_player_find_next(current, TRUE);
+    next = rclib_player_find_next(current, rclib_player_get_repeat_mode());
     if(next==NULL) return FALSE;
     rclib_player_history_push(current);
     return rclib_player_play_item(next);
@@ -339,9 +376,35 @@ RCLibPlayerRepeatMode rclib_player_get_repeat_mode()
 {
     gint mode = rclib_settings_get_integer(RCLIB_SETTINGS_GROUP_PLAYER,
         RCLIB_SETTINGS_KEY_REPEAT_MODE);
-    if(mode<RCLIB_PLAYER_REPEAT_NONE || mode>RCLIB_PLAYER_REPEAT_SINGLE)
+    if(mode<RCLIB_PLAYER_REPEAT_NONE || mode>RCLIB_PLAYER_REPEAT_ALL)
         mode = RCLIB_PLAYER_REPEAT_LIST;
     return mode;
+}
+
+/**
+ * rclib_player_get_next_repeat_mode:
+ * @mode: the repeat mode
+ *
+ * Get the next repeat mode for switching repeat modes in the user
+ * interface, the order is: none, list, all, single.
+ *
+ * Returns: The next repeat mode.
+ */
+
+RCLibPlayerRepeatMode rclib_player_get_next_repeat_mode(
+    RCLibPlayerRepeatMode mode)
+{
+    switch(mode)
+    {
+        case RCLIB_PLAYER_REPEAT_NONE:
+            return RCLIB_PLAYER_REPEAT_LIST;
+        case RCLIB_PLAYER_REPEAT_LIST:
+            return RCLIB_PLAYER_REPEAT_ALL;
+        case RCLIB_PLAYER_REPEAT_ALL:
+            return RCLIB_PLAYER_REPEAT_SINGLE;
+        default:
+            return RCLIB_PLAYER_REPEAT_NONE;
+    }
 }
 
 /**

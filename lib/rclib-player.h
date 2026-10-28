@@ -29,17 +29,24 @@ G_BEGIN_DECLS
 
 /**
  * RCLibPlayerRepeatMode:
- * @RCLIB_PLAYER_REPEAT_NONE: stop after the last item
- * @RCLIB_PLAYER_REPEAT_LIST: repeat the whole list
- * @RCLIB_PLAYER_REPEAT_SINGLE: repeat the current item
+ * @RCLIB_PLAYER_REPEAT_NONE: after the last item of a playlist, continue
+ *     with the next playlist, stop after the last playlist
+ * @RCLIB_PLAYER_REPEAT_LIST: repeat the current playlist (or the music
+ *     library)
+ * @RCLIB_PLAYER_REPEAT_SINGLE: repeat the current item, the next item is
+ *     chosen like #RCLIB_PLAYER_REPEAT_NONE when the user skips it
+ * @RCLIB_PLAYER_REPEAT_ALL: like #RCLIB_PLAYER_REPEAT_NONE, but continue
+ *     with the first playlist after the last playlist
  *
- * The repeat modes of the player.
+ * The repeat modes of the player. Empty playlists are skipped when moving
+ * to another playlist.
  */
 
 typedef enum {
     RCLIB_PLAYER_REPEAT_NONE = 0,
     RCLIB_PLAYER_REPEAT_LIST = 1,
-    RCLIB_PLAYER_REPEAT_SINGLE = 2
+    RCLIB_PLAYER_REPEAT_SINGLE = 2,
+    RCLIB_PLAYER_REPEAT_ALL = 3
 }RCLibPlayerRepeatMode;
 
 gboolean rclib_player_init();
@@ -51,6 +58,8 @@ gboolean rclib_player_play_next();
 gboolean rclib_player_play_prev();
 void rclib_player_set_repeat_mode(RCLibPlayerRepeatMode mode);
 RCLibPlayerRepeatMode rclib_player_get_repeat_mode();
+RCLibPlayerRepeatMode rclib_player_get_next_repeat_mode(
+    RCLibPlayerRepeatMode mode);
 void rclib_player_set_random_mode(gboolean random);
 gboolean rclib_player_get_random_mode();
 void rclib_player_set_eq_enabled(gboolean enabled);

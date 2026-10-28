@@ -60,6 +60,8 @@ typedef struct RCUiWindowPrivate
     GtkWidget *progress_scale;
     GtkWidget *play_button;
     GtkWidget *repeat_button;
+    GtkWidget *repeat_image;
+    GtkWidget *repeat_label;
     GtkWidget *random_button;
     GtkWidget *volume_scale;
     GtkWidget *lyric_box;
@@ -1299,33 +1301,40 @@ static gboolean rc_ui_window_progress_change_value_cb(GtkRange *range,
 static void rc_ui_window_update_repeat_button()
 {
     RCUiWindowPrivate *priv = &window_priv;
+    const gchar *icon, *label = NULL, *tooltip;
     switch(rclib_player_get_repeat_mode())
     {
         case RCLIB_PLAYER_REPEAT_NONE:
-            gtk_button_set_icon_name(GTK_BUTTON(priv->repeat_button),
-                "media-playlist-consecutive-symbolic");
-            gtk_widget_set_tooltip_text(priv->repeat_button,
-                _("Repeat: Off"));
+            icon = "media-playlist-consecutive-symbolic";
+            tooltip = _("Repeat: Off (continue with the next playlist, "
+                "stop after the last one)");
             break;
         case RCLIB_PLAYER_REPEAT_SINGLE:
-            gtk_button_set_icon_name(GTK_BUTTON(priv->repeat_button),
-                "media-playlist-repeat-song-symbolic");
-            gtk_widget_set_tooltip_text(priv->repeat_button,
-                _("Repeat: Current Track"));
+            icon = "media-playlist-repeat-song-symbolic";
+            tooltip = _("Repeat: Current Track");
+            break;
+        case RCLIB_PLAYER_REPEAT_ALL:
+            icon = "media-playlist-repeat-symbolic";
+            label = _("All");
+            tooltip = _("Repeat: All Playlists");
             break;
         default:
-            gtk_button_set_icon_name(GTK_BUTTON(priv->repeat_button),
-                "media-playlist-repeat-symbolic");
-            gtk_widget_set_tooltip_text(priv->repeat_button,
-                _("Repeat: All"));
+            icon = "media-playlist-repeat-symbolic";
+            label = _("List");
+            tooltip = _("Repeat: Current Playlist");
             break;
     }
+    gtk_image_set_from_icon_name(GTK_IMAGE(priv->repeat_image), icon);
+    gtk_label_set_text(GTK_LABEL(priv->repeat_label), label);
+    gtk_widget_set_visible(priv->repeat_label, label!=NULL);
+    gtk_widget_set_tooltip_text(priv->repeat_button, tooltip);
 }
 
 static void rc_ui_window_repeat_clicked_cb(GtkButton *button,
     gpointer data)
 {
-    rclib_player_set_repeat_mode((rclib_player_get_repeat_mode()+1) % 3);
+    rclib_player_set_repeat_mode(rclib_player_get_next_repeat_mode(
+        rclib_player_get_repeat_mode()));
     rc_ui_window_update_repeat_button();
 }
 
@@ -1839,6 +1848,8 @@ GtkWidget *rc_ui_window_init(GtkApplication *app)
     priv->progress_scale = rc_ui_window_get_object("progress_scale");
     priv->play_button = rc_ui_window_get_object("play_button");
     priv->repeat_button = rc_ui_window_get_object("repeat_button");
+    priv->repeat_image = rc_ui_window_get_object("repeat_image");
+    priv->repeat_label = rc_ui_window_get_object("repeat_label");
     priv->random_button = rc_ui_window_get_object("random_button");
     priv->volume_scale = rc_ui_window_get_object("volume_scale");
     priv->lyric_box = rc_ui_window_get_object("lyric_box");

@@ -77,6 +77,17 @@ the icon is also installed as the application icon.
   (`.srt`), WebVTT (`.vtt`) and ASS/SSA. A lyric file must be in the same
   directory as the audio file and have the same base name. Non-Unicode
   files use the fallback encoding list.
+* Playing order with four repeat modes:
+  * **Off**: after the last item of a playlist, continue with the first
+    item of the next playlist; stop after the last playlist.
+  * **List**: repeat the current playlist (or the music library).
+  * **All**: like Off, but continue with the first playlist after the
+    last one.
+  * **Track**: repeat the current item; skipping to the next item works
+    like Off.
+
+  Empty playlists are skipped. In random mode, the next item is a random
+  item of the current playlist.
 * Settings are stored in `~/.config/RhythmCat3/settings.conf`.
 
 ### GTK4 frontend
@@ -109,8 +120,8 @@ the icon is also installed as the application icon.
 ### ncurses frontend
 
 Press `?` in the program for the key list. Main keys: Enter play, Space
-pause, `n`/`p` next/previous, ←/→ seek, `+`/`-` volume, `g` grouping, `a`
-add a file/folder, `A` add to playlist, `N`/`R`/`D` new/rename/delete
+pause, `r` repeat mode, `n`/`p` next/previous, ←/→ seek, `+`/`-` volume,
+`g` grouping, `a` add a file/folder, `A` add to playlist, `N`/`R`/`D` new/rename/delete
 playlist, `J`/`K` reorder, `e` equalizer on/off, `E` next equalizer preset,
 `q` quit. The header shows the current equalizer preset. Log output goes to
 `~/.cache/RhythmCat3/tui.log`.

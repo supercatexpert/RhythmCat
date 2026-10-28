@@ -345,6 +345,131 @@ static void test_eq()
     rclib_core_exit();
 }
 
+/* Write a short silent WAV file (8 kHz, mono, 16-bit) */
+static gchar *test_make_wav(const gchar *name)
+{
+    const guint32 samples = 800, data_size = samples * 2;
+    guint8 header[44];
+    gchar *path, *uri, *contents;
+    guint32 value;
+    path = g_build_filename(test_dir, name, NULL);
+    memcpy(header, "RIFF", 4);
+    value = GUINT32_TO_LE(36 + data_size);
+    memcpy(header+4, &value, 4);
+    memcpy(header+8, "WAVEfmt ", 8);
+    value = GUINT32_TO_LE(16);
+    memcpy(header+16, &value, 4);
+    header[20] = 1; header[21] = 0;
+    header[22] = 1; header[23] = 0;
+    value = GUINT32_TO_LE(8000);
+    memcpy(header+24, &value, 4);
+    value = GUINT32_TO_LE(16000);
+    memcpy(header+28, &value, 4);
+    header[32] = 2; header[33] = 0;
+    header[34] = 16; header[35] = 0;
+    memcpy(header+36, "data", 4);
+    value = GUINT32_TO_LE(data_size);
+    memcpy(header+40, &value, 4);
+    contents = g_malloc0(44 + data_size);
+    memcpy(contents, header, 44);
+    g_assert_true(g_file_set_contents(path, contents, 44 + data_size,
+        NULL));
+    g_free(contents);
+    uri = g_filename_to_uri(path, NULL, NULL);
+    g_free(path);
+    return uri;
+}
+
+static RCLibDbItem *test_add_to_playlist(RCLibDbPlaylist *playlist,
+    const gchar *name)
+{
+    gchar *uri = test_make_wav(name);
+    RCLibDbItem *item = test_make_item(uri, name, NULL, NULL, 0);
+    rclib_db_playlist_add_item(playlist, item, -1);
+    rclib_db_item_unref(item);
+    g_free(uri);
+    return g_ptr_array_index(playlist->items, playlist->items->len-1);
+}
+
+static void test_player_next()
+{
+    RCLibDbPlaylist *a, *b, *c;
+    RCLibDbItem *a1, *a2, *c1;
+    gchar *db_file;
+    db_file = g_build_filename(test_dir, "player.json.gz", NULL);
+    g_assert_true(rclib_db_init(db_file));
+    g_assert_true(rclib_core_init(NULL));
+    g_assert_true(rclib_player_init());
+    a = rclib_db_playlist_new("A", -1);
+    b = rclib_db_playlist_new("B (empty)", -1);
+    c = rclib_db_playlist_new("C", -1);
+    (void)b;
+    a1 = test_add_to_playlist(a, "a1.wav");
+    a2 = test_add_to_playlist(a, "a2.wav");
+    c1 = test_add_to_playlist(c, "c1.wav");
+    rclib_player_set_random_mode(FALSE);
+
+    /* Inside a playlist */
+    rclib_player_set_repeat_mode(RCLIB_PLAYER_REPEAT_NONE);
+    rclib_player_play_item(a1);
+    g_assert_true(rclib_player_play_next());
+    g_assert_true(rclib_player_get_current_item()==a2);
+
+    /* The last item: skip the empty playlist B, go to C */
+    g_assert_true(rclib_player_play_next());
+    g_assert_true(rclib_player_get_current_item()==c1);
+
+    /* The last item of the last playlist */
+    g_assert_false(rclib_player_play_next());
+    g_assert_true(rclib_player_get_current_item()==c1);
+    rclib_player_set_repeat_mode(RCLIB_PLAYER_REPEAT_SINGLE);
+    g_assert_false(rclib_player_play_next());
+    rclib_player_set_repeat_mode(RCLIB_PLAYER_REPEAT_LIST);
+    g_assert_true(rclib_player_play_next());
+    g_assert_true(rclib_player_get_current_item()==c1);
+    rclib_player_set_repeat_mode(RCLIB_PLAYER_REPEAT_ALL);
+    g_assert_true(rclib_player_play_next());
+    g_assert_true(rclib_player_get_current_item()==a1);
+
+    /* Repeat the current playlist */
+    rclib_player_set_repeat_mode(RCLIB_PLAYER_REPEAT_LIST);
+    rclib_player_play_item(a2);
+    g_assert_true(rclib_player_play_next());
+    g_assert_true(rclib_player_get_current_item()==a1);
+
+    /* End of stream follows the same rules */
+    rclib_player_set_repeat_mode(RCLIB_PLAYER_REPEAT_NONE);
+    rclib_player_play_item(a2);
+    g_signal_emit_by_name(rclib_core_get_instance(), "eos");
+    g_assert_true(rclib_player_get_current_item()==c1);
+    rclib_player_set_repeat_mode(RCLIB_PLAYER_REPEAT_SINGLE);
+    g_signal_emit_by_name(rclib_core_get_instance(), "eos");
+    g_assert_true(rclib_player_get_current_item()==c1);
+    rclib_player_set_repeat_mode(RCLIB_PLAYER_REPEAT_ALL);
+    g_signal_emit_by_name(rclib_core_get_instance(), "eos");
+    g_assert_true(rclib_player_get_current_item()==a1);
+    rclib_player_set_repeat_mode(RCLIB_PLAYER_REPEAT_NONE);
+    rclib_player_play_item(c1);
+    g_signal_emit_by_name(rclib_core_get_instance(), "eos");
+    g_assert_cmpint(rclib_core_get_state(), <=, GST_STATE_READY);
+
+    /* The switching order of the repeat modes */
+    g_assert_cmpint(rclib_player_get_next_repeat_mode(
+        RCLIB_PLAYER_REPEAT_NONE), ==, RCLIB_PLAYER_REPEAT_LIST);
+    g_assert_cmpint(rclib_player_get_next_repeat_mode(
+        RCLIB_PLAYER_REPEAT_LIST), ==, RCLIB_PLAYER_REPEAT_ALL);
+    g_assert_cmpint(rclib_player_get_next_repeat_mode(
+        RCLIB_PLAYER_REPEAT_ALL), ==, RCLIB_PLAYER_REPEAT_SINGLE);
+    g_assert_cmpint(rclib_player_get_next_repeat_mode(
+        RCLIB_PLAYER_REPEAT_SINGLE), ==, RCLIB_PLAYER_REPEAT_NONE);
+
+    rclib_core_stop();
+    rclib_player_exit();
+    rclib_core_exit();
+    rclib_db_exit();
+    g_free(db_file);
+}
+
 static void test_instance()
 {
     GError *error = NULL;
@@ -374,6 +499,7 @@ int main(int argc, char *argv[])
     g_test_add_func("/db/library-playlist", test_db);
     g_test_add_func("/instance/lock", test_instance);
     g_test_add_func("/core/equalizer", test_eq);
+    g_test_add_func("/player/next", test_player_next);
     ret = g_test_run();
     rclib_settings_exit();
     g_free(settings_file);
