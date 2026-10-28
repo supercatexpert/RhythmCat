@@ -1,5 +1,11 @@
 /* RhythmCat 3 style sheet, this file is part of RhythmCat Music Player (GTK4 Version), license: GPL v3 */
 
+/* Digits of the same width for times and numbers, GTK does not define
+ * this style class (it is from libadwaita) */
+.numeric {
+    font-feature-settings: "tnum";
+}
+
 .title-label {
     font-size: 1.5em;
     font-weight: bold;
