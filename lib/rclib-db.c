@@ -23,6 +23,7 @@
 #include "rclib-db.h"
 #include "rclib-common.h"
 #include "rclib-cue.h"
+#include "rclib-plist.h"
 #include "rclib-tag.h"
 #include "rclib-util.h"
 #include <gio/gio.h>
@@ -72,6 +73,9 @@ typedef struct RCLibDbImportData
     RCLibDbPlaylist *playlist;
     gchar *uri;
     gint position;
+    gint cue_track;
+    gchar *title;
+    gint64 duration;
     gboolean cancelled;
 }RCLibDbImportData;
 
@@ -156,6 +160,7 @@ static void rclib_db_import_data_free(RCLibDbImportData *import_data)
     if(import_data->playlist!=NULL)
         rclib_db_playlist_unref(import_data->playlist);
     g_free(import_data->uri);
+    g_free(import_data->title);
     g_free(import_data);
 }
 
@@ -259,14 +264,17 @@ static void rclib_db_item_set_metadata(RCLibDbItem *item,
     if(metadata->bitrate>0) item->bitrate = metadata->bitrate;
 }
 
+/* Import the tracks in the CUE sheet, only the track with index
+ * @track is imported if @track is larger than 0. */
 static void rclib_db_import_cue_data(RCLibDbPlaylist *playlist,
     const RCLibCueData *cue, RCLibDbItemType type, const gchar *cue_uri,
-    gint position, const RCLibTagMetadata *metadata)
+    gint track, gint position, const RCLibTagMetadata *metadata)
 {
     RCLibDbItem *item;
     guint i;
     for(i=0;i<cue->length;i++)
     {
+        if(track>0 && cue->tracks[i].index!=track) continue;
         item = rclib_db_item_new();
         item->type = type;
         item->uri = g_strdup(cue->tracks[i].uri);
@@ -330,7 +338,7 @@ static void rclib_db_import_cb(const gchar *uri,
         if(cue!=NULL)
         {
             rclib_db_import_cue_data(import_data->playlist, cue,
-                RCLIB_DB_ITEM_TYPE_EMBEDDED_CUE, uri,
+                RCLIB_DB_ITEM_TYPE_EMBEDDED_CUE, uri, import_data->cue_track,
                 import_data->position, metadata);
             rclib_cue_data_free(cue);
             metadata = NULL;
@@ -358,9 +366,53 @@ static void rclib_db_import_cb(const gchar *uri,
     rclib_db_import_updated();
 }
 
+/* Whether the item can be imported without reading the metadata: CUE
+ * sheets and remote streams */
+static gboolean rclib_db_import_is_direct(const RCLibDbImportData *data)
+{
+    return rclib_util_is_cue_sheet(data->uri) ||
+        !g_str_has_prefix(data->uri, "file:");
+}
+
+static void rclib_db_import_direct(RCLibDbImportData *import_data)
+{
+    RCLibDbItem *item;
+    RCLibCueData *cue;
+    gchar **encodings;
+    GError *error = NULL;
+    if(rclib_util_is_cue_sheet(import_data->uri))
+    {
+        encodings = rclib_cue_get_encodings();
+        cue = rclib_cue_parse_uri(import_data->uri,
+            (const gchar * const *)encodings, &error);
+        g_strfreev(encodings);
+        if(cue==NULL)
+        {
+            g_message("Cannot import CUE sheet %s: %s", import_data->uri,
+                error!=NULL ? error->message : "unknown error");
+            g_clear_error(&error);
+            return;
+        }
+        rclib_db_import_cue_data(import_data->playlist, cue,
+            RCLIB_DB_ITEM_TYPE_CUE, import_data->uri, import_data->cue_track,
+            import_data->position, NULL);
+        rclib_cue_data_free(cue);
+        return;
+    }
+    /* Remote streams, use the information in the playlist file */
+    item = rclib_db_item_new();
+    item->type = RCLIB_DB_ITEM_TYPE_NORMAL;
+    item->uri = g_strdup(import_data->uri);
+    item->title = g_strdup(import_data->title);
+    item->duration = import_data->duration;
+    rclib_db_insert_item(import_data->playlist, item,
+        import_data->position);
+}
+
 /* Start reading the metadata of the files in the import queue, only a
  * few requests are sent to the metadata reader at the same time, so
- * that the import can be cancelled quickly. */
+ * that the import can be cancelled quickly. The items are added in the
+ * order of the queue. */
 static void rclib_db_import_process()
 {
     RCLibDbPrivate *priv = rclib_db_get_priv();
@@ -369,13 +421,24 @@ static void rclib_db_import_process()
     while(priv->import_running->len<RCLIB_DB_IMPORT_RUNNING_MAX &&
         !g_queue_is_empty(priv->import_queue))
     {
-        import_data = g_queue_pop_head(priv->import_queue);
+        import_data = g_queue_peek_head(priv->import_queue);
+        /* Wait for the running requests to keep the order */
+        if(rclib_db_import_is_direct(import_data) &&
+            priv->import_running->len>0)
+            break;
+        g_queue_pop_head(priv->import_queue);
         if(import_data->playlist!=NULL && import_data->playlist->removed)
         {
             rclib_db_import_data_free(import_data);
             continue;
         }
-        if(import_data->playlist==NULL &&
+        if(rclib_db_import_is_direct(import_data))
+        {
+            rclib_db_import_direct(import_data);
+            rclib_db_import_data_free(import_data);
+            continue;
+        }
+        if(import_data->playlist==NULL && import_data->cue_track==0 &&
             rclib_db_library_has_uri(import_data->uri))
         {
             rclib_db_import_data_free(import_data);
@@ -1351,40 +1414,73 @@ const GPtrArray *rclib_db_library_get_items()
     return priv->library;
 }
 
-static gboolean rclib_db_import_queue_uri(RCLibDbPlaylist *playlist,
-    const gchar *uri, gint position)
+static RCLibDbImportData *rclib_db_import_queue_push(
+    RCLibDbPlaylist *playlist, const gchar *uri, gint position)
 {
     RCLibDbPrivate *priv = rclib_db_get_priv();
     RCLibDbImportData *import_data;
-    RCLibCueData *cue;
-    gchar **encodings;
-    GError *error = NULL;
-    if(priv==NULL || uri==NULL) return FALSE;
-    if(rclib_util_is_cue_sheet(uri))
-    {
-        encodings = rclib_cue_get_encodings();
-        cue = rclib_cue_parse_uri(uri, (const gchar * const *)encodings,
-            &error);
-        g_strfreev(encodings);
-        if(cue==NULL)
-        {
-            g_message("Cannot import CUE sheet %s: %s", uri,
-                error!=NULL ? error->message : "unknown error");
-            g_clear_error(&error);
-            return FALSE;
-        }
-        rclib_db_import_cue_data(playlist, cue, RCLIB_DB_ITEM_TYPE_CUE,
-            uri, position, NULL);
-        rclib_cue_data_free(cue);
-        return FALSE;
-    }
-    if(playlist==NULL && rclib_db_library_has_uri(uri)) return FALSE;
     import_data = g_new0(RCLibDbImportData, 1);
     import_data->playlist = playlist!=NULL ?
         rclib_db_playlist_ref(playlist) : NULL;
     import_data->uri = g_strdup(uri);
     import_data->position = position;
     g_queue_push_tail(priv->import_queue, import_data);
+    return import_data;
+}
+
+static gboolean rclib_db_import_queue_entries(RCLibDbPlaylist *playlist,
+    const GPtrArray *entries, gint position)
+{
+    const RCLibPlistEntry *entry;
+    RCLibDbImportData *import_data;
+    guint i;
+    gboolean queued = FALSE;
+    for(i=0;i<entries->len;i++)
+    {
+        entry = g_ptr_array_index(entries, i);
+        /* Playlist files in playlist files are not supported */
+        if(entry->uri==NULL || rclib_plist_is_playlist_file(entry->uri))
+            continue;
+        import_data = rclib_db_import_queue_push(playlist, entry->uri,
+            position>=0 ? position+(gint)i : -1);
+        import_data->cue_track = entry->cue_track;
+        import_data->title = g_strdup(entry->title);
+        import_data->duration = entry->duration;
+        queued = TRUE;
+    }
+    return queued;
+}
+
+static gboolean rclib_db_import_queue_uri(RCLibDbPlaylist *playlist,
+    const gchar *uri, gint position)
+{
+    RCLibDbPrivate *priv = rclib_db_get_priv();
+    GPtrArray *entries;
+    gchar **encodings;
+    gboolean queued;
+    GError *error = NULL;
+    if(priv==NULL || uri==NULL) return FALSE;
+    if(rclib_plist_is_playlist_file(uri))
+    {
+        encodings = rclib_plist_get_encodings();
+        entries = rclib_plist_parse_uri(uri,
+            (const gchar * const *)encodings, NULL, &error);
+        g_strfreev(encodings);
+        if(entries==NULL)
+        {
+            g_message("Cannot import playlist file %s: %s", uri,
+                error!=NULL ? error->message : "unknown error");
+            g_clear_error(&error);
+            return FALSE;
+        }
+        queued = rclib_db_import_queue_entries(playlist, entries, position);
+        g_ptr_array_unref(entries);
+        return queued;
+    }
+    if(playlist==NULL && !rclib_util_is_cue_sheet(uri) &&
+        rclib_db_library_has_uri(uri))
+        return FALSE;
+    rclib_db_import_queue_push(playlist, uri, position);
     return TRUE;
 }
 
@@ -1397,6 +1493,8 @@ static gboolean rclib_db_import_queue_uri(RCLibDbPlaylist *playlist,
  * Import a file into the music library or a playlist. The metadata is
  * read asynchronously, the item will be added after the metadata is
  * read. If the file is a CUE sheet, all tracks in it will be imported.
+ * If the file is a playlist file (see rclib_plist_is_playlist_file()),
+ * the entries in it will be imported.
  * Pending imports can be cancelled by rclib_db_import_cancel().
  */
 
@@ -1835,6 +1933,115 @@ RCLibDbPlaylist *rclib_db_playlist_new(const gchar *name, gint position)
         playlist, position);
     rclib_db_mark_dirty();
     return playlist;
+}
+
+/**
+ * rclib_db_playlist_load:
+ * @uri: the URI of the playlist file
+ * @position: the position of the new playlist, -1 to append
+ * @error: (allow-none): return location for a #GError, or %NULL
+ *
+ * Create a new playlist from a playlist file (M3U, M3U8, PLS or XSPF,
+ * see rclib_plist_parse_uri()). The playlist is named by the title in
+ * the file, or the base name of the file. The entries are imported
+ * asynchronously like rclib_db_import_uri().
+ *
+ * Returns: (transfer none): The new playlist, %NULL if the file cannot
+ *     be read.
+ */
+
+RCLibDbPlaylist *rclib_db_playlist_load(const gchar *uri, gint position,
+    GError **error)
+{
+    RCLibDbPlaylist *playlist;
+    GPtrArray *entries;
+    gchar **encodings, *title = NULL;
+    if(rclib_db_get_priv()==NULL || uri==NULL) return NULL;
+    encodings = rclib_plist_get_encodings();
+    entries = rclib_plist_parse_uri(uri, (const gchar * const *)encodings,
+        &title, error);
+    g_strfreev(encodings);
+    if(entries==NULL) return NULL;
+    if(title==NULL || title[0]=='\0')
+    {
+        g_free(title);
+        title = rclib_util_get_title_from_uri(uri);
+    }
+    playlist = rclib_db_playlist_new(title, position);
+    g_free(title);
+    if(rclib_db_import_queue_entries(playlist, entries, -1))
+    {
+        rclib_db_import_process();
+        rclib_db_import_updated();
+    }
+    g_ptr_array_unref(entries);
+    return playlist;
+}
+
+/**
+ * rclib_db_export_items:
+ * @items: (element-type RCLibDbItem): the items
+ * @uri: the URI of the playlist file
+ * @format: the format, #RCLIB_PLIST_FORMAT_UNKNOWN to use the extension
+ *     name of @uri
+ * @title: (allow-none): the title of the playlist
+ * @error: (allow-none): return location for a #GError, or %NULL
+ *
+ * Write the items into a playlist file, see rclib_plist_save_uri().
+ * Tracks in CUE sheets are written as the CUE sheet (or the audio file
+ * with an embedded CUE sheet) with the track number.
+ *
+ * Returns: Whether the file is written.
+ */
+
+gboolean rclib_db_export_items(const GPtrArray *items, const gchar *uri,
+    RCLibPlistFormat format, const gchar *title, GError **error)
+{
+    const RCLibDbItem *item;
+    RCLibPlistEntry *entry;
+    GPtrArray *entries;
+    gboolean result;
+    guint i;
+    if(items==NULL || uri==NULL) return FALSE;
+    entries = g_ptr_array_new_with_free_func(
+        (GDestroyNotify)rclib_plist_entry_free);
+    for(i=0;i<items->len;i++)
+    {
+        item = g_ptr_array_index(items, i);
+        if(item->type==RCLIB_DB_ITEM_TYPE_CUE && item->cue_uri!=NULL)
+            entry = rclib_plist_entry_new(item->cue_uri);
+        else
+            entry = rclib_plist_entry_new(item->uri);
+        if(item->type!=RCLIB_DB_ITEM_TYPE_NORMAL)
+            entry->cue_track = item->cue_track;
+        entry->title = rclib_db_item_get_display_title(item);
+        entry->duration = item->duration;
+        g_ptr_array_add(entries, entry);
+    }
+    result = rclib_plist_save_uri(uri, format, entries, title, error);
+    g_ptr_array_unref(entries);
+    return result;
+}
+
+/**
+ * rclib_db_playlist_export:
+ * @playlist: the playlist
+ * @uri: the URI of the playlist file
+ * @format: the format, #RCLIB_PLIST_FORMAT_UNKNOWN to use the extension
+ *     name of @uri
+ * @error: (allow-none): return location for a #GError, or %NULL
+ *
+ * Write the playlist into a playlist file, see rclib_db_export_items().
+ *
+ * Returns: Whether the file is written.
+ */
+
+gboolean rclib_db_playlist_export(const RCLibDbPlaylist *playlist,
+    const gchar *uri, RCLibPlistFormat format, GError **error)
+{
+    if(playlist==NULL) return FALSE;
+    return rclib_db_export_items(playlist->items, uri, format,
+        playlist->name, error);
 }
 
 /**

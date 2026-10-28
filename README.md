@@ -74,6 +74,22 @@ the icon is also installed as the application icon.
 * CUE sheets: external `.cue` files and embedded `CUESHEET` tags. Missing
   audio files are looked up by base name with common extensions. Non-UTF-8
   sheets are decoded with the fallback encoding list.
+* Playlist files: M3U (including extended M3U), M3U8, PLS and XSPF.
+  * Load a file as a new playlist (named by the title in the file, or the
+    file name), or import a playlist file into the library or a playlist
+    like an audio file. The order of the entries is kept. Remote streams
+    (such as web radio URLs) are added with the title in the file.
+  * Save a playlist (or any list of tracks) to a file; the format is chosen
+    by the extension name. Files in the folder of the playlist file are
+    written with relative paths, others with absolute paths. Files are
+    written in UTF-8.
+  * M3U and PLS files which are not UTF-8 are decoded with the fallback
+    encoding list. Windows-style relative paths (`dir\song.mp3`) are
+    supported.
+  * CUE tracks are written as the CUE sheet with the track number in an
+    extension (`#RHYTHMCAT-CUE-TRACK:` in M3U, a `meta` element in XSPF),
+    so they can be loaded again exactly; other players play the whole CUE
+    sheet. PLS has no extension, so a CUE sheet is written once.
 * Lyrics: LRC (including enhanced word timestamps and `[offset:]`), SubRip
   (`.srt`), WebVTT (`.vtt`) and ASS/SSA. A lyric file must be in the same
   directory as the audio file and have the same base name. Non-Unicode
@@ -115,8 +131,10 @@ the icon is also installed as the application icon.
   selected items, all selected items are moved together and keep their
   order. Dropping below the last item moves them to the end. The up/down
   buttons move a single item.
+* Load a playlist file as a new playlist, or save the shown track list
+  to a playlist file (buttons below the playlist sidebar, or the menu).
 * Settings: style, lyric display, update metadata when playing, and the
-  fallback encodings for ID3, CUE and lyrics.
+  fallback encodings for ID3, CUE, lyrics and playlist files.
 * Equalizer window (header bar button, menu, or Ctrl+E): an on/off switch,
   a preset list and a slider for each band. Moving a slider changes the
   custom preset, starting from the gains of the current preset. "Reset
@@ -128,7 +146,8 @@ the icon is also installed as the application icon.
 
 Press `?` in the program for the key list. Main keys: Enter play, Space
 pause, `r` repeat mode, `n`/`p` next/previous, ←/→ seek, `+`/`-` volume,
-`g` grouping, `a` add a file/folder, `c` cancel import, `A` add to playlist, `N`/`R`/`D` new/rename/delete
+`g` grouping, `a` add a file/folder/playlist file, `c` cancel import,
+`L`/`W` load/save a playlist file, `A` add to playlist, `N`/`R`/`D` new/rename/delete
 playlist, `J`/`K` reorder, `e` equalizer on/off, `E` next equalizer preset,
 `q` quit. The header shows the current equalizer preset. Log output goes to
 `~/.cache/RhythmCat3/tui.log`.

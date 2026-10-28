@@ -1887,13 +1887,15 @@ static void rc_ui_window_import_files_action(GSimpleAction *action,
     GtkFileFilter *filter;
     GListStore *filters;
     static const gchar *suffixes[] = {"mp3", "ogg", "oga", "opus", "flac",
-        "wav", "wv", "ape", "m4a", "aac", "wma", "aiff", "mka", "cue", NULL};
+        "wav", "wv", "ape", "m4a", "aac", "wma", "aiff", "mka", "cue",
+        "m3u", "m3u8", "pls", "xspf", NULL};
     guint i;
     dialog = gtk_file_dialog_new();
     gtk_file_dialog_set_title(dialog, _("Import Files"));
     filters = g_list_store_new(GTK_TYPE_FILE_FILTER);
     filter = gtk_file_filter_new();
-    gtk_file_filter_set_name(filter, _("Audio Files and CUE Sheets"));
+    gtk_file_filter_set_name(filter, _("Audio Files, CUE Sheets and "
+        "Playlists"));
     gtk_file_filter_add_mime_type(filter, "audio/*");
     for(i=0;suffixes[i]!=NULL;i++)
         gtk_file_filter_add_suffix(filter, suffixes[i]);
@@ -2003,6 +2005,160 @@ static gboolean rc_ui_window_drop_cb(GtkDropTarget *target,
     return TRUE;
 }
 
+static void rc_ui_window_show_error(const gchar *message,
+    const GError *error)
+{
+    GtkAlertDialog *dialog;
+    dialog = gtk_alert_dialog_new("%s", message);
+    if(error!=NULL) gtk_alert_dialog_set_detail(dialog, error->message);
+    gtk_alert_dialog_show(dialog, GTK_WINDOW(window_priv.window));
+    g_object_unref(dialog);
+}
+
+static GListModel *rc_ui_window_get_playlist_filters()
+{
+    GtkFileFilter *filter;
+    GListStore *filters;
+    filters = g_list_store_new(GTK_TYPE_FILE_FILTER);
+    filter = gtk_file_filter_new();
+    gtk_file_filter_set_name(filter, _("Playlists (M3U, M3U8, PLS, "
+        "XSPF)"));
+    gtk_file_filter_add_suffix(filter, "m3u");
+    gtk_file_filter_add_suffix(filter, "m3u8");
+    gtk_file_filter_add_suffix(filter, "pls");
+    gtk_file_filter_add_suffix(filter, "xspf");
+    g_list_store_append(filters, filter);
+    g_object_unref(filter);
+    filter = gtk_file_filter_new();
+    gtk_file_filter_set_name(filter, _("All Files"));
+    gtk_file_filter_add_pattern(filter, "*");
+    g_list_store_append(filters, filter);
+    g_object_unref(filter);
+    return G_LIST_MODEL(filters);
+}
+
+static void rc_ui_window_load_playlist_cb(GObject *source,
+    GAsyncResult *result, gpointer data)
+{
+    RCUiWindowPrivate *priv = &window_priv;
+    RCLibDbPlaylist *playlist;
+    GError *error = NULL;
+    GFile *file;
+    gchar *uri;
+    file = gtk_file_dialog_open_finish(GTK_FILE_DIALOG(source), result,
+        NULL);
+    if(file==NULL) return;
+    uri = g_file_get_uri(file);
+    playlist = rclib_db_playlist_load(uri, -1, &error);
+    if(playlist!=NULL)
+    {
+        gtk_stack_set_visible_child_name(GTK_STACK(priv->sidebar_stack),
+            "playlists");
+        rc_ui_window_set_view_playlist(playlist);
+        rc_ui_window_reload_playlists();
+    }
+    else rc_ui_window_show_error(_("Cannot load the playlist."), error);
+    g_clear_error(&error);
+    g_free(uri);
+    g_object_unref(file);
+}
+
+static void rc_ui_window_load_playlist_action(GSimpleAction *action,
+    GVariant *parameter, gpointer data)
+{
+    GtkFileDialog *dialog;
+    GListModel *filters;
+    dialog = gtk_file_dialog_new();
+    gtk_file_dialog_set_title(dialog, _("Load Playlist"));
+    filters = rc_ui_window_get_playlist_filters();
+    gtk_file_dialog_set_filters(dialog, filters);
+    g_object_unref(filters);
+    gtk_file_dialog_open(dialog, GTK_WINDOW(window_priv.window), NULL,
+        rc_ui_window_load_playlist_cb, NULL);
+    g_object_unref(dialog);
+}
+
+/* Get the title of the shown track list, used as the playlist title */
+static const gchar *rc_ui_window_get_view_title()
+{
+    RCUiWindowPrivate *priv = &window_priv;
+    if(priv->view_type==RC_UI_VIEW_PLAYLIST && priv->view_playlist!=NULL)
+        return priv->view_playlist->name;
+    if(!priv->group_all && priv->group_mode!=RCLIB_DB_GROUP_NONE &&
+        priv->group!=NULL)
+        return priv->group;
+    return _("Music Library");
+}
+
+static void rc_ui_window_save_playlist_cb(GObject *source,
+    GAsyncResult *result, gpointer data)
+{
+    RCUiWindowPrivate *priv = &window_priv;
+    GPtrArray *items;
+    RCUiTrack *track;
+    GError *error = NULL;
+    GFile *file;
+    gchar *uri, *fixed, *name;
+    guint i, n;
+    file = gtk_file_dialog_save_finish(GTK_FILE_DIALOG(source), result,
+        NULL);
+    if(file==NULL) return;
+    uri = g_file_get_uri(file);
+    g_object_unref(file);
+    if(rclib_plist_get_format(uri)==RCLIB_PLIST_FORMAT_UNKNOWN)
+    {
+        fixed = g_strconcat(uri, ".m3u8", NULL);
+        g_free(uri);
+        uri = fixed;
+    }
+    /* Save the items which are shown in the track list */
+    n = g_list_model_get_n_items(G_LIST_MODEL(priv->track_store));
+    items = g_ptr_array_new_with_free_func(
+        (GDestroyNotify)rclib_db_item_unref);
+    for(i=0;i<n;i++)
+    {
+        track = g_list_model_get_item(G_LIST_MODEL(priv->track_store), i);
+        g_ptr_array_add(items, rclib_db_item_ref(rc_ui_track_get_item(
+            track)));
+        g_object_unref(track);
+    }
+    if(rclib_db_export_items(items, uri, RCLIB_PLIST_FORMAT_UNKNOWN,
+        rc_ui_window_get_view_title(), &error))
+    {
+        name = g_filename_from_uri(uri, NULL, NULL);
+        fixed = g_strdup_printf(g_dngettext(NULL, "Saved %u track to %s.",
+            "Saved %u tracks to %s.", items->len), items->len,
+            name!=NULL ? name : uri);
+        gtk_label_set_text(GTK_LABEL(priv->status_label), fixed);
+        g_free(fixed);
+        g_free(name);
+    }
+    else rc_ui_window_show_error(_("Cannot save the playlist."), error);
+    g_clear_error(&error);
+    g_ptr_array_unref(items);
+    g_free(uri);
+}
+
+static void rc_ui_window_save_playlist_action(GSimpleAction *action,
+    GVariant *parameter, gpointer data)
+{
+    GtkFileDialog *dialog;
+    GListModel *filters;
+    gchar *name;
+    dialog = gtk_file_dialog_new();
+    gtk_file_dialog_set_title(dialog, _("Save Playlist"));
+    filters = rc_ui_window_get_playlist_filters();
+    gtk_file_dialog_set_filters(dialog, filters);
+    g_object_unref(filters);
+    name = g_strdup_printf("%s.m3u8", rc_ui_window_get_view_title());
+    g_strdelimit(name, "/\\", '_');
+    gtk_file_dialog_set_initial_name(dialog, name);
+    g_free(name);
+    gtk_file_dialog_save(dialog, GTK_WINDOW(window_priv.window), NULL,
+        rc_ui_window_save_playlist_cb, NULL);
+    g_object_unref(dialog);
+}
+
 static const GActionEntry window_actions[] = {
     {"play-pause", rc_ui_window_play_pause_action, NULL, NULL, NULL},
     {"stop", rc_ui_window_stop_action, NULL, NULL, NULL},
@@ -2012,6 +2168,8 @@ static const GActionEntry window_actions[] = {
     {"import-folder", rc_ui_window_import_folder_action, NULL, NULL, NULL},
     {"refresh-all", rc_ui_window_refresh_all_action, NULL, NULL, NULL},
     {"cancel-import", rc_ui_window_cancel_import_action, NULL, NULL, NULL},
+    {"load-playlist", rc_ui_window_load_playlist_action, NULL, NULL, NULL},
+    {"save-playlist", rc_ui_window_save_playlist_action, NULL, NULL, NULL},
     {"settings", rc_ui_window_settings_action, NULL, NULL, NULL},
     {"equalizer", rc_ui_window_equalizer_action, NULL, NULL, NULL},
     {"about", rc_ui_window_about_action, NULL, NULL, NULL},

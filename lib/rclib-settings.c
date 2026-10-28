@@ -74,6 +74,9 @@ static void rclib_settings_set_defaults(GKeyFile *keyfile)
     g_key_file_set_string_list(keyfile, RCLIB_SETTINGS_GROUP_ENCODING,
         RCLIB_SETTINGS_KEY_LYRIC_ENCODINGS,
         (const gchar * const *)encodings, g_strv_length(encodings));
+    g_key_file_set_string_list(keyfile, RCLIB_SETTINGS_GROUP_ENCODING,
+        RCLIB_SETTINGS_KEY_PLAYLIST_ENCODINGS,
+        (const gchar * const *)encodings, g_strv_length(encodings));
     g_key_file_set_boolean(keyfile, RCLIB_SETTINGS_GROUP_LYRIC,
         RCLIB_SETTINGS_KEY_LYRIC_ENABLED, TRUE);
     g_key_file_set_integer(keyfile, RCLIB_SETTINGS_GROUP_LIBRARY,

@@ -193,6 +193,25 @@
                 </layout>
               </object>
             </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="yes">Playlist files</property>
+                <property name="xalign">0</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">3</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkEntry" id="playlist_entry">
+                <property name="hexpand">True</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">3</property>
+                </layout>
+              </object>
+            </child>
           </object>
         </child>
         <child>

@@ -470,6 +470,221 @@ static void test_player_next()
     g_free(db_file);
 }
 
+static const RCLibPlistEntry *test_entry(const GPtrArray *entries,
+    guint index)
+{
+    g_assert_cmpuint(index, <, entries->len);
+    return g_ptr_array_index(entries, index);
+}
+
+static void test_plist_parse()
+{
+    const gchar *m3u =
+        "#EXTM3U\r\n"
+        "#PLAYLIST:Cat Songs\r\n"
+        "#EXTINF:123,Cat Band - Meow, Meow\r\n"
+        "music/a song.mp3\r\n"
+        "\r\n"
+        "# a comment\r\n"
+        "#EXTINF:-1 tvg-name=\"x,y\",Radio\r\n"
+        "http://radio.example.com/stream\r\n"
+        "/abs/b.flac\r\n"
+        "sub\\c.ogg\r\n"
+        "C:\\Music\\d.mp3\r\n"
+        "#RHYTHMCAT-CUE-TRACK:2\r\n"
+        "album.cue\r\n"
+        "file:///x/y%20z.wav\r\n";
+    /* "音乐.mp3" in GB18030 */
+    const gchar legacy[] = {(gchar)0xD2, (gchar)0xF4, (gchar)0xC0,
+        (gchar)0xD6, '.', 'm', 'p', '3', '\n', 0};
+    const gchar *pls =
+        "[playlist]\n"
+        "File2=two.ogg\n"
+        "Title1=First\n"
+        "File1=/music/one.mp3\n"
+        "Length1=61\n"
+        "NumberOfEntries=2\n"
+        "Version=2\n";
+    const gchar *xspf =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        "<playlist version=\"1\" xmlns=\"http://xspf.org/ns/0/\">\n"
+        "  <title>XSPF &amp; Cats</title>\n"
+        "  <trackList>\n"
+        "    <track><location>a%20b.flac</location>"
+        "<title>A &lt;B&gt;</title><duration>1500</duration></track>\n"
+        "    <track><location>file:///music/c.cue</location>"
+        "<meta rel=\"urn:rhythmcat:cue-track\">3</meta></track>\n"
+        "    <track><title>No location</title></track>\n"
+        "  </trackList>\n"
+        "</playlist>\n";
+    const gchar *encodings[] = {"GB18030", NULL};
+    GPtrArray *entries;
+    GError *error = NULL;
+    gchar *title = NULL;
+
+    g_assert_cmpint(rclib_plist_get_format("a/b.M3U8"), ==,
+        RCLIB_PLIST_FORMAT_M3U8);
+    g_assert_cmpint(rclib_plist_get_format("x.xspf"), ==,
+        RCLIB_PLIST_FORMAT_XSPF);
+    g_assert_cmpint(rclib_plist_get_format("x.mp3"), ==,
+        RCLIB_PLIST_FORMAT_UNKNOWN);
+    g_assert_true(rclib_plist_is_playlist_file("file:///a/b.pls"));
+
+    entries = rclib_plist_parse_data(m3u, -1, "file:///home/cat/list.m3u",
+        RCLIB_PLIST_FORMAT_UNKNOWN, NULL, &title, &error);
+    g_assert_no_error(error);
+    g_assert_cmpstr(title, ==, "Cat Songs");
+    g_free(title);
+    g_assert_cmpuint(entries->len, ==, 6);
+    g_assert_cmpstr(test_entry(entries, 0)->uri, ==,
+        "file:///home/cat/music/a%20song.mp3");
+    g_assert_cmpstr(test_entry(entries, 0)->title, ==,
+        "Cat Band - Meow, Meow");
+    g_assert_cmpint(test_entry(entries, 0)->duration, ==, 123 * GST_SECOND);
+    g_assert_cmpstr(test_entry(entries, 1)->uri, ==,
+        "http://radio.example.com/stream");
+    g_assert_cmpstr(test_entry(entries, 1)->title, ==, "Radio");
+    g_assert_cmpint(test_entry(entries, 1)->duration, ==, 0);
+    g_assert_cmpstr(test_entry(entries, 2)->uri, ==, "file:///abs/b.flac");
+    g_assert_null(test_entry(entries, 2)->title);
+    g_assert_cmpstr(test_entry(entries, 3)->uri, ==,
+        "file:///home/cat/sub/c.ogg");
+    /* The Windows path is skipped */
+    g_assert_cmpstr(test_entry(entries, 4)->uri, ==,
+        "file:///home/cat/album.cue");
+    g_assert_cmpint(test_entry(entries, 4)->cue_track, ==, 2);
+    g_assert_cmpstr(test_entry(entries, 5)->uri, ==, "file:///x/y%20z.wav");
+    g_assert_cmpint(test_entry(entries, 5)->cue_track, ==, 0);
+    g_ptr_array_unref(entries);
+
+    /* Legacy encoding in M3U, M3U8 is always UTF-8 */
+    entries = rclib_plist_parse_data(legacy, -1, "file:///m/list.m3u",
+        RCLIB_PLIST_FORMAT_UNKNOWN, encodings, NULL, &error);
+    g_assert_no_error(error);
+    g_assert_cmpuint(entries->len, ==, 1);
+    g_assert_cmpstr(test_entry(entries, 0)->uri, ==,
+        "file:///m/%E9%9F%B3%E4%B9%90.mp3");
+    g_ptr_array_unref(entries);
+
+    entries = rclib_plist_parse_data(pls, -1, "file:///m/list.pls",
+        RCLIB_PLIST_FORMAT_UNKNOWN, NULL, NULL, &error);
+    g_assert_no_error(error);
+    g_assert_cmpuint(entries->len, ==, 2);
+    g_assert_cmpstr(test_entry(entries, 0)->uri, ==,
+        "file:///music/one.mp3");
+    g_assert_cmpstr(test_entry(entries, 0)->title, ==, "First");
+    g_assert_cmpint(test_entry(entries, 0)->duration, ==, 61 * GST_SECOND);
+    g_assert_cmpstr(test_entry(entries, 1)->uri, ==, "file:///m/two.ogg");
+    g_ptr_array_unref(entries);
+    entries = rclib_plist_parse_data("File1=a.mp3\n", -1, NULL,
+        RCLIB_PLIST_FORMAT_PLS, NULL, NULL, &error);
+    g_assert_null(entries);
+    g_assert_error(error, RCLIB_PLIST_ERROR, RCLIB_PLIST_ERROR_INVALID);
+    g_clear_error(&error);
+
+    /* The format is detected by the content */
+    entries = rclib_plist_parse_data(xspf, -1, "file:///m/list",
+        RCLIB_PLIST_FORMAT_UNKNOWN, NULL, &title, &error);
+    g_assert_no_error(error);
+    g_assert_cmpstr(title, ==, "XSPF & Cats");
+    g_free(title);
+    g_assert_cmpuint(entries->len, ==, 2);
+    g_assert_cmpstr(test_entry(entries, 0)->uri, ==,
+        "file:///m/a%20b.flac");
+    g_assert_cmpstr(test_entry(entries, 0)->title, ==, "A <B>");
+    g_assert_cmpint(test_entry(entries, 0)->duration, ==,
+        1500 * GST_MSECOND);
+    g_assert_cmpstr(test_entry(entries, 1)->uri, ==,
+        "file:///music/c.cue");
+    g_assert_cmpint(test_entry(entries, 1)->cue_track, ==, 3);
+    g_ptr_array_unref(entries);
+    entries = rclib_plist_parse_data("<playlist><trackList>", -1, NULL,
+        RCLIB_PLIST_FORMAT_XSPF, NULL, NULL, &error);
+    g_assert_null(entries);
+    g_assert_nonnull(error);
+    g_clear_error(&error);
+}
+
+static void test_plist_write()
+{
+    static const RCLibPlistFormat formats[] = {RCLIB_PLIST_FORMAT_M3U,
+        RCLIB_PLIST_FORMAT_M3U8, RCLIB_PLIST_FORMAT_PLS,
+        RCLIB_PLIST_FORMAT_XSPF};
+    RCLibPlistEntry *entry;
+    GPtrArray *entries, *parsed;
+    GError *error = NULL;
+    gchar *uri, *data, *title;
+    guint i, j;
+    entries = g_ptr_array_new_with_free_func(
+        (GDestroyNotify)rclib_plist_entry_free);
+    entry = rclib_plist_entry_new("file:///lists/sub/%E9%9F%B3%20&.mp3");
+    entry->title = g_strdup("Line\nbreak & <tag>");
+    entry->duration = 90 * GST_SECOND;
+    g_ptr_array_add(entries, entry);
+    entry = rclib_plist_entry_new("file:///other/b.flac");
+    g_ptr_array_add(entries, entry);
+    entry = rclib_plist_entry_new("http://radio.example.com/s?a=1&b=2");
+    entry->title = g_strdup("Radio");
+    g_ptr_array_add(entries, entry);
+    entry = rclib_plist_entry_new("file:///lists/album.cue");
+    entry->cue_track = 1;
+    g_ptr_array_add(entries, entry);
+    entry = rclib_plist_entry_new("file:///lists/album.cue");
+    entry->cue_track = 2;
+    g_ptr_array_add(entries, entry);
+    for(i=0;i<G_N_ELEMENTS(formats);i++)
+    {
+        uri = g_strdup_printf("file:///lists/list.%s",
+            rclib_plist_format_get_extension(formats[i]));
+        data = rclib_plist_build_data(entries, uri, formats[i], "My <List>");
+        g_assert_nonnull(data);
+        if(formats[i]!=RCLIB_PLIST_FORMAT_XSPF)
+        {
+            /* Relative paths for files in the directory */
+            g_assert_nonnull(strstr(data, "sub/音 &.mp3"));
+            g_assert_nonnull(strstr(data, "/other/b.flac"));
+        }
+        parsed = rclib_plist_parse_data(data, -1, uri,
+            RCLIB_PLIST_FORMAT_UNKNOWN, NULL, &title, &error);
+        g_assert_no_error(error);
+        if(formats[i]==RCLIB_PLIST_FORMAT_PLS)
+        {
+            /* The CUE sheet is written once, and no title */
+            g_assert_cmpuint(parsed->len, ==, 4);
+            g_assert_null(title);
+        }
+        else
+        {
+            g_assert_cmpuint(parsed->len, ==, 5);
+            g_assert_cmpstr(title, ==, "My <List>");
+            g_assert_cmpint(test_entry(parsed, 4)->cue_track, ==, 2);
+        }
+        g_free(title);
+        for(j=0;j<parsed->len;j++)
+        {
+            g_assert_cmpstr(test_entry(parsed, j)->uri, ==,
+                test_entry(entries, j)->uri);
+        }
+        g_assert_cmpint(test_entry(parsed, 0)->duration, ==,
+            90 * GST_SECOND);
+        g_assert_cmpstr(test_entry(parsed, 0)->title, ==,
+            formats[i]==RCLIB_PLIST_FORMAT_XSPF ? "Line\nbreak & <tag>" :
+            "Line break & <tag>");
+        g_assert_cmpstr(test_entry(parsed, 2)->title, ==, "Radio");
+        g_ptr_array_unref(parsed);
+        g_free(data);
+        g_free(uri);
+    }
+    uri = g_strdup_printf("file://%s/unknown.txt", test_dir);
+    g_assert_false(rclib_plist_save_uri(uri, RCLIB_PLIST_FORMAT_UNKNOWN,
+        entries, NULL, &error));
+    g_assert_error(error, RCLIB_PLIST_ERROR,
+        RCLIB_PLIST_ERROR_UNKNOWN_FORMAT);
+    g_clear_error(&error);
+    g_free(uri);
+    g_ptr_array_unref(entries);
+}
+
 static void test_import_wait(guint timeout_ms)
 {
     gint64 end = g_get_monotonic_time() + timeout_ms * 1000;
@@ -545,6 +760,132 @@ static void test_import_cancel()
     g_free(db_file);
 }
 
+static void test_plist_db()
+{
+    RCLibDbPlaylist *playlist, *loaded;
+    RCLibDbItem *item;
+    const gchar *names[] = {"p1.wav", "p2.wav", "p3.wav"};
+    gchar *db_file, *dir, *path, *uri, *list_uri, *text, *cue_path;
+    GError *error = NULL;
+    guint i;
+    db_file = g_build_filename(test_dir, "plist.json.gz", NULL);
+    g_assert_true(rclib_tag_init());
+    g_assert_true(rclib_db_init(db_file));
+    dir = g_build_filename(test_dir, "plist", NULL);
+    g_assert_cmpint(g_mkdir_with_parents(dir, 0700), ==, 0);
+    for(i=0;i<G_N_ELEMENTS(names);i++)
+    {
+        path = g_build_filename("plist", names[i], NULL);
+        g_free(test_make_wav(path));
+        g_free(path);
+    }
+    cue_path = g_build_filename(dir, "album.cue", NULL);
+    g_assert_true(g_file_set_contents(cue_path,
+        "TITLE \"Album\"\n"
+        "FILE \"p3.wav\" WAVE\n"
+        "  TRACK 01 AUDIO\n"
+        "    TITLE \"One\"\n"
+        "    INDEX 01 00:00:00\n"
+        "  TRACK 02 AUDIO\n"
+        "    TITLE \"Two\"\n"
+        "    INDEX 01 00:00:03\n", -1, NULL));
+
+    /* A playlist with files, a CUE track and a stream, the order is
+     * kept */
+    path = g_build_filename(dir, "list.m3u8", NULL);
+    g_assert_true(g_file_set_contents(path,
+        "#EXTM3U\n#PLAYLIST:Loaded\n"
+        "p2.wav\n"
+        "#RHYTHMCAT-CUE-TRACK:2\nalbum.cue\n"
+        "#EXTINF:-1,Cat Radio\nhttp://radio.example.com/stream\n"
+        "p1.wav\n"
+        "missing.wav\n", -1, NULL));
+    list_uri = g_filename_to_uri(path, NULL, NULL);
+    g_free(path);
+    loaded = rclib_db_playlist_load(list_uri, -1, &error);
+    g_assert_no_error(error);
+    g_assert_nonnull(loaded);
+    g_assert_cmpstr(loaded->name, ==, "Loaded");
+    test_import_wait(10000);
+    g_assert_cmpuint(rclib_db_get_import_pending(), ==, 0);
+    g_assert_cmpuint(loaded->items->len, ==, 4);
+    item = g_ptr_array_index(loaded->items, 0);
+    g_assert_true(g_str_has_suffix(item->uri, "/p2.wav"));
+    item = g_ptr_array_index(loaded->items, 1);
+    g_assert_cmpint(item->type, ==, RCLIB_DB_ITEM_TYPE_CUE);
+    g_assert_cmpint(item->cue_track, ==, 2);
+    g_assert_cmpstr(item->title, ==, "Two");
+    item = g_ptr_array_index(loaded->items, 2);
+    g_assert_cmpstr(item->uri, ==, "http://radio.example.com/stream");
+    g_assert_cmpstr(item->title, ==, "Cat Radio");
+    item = g_ptr_array_index(loaded->items, 3);
+    g_assert_true(g_str_has_suffix(item->uri, "/p1.wav"));
+
+    /* Export and load again */
+    path = g_build_filename(dir, "export.xspf", NULL);
+    uri = g_filename_to_uri(path, NULL, NULL);
+    g_free(path);
+    g_assert_true(rclib_db_playlist_export(loaded, uri,
+        RCLIB_PLIST_FORMAT_UNKNOWN, &error));
+    g_assert_no_error(error);
+    playlist = rclib_db_playlist_load(uri, -1, &error);
+    g_assert_no_error(error);
+    test_import_wait(10000);
+    g_assert_cmpuint(playlist->items->len, ==, 4);
+    for(i=0;i<4;i++)
+    {
+        RCLibDbItem *a = g_ptr_array_index(loaded->items, i);
+        RCLibDbItem *b = g_ptr_array_index(playlist->items, i);
+        g_assert_cmpstr(a->uri, ==, b->uri);
+        g_assert_cmpint(a->cue_track, ==, b->cue_track);
+    }
+    g_free(uri);
+
+    /* Import a playlist file into the library */
+    rclib_db_library_import_uri(list_uri);
+    test_import_wait(10000);
+    g_assert_cmpuint(rclib_db_library_get_items()->len, ==, 4);
+
+    /* No title in the file: named by the file name */
+    path = g_build_filename(dir, "Night Songs.pls", NULL);
+    g_assert_true(g_file_set_contents(path,
+        "[playlist]\nFile1=p1.wav\nNumberOfEntries=1\n", -1, NULL));
+    uri = g_filename_to_uri(path, NULL, NULL);
+    playlist = rclib_db_playlist_load(uri, -1, &error);
+    g_assert_no_error(error);
+    g_assert_cmpstr(playlist->name, ==, "Night Songs");
+    test_import_wait(10000);
+    g_assert_cmpuint(playlist->items->len, ==, 1);
+    g_free(uri);
+    g_free(path);
+    uri = g_strdup_printf("file://%s/none.m3u", dir);
+    g_assert_null(rclib_db_playlist_load(uri, -1, &error));
+    g_assert_nonnull(error);
+    g_clear_error(&error);
+    g_free(uri);
+
+    /* Export a CUE track to M3U */
+    path = g_build_filename(dir, "export.m3u", NULL);
+    uri = g_filename_to_uri(path, NULL, NULL);
+    g_assert_true(rclib_db_playlist_export(loaded, uri,
+        RCLIB_PLIST_FORMAT_UNKNOWN, &error));
+    g_assert_true(g_file_get_contents(path, &text, NULL, NULL));
+    g_assert_nonnull(strstr(text, ",Two\n"
+        "#RHYTHMCAT-CUE-TRACK:2\nalbum.cue\n"));
+    g_assert_nonnull(strstr(text, "#EXTINF:-1,Cat Radio\n"
+        "http://radio.example.com/stream\n"));
+    g_free(text);
+    g_free(uri);
+    g_free(path);
+
+    rclib_db_exit();
+    rclib_tag_exit();
+    g_free(cue_path);
+    g_free(list_uri);
+    g_free(dir);
+    g_free(db_file);
+}
+
 static void test_instance()
 {
     GError *error = NULL;
@@ -573,6 +914,9 @@ int main(int argc, char *argv[])
     g_test_add_func("/lyric/vtt-ass", test_lyric_vtt_ass);
     g_test_add_func("/db/library-playlist", test_db);
     g_test_add_func("/db/import-cancel", test_import_cancel);
+    g_test_add_func("/plist/parse", test_plist_parse);
+    g_test_add_func("/plist/write", test_plist_write);
+    g_test_add_func("/plist/db", test_plist_db);
     g_test_add_func("/instance/lock", test_instance);
     g_test_add_func("/core/equalizer", test_eq);
     g_test_add_func("/player/next", test_player_next);

@@ -594,12 +594,13 @@ static void rc_tui_draw_help(gint top, gint height)
         N_("Library and playlists"),
         N_("  Tab        Switch between sources and tracks"),
         N_("  g          Cycle library grouping (none, artist, album)"),
-        N_("  a          Add a file, CUE sheet or folder"),
+        N_("  a          Add a file, CUE sheet, playlist file or folder"),
         N_("  c          Cancel the pending imports"),
         N_("  A          Add the selected track to a playlist"),
         N_("  d / Del    Remove the selected track"),
         N_("  J / K      Move the selected track or playlist down / up"),
         N_("  N / R / D  New / rename / delete playlist"),
+        N_("  L / W      Load a playlist file / save the track list to a file"),
         N_("  u / U      Refresh metadata of the track / all tracks"),
         N_("  l          Toggle lyric display"),
         N_("  q          Quit                    ?   Close this help"),
@@ -722,11 +723,10 @@ static void rc_tui_prompt_key(gint ret, wint_t key)
 
 /* ----- Commands ----- */
 
-static void rc_tui_add_path_cb(const gchar *text, gpointer data)
+/* Get the absolute path (or the URI) of the path typed by the user */
+static gchar *rc_tui_get_path(const gchar *text)
 {
-    RCLibDbPlaylist *playlist = rc_tui_get_current_playlist();
-    gchar *path, *uri;
-    GFile *file;
+    gchar *path;
     if(g_str_has_prefix(text, "~/"))
         path = g_build_filename(g_get_home_dir(), text+2, NULL);
     else if(g_path_is_absolute(text) || strstr(text, "://")!=NULL)
@@ -737,8 +737,22 @@ static void rc_tui_add_path_cb(const gchar *text, gpointer data)
         path = g_build_filename(cwd, text, NULL);
         g_free(cwd);
     }
-    if(strstr(path, "://")!=NULL) file = g_file_new_for_uri(path);
-    else file = g_file_new_for_path(path);
+    return path;
+}
+
+static GFile *rc_tui_get_file(const gchar *path)
+{
+    if(strstr(path, "://")!=NULL) return g_file_new_for_uri(path);
+    return g_file_new_for_path(path);
+}
+
+static void rc_tui_add_path_cb(const gchar *text, gpointer data)
+{
+    RCLibDbPlaylist *playlist = rc_tui_get_current_playlist();
+    gchar *path, *uri;
+    GFile *file;
+    path = rc_tui_get_path(text);
+    file = rc_tui_get_file(path);
     uri = g_file_get_uri(file);
     switch(g_file_query_file_type(file, G_FILE_QUERY_INFO_NONE, NULL))
     {
@@ -754,6 +768,71 @@ static void rc_tui_add_path_cb(const gchar *text, gpointer data)
             rc_tui_set_message(_("Importing %s…"), path);
             break;
     }
+    g_free(uri);
+    g_object_unref(file);
+    g_free(path);
+}
+
+static void rc_tui_load_playlist_cb(const gchar *text, gpointer data)
+{
+    RCLibDbPlaylist *playlist;
+    GError *error = NULL;
+    GFile *file;
+    gchar *path, *uri;
+    path = rc_tui_get_path(text);
+    file = rc_tui_get_file(path);
+    uri = g_file_get_uri(file);
+    playlist = rclib_db_playlist_load(uri, -1, &error);
+    if(playlist!=NULL)
+        rc_tui_set_message(_("Playlist “%s” is loaded."), playlist->name);
+    else
+    {
+        rc_tui_set_message(_("Cannot load the playlist: %s"),
+            error!=NULL ? error->message : path);
+    }
+    g_clear_error(&error);
+    g_free(uri);
+    g_object_unref(file);
+    g_free(path);
+}
+
+static void rc_tui_save_playlist_cb(const gchar *text, gpointer data)
+{
+    RCTuiPrivate *priv = &tui_priv;
+    RCTuiSource *source = rc_tui_get_source();
+    GError *error = NULL;
+    GFile *file;
+    gchar *path, *uri, *fixed, *title = NULL;
+    path = rc_tui_get_path(text);
+    if(rclib_plist_get_format(path)==RCLIB_PLIST_FORMAT_UNKNOWN)
+    {
+        fixed = g_strconcat(path, ".m3u8", NULL);
+        g_free(path);
+        path = fixed;
+    }
+    file = rc_tui_get_file(path);
+    uri = g_file_get_uri(file);
+    if(priv->tracks_dirty || priv->tracks==NULL) rc_tui_rebuild_tracks();
+    if(source!=NULL && source->type==RC_TUI_SOURCE_PLAYLIST)
+        title = g_strdup(source->playlist->name);
+    else if(source!=NULL && source->type==RC_TUI_SOURCE_GROUP &&
+        source->group!=NULL)
+        title = g_strdup(source->group);
+    else title = g_strdup(_("Music Library"));
+    if(rclib_db_export_items(priv->tracks, uri, RCLIB_PLIST_FORMAT_UNKNOWN,
+        title, &error))
+    {
+        rc_tui_set_message(g_dngettext(NULL, "Saved %u track to %s.",
+            "Saved %u tracks to %s.", priv->tracks->len),
+            priv->tracks->len, path);
+    }
+    else
+    {
+        rc_tui_set_message(_("Cannot save the playlist: %s"),
+            error!=NULL ? error->message : path);
+    }
+    g_clear_error(&error);
+    g_free(title);
     g_free(uri);
     g_object_unref(file);
     g_free(path);
@@ -1070,6 +1149,19 @@ static void rc_tui_handle_key(gint ret, wint_t key)
         case 'N':
             rc_tui_prompt(_("New playlist name: "), NULL,
                 rc_tui_new_playlist_cb, NULL, NULL);
+            break;
+        case 'L':
+            rc_tui_prompt(_("Load playlist file (M3U, M3U8, PLS, XSPF): "),
+                NULL, rc_tui_load_playlist_cb, NULL, NULL);
+            break;
+        case 'W':
+            label = g_strdup_printf("%s.m3u8", (source=rc_tui_get_source())!=
+                NULL && source->type==RC_TUI_SOURCE_PLAYLIST ?
+                source->playlist->name : "playlist");
+            g_strdelimit(label, "/", '_');
+            rc_tui_prompt(_("Save the track list to (.m3u, .m3u8, .pls, "
+                ".xspf): "), label, rc_tui_save_playlist_cb, NULL, NULL);
+            g_free(label);
             break;
         case 'R':
             source = rc_tui_get_source();

@@ -13,6 +13,14 @@
         <attribute name="action">win.import-folder</attribute>
       </item>
       <item>
+        <attribute name="label" translatable="yes">_Load Playlist…</attribute>
+        <attribute name="action">win.load-playlist</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Save Playlist…</attribute>
+        <attribute name="action">win.save-playlist</attribute>
+      </item>
+      <item>
         <attribute name="label" translatable="yes">_Refresh All Metadata</attribute>
         <attribute name="action">win.refresh-all</attribute>
       </item>
@@ -427,6 +435,20 @@
                                   <object class="GtkButton" id="playlist_delete_button">
                                     <property name="icon-name">list-remove-symbolic</property>
                                     <property name="tooltip-text" translatable="yes">Delete Playlist</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkButton" id="playlist_load_button">
+                                    <property name="icon-name">document-open-symbolic</property>
+                                    <property name="tooltip-text" translatable="yes">Load Playlist from File</property>
+                                    <property name="action-name">win.load-playlist</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkButton" id="playlist_save_button">
+                                    <property name="icon-name">document-save-as-symbolic</property>
+                                    <property name="tooltip-text" translatable="yes">Save Playlist to File</property>
+                                    <property name="action-name">win.save-playlist</property>
                                   </object>
                                 </child>
                                 <child>

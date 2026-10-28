@@ -29,6 +29,7 @@
 #include "rclib-instance.h"
 #include "rclib-lyric.h"
 #include "rclib-player.h"
+#include "rclib-plist.h"
 #include "rclib-settings.h"
 #include "rclib-tag.h"
 #include "rclib-util.h"

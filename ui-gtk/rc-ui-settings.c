@@ -35,6 +35,7 @@ typedef struct RCUiSettingsPrivate
     GtkWidget *id3_entry;
     GtkWidget *cue_entry;
     GtkWidget *lyric_entry;
+    GtkWidget *playlist_entry;
     GtkWidget *encoding_status_label;
 }RCUiSettingsPrivate;
 
@@ -128,6 +129,8 @@ static void rc_ui_settings_save_encodings()
         RCLIB_SETTINGS_KEY_CUE_ENCODINGS, invalid);
     rc_ui_settings_save_entry(priv->lyric_entry,
         RCLIB_SETTINGS_KEY_LYRIC_ENCODINGS, invalid);
+    rc_ui_settings_save_entry(priv->playlist_entry,
+        RCLIB_SETTINGS_KEY_PLAYLIST_ENCODINGS, invalid);
     if(invalid->len>0)
     {
         message = g_strdup_printf(_("Unsupported encodings are ignored: "
@@ -160,6 +163,7 @@ static void rc_ui_settings_reset_clicked_cb(GtkButton *button,
     gtk_editable_set_text(GTK_EDITABLE(priv->id3_entry), text);
     gtk_editable_set_text(GTK_EDITABLE(priv->cue_entry), text);
     gtk_editable_set_text(GTK_EDITABLE(priv->lyric_entry), text);
+    gtk_editable_set_text(GTK_EDITABLE(priv->playlist_entry), text);
     g_free(text);
     g_strfreev(list);
     rc_ui_settings_save_encodings();
@@ -237,6 +241,8 @@ void rc_ui_settings_show(GtkWindow *parent)
         "cue_entry"));
     priv->lyric_entry = GTK_WIDGET(gtk_builder_get_object(priv->builder,
         "lyric_entry"));
+    priv->playlist_entry = GTK_WIDGET(gtk_builder_get_object(priv->builder,
+        "playlist_entry"));
     priv->encoding_status_label = GTK_WIDGET(gtk_builder_get_object(
         priv->builder, "encoding_status_label"));
     if(parent!=NULL)
@@ -256,6 +262,8 @@ void rc_ui_settings_show(GtkWindow *parent)
         RCLIB_SETTINGS_KEY_CUE_ENCODINGS);
     rc_ui_settings_load_entry(priv->lyric_entry,
         RCLIB_SETTINGS_KEY_LYRIC_ENCODINGS);
+    rc_ui_settings_load_entry(priv->playlist_entry,
+        RCLIB_SETTINGS_KEY_PLAYLIST_ENCODINGS);
     g_signal_connect(priv->color_scheme_dropdown, "notify::selected",
         G_CALLBACK(rc_ui_settings_color_scheme_cb), NULL);
     g_signal_connect(priv->lyric_switch, "notify::active",
@@ -267,6 +275,8 @@ void rc_ui_settings_show(GtkWindow *parent)
     g_signal_connect(priv->cue_entry, "activate",
         G_CALLBACK(rc_ui_settings_entry_activate_cb), NULL);
     g_signal_connect(priv->lyric_entry, "activate",
+        G_CALLBACK(rc_ui_settings_entry_activate_cb), NULL);
+    g_signal_connect(priv->playlist_entry, "activate",
         G_CALLBACK(rc_ui_settings_entry_activate_cb), NULL);
     g_signal_connect(gtk_builder_get_object(priv->builder, "reset_button"),
         "clicked", G_CALLBACK(rc_ui_settings_reset_clicked_cb), NULL);

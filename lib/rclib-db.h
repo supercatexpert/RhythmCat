@@ -24,6 +24,7 @@
 
 #include <glib.h>
 #include <glib-object.h>
+#include "rclib-plist.h"
 #include "rclib-core.h"
 
 G_BEGIN_DECLS
@@ -242,12 +243,18 @@ void rclib_db_playlist_add_item(RCLibDbPlaylist *playlist,
 gboolean rclib_db_playlist_remove_item(RCLibDbItem *item);
 gboolean rclib_db_playlist_move_item(RCLibDbPlaylist *playlist, gint from,
     gint to);
+RCLibDbPlaylist *rclib_db_playlist_load(const gchar *uri, gint position,
+    GError **error);
+gboolean rclib_db_playlist_export(const RCLibDbPlaylist *playlist,
+    const gchar *uri, RCLibPlistFormat format, GError **error);
 
 /* Generic */
 void rclib_db_import_uri(RCLibDbPlaylist *playlist, const gchar *uri,
     gint position);
 void rclib_db_import_directory(RCLibDbPlaylist *playlist,
     const gchar *uri);
+gboolean rclib_db_export_items(const GPtrArray *items, const gchar *uri,
+    RCLibPlistFormat format, const gchar *title, GError **error);
 gint rclib_db_item_get_index(const RCLibDbItem *item);
 gboolean rclib_db_remove_item(RCLibDbItem *item);
 
