@@ -8,3 +8,8 @@ if gtk_dep.found()
     install_dir: get_option('datadir') / 'applications',
   )
 endif
+
+gnome.post_install(
+  gtk_update_icon_cache: true,
+  update_desktop_database: gtk_dep.found(),
+)

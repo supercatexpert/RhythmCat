@@ -41,7 +41,20 @@ The application icon (`data/artwork/rhythmcat-icon.svg`) and the default
 album cover for music without an embedded image
 (`data/artwork/rhythmcat-cover.svg`) are SVG images of a cat as the head of
 an eighth note. Both are compiled into the GTK executable as GResources, and
-the icon is also installed as the application icon.
+the icon is also installed as the application icon
+(`share/icons/hicolor/scalable/apps/org.supercat.RhythmCat3.svg`), together
+with the desktop file `org.supercat.RhythmCat3.desktop`.
+
+The GTK frontend uses the icon for its windows and the About dialog. On X11
+this works without installing. On Wayland, the desktop (for example GNOME
+Shell) takes the icon from the desktop file whose name matches the
+application ID, so the program must be installed to show its icon in the
+dock and the window switcher. To install for the current user only:
+
+```sh
+meson setup build --prefix="$HOME/.local"
+ninja -C build install
+```
 
 ## Features
 

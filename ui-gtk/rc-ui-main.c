@@ -42,6 +42,7 @@ static void rc_ui_main_error_activate_cb(GApplication *app, gpointer data)
     GtkAlertDialog *dialog;
     const gchar *buttons[] = {_("_Close"), NULL};
     g_application_hold(app);
+    gtk_window_set_default_icon_name(APPLICATION_ID);
     dialog = gtk_alert_dialog_new(_("RhythmCat is already running"));
     gtk_alert_dialog_set_detail(dialog, main_error_message);
     gtk_alert_dialog_set_buttons(dialog, buttons);
@@ -135,6 +136,9 @@ gint rc_ui_main_run(gint argc, gchar *argv[])
         g_error_free(error);
         app = gtk_application_new(APPLICATION_ID ".Error",
             G_APPLICATION_NON_UNIQUE);
+        /* Use the resources (including the icon) of the player */
+        g_application_set_resource_base_path(G_APPLICATION(app),
+            "/org/supercat/RhythmCat3");
         g_signal_connect(app, "activate",
             G_CALLBACK(rc_ui_main_error_activate_cb), NULL);
         g_application_run(G_APPLICATION(app), 1, argv);
