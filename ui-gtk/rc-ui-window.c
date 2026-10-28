@@ -63,6 +63,9 @@ typedef struct RCUiWindowPrivate
     GtkWidget *repeat_image;
     GtkWidget *repeat_label;
     GtkWidget *random_button;
+    GtkWidget *library_button;
+    GtkWidget *library_separator;
+    GtkWidget *library_paned;
     GtkWidget *volume_scale;
     GtkWidget *lyric_box;
     GtkWidget *lyric_prev_label;
@@ -96,6 +99,7 @@ typedef struct RCUiWindowPrivate
     guint press_position;
     guint press_timeout_id;
     gint drag_from;
+    gint expanded_height;
     GtkWidget *drop_row;
     GPtrArray *drag_items;
     guint progress_timer_id;
@@ -1344,6 +1348,56 @@ static void rc_ui_window_random_toggled_cb(GtkToggleButton *button,
     rclib_player_set_random_mode(gtk_toggle_button_get_active(button));
 }
 
+/* Show or hide the library and playlist area. When it is hidden, the
+ * window shrinks to its natural height (a compact player), and the old
+ * height is restored when it is shown again. */
+static void rc_ui_window_set_library_visible(gboolean visible)
+{
+    RCUiWindowPrivate *priv = &window_priv;
+    GtkWindow *window = GTK_WINDOW(priv->window);
+    gboolean resizable;
+    gint width;
+    if(gtk_widget_get_visible(priv->library_paned)==visible) return;
+    resizable = !gtk_window_is_maximized(window) &&
+        !gtk_window_is_fullscreen(window) &&
+        gtk_widget_get_realized(priv->window);
+    width = gtk_widget_get_width(priv->window);
+    if(!visible && resizable)
+        priv->expanded_height = gtk_widget_get_height(priv->window);
+    gtk_widget_set_visible(priv->library_paned, visible);
+    gtk_widget_set_visible(priv->library_separator, visible);
+    gtk_widget_set_tooltip_text(priv->library_button, visible ?
+        _("Hide Library and Playlists") : _("Show Library and Playlists"));
+    if(!gtk_widget_get_realized(priv->window))
+    {
+        /* Not shown yet, start as a compact player with the default
+         * width */
+        if(!visible)
+        {
+            gtk_window_get_default_size(window, &width, NULL);
+            gtk_window_set_default_size(window, width, -1);
+        }
+        return;
+    }
+    if(!resizable) return;
+    if(visible)
+    {
+        gtk_window_set_default_size(window, width,
+            priv->expanded_height>0 ? priv->expanded_height : 700);
+    }
+    else
+        gtk_window_set_default_size(window, width, -1);
+}
+
+static void rc_ui_window_library_toggled_cb(GtkToggleButton *button,
+    gpointer data)
+{
+    gboolean visible = gtk_toggle_button_get_active(button);
+    rc_ui_window_set_library_visible(visible);
+    rclib_settings_set_boolean(RCLIB_SETTINGS_GROUP_UI,
+        RCLIB_SETTINGS_KEY_SHOW_LIBRARY, visible);
+}
+
 static void rc_ui_window_volume_changed_cb(GtkRange *range, gpointer data)
 {
     rclib_core_set_volume(gtk_range_get_value(range));
@@ -1851,6 +1905,9 @@ GtkWidget *rc_ui_window_init(GtkApplication *app)
     priv->repeat_image = rc_ui_window_get_object("repeat_image");
     priv->repeat_label = rc_ui_window_get_object("repeat_label");
     priv->random_button = rc_ui_window_get_object("random_button");
+    priv->library_button = rc_ui_window_get_object("library_button");
+    priv->library_separator = rc_ui_window_get_object("library_separator");
+    priv->library_paned = rc_ui_window_get_object("library_paned");
     priv->volume_scale = rc_ui_window_get_object("volume_scale");
     priv->lyric_box = rc_ui_window_get_object("lyric_box");
     priv->lyric_prev_label = rc_ui_window_get_object("lyric_prev_label");
@@ -1955,6 +2012,20 @@ GtkWidget *rc_ui_window_init(GtkApplication *app)
         rclib_player_get_random_mode());
     priv->random_handler_id = g_signal_connect(priv->random_button,
         "toggled", G_CALLBACK(rc_ui_window_random_toggled_cb), NULL);
+    if(!rclib_settings_get_boolean(RCLIB_SETTINGS_GROUP_UI,
+        RCLIB_SETTINGS_KEY_SHOW_LIBRARY))
+    {
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(priv->library_button),
+            FALSE);
+        rc_ui_window_set_library_visible(FALSE);
+    }
+    else
+    {
+        gtk_widget_set_tooltip_text(priv->library_button,
+            _("Hide Library and Playlists"));
+    }
+    g_signal_connect(priv->library_button, "toggled",
+        G_CALLBACK(rc_ui_window_library_toggled_cb), NULL);
     gtk_range_set_value(GTK_RANGE(priv->volume_scale),
         rclib_core_get_volume());
     priv->volume_handler_id = g_signal_connect(priv->volume_scale,

@@ -64,6 +64,7 @@ G_BEGIN_DECLS
 
 #define RCLIB_SETTINGS_GROUP_UI "UI"
 #define RCLIB_SETTINGS_KEY_COLOR_SCHEME "ColorScheme"
+#define RCLIB_SETTINGS_KEY_SHOW_LIBRARY "ShowLibrary"
 
 typedef struct _RCLibSettings RCLibSettings;
 typedef struct _RCLibSettingsClass RCLibSettingsClass;

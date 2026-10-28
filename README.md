@@ -100,6 +100,9 @@ the icon is also installed as the application icon.
   a seek bar, and synced lyrics (previous/current/next line).
 * Library sidebar with grouping, and a playlist sidebar with new, rename,
   delete and move up/down.
+* A button next to the random button shows or hides the library and
+  playlist area. When it is hidden, the window shrinks to a compact
+  player; the choice is remembered.
 * Track list: import files or folders (also by drag and drop), add to
   playlist, remove, reorder, refresh metadata.
 * Reorder playlist items by long press dragging: press and hold an item for

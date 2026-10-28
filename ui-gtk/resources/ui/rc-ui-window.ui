@@ -233,6 +233,16 @@
                       </object>
                     </child>
                     <child>
+                      <object class="GtkToggleButton" id="library_button">
+                        <property name="icon-name">view-list-symbolic</property>
+                        <property name="tooltip-text" translatable="yes">Show Library and Playlists</property>
+                        <property name="active">True</property>
+                        <style>
+                          <class name="flat"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
                       <object class="GtkBox">
                         <property name="hexpand">True</property>
                       </object>
@@ -306,10 +316,10 @@
           </object>
         </child>
         <child>
-          <object class="GtkSeparator"/>
+          <object class="GtkSeparator" id="library_separator"/>
         </child>
         <child>
-          <object class="GtkPaned">
+          <object class="GtkPaned" id="library_paned">
             <property name="vexpand">True</property>
             <property name="position">250</property>
             <property name="shrink-start-child">False</property>
