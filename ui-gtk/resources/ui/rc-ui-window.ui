@@ -43,20 +43,6 @@
     <property name="icon-name">org.supercat.RhythmCat3</property>
     <child type="titlebar">
       <object class="GtkHeaderBar" id="header_bar">
-        <child type="start">
-          <object class="GtkButton">
-            <property name="icon-name">document-open-symbolic</property>
-            <property name="action-name">win.import-files</property>
-            <property name="tooltip-text" translatable="yes">Import Files</property>
-          </object>
-        </child>
-        <child type="start">
-          <object class="GtkButton">
-            <property name="icon-name">folder-open-symbolic</property>
-            <property name="action-name">win.import-folder</property>
-            <property name="tooltip-text" translatable="yes">Import Folder</property>
-          </object>
-        </child>
         <child type="end">
           <object class="GtkMenuButton">
             <property name="icon-name">open-menu-symbolic</property>
