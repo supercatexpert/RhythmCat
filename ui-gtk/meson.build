@@ -4,7 +4,7 @@ rc_ui_resources = gnome.compile_resources('rc-ui-resources',
   c_name: 'rc_ui',
 )
 
-executable('rhythmcat3',
+executable('rhythmcat',
   'main.c',
   'rc-ui-equalizer.c',
   'rc-ui-main.c',

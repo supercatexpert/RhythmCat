@@ -1,4 +1,4 @@
-executable('rhythmcat3-tui',
+executable('rhythmcat-tui',
   'main.c',
   'rc-tui.c',
   dependencies: [rclib_dep, ncurses_dep],

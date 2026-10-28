@@ -7,8 +7,8 @@ json-c. It has two parts:
   audio and manages the music library, playlists, metadata, CUE sheets and
   lyrics.
 * **Frontends**, which link the core library dynamically:
-  * `rhythmcat3`: the GTK4 frontend (`ui-gtk/`)
-  * `rhythmcat3-tui`: the ncurses frontend (`ui-tui/`)
+  * `rhythmcat`: the GTK4 frontend (`ui-gtk/`)
+  * `rhythmcat-tui`: the ncurses frontend (`ui-tui/`)
 
 Only one frontend can run at a time. Starting a second one prints an error
 (the GTK frontend also shows a dialog) that names the running instance.
