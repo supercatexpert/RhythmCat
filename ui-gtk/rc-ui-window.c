@@ -89,6 +89,7 @@ typedef struct RCUiWindowPrivate
     GtkWidget *import_cancel_button;
     GtkWidget *dark_toggle;
     GListStore *track_store;
+    GHashTable *track_table;
     GtkMultiSelection *track_selection;
     GMenu *playlist_menu;
     GdkTexture *default_cover;
@@ -155,34 +156,52 @@ static RCLibDbPlaylist *rc_ui_window_get_import_target()
 
 /* ----- Track list ----- */
 
-static gint rc_ui_window_find_item(const RCLibDbItem *item)
+/*
+ * The track table maps the database items to the track objects in the
+ * track list, so the row of an item can be found without searching the
+ * list. Entries are added when tracks are added into the list store, and
+ * removed when the track objects are finalized (a track object may be
+ * kept by the list widgets for a while after it is removed from the
+ * store, updating it is harmless).
+ */
+
+static void rc_ui_window_track_finalized_cb(gpointer data,
+    GObject *where_the_object_was)
+{
+    RCUiWindowPrivate *priv = &window_priv;
+    if(priv->track_table==NULL) return;
+    if(g_hash_table_lookup(priv->track_table, data)==where_the_object_was)
+        g_hash_table_remove(priv->track_table, data);
+}
+
+static void rc_ui_window_track_store_changed_cb(GListModel *model,
+    guint position, guint removed, guint added, gpointer data)
 {
     RCUiWindowPrivate *priv = &window_priv;
     RCUiTrack *track;
-    guint i, n;
-    gboolean found;
-    if(item==NULL) return -1;
-    n = g_list_model_get_n_items(G_LIST_MODEL(priv->track_store));
-    for(i=0;i<n;i++)
+    RCLibDbItem *item;
+    guint i;
+    for(i=position;i<position+added;i++)
     {
-        track = g_list_model_get_item(G_LIST_MODEL(priv->track_store), i);
-        found = rc_ui_track_get_item(track)==item;
+        track = g_list_model_get_item(model, i);
+        if(track==NULL) continue;
+        item = rc_ui_track_get_item(track);
+        if(g_hash_table_lookup(priv->track_table, item)!=(gpointer)track)
+        {
+            g_hash_table_insert(priv->track_table, item, track);
+            g_object_weak_ref(G_OBJECT(track),
+                rc_ui_window_track_finalized_cb, item);
+        }
         g_object_unref(track);
-        if(found) return i;
     }
-    return -1;
 }
 
 static void rc_ui_window_refresh_item(const RCLibDbItem *item)
 {
-    RCUiWindowPrivate *priv = &window_priv;
     RCUiTrack *track;
-    gint pos;
-    pos = rc_ui_window_find_item(item);
-    if(pos<0) return;
-    track = g_list_model_get_item(G_LIST_MODEL(priv->track_store), pos);
-    rc_ui_track_changed(track);
-    g_object_unref(track);
+    if(item==NULL || window_priv.track_table==NULL) return;
+    track = g_hash_table_lookup(window_priv.track_table, item);
+    if(track!=NULL) rc_ui_track_changed(track);
 }
 
 static void rc_ui_window_update_source_label()
@@ -2498,6 +2517,9 @@ GtkWidget *rc_ui_window_init(GtkApplication *app)
 
     /* Track view */
     priv->track_store = g_list_store_new(RC_UI_TYPE_TRACK);
+    priv->track_table = g_hash_table_new(g_direct_hash, g_direct_equal);
+    g_signal_connect(priv->track_store, "items-changed",
+        G_CALLBACK(rc_ui_window_track_store_changed_cb), NULL);
     priv->track_selection = gtk_multi_selection_new(G_LIST_MODEL(
         g_object_ref(priv->track_store)));
     gtk_column_view_set_model(GTK_COLUMN_VIEW(priv->track_view),
@@ -2706,6 +2728,8 @@ void rc_ui_window_cleanup()
     if(priv->lyric!=NULL) rclib_lyric_data_free(priv->lyric);
     g_clear_pointer(&priv->groups, g_ptr_array_unref);
     g_clear_object(&priv->track_selection);
+    /* The table is checked when the track objects are finalized */
+    g_clear_pointer(&priv->track_table, g_hash_table_destroy);
     g_clear_object(&priv->track_store);
     g_clear_object(&priv->playlist_menu);
     g_clear_object(&priv->default_cover);
