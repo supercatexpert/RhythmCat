@@ -54,3 +54,15 @@ button.rc-status-button {
 label.rc-playing-source {
     font-weight: bold;
 }
+
+/* The OSD lyric window, the background is shown when the pointer is
+ * over it, so it can be found and moved */
+window.rc-osd-lyric {
+    background-color: transparent;
+    box-shadow: none;
+}
+
+window.rc-osd-lyric:hover {
+    background-color: alpha(black, 0.3);
+    border-radius: 12px;
+}

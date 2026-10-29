@@ -22,6 +22,7 @@
  */
 #include "rc-ui-window.h"
 #include "rc-ui-equalizer.h"
+#include "rc-ui-osd.h"
 #include "rc-ui-settings.h"
 #include "rc-ui-style.h"
 #include "rc-ui-track.h"
@@ -1544,6 +1545,7 @@ static void rc_ui_window_update_lyric(gint64 pos)
     RCUiWindowPrivate *priv = &window_priv;
     const RCLibLyricLine *line;
     GArray *lines;
+    gint64 end = -1;
     gint index, key;
     if(priv->lyric==NULL) return;
     lines = priv->lyric->lines;
@@ -1556,6 +1558,21 @@ static void rc_ui_window_update_lyric(gint64 pos)
         line!=NULL ? line->text : "",
         index+1<(gint)lines->len ? g_array_index(lines, RCLibLyricLine,
         index+1).text : "");
+    /* A line without the end time lasts until the next line or the end
+     * of the track */
+    if(line!=NULL)
+    {
+        if(line->end>=0) end = line->end;
+        else if(index+1<(gint)lines->len)
+            end = g_array_index(lines, RCLibLyricLine, index+1).time;
+        else
+        {
+            end = rclib_core_query_duration();
+            if(end<=line->time) end = -1;
+        }
+    }
+    rc_ui_osd_set_line(line!=NULL ? line->text : NULL,
+        line!=NULL ? line->time : -1, end);
 }
 
 static void rc_ui_window_load_lyric()
@@ -1565,14 +1582,18 @@ static void rc_ui_window_load_lyric()
     const gchar *uri;
     gchar *path, **encodings;
     GError *error = NULL;
+    gboolean show, osd;
     if(priv->lyric!=NULL) rclib_lyric_data_free(priv->lyric);
     priv->lyric = NULL;
     priv->lyric_key = G_MININT;
     uri = rclib_core_get_uri();
     item = rclib_player_get_current_item();
     path = NULL;
-    if(uri!=NULL && rclib_settings_get_boolean(RCLIB_SETTINGS_GROUP_LYRIC,
-        RCLIB_SETTINGS_KEY_LYRIC_ENABLED) && (item==NULL ||
+    show = rclib_settings_get_boolean(RCLIB_SETTINGS_GROUP_LYRIC,
+        RCLIB_SETTINGS_KEY_LYRIC_ENABLED);
+    osd = rclib_settings_get_boolean(RCLIB_SETTINGS_GROUP_LYRIC,
+        RCLIB_SETTINGS_KEY_OSD_ENABLED);
+    if(uri!=NULL && (show || osd) && (item==NULL ||
         item->type==RCLIB_DB_ITEM_TYPE_NORMAL))
     {
         path = rclib_lyric_find_file(uri);
@@ -1591,8 +1612,10 @@ static void rc_ui_window_load_lyric()
         }
         g_free(path);
     }
-    gtk_widget_set_visible(priv->lyric_box, priv->lyric!=NULL);
+    gtk_widget_set_visible(priv->lyric_box, show && priv->lyric!=NULL);
     rc_ui_window_set_lyric_text("", "", "");
+    rc_ui_osd_set_line(NULL, -1, -1);
+    rc_ui_osd_set_available(priv->lyric!=NULL);
     if(priv->lyric!=NULL)
         rc_ui_window_update_lyric(rclib_core_query_position());
 }
@@ -1976,6 +1999,17 @@ static void rc_ui_window_db_import_updated_cb(GObject *db, guint pending,
     rc_ui_window_update_status();
 }
 
+static void rc_ui_window_sync_osd_action()
+{
+    GAction *action;
+    action = g_action_map_lookup_action(G_ACTION_MAP(window_priv.window),
+        "osd-lyric");
+    if(action==NULL) return;
+    g_simple_action_set_state(G_SIMPLE_ACTION(action),
+        g_variant_new_boolean(rclib_settings_get_boolean(
+        RCLIB_SETTINGS_GROUP_LYRIC, RCLIB_SETTINGS_KEY_OSD_ENABLED)));
+}
+
 static void rc_ui_window_settings_changed_cb(GObject *settings,
     const gchar *group, const gchar *key, gpointer data)
 {
@@ -1983,6 +2017,12 @@ static void rc_ui_window_settings_changed_cb(GObject *settings,
         g_strcmp0(key, RCLIB_SETTINGS_KEY_COLOR_SCHEME)==0)
     {
         rc_ui_window_sync_dark_toggle();
+    }
+    else if(g_strcmp0(group, RCLIB_SETTINGS_GROUP_LYRIC)==0 &&
+        g_strcmp0(key, RCLIB_SETTINGS_KEY_OSD_ENABLED)==0)
+    {
+        rc_ui_window_sync_osd_action();
+        rc_ui_window_load_lyric();
     }
     else if((g_strcmp0(group, RCLIB_SETTINGS_GROUP_LYRIC)==0 &&
         g_strcmp0(key, RCLIB_SETTINGS_KEY_LYRIC_ENABLED)==0) ||
@@ -2422,6 +2462,13 @@ static void rc_ui_window_save_playlist_action(GSimpleAction *action,
     g_object_unref(dialog);
 }
 
+static void rc_ui_window_osd_lyric_action(GSimpleAction *action,
+    GVariant *value, gpointer data)
+{
+    rclib_settings_set_boolean(RCLIB_SETTINGS_GROUP_LYRIC,
+        RCLIB_SETTINGS_KEY_OSD_ENABLED, g_variant_get_boolean(value));
+}
+
 static const GActionEntry window_actions[] = {
     {"play-pause", rc_ui_window_play_pause_action, NULL, NULL, NULL},
     {"stop", rc_ui_window_stop_action, NULL, NULL, NULL},
@@ -2437,6 +2484,7 @@ static const GActionEntry window_actions[] = {
     {"save-playlist", rc_ui_window_save_playlist_action, NULL, NULL, NULL},
     {"settings", rc_ui_window_settings_action, NULL, NULL, NULL},
     {"equalizer", rc_ui_window_equalizer_action, NULL, NULL, NULL},
+    {"osd-lyric", NULL, NULL, "false", rc_ui_window_osd_lyric_action},
     {"about", rc_ui_window_about_action, NULL, NULL, NULL},
     {"add-to-playlist", rc_ui_window_add_to_playlist_action, "i", NULL,
         NULL}
@@ -2671,6 +2719,8 @@ GtkWidget *rc_ui_window_init(GtkApplication *app)
     rc_ui_window_reload_tracks(FALSE);
     rc_ui_window_set_cover(NULL);
     rc_ui_window_update_info();
+    rc_ui_osd_init();
+    rc_ui_window_sync_osd_action();
     rc_ui_window_load_lyric();
     rc_ui_window_update_progress();
     rc_ui_window_update_status();
@@ -2726,6 +2776,7 @@ void rc_ui_window_cleanup()
         rclib_db_playlist_unref(priv->view_playlist);
     if(priv->playing_item!=NULL) rclib_db_item_unref(priv->playing_item);
     if(priv->lyric!=NULL) rclib_lyric_data_free(priv->lyric);
+    rc_ui_osd_exit();
     g_clear_pointer(&priv->groups, g_ptr_array_unref);
     g_clear_object(&priv->track_selection);
     /* The table is checked when the track objects are finalized */

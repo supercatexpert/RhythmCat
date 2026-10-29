@@ -19,7 +19,8 @@ License: GNU GPL v3 or later (see `COPYING`).
 
 Dependencies: GLib/GIO ≥ 2.74, GStreamer ≥ 1.16 (core, base: pbutils,
 tag, audio), json-c ≥ 0.15, GTK ≥ 4.12 (optional), ncursesw (optional),
-meson ≥ 0.64.
+meson ≥ 0.64. Xlib (`x11`, optional) is used by the GTK frontend to
+keep the OSD lyric window above other windows on X11.
 
 ```sh
 meson setup build
@@ -143,6 +144,19 @@ ninja -C build install
 * Shows the cover (embedded image or the default cover), title (the file
   base name if there's no title tag), artist, album, position/duration with
   a seek bar, and synced lyrics (previous/current/next line).
+* OSD lyric (off by default; menu "OSD Lyric" or Settings): the current
+  lyric line in a transparent window on the desktop, drawn with an outline
+  so it can be read on any background. The played part of the line is
+  filled with the progress color, moving from the start time of the line
+  to its end time (the end time in the lyric file, the start of the next
+  line, or the end of the track), also across wrapped lines. The font,
+  font size, text color, progress color (the progress can be turned off)
+  and maximum width (percent of the screen width; longer lines are
+  wrapped) can be set in Settings. Drag the text to move it, right click it to hide
+  it or reset its position. On X11 the window stays above other windows on
+  all workspaces, and the position is remembered. On Wayland, the
+  compositor decides where the window is placed and whether it stays on
+  top. It works even if the lyric in the main window is turned off.
 * Library sidebar with grouping, and a playlist sidebar with new, rename,
   delete and move up/down.
   The playlist of the playing track is shown in bold (in the ncurses
@@ -167,8 +181,9 @@ ninja -C build install
   streams are kept.
 * Load a playlist file as a new playlist, or save the shown track list
   to a playlist file (buttons below the playlist sidebar, or the menu).
-* Settings: style, lyric display, update metadata when playing, and the
-  fallback encodings for ID3, CUE, lyrics and playlist files.
+* Settings: style, lyric display, OSD lyric, update metadata when
+  playing, and the fallback encodings for ID3, CUE, lyrics and playlist
+  files.
 * Equalizer window (header bar button, menu, or Ctrl+E): an on/off switch,
   a preset list and a slider for each band. Moving a slider changes the
   custom preset, starting from the gains of the current preset. "Reset

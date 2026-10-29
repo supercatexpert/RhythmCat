@@ -31,6 +31,13 @@ typedef struct RCUiSettingsPrivate
     GtkWidget *window;
     GtkWidget *color_scheme_dropdown;
     GtkWidget *lyric_switch;
+    GtkWidget *osd_switch;
+    GtkWidget *osd_font_button;
+    GtkWidget *osd_size_spin;
+    GtkWidget *osd_color_button;
+    GtkWidget *osd_width_spin;
+    GtkWidget *osd_progress_switch;
+    GtkWidget *osd_progress_color_button;
     GtkWidget *update_switch;
     GtkWidget *id3_entry;
     GtkWidget *cue_entry;
@@ -185,6 +192,79 @@ static void rc_ui_settings_lyric_switch_cb(GObject *object,
         GTK_SWITCH(object)));
 }
 
+static void rc_ui_settings_osd_switch_cb(GObject *object,
+    GParamSpec *pspec, gpointer data)
+{
+    rclib_settings_set_boolean(RCLIB_SETTINGS_GROUP_LYRIC,
+        RCLIB_SETTINGS_KEY_OSD_ENABLED, gtk_switch_get_active(
+        GTK_SWITCH(object)));
+}
+
+static void rc_ui_settings_osd_font_cb(GObject *object,
+    GParamSpec *pspec, gpointer data)
+{
+    PangoFontDescription *desc;
+    gchar *font;
+    desc = gtk_font_dialog_button_get_font_desc(
+        GTK_FONT_DIALOG_BUTTON(object));
+    if(desc==NULL) return;
+    /* The size is set separately */
+    desc = pango_font_description_copy(desc);
+    pango_font_description_unset_fields(desc, PANGO_FONT_MASK_SIZE);
+    font = pango_font_description_to_string(desc);
+    rclib_settings_set_string(RCLIB_SETTINGS_GROUP_LYRIC,
+        RCLIB_SETTINGS_KEY_OSD_FONT, font);
+    g_free(font);
+    pango_font_description_free(desc);
+}
+
+static void rc_ui_settings_osd_size_cb(GtkSpinButton *spin, gpointer data)
+{
+    rclib_settings_set_integer(RCLIB_SETTINGS_GROUP_LYRIC,
+        RCLIB_SETTINGS_KEY_OSD_FONT_SIZE, gtk_spin_button_get_value_as_int(
+        spin));
+}
+
+static void rc_ui_settings_osd_color_cb(GObject *object,
+    GParamSpec *pspec, gpointer data)
+{
+    const GdkRGBA *rgba;
+    gchar *color;
+    rgba = gtk_color_dialog_button_get_rgba(GTK_COLOR_DIALOG_BUTTON(
+        object));
+    color = gdk_rgba_to_string(rgba);
+    rclib_settings_set_string(RCLIB_SETTINGS_GROUP_LYRIC, data, color);
+    g_free(color);
+}
+
+static void rc_ui_settings_osd_progress_switch_cb(GObject *object,
+    GParamSpec *pspec, gpointer data)
+{
+    rclib_settings_set_boolean(RCLIB_SETTINGS_GROUP_LYRIC,
+        RCLIB_SETTINGS_KEY_OSD_PROGRESS, gtk_switch_get_active(
+        GTK_SWITCH(object)));
+}
+
+static void rc_ui_settings_load_color(GtkWidget *button, const gchar *key,
+    const gchar *fallback)
+{
+    GdkRGBA rgba;
+    gchar *text;
+    text = rclib_settings_get_string(RCLIB_SETTINGS_GROUP_LYRIC, key);
+    if(text==NULL || !gdk_rgba_parse(&rgba, text))
+        gdk_rgba_parse(&rgba, fallback);
+    gtk_color_dialog_button_set_rgba(GTK_COLOR_DIALOG_BUTTON(button),
+        &rgba);
+    g_free(text);
+}
+
+static void rc_ui_settings_osd_width_cb(GtkSpinButton *spin, gpointer data)
+{
+    rclib_settings_set_integer(RCLIB_SETTINGS_GROUP_LYRIC,
+        RCLIB_SETTINGS_KEY_OSD_MAX_WIDTH, gtk_spin_button_get_value_as_int(
+        spin));
+}
+
 static void rc_ui_settings_update_switch_cb(GObject *object,
     GParamSpec *pspec, gpointer data)
 {
@@ -220,6 +300,8 @@ static void rc_ui_settings_close_clicked_cb(GtkButton *button,
 void rc_ui_settings_show(GtkWindow *parent)
 {
     RCUiSettingsPrivate *priv = &settings_priv;
+    PangoFontDescription *desc;
+    gchar *text;
     if(priv->window!=NULL)
     {
         gtk_window_present(GTK_WINDOW(priv->window));
@@ -233,6 +315,20 @@ void rc_ui_settings_show(GtkWindow *parent)
         priv->builder, "color_scheme_dropdown"));
     priv->lyric_switch = GTK_WIDGET(gtk_builder_get_object(priv->builder,
         "lyric_switch"));
+    priv->osd_switch = GTK_WIDGET(gtk_builder_get_object(priv->builder,
+        "osd_switch"));
+    priv->osd_font_button = GTK_WIDGET(gtk_builder_get_object(
+        priv->builder, "osd_font_button"));
+    priv->osd_size_spin = GTK_WIDGET(gtk_builder_get_object(priv->builder,
+        "osd_size_spin"));
+    priv->osd_color_button = GTK_WIDGET(gtk_builder_get_object(
+        priv->builder, "osd_color_button"));
+    priv->osd_width_spin = GTK_WIDGET(gtk_builder_get_object(priv->builder,
+        "osd_width_spin"));
+    priv->osd_progress_switch = GTK_WIDGET(gtk_builder_get_object(
+        priv->builder, "osd_progress_switch"));
+    priv->osd_progress_color_button = GTK_WIDGET(gtk_builder_get_object(
+        priv->builder, "osd_progress_color_button"));
     priv->update_switch = GTK_WIDGET(gtk_builder_get_object(priv->builder,
         "update_switch"));
     priv->id3_entry = GTK_WIDGET(gtk_builder_get_object(priv->builder,
@@ -253,6 +349,29 @@ void rc_ui_settings_show(GtkWindow *parent)
     gtk_switch_set_active(GTK_SWITCH(priv->lyric_switch),
         rclib_settings_get_boolean(RCLIB_SETTINGS_GROUP_LYRIC,
         RCLIB_SETTINGS_KEY_LYRIC_ENABLED));
+    gtk_switch_set_active(GTK_SWITCH(priv->osd_switch),
+        rclib_settings_get_boolean(RCLIB_SETTINGS_GROUP_LYRIC,
+        RCLIB_SETTINGS_KEY_OSD_ENABLED));
+    text = rclib_settings_get_string(RCLIB_SETTINGS_GROUP_LYRIC,
+        RCLIB_SETTINGS_KEY_OSD_FONT);
+    desc = pango_font_description_from_string(text!=NULL ? text : "");
+    gtk_font_dialog_button_set_font_desc(GTK_FONT_DIALOG_BUTTON(
+        priv->osd_font_button), desc);
+    pango_font_description_free(desc);
+    g_free(text);
+    gtk_spin_button_set_value(GTK_SPIN_BUTTON(priv->osd_size_spin),
+        rclib_settings_get_integer(RCLIB_SETTINGS_GROUP_LYRIC,
+        RCLIB_SETTINGS_KEY_OSD_FONT_SIZE));
+    rc_ui_settings_load_color(priv->osd_color_button,
+        RCLIB_SETTINGS_KEY_OSD_COLOR, "#33ccff");
+    gtk_switch_set_active(GTK_SWITCH(priv->osd_progress_switch),
+        rclib_settings_get_boolean(RCLIB_SETTINGS_GROUP_LYRIC,
+        RCLIB_SETTINGS_KEY_OSD_PROGRESS));
+    rc_ui_settings_load_color(priv->osd_progress_color_button,
+        RCLIB_SETTINGS_KEY_OSD_PROGRESS_COLOR, "#ffd633");
+    gtk_spin_button_set_value(GTK_SPIN_BUTTON(priv->osd_width_spin),
+        rclib_settings_get_integer(RCLIB_SETTINGS_GROUP_LYRIC,
+        RCLIB_SETTINGS_KEY_OSD_MAX_WIDTH));
     gtk_switch_set_active(GTK_SWITCH(priv->update_switch),
         rclib_settings_get_boolean(RCLIB_SETTINGS_GROUP_LIBRARY,
         RCLIB_SETTINGS_KEY_UPDATE_ON_PLAY));
@@ -268,6 +387,22 @@ void rc_ui_settings_show(GtkWindow *parent)
         G_CALLBACK(rc_ui_settings_color_scheme_cb), NULL);
     g_signal_connect(priv->lyric_switch, "notify::active",
         G_CALLBACK(rc_ui_settings_lyric_switch_cb), NULL);
+    g_signal_connect(priv->osd_switch, "notify::active",
+        G_CALLBACK(rc_ui_settings_osd_switch_cb), NULL);
+    g_signal_connect(priv->osd_font_button, "notify::font-desc",
+        G_CALLBACK(rc_ui_settings_osd_font_cb), NULL);
+    g_signal_connect(priv->osd_size_spin, "value-changed",
+        G_CALLBACK(rc_ui_settings_osd_size_cb), NULL);
+    g_signal_connect(priv->osd_color_button, "notify::rgba",
+        G_CALLBACK(rc_ui_settings_osd_color_cb),
+        RCLIB_SETTINGS_KEY_OSD_COLOR);
+    g_signal_connect(priv->osd_progress_switch, "notify::active",
+        G_CALLBACK(rc_ui_settings_osd_progress_switch_cb), NULL);
+    g_signal_connect(priv->osd_progress_color_button, "notify::rgba",
+        G_CALLBACK(rc_ui_settings_osd_color_cb),
+        RCLIB_SETTINGS_KEY_OSD_PROGRESS_COLOR);
+    g_signal_connect(priv->osd_width_spin, "value-changed",
+        G_CALLBACK(rc_ui_settings_osd_width_cb), NULL);
     g_signal_connect(priv->update_switch, "notify::active",
         G_CALLBACK(rc_ui_settings_update_switch_cb), NULL);
     g_signal_connect(priv->id3_entry, "activate",

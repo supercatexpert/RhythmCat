@@ -79,6 +79,25 @@ static void rclib_settings_set_defaults(GKeyFile *keyfile)
         (const gchar * const *)encodings, g_strv_length(encodings));
     g_key_file_set_boolean(keyfile, RCLIB_SETTINGS_GROUP_LYRIC,
         RCLIB_SETTINGS_KEY_LYRIC_ENABLED, TRUE);
+    g_key_file_set_boolean(keyfile, RCLIB_SETTINGS_GROUP_LYRIC,
+        RCLIB_SETTINGS_KEY_OSD_ENABLED, FALSE);
+    g_key_file_set_string(keyfile, RCLIB_SETTINGS_GROUP_LYRIC,
+        RCLIB_SETTINGS_KEY_OSD_FONT, "Sans Bold");
+    g_key_file_set_integer(keyfile, RCLIB_SETTINGS_GROUP_LYRIC,
+        RCLIB_SETTINGS_KEY_OSD_FONT_SIZE, 28);
+    g_key_file_set_string(keyfile, RCLIB_SETTINGS_GROUP_LYRIC,
+        RCLIB_SETTINGS_KEY_OSD_COLOR, "#33ccff");
+    g_key_file_set_integer(keyfile, RCLIB_SETTINGS_GROUP_LYRIC,
+        RCLIB_SETTINGS_KEY_OSD_MAX_WIDTH, 60);
+    g_key_file_set_boolean(keyfile, RCLIB_SETTINGS_GROUP_LYRIC,
+        RCLIB_SETTINGS_KEY_OSD_PROGRESS, TRUE);
+    g_key_file_set_string(keyfile, RCLIB_SETTINGS_GROUP_LYRIC,
+        RCLIB_SETTINGS_KEY_OSD_PROGRESS_COLOR, "#ffd633");
+    /* The center of the top edge, -1 means the default position */
+    g_key_file_set_integer(keyfile, RCLIB_SETTINGS_GROUP_LYRIC,
+        RCLIB_SETTINGS_KEY_OSD_X, -1);
+    g_key_file_set_integer(keyfile, RCLIB_SETTINGS_GROUP_LYRIC,
+        RCLIB_SETTINGS_KEY_OSD_Y, -1);
     g_key_file_set_integer(keyfile, RCLIB_SETTINGS_GROUP_LIBRARY,
         RCLIB_SETTINGS_KEY_GROUP_MODE, 0);
     g_key_file_set_boolean(keyfile, RCLIB_SETTINGS_GROUP_LIBRARY,
