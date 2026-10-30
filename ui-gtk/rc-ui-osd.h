@@ -29,6 +29,7 @@ G_BEGIN_DECLS
 void rc_ui_osd_init();
 void rc_ui_osd_exit();
 void rc_ui_osd_set_available(gboolean available);
+void rc_ui_osd_set_title(const gchar *title);
 void rc_ui_osd_set_line(const gchar *text, gint64 start, gint64 end);
 
 G_END_DECLS

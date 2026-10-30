@@ -1496,7 +1496,7 @@ static void rc_ui_window_update_info()
     const RCLibCoreMetadata *metadata;
     RCLibDbItem *item;
     const gchar *uri, *artist = NULL, *album = NULL;
-    gchar *title = NULL, *window_title;
+    gchar *title = NULL, *window_title, *osd_title;
     uri = rclib_core_get_uri();
     if(uri==NULL)
     {
@@ -1505,6 +1505,7 @@ static void rc_ui_window_update_info()
             _("Ready to play"));
         gtk_label_set_text(GTK_LABEL(priv->album_label), "");
         gtk_window_set_title(GTK_WINDOW(priv->window), "RhythmCat");
+        rc_ui_osd_set_title("RhythmCat");
         return;
     }
     metadata = rclib_core_get_metadata();
@@ -1528,6 +1529,15 @@ static void rc_ui_window_update_info()
     window_title = g_strdup_printf("%s - RhythmCat", title);
     gtk_window_set_title(GTK_WINDOW(priv->window), window_title);
     g_free(window_title);
+    /* Shown on the OSD lyric if there is no lyric */
+    if(artist!=NULL && *artist!='\0')
+    {
+        osd_title = g_strdup_printf("%s - %s", title, artist);
+        rc_ui_osd_set_title(osd_title);
+        g_free(osd_title);
+    }
+    else
+        rc_ui_osd_set_title(title);
     g_free(title);
 }
 
@@ -2718,8 +2728,8 @@ GtkWidget *rc_ui_window_init(GtkApplication *app)
     rc_ui_window_reload_playlists();
     rc_ui_window_reload_tracks(FALSE);
     rc_ui_window_set_cover(NULL);
-    rc_ui_window_update_info();
     rc_ui_osd_init();
+    rc_ui_window_update_info();
     rc_ui_window_sync_osd_action();
     rc_ui_window_load_lyric();
     rc_ui_window_update_progress();

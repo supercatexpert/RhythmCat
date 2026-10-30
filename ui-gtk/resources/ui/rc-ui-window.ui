@@ -292,47 +292,6 @@
                 </child>
               </object>
             </child>
-            <child>
-              <object class="GtkBox" id="lyric_box">
-                <property name="orientation">vertical</property>
-                <property name="spacing">6</property>
-                <property name="width-request">340</property>
-                <property name="valign">center</property>
-                <style>
-                  <class name="lyric-box"/>
-                </style>
-                <child>
-                  <object class="GtkLabel" id="lyric_prev_label">
-                    <property name="wrap">True</property>
-                    <property name="justify">center</property>
-                    <property name="max-width-chars">40</property>
-                    <style>
-                      <class name="lyric-other"/>
-                    </style>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel" id="lyric_label">
-                    <property name="wrap">True</property>
-                    <property name="justify">center</property>
-                    <property name="max-width-chars">40</property>
-                    <style>
-                      <class name="lyric-current"/>
-                    </style>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel" id="lyric_next_label">
-                    <property name="wrap">True</property>
-                    <property name="justify">center</property>
-                    <property name="max-width-chars">40</property>
-                    <style>
-                      <class name="lyric-other"/>
-                    </style>
-                  </object>
-                </child>
-              </object>
-            </child>
           </object>
         </child>
         <child>
@@ -565,6 +524,57 @@
                 </child>
               </object>
             </property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox" id="lyric_box">
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkSeparator"/>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
+                <property name="spacing">4</property>
+                <property name="margin-start">12</property>
+                <property name="margin-end">12</property>
+                <property name="margin-top">8</property>
+                <property name="margin-bottom">8</property>
+                <style>
+                  <class name="lyric-box"/>
+                </style>
+                <child>
+                  <object class="GtkLabel" id="lyric_prev_label">
+                    <property name="wrap">True</property>
+                    <property name="justify">center</property>
+                    <property name="max-width-chars">80</property>
+                    <style>
+                      <class name="lyric-other"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="lyric_label">
+                    <property name="wrap">True</property>
+                    <property name="justify">center</property>
+                    <property name="max-width-chars">80</property>
+                    <style>
+                      <class name="lyric-current"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="lyric_next_label">
+                    <property name="wrap">True</property>
+                    <property name="justify">center</property>
+                    <property name="max-width-chars">80</property>
+                    <style>
+                      <class name="lyric-other"/>
+                    </style>
+                  </object>
+                </child>
+              </object>
+            </child>
           </object>
         </child>
         <child>

@@ -21,12 +21,14 @@
  * along with RhythmCat; if not, see <https://www.gnu.org/licenses/>.
  */
 #include "rc-ui-osd.h"
+#include "rc-ui-style.h"
 #include <rclib.h>
 #include <glib/gi18n.h>
 
 #if defined(GDK_WINDOWING_X11) && defined(RC_UI_HAVE_X11)
 #define RC_UI_OSD_X11
 #include <gdk/x11/gdkx.h>
+#include <X11/Xatom.h>
 #endif
 
 #define RC_UI_OSD_MIN_WIDTH 120
@@ -37,15 +39,24 @@ typedef struct RCUiOsdPrivate
     GtkWidget *window;
     GtkWidget *area;
     GtkWidget *popover;
+    /* The X11 display (XWayland) used for the window on Wayland, so it
+     * can stay above other windows */
+    GdkDisplay *x11_display;
     PangoLayout *layout;
+    /* The current lyric line, and the title shown without a lyric */
+    gchar *line_text;
+    gchar *title;
+    /* Whether the lyric line is shown (not the title) */
+    gboolean line_shown;
     GdkRGBA color;
     GdkRGBA progress_color;
     gboolean show_progress;
     gint font_size;
-    gint max_width;
+    gint width_percent;
     gint outline;
     gint padding;
     gboolean enabled;
+    /* Whether a lyric is loaded */
     gboolean available;
     /* The time range of the current line (unit: nanosecond), the end
      * time is -1 if unknown */
@@ -96,12 +107,12 @@ static void rc_ui_osd_update_size()
     GdkRectangle geometry = {0, 0, 1024, 768};
     PangoRectangle logical, line_rect;
     PangoLayoutIter *iter;
-    gint max;
+    gint width;
     monitor = rc_ui_osd_get_monitor();
     if(monitor!=NULL) gdk_monitor_get_geometry(monitor, &geometry);
-    max = geometry.width * priv->max_width / 100 - 2 * priv->padding;
-    if(max<RC_UI_OSD_MIN_WIDTH) max = RC_UI_OSD_MIN_WIDTH;
-    pango_layout_set_width(priv->layout, max * PANGO_SCALE);
+    width = geometry.width * priv->width_percent / 100 - 2 * priv->padding;
+    if(width<RC_UI_OSD_MIN_WIDTH) width = RC_UI_OSD_MIN_WIDTH;
+    pango_layout_set_width(priv->layout, width * PANGO_SCALE);
     pango_layout_get_pixel_extents(priv->layout, NULL, &logical);
     priv->text_width = 0;
     iter = pango_layout_get_iter(priv->layout);
@@ -112,8 +123,10 @@ static void rc_ui_osd_update_size()
     }
     while(pango_layout_iter_next_line(iter));
     pango_layout_iter_free(iter);
+    /* The window always has the full width, and the text is drawn in the
+     * middle of it, so the window does not move when the line changes */
     gtk_drawing_area_set_content_width(GTK_DRAWING_AREA(priv->area),
-        MAX(logical.width, RC_UI_OSD_MIN_WIDTH) + 2 * priv->padding);
+        width + 2 * priv->padding);
     gtk_drawing_area_set_content_height(GTK_DRAWING_AREA(priv->area),
         logical.height + 2 * priv->padding);
     gtk_widget_queue_draw(priv->area);
@@ -154,7 +167,7 @@ static void rc_ui_osd_update_progress()
     RCUiOsdPrivate *priv = &osd_priv;
     gint64 pos;
     gint width = 0;
-    if(priv->show_progress && priv->line_start>=0 &&
+    if(priv->show_progress && priv->line_shown && priv->line_start>=0 &&
         priv->line_end>priv->line_start &&
         rclib_core_get_state()>=GST_STATE_PAUSED)
     {
@@ -187,7 +200,7 @@ static void rc_ui_osd_update_timer()
 {
     RCUiOsdPrivate *priv = &osd_priv;
     gboolean run;
-    run = priv->show_progress && priv->enabled && priv->available &&
+    run = priv->show_progress && priv->enabled && priv->line_shown &&
         priv->line_end>priv->line_start && priv->line_start>=0 &&
         rclib_core_get_state()==GST_STATE_PLAYING;
     if(run && priv->progress_id==0)
@@ -307,11 +320,11 @@ static void rc_ui_osd_x11_move()
     }
     else
     {
-        /* Near the bottom of the screen by default */
+        /* The bottom edge is at 90% of the screen height by default */
         monitor = rc_ui_osd_get_monitor();
         if(monitor!=NULL) gdk_monitor_get_geometry(monitor, &geometry);
         x = (geometry.x + geometry.width / 2) * scale;
-        y = (geometry.y + geometry.height * 85 / 100) * scale - height;
+        y = (geometry.y + geometry.height * 90 / 100) * scale - height;
     }
     XMoveWindow(gdk_x11_display_get_xdisplay(display),
         gdk_x11_surface_get_xid(surface), x - width / 2, y);
@@ -337,6 +350,24 @@ static void rc_ui_osd_x11_set_above()
     XSendEvent(gdk_x11_display_get_xdisplay(display),
         gdk_x11_display_get_xrootwindow(display), False,
         SubstructureRedirectMask | SubstructureNotifyMask, &event);
+}
+
+/* Window managers (like Mutter with "center new windows" turned on) place
+ * normal windows themselves when they are shown, and may move the window
+ * after it is placed by the program. Utility windows are not placed. */
+static void rc_ui_osd_x11_set_type()
+{
+    GdkDisplay *display = gtk_widget_get_display(osd_priv.window);
+    GdkSurface *surface;
+    Atom type;
+    surface = gtk_native_get_surface(GTK_NATIVE(osd_priv.window));
+    type = gdk_x11_get_xatom_by_name_for_display(display,
+        "_NET_WM_WINDOW_TYPE_UTILITY");
+    XChangeProperty(gdk_x11_display_get_xdisplay(display),
+        gdk_x11_surface_get_xid(surface),
+        gdk_x11_get_xatom_by_name_for_display(display,
+        "_NET_WM_WINDOW_TYPE"), XA_ATOM, 32, PropModeReplace,
+        (guchar *)&type, 1);
 }
 
 static gboolean rc_ui_osd_move_idle_cb(gpointer data)
@@ -372,6 +403,83 @@ static void rc_ui_osd_surface_mapped_cb(GObject *object, GParamSpec *pspec,
         osd_priv.mapped_id = g_idle_add(rc_ui_osd_mapped_idle_cb, NULL);
 }
 
+/* Open the X11 display of XWayland, Wayland has no way for a program to
+ * keep its window above others (GNOME has no layer shell) */
+/* Get the X11 display name from the environment of the systemd user
+ * manager, the desktop (like GNOME) puts it there when XWayland starts.
+ * It is used when the program is started from a place which does not have
+ * it (like a terminal multiplexer started before XWayland). The
+ * XAUTHORITY variable is also set from there if it is not set. */
+static gchar *rc_ui_osd_get_session_display()
+{
+    GDBusConnection *connection;
+    GVariant *result, *value;
+    const gchar **env;
+    const gchar *auth = NULL;
+    gchar *name = NULL;
+    gsize i;
+    connection = g_bus_get_sync(G_BUS_TYPE_SESSION, NULL, NULL);
+    if(connection==NULL) return NULL;
+    result = g_dbus_connection_call_sync(connection,
+        "org.freedesktop.systemd1", "/org/freedesktop/systemd1",
+        "org.freedesktop.DBus.Properties", "Get",
+        g_variant_new("(ss)", "org.freedesktop.systemd1.Manager",
+        "Environment"), G_VARIANT_TYPE("(v)"), G_DBUS_CALL_FLAGS_NONE,
+        1000, NULL, NULL);
+    g_object_unref(connection);
+    if(result==NULL) return NULL;
+    g_variant_get(result, "(v)", &value);
+    if(g_variant_is_of_type(value, G_VARIANT_TYPE_STRING_ARRAY))
+    {
+        env = g_variant_get_strv(value, NULL);
+        for(i=0;env[i]!=NULL;i++)
+        {
+            if(g_str_has_prefix(env[i], "DISPLAY=") && env[i][8]!='\0')
+            {
+                g_free(name);
+                name = g_strdup(env[i] + 8);
+            }
+            else if(g_str_has_prefix(env[i], "XAUTHORITY="))
+                auth = env[i] + 11;
+        }
+        if(name!=NULL && auth!=NULL && *auth!='\0')
+            g_setenv("XAUTHORITY", auth, FALSE);
+        g_free(env);
+    }
+    g_variant_unref(value);
+    g_variant_unref(result);
+    return name;
+}
+
+static GdkDisplay *rc_ui_osd_x11_open_display()
+{
+    GdkDisplay *display;
+    gchar *name;
+    if(GDK_IS_X11_DISPLAY(gdk_display_get_default())) return NULL;
+    name = g_strdup(g_getenv("DISPLAY"));
+    if(name==NULL || *name=='\0')
+    {
+        g_free(name);
+        name = rc_ui_osd_get_session_display();
+    }
+    if(name==NULL) return NULL;
+    display = gdk_display_manager_open_display(gdk_display_manager_get(),
+        name);
+    if(display==NULL)
+    {
+        g_message("Cannot open X11 display %s for the OSD lyric", name);
+        g_free(name);
+        return NULL;
+    }
+    g_free(name);
+    if(!GDK_IS_X11_DISPLAY(display))
+    {
+        gdk_display_close(display);
+        return NULL;
+    }
+    return display;
+}
+
 G_GNUC_END_IGNORE_DEPRECATIONS
 
 #else
@@ -391,6 +499,7 @@ static void rc_ui_osd_realize_cb(GtkWidget *widget, gpointer data)
     surface = gtk_native_get_surface(GTK_NATIVE(widget));
     gdk_x11_surface_set_skip_taskbar_hint(GDK_X11_SURFACE(surface), TRUE);
     gdk_x11_surface_set_skip_pager_hint(GDK_X11_SURFACE(surface), TRUE);
+    rc_ui_osd_x11_set_type();
     /* Do not take the keyboard focus when shown */
     gdk_x11_surface_set_user_time(surface, 0);
     g_signal_connect(surface, "notify::mapped",
@@ -502,7 +611,7 @@ static void rc_ui_osd_reset_position_action(GSimpleAction *action,
 static void rc_ui_osd_update_visible()
 {
     RCUiOsdPrivate *priv = &osd_priv;
-    gboolean visible = priv->enabled && priv->available;
+    gboolean visible = priv->enabled;
     if(visible==gtk_widget_get_visible(priv->window)) return;
 #ifdef RC_UI_OSD_X11
     if(visible && rc_ui_osd_is_x11())
@@ -515,6 +624,21 @@ static void rc_ui_osd_update_visible()
 #endif
     gtk_widget_set_visible(priv->window, visible);
     rc_ui_osd_update_timer();
+}
+
+static void rc_ui_osd_update_text()
+{
+    RCUiOsdPrivate *priv = &osd_priv;
+    const gchar *text;
+    /* Show the title if there is no lyric text (no lyric, before the
+     * first line, or an empty line) */
+    priv->line_shown = priv->available && priv->line_text!=NULL &&
+        *priv->line_text!='\0';
+    text = priv->line_shown ? priv->line_text : priv->title;
+    if(text==NULL) text = "";
+    if(g_strcmp0(pango_layout_get_text(priv->layout), text)==0) return;
+    pango_layout_set_text(priv->layout, text, -1);
+    rc_ui_osd_update_size();
 }
 
 static void rc_ui_osd_load_style()
@@ -545,9 +669,9 @@ static void rc_ui_osd_load_style()
     g_free(color);
     priv->show_progress = rclib_settings_get_boolean(
         RCLIB_SETTINGS_GROUP_LYRIC, RCLIB_SETTINGS_KEY_OSD_PROGRESS);
-    priv->max_width = rclib_settings_get_integer(RCLIB_SETTINGS_GROUP_LYRIC,
+    priv->width_percent = rclib_settings_get_integer(RCLIB_SETTINGS_GROUP_LYRIC,
         RCLIB_SETTINGS_KEY_OSD_MAX_WIDTH);
-    priv->max_width = CLAMP(priv->max_width, 10, 100);
+    priv->width_percent = CLAMP(priv->width_percent, 10, 100);
     priv->outline = MAX(priv->font_size / 12, 2);
     priv->padding = priv->outline + 8;
     rc_ui_osd_update_size();
@@ -589,7 +713,8 @@ static void rc_ui_osd_settings_changed_cb(GObject *settings,
  * rc_ui_osd_init:
  *
  * Create the OSD lyric window. It is shown when the OSD lyric is
- * enabled in the settings and a lyric is loaded.
+ * enabled in the settings. On Wayland, the window is shown with
+ * XWayland if possible, so it can stay above other windows.
  */
 
 void rc_ui_osd_init()
@@ -607,6 +732,14 @@ void rc_ui_osd_init()
     /* Not added to the application, so it does not keep the program
      * running after the main window is closed */
     priv->window = gtk_window_new();
+#ifdef RC_UI_OSD_X11
+    priv->x11_display = rc_ui_osd_x11_open_display();
+    if(priv->x11_display!=NULL)
+    {
+        gtk_window_set_display(GTK_WINDOW(priv->window), priv->x11_display);
+        rc_ui_style_add_display(priv->x11_display);
+    }
+#endif
     gtk_window_set_title(GTK_WINDOW(priv->window), _("RhythmCat Lyric"));
     gtk_window_set_decorated(GTK_WINDOW(priv->window), FALSE);
     gtk_window_set_resizable(GTK_WINDOW(priv->window), FALSE);
@@ -669,6 +802,7 @@ void rc_ui_osd_init()
         G_CALLBACK(rc_ui_osd_settings_changed_cb), NULL);
     priv->state_handler = rclib_core_signal_connect("state-changed",
         G_CALLBACK(rc_ui_osd_core_state_changed_cb), NULL);
+    rc_ui_osd_update_visible();
 }
 
 /**
@@ -691,6 +825,9 @@ void rc_ui_osd_exit()
     gtk_widget_unparent(priv->popover);
     gtk_window_destroy(GTK_WINDOW(priv->window));
     g_clear_object(&priv->layout);
+    if(priv->x11_display!=NULL) gdk_display_close(priv->x11_display);
+    g_free(priv->line_text);
+    g_free(priv->title);
     memset(priv, 0, sizeof(RCUiOsdPrivate));
 }
 
@@ -698,15 +835,31 @@ void rc_ui_osd_exit()
  * rc_ui_osd_set_available:
  * @available: whether a lyric is loaded
  *
- * Set whether there is a lyric to show. The OSD lyric window is only
- * shown when a lyric is loaded.
+ * Set whether there is a lyric to show. If there is no lyric, the title
+ * of the playing music is shown.
  */
 
 void rc_ui_osd_set_available(gboolean available)
 {
     if(osd_priv.window==NULL) return;
     osd_priv.available = available;
-    rc_ui_osd_update_visible();
+    rc_ui_osd_update_text();
+    rc_ui_osd_update_timer();
+}
+
+/**
+ * rc_ui_osd_set_title:
+ * @title: (allow-none): the title of the playing music
+ *
+ * Set the title to show when there is no lyric.
+ */
+
+void rc_ui_osd_set_title(const gchar *title)
+{
+    if(osd_priv.window==NULL) return;
+    g_free(osd_priv.title);
+    osd_priv.title = g_strdup(title);
+    rc_ui_osd_update_text();
 }
 
 /**
@@ -725,12 +878,9 @@ void rc_ui_osd_set_line(const gchar *text, gint64 start, gint64 end)
     if(priv->window==NULL) return;
     priv->line_start = start;
     priv->line_end = end;
-    if(g_strcmp0(pango_layout_get_text(priv->layout),
-        text!=NULL ? text : "")!=0)
-    {
-        pango_layout_set_text(priv->layout, text!=NULL ? text : "", -1);
-        rc_ui_osd_update_size();
-    }
+    g_free(priv->line_text);
+    priv->line_text = g_strdup(text);
+    rc_ui_osd_update_text();
     priv->progress_width = 0;
     gtk_widget_queue_draw(priv->area);
     rc_ui_osd_update_timer();
