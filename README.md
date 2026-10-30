@@ -144,7 +144,10 @@ ninja -C build install
 * Shows the cover (embedded image or the default cover), title (the file
   base name if there's no title tag), artist, album, position/duration with
   a seek bar, and synced lyrics (previous/current/next line, at the bottom
-  of the window above the status bar).
+  of the window above the status bar). The status bar shows the format
+  (codec) and bitrate of the playing music; the bitrate is updated while
+  playing VBR streams, and for streams without bitrate information it is
+  the average from the file size and the duration.
 * OSD lyric (off by default; menu "OSD Lyric" or Settings): the current
   lyric line in a transparent window on the desktop, drawn with an outline
   so it can be read on any background. When it is on, the window is

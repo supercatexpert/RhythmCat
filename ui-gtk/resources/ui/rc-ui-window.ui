@@ -600,6 +600,19 @@
               </object>
             </child>
             <child>
+              <object class="GtkLabel" id="format_label">
+                <property name="margin-top">4</property>
+                <property name="margin-bottom">4</property>
+                <property name="margin-end">4</property>
+                <property name="tooltip-text" translatable="yes">Format and bitrate of the playing music</property>
+                <style>
+                  <class name="dim-label"/>
+                  <class name="caption"/>
+                  <class name="numeric"/>
+                </style>
+              </object>
+            </child>
+            <child>
               <object class="GtkButton" id="import_cancel_button">
                 <property name="visible">False</property>
                 <property name="valign">center</property>

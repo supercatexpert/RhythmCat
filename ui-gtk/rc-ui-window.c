@@ -87,6 +87,10 @@ typedef struct RCUiWindowPrivate
     GtkWidget *item_down_button;
     GtkWidget *track_view;
     GtkWidget *status_label;
+    GtkWidget *format_label;
+    /* The average bitrate from the file size (unit: bit/s), 0 if it is
+     * not calculated yet */
+    guint average_bitrate;
     GtkWidget *import_cancel_button;
     GtkWidget *dark_toggle;
     GListStore *track_store;
@@ -1659,9 +1663,13 @@ static void rc_ui_window_update_progress()
     rc_ui_window_update_lyric(pos);
 }
 
+static void rc_ui_window_update_format();
+
 static gboolean rc_ui_window_progress_timeout_cb(gpointer data)
 {
     rc_ui_window_update_progress();
+    /* The bitrate of VBR streams changes while playing */
+    rc_ui_window_update_format();
     return G_SOURCE_CONTINUE;
 }
 
@@ -1822,6 +1830,73 @@ static void rc_ui_window_update_status()
 
 /* ----- Core signal handlers ----- */
 
+/* Get the average bitrate (unit: bit/s) from the file size and the
+ * duration, for streams without the bitrate tag (like FLAC) */
+static guint rc_ui_window_get_average_bitrate(const gchar *uri)
+{
+    RCLibDbItem *item;
+    GFile *file;
+    GFileInfo *info;
+    gint64 duration;
+    guint64 size;
+    item = rclib_player_get_current_item();
+    /* A CUE track is a part of the file */
+    if(item!=NULL && item->type!=RCLIB_DB_ITEM_TYPE_NORMAL) return 0;
+    duration = rclib_core_query_duration();
+    if(duration<GST_SECOND) return 0;
+    file = g_file_new_for_uri(uri);
+    if(!g_file_is_native(file))
+    {
+        g_object_unref(file);
+        return 0;
+    }
+    info = g_file_query_info(file, G_FILE_ATTRIBUTE_STANDARD_SIZE,
+        G_FILE_QUERY_INFO_NONE, NULL, NULL);
+    g_object_unref(file);
+    if(info==NULL) return 0;
+    size = g_file_info_get_size(info);
+    g_object_unref(info);
+    return (guint)((gdouble)size * 8 * GST_SECOND / duration);
+}
+
+/* Show the format and the bitrate of the playing music in the status
+ * bar */
+static void rc_ui_window_update_format()
+{
+    RCUiWindowPrivate *priv = &window_priv;
+    const RCLibCoreMetadata *metadata;
+    const gchar *uri;
+    GString *text;
+    guint bitrate;
+    uri = rclib_core_get_uri();
+    if(uri==NULL)
+    {
+        gtk_label_set_text(GTK_LABEL(priv->format_label), "");
+        return;
+    }
+    metadata = rclib_core_get_metadata();
+    text = g_string_new(NULL);
+    if(metadata->ftype!=NULL) g_string_append(text, metadata->ftype);
+    bitrate = metadata->bitrate;
+    if(bitrate==0)
+    {
+        if(priv->average_bitrate==0)
+            priv->average_bitrate = rc_ui_window_get_average_bitrate(uri);
+        bitrate = priv->average_bitrate;
+    }
+    if(bitrate>0)
+    {
+        if(text->len>0) g_string_append(text, " · ");
+        g_string_append_printf(text, _("%u kbps"), (bitrate + 500) / 1000);
+    }
+    if(g_strcmp0(gtk_label_get_text(GTK_LABEL(priv->format_label)),
+        text->str)!=0)
+    {
+        gtk_label_set_text(GTK_LABEL(priv->format_label), text->str);
+    }
+    g_string_free(text, TRUE);
+}
+
 static void rc_ui_window_core_uri_changed_cb(GObject *core,
     const gchar *uri, gpointer data)
 {
@@ -1839,6 +1914,8 @@ static void rc_ui_window_core_uri_changed_cb(GObject *core,
     rc_ui_window_update_playing_playlist();
     rc_ui_window_set_cover(NULL);
     rc_ui_window_update_info();
+    priv->average_bitrate = 0;
+    rc_ui_window_update_format();
     rc_ui_window_load_lyric();
     rc_ui_window_update_progress();
 }
@@ -1847,6 +1924,7 @@ static void rc_ui_window_core_tag_found_cb(GObject *core,
     const RCLibCoreMetadata *metadata, const gchar *uri, gpointer data)
 {
     rc_ui_window_update_info();
+    rc_ui_window_update_format();
     if(metadata->image!=NULL) rc_ui_window_set_cover(metadata->image);
 }
 
@@ -1874,6 +1952,7 @@ static void rc_ui_window_core_new_duration_cb(GObject *core,
     gint64 duration, gpointer data)
 {
     rc_ui_window_update_progress();
+    rc_ui_window_update_format();
 }
 
 static void rc_ui_window_core_volume_changed_cb(GObject *core,
@@ -2561,6 +2640,7 @@ GtkWidget *rc_ui_window_init(GtkApplication *app)
     priv->item_down_button = rc_ui_window_get_object("item_down_button");
     priv->track_view = rc_ui_window_get_object("track_view");
     priv->status_label = rc_ui_window_get_object("status_label");
+    priv->format_label = rc_ui_window_get_object("format_label");
     priv->import_cancel_button = rc_ui_window_get_object(
         "import_cancel_button");
     priv->dark_toggle = rc_ui_window_get_object("dark_toggle");
@@ -2730,6 +2810,7 @@ GtkWidget *rc_ui_window_init(GtkApplication *app)
     rc_ui_window_set_cover(NULL);
     rc_ui_osd_init();
     rc_ui_window_update_info();
+    rc_ui_window_update_format();
     rc_ui_window_sync_osd_action();
     rc_ui_window_load_lyric();
     rc_ui_window_update_progress();
