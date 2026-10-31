@@ -144,7 +144,11 @@ ninja -C build install
 * Shows the cover (embedded image or the default cover), title (the file
   base name if there's no title tag), artist, album, position/duration with
   a seek bar, and synced lyrics (previous/current/next line, at the bottom
-  of the window above the status bar). The status bar shows the format
+  of the window above the status bar). The lyric display can be turned on
+  or off in the menu ("Lyric Display") or Settings, and it is always shown
+  when it is on; when there is no lyric text (no lyric file, before
+  the first line, or an empty line), it shows "title - artist - album" of
+  the playing music. The status bar shows the format
   (codec) and bitrate of the playing music; the bitrate is updated while
   playing VBR streams, and for streams without bitrate information it is
   the average from the file size and the duration.

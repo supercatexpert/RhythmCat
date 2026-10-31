@@ -77,6 +77,11 @@ typedef struct RCUiWindowPrivate
     GtkWidget *lyric_prev_label;
     GtkWidget *lyric_label;
     GtkWidget *lyric_next_label;
+    /* "title - artist - album" of the playing music, shown in the lyric
+     * display if there is no lyric text */
+    gchar *lyric_info;
+    /* The current lyric line, or NULL if there is no lyric text */
+    gchar *lyric_current;
     GtkWidget *sidebar_stack;
     GtkWidget *group_dropdown;
     GtkWidget *group_listbox;
@@ -1494,6 +1499,29 @@ static void rc_ui_window_set_cover(GBytes *image)
     if(texture!=NULL) g_object_unref(texture);
 }
 
+static void rc_ui_window_update_lyric_label()
+{
+    RCUiWindowPrivate *priv = &window_priv;
+    gtk_label_set_text(GTK_LABEL(priv->lyric_label),
+        priv->lyric_current!=NULL ? priv->lyric_current :
+        (priv->lyric_info!=NULL ? priv->lyric_info : ""));
+}
+
+static void rc_ui_window_set_lyric_info(const gchar *title,
+    const gchar *artist, const gchar *album)
+{
+    RCUiWindowPrivate *priv = &window_priv;
+    GString *info;
+    info = g_string_new(title);
+    if(artist!=NULL && *artist!='\0')
+        g_string_append_printf(info, " - %s", artist);
+    if(album!=NULL && *album!='\0')
+        g_string_append_printf(info, " - %s", album);
+    g_free(priv->lyric_info);
+    priv->lyric_info = g_string_free(info, FALSE);
+    rc_ui_window_update_lyric_label();
+}
+
 static void rc_ui_window_update_info()
 {
     RCUiWindowPrivate *priv = &window_priv;
@@ -1510,6 +1538,7 @@ static void rc_ui_window_update_info()
         gtk_label_set_text(GTK_LABEL(priv->album_label), "");
         gtk_window_set_title(GTK_WINDOW(priv->window), "RhythmCat");
         rc_ui_osd_set_title("RhythmCat");
+        rc_ui_window_set_lyric_info("RhythmCat", NULL, NULL);
         return;
     }
     metadata = rclib_core_get_metadata();
@@ -1542,6 +1571,7 @@ static void rc_ui_window_update_info()
     }
     else
         rc_ui_osd_set_title(title);
+    rc_ui_window_set_lyric_info(title, artist, album);
     g_free(title);
 }
 
@@ -1550,8 +1580,12 @@ static void rc_ui_window_set_lyric_text(const gchar *prev,
 {
     RCUiWindowPrivate *priv = &window_priv;
     gtk_label_set_text(GTK_LABEL(priv->lyric_prev_label), prev);
-    gtk_label_set_text(GTK_LABEL(priv->lyric_label), current);
     gtk_label_set_text(GTK_LABEL(priv->lyric_next_label), next);
+    /* Show the music information if there is no lyric text */
+    g_free(priv->lyric_current);
+    priv->lyric_current = current!=NULL && *current!='\0' ?
+        g_strdup(current) : NULL;
+    rc_ui_window_update_lyric_label();
 }
 
 static void rc_ui_window_update_lyric(gint64 pos)
@@ -1626,7 +1660,7 @@ static void rc_ui_window_load_lyric()
         }
         g_free(path);
     }
-    gtk_widget_set_visible(priv->lyric_box, show && priv->lyric!=NULL);
+    gtk_widget_set_visible(priv->lyric_box, show);
     rc_ui_window_set_lyric_text("", "", "");
     rc_ui_osd_set_line(NULL, -1, -1);
     rc_ui_osd_set_available(priv->lyric!=NULL);
@@ -2088,15 +2122,16 @@ static void rc_ui_window_db_import_updated_cb(GObject *db, guint pending,
     rc_ui_window_update_status();
 }
 
-static void rc_ui_window_sync_osd_action()
+static void rc_ui_window_sync_lyric_action(const gchar *name,
+    const gchar *key)
 {
     GAction *action;
     action = g_action_map_lookup_action(G_ACTION_MAP(window_priv.window),
-        "osd-lyric");
+        name);
     if(action==NULL) return;
     g_simple_action_set_state(G_SIMPLE_ACTION(action),
         g_variant_new_boolean(rclib_settings_get_boolean(
-        RCLIB_SETTINGS_GROUP_LYRIC, RCLIB_SETTINGS_KEY_OSD_ENABLED)));
+        RCLIB_SETTINGS_GROUP_LYRIC, key)));
 }
 
 static void rc_ui_window_settings_changed_cb(GObject *settings,
@@ -2110,13 +2145,19 @@ static void rc_ui_window_settings_changed_cb(GObject *settings,
     else if(g_strcmp0(group, RCLIB_SETTINGS_GROUP_LYRIC)==0 &&
         g_strcmp0(key, RCLIB_SETTINGS_KEY_OSD_ENABLED)==0)
     {
-        rc_ui_window_sync_osd_action();
+        rc_ui_window_sync_lyric_action("osd-lyric",
+            RCLIB_SETTINGS_KEY_OSD_ENABLED);
         rc_ui_window_load_lyric();
     }
-    else if((g_strcmp0(group, RCLIB_SETTINGS_GROUP_LYRIC)==0 &&
-        g_strcmp0(key, RCLIB_SETTINGS_KEY_LYRIC_ENABLED)==0) ||
-        (g_strcmp0(group, RCLIB_SETTINGS_GROUP_ENCODING)==0 &&
-        g_strcmp0(key, RCLIB_SETTINGS_KEY_LYRIC_ENCODINGS)==0))
+    else if(g_strcmp0(group, RCLIB_SETTINGS_GROUP_LYRIC)==0 &&
+        g_strcmp0(key, RCLIB_SETTINGS_KEY_LYRIC_ENABLED)==0)
+    {
+        rc_ui_window_sync_lyric_action("lyric",
+            RCLIB_SETTINGS_KEY_LYRIC_ENABLED);
+        rc_ui_window_load_lyric();
+    }
+    else if(g_strcmp0(group, RCLIB_SETTINGS_GROUP_ENCODING)==0 &&
+        g_strcmp0(key, RCLIB_SETTINGS_KEY_LYRIC_ENCODINGS)==0)
     {
         rc_ui_window_load_lyric();
     }
@@ -2551,6 +2592,13 @@ static void rc_ui_window_save_playlist_action(GSimpleAction *action,
     g_object_unref(dialog);
 }
 
+static void rc_ui_window_lyric_action(GSimpleAction *action,
+    GVariant *value, gpointer data)
+{
+    rclib_settings_set_boolean(RCLIB_SETTINGS_GROUP_LYRIC,
+        RCLIB_SETTINGS_KEY_LYRIC_ENABLED, g_variant_get_boolean(value));
+}
+
 static void rc_ui_window_osd_lyric_action(GSimpleAction *action,
     GVariant *value, gpointer data)
 {
@@ -2573,6 +2621,7 @@ static const GActionEntry window_actions[] = {
     {"save-playlist", rc_ui_window_save_playlist_action, NULL, NULL, NULL},
     {"settings", rc_ui_window_settings_action, NULL, NULL, NULL},
     {"equalizer", rc_ui_window_equalizer_action, NULL, NULL, NULL},
+    {"lyric", NULL, NULL, "false", rc_ui_window_lyric_action},
     {"osd-lyric", NULL, NULL, "false", rc_ui_window_osd_lyric_action},
     {"about", rc_ui_window_about_action, NULL, NULL, NULL},
     {"add-to-playlist", rc_ui_window_add_to_playlist_action, "i", NULL,
@@ -2811,7 +2860,10 @@ GtkWidget *rc_ui_window_init(GtkApplication *app)
     rc_ui_osd_init();
     rc_ui_window_update_info();
     rc_ui_window_update_format();
-    rc_ui_window_sync_osd_action();
+    rc_ui_window_sync_lyric_action("lyric",
+        RCLIB_SETTINGS_KEY_LYRIC_ENABLED);
+    rc_ui_window_sync_lyric_action("osd-lyric",
+        RCLIB_SETTINGS_KEY_OSD_ENABLED);
     rc_ui_window_load_lyric();
     rc_ui_window_update_progress();
     rc_ui_window_update_status();
@@ -2867,6 +2919,8 @@ void rc_ui_window_cleanup()
         rclib_db_playlist_unref(priv->view_playlist);
     if(priv->playing_item!=NULL) rclib_db_item_unref(priv->playing_item);
     if(priv->lyric!=NULL) rclib_lyric_data_free(priv->lyric);
+    g_clear_pointer(&priv->lyric_info, g_free);
+    g_clear_pointer(&priv->lyric_current, g_free);
     rc_ui_osd_exit();
     g_clear_pointer(&priv->groups, g_ptr_array_unref);
     g_clear_object(&priv->track_selection);

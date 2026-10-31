@@ -39,6 +39,10 @@
         <attribute name="action">win.equalizer</attribute>
       </item>
       <item>
+        <attribute name="label" translatable="yes">L_yric Display</attribute>
+        <attribute name="action">win.lyric</attribute>
+      </item>
+      <item>
         <attribute name="label" translatable="yes">_OSD Lyric</attribute>
         <attribute name="action">win.osd-lyric</attribute>
       </item>
