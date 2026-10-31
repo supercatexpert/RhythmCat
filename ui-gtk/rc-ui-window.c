@@ -2631,6 +2631,24 @@ static const GActionEntry window_actions[] = {
         NULL}
 };
 
+static gboolean rc_ui_window_key_pressed_cb(GtkEventControllerKey *controller,
+    guint keyval, guint keycode, GdkModifierType state, gpointer data)
+{
+    GtkWidget *focus;
+    if(keyval!=GDK_KEY_space && keyval!=GDK_KEY_KP_Space) return FALSE;
+    if((state & (GDK_CONTROL_MASK | GDK_ALT_MASK | GDK_SHIFT_MASK |
+        GDK_SUPER_MASK))!=0)
+    {
+        return FALSE;
+    }
+    /* Keep the space key for text input */
+    focus = gtk_root_get_focus(GTK_ROOT(window_priv.window));
+    if(focus!=NULL && (GTK_IS_EDITABLE(focus) || GTK_IS_TEXT_VIEW(focus)))
+        return FALSE;
+    gtk_widget_activate_action(window_priv.window, "win.play-pause", NULL);
+    return TRUE;
+}
+
 static void rc_ui_window_connect_core(const gchar *name, GCallback callback)
 {
     gulong id = rclib_core_signal_connect(name, callback, NULL);
@@ -2656,6 +2674,7 @@ GtkWidget *rc_ui_window_init(GtkApplication *app)
 {
     RCUiWindowPrivate *priv = &window_priv;
     GtkDropTarget *drop_target;
+    GtkEventController *key_controller;
     gulong id;
     guint mode;
     if(priv->window!=NULL) return priv->window;
@@ -2743,6 +2762,15 @@ GtkWidget *rc_ui_window_init(GtkApplication *app)
         G_CALLBACK(rc_ui_window_list_drop_cb), NULL);
     gtk_widget_add_controller(rc_ui_window_get_object("track_scrolled"),
         GTK_EVENT_CONTROLLER(drop_target));
+
+    /* The space key pauses or resumes the music, before the focused
+     * widget (such as a button or the track list) handles it */
+    key_controller = gtk_event_controller_key_new();
+    gtk_event_controller_set_propagation_phase(key_controller,
+        GTK_PHASE_CAPTURE);
+    g_signal_connect(key_controller, "key-pressed",
+        G_CALLBACK(rc_ui_window_key_pressed_cb), NULL);
+    gtk_widget_add_controller(priv->window, key_controller);
 
     /* Sidebar */
     priv->playlist_menu = g_menu_new();

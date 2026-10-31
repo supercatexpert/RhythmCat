@@ -205,8 +205,9 @@ ninja -C build install
   a preset list and a slider for each band. Moving a slider changes the
   custom preset, starting from the gains of the current preset. "Reset
   Custom" sets all custom bands to 0 dB.
-* Shortcuts: Ctrl+Space play/pause, Ctrl+←/→ previous/next, Ctrl+O import,
-  Ctrl+, settings, Ctrl+E equalizer, Ctrl+Q quit.
+* Shortcuts: Space or Ctrl+Space play/pause (Space types a space in text
+  fields), Ctrl+←/→ previous/next, Ctrl+O import, Ctrl+, settings, Ctrl+E
+  equalizer, Ctrl+Q quit.
 
 ### ncurses frontend
 
