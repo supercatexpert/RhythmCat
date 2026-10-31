@@ -103,32 +103,76 @@ static gint rc_tui_char_width(gunichar c)
     return 1;
 }
 
-/* Print the UTF-8 text at the position, truncated or padded to the
- * display width. */
-static void rc_tui_put(gint y, gint x, const gchar *text, gint width)
+/* Get the character to show at p (invalid bytes are shown as '?', and
+ * control characters are skipped), and the position of the next one. */
+static gunichar rc_tui_get_char(const gchar *p, const gchar **next)
+{
+    gunichar c;
+    c = g_utf8_get_char_validated(p, -1);
+    *next = g_utf8_next_char(p);
+    if(c==(gunichar)-1 || c==(gunichar)-2)
+    {
+        *next = p+1;
+        return '?';
+    }
+    if(c=='\n' || c=='\t') return ' ';
+    if(g_unichar_iscntrl(c)) return 0;
+    return c;
+}
+
+/* Print the UTF-8 text at the position, padded to the display width. If
+ * the text is wider, it is truncated, and ends with an ellipsis if
+ * ellipsize is TRUE. */
+static void rc_tui_put_full(gint y, gint x, const gchar *text, gint width,
+    gboolean ellipsize)
 {
     const gchar *p, *next;
-    gint used = 0, w;
+    gint used = 0, limit, w;
     gunichar c;
     if(width<=0 || y<0 || y>=LINES) return;
-    move(y, x);
-    for(p=text!=NULL ? text : "";*p!='\0';p=next)
+    if(text==NULL) text = "";
+    limit = width;
+    if(ellipsize)
     {
-        c = g_utf8_get_char_validated(p, -1);
-        next = g_utf8_next_char(p);
-        if(c==(gunichar)-1 || c==(gunichar)-2)
+        for(p=text;*p!='\0' && used<=width;p=next)
         {
-            c = '?';
-            next = p+1;
+            c = rc_tui_get_char(p, &next);
+            if(c!=0) used += rc_tui_char_width(c);
         }
-        if(c=='\n' || c=='\t') c = ' ';
-        if(g_unichar_iscntrl(c)) continue;
+        /* Keep one column for the ellipsis */
+        if(used>width) limit = width - 1;
+        else ellipsize = FALSE;
+        used = 0;
+    }
+    move(y, x);
+    for(p=text;*p!='\0';p=next)
+    {
+        c = rc_tui_get_char(p, &next);
+        if(c==0) continue;
         w = rc_tui_char_width(c);
-        if(used+w>width) break;
-        addnstr(p, next-p);
+        if(used+w>limit) break;
+        /* ASCII (including the replaced characters) is added directly */
+        if(c<0x80) addch(c);
+        else addnstr(p, next-p);
         used += w;
     }
+    if(ellipsize)
+    {
+        addstr(g_get_charset(NULL) ? "\u2026" : ".");
+        used++;
+    }
     for(;used<width;used++) addch(' ');
+}
+
+static void rc_tui_put(gint y, gint x, const gchar *text, gint width)
+{
+    rc_tui_put_full(y, x, text, width, FALSE);
+}
+
+/* Print a cell of a list, with an ellipsis if the text is too wide */
+static void rc_tui_put_cell(gint y, gint x, const gchar *text, gint width)
+{
+    rc_tui_put_full(y, x, text, width, TRUE);
 }
 
 static gint rc_tui_text_width(const gchar *text)
@@ -427,7 +471,7 @@ static void rc_tui_draw_sources(gint top, gint height, gint width)
         if(i==priv->source_cursor)
             attr |= priv->focus==RC_TUI_FOCUS_SOURCES ? A_REVERSE : A_BOLD;
         attron(attr);
-        rc_tui_put(top+row, 0, text, width);
+        rc_tui_put_cell(top+row, 0, text, width);
         attroff(attr);
         g_free(text);
     }
@@ -450,8 +494,10 @@ static void rc_tui_draw_tracks(gint top, gint height, gint left,
     title_width = MAX(width - artist_width - 10, 6);
     line = g_strdup_printf("  %-*s", 0, _("Title"));
     attron(A_BOLD);
-    rc_tui_put(top, left, line, title_width+2);
-    rc_tui_put(top, left+title_width+2, _("Artist"), artist_width);
+    rc_tui_put_cell(top, left, line, title_width+1);
+    rc_tui_put(top, left+title_width+1, "", 1);
+    rc_tui_put_cell(top, left+title_width+2, _("Artist"), artist_width-1);
+    rc_tui_put(top, left+title_width+1+artist_width, "", 1);
     rc_tui_put(top, left+title_width+2+artist_width, _("Length"),
         width-title_width-2-artist_width);
     attroff(A_BOLD);
@@ -474,10 +520,13 @@ static void rc_tui_draw_tracks(gint top, gint height, gint left,
             item->duration) : g_strdup("");
         attron(attr);
         rc_tui_put(top+row, left, item==current ? "> " : "  ", 2);
-        rc_tui_put(top+row, left+2, title, title_width);
-        rc_tui_put(top+row, left+2+title_width, item->artist!=NULL ?
-            item->artist : "", artist_width);
-        rc_tui_put(top+row, left+2+title_width+artist_width, duration,
+        /* A space is left between the columns */
+        rc_tui_put_cell(top+row, left+2, title, title_width-1);
+        rc_tui_put(top+row, left+1+title_width, "", 1);
+        rc_tui_put_cell(top+row, left+2+title_width, item->artist!=NULL ?
+            item->artist : "", artist_width-1);
+        rc_tui_put(top+row, left+1+title_width+artist_width, "", 1);
+        rc_tui_put_cell(top+row, left+2+title_width+artist_width, duration,
             width-2-title_width-artist_width);
         attroff(attr);
         g_free(title);

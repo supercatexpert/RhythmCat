@@ -217,5 +217,6 @@ pause, `r` repeat mode, `n`/`p` next/previous, ←/→ seek, `+`/`-` volume,
 `L`/`W` load/save a playlist file, `M` remove missing files, `A` add to
 playlist, `N`/`R`/`D` new/rename/delete playlist, `J`/`K` reorder, `e`
 equalizer on/off, `E` next equalizer preset, `q` quit. The header shows
-the current equalizer preset. Log output goes to
+the current equalizer preset. Text too wide for the playlist and track
+lists is cut with an ellipsis (`…`). Log output goes to
 `~/.cache/RhythmCat3/tui.log`.
