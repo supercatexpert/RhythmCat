@@ -156,9 +156,8 @@ ninja -C build install
 * OSD lyric (off by default; menu "OSD Lyric" or Settings): the current
   lyric line in a transparent window on the desktop, drawn with an outline
   so it can be read on any background. When it is on, the window is
-  always shown; when there is no lyric text (no lyric file, before the
-  first line, or an empty line), it shows "title - artist" of the playing
-  music. The played part of the line is
+  always shown; if the playing music has no lyric file, it shows
+  "title - artist" of the music. The played part of the line is
   filled with the progress color, moving from the start time of the line
   to its end time (the end time in the lyric file, the start of the next
   line, or the end of the track), also across wrapped lines. The font,

@@ -46,8 +46,6 @@ typedef struct RCUiOsdPrivate
     /* The current lyric line, and the title shown without a lyric */
     gchar *line_text;
     gchar *title;
-    /* Whether the lyric line is shown (not the title) */
-    gboolean line_shown;
     GdkRGBA color;
     GdkRGBA progress_color;
     gboolean show_progress;
@@ -167,7 +165,7 @@ static void rc_ui_osd_update_progress()
     RCUiOsdPrivate *priv = &osd_priv;
     gint64 pos;
     gint width = 0;
-    if(priv->show_progress && priv->line_shown && priv->line_start>=0 &&
+    if(priv->show_progress && priv->available && priv->line_start>=0 &&
         priv->line_end>priv->line_start &&
         rclib_core_get_state()>=GST_STATE_PAUSED)
     {
@@ -200,7 +198,7 @@ static void rc_ui_osd_update_timer()
 {
     RCUiOsdPrivate *priv = &osd_priv;
     gboolean run;
-    run = priv->show_progress && priv->enabled && priv->line_shown &&
+    run = priv->show_progress && priv->enabled && priv->available &&
         priv->line_end>priv->line_start && priv->line_start>=0 &&
         rclib_core_get_state()==GST_STATE_PLAYING;
     if(run && priv->progress_id==0)
@@ -630,11 +628,8 @@ static void rc_ui_osd_update_text()
 {
     RCUiOsdPrivate *priv = &osd_priv;
     const gchar *text;
-    /* Show the title if there is no lyric text (no lyric, before the
-     * first line, or an empty line) */
-    priv->line_shown = priv->available && priv->line_text!=NULL &&
-        *priv->line_text!='\0';
-    text = priv->line_shown ? priv->line_text : priv->title;
+    /* Show the title if there is no lyric file */
+    text = priv->available ? priv->line_text : priv->title;
     if(text==NULL) text = "";
     if(g_strcmp0(pango_layout_get_text(priv->layout), text)==0) return;
     pango_layout_set_text(priv->layout, text, -1);
@@ -745,8 +740,6 @@ void rc_ui_osd_init()
     gtk_window_set_resizable(GTK_WINDOW(priv->window), FALSE);
     gtk_widget_add_css_class(priv->window, "rc-osd-lyric");
     priv->area = gtk_drawing_area_new();
-    gtk_widget_set_tooltip_text(priv->area, _("Drag to move the lyric, "
-        "right click for the menu"));
     gtk_drawing_area_set_draw_func(GTK_DRAWING_AREA(priv->area),
         rc_ui_osd_draw_cb, NULL, NULL);
     gtk_window_set_child(GTK_WINDOW(priv->window), priv->area);
