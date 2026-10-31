@@ -92,6 +92,8 @@ typedef struct RCUiWindowPrivate
     GtkWidget *item_down_button;
     GtkWidget *track_view;
     GtkWidget *status_label;
+    /* Whether the status bar shows a playback error */
+    gboolean status_error;
     GtkWidget *format_label;
     /* The average bitrate from the file size (unit: bit/s), 0 if it is
      * not calculated yet */
@@ -1843,6 +1845,7 @@ static void rc_ui_window_update_status()
     library = rclib_db_library_get_items();
     playlists = rclib_db_get_playlists();
     pending = rclib_db_get_import_pending();
+    priv->status_error = FALSE;
     count = g_strdup_printf(_("%u tracks in library, %u playlists"),
         library!=NULL ? library->len : 0, playlists!=NULL ?
         playlists->len : 0);
@@ -1979,6 +1982,9 @@ static void rc_ui_window_core_state_changed_cb(GObject *core, gint state,
         g_source_remove(priv->progress_timer_id);
         priv->progress_timer_id = 0;
     }
+    /* The playing music is OK, so the error is not shown any more */
+    if(state==GST_STATE_PLAYING && priv->status_error)
+        rc_ui_window_update_status();
     rc_ui_window_update_progress();
 }
 
@@ -2005,6 +2011,7 @@ static void rc_ui_window_core_error_cb(GObject *core, const gchar *message,
     text = g_strdup_printf(_("Error: %s"), message);
     gtk_label_set_text(GTK_LABEL(window_priv.status_label), text);
     g_free(text);
+    window_priv.status_error = TRUE;
 }
 
 /* ----- Database signal handlers ----- */

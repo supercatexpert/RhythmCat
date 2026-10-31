@@ -151,7 +151,9 @@ ninja -C build install
   the playing music. The status bar shows the format
   (codec) and bitrate of the playing music; the bitrate is updated while
   playing VBR streams, and for streams without bitrate information it is
-  the average from the file size and the duration.
+  the average from the file size and the duration. Playback errors (such
+  as a missing file) are shown in the status bar until music is played
+  successfully.
 * OSD lyric (off by default; menu "OSD Lyric" or Settings): the current
   lyric line in a transparent window on the desktop, drawn with an outline
   so it can be read on any background. When it is on, the window is
