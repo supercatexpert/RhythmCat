@@ -78,10 +78,8 @@ typedef struct RCUiWindowPrivate
     GtkWidget *lyric_label;
     GtkWidget *lyric_next_label;
     /* "title - artist - album" of the playing music, shown in the lyric
-     * display if there is no lyric text */
+     * display if there is no lyric file */
     gchar *lyric_info;
-    /* The current lyric line, or NULL if there is no lyric text */
-    gchar *lyric_current;
     GtkWidget *sidebar_stack;
     GtkWidget *group_dropdown;
     GtkWidget *group_listbox;
@@ -1501,12 +1499,12 @@ static void rc_ui_window_set_cover(GBytes *image)
     if(texture!=NULL) g_object_unref(texture);
 }
 
-static void rc_ui_window_update_lyric_label()
+static void rc_ui_window_show_lyric_info()
 {
     RCUiWindowPrivate *priv = &window_priv;
+    if(priv->lyric!=NULL) return;
     gtk_label_set_text(GTK_LABEL(priv->lyric_label),
-        priv->lyric_current!=NULL ? priv->lyric_current :
-        (priv->lyric_info!=NULL ? priv->lyric_info : ""));
+        priv->lyric_info!=NULL ? priv->lyric_info : "");
 }
 
 static void rc_ui_window_set_lyric_info(const gchar *title,
@@ -1521,7 +1519,7 @@ static void rc_ui_window_set_lyric_info(const gchar *title,
         g_string_append_printf(info, " - %s", album);
     g_free(priv->lyric_info);
     priv->lyric_info = g_string_free(info, FALSE);
-    rc_ui_window_update_lyric_label();
+    rc_ui_window_show_lyric_info();
 }
 
 static void rc_ui_window_update_info()
@@ -1582,12 +1580,8 @@ static void rc_ui_window_set_lyric_text(const gchar *prev,
 {
     RCUiWindowPrivate *priv = &window_priv;
     gtk_label_set_text(GTK_LABEL(priv->lyric_prev_label), prev);
+    gtk_label_set_text(GTK_LABEL(priv->lyric_label), current);
     gtk_label_set_text(GTK_LABEL(priv->lyric_next_label), next);
-    /* Show the music information if there is no lyric text */
-    g_free(priv->lyric_current);
-    priv->lyric_current = current!=NULL && *current!='\0' ?
-        g_strdup(current) : NULL;
-    rc_ui_window_update_lyric_label();
 }
 
 static void rc_ui_window_update_lyric(gint64 pos)
@@ -1664,6 +1658,8 @@ static void rc_ui_window_load_lyric()
     }
     gtk_widget_set_visible(priv->lyric_box, show);
     rc_ui_window_set_lyric_text("", "", "");
+    /* Show the music information if there is no lyric file */
+    rc_ui_window_show_lyric_info();
     rc_ui_osd_set_line(NULL, -1, -1);
     rc_ui_osd_set_available(priv->lyric!=NULL);
     if(priv->lyric!=NULL)
@@ -2927,7 +2923,6 @@ void rc_ui_window_cleanup()
     if(priv->playing_item!=NULL) rclib_db_item_unref(priv->playing_item);
     if(priv->lyric!=NULL) rclib_lyric_data_free(priv->lyric);
     g_clear_pointer(&priv->lyric_info, g_free);
-    g_clear_pointer(&priv->lyric_current, g_free);
     rc_ui_osd_exit();
     g_clear_pointer(&priv->groups, g_ptr_array_unref);
     g_clear_object(&priv->track_selection);
