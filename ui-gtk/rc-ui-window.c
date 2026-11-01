@@ -33,6 +33,12 @@
 /* Hold the pointer this long (unit: millisecond) to start dragging */
 #define RC_UI_WINDOW_LONG_PRESS_TIME 500
 
+/* The speed (unit: pixel per second) to move the music information in
+ * the lyric display, and the time (unit: microsecond) to rest at each
+ * end */
+#define RC_UI_WINDOW_LYRIC_INFO_SPEED 40
+#define RC_UI_WINDOW_LYRIC_INFO_REST (3 * G_USEC_PER_SEC)
+
 typedef enum
 {
     RC_UI_VIEW_LIBRARY = 0,
@@ -77,6 +83,16 @@ typedef struct RCUiWindowPrivate
     GtkWidget *lyric_prev_label;
     GtkWidget *lyric_label;
     GtkWidget *lyric_next_label;
+    /* The current line is moved in it if the line is too wide */
+    GtkWidget *lyric_scrolled;
+    guint lyric_tick_id;
+    /* The time range of the current line (unit: nanosecond), the end
+     * time is -1 if unknown */
+    gint64 lyric_line_start;
+    gint64 lyric_line_end;
+    /* The frame time when the music information starts to move, -1 to
+     * start again */
+    gint64 lyric_info_time;
     /* "title - artist - album" of the playing music, shown in the lyric
      * display if there is no lyric file */
     gchar *lyric_info;
@@ -1499,12 +1515,120 @@ static void rc_ui_window_set_cover(GBytes *image)
     if(texture!=NULL) g_object_unref(texture);
 }
 
+/* Get the horizontal position of the current line in the lyric display,
+ * range is the width which is not shown. */
+static gdouble rc_ui_window_get_lyric_offset(gint64 frame_time,
+    gdouble range)
+{
+    RCUiWindowPrivate *priv = &window_priv;
+    gint64 pos, move, t;
+    gdouble fraction;
+    if(priv->lyric!=NULL)
+    {
+        /* Move the line with the progress from its start to its end */
+        if(priv->lyric_line_start<0 ||
+            priv->lyric_line_end<=priv->lyric_line_start)
+        {
+            return 0.0;
+        }
+        pos = rclib_core_query_position();
+        fraction = (gdouble)(pos - priv->lyric_line_start) /
+            (priv->lyric_line_end - priv->lyric_line_start);
+        return CLAMP(fraction, 0.0, 1.0) * range;
+    }
+    /* Move the music information from the start to the end and back,
+     * and rest at each end */
+    if(priv->lyric_info_time<0) priv->lyric_info_time = frame_time;
+    move = MAX((gint64)(range * G_USEC_PER_SEC /
+        RC_UI_WINDOW_LYRIC_INFO_SPEED), 1);
+    t = (frame_time - priv->lyric_info_time) %
+        (2 * (RC_UI_WINDOW_LYRIC_INFO_REST + move));
+    if(t<RC_UI_WINDOW_LYRIC_INFO_REST) return 0.0;
+    t -= RC_UI_WINDOW_LYRIC_INFO_REST;
+    if(t<move) return range * t / move;
+    t -= move;
+    if(t<RC_UI_WINDOW_LYRIC_INFO_REST) return range;
+    t -= RC_UI_WINDOW_LYRIC_INFO_REST;
+    return range - range * t / move;
+}
+
+static gboolean rc_ui_window_lyric_tick_cb(GtkWidget *widget,
+    GdkFrameClock *clock, gpointer data)
+{
+    RCUiWindowPrivate *priv = &window_priv;
+    GtkAdjustment *adjustment;
+    gdouble range;
+    adjustment = gtk_scrolled_window_get_hadjustment(GTK_SCROLLED_WINDOW(
+        priv->lyric_scrolled));
+    range = gtk_adjustment_get_upper(adjustment) -
+        gtk_adjustment_get_page_size(adjustment);
+    if(range<=0.0)
+    {
+        gtk_adjustment_set_value(adjustment, 0.0);
+        priv->lyric_tick_id = 0;
+        return G_SOURCE_REMOVE;
+    }
+    gtk_adjustment_set_value(adjustment, rc_ui_window_get_lyric_offset(
+        gdk_frame_clock_get_frame_time(clock), range));
+    /* The lyric line does not move while the music is not playing */
+    if(priv->lyric!=NULL && rclib_core_get_state()!=GST_STATE_PLAYING)
+    {
+        priv->lyric_tick_id = 0;
+        return G_SOURCE_REMOVE;
+    }
+    return G_SOURCE_CONTINUE;
+}
+
+/* Move the current line in the lyric display if it is too wide */
+static void rc_ui_window_update_lyric_scroll()
+{
+    RCUiWindowPrivate *priv = &window_priv;
+    GtkAdjustment *adjustment;
+    if(priv->lyric_scrolled==NULL) return;
+    adjustment = gtk_scrolled_window_get_hadjustment(GTK_SCROLLED_WINDOW(
+        priv->lyric_scrolled));
+    if(gtk_adjustment_get_upper(adjustment)<=
+        gtk_adjustment_get_page_size(adjustment))
+    {
+        gtk_adjustment_set_value(adjustment, 0.0);
+        return;
+    }
+    if(priv->lyric_tick_id==0)
+    {
+        priv->lyric_tick_id = gtk_widget_add_tick_callback(
+            priv->lyric_scrolled, rc_ui_window_lyric_tick_cb, NULL, NULL);
+    }
+}
+
+static void rc_ui_window_lyric_adjustment_changed_cb(
+    GtkAdjustment *adjustment, gpointer data)
+{
+    rc_ui_window_update_lyric_scroll();
+}
+
+static gboolean rc_ui_window_lyric_scroll_cb(
+    GtkEventControllerScroll *controller, gdouble dx, gdouble dy,
+    gpointer data)
+{
+    /* The position is set by the progress, not by the user */
+    return TRUE;
+}
+
 static void rc_ui_window_show_lyric_info()
 {
     RCUiWindowPrivate *priv = &window_priv;
+    const gchar *info;
     if(priv->lyric!=NULL) return;
-    gtk_label_set_text(GTK_LABEL(priv->lyric_label),
-        priv->lyric_info!=NULL ? priv->lyric_info : "");
+    info = priv->lyric_info!=NULL ? priv->lyric_info : "";
+    if(g_strcmp0(gtk_label_get_text(GTK_LABEL(priv->lyric_label)),
+        info)==0)
+    {
+        return;
+    }
+    gtk_label_set_text(GTK_LABEL(priv->lyric_label), info);
+    /* Start moving from the start */
+    priv->lyric_info_time = -1;
+    rc_ui_window_update_lyric_scroll();
 }
 
 static void rc_ui_window_set_lyric_info(const gchar *title,
@@ -1615,6 +1739,9 @@ static void rc_ui_window_update_lyric(gint64 pos)
             if(end<=line->time) end = -1;
         }
     }
+    priv->lyric_line_start = line!=NULL ? line->time : -1;
+    priv->lyric_line_end = end;
+    rc_ui_window_update_lyric_scroll();
     rc_ui_osd_set_line(line!=NULL ? line->text : NULL,
         line!=NULL ? line->time : -1, end);
 }
@@ -1630,6 +1757,8 @@ static void rc_ui_window_load_lyric()
     if(priv->lyric!=NULL) rclib_lyric_data_free(priv->lyric);
     priv->lyric = NULL;
     priv->lyric_key = G_MININT;
+    priv->lyric_line_start = -1;
+    priv->lyric_line_end = -1;
     uri = rclib_core_get_uri();
     item = rclib_player_get_current_item();
     path = NULL;
@@ -1693,6 +1822,7 @@ static void rc_ui_window_update_progress()
     g_free(pos_str);
     g_free(dur_str);
     rc_ui_window_update_lyric(pos);
+    rc_ui_window_update_lyric_scroll();
 }
 
 static void rc_ui_window_update_format();
@@ -2674,7 +2804,7 @@ GtkWidget *rc_ui_window_init(GtkApplication *app)
 {
     RCUiWindowPrivate *priv = &window_priv;
     GtkDropTarget *drop_target;
-    GtkEventController *key_controller;
+    GtkEventController *key_controller, *scroll_controller;
     gulong id;
     guint mode;
     if(priv->window!=NULL) return priv->window;
@@ -2700,6 +2830,20 @@ GtkWidget *rc_ui_window_init(GtkApplication *app)
     priv->lyric_prev_label = rc_ui_window_get_object("lyric_prev_label");
     priv->lyric_label = rc_ui_window_get_object("lyric_label");
     priv->lyric_next_label = rc_ui_window_get_object("lyric_next_label");
+    priv->lyric_scrolled = rc_ui_window_get_object("lyric_scrolled");
+    priv->lyric_info_time = -1;
+    priv->lyric_line_start = -1;
+    priv->lyric_line_end = -1;
+    g_signal_connect(gtk_scrolled_window_get_hadjustment(
+        GTK_SCROLLED_WINDOW(priv->lyric_scrolled)), "changed",
+        G_CALLBACK(rc_ui_window_lyric_adjustment_changed_cb), NULL);
+    scroll_controller = gtk_event_controller_scroll_new(
+        GTK_EVENT_CONTROLLER_SCROLL_BOTH_AXES);
+    gtk_event_controller_set_propagation_phase(scroll_controller,
+        GTK_PHASE_CAPTURE);
+    g_signal_connect(scroll_controller, "scroll",
+        G_CALLBACK(rc_ui_window_lyric_scroll_cb), NULL);
+    gtk_widget_add_controller(priv->lyric_scrolled, scroll_controller);
     priv->sidebar_stack = rc_ui_window_get_object("sidebar_stack");
     priv->group_dropdown = rc_ui_window_get_object("group_dropdown");
     priv->group_listbox = rc_ui_window_get_object("group_listbox");

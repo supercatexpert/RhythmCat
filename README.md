@@ -147,7 +147,10 @@ ninja -C build install
   of the window above the status bar). The lyric display can be turned on
   or off in the menu ("Lyric Display") or Settings, and it is always shown
   when it is on; if the playing music has no lyric file, it shows
-  "title - artist - album" of the music. The status bar shows the format
+  "title - artist - album" of the music. The current line is shown in one
+  line; if it is too wide, it moves horizontally with the progress of the
+  line, and the music information moves from the start to the end and
+  back, resting for 3 seconds at each end. The status bar shows the format
   (codec) and bitrate of the playing music; the bitrate is updated while
   playing VBR streams, and for streams without bitrate information it is
   the average from the file size and the duration. Playback errors (such
@@ -160,11 +163,13 @@ ninja -C build install
   "title - artist" of the music. The played part of the line is
   filled with the progress color, moving from the start time of the line
   to its end time (the end time in the lyric file, the start of the next
-  line, or the end of the track), also across wrapped lines. The font,
+  line, or the end of the track). The font,
   font size, text color, progress color (the progress can be turned off)
   and width (percent of the screen width) can be set in Settings. The
-  window always has this width and the text is shown in the middle of it;
-  longer lines are wrapped. By default, the bottom of the window is at 90%
+  window always has this width and the text is shown in one line in the
+  middle of it; a line which is too wide moves horizontally with its
+  progress, and a title which is too wide moves from the start to the end
+  and back, resting for 3 seconds at each end. By default, the bottom of the window is at 90%
   of the screen height. Drag the text to move it, right click it to hide
   it or reset its position. The window stays above other windows on all
   workspaces, and the position is remembered. Wayland has no way for a

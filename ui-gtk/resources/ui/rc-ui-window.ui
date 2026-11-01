@@ -558,13 +558,23 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkLabel" id="lyric_label">
-                    <property name="wrap">True</property>
-                    <property name="justify">center</property>
-                    <property name="max-width-chars">80</property>
-                    <style>
-                      <class name="lyric-current"/>
-                    </style>
+                  <!-- The current line is not wrapped; if it is too wide,
+                       it is moved horizontally -->
+                  <object class="GtkScrolledWindow" id="lyric_scrolled">
+                    <property name="hscrollbar-policy">external</property>
+                    <property name="vscrollbar-policy">never</property>
+                    <property name="propagate-natural-height">True</property>
+                    <property name="kinetic-scrolling">False</property>
+                    <property name="hexpand">True</property>
+                    <property name="child">
+                      <object class="GtkLabel" id="lyric_label">
+                        <property name="halign">center</property>
+                        <property name="single-line-mode">True</property>
+                        <style>
+                          <class name="lyric-current"/>
+                        </style>
+                      </object>
+                    </property>
                   </object>
                 </child>
                 <child>

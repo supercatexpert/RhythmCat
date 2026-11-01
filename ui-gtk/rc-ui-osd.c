@@ -32,7 +32,10 @@
 #endif
 
 #define RC_UI_OSD_MIN_WIDTH 120
-#define RC_UI_OSD_PROGRESS_INTERVAL 40
+/* The speed (unit: pixel per second) to move the title if it is too
+ * wide, and the time (unit: microsecond) to rest at each end */
+#define RC_UI_OSD_TITLE_SPEED 80
+#define RC_UI_OSD_TITLE_REST (3 * G_USEC_PER_SEC)
 
 typedef struct RCUiOsdPrivate
 {
@@ -60,11 +63,18 @@ typedef struct RCUiOsdPrivate
      * time is -1 if unknown */
     gint64 line_start;
     gint64 line_end;
-    /* The sum of the widths of all lines in the layout (Pango unit) */
+    /* The width of the text (Pango unit), and the width for it (unit:
+     * pixel), the text is moved horizontally if it is wider */
     gint text_width;
+    gint text_area_width;
     /* The width of the played part (Pango unit) */
     gint progress_width;
-    guint progress_id;
+    /* How far the text is moved (unit: pixel) */
+    gdouble offset;
+    /* The time when the title starts to move (monotonic time), -1 to
+     * start again */
+    gint64 title_time;
+    guint tick_id;
     /* The center of the top edge in root window pixels (X11 only) */
     gint x;
     gint y;
@@ -103,26 +113,20 @@ static void rc_ui_osd_update_size()
     RCUiOsdPrivate *priv = &osd_priv;
     GdkMonitor *monitor;
     GdkRectangle geometry = {0, 0, 1024, 768};
-    PangoRectangle logical, line_rect;
-    PangoLayoutIter *iter;
+    PangoRectangle logical;
     gint width;
     monitor = rc_ui_osd_get_monitor();
     if(monitor!=NULL) gdk_monitor_get_geometry(monitor, &geometry);
     width = geometry.width * priv->width_percent / 100 - 2 * priv->padding;
     if(width<RC_UI_OSD_MIN_WIDTH) width = RC_UI_OSD_MIN_WIDTH;
-    pango_layout_set_width(priv->layout, width * PANGO_SCALE);
-    pango_layout_get_pixel_extents(priv->layout, NULL, &logical);
-    priv->text_width = 0;
-    iter = pango_layout_get_iter(priv->layout);
-    do
-    {
-        pango_layout_iter_get_line_extents(iter, NULL, &line_rect);
-        priv->text_width += line_rect.width;
-    }
-    while(pango_layout_iter_next_line(iter));
-    pango_layout_iter_free(iter);
+    priv->text_area_width = width;
+    /* The text is shown in one line */
+    pango_layout_get_extents(priv->layout, NULL, &logical);
+    priv->text_width = logical.width;
+    pango_extents_to_pixels(&logical, NULL);
     /* The window always has the full width, and the text is drawn in the
-     * middle of it, so the window does not move when the line changes */
+     * middle of it (or moved if it is too wide), so the window does not
+     * move when the line changes */
     gtk_drawing_area_set_content_width(GTK_DRAWING_AREA(priv->area),
         width + 2 * priv->padding);
     gtk_drawing_area_set_content_height(GTK_DRAWING_AREA(priv->area),
@@ -138,7 +142,6 @@ static void rc_ui_osd_clip_progress(cairo_t *cr, gdouble x, gdouble y)
     PangoRectangle rect;
     gint remain = priv->progress_width, width;
     gdouble left;
-    /* The played part goes through the wrapped lines in order */
     iter = pango_layout_get_iter(priv->layout);
     do
     {
@@ -160,56 +163,104 @@ static void rc_ui_osd_clip_progress(cairo_t *cr, gdouble x, gdouble y)
     cairo_clip(cr);
 }
 
+/* The width of the text which is not shown (unit: pixel) */
+static gdouble rc_ui_osd_get_hidden_width()
+{
+    RCUiOsdPrivate *priv = &osd_priv;
+    return MAX((gdouble)priv->text_width / PANGO_SCALE -
+        priv->text_area_width, 0.0);
+}
+
+/* Get the position of the title which is too wide: it moves from the
+ * start to the end and back, and rests at each end */
+static gdouble rc_ui_osd_get_title_offset(gdouble range)
+{
+    RCUiOsdPrivate *priv = &osd_priv;
+    gint64 now, move, t;
+    now = g_get_monotonic_time();
+    if(priv->title_time<0) priv->title_time = now;
+    move = MAX((gint64)(range * G_USEC_PER_SEC / RC_UI_OSD_TITLE_SPEED), 1);
+    t = (now - priv->title_time) % (2 * (RC_UI_OSD_TITLE_REST + move));
+    if(t<RC_UI_OSD_TITLE_REST) return 0.0;
+    t -= RC_UI_OSD_TITLE_REST;
+    if(t<move) return range * t / move;
+    t -= move;
+    if(t<RC_UI_OSD_TITLE_REST) return range;
+    t -= RC_UI_OSD_TITLE_REST;
+    return range - range * t / move;
+}
+
 static void rc_ui_osd_update_progress()
 {
     RCUiOsdPrivate *priv = &osd_priv;
     gint64 pos;
+    gdouble fraction = 0.0, range, offset = 0.0;
     gint width = 0;
-    if(priv->show_progress && priv->available && priv->line_start>=0 &&
+    if(priv->available && priv->line_start>=0 &&
         priv->line_end>priv->line_start &&
         rclib_core_get_state()>=GST_STATE_PAUSED)
     {
         pos = rclib_core_query_position();
-        if(pos>=priv->line_end) width = priv->text_width;
-        else if(pos>priv->line_start)
-        {
-            width = (gdouble)priv->text_width * (pos - priv->line_start) /
-                (priv->line_end - priv->line_start);
-        }
+        fraction = (gdouble)(pos - priv->line_start) /
+            (priv->line_end - priv->line_start);
+        fraction = CLAMP(fraction, 0.0, 1.0);
     }
-    /* Redraw only when the played part changes by a pixel */
+    if(priv->show_progress && priv->available)
+        width = priv->text_width * fraction;
+    /* A line which is too wide moves with the progress */
+    range = rc_ui_osd_get_hidden_width();
+    if(range>0.0)
+    {
+        offset = priv->available ? range * fraction :
+            rc_ui_osd_get_title_offset(range);
+    }
+    /* Redraw only when the played part or the position changes */
     if(ABS(width - priv->progress_width)<PANGO_SCALE &&
         (width==0)==(priv->progress_width==0) &&
-        (width==priv->text_width)==(priv->progress_width==priv->text_width))
+        (width==priv->text_width)==(priv->progress_width==priv->text_width) &&
+        ABS(offset - priv->offset)<0.25)
     {
         return;
     }
     priv->progress_width = width;
+    priv->offset = offset;
     gtk_widget_queue_draw(priv->area);
 }
 
-static gboolean rc_ui_osd_progress_timeout_cb(gpointer data)
+/* Whether the progress or the position of the text changes over time */
+static gboolean rc_ui_osd_is_animated()
+{
+    RCUiOsdPrivate *priv = &osd_priv;
+    if(!priv->enabled) return FALSE;
+    if(!priv->available) return rc_ui_osd_get_hidden_width()>0.0;
+    return (priv->show_progress || rc_ui_osd_get_hidden_width()>0.0) &&
+        priv->line_end>priv->line_start && priv->line_start>=0 &&
+        rclib_core_get_state()==GST_STATE_PLAYING;
+}
+
+static gboolean rc_ui_osd_tick_cb(GtkWidget *widget, GdkFrameClock *clock,
+    gpointer data)
 {
     rc_ui_osd_update_progress();
-    return G_SOURCE_CONTINUE;
+    if(rc_ui_osd_is_animated()) return G_SOURCE_CONTINUE;
+    osd_priv.tick_id = 0;
+    return G_SOURCE_REMOVE;
 }
 
 static void rc_ui_osd_update_timer()
 {
     RCUiOsdPrivate *priv = &osd_priv;
     gboolean run;
-    run = priv->show_progress && priv->enabled && priv->available &&
-        priv->line_end>priv->line_start && priv->line_start>=0 &&
-        rclib_core_get_state()==GST_STATE_PLAYING;
-    if(run && priv->progress_id==0)
+    run = rc_ui_osd_is_animated();
+    if(run && priv->tick_id==0)
     {
-        priv->progress_id = g_timeout_add(RC_UI_OSD_PROGRESS_INTERVAL,
-            rc_ui_osd_progress_timeout_cb, NULL);
+        priv->tick_id = gtk_widget_add_tick_callback(priv->area,
+            rc_ui_osd_tick_cb, NULL, NULL);
     }
-    else if(!run && priv->progress_id>0)
+    else if(!run && priv->tick_id>0)
     {
-        g_source_remove(priv->progress_id);
-        priv->progress_id = 0;
+        gtk_widget_remove_tick_callback(priv->area, priv->tick_id);
+        priv->tick_id = 0;
     }
     rc_ui_osd_update_progress();
 }
@@ -225,9 +276,17 @@ static void rc_ui_osd_draw_cb(GtkDrawingArea *area, cairo_t *cr,
 {
     RCUiOsdPrivate *priv = &osd_priv;
     PangoRectangle logical;
-    gdouble luminance, x, y;
+    gdouble luminance, x, y, range;
     pango_layout_get_pixel_extents(priv->layout, NULL, &logical);
-    x = (width - logical.width) / 2 - logical.x;
+    range = rc_ui_osd_get_hidden_width();
+    if(range>0.0)
+    {
+        /* Show the part at the offset from the start of the text */
+        if(pango_layout_get_direction(priv->layout, 0)==PANGO_DIRECTION_RTL)
+            x = priv->padding - range + priv->offset - logical.x;
+        else x = priv->padding - priv->offset - logical.x;
+    }
+    else x = (width - logical.width) / 2 - logical.x;
     y = (height - logical.height) / 2 - logical.y;
     cairo_move_to(cr, x, y);
     pango_cairo_layout_path(cr, priv->layout);
@@ -633,7 +692,9 @@ static void rc_ui_osd_update_text()
     if(text==NULL) text = "";
     if(g_strcmp0(pango_layout_get_text(priv->layout), text)==0) return;
     pango_layout_set_text(priv->layout, text, -1);
+    priv->title_time = -1;
     rc_ui_osd_update_size();
+    rc_ui_osd_update_timer();
 }
 
 static void rc_ui_osd_load_style()
@@ -744,8 +805,7 @@ void rc_ui_osd_init()
         rc_ui_osd_draw_cb, NULL, NULL);
     gtk_window_set_child(GTK_WINDOW(priv->window), priv->area);
     priv->layout = gtk_widget_create_pango_layout(priv->area, NULL);
-    pango_layout_set_alignment(priv->layout, PANGO_ALIGN_CENTER);
-    pango_layout_set_wrap(priv->layout, PANGO_WRAP_WORD_CHAR);
+    priv->title_time = -1;
 
     group = g_simple_action_group_new();
     g_action_map_add_action_entries(G_ACTION_MAP(group), osd_actions,
@@ -812,7 +872,8 @@ void rc_ui_osd_exit()
         rclib_settings_signal_disconnect(priv->settings_handler);
     if(priv->state_handler>0)
         rclib_core_signal_disconnect(priv->state_handler);
-    if(priv->progress_id>0) g_source_remove(priv->progress_id);
+    if(priv->tick_id>0)
+        gtk_widget_remove_tick_callback(priv->area, priv->tick_id);
     if(priv->move_id>0) g_source_remove(priv->move_id);
     if(priv->mapped_id>0) g_source_remove(priv->mapped_id);
     gtk_widget_unparent(priv->popover);
