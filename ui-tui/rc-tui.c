@@ -175,15 +175,41 @@ static void rc_tui_put_cell(gint y, gint x, const gchar *text, gint width)
     rc_tui_put_full(y, x, text, width, TRUE);
 }
 
+/* The display width of the text, as it is printed by rc_tui_put() */
 static gint rc_tui_text_width(const gchar *text)
 {
-    const gchar *p;
+    const gchar *p, *next;
     gint width = 0;
-    if(text==NULL || !g_utf8_validate(text, -1, NULL))
-        return text!=NULL ? strlen(text) : 0;
-    for(p=text;*p!='\0';p=g_utf8_next_char(p))
-        width += rc_tui_char_width(g_utf8_get_char(p));
+    gunichar c;
+    if(text==NULL) return 0;
+    for(p=text;*p!='\0';p=next)
+    {
+        c = rc_tui_get_char(p, &next);
+        if(c!=0) width += rc_tui_char_width(c);
+    }
     return width;
+}
+
+/* Print the part of the text which starts at the display column offset
+ * in the whole row. A wide character cut by the offset is replaced by
+ * spaces. */
+static void rc_tui_put_from(gint y, const gchar *text, gint offset,
+    gint attr)
+{
+    const gchar *p, *next;
+    gint skipped = 0, pad;
+    gunichar c;
+    if(text==NULL) text = "";
+    for(p=text;*p!='\0' && skipped<offset;p=next)
+    {
+        c = rc_tui_get_char(p, &next);
+        if(c!=0) skipped += rc_tui_char_width(c);
+    }
+    pad = MIN(skipped - offset, COLS);
+    attron(attr);
+    rc_tui_put(y, 0, "", pad);
+    rc_tui_put(y, pad, p, COLS - pad);
+    attroff(attr);
 }
 
 static void rc_tui_put_centered(gint y, const gchar *text, gint attr)
@@ -539,11 +565,13 @@ static void rc_tui_draw_status(gint top)
     RCTuiPrivate *priv = &tui_priv;
     const RCLibCoreMetadata *metadata;
     RCLibDbItem *item;
-    const RCLibLyricLine *lyric_line;
+    const RCLibLyricLine *lyric_line = NULL;
     const gchar *uri, *artist = NULL, *album = NULL, *state_str;
     gchar *title = NULL, *text, *pos_str, *dur_str, *bar;
-    gint64 pos = 0, duration = 0;
-    gint bar_width, filled, i;
+    gint64 pos = 0, duration = 0, line_end = -1;
+    gint bar_width, filled, i, index, range;
+    gdouble fraction = 0.0;
+    GArray *lines;
     GstState state;
     uri = rclib_core_get_uri();
     state = rclib_core_get_state();
@@ -607,9 +635,31 @@ static void rc_tui_draw_status(gint top)
     g_free(bar);
     g_free(pos_str);
     g_free(dur_str);
-    lyric_line = priv->lyric!=NULL ? rclib_lyric_get_line(priv->lyric, pos,
-        NULL) : NULL;
-    rc_tui_put_centered(top+3, lyric_line!=NULL ? lyric_line->text : "",
+    if(priv->lyric!=NULL)
+        lyric_line = rclib_lyric_get_line(priv->lyric, pos, &index);
+    range = lyric_line!=NULL ? rc_tui_text_width(lyric_line->text) - COLS :
+        0;
+    if(range<=0)
+    {
+        rc_tui_put_centered(top+3, lyric_line!=NULL ? lyric_line->text : "",
+            A_BOLD);
+        return;
+    }
+    /* A line which is too wide moves with the progress from its start
+     * time to its end time (the end time in the lyric file, the start of
+     * the next line, or the end of the track) */
+    lines = priv->lyric->lines;
+    if(lyric_line->end>=0) line_end = lyric_line->end;
+    else if(index+1<(gint)lines->len)
+        line_end = g_array_index(lines, RCLibLyricLine, index+1).time;
+    else if(duration>lyric_line->time) line_end = duration;
+    if(line_end>lyric_line->time)
+    {
+        fraction = (gdouble)(pos - lyric_line->time) /
+            (line_end - lyric_line->time);
+        fraction = CLAMP(fraction, 0.0, 1.0);
+    }
+    rc_tui_put_from(top+3, lyric_line->text, (gint)(fraction * range + 0.5),
         A_BOLD);
 }
 
