@@ -549,8 +549,8 @@
                 </style>
                 <child>
                   <object class="GtkLabel" id="lyric_prev_label">
-                    <property name="wrap">True</property>
-                    <property name="justify">center</property>
+                    <property name="single-line-mode">True</property>
+                    <property name="ellipsize">end</property>
                     <property name="max-width-chars">80</property>
                     <style>
                       <class name="lyric-other"/>
@@ -579,8 +579,8 @@
                 </child>
                 <child>
                   <object class="GtkLabel" id="lyric_next_label">
-                    <property name="wrap">True</property>
-                    <property name="justify">center</property>
+                    <property name="single-line-mode">True</property>
+                    <property name="ellipsize">end</property>
                     <property name="max-width-chars">80</property>
                     <style>
                       <class name="lyric-other"/>

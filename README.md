@@ -150,7 +150,9 @@ ninja -C build install
   "title - artist - album" of the music. The current line is shown in one
   line; if it is too wide, it moves horizontally with the progress of the
   line, and the music information moves from the start to the end and
-  back, resting for 3 seconds at each end. The status bar shows the format
+  back, resting for 3 seconds at each end. The previous and next lines are
+  also shown in one line, ending with an ellipsis if they are too wide.
+  The status bar shows the format
   (codec) and bitrate of the playing music; the bitrate is updated while
   playing VBR streams, and for streams without bitrate information it is
   the average from the file size and the duration. Playback errors (such
