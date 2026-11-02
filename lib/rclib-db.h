@@ -96,7 +96,6 @@ typedef struct _RCLibDbPrivate RCLibDbPrivate;
  * @duration: the duration (unit: nanosecond)
  * @track: the track number
  * @year: the year
- * @bitrate: the bitrate (unit: bit/s)
  * @playlist: the playlist which contains the item, %NULL if the item
  *     is in the music library
  *
@@ -119,7 +118,6 @@ struct _RCLibDbItem {
     gint64 duration;
     gint track;
     gint year;
-    guint bitrate;
     RCLibDbPlaylist *playlist;
     /*< private >*/
     gint ref_count;

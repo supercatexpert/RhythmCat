@@ -261,7 +261,6 @@ static void rclib_db_item_set_metadata(RCLibDbItem *item,
         g_free(item->ftype);
         item->ftype = g_strdup(metadata->ftype);
     }
-    if(metadata->bitrate>0) item->bitrate = metadata->bitrate;
 }
 
 /* Check whether the audio file of the CUE track exists, remote files
@@ -527,9 +526,6 @@ static json_object *rclib_db_item_to_json(const RCLibDbItem *item)
     if(item->year>0)
         json_object_object_add(object, "year",
             json_object_new_int(item->year));
-    if(item->bitrate>0)
-        json_object_object_add(object, "bitrate",
-            json_object_new_int64(item->bitrate));
     return object;
 }
 
@@ -580,7 +576,6 @@ static RCLibDbItem *rclib_db_item_from_json(json_object *object)
     item->duration = rclib_db_json_get_int64(object, "duration");
     item->track = rclib_db_json_get_int64(object, "track");
     item->year = rclib_db_json_get_int64(object, "year");
-    item->bitrate = rclib_db_json_get_int64(object, "bitrate");
     return item;
 }
 
@@ -1417,7 +1412,6 @@ RCLibDbItem *rclib_db_item_copy(const RCLibDbItem *item)
     copy->duration = item->duration;
     copy->track = item->track;
     copy->year = item->year;
-    copy->bitrate = item->bitrate;
     return copy;
 }
 
@@ -1542,11 +1536,6 @@ gboolean rclib_db_item_update_from_core(RCLibDbItem *item,
     if(metadata->ftype!=NULL && item->ftype==NULL)
     {
         item->ftype = g_strdup(metadata->ftype);
-        changed = TRUE;
-    }
-    if(metadata->bitrate>0 && item->bitrate==0)
-    {
-        item->bitrate = metadata->bitrate;
         changed = TRUE;
     }
     if(changed) rclib_db_item_changed(item);
