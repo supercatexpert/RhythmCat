@@ -11,13 +11,6 @@
     font-weight: bold;
 }
 
-/* A fixed line height (relative to the font size) for the title, artist
- * and album, so the height of the player panel does not change with the
- * fallback fonts used for the text */
-.track-info {
-    line-height: 1.4em;
-}
-
 .cover {
     border-radius: 8px;
 }

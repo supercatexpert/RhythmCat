@@ -120,34 +120,44 @@
                 <property name="spacing">4</property>
                 <property name="hexpand">True</property>
                 <property name="valign">center</property>
+                <!-- The layout managers of the boxes which contain the
+                     title, artist and album labels are replaced in
+                     rc-ui-window.c to keep their heights fixed -->
                 <child>
-                  <object class="GtkLabel" id="title_label">
-                    <property name="label" translatable="yes">RhythmCat</property>
-                    <property name="xalign">0</property>
-                    <property name="ellipsize">end</property>
-                    <style>
-                      <class name="title-label"/>
-                      <class name="track-info"/>
-                    </style>
+                  <object class="GtkBox">
+                    <child>
+                      <object class="GtkLabel" id="title_label">
+                        <property name="label" translatable="yes">RhythmCat</property>
+                        <property name="xalign">0</property>
+                        <property name="ellipsize">end</property>
+                        <style>
+                          <class name="title-label"/>
+                        </style>
+                      </object>
+                    </child>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkLabel" id="artist_label">
-                    <property name="xalign">0</property>
-                    <property name="ellipsize">end</property>
-                    <style>
-                      <class name="track-info"/>
-                    </style>
+                  <object class="GtkBox">
+                    <child>
+                      <object class="GtkLabel" id="artist_label">
+                        <property name="xalign">0</property>
+                        <property name="ellipsize">end</property>
+                      </object>
+                    </child>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkLabel" id="album_label">
-                    <property name="xalign">0</property>
-                    <property name="ellipsize">end</property>
-                    <style>
-                      <class name="dim-label"/>
-                      <class name="track-info"/>
-                    </style>
+                  <object class="GtkBox">
+                    <child>
+                      <object class="GtkLabel" id="album_label">
+                        <property name="xalign">0</property>
+                        <property name="ellipsize">end</property>
+                        <style>
+                          <class name="dim-label"/>
+                        </style>
+                      </object>
+                    </child>
                   </object>
                 </child>
                 <child>
