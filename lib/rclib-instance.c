@@ -120,7 +120,7 @@ gboolean rclib_instance_lock(const gchar *frontend, GError **error)
         return FALSE;
     }
     info = g_strdup_printf(_("%s, PID %d"), frontend!=NULL ? frontend :
-        "unknown", (gint)getpid());
+        _("unknown"), (gint)getpid());
     if(ftruncate(fd, 0)==0)
     {
         if(write(fd, info, strlen(info))<0)

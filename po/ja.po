@@ -1,0 +1,1074 @@
+# Japanese translation of RhythmCat.
+# Copyright (C) 2026 SuperCat
+# This file is distributed under the same license as the rhythmcat3 package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: rhythmcat3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-03 04:10+0900\n"
+"PO-Revision-Date: 2026-11-03\n"
+"Last-Translator: SuperCat\n"
+"Language-Team: Japanese\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: data/org.supercat.RhythmCat3.desktop.in:3
+#: ui-gtk/resources/ui/rc-ui-window.ui:130
+msgid "RhythmCat"
+msgstr "RhythmCat"
+
+#: data/org.supercat.RhythmCat3.desktop.in:4
+msgid "Music Player"
+msgstr "音楽プレーヤー"
+
+#: data/org.supercat.RhythmCat3.desktop.in:5
+msgid "Play and organize your music"
+msgstr "音楽を再生・整理します"
+
+#: data/org.supercat.RhythmCat3.desktop.in:11
+msgid "music;audio;player;playlist;"
+msgstr "music;audio;player;playlist;音楽;オーディオ;プレーヤー;プレイリスト;"
+
+#: lib/rclib-core.c:95
+msgid "Flat"
+msgstr "フラット"
+
+#: lib/rclib-core.c:96
+msgid "Pop"
+msgstr "ポップ"
+
+#: lib/rclib-core.c:97
+msgid "Rock"
+msgstr "ロック"
+
+#: lib/rclib-core.c:98
+msgid "Jazz"
+msgstr "ジャズ"
+
+#: lib/rclib-core.c:99
+msgid "Classical"
+msgstr "クラシック"
+
+#: lib/rclib-core.c:100
+msgid "Dance"
+msgstr "ダンス"
+
+#: lib/rclib-core.c:101
+msgid "Electronic"
+msgstr "エレクトロニック"
+
+#: lib/rclib-core.c:102
+msgid "Hip-Hop"
+msgstr "ヒップホップ"
+
+#: lib/rclib-core.c:103
+msgid "Vocal"
+msgstr "ボーカル"
+
+#: lib/rclib-core.c:104
+msgid "Bass Boost"
+msgstr "低音強調"
+
+#: lib/rclib-core.c:105
+msgid "Treble Boost"
+msgstr "高音強調"
+
+#: lib/rclib-core.c:106
+msgid "Custom"
+msgstr "カスタム"
+
+#: lib/rclib-core.c:302 ui-gtk/rc-ui-main.c:152 ui-tui/rc-tui.c:1517
+msgid "Unknown error"
+msgstr "不明なエラー"
+
+#: lib/rclib-core.c:526
+#, c-format
+msgid ""
+"Cannot create the playbin element! Please check your GStreamer installation."
+msgstr ""
+"playbin エレメントを作成できません。GStreamer のインストールを確認してくださ"
+"い。"
+
+#: lib/rclib-core.c:585
+#, c-format
+msgid "The core is already initialized!"
+msgstr "コアはすでに初期化されています。"
+
+#: lib/rclib-cue.c:198
+#, c-format
+msgid "Empty CUE sheet data."
+msgstr "CUE シートのデータが空です。"
+
+#: lib/rclib-cue.c:306
+#, c-format
+msgid "No track is found in the CUE sheet."
+msgstr "CUE シートにトラックが見つかりません。"
+
+#: lib/rclib-cue.c:338
+#, c-format
+msgid "Track %02d"
+msgstr "トラック %02d"
+
+#: lib/rclib-db.c:663 lib/rclib-db.c:2070
+msgid "Untitled Playlist"
+msgstr "無題のプレイリスト"
+
+#: lib/rclib-db.c:1122
+#, c-format
+msgid "The database file is corrupted: %s"
+msgstr "データベースファイルが壊れています: %s"
+
+#: lib/rclib-db.c:1282
+msgid "The database is not initialized."
+msgstr "データベースが初期化されていません。"
+
+#: lib/rclib-instance.c:84
+#, c-format
+msgid "Cannot open lock file %s: %s"
+msgstr "ロックファイル %s を開けません: %s"
+
+#: lib/rclib-instance.c:100
+#, c-format
+msgid ""
+"There is already one instance of RhythmCat running (%s), only one instance "
+"can be run at the same time."
+msgstr ""
+"RhythmCat はすでに実行中です（%s）。同時に実行できるのは 1 つだけです。"
+
+#: lib/rclib-instance.c:108
+#, c-format
+msgid ""
+"There is already one instance of RhythmCat running, only one instance can be "
+"run at the same time."
+msgstr "RhythmCat はすでに実行中です。同時に実行できるのは 1 つだけです。"
+
+#: lib/rclib-instance.c:116
+#, c-format
+msgid "Cannot lock file %s: %s"
+msgstr "ファイル %s をロックできません: %s"
+
+#: lib/rclib-instance.c:122
+#, c-format
+msgid "%s, PID %d"
+msgstr "%s、PID %d"
+
+#: lib/rclib-instance.c:123
+msgid "unknown"
+msgstr "不明"
+
+#: lib/rclib-lyric.c:400
+#, c-format
+msgid "Empty lyric data."
+msgstr "歌詞のデータが空です。"
+
+#: lib/rclib-lyric.c:430
+#, c-format
+msgid "No lyric line is found."
+msgstr "歌詞の行が見つかりません。"
+
+#: lib/rclib-plist.c:441
+#, c-format
+msgid "The PLS file does not have a [playlist] section."
+msgstr "PLS ファイルに [playlist] セクションがありません。"
+
+#: lib/rclib-plist.c:625
+#, c-format
+msgid "The playlist file is empty."
+msgstr "プレイリストファイルが空です。"
+
+#: lib/rclib-plist.c:931
+#, c-format
+msgid ""
+"Unknown playlist format, the file name should end with .m3u, .m3u8, .pls "
+"or .xspf."
+msgstr ""
+"不明なプレイリスト形式です。ファイル名は .m3u、.m3u8、.pls、.xspf のいずれか"
+"で終わる必要があります。"
+
+#: lib/rclib-tag.c:145
+#, c-format
+msgid "No audio stream is found in the file."
+msgstr "ファイルにオーディオストリームが見つかりません。"
+
+#: lib/rclib-tag.c:223
+#, c-format
+msgid "Timeout while reading the metadata."
+msgstr "メタデータの読み込みがタイムアウトしました。"
+
+#: lib/rclib-tag.c:231
+#, c-format
+msgid "Cannot read the metadata."
+msgstr "メタデータを読み込めません。"
+
+#: lib/rclib-tag.c:246
+#, c-format
+msgid "Cannot start reading the metadata of %s."
+msgstr "%s のメタデータの読み込みを開始できません。"
+
+#: lib/rclib-tag.c:367
+#, c-format
+msgid "The metadata reader is not initialized."
+msgstr "メタデータリーダーが初期化されていません。"
+
+#: lib/rclib-tag.c:416
+#, c-format
+msgid "The operation is cancelled."
+msgstr "操作はキャンセルされました。"
+
+#: ui-gtk/rc-ui-equalizer.c:207
+msgid "The equalizer plug-in of GStreamer (gst-plugins-good) is not installed."
+msgstr ""
+"GStreamer のイコライザープラグイン（gst-plugins-good）がインストールされてい"
+"ません。"
+
+#: ui-gtk/rc-ui-main.c:43 ui-gtk/resources/ui/rc-ui-equalizer.ui:577
+#: ui-gtk/resources/ui/rc-ui-settings.ui:439
+msgid "_Close"
+msgstr "閉じる(_C)"
+
+#: ui-gtk/rc-ui-main.c:46
+msgid "RhythmCat is already running"
+msgstr "RhythmCat はすでに実行中です"
+
+#: ui-gtk/rc-ui-main.c:132
+msgid "GTK4 frontend"
+msgstr "GTK4 フロントエンド"
+
+#: ui-gtk/rc-ui-main.c:151 ui-tui/rc-tui.c:1516
+#, c-format
+msgid "Cannot initialize the player: %s\n"
+msgstr "プレーヤーを初期化できません: %s\n"
+
+#: ui-gtk/rc-ui-osd.c:799
+msgid "RhythmCat Lyric"
+msgstr "RhythmCat 歌詞"
+
+#: ui-gtk/rc-ui-osd.c:817
+msgid "_Hide OSD Lyric"
+msgstr "デスクトップ歌詞を隠す(_H)"
+
+#: ui-gtk/rc-ui-osd.c:818
+msgid "_Reset Position"
+msgstr "位置をリセット(_R)"
+
+#: ui-gtk/rc-ui-settings.c:143
+#, c-format
+msgid "Unsupported encodings are ignored: %s"
+msgstr "サポートされていないエンコーディングは無視されました: %s"
+
+#: ui-gtk/rc-ui-settings.c:152
+msgid ""
+"Encodings are saved. New settings will be used when files are read next time."
+msgstr ""
+"エンコーディングを保存しました。次にファイルを読み込むときから新しい設定が使"
+"われます。"
+
+#: ui-gtk/rc-ui-window.c:243 ui-gtk/rc-ui-window.c:1111 ui-tui/rc-tui.c:304
+msgid "All Tracks"
+msgstr "すべてのトラック"
+
+#: ui-gtk/rc-ui-window.c:247 ui-gtk/rc-ui-window.c:1125
+#: ui-gtk/rc-ui-window.c:1683 ui-tui/rc-tui.c:313 ui-tui/rc-tui.c:607
+msgid "Unknown Artist"
+msgstr "不明なアーティスト"
+
+#: ui-gtk/rc-ui-window.c:249 ui-gtk/rc-ui-window.c:1126
+#: ui-gtk/rc-ui-window.c:1685 ui-tui/rc-tui.c:313 ui-tui/rc-tui.c:608
+msgid "Unknown Album"
+msgstr "不明なアルバム"
+
+#: ui-gtk/rc-ui-window.c:250
+#, c-format
+msgid "%s (%u track)"
+msgid_plural "%s (%u tracks)"
+msgstr[0] "%s（%u 曲）"
+
+#: ui-gtk/rc-ui-window.c:1335 ui-gtk/rc-ui-window.c:1418
+#: ui-gtk/rc-ui-window.c:2506
+msgid "_Cancel"
+msgstr "キャンセル(_C)"
+
+#: ui-gtk/rc-ui-window.c:1336
+msgid "_OK"
+msgstr "OK(_O)"
+
+#: ui-gtk/rc-ui-window.c:1379
+#, c-format
+msgid "Playlist %u"
+msgstr "プレイリスト %u"
+
+#: ui-gtk/rc-ui-window.c:1381 ui-gtk/resources/ui/rc-ui-window.ui:411
+msgid "New Playlist"
+msgstr "新しいプレイリスト"
+
+#: ui-gtk/rc-ui-window.c:1397 ui-gtk/resources/ui/rc-ui-window.ui:417
+msgid "Rename Playlist"
+msgstr "プレイリストの名前を変更"
+
+#: ui-gtk/rc-ui-window.c:1418
+msgid "_Delete"
+msgstr "削除(_D)"
+
+#: ui-gtk/rc-ui-window.c:1420
+#, c-format
+msgid "Delete playlist “%s”?"
+msgstr "プレイリスト「%s」を削除しますか？"
+
+#: ui-gtk/rc-ui-window.c:1422
+msgid "The audio files will not be deleted."
+msgstr "オーディオファイルは削除されません。"
+
+#: ui-gtk/rc-ui-window.c:1661
+msgid "Ready to play"
+msgstr "再生の準備ができました"
+
+#: ui-gtk/rc-ui-window.c:1853
+msgid "Repeat: Off (continue with the next playlist, stop after the last one)"
+msgstr "リピート: オフ（次のプレイリストに進み、最後のプレイリストの後で停止）"
+
+#: ui-gtk/rc-ui-window.c:1858
+msgid "Repeat: Current Track"
+msgstr "リピート: 現在のトラック"
+
+#: ui-gtk/rc-ui-window.c:1862 ui-tui/rc-tui.c:440
+msgid "All"
+msgstr "すべて"
+
+#: ui-gtk/rc-ui-window.c:1863
+msgid "Repeat: All Playlists"
+msgstr "リピート: すべてのプレイリスト"
+
+#: ui-gtk/rc-ui-window.c:1867 ui-tui/rc-tui.c:439
+msgid "List"
+msgstr "リスト"
+
+#: ui-gtk/rc-ui-window.c:1868
+msgid "Repeat: Current Playlist"
+msgstr "リピート: 現在のプレイリスト"
+
+#: ui-gtk/rc-ui-window.c:1910 ui-gtk/rc-ui-window.c:3033
+msgid "Hide Library and Playlists"
+msgstr "ライブラリとプレイリストを隠す"
+
+#: ui-gtk/rc-ui-window.c:1910 ui-gtk/resources/ui/rc-ui-window.ui:277
+msgid "Show Library and Playlists"
+msgstr "ライブラリとプレイリストを表示"
+
+#: ui-gtk/rc-ui-window.c:1975
+#, c-format
+msgid "%u tracks in library, %u playlists"
+msgstr "ライブラリに %u 曲、プレイリスト %u 個"
+
+#: ui-gtk/rc-ui-window.c:1980
+#, c-format
+msgid "Importing (%u pending)… %s"
+msgstr "インポート中（残り %u 件）… %s"
+
+#: ui-gtk/rc-ui-window.c:2053
+#, c-format
+msgid "%u kbps"
+msgstr "%u kbps"
+
+#: ui-gtk/rc-ui-window.c:2137 ui-tui/rc-tui.c:1425
+#, c-format
+msgid "Error: %s"
+msgstr "エラー: %s"
+
+#: ui-gtk/rc-ui-window.c:2393
+msgid "Import Files"
+msgstr "ファイルをインポート"
+
+#: ui-gtk/rc-ui-window.c:2396
+msgid "Audio Files, CUE Sheets and Playlists"
+msgstr "オーディオファイル、CUE シート、プレイリスト"
+
+#: ui-gtk/rc-ui-window.c:2404 ui-gtk/rc-ui-window.c:2599
+msgid "All Files"
+msgstr "すべてのファイル"
+
+#: ui-gtk/rc-ui-window.c:2431
+msgid "Import Folder"
+msgstr "フォルダーをインポート"
+
+#: ui-gtk/rc-ui-window.c:2466
+msgid "Cannot check the files."
+msgstr "ファイルを確認できません。"
+
+#: ui-gtk/rc-ui-window.c:2471 ui-tui/rc-tui.c:988
+msgid "No missing files are found."
+msgstr "見つからないファイルはありません。"
+
+#: ui-gtk/rc-ui-window.c:2474 ui-tui/rc-tui.c:991
+#, c-format
+msgid "Removed %d item whose file is missing."
+msgid_plural "Removed %d items whose files are missing."
+msgstr[0] "ファイルが見つからない %d 件の項目を削除しました。"
+
+#: ui-gtk/rc-ui-window.c:2497 ui-tui/rc-tui.c:1004 ui-tui/rc-tui.c:1333
+msgid "Checking files…"
+msgstr "ファイルを確認中…"
+
+#: ui-gtk/rc-ui-window.c:2506
+msgid "_Remove"
+msgstr "削除(_R)"
+
+#: ui-gtk/rc-ui-window.c:2507
+msgid "Remove missing files?"
+msgstr "見つからないファイルを削除しますか？"
+
+#: ui-gtk/rc-ui-window.c:2508
+msgid ""
+"Items in the music library and the playlists whose audio files do not exist "
+"any more will be removed. Files on removable drives or network shares which "
+"are not mounted are also treated as missing."
+msgstr ""
+"オーディオファイルが存在しなくなったライブラリとプレイリストの項目を削除しま"
+"す。マウントされていないリムーバブルドライブやネットワーク共有上のファイルも"
+"見つからないものとして扱われます。"
+
+#: ui-gtk/rc-ui-window.c:2545
+msgid "A music player based on GStreamer"
+msgstr "GStreamer ベースの音楽プレーヤー"
+
+#: ui-gtk/rc-ui-window.c:2590
+msgid "Playlists (M3U, M3U8, PLS, XSPF)"
+msgstr "プレイリスト（M3U、M3U8、PLS、XSPF）"
+
+#: ui-gtk/rc-ui-window.c:2626
+msgid "Cannot load the playlist."
+msgstr "プレイリストを読み込めません。"
+
+#: ui-gtk/rc-ui-window.c:2638
+msgid "Load Playlist"
+msgstr "プレイリストを読み込む"
+
+#: ui-gtk/rc-ui-window.c:2656 ui-tui/rc-tui.c:933
+msgid "Music Library"
+msgstr "ミュージックライブラリ"
+
+#: ui-gtk/rc-ui-window.c:2695 ui-tui/rc-tui.c:937
+#, c-format
+msgid "Saved %u track to %s."
+msgid_plural "Saved %u tracks to %s."
+msgstr[0] "%u 曲を %s に保存しました。"
+
+#: ui-gtk/rc-ui-window.c:2702
+msgid "Cannot save the playlist."
+msgstr "プレイリストを保存できません。"
+
+#: ui-gtk/rc-ui-window.c:2715
+msgid "Save Playlist"
+msgstr "プレイリストを保存"
+
+#: ui-gtk/rc-ui-window.c:2937
+msgid "#"
+msgstr "#"
+
+#: ui-gtk/rc-ui-window.c:2938 ui-tui/rc-tui.c:521
+msgid "Title"
+msgstr "タイトル"
+
+#: ui-gtk/rc-ui-window.c:2939 ui-tui/rc-tui.c:525
+msgid "Artist"
+msgstr "アーティスト"
+
+#: ui-gtk/rc-ui-window.c:2940
+msgid "Album"
+msgstr "アルバム"
+
+#: ui-gtk/rc-ui-window.c:2941 ui-tui/rc-tui.c:527
+msgid "Length"
+msgstr "長さ"
+
+#: ui-gtk/resources/ui/rc-ui-equalizer.ui:6
+#: ui-gtk/resources/ui/rc-ui-window.ui:82
+msgid "Equalizer"
+msgstr "イコライザー"
+
+#: ui-gtk/resources/ui/rc-ui-equalizer.ui:21
+msgid "Enable equalizer"
+msgstr "イコライザーを有効にする"
+
+#: ui-gtk/resources/ui/rc-ui-equalizer.ui:41
+msgid "Preset"
+msgstr "プリセット"
+
+#: ui-gtk/resources/ui/rc-ui-equalizer.ui:51
+msgid "Reset Custom"
+msgstr "カスタムをリセット"
+
+#: ui-gtk/resources/ui/rc-ui-equalizer.ui:52
+msgid "Set all bands of the custom preset to 0 dB"
+msgstr "カスタムプリセットのすべての帯域を 0 dB にします"
+
+#: ui-gtk/resources/ui/rc-ui-equalizer.ui:67
+msgid "dB"
+msgstr "dB"
+
+#: ui-gtk/resources/ui/rc-ui-equalizer.ui:114
+msgid "Hz"
+msgstr "Hz"
+
+#: ui-gtk/resources/ui/rc-ui-equalizer.ui:567
+msgid "Moving a slider changes the custom preset."
+msgstr "スライダーを動かすとカスタムプリセットが変更されます。"
+
+#: ui-gtk/resources/ui/rc-ui-settings.ui:6
+msgid "Settings"
+msgstr "設定"
+
+#: ui-gtk/resources/ui/rc-ui-settings.ui:28
+msgid "Appearance"
+msgstr "外観"
+
+#: ui-gtk/resources/ui/rc-ui-settings.ui:41
+msgid "Style"
+msgstr "スタイル"
+
+#: ui-gtk/resources/ui/rc-ui-settings.ui:55
+msgid "Follow System"
+msgstr "システムに従う"
+
+#: ui-gtk/resources/ui/rc-ui-settings.ui:56
+msgid "Light"
+msgstr "ライト"
+
+#: ui-gtk/resources/ui/rc-ui-settings.ui:57
+msgid "Dark"
+msgstr "ダーク"
+
+#: ui-gtk/resources/ui/rc-ui-settings.ui:69
+msgid "Show lyrics"
+msgstr "歌詞を表示"
+
+#: ui-gtk/resources/ui/rc-ui-settings.ui:90
+msgid "OSD Lyric"
+msgstr "デスクトップ歌詞"
+
+#: ui-gtk/resources/ui/rc-ui-settings.ui:103
+msgid "Show OSD lyric"
+msgstr "デスクトップ歌詞を表示"
+
+#: ui-gtk/resources/ui/rc-ui-settings.ui:123
+msgid "Font"
+msgstr "フォント"
+
+#: ui-gtk/resources/ui/rc-ui-settings.ui:136
+msgid "OSD Lyric Font"
+msgstr "デスクトップ歌詞のフォント"
+
+#: ui-gtk/resources/ui/rc-ui-settings.ui:147
+msgid "Font size"
+msgstr "フォントサイズ"
+
+#: ui-gtk/resources/ui/rc-ui-settings.ui:175
+msgid "Text color"
+msgstr "文字の色"
+
+#: ui-gtk/resources/ui/rc-ui-settings.ui:188
+msgid "OSD Lyric Color"
+msgstr "デスクトップ歌詞の色"
+
+#: ui-gtk/resources/ui/rc-ui-settings.ui:199
+msgid "Width (% of screen width)"
+msgstr "幅（画面幅に対する %）"
+
+#: ui-gtk/resources/ui/rc-ui-settings.ui:227
+msgid "Show progress of the line"
+msgstr "行の進行状況を表示"
+
+#: ui-gtk/resources/ui/rc-ui-settings.ui:246
+msgid "Progress color"
+msgstr "進行状況の色"
+
+#: ui-gtk/resources/ui/rc-ui-settings.ui:259
+msgid "OSD Lyric Progress Color"
+msgstr "デスクトップ歌詞の進行状況の色"
+
+#: ui-gtk/resources/ui/rc-ui-settings.ui:272
+msgid "Metadata"
+msgstr "メタデータ"
+
+#: ui-gtk/resources/ui/rc-ui-settings.ui:285
+msgid "Update metadata when playing"
+msgstr "再生時にメタデータを更新"
+
+#: ui-gtk/resources/ui/rc-ui-settings.ui:307
+msgid "Fallback Encodings"
+msgstr "代替エンコーディング"
+
+#: ui-gtk/resources/ui/rc-ui-settings.ui:316
+msgid ""
+"Text which is not valid UTF-8 will be decoded with these encodings in order. "
+"Separate encodings with commas or semicolons, for example: GB18030, BIG5, "
+"SHIFT_JIS."
+msgstr ""
+"有効な UTF-8 でないテキストは、これらのエンコーディングで順にデコードされま"
+"す。エンコーディングはカンマまたはセミコロンで区切ります。例: SHIFT_JIS, EUC-"
+"JP, GB18030。"
+
+#: ui-gtk/resources/ui/rc-ui-settings.ui:331
+msgid "Legacy ID3 tags"
+msgstr "旧形式の ID3 タグ"
+
+#: ui-gtk/resources/ui/rc-ui-settings.ui:350
+msgid "CUE sheets"
+msgstr "CUE シート"
+
+#: ui-gtk/resources/ui/rc-ui-settings.ui:369
+msgid "Lyric files"
+msgstr "歌詞ファイル"
+
+#: ui-gtk/resources/ui/rc-ui-settings.ui:388
+msgid "Playlist files"
+msgstr "プレイリストファイル"
+
+#: ui-gtk/resources/ui/rc-ui-settings.ui:434
+msgid "Reset Encodings"
+msgstr "エンコーディングをリセット"
+
+#: ui-gtk/resources/ui/rc-ui-window.ui:8
+msgid "_Import Files…"
+msgstr "ファイルをインポート(_I)…"
+
+#: ui-gtk/resources/ui/rc-ui-window.ui:12
+msgid "Import _Folder…"
+msgstr "フォルダーをインポート(_F)…"
+
+#: ui-gtk/resources/ui/rc-ui-window.ui:16
+msgid "_Load Playlist…"
+msgstr "プレイリストを読み込む(_L)…"
+
+#: ui-gtk/resources/ui/rc-ui-window.ui:20
+msgid "_Save Playlist…"
+msgstr "プレイリストを保存(_S)…"
+
+#: ui-gtk/resources/ui/rc-ui-window.ui:24
+msgid "_Refresh All Metadata"
+msgstr "すべてのメタデータを更新(_R)"
+
+#: ui-gtk/resources/ui/rc-ui-window.ui:28
+msgid "Remove _Missing Files…"
+msgstr "見つからないファイルを削除(_M)…"
+
+#: ui-gtk/resources/ui/rc-ui-window.ui:32
+msgid "_Cancel Import"
+msgstr "インポートをキャンセル(_C)"
+
+#: ui-gtk/resources/ui/rc-ui-window.ui:38
+msgid "_Equalizer"
+msgstr "イコライザー(_E)"
+
+#: ui-gtk/resources/ui/rc-ui-window.ui:42
+msgid "L_yric Display"
+msgstr "歌詞表示(_Y)"
+
+#: ui-gtk/resources/ui/rc-ui-window.ui:46
+msgid "_OSD Lyric"
+msgstr "デスクトップ歌詞(_O)"
+
+#: ui-gtk/resources/ui/rc-ui-window.ui:50
+msgid "_Settings"
+msgstr "設定(_S)"
+
+#: ui-gtk/resources/ui/rc-ui-window.ui:54
+msgid "_About RhythmCat"
+msgstr "RhythmCat について(_A)"
+
+#: ui-gtk/resources/ui/rc-ui-window.ui:58
+msgid "_Quit"
+msgstr "終了(_Q)"
+
+#: ui-gtk/resources/ui/rc-ui-window.ui:75
+msgid "Main Menu"
+msgstr "メインメニュー"
+
+#: ui-gtk/resources/ui/rc-ui-window.ui:88
+msgid "Dark Style"
+msgstr "ダークスタイル"
+
+#: ui-gtk/resources/ui/rc-ui-window.ui:198
+msgid "Previous"
+msgstr "前へ"
+
+#: ui-gtk/resources/ui/rc-ui-window.ui:208
+msgid "Play/Pause"
+msgstr "再生/一時停止"
+
+#: ui-gtk/resources/ui/rc-ui-window.ui:219
+msgid "Stop"
+msgstr "停止"
+
+#: ui-gtk/resources/ui/rc-ui-window.ui:229
+msgid "Next"
+msgstr "次へ"
+
+#: ui-gtk/resources/ui/rc-ui-window.ui:268 ui-tui/rc-tui.c:449
+msgid "Random"
+msgstr "ランダム"
+
+#: ui-gtk/resources/ui/rc-ui-window.ui:298 ui-tui/rc-tui.c:450
+msgid "Volume"
+msgstr "音量"
+
+#: ui-gtk/resources/ui/rc-ui-window.ui:343 ui-tui/rc-tui.c:303
+msgid "Library"
+msgstr "ライブラリ"
+
+#: ui-gtk/resources/ui/rc-ui-window.ui:355 ui-tui/rc-tui.c:437
+msgid "No Grouping"
+msgstr "グループ化しない"
+
+#: ui-gtk/resources/ui/rc-ui-window.ui:356
+msgid "Group by Artist"
+msgstr "アーティストでグループ化"
+
+#: ui-gtk/resources/ui/rc-ui-window.ui:357
+msgid "Group by Album"
+msgstr "アルバムでグループ化"
+
+#: ui-gtk/resources/ui/rc-ui-window.ui:383 ui-tui/rc-tui.c:318
+msgid "Playlists"
+msgstr "プレイリスト"
+
+#: ui-gtk/resources/ui/rc-ui-window.ui:423
+msgid "Delete Playlist"
+msgstr "プレイリストを削除"
+
+#: ui-gtk/resources/ui/rc-ui-window.ui:429
+msgid "Load Playlist from File"
+msgstr "ファイルからプレイリストを読み込む"
+
+#: ui-gtk/resources/ui/rc-ui-window.ui:436
+msgid "Save Playlist to File"
+msgstr "プレイリストをファイルに保存"
+
+#: ui-gtk/resources/ui/rc-ui-window.ui:443
+#: ui-gtk/resources/ui/rc-ui-window.ui:494
+msgid "Move Up"
+msgstr "上へ移動"
+
+#: ui-gtk/resources/ui/rc-ui-window.ui:449
+#: ui-gtk/resources/ui/rc-ui-window.ui:503
+msgid "Move Down"
+msgstr "下へ移動"
+
+#: ui-gtk/resources/ui/rc-ui-window.ui:485
+msgid "Add Selected to Playlist"
+msgstr "選択した項目をプレイリストに追加"
+
+#: ui-gtk/resources/ui/rc-ui-window.ui:512
+msgid "Refresh Metadata of Selected Items"
+msgstr "選択した項目のメタデータを更新"
+
+#: ui-gtk/resources/ui/rc-ui-window.ui:521
+msgid "Remove Selected Items"
+msgstr "選択した項目を削除"
+
+#: ui-gtk/resources/ui/rc-ui-window.ui:636
+msgid "Format and bitrate of the playing music"
+msgstr "再生中の音楽の形式とビットレート"
+
+#: ui-gtk/resources/ui/rc-ui-window.ui:648
+msgid "Cancel Import"
+msgstr "インポートをキャンセル"
+
+#: ui-gtk/resources/ui/rc-ui-window.ui:649
+msgid "Cancel the pending imports"
+msgstr "保留中のインポートをキャンセル"
+
+#: ui-tui/rc-tui.c:438
+msgid "By Artist"
+msgstr "アーティスト別"
+
+#: ui-tui/rc-tui.c:438
+msgid "By Album"
+msgstr "アルバム別"
+
+#: ui-tui/rc-tui.c:439 ui-tui/rc-tui.c:445 ui-tui/rc-tui.c:450
+msgid "Off"
+msgstr "オフ"
+
+#: ui-tui/rc-tui.c:440
+msgid "Track"
+msgstr "トラック"
+
+#: ui-tui/rc-tui.c:448
+msgid "Repeat"
+msgstr "リピート"
+
+#: ui-tui/rc-tui.c:450
+msgid "On"
+msgstr "オン"
+
+#: ui-tui/rc-tui.c:451
+msgid "Help"
+msgstr "ヘルプ"
+
+#: ui-tui/rc-tui.c:581
+msgid "Playing"
+msgstr "再生中"
+
+#: ui-tui/rc-tui.c:584
+msgid "Paused"
+msgstr "一時停止"
+
+#: ui-tui/rc-tui.c:587
+msgid "Stopped"
+msgstr "停止"
+
+#: ui-tui/rc-tui.c:617
+msgid "Select a track and press Enter to play"
+msgstr "トラックを選んで Enter で再生"
+
+#: ui-tui/rc-tui.c:687
+msgid ""
+"Enter:Play  Space:Pause  n/p:Next/Prev  </>:Seek  +/-:Volume  a:Add  "
+"g:Group  Tab:Switch  ?:Help  q:Quit"
+msgstr ""
+"Enter:再生  Space:一時停止  n/p:次/前  </>:シーク  +/-:音量  a:追加  g:グルー"
+"プ  Tab:切替  ?:ヘルプ  q:終了"
+
+#: ui-tui/rc-tui.c:696
+msgid "Playback"
+msgstr "再生"
+
+#: ui-tui/rc-tui.c:697
+msgid "  Enter      Play the selected track (or open the source)"
+msgstr "  Enter      選択したトラックを再生（またはソースを開く）"
+
+#: ui-tui/rc-tui.c:698
+msgid "  Space      Play / pause            s   Stop"
+msgstr "  Space      再生 / 一時停止         s   停止"
+
+#: ui-tui/rc-tui.c:699
+msgid "  n / p      Next / previous track"
+msgstr "  n / p      次 / 前のトラック"
+
+#: ui-tui/rc-tui.c:700
+msgid "  Left/Right Seek backward / forward (5 seconds)"
+msgstr "  Left/Right 後方 / 前方へシーク（5 秒）"
+
+#: ui-tui/rc-tui.c:701
+msgid "  + / -      Volume up / down"
+msgstr "  + / -      音量を上げる / 下げる"
+
+#: ui-tui/rc-tui.c:702
+msgid "  r          Cycle repeat mode (off, list, all, track)"
+msgstr ""
+"  r          リピートモードを切り替え（オフ、リスト、すべて、トラック）"
+
+#: ui-tui/rc-tui.c:703
+msgid "  z          Toggle random mode"
+msgstr "  z          ランダムモードのオン/オフ"
+
+#: ui-tui/rc-tui.c:704
+msgid "  e          Toggle equalizer        E   Next equalizer preset"
+msgstr "  e          イコライザー オン/オフ  E   次のイコライザープリセット"
+
+#: ui-tui/rc-tui.c:705
+msgid "Library and playlists"
+msgstr "ライブラリとプレイリスト"
+
+#: ui-tui/rc-tui.c:706
+msgid "  Tab        Switch between sources and tracks"
+msgstr "  Tab        ソースとトラックを切り替え"
+
+#: ui-tui/rc-tui.c:707
+msgid "  g          Cycle library grouping (none, artist, album)"
+msgstr ""
+"  g          ライブラリのグループ化を切り替え（なし、アーティスト、アルバム）"
+
+#: ui-tui/rc-tui.c:708
+msgid "  a          Add a file, CUE sheet, playlist file or folder"
+msgstr ""
+"  a          ファイル、CUE シート、プレイリストファイル、フォルダーを追加"
+
+#: ui-tui/rc-tui.c:709
+msgid "  c          Cancel the pending imports"
+msgstr "  c          保留中のインポートをキャンセル"
+
+#: ui-tui/rc-tui.c:710
+msgid "  A          Add the selected track to a playlist"
+msgstr "  A          選択したトラックをプレイリストに追加"
+
+#: ui-tui/rc-tui.c:711
+msgid "  d / Del    Remove the selected track"
+msgstr "  d / Del    選択したトラックを削除"
+
+#: ui-tui/rc-tui.c:712
+msgid "  J / K      Move the selected track or playlist down / up"
+msgstr "  J / K      選択したトラックまたはプレイリストを下 / 上へ移動"
+
+#: ui-tui/rc-tui.c:713
+msgid "  N / R / D  New / rename / delete playlist"
+msgstr "  N / R / D  プレイリストを作成 / 名前変更 / 削除"
+
+#: ui-tui/rc-tui.c:714
+msgid "  L / W      Load a playlist file / save the track list to a file"
+msgstr ""
+"  L / W      プレイリストファイルを読み込む / トラック一覧をファイルに保存"
+
+#: ui-tui/rc-tui.c:715
+msgid "  u / U      Refresh metadata of the track / all tracks"
+msgstr "  u / U      トラック / すべてのトラックのメタデータを更新"
+
+#: ui-tui/rc-tui.c:716
+msgid "  M          Remove items whose files are missing"
+msgstr "  M          ファイルが見つからない項目を削除"
+
+#: ui-tui/rc-tui.c:717
+msgid "  l          Toggle lyric display"
+msgstr "  l          歌詞表示のオン/オフ"
+
+#: ui-tui/rc-tui.c:718
+msgid "  q          Quit                    ?   Close this help"
+msgstr "  q          終了                    ?   ヘルプを閉じる"
+
+#: ui-tui/rc-tui.c:873
+#, c-format
+msgid "Importing folder %s…"
+msgstr "フォルダー %s をインポート中…"
+
+#: ui-tui/rc-tui.c:876
+#, c-format
+msgid "File not found: %s"
+msgstr "ファイルが見つかりません: %s"
+
+#: ui-tui/rc-tui.c:880
+#, c-format
+msgid "Importing %s…"
+msgstr "%s をインポート中…"
+
+#: ui-tui/rc-tui.c:899
+#, c-format
+msgid "Playlist “%s” is loaded."
+msgstr "プレイリスト「%s」を読み込みました。"
+
+#: ui-tui/rc-tui.c:902
+#, c-format
+msgid "Cannot load the playlist: %s"
+msgstr "プレイリストを読み込めません: %s"
+
+#: ui-tui/rc-tui.c:943
+#, c-format
+msgid "Cannot save the playlist: %s"
+msgstr "プレイリストを保存できません: %s"
+
+#: ui-tui/rc-tui.c:956
+#, c-format
+msgid "Playlist “%s” is created."
+msgstr "プレイリスト「%s」を作成しました。"
+
+#: ui-tui/rc-tui.c:970
+#, c-format
+msgid "Playlist “%s” is deleted."
+msgstr "プレイリスト「%s」を削除しました。"
+
+#: ui-tui/rc-tui.c:983
+#, c-format
+msgid "Cannot check the files: %s"
+msgstr "ファイルを確認できません: %s"
+
+#: ui-tui/rc-tui.c:984
+msgid "unknown error"
+msgstr "不明なエラー"
+
+#: ui-tui/rc-tui.c:1030
+#, c-format
+msgid "Playlist “%s” is not found."
+msgstr "プレイリスト「%s」が見つかりません。"
+
+#: ui-tui/rc-tui.c:1034
+#, c-format
+msgid "Added to playlist “%s”."
+msgstr "プレイリスト「%s」に追加しました。"
+
+#: ui-tui/rc-tui.c:1084
+msgid "Tracks can be reordered in playlists only."
+msgstr "トラックの並べ替えはプレイリストでのみできます。"
+
+#: ui-tui/rc-tui.c:1111
+#, c-format
+msgid "Equalizer preset: %s"
+msgstr "イコライザープリセット: %s"
+
+#: ui-tui/rc-tui.c:1244
+msgid "The equalizer is not available."
+msgstr "イコライザーは利用できません。"
+
+#: ui-tui/rc-tui.c:1266
+#, c-format
+msgid "Add to %s (file, CUE or folder): "
+msgstr "%s に追加（ファイル、CUE、フォルダー）: "
+
+#: ui-tui/rc-tui.c:1267
+msgid "library"
+msgstr "ライブラリ"
+
+#: ui-tui/rc-tui.c:1275
+msgid "Import cancelled."
+msgstr "インポートをキャンセルしました。"
+
+#: ui-tui/rc-tui.c:1281
+msgid "Add to playlist (number or name): "
+msgstr "プレイリストに追加（番号または名前）: "
+
+#: ui-tui/rc-tui.c:1297
+msgid "New playlist name: "
+msgstr "新しいプレイリスト名: "
+
+#: ui-tui/rc-tui.c:1301
+msgid "Load playlist file (M3U, M3U8, PLS, XSPF): "
+msgstr "プレイリストファイルを読み込む（M3U、M3U8、PLS、XSPF）: "
+
+#: ui-tui/rc-tui.c:1309
+msgid "Save the track list to (.m3u, .m3u8, .pls, .xspf): "
+msgstr "トラック一覧の保存先（.m3u、.m3u8、.pls、.xspf）: "
+
+#: ui-tui/rc-tui.c:1316
+msgid "Rename playlist: "
+msgstr "プレイリストの名前を変更: "
+
+#: ui-tui/rc-tui.c:1323
+#, c-format
+msgid "Delete playlist “%s”? (y/N): "
+msgstr "プレイリスト「%s」を削除しますか？(y/N): "
+
+#: ui-tui/rc-tui.c:1336
+msgid ""
+"Remove the items whose files are missing from the library and all playlists? "
+"(y/N): "
+msgstr ""
+"ファイルが見つからない項目をライブラリとすべてのプレイリストから削除します"
+"か？(y/N): "
+
+#: ui-tui/rc-tui.c:1345
+msgid "Refreshing metadata…"
+msgstr "メタデータを更新中…"
+
+#: ui-tui/rc-tui.c:1350
+msgid "Refreshing metadata of all tracks…"
+msgstr "すべてのトラックのメタデータを更新中…"
+
+#: ui-tui/rc-tui.c:1408
+#, c-format
+msgid "Importing (%u pending, press c to cancel)…"
+msgstr "インポート中（残り %u 件、c でキャンセル）…"
+
+#: ui-tui/rc-tui.c:1411
+msgid "Import finished."
+msgstr "インポートが完了しました。"
+
+#: ui-tui/rc-tui.c:1505
+#, c-format
+msgid "RhythmCat terminal UI must be run in a terminal.\n"
+msgstr "RhythmCat の端末 UI は端末で実行する必要があります。\n"
+
+#: ui-tui/rc-tui.c:1508
+msgid "ncurses frontend"
+msgstr "ncurses フロントエンド"

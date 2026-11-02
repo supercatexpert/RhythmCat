@@ -39,7 +39,8 @@ dpkg-buildpackage -us -uc -b
 
 The packages are written to the parent directory: `librhythmcat3-3` (the
 core library), `librhythmcat3-dev` (headers and pkg-config file),
-`rhythmcat` (the GTK4 frontend) and `rhythmcat-tui` (the ncurses frontend).
+`rhythmcat` (the GTK4 frontend), `rhythmcat-tui` (the ncurses frontend)
+and `rhythmcat-l10n` (the translations).
 
 Build options (`meson configure build -D<option>=<value>`):
 
@@ -68,6 +69,30 @@ dock and the window switcher. To install for the current user only:
 meson setup build --prefix="$HOME/.local"
 ninja -C build install
 ```
+
+## Translations
+
+The core library and both frontends are translated (gettext domain
+`rhythmcat3`, in `po/`) into:
+
+* Chinese (simplified), `zh_CN`
+* Chinese (traditional), `zh_TW`
+* Japanese, `ja`
+
+The language follows the locale (`LANG`, `LC_ALL` or `LANGUAGE`), for
+example `LANG=ja_JP.UTF-8 rhythmcat`. The translations are installed to
+`share/locale`, so the program must be installed to use them. The name,
+generic name, comment and keywords in the desktop file are translated too.
+
+To update the translations after changing the strings:
+
+```sh
+ninja -C build rhythmcat3-pot        # regenerate po/rhythmcat3.pot
+ninja -C build rhythmcat3-update-po  # merge it into the .po files
+```
+
+To add a language, add its code to `po/LINGUAS` and create the `.po` file
+from the template (for example with `msginit`).
 
 ## Features
 

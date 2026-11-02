@@ -27,6 +27,7 @@ Depends: gstreamer1.0-plugins-base,
          ${misc:Depends},
          ${shlibs:Depends},
 Recommends: gstreamer1.0-plugins-good,
+            rhythmcat-l10n,
 Suggests: gstreamer1.0-libav,
           gstreamer1.0-plugins-bad,
           gstreamer1.0-plugins-ugly,
@@ -82,3 +83,13 @@ Description: RhythmCat music player - terminal frontend
  .
  This package contains the ncurses frontend, which plays music and
  manages the music library and playlists in a terminal.
+
+Package: rhythmcat-l10n
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends},
+Description: RhythmCat music player - translations
+ RhythmCat is a music player based on GLib, GStreamer and json-c.
+ .
+ This package contains the translations of the core library and the
+ frontends: Chinese (simplified), Chinese (traditional) and Japanese.

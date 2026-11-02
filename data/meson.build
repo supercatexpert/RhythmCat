@@ -4,7 +4,12 @@ install_data('artwork' / 'rhythmcat-icon.svg',
 )
 
 if gtk_dep.found()
-  install_data('org.supercat.RhythmCat3.desktop',
+  i18n.merge_file(
+    input: 'org.supercat.RhythmCat3.desktop.in',
+    output: 'org.supercat.RhythmCat3.desktop',
+    type: 'desktop',
+    po_dir: meson.project_source_root() / 'po',
+    install: true,
     install_dir: get_option('datadir') / 'applications',
   )
 endif

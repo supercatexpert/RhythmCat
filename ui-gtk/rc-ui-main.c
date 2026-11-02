@@ -129,7 +129,7 @@ gint rc_ui_main_run(gint argc, gchar *argv[])
     bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
     bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
     textdomain(GETTEXT_PACKAGE);
-    if(!rclib_instance_lock("GTK4 frontend", &error))
+    if(!rclib_instance_lock(_("GTK4 frontend"), &error))
     {
         g_printerr("%s\n", error->message);
         main_error_message = g_strdup(error->message);
@@ -149,7 +149,7 @@ gint rc_ui_main_run(gint argc, gchar *argv[])
     if(!rclib_init(&argc, &argv, &error))
     {
         g_printerr(_("Cannot initialize the player: %s\n"),
-            error!=NULL ? error->message : "unknown error");
+            error!=NULL ? error->message : _("Unknown error"));
         g_clear_error(&error);
         rclib_instance_unlock();
         return 1;

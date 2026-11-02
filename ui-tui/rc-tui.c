@@ -1505,7 +1505,7 @@ gint rc_tui_run(gint argc, gchar *argv[])
         g_printerr(_("RhythmCat terminal UI must be run in a terminal.\n"));
         return 1;
     }
-    if(!rclib_instance_lock("ncurses frontend", &error))
+    if(!rclib_instance_lock(_("ncurses frontend"), &error))
     {
         g_printerr("%s\n", error->message);
         g_error_free(error);
@@ -1514,7 +1514,7 @@ gint rc_tui_run(gint argc, gchar *argv[])
     if(!rclib_init(&argc, &argv, &error))
     {
         g_printerr(_("Cannot initialize the player: %s\n"),
-            error!=NULL ? error->message : "unknown error");
+            error!=NULL ? error->message : _("Unknown error"));
         g_clear_error(&error);
         rclib_instance_unlock();
         return 1;
