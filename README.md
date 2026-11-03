@@ -161,7 +161,9 @@ from the template (for example with `msginit`).
   item of the current playlist. A frontend can set a filter and a playing
   order for the music library (`rclib_player_set_library_filter()` and
   `rclib_player_set_library_order()`); then the next or previous library
-  item is chosen in that order, from the matching items only.
+  item is chosen in that order, from the matching items only. The order
+  may have only a part of the library (like the shown group), then a
+  library item is played in that part only, and List and All repeat it.
 * Settings are stored in `~/.config/RhythmCat3/settings.conf`.
 
 ### GTK4 frontend
@@ -220,6 +222,11 @@ from the template (for example with `msginit`).
   Playlists are not sorted (their headers can not be clicked). Tracks in
   the library are played in the sorted order (previous/next, and when a
   track ends).
+* A track played in the library is played in the list shown when it was
+  started: the selected artist or album group (or the whole library),
+  with the filter and the sorting. Previous/next, random mode and the end
+  of a track stay in that list, and the repeat modes List and All repeat
+  it, even when another group is shown later.
 * Library filter (the entry in the library sidebar, or Ctrl+F): only the
   tracks whose title (or file name), artist or album contains every word
   of the filter are shown. Case is ignored, and so are the differences of

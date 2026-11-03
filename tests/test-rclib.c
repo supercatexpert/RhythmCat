@@ -593,6 +593,22 @@ static GPtrArray *test_player_reverse_func(gpointer data)
     return list;
 }
 
+/* A part of the library: the items whose title contains "pop" */
+static GPtrArray *test_player_part_func(gpointer data)
+{
+    const GPtrArray *library = rclib_db_library_get_items();
+    RCLibDbItem *item;
+    GPtrArray *list;
+    guint i;
+    list = g_ptr_array_new();
+    for(i=0;i<library->len;i++)
+    {
+        item = g_ptr_array_index(library, i);
+        if(strstr(item->title, "pop")!=NULL) g_ptr_array_add(list, item);
+    }
+    return list;
+}
+
 static void test_player_order()
 {
     static const gchar *names[] = {"o-rock1.wav", "o-pop1.wav",
@@ -662,8 +678,24 @@ static void test_player_order()
     g_assert_true(rclib_player_play_prev());
     g_assert_true(rclib_player_get_current_item()==items[4]);
 
-    /* Back to the order of the library */
+    /* A part of the library, it is repeated in the repeat all mode */
     rclib_player_set_library_filter(NULL, NULL, NULL);
+    rclib_player_set_library_order(test_player_part_func, NULL, NULL);
+    rclib_player_play_item(items[1]);
+    g_assert_true(rclib_player_play_next());
+    g_assert_true(rclib_player_get_current_item()==items[3]);
+    g_signal_emit_by_name(rclib_core_get_instance(), "eos");
+    g_assert_true(rclib_player_get_current_item()==items[1]);
+    g_assert_true(rclib_player_play_prev());
+    g_assert_true(rclib_player_get_current_item()==items[3]);
+    rclib_player_set_repeat_mode(RCLIB_PLAYER_REPEAT_NONE);
+    g_assert_false(rclib_player_play_next());
+    /* The playing item is not in the part, the whole library is used */
+    rclib_player_play_item(items[2]);
+    g_assert_true(rclib_player_play_next());
+    g_assert_true(rclib_player_get_current_item()==items[3]);
+
+    /* Back to the order of the library */
     rclib_player_set_library_order(NULL, NULL, NULL);
     rclib_player_set_repeat_mode(RCLIB_PLAYER_REPEAT_NONE);
     rclib_player_play_item(items[0]);

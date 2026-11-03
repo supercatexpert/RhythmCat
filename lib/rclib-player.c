@@ -38,8 +38,10 @@
  *
  * A filter and a playing order can be set for the music library: when an
  * item in the music library is playing, the next and the previous items
- * (also in random mode) are chosen in the playing order, from the items
- * which match the filter only.
+ * (also in random mode) are chosen in the playing order (which may have
+ * only a part of the music library, like the shown group), from the
+ * items which match the filter only. The repeat modes which repeat the
+ * list or all lists repeat these items.
  *
  * The equalizer settings (enabled or not, the preset and the user
  * customized band gains) are stored in the settings, and they are
@@ -61,9 +63,10 @@ static RCLibPlayerOrderFunc player_order_func = NULL;
 static gpointer player_order_data = NULL;
 static GDestroyNotify player_order_notify = NULL;
 
-/* The list which the item is played in: its playlist, or the music
- * library in the playing order (see rclib_player_set_library_order()).
- * Unref it after use. */
+/* The list which the item is played in: its playlist, or the items of
+ * the music library in the playing order (see
+ * rclib_player_set_library_order()), or the whole music library if the
+ * item is not in them. Unref it after use. */
 static GPtrArray *rclib_player_get_list(const RCLibDbItem *item)
 {
     const GPtrArray *library;
@@ -72,7 +75,8 @@ static GPtrArray *rclib_player_get_list(const RCLibDbItem *item)
     if(player_order_func!=NULL)
     {
         list = player_order_func(player_order_data);
-        if(list!=NULL) return list;
+        if(list!=NULL && g_ptr_array_find(list, item, NULL)) return list;
+        if(list!=NULL) g_ptr_array_unref(list);
     }
     library = rclib_db_library_get_items();
     if(library==NULL) return NULL;
@@ -545,15 +549,17 @@ void rclib_player_set_library_filter(RCLibPlayerFilterFunc func,
 /**
  * rclib_player_set_library_order:
  * @func: (nullable): the function which returns the items of the music
- *     library in the playing order, %NULL to play them in the order of the
- *     music library
+ *     library to play in, in the playing order, %NULL to play the whole
+ *     music library in its order
  * @data: (closure): the user data for @func
  * @notify: (nullable): the function to free @data
  *
- * Set the playing order of the music library (for example, the order of
- * the sorted library list in the frontend). When an item in the music
- * library is playing, the next and the previous items are chosen in this
- * order (the library filter is applied to it). The function is called
+ * Set the playing order of the music library (for example, the items of
+ * the group and the order of the sorted library list in the frontend).
+ * When an item in the music library is playing, the next and the previous
+ * items are chosen in these items in this order (the library filter is
+ * applied to them), the repeat modes repeat them. If the playing item is
+ * not in them, the whole music library is used. The function is called
  * whenever an item is chosen.
  */
 

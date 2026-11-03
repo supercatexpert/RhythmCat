@@ -131,6 +131,11 @@ typedef struct RCUiWindowPrivate
     RCLibDbGroupMode group_mode;
     gboolean group_all;
     const gchar *group;
+    /* The group of the library which the playing music is played in, the
+     * next and the previous music are chosen in it (with the filter and
+     * the sorting) */
+    RCLibDbGroupMode play_group_mode;
+    const gchar *play_group;
     GPtrArray *groups;
     RCLibDbGroupMode groups_mode;
     RCLibDbPlaylist *view_playlist;
@@ -538,24 +543,16 @@ static void rc_ui_window_sort_items(GPtrArray *items)
 
 /* The library in the sorted order, it is also the playing order of the
  * library */
+/* The items of the group which the playing music is played in, in the
+ * sorted order */
 static GPtrArray *rc_ui_window_library_order(gpointer data)
 {
-    const GPtrArray *library;
-    GPtrArray *list;
-    guint i;
-    library = rclib_db_library_get_items();
-    if(library==NULL) return NULL;
-    list = g_ptr_array_sized_new(library->len);
-    for(i=0;i<library->len;i++)
-        g_ptr_array_add(list, g_ptr_array_index(library, i));
-    rc_ui_window_sort_items(list);
-    return list;
-}
-
-static void rc_ui_window_update_play_order()
-{
-    rclib_player_set_library_order(window_priv.sort_column>=0 ?
-        rc_ui_window_library_order : NULL, NULL, NULL);
+    RCUiWindowPrivate *priv = &window_priv;
+    GPtrArray *items;
+    items = rclib_db_library_get_group_items(priv->play_group_mode,
+        priv->play_group);
+    rc_ui_window_sort_items(items);
+    return items;
 }
 
 /* Columns can be sorted in the library only, the order of a playlist is
@@ -1266,6 +1263,29 @@ static void rc_ui_window_add_column(const gchar *title, gint column,
     g_object_unref(view_column);
 }
 
+/* Play a track in the track list, a track in the library is played in
+ * the group shown now */
+static void rc_ui_window_play_track(RCUiTrack *track)
+{
+    RCUiWindowPrivate *priv = &window_priv;
+    RCLibDbItem *item;
+    item = rc_ui_track_get_item(track);
+    if(item->playlist==NULL)
+    {
+        if(priv->group_all || priv->group_mode==RCLIB_DB_GROUP_NONE)
+        {
+            priv->play_group_mode = RCLIB_DB_GROUP_NONE;
+            priv->play_group = NULL;
+        }
+        else
+        {
+            priv->play_group_mode = priv->group_mode;
+            priv->play_group = priv->group;
+        }
+    }
+    rclib_player_play_item(item);
+}
+
 static void rc_ui_window_track_activate_cb(GtkColumnView *view,
     guint position, gpointer data)
 {
@@ -1273,7 +1293,7 @@ static void rc_ui_window_track_activate_cb(GtkColumnView *view,
     track = g_list_model_get_item(G_LIST_MODEL(window_priv.track_store),
         position);
     if(track==NULL) return;
-    rclib_player_play_item(rc_ui_track_get_item(track));
+    rc_ui_window_play_track(track);
     g_object_unref(track);
 }
 
@@ -1595,7 +1615,6 @@ static void rc_ui_window_sort_changed_cb(GtkSorter *sorter,
         rc_ui_window_sort_names[sort_column] : "");
     rclib_settings_set_boolean(RCLIB_SETTINGS_GROUP_LIBRARY,
         RCLIB_SETTINGS_KEY_SORT_DESCENDING, priv->sort_descending);
-    rc_ui_window_update_play_order();
     if(priv->view_type==RC_UI_VIEW_LIBRARY)
         rc_ui_window_reload_tracks(TRUE);
 }
@@ -2641,7 +2660,7 @@ static void rc_ui_window_play_pause_action(GSimpleAction *action,
     if(pos<0) pos = 0;
     track = g_list_model_get_item(G_LIST_MODEL(priv->track_store), pos);
     if(track==NULL) return;
-    rclib_player_play_item(rc_ui_track_get_item(track));
+    rc_ui_window_play_track(track);
     g_object_unref(track);
 }
 
@@ -3309,7 +3328,7 @@ GtkWidget *rc_ui_window_init(GtkApplication *app)
         rclib_settings_get_boolean(RCLIB_SETTINGS_GROUP_LIBRARY,
         RCLIB_SETTINGS_KEY_SORT_DESCENDING);
     priv->sort_enabled = -1;
-    rc_ui_window_update_play_order();
+    rclib_player_set_library_order(rc_ui_window_library_order, NULL, NULL);
     priv->sort_handler = g_signal_connect(gtk_column_view_get_sorter(
         GTK_COLUMN_VIEW(priv->track_view)), "changed",
         G_CALLBACK(rc_ui_window_sort_changed_cb), NULL);

@@ -72,6 +72,10 @@ typedef struct RCTuiPrivate
     gint track_scroll;
     RCTuiFocus focus;
     RCLibDbGroupMode group_mode;
+    /* The group of the library which the playing music is played in, the
+     * next and the previous music are chosen in it */
+    RCLibDbGroupMode play_group_mode;
+    const gchar *play_group;
     gboolean sources_dirty;
     gboolean tracks_dirty;
     gboolean checking_files;
@@ -395,6 +399,35 @@ static RCLibDbItem *rc_tui_get_track()
         (guint)priv->track_cursor>=priv->tracks->len)
         return NULL;
     return g_ptr_array_index(priv->tracks, priv->track_cursor);
+}
+
+/* Play an item in the track list, an item in the library is played in
+ * the group shown now */
+static void rc_tui_play_track(RCLibDbItem *item)
+{
+    RCTuiPrivate *priv = &tui_priv;
+    RCTuiSource *source = rc_tui_get_source();
+    if(item->playlist==NULL)
+    {
+        if(source!=NULL && source->type==RC_TUI_SOURCE_GROUP)
+        {
+            priv->play_group_mode = priv->group_mode;
+            priv->play_group = source->group;
+        }
+        else
+        {
+            priv->play_group_mode = RCLIB_DB_GROUP_NONE;
+            priv->play_group = NULL;
+        }
+    }
+    rclib_player_play_item(item);
+}
+
+/* The items of the group which the playing music is played in */
+static GPtrArray *rc_tui_library_order(gpointer data)
+{
+    return rclib_db_library_get_group_items(tui_priv.play_group_mode,
+        tui_priv.play_group);
 }
 
 static RCLibDbPlaylist *rc_tui_get_current_playlist()
@@ -1197,12 +1230,12 @@ static void rc_tui_handle_key(gint ret, wint_t key)
             if(priv->focus==RC_TUI_FOCUS_SOURCES)
                 priv->focus = RC_TUI_FOCUS_TRACKS;
             else if((item=rc_tui_get_track())!=NULL)
-                rclib_player_play_item(item);
+                rc_tui_play_track(item);
             break;
         case ' ':
             if(rclib_core_get_uri()!=NULL) rclib_player_play_pause();
             else if((item=rc_tui_get_track())!=NULL)
-                rclib_player_play_item(item);
+                rc_tui_play_track(item);
             break;
         case 's':
             rclib_core_stop();
@@ -1521,6 +1554,7 @@ gint rc_tui_run(gint argc, gchar *argv[])
     }
     rc_tui_redirect_stderr();
     g_log_set_writer_func(rc_tui_log_writer, NULL, NULL);
+    rclib_player_set_library_order(rc_tui_library_order, NULL, NULL);
     for(arg=1;arg<argc;arg++) rc_tui_add_path_cb(argv[arg], NULL);
     mode = rclib_settings_get_integer(RCLIB_SETTINGS_GROUP_LIBRARY,
         RCLIB_SETTINGS_KEY_GROUP_MODE);

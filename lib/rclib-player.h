@@ -31,12 +31,14 @@ G_BEGIN_DECLS
  * RCLibPlayerRepeatMode:
  * @RCLIB_PLAYER_REPEAT_NONE: after the last item of a playlist, continue
  *     with the next playlist, stop after the last playlist
- * @RCLIB_PLAYER_REPEAT_LIST: repeat the current playlist (or the music
- *     library)
+ * @RCLIB_PLAYER_REPEAT_LIST: repeat the current playlist (or the items
+ *     of the music library which are played in, see
+ *     rclib_player_set_library_order())
  * @RCLIB_PLAYER_REPEAT_SINGLE: repeat the current item, the next item is
  *     chosen like #RCLIB_PLAYER_REPEAT_NONE when the user skips it
  * @RCLIB_PLAYER_REPEAT_ALL: like #RCLIB_PLAYER_REPEAT_NONE, but continue
- *     with the first playlist after the last playlist
+ *     with the first playlist after the last playlist (in the music
+ *     library, like #RCLIB_PLAYER_REPEAT_LIST)
  *
  * The repeat modes of the player. Empty playlists are skipped when moving
  * to another playlist.
@@ -67,12 +69,12 @@ typedef gboolean (*RCLibPlayerFilterFunc)(const RCLibDbItem *item,
  * RCLibPlayerOrderFunc:
  * @data: the user data
  *
- * Get the items of the music library in the playing order, see
- * rclib_player_set_library_order().
+ * Get the items of the music library to play in, in the playing order,
+ * see rclib_player_set_library_order().
  *
- * Returns: (transfer container) (element-type RCLibDbItem) (nullable): All
- *     items of the music library in the playing order, %NULL to use the
- *     order of the music library.
+ * Returns: (transfer container) (element-type RCLibDbItem) (nullable): The
+ *     items of the music library (all of them or a part) in the playing
+ *     order, %NULL to use the whole music library in its order.
  */
 
 typedef GPtrArray *(*RCLibPlayerOrderFunc)(gpointer data);
