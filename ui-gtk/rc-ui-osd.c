@@ -811,6 +811,13 @@ static void rc_ui_osd_update_resolution()
     priv->text_scale = resolution / 96.0;
     pango_cairo_context_set_resolution(priv->context, resolution);
     pango_layout_context_changed(priv->layout);
+    /* The menu of the window (on the X11 display) uses the same font
+     * resolution, the X11 display only supports integer window scales */
+    if(priv->x11_display!=NULL)
+    {
+        g_object_set(gtk_settings_get_for_display(priv->x11_display),
+            "gtk-xft-dpi", (gint)(resolution * 1024), NULL);
+    }
 }
 
 /* Update the font and the size of the window (the width follows the
