@@ -218,12 +218,17 @@ from the template (for example with `msginit`).
   while importing, so the selection is kept and tracks can be played.
   While files are being imported, a "Cancel Import" button is shown in
   the status bar (also in the menu).
-* Reorder playlist items by long press dragging: press and hold an item for
-  half a second until it is selected, then drag it to the new position (a
-  line shows where it will be placed). If the item is one of several
-  selected items, all selected items are moved together and keep their
-  order. Dropping below the last item moves them to the end. The up/down
-  buttons move a single item.
+* Drag and drop tracks (a drag starts as soon as the pointer moves, like
+  other drags in GTK; the dragged item is selected). If the item is one
+  of several selected items, all selected items are dragged together and
+  keep their order.
+  * Drop them in the same playlist to reorder them: a line shows where
+    they will be placed, and dropping below the last item moves them to
+    the end. The up/down buttons move a single item.
+  * Drop them on another playlist in the playlist sidebar to move them to
+    the end of it (the playlist under the pointer is highlighted); they
+    are removed from the playlist they are dragged from. Tracks dragged
+    from the library are copied to the playlist and kept in the library.
 * "Remove Missing Files…" in the menu removes the items in the library and
   all playlists whose audio files do not exist any more (after a
   confirmation). The files are checked in a background thread; remote

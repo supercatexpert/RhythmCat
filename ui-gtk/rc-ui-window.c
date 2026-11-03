@@ -30,14 +30,21 @@
 #include <glib/gi18n.h>
 #include "config.h"
 
-/* Hold the pointer this long (unit: millisecond) to start dragging */
-#define RC_UI_WINDOW_LONG_PRESS_TIME 500
-
 /* The speed (unit: pixel per second) to move the music information in
  * the lyric display, and the time (unit: microsecond) to rest at each
  * end */
 #define RC_UI_WINDOW_LYRIC_INFO_SPEED 40
 #define RC_UI_WINDOW_LYRIC_INFO_REST (3 * G_USEC_PER_SEC)
+
+/* The items are moved in the playlist or to another playlist, or copied
+ * from the library to a playlist (the drop target in the playlist sidebar
+ * prefers to copy the items dragged from the library, the others prefer to
+ * move them). All drop targets accept both actions: on
+ * Wayland, the actions of a drop are only the action selected by the
+ * compositor for the last target, and a drop target which does not accept
+ * it when the pointer enters it ignores the drop until the pointer leaves
+ * it, even after the selected action is changed. */
+#define RC_UI_WINDOW_DRAG_ACTIONS (GDK_ACTION_MOVE | GDK_ACTION_COPY)
 
 typedef enum
 {
@@ -130,13 +137,12 @@ typedef struct RCUiWindowPrivate
     RCLibLyricData *lyric;
     gint lyric_key;
     gboolean updating_lists;
-    gint64 press_time;
-    guint press_position;
-    guint press_timeout_id;
     gint drag_from;
     gint expanded_height;
     GtkWidget *drop_row;
+    GtkListBoxRow *drop_playlist_row;
     GPtrArray *drag_items;
+    RCLibDbPlaylist *drag_playlist;
     guint progress_timer_id;
     guint library_refresh_id;
     guint group_refresh_id;
@@ -458,13 +464,24 @@ static gint rc_ui_window_get_first_selected()
     return pos;
 }
 
-/* ----- Reordering playlist items by long press dragging ----- */
+/* ----- Dragging items to reorder them or to add them to playlists ----- */
 
 static gboolean rc_ui_window_can_reorder()
 {
     RCUiWindowPrivate *priv = &window_priv;
     return priv->view_type==RC_UI_VIEW_PLAYLIST &&
         priv->view_playlist!=NULL && !priv->view_playlist->removed;
+}
+
+/* The dragged items can be moved in the shown track list only if they are
+ * dragged from it (the shown list changes if the sidebar is switched to
+ * the other page while dragging) */
+static gboolean rc_ui_window_can_move_dragged()
+{
+    RCUiWindowPrivate *priv = &window_priv;
+    return priv->drag_from>=0 && priv->drag_items!=NULL &&
+        rc_ui_window_can_reorder() &&
+        priv->drag_playlist==priv->view_playlist;
 }
 
 /* The cell widget is in a cell, which is in a row of the column view */
@@ -493,14 +510,6 @@ static void rc_ui_window_set_drop_row(GtkWidget *row, const gchar *css_class)
     gtk_widget_add_css_class(row, css_class);
 }
 
-static void rc_ui_window_cancel_long_press()
-{
-    RCUiWindowPrivate *priv = &window_priv;
-    if(priv->press_timeout_id>0)
-        g_source_remove(priv->press_timeout_id);
-    priv->press_timeout_id = 0;
-}
-
 /* Select the item if it is not selected, the selection is kept if the
  * item is one of the selected items, so all of them can be dragged. */
 static void rc_ui_window_select_for_drag(guint position)
@@ -509,15 +518,6 @@ static void rc_ui_window_select_for_drag(guint position)
     model = GTK_SELECTION_MODEL(window_priv.track_selection);
     if(!gtk_selection_model_is_selected(model, position))
         gtk_selection_model_select_item(model, position, TRUE);
-}
-
-static gboolean rc_ui_window_long_press_timeout_cb(gpointer data)
-{
-    RCUiWindowPrivate *priv = &window_priv;
-    priv->press_timeout_id = 0;
-    /* Select the item to show that it can be dragged now */
-    rc_ui_window_select_for_drag(priv->press_position);
-    return G_SOURCE_REMOVE;
 }
 
 static gboolean rc_ui_window_is_dragged_position(guint position)
@@ -538,41 +538,13 @@ static gboolean rc_ui_window_is_dragged_position(guint position)
 static void rc_ui_window_clear_drag()
 {
     RCUiWindowPrivate *priv = &window_priv;
-    priv->press_time = 0;
     priv->drag_from = -1;
     if(priv->drag_items!=NULL) g_ptr_array_unref(priv->drag_items);
     priv->drag_items = NULL;
+    if(priv->drag_playlist!=NULL)
+        rclib_db_playlist_unref(priv->drag_playlist);
+    priv->drag_playlist = NULL;
     rc_ui_window_set_drop_row(NULL, NULL);
-}
-
-static void rc_ui_window_cell_pressed_cb(GtkGestureClick *gesture,
-    gint n_press, gdouble x, gdouble y, gpointer data)
-{
-    RCUiWindowPrivate *priv = &window_priv;
-    guint position;
-    rc_ui_window_cancel_long_press();
-    priv->press_time = 0;
-    if(!rc_ui_window_can_reorder() || n_press!=1) return;
-    position = gtk_list_item_get_position(GTK_LIST_ITEM(data));
-    if(position==GTK_INVALID_LIST_POSITION) return;
-    priv->press_time = g_get_monotonic_time();
-    priv->press_position = position;
-    priv->press_timeout_id = g_timeout_add(RC_UI_WINDOW_LONG_PRESS_TIME,
-        rc_ui_window_long_press_timeout_cb, NULL);
-}
-
-static void rc_ui_window_cell_released_cb(GtkGestureClick *gesture,
-    gint n_press, gdouble x, gdouble y, gpointer data)
-{
-    rc_ui_window_cancel_long_press();
-    window_priv.press_time = 0;
-}
-
-static void rc_ui_window_cell_stopped_cb(GtkGestureClick *gesture,
-    gpointer data)
-{
-    /* The pointer moves, keep the press time for the drag source */
-    rc_ui_window_cancel_long_press();
 }
 
 static GdkContentProvider *rc_ui_window_drag_prepare_cb(
@@ -580,15 +552,6 @@ static GdkContentProvider *rc_ui_window_drag_prepare_cb(
 {
     RCUiWindowPrivate *priv = &window_priv;
     guint position;
-    rc_ui_window_cancel_long_press();
-    if(!rc_ui_window_can_reorder() || priv->press_time==0) return NULL;
-    if(g_get_monotonic_time()-priv->press_time <
-        RC_UI_WINDOW_LONG_PRESS_TIME * 1000)
-    {
-        /* Not a long press, let the column view handle the motion */
-        priv->press_time = 0;
-        return NULL;
-    }
     position = gtk_list_item_get_position(GTK_LIST_ITEM(data));
     if(position==GTK_INVALID_LIST_POSITION) return NULL;
     rc_ui_window_select_for_drag(position);
@@ -596,6 +559,11 @@ static GdkContentProvider *rc_ui_window_drag_prepare_cb(
     /* The selected items, in the order of the playlist */
     priv->drag_items = rc_ui_window_get_selected_items();
     priv->drag_from = position;
+    if(priv->drag_playlist!=NULL)
+        rclib_db_playlist_unref(priv->drag_playlist);
+    priv->drag_playlist = NULL;
+    if(priv->view_type==RC_UI_VIEW_PLAYLIST && priv->view_playlist!=NULL)
+        priv->drag_playlist = rclib_db_playlist_ref(priv->view_playlist);
     return gdk_content_provider_new_typed(G_TYPE_UINT, position);
 }
 
@@ -603,13 +571,17 @@ static void rc_ui_window_drag_begin_cb(GtkDragSource *source, GdkDrag *drag,
     gpointer data)
 {
     GtkWidget *row;
-    GdkPaintable *paintable;
+    GdkPaintable *paintable, *image;
     row = rc_ui_window_get_row_widget(GTK_EVENT_CONTROLLER(source));
     if(row==NULL) return;
+    /* A snapshot of the row, the row may be reused or removed while
+     * dragging (if the shown track list changes) */
     paintable = gtk_widget_paintable_new(row);
+    image = gdk_paintable_get_current_image(paintable);
     /* Show the icon below the pointer, so the drop position indicator is
      * not covered */
-    gtk_drag_source_set_icon(source, paintable, -16, -16);
+    gtk_drag_source_set_icon(source, image, -16, -16);
+    g_object_unref(image);
     g_object_unref(paintable);
 }
 
@@ -624,7 +596,7 @@ static GdkDragAction rc_ui_window_drop_motion_cb(GtkDropTarget *target,
 {
     RCUiWindowPrivate *priv = &window_priv;
     guint position;
-    if(priv->drag_from<0 || !rc_ui_window_can_reorder()) return 0;
+    if(!rc_ui_window_can_move_dragged()) return 0;
     position = gtk_list_item_get_position(GTK_LIST_ITEM(data));
     if(position==GTK_INVALID_LIST_POSITION) return 0;
     if(rc_ui_window_is_dragged_position(position))
@@ -654,7 +626,7 @@ static void rc_ui_window_move_dragged_items(gint target, gboolean after)
     gpointer item;
     guint i, j, insert;
     rc_ui_window_set_drop_row(NULL, NULL);
-    if(!rc_ui_window_can_reorder() || priv->drag_items==NULL) return;
+    if(!rc_ui_window_can_move_dragged()) return;
     items = priv->view_playlist->items;
     moved = g_ptr_array_new();
     rest = g_ptr_array_new();
@@ -714,6 +686,84 @@ static gboolean rc_ui_window_cell_drop_cb(GtkDropTarget *target,
     return TRUE;
 }
 
+/* The row of the playlist under the pointer in the playlist sidebar, which
+ * the dragged items can be added to, %NULL if there is none, or it is the
+ * playlist which the items are dragged from */
+static GtkListBoxRow *rc_ui_window_get_drop_playlist_row(gdouble y)
+{
+    RCUiWindowPrivate *priv = &window_priv;
+    GtkListBoxRow *row;
+    RCLibDbPlaylist *playlist;
+    if(priv->drag_from<0 || priv->drag_items==NULL) return NULL;
+    row = gtk_list_box_get_row_at_y(GTK_LIST_BOX(priv->playlist_listbox), y);
+    if(row==NULL) return NULL;
+    playlist = g_object_get_data(G_OBJECT(row), "rc-playlist");
+    if(playlist==NULL || playlist->removed) return NULL;
+    if(playlist==priv->drag_playlist) return NULL;
+    return row;
+}
+
+static void rc_ui_window_set_drop_playlist_row(GtkListBoxRow *row)
+{
+    RCUiWindowPrivate *priv = &window_priv;
+    if(row==priv->drop_playlist_row) return;
+    priv->drop_playlist_row = row;
+    if(row!=NULL)
+    {
+        gtk_list_box_drag_highlight_row(GTK_LIST_BOX(
+            priv->playlist_listbox), row);
+    }
+    else
+        gtk_list_box_drag_unhighlight_row(GTK_LIST_BOX(
+            priv->playlist_listbox));
+}
+
+static GdkDragAction rc_ui_window_playlist_drop_motion_cb(
+    GtkDropTarget *target, gdouble x, gdouble y, gpointer data)
+{
+    GtkListBoxRow *row;
+    row = rc_ui_window_get_drop_playlist_row(y);
+    rc_ui_window_set_drop_playlist_row(row);
+    if(row==NULL) return 0;
+    return window_priv.drag_playlist!=NULL ? GDK_ACTION_MOVE :
+        GDK_ACTION_COPY;
+}
+
+static void rc_ui_window_playlist_drop_leave_cb(GtkDropTarget *target,
+    gpointer data)
+{
+    rc_ui_window_set_drop_playlist_row(NULL);
+}
+
+/* Dropping on a playlist in the sidebar appends the dragged items to it,
+ * the items are removed from the playlist which they are dragged from (but
+ * kept in the library if they are dragged from the library) */
+static gboolean rc_ui_window_playlist_drop_cb(GtkDropTarget *target,
+    const GValue *value, gdouble x, gdouble y, gpointer data)
+{
+    RCUiWindowPrivate *priv = &window_priv;
+    GtkListBoxRow *row;
+    RCLibDbPlaylist *playlist;
+    guint i;
+    rc_ui_window_set_drop_playlist_row(NULL);
+    if(!G_VALUE_HOLDS_UINT(value)) return FALSE;
+    row = rc_ui_window_get_drop_playlist_row(y);
+    if(row==NULL) return FALSE;
+    playlist = g_object_get_data(G_OBJECT(row), "rc-playlist");
+    for(i=0;i<priv->drag_items->len;i++)
+    {
+        rclib_db_playlist_add_item(playlist, g_ptr_array_index(
+            priv->drag_items, i), -1);
+    }
+    if(priv->drag_playlist!=NULL)
+    {
+        for(i=0;i<priv->drag_items->len;i++)
+            rclib_db_playlist_remove_item(g_ptr_array_index(
+                priv->drag_items, i));
+    }
+    return TRUE;
+}
+
 /* Dropping on the empty area below the items moves the item to the end */
 static gboolean rc_ui_window_list_drop_cb(GtkDropTarget *target,
     const GValue *value, gdouble x, gdouble y, gpointer data)
@@ -727,28 +777,17 @@ static GdkDragAction rc_ui_window_list_drop_motion_cb(GtkDropTarget *target,
     gdouble x, gdouble y, gpointer data)
 {
     /* The indicator is cleared by the drop targets of the cells */
-    if(window_priv.drag_from<0 || !rc_ui_window_can_reorder()) return 0;
+    if(!rc_ui_window_can_move_dragged()) return 0;
     return GDK_ACTION_MOVE;
 }
 
 static void rc_ui_window_setup_cell_dnd(GtkWidget *widget,
     GtkListItem *list_item)
 {
-    GtkGesture *click;
     GtkDragSource *source;
     GtkDropTarget *target;
-    click = gtk_gesture_click_new();
-    gtk_gesture_single_set_button(GTK_GESTURE_SINGLE(click),
-        GDK_BUTTON_PRIMARY);
-    g_signal_connect(click, "pressed",
-        G_CALLBACK(rc_ui_window_cell_pressed_cb), list_item);
-    g_signal_connect(click, "released",
-        G_CALLBACK(rc_ui_window_cell_released_cb), list_item);
-    g_signal_connect(click, "stopped",
-        G_CALLBACK(rc_ui_window_cell_stopped_cb), list_item);
-    gtk_widget_add_controller(widget, GTK_EVENT_CONTROLLER(click));
     source = gtk_drag_source_new();
-    gtk_drag_source_set_actions(source, GDK_ACTION_MOVE);
+    gtk_drag_source_set_actions(source, RC_UI_WINDOW_DRAG_ACTIONS);
     g_signal_connect(source, "prepare",
         G_CALLBACK(rc_ui_window_drag_prepare_cb), list_item);
     g_signal_connect(source, "drag-begin",
@@ -756,7 +795,7 @@ static void rc_ui_window_setup_cell_dnd(GtkWidget *widget,
     g_signal_connect(source, "drag-end",
         G_CALLBACK(rc_ui_window_drag_end_cb), list_item);
     gtk_widget_add_controller(widget, GTK_EVENT_CONTROLLER(source));
-    target = gtk_drop_target_new(G_TYPE_UINT, GDK_ACTION_MOVE);
+    target = gtk_drop_target_new(G_TYPE_UINT, RC_UI_WINDOW_DRAG_ACTIONS);
     g_signal_connect(target, "enter",
         G_CALLBACK(rc_ui_window_drop_motion_cb), list_item);
     g_signal_connect(target, "motion",
@@ -1153,6 +1192,7 @@ static void rc_ui_window_reload_playlists()
     GMenuItem *menu_item;
     guint i;
     priv->updating_lists = TRUE;
+    priv->drop_playlist_row = NULL;
     gtk_list_box_remove_all(GTK_LIST_BOX(priv->playlist_listbox));
     g_menu_remove_all(priv->playlist_menu);
     playlists = rclib_db_get_playlists();
@@ -2965,7 +3005,8 @@ GtkWidget *rc_ui_window_init(GtkApplication *app)
     gtk_widget_add_controller(rc_ui_window_get_object("track_scrolled"),
         GTK_EVENT_CONTROLLER(drop_target));
     priv->drag_from = -1;
-    drop_target = gtk_drop_target_new(G_TYPE_UINT, GDK_ACTION_MOVE);
+    drop_target = gtk_drop_target_new(G_TYPE_UINT,
+        RC_UI_WINDOW_DRAG_ACTIONS);
     g_signal_connect(drop_target, "enter",
         G_CALLBACK(rc_ui_window_list_drop_motion_cb), NULL);
     g_signal_connect(drop_target, "motion",
@@ -3000,6 +3041,18 @@ GtkWidget *rc_ui_window_init(GtkApplication *app)
         G_CALLBACK(rc_ui_window_group_selected_cb), NULL);
     g_signal_connect(priv->playlist_listbox, "row-selected",
         G_CALLBACK(rc_ui_window_playlist_selected_cb), NULL);
+    drop_target = gtk_drop_target_new(G_TYPE_UINT,
+        RC_UI_WINDOW_DRAG_ACTIONS);
+    g_signal_connect(drop_target, "enter",
+        G_CALLBACK(rc_ui_window_playlist_drop_motion_cb), NULL);
+    g_signal_connect(drop_target, "motion",
+        G_CALLBACK(rc_ui_window_playlist_drop_motion_cb), NULL);
+    g_signal_connect(drop_target, "leave",
+        G_CALLBACK(rc_ui_window_playlist_drop_leave_cb), NULL);
+    g_signal_connect(drop_target, "drop",
+        G_CALLBACK(rc_ui_window_playlist_drop_cb), NULL);
+    gtk_widget_add_controller(priv->playlist_listbox,
+        GTK_EVENT_CONTROLLER(drop_target));
     g_signal_connect(priv->sidebar_stack, "notify::visible-child-name",
         G_CALLBACK(rc_ui_window_stack_changed_cb), NULL);
     g_signal_connect(rc_ui_window_get_object("playlist_new_button"),
@@ -3156,7 +3209,6 @@ void rc_ui_window_cleanup()
         g_source_remove(priv->library_refresh_id);
     if(priv->group_refresh_id>0) g_source_remove(priv->group_refresh_id);
     if(priv->column_layout_id>0) g_source_remove(priv->column_layout_id);
-    rc_ui_window_cancel_long_press();
     rc_ui_window_clear_drag();
     if(priv->view_playlist!=NULL)
         rclib_db_playlist_unref(priv->view_playlist);
