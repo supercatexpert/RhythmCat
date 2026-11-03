@@ -42,7 +42,6 @@ typedef enum {
 }RCUiStyleColorScheme;
 
 void rc_ui_style_init();
-void rc_ui_style_add_display(GdkDisplay *display);
 void rc_ui_style_apply(RCUiStyleColorScheme scheme);
 gboolean rc_ui_style_is_dark();
 

@@ -20,7 +20,7 @@ License: GNU GPL v3 or later (see `COPYING`).
 Dependencies: GLib/GIO ≥ 2.74, GStreamer ≥ 1.16 (core, base: pbutils,
 tag, audio), json-c ≥ 0.15, GTK ≥ 4.12 (optional), ncursesw (optional),
 meson ≥ 0.64. Xlib (`x11`, optional) is used by the GTK frontend to
-keep the OSD lyric window above other windows (on X11 and XWayland).
+keep the OSD lyric window above other windows (on X11).
 
 ```sh
 meson setup build
@@ -197,22 +197,18 @@ from the template (for example with `msginit`).
   font size, text color, progress color (the progress can be turned off)
   and width (percent of the screen width) can be set in Settings. The
   font size (in points) follows the font scaling of the desktop (for
-  example the text scaling factor of GNOME) and the display scaling
-  (also the fractional scaling of GNOME with the native scaling of
-  XWayland), also when the window is shown with XWayland, and the window
-  is resized when the scaling or the monitors change. The
+  example the text scaling factor of GNOME), and the window is resized
+  when the scaling or the monitors change. The
   window always has this width and the text is shown in one line in the
   middle of it; a line which is too wide moves horizontally with its
   progress, and a title which is too wide moves from the start to the end
   and back, resting for 3 seconds at each end. By default, the bottom of the window is at 90%
   of the screen height. Drag the text to move it, right click it to hide
-  it or reset its position. The window stays above other windows on all
-  workspaces, and the position is remembered. Wayland has no way for a
-  program to do this, so on Wayland the window is shown with XWayland (the
-  X11 display in `DISPLAY`, or in the environment of the systemd user
-  manager if `DISPLAY` is not set, for example in a terminal multiplexer
-  started before XWayland); if XWayland is not available, the compositor
-  decides where the window is placed and whether it stays on top. It works
+  it or reset its position (on X11). On X11, the window stays above other
+  windows on all workspaces, and the position is remembered. Wayland has no way
+  for a program to do this, so on Wayland the compositor decides where
+  the window is placed and whether it stays on top (for example, use
+  "Always on Top" in the window menu of GNOME, opened with Alt+Space). It works
   even if the lyric in the main window is turned off.
 * Library sidebar with grouping, and a playlist sidebar with new, rename,
   delete and move up/down.

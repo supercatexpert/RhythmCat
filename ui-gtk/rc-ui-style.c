@@ -26,8 +26,6 @@
 static gboolean style_system_dark = FALSE;
 static gboolean style_initialized = FALSE;
 static GtkCssProvider *style_provider = NULL;
-/* Other displays than the default one, which use the same style */
-static GSList *style_displays = NULL;
 
 static void rc_ui_style_settings_changed_cb(GObject *object,
     const gchar *group, const gchar *key, gpointer data)
@@ -66,38 +64,6 @@ void rc_ui_style_init()
         G_CALLBACK(rc_ui_style_settings_changed_cb), NULL);
 }
 
-static void rc_ui_style_display_closed_cb(GdkDisplay *display,
-    gboolean is_error, gpointer data)
-{
-    style_displays = g_slist_remove(style_displays, display);
-}
-
-/**
- * rc_ui_style_add_display:
- * @display: the display
- *
- * Use the style sheet and the color scheme on another display than the
- * default one. The display is removed when it is closed.
- */
-
-void rc_ui_style_add_display(GdkDisplay *display)
-{
-    gboolean dark;
-    if(!style_initialized || display==NULL ||
-        display==gdk_display_get_default() ||
-        g_slist_find(style_displays, display)!=NULL)
-        return;
-    gtk_style_context_add_provider_for_display(display,
-        GTK_STYLE_PROVIDER(style_provider),
-        GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
-    style_displays = g_slist_prepend(style_displays, display);
-    g_signal_connect(display, "closed",
-        G_CALLBACK(rc_ui_style_display_closed_cb), NULL);
-    dark = rc_ui_style_is_dark();
-    g_object_set(gtk_settings_get_for_display(display),
-        "gtk-application-prefer-dark-theme", dark, NULL);
-}
-
 /**
  * rc_ui_style_apply:
  * @scheme: the color scheme
@@ -108,7 +74,6 @@ void rc_ui_style_add_display(GdkDisplay *display)
 void rc_ui_style_apply(RCUiStyleColorScheme scheme)
 {
     gboolean dark;
-    GSList *list;
     switch(scheme)
     {
         case RC_UI_STYLE_COLOR_SCHEME_LIGHT:
@@ -123,11 +88,6 @@ void rc_ui_style_apply(RCUiStyleColorScheme scheme)
     }
     g_object_set(gtk_settings_get_default(),
         "gtk-application-prefer-dark-theme", dark, NULL);
-    for(list=style_displays;list!=NULL;list=g_slist_next(list))
-    {
-        g_object_set(gtk_settings_get_for_display(list->data),
-            "gtk-application-prefer-dark-theme", dark, NULL);
-    }
 }
 
 /**

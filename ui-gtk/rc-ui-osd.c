@@ -21,7 +21,6 @@
  * along with RhythmCat; if not, see <https://www.gnu.org/licenses/>.
  */
 #include "rc-ui-osd.h"
-#include "rc-ui-style.h"
 #include <rclib.h>
 #include <glib/gi18n.h>
 
@@ -42,13 +41,8 @@ typedef struct RCUiOsdPrivate
     GtkWidget *window;
     GtkWidget *area;
     GtkWidget *popover;
-    /* The X11 display (XWayland) used for the window on Wayland, so it
-     * can stay above other windows */
-    GdkDisplay *x11_display;
     /* The Pango context of the layout, its resolution follows the font
-     * scaling of the default display (the display of the OSD window may be
-     * the X11 display, whose settings may not include it), and the scale
-     * of the X11 display */
+     * scaling of the display */
     PangoContext *context;
     PangoLayout *layout;
     /* The scale of the text, the outline and the padding (the resolution
@@ -473,83 +467,6 @@ static void rc_ui_osd_surface_mapped_cb(GObject *object, GParamSpec *pspec,
         osd_priv.mapped_id = g_idle_add(rc_ui_osd_mapped_idle_cb, NULL);
 }
 
-/* Open the X11 display of XWayland, Wayland has no way for a program to
- * keep its window above others (GNOME has no layer shell) */
-/* Get the X11 display name from the environment of the systemd user
- * manager, the desktop (like GNOME) puts it there when XWayland starts.
- * It is used when the program is started from a place which does not have
- * it (like a terminal multiplexer started before XWayland). The
- * XAUTHORITY variable is also set from there if it is not set. */
-static gchar *rc_ui_osd_get_session_display()
-{
-    GDBusConnection *connection;
-    GVariant *result, *value;
-    const gchar **env;
-    const gchar *auth = NULL;
-    gchar *name = NULL;
-    gsize i;
-    connection = g_bus_get_sync(G_BUS_TYPE_SESSION, NULL, NULL);
-    if(connection==NULL) return NULL;
-    result = g_dbus_connection_call_sync(connection,
-        "org.freedesktop.systemd1", "/org/freedesktop/systemd1",
-        "org.freedesktop.DBus.Properties", "Get",
-        g_variant_new("(ss)", "org.freedesktop.systemd1.Manager",
-        "Environment"), G_VARIANT_TYPE("(v)"), G_DBUS_CALL_FLAGS_NONE,
-        1000, NULL, NULL);
-    g_object_unref(connection);
-    if(result==NULL) return NULL;
-    g_variant_get(result, "(v)", &value);
-    if(g_variant_is_of_type(value, G_VARIANT_TYPE_STRING_ARRAY))
-    {
-        env = g_variant_get_strv(value, NULL);
-        for(i=0;env[i]!=NULL;i++)
-        {
-            if(g_str_has_prefix(env[i], "DISPLAY=") && env[i][8]!='\0')
-            {
-                g_free(name);
-                name = g_strdup(env[i] + 8);
-            }
-            else if(g_str_has_prefix(env[i], "XAUTHORITY="))
-                auth = env[i] + 11;
-        }
-        if(name!=NULL && auth!=NULL && *auth!='\0')
-            g_setenv("XAUTHORITY", auth, FALSE);
-        g_free(env);
-    }
-    g_variant_unref(value);
-    g_variant_unref(result);
-    return name;
-}
-
-static GdkDisplay *rc_ui_osd_x11_open_display()
-{
-    GdkDisplay *display;
-    gchar *name;
-    if(GDK_IS_X11_DISPLAY(gdk_display_get_default())) return NULL;
-    name = g_strdup(g_getenv("DISPLAY"));
-    if(name==NULL || *name=='\0')
-    {
-        g_free(name);
-        name = rc_ui_osd_get_session_display();
-    }
-    if(name==NULL) return NULL;
-    display = gdk_display_manager_open_display(gdk_display_manager_get(),
-        name);
-    if(display==NULL)
-    {
-        g_message("Cannot open X11 display %s for the OSD lyric", name);
-        g_free(name);
-        return NULL;
-    }
-    g_free(name);
-    if(!GDK_IS_X11_DISPLAY(display))
-    {
-        gdk_display_close(display);
-        return NULL;
-    }
-    return display;
-}
-
 G_GNUC_END_IGNORE_DEPRECATIONS
 
 #else
@@ -752,54 +669,8 @@ static void rc_ui_osd_load_style()
     rc_ui_osd_update_timer();
 }
 
-/* Get the size of a pixel of the OSD window in the logical pixels of the
- * default display. The X11 display of XWayland may use the pixels of the
- * monitors (like with the native scaling of GNOME), with an integer
- * window scale, so the monitor of the window is compared with the same
- * monitor of the default display (by the connector name) */
-static gdouble rc_ui_osd_get_display_scale()
-{
-    RCUiOsdPrivate *priv = &osd_priv;
-    GdkMonitor *monitor, *item, *default_monitor = NULL;
-    GListModel *monitors;
-    GdkRectangle geometry, default_geometry;
-    const gchar *connector;
-    guint i, n;
-    gdouble scale;
-    if(priv->x11_display==NULL) return 1.0;
-    monitor = rc_ui_osd_get_monitor();
-    if(monitor==NULL) return 1.0;
-    connector = gdk_monitor_get_connector(monitor);
-    monitors = gdk_display_get_monitors(gdk_display_get_default());
-    n = g_list_model_get_n_items(monitors);
-    for(i=0;i<n && default_monitor==NULL;i++)
-    {
-        item = g_list_model_get_item(monitors, i);
-        if(connector!=NULL && g_strcmp0(connector,
-            gdk_monitor_get_connector(item))==0)
-        {
-            default_monitor = item;
-        }
-        g_object_unref(item);
-    }
-    /* Without the connector names, it is only known with one monitor */
-    if(default_monitor==NULL && n==1 && g_list_model_get_n_items(
-        gdk_display_get_monitors(priv->x11_display))==1)
-    {
-        default_monitor = g_list_model_get_item(monitors, 0);
-        g_object_unref(default_monitor);
-    }
-    if(default_monitor==NULL) return 1.0;
-    gdk_monitor_get_geometry(monitor, &geometry);
-    gdk_monitor_get_geometry(default_monitor, &default_geometry);
-    if(geometry.width<=0 || default_geometry.width<=0) return 1.0;
-    scale = (gdouble)geometry.width / default_geometry.width;
-    return CLAMP(scale, 0.25, 8.0);
-}
-
-/* Use the font scaling of the default display (the resolution set in
- * gtk-xft-dpi, in 1024ths of a dot per inch), and the scale of the X11
- * display */
+/* Use the font scaling of the display (the resolution set in gtk-xft-dpi,
+ * in 1024ths of a dot per inch), a layout does not follow it by itself */
 static void rc_ui_osd_update_resolution()
 {
     RCUiOsdPrivate *priv = &osd_priv;
@@ -807,17 +678,9 @@ static void rc_ui_osd_update_resolution()
     gdouble resolution = 96.0;
     g_object_get(gtk_settings_get_default(), "gtk-xft-dpi", &dpi, NULL);
     if(dpi>0) resolution = dpi / 1024.0;
-    resolution *= rc_ui_osd_get_display_scale();
     priv->text_scale = resolution / 96.0;
     pango_cairo_context_set_resolution(priv->context, resolution);
     pango_layout_context_changed(priv->layout);
-    /* The menu of the window (on the X11 display) uses the same font
-     * resolution, the X11 display only supports integer window scales */
-    if(priv->x11_display!=NULL)
-    {
-        g_object_set(gtk_settings_get_for_display(priv->x11_display),
-            "gtk-xft-dpi", (gint)(resolution * 1024), NULL);
-    }
 }
 
 /* Update the font and the size of the window (the width follows the
@@ -840,8 +703,7 @@ static void rc_ui_osd_monitor_changed_cb(GObject *object,
     rc_ui_osd_update_scale();
 }
 
-/* Watch the geometry and the scale of the monitors of the default
- * display and the X11 display */
+/* Watch the geometry and the scale of the monitors */
 static void rc_ui_osd_monitors_changed_cb(GListModel *monitors,
     guint position, guint removed, guint added, gpointer data)
 {
@@ -857,12 +719,12 @@ static void rc_ui_osd_monitors_changed_cb(GListModel *monitors,
     if(removed>0 || added>0) rc_ui_osd_update_scale();
 }
 
-static void rc_ui_osd_watch_monitors(GdkDisplay *display, gboolean watch)
+static void rc_ui_osd_watch_monitors(gboolean watch)
 {
     GListModel *monitors;
     GdkMonitor *monitor;
     guint i, n;
-    monitors = gdk_display_get_monitors(display);
+    monitors = gdk_display_get_monitors(gdk_display_get_default());
     n = g_list_model_get_n_items(monitors);
     if(watch)
     {
@@ -917,8 +779,8 @@ static void rc_ui_osd_settings_changed_cb(GObject *settings,
  * rc_ui_osd_init:
  *
  * Create the OSD lyric window. It is shown when the OSD lyric is
- * enabled in the settings. On Wayland, the window is shown with
- * XWayland if possible, so it can stay above other windows.
+ * enabled in the settings. On X11, it stays above other windows and is
+ * placed by the program; on Wayland, the compositor decides it.
  */
 
 void rc_ui_osd_init()
@@ -936,14 +798,6 @@ void rc_ui_osd_init()
     /* Not added to the application, so it does not keep the program
      * running after the main window is closed */
     priv->window = gtk_window_new();
-#ifdef RC_UI_OSD_X11
-    priv->x11_display = rc_ui_osd_x11_open_display();
-    if(priv->x11_display!=NULL)
-    {
-        gtk_window_set_display(GTK_WINDOW(priv->window), priv->x11_display);
-        rc_ui_style_add_display(priv->x11_display);
-    }
-#endif
     gtk_window_set_title(GTK_WINDOW(priv->window), _("RhythmCat Lyric"));
     gtk_window_set_decorated(GTK_WINDOW(priv->window), FALSE);
     gtk_window_set_resizable(GTK_WINDOW(priv->window), FALSE);
@@ -965,7 +819,11 @@ void rc_ui_osd_init()
     g_object_unref(group);
     menu = g_menu_new();
     g_menu_append(menu, _("_Hide OSD Lyric"), "osd.hide");
-    g_menu_append(menu, _("_Reset Position"), "osd.reset-position");
+#ifdef RC_UI_OSD_X11
+    /* The program can only place the window on X11 */
+    if(GDK_IS_X11_DISPLAY(gdk_display_get_default()))
+        g_menu_append(menu, _("_Reset Position"), "osd.reset-position");
+#endif
     priv->popover = gtk_popover_menu_new_from_model(G_MENU_MODEL(menu));
     gtk_popover_set_has_arrow(GTK_POPOVER(priv->popover), FALSE);
     gtk_widget_set_parent(priv->popover, priv->area);
@@ -1007,9 +865,7 @@ void rc_ui_osd_init()
         G_CALLBACK(rc_ui_osd_core_state_changed_cb), NULL);
     priv->dpi_handler = g_signal_connect(gtk_settings_get_default(),
         "notify::gtk-xft-dpi", G_CALLBACK(rc_ui_osd_dpi_changed_cb), NULL);
-    rc_ui_osd_watch_monitors(gdk_display_get_default(), TRUE);
-    if(priv->x11_display!=NULL)
-        rc_ui_osd_watch_monitors(priv->x11_display, TRUE);
+    rc_ui_osd_watch_monitors(TRUE);
     rc_ui_osd_update_visible();
 }
 
@@ -1030,9 +886,7 @@ void rc_ui_osd_exit()
     if(priv->dpi_handler>0)
         g_signal_handler_disconnect(gtk_settings_get_default(),
             priv->dpi_handler);
-    rc_ui_osd_watch_monitors(gdk_display_get_default(), FALSE);
-    if(priv->x11_display!=NULL)
-        rc_ui_osd_watch_monitors(priv->x11_display, FALSE);
+    rc_ui_osd_watch_monitors(FALSE);
     if(priv->tick_id>0)
         gtk_widget_remove_tick_callback(priv->area, priv->tick_id);
     if(priv->move_id>0) g_source_remove(priv->move_id);
@@ -1041,7 +895,6 @@ void rc_ui_osd_exit()
     gtk_window_destroy(GTK_WINDOW(priv->window));
     g_clear_object(&priv->layout);
     g_clear_object(&priv->context);
-    if(priv->x11_display!=NULL) gdk_display_close(priv->x11_display);
     g_free(priv->line_text);
     g_free(priv->title);
     memset(priv, 0, sizeof(RCUiOsdPrivate));
