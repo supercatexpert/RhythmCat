@@ -47,10 +47,12 @@ typedef struct RCUiOsdPrivate
     GdkDisplay *x11_display;
     /* The Pango context of the layout, its resolution follows the font
      * scaling of the default display (the display of the OSD window may be
-     * the X11 display, whose settings may not include it) */
+     * the X11 display, whose settings may not include it), and the scale
+     * of the X11 display */
     PangoContext *context;
     PangoLayout *layout;
-    /* The font scaling (the resolution divided by 96) */
+    /* The scale of the text, the outline and the padding (the resolution
+     * divided by 96) */
     gdouble text_scale;
     /* The current lyric line, and the title shown without a lyric */
     gchar *line_text;
@@ -95,6 +97,8 @@ typedef struct RCUiOsdPrivate
 }RCUiOsdPrivate;
 
 static RCUiOsdPrivate osd_priv = {0};
+
+static void rc_ui_osd_update_scale();
 
 static GdkMonitor *rc_ui_osd_get_monitor()
 {
@@ -453,6 +457,8 @@ static gboolean rc_ui_osd_mapped_idle_cb(gpointer data)
     osd_priv.mapped_id = 0;
     if(!gtk_widget_get_mapped(osd_priv.window)) return G_SOURCE_REMOVE;
     rc_ui_osd_x11_set_above();
+    /* The monitor of the window is known now */
+    rc_ui_osd_update_scale();
     rc_ui_osd_x11_move();
     return G_SOURCE_REMOVE;
 }
@@ -645,6 +651,8 @@ static void rc_ui_osd_drag_end_cb(GtkGestureDrag *gesture,
         RCLIB_SETTINGS_KEY_OSD_X, center_x);
     rclib_settings_set_integer(RCLIB_SETTINGS_GROUP_LYRIC,
         RCLIB_SETTINGS_KEY_OSD_Y, top_y);
+    /* The window may be moved to another monitor */
+    rc_ui_osd_update_scale();
 #endif
 }
 
@@ -744,8 +752,54 @@ static void rc_ui_osd_load_style()
     rc_ui_osd_update_timer();
 }
 
+/* Get the size of a pixel of the OSD window in the logical pixels of the
+ * default display. The X11 display of XWayland may use the pixels of the
+ * monitors (like with the native scaling of GNOME), with an integer
+ * window scale, so the monitor of the window is compared with the same
+ * monitor of the default display (by the connector name) */
+static gdouble rc_ui_osd_get_display_scale()
+{
+    RCUiOsdPrivate *priv = &osd_priv;
+    GdkMonitor *monitor, *item, *default_monitor = NULL;
+    GListModel *monitors;
+    GdkRectangle geometry, default_geometry;
+    const gchar *connector;
+    guint i, n;
+    gdouble scale;
+    if(priv->x11_display==NULL) return 1.0;
+    monitor = rc_ui_osd_get_monitor();
+    if(monitor==NULL) return 1.0;
+    connector = gdk_monitor_get_connector(monitor);
+    monitors = gdk_display_get_monitors(gdk_display_get_default());
+    n = g_list_model_get_n_items(monitors);
+    for(i=0;i<n && default_monitor==NULL;i++)
+    {
+        item = g_list_model_get_item(monitors, i);
+        if(connector!=NULL && g_strcmp0(connector,
+            gdk_monitor_get_connector(item))==0)
+        {
+            default_monitor = item;
+        }
+        g_object_unref(item);
+    }
+    /* Without the connector names, it is only known with one monitor */
+    if(default_monitor==NULL && n==1 && g_list_model_get_n_items(
+        gdk_display_get_monitors(priv->x11_display))==1)
+    {
+        default_monitor = g_list_model_get_item(monitors, 0);
+        g_object_unref(default_monitor);
+    }
+    if(default_monitor==NULL) return 1.0;
+    gdk_monitor_get_geometry(monitor, &geometry);
+    gdk_monitor_get_geometry(default_monitor, &default_geometry);
+    if(geometry.width<=0 || default_geometry.width<=0) return 1.0;
+    scale = (gdouble)geometry.width / default_geometry.width;
+    return CLAMP(scale, 0.25, 8.0);
+}
+
 /* Use the font scaling of the default display (the resolution set in
- * gtk-xft-dpi, in 1024ths of a dot per inch) */
+ * gtk-xft-dpi, in 1024ths of a dot per inch), and the scale of the X11
+ * display */
 static void rc_ui_osd_update_resolution()
 {
     RCUiOsdPrivate *priv = &osd_priv;
@@ -753,16 +807,72 @@ static void rc_ui_osd_update_resolution()
     gdouble resolution = 96.0;
     g_object_get(gtk_settings_get_default(), "gtk-xft-dpi", &dpi, NULL);
     if(dpi>0) resolution = dpi / 1024.0;
+    resolution *= rc_ui_osd_get_display_scale();
     priv->text_scale = resolution / 96.0;
     pango_cairo_context_set_resolution(priv->context, resolution);
     pango_layout_context_changed(priv->layout);
 }
 
-static void rc_ui_osd_dpi_changed_cb(GObject *object, GParamSpec *pspec,
-    gpointer data)
+/* Update the font and the size of the window (the width follows the
+ * monitor) */
+static void rc_ui_osd_update_scale()
 {
     rc_ui_osd_update_resolution();
     rc_ui_osd_load_style();
+}
+
+static void rc_ui_osd_dpi_changed_cb(GObject *object, GParamSpec *pspec,
+    gpointer data)
+{
+    rc_ui_osd_update_scale();
+}
+
+static void rc_ui_osd_monitor_changed_cb(GObject *object,
+    GParamSpec *pspec, gpointer data)
+{
+    rc_ui_osd_update_scale();
+}
+
+/* Watch the geometry and the scale of the monitors of the default
+ * display and the X11 display */
+static void rc_ui_osd_monitors_changed_cb(GListModel *monitors,
+    guint position, guint removed, guint added, gpointer data)
+{
+    GdkMonitor *monitor;
+    guint i;
+    for(i=position;i<position+added;i++)
+    {
+        monitor = g_list_model_get_item(monitors, i);
+        g_signal_connect(monitor, "notify",
+            G_CALLBACK(rc_ui_osd_monitor_changed_cb), NULL);
+        g_object_unref(monitor);
+    }
+    if(removed>0 || added>0) rc_ui_osd_update_scale();
+}
+
+static void rc_ui_osd_watch_monitors(GdkDisplay *display, gboolean watch)
+{
+    GListModel *monitors;
+    GdkMonitor *monitor;
+    guint i, n;
+    monitors = gdk_display_get_monitors(display);
+    n = g_list_model_get_n_items(monitors);
+    if(watch)
+    {
+        g_signal_connect(monitors, "items-changed",
+            G_CALLBACK(rc_ui_osd_monitors_changed_cb), NULL);
+        rc_ui_osd_monitors_changed_cb(monitors, 0, 0, n, NULL);
+        return;
+    }
+    g_signal_handlers_disconnect_by_func(monitors,
+        rc_ui_osd_monitors_changed_cb, NULL);
+    for(i=0;i<n;i++)
+    {
+        monitor = g_list_model_get_item(monitors, i);
+        g_signal_handlers_disconnect_by_func(monitor,
+            rc_ui_osd_monitor_changed_cb, NULL);
+        g_object_unref(monitor);
+    }
 }
 
 static void rc_ui_osd_settings_changed_cb(GObject *settings,
@@ -890,6 +1000,9 @@ void rc_ui_osd_init()
         G_CALLBACK(rc_ui_osd_core_state_changed_cb), NULL);
     priv->dpi_handler = g_signal_connect(gtk_settings_get_default(),
         "notify::gtk-xft-dpi", G_CALLBACK(rc_ui_osd_dpi_changed_cb), NULL);
+    rc_ui_osd_watch_monitors(gdk_display_get_default(), TRUE);
+    if(priv->x11_display!=NULL)
+        rc_ui_osd_watch_monitors(priv->x11_display, TRUE);
     rc_ui_osd_update_visible();
 }
 
@@ -910,6 +1023,9 @@ void rc_ui_osd_exit()
     if(priv->dpi_handler>0)
         g_signal_handler_disconnect(gtk_settings_get_default(),
             priv->dpi_handler);
+    rc_ui_osd_watch_monitors(gdk_display_get_default(), FALSE);
+    if(priv->x11_display!=NULL)
+        rc_ui_osd_watch_monitors(priv->x11_display, FALSE);
     if(priv->tick_id>0)
         gtk_widget_remove_tick_callback(priv->area, priv->tick_id);
     if(priv->move_id>0) g_source_remove(priv->move_id);
