@@ -45,7 +45,13 @@ typedef struct RCUiOsdPrivate
     /* The X11 display (XWayland) used for the window on Wayland, so it
      * can stay above other windows */
     GdkDisplay *x11_display;
+    /* The Pango context of the layout, its resolution follows the font
+     * scaling of the default display (the display of the OSD window may be
+     * the X11 display, whose settings may not include it) */
+    PangoContext *context;
     PangoLayout *layout;
+    /* The font scaling (the resolution divided by 96) */
+    gdouble text_scale;
     /* The current lyric line, and the title shown without a lyric */
     gchar *line_text;
     gchar *title;
@@ -85,6 +91,7 @@ typedef struct RCUiOsdPrivate
     guint mapped_id;
     gulong settings_handler;
     gulong state_handler;
+    gulong dpi_handler;
 }RCUiOsdPrivate;
 
 static RCUiOsdPrivate osd_priv = {0};
@@ -728,10 +735,34 @@ static void rc_ui_osd_load_style()
     priv->width_percent = rclib_settings_get_integer(RCLIB_SETTINGS_GROUP_LYRIC,
         RCLIB_SETTINGS_KEY_OSD_MAX_WIDTH);
     priv->width_percent = CLAMP(priv->width_percent, 10, 100);
-    priv->outline = MAX(priv->font_size / 12, 2);
-    priv->padding = priv->outline + 8;
+    /* The font size is in points, the outline and the padding (in
+     * pixels) are scaled with the font */
+    priv->outline = MAX((gint)(priv->font_size * priv->text_scale / 12),
+        2);
+    priv->padding = priv->outline + (gint)(8 * priv->text_scale);
     rc_ui_osd_update_size();
     rc_ui_osd_update_timer();
+}
+
+/* Use the font scaling of the default display (the resolution set in
+ * gtk-xft-dpi, in 1024ths of a dot per inch) */
+static void rc_ui_osd_update_resolution()
+{
+    RCUiOsdPrivate *priv = &osd_priv;
+    gint dpi = -1;
+    gdouble resolution = 96.0;
+    g_object_get(gtk_settings_get_default(), "gtk-xft-dpi", &dpi, NULL);
+    if(dpi>0) resolution = dpi / 1024.0;
+    priv->text_scale = resolution / 96.0;
+    pango_cairo_context_set_resolution(priv->context, resolution);
+    pango_layout_context_changed(priv->layout);
+}
+
+static void rc_ui_osd_dpi_changed_cb(GObject *object, GParamSpec *pspec,
+    gpointer data)
+{
+    rc_ui_osd_update_resolution();
+    rc_ui_osd_load_style();
 }
 
 static void rc_ui_osd_settings_changed_cb(GObject *settings,
@@ -804,7 +835,9 @@ void rc_ui_osd_init()
     gtk_drawing_area_set_draw_func(GTK_DRAWING_AREA(priv->area),
         rc_ui_osd_draw_cb, NULL, NULL);
     gtk_window_set_child(GTK_WINDOW(priv->window), priv->area);
-    priv->layout = gtk_widget_create_pango_layout(priv->area, NULL);
+    priv->context = gtk_widget_create_pango_context(priv->area);
+    priv->layout = pango_layout_new(priv->context);
+    rc_ui_osd_update_resolution();
     priv->title_time = -1;
 
     group = g_simple_action_group_new();
@@ -855,6 +888,8 @@ void rc_ui_osd_init()
         G_CALLBACK(rc_ui_osd_settings_changed_cb), NULL);
     priv->state_handler = rclib_core_signal_connect("state-changed",
         G_CALLBACK(rc_ui_osd_core_state_changed_cb), NULL);
+    priv->dpi_handler = g_signal_connect(gtk_settings_get_default(),
+        "notify::gtk-xft-dpi", G_CALLBACK(rc_ui_osd_dpi_changed_cb), NULL);
     rc_ui_osd_update_visible();
 }
 
@@ -872,6 +907,9 @@ void rc_ui_osd_exit()
         rclib_settings_signal_disconnect(priv->settings_handler);
     if(priv->state_handler>0)
         rclib_core_signal_disconnect(priv->state_handler);
+    if(priv->dpi_handler>0)
+        g_signal_handler_disconnect(gtk_settings_get_default(),
+            priv->dpi_handler);
     if(priv->tick_id>0)
         gtk_widget_remove_tick_callback(priv->area, priv->tick_id);
     if(priv->move_id>0) g_source_remove(priv->move_id);
@@ -879,6 +917,7 @@ void rc_ui_osd_exit()
     gtk_widget_unparent(priv->popover);
     gtk_window_destroy(GTK_WINDOW(priv->window));
     g_clear_object(&priv->layout);
+    g_clear_object(&priv->context);
     if(priv->x11_display!=NULL) gdk_display_close(priv->x11_display);
     g_free(priv->line_text);
     g_free(priv->title);

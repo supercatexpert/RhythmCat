@@ -196,6 +196,9 @@ from the template (for example with `msginit`).
   line, or the end of the track). The font,
   font size, text color, progress color (the progress can be turned off)
   and width (percent of the screen width) can be set in Settings. The
+  font size (in points) follows the font scaling of the desktop (for
+  example the text scaling factor of GNOME), also when the window is
+  shown with XWayland. The
   window always has this width and the text is shown in one line in the
   middle of it; a line which is too wide moves horizontally with its
   progress, and a title which is too wide moves from the start to the end
