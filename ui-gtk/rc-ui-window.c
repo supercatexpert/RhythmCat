@@ -156,6 +156,7 @@ typedef struct RCUiWindowPrivate
     gint sort_column;
     gboolean sort_descending;
     gboolean sort_updating;
+    gulong sort_handler;
     /* Whether the columns can be sorted now (in the library), -1 if it
      * is not set yet */
     gint sort_enabled;
@@ -3309,8 +3310,8 @@ GtkWidget *rc_ui_window_init(GtkApplication *app)
         RCLIB_SETTINGS_KEY_SORT_DESCENDING);
     priv->sort_enabled = -1;
     rc_ui_window_update_play_order();
-    g_signal_connect(gtk_column_view_get_sorter(GTK_COLUMN_VIEW(
-        priv->track_view)), "changed",
+    priv->sort_handler = g_signal_connect(gtk_column_view_get_sorter(
+        GTK_COLUMN_VIEW(priv->track_view)), "changed",
         G_CALLBACK(rc_ui_window_sort_changed_cb), NULL);
     priv->column_ratios[0] = 0.4;
     priv->column_ratios[1] = 0.3;
@@ -3517,6 +3518,10 @@ void rc_ui_window_cleanup()
     RCUiWindowPrivate *priv = &window_priv;
     guint i;
     if(priv->builder==NULL) return;
+    /* The columns are removed when the column view is finalized (after
+     * the track list is freed), the sorting is not changed by it */
+    g_signal_handler_disconnect(gtk_column_view_get_sorter(GTK_COLUMN_VIEW(
+        priv->track_view)), priv->sort_handler);
     for(i=0;i<priv->core_handlers->len;i++)
         rclib_core_signal_disconnect(g_array_index(priv->core_handlers,
             gulong, i));
