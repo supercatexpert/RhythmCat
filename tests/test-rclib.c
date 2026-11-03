@@ -470,6 +470,213 @@ static void test_player_next()
     g_free(db_file);
 }
 
+static gboolean test_player_filter_func(const RCLibDbItem *item,
+    gpointer data)
+{
+    return item->title!=NULL && strstr(item->title, data)!=NULL;
+}
+
+static void test_player_filter()
+{
+    static const gchar *names[] = {"rock1.wav", "pop1.wav", "rock2.wav",
+        "pop2.wav", "rock3.wav"};
+    const GPtrArray *library;
+    RCLibDbPlaylist *playlist;
+    RCLibDbItem *item, *items[5], *p1, *p2, *last;
+    gchar *db_file, *uri;
+    guint i, j;
+    db_file = g_build_filename(test_dir, "filter.json.gz", NULL);
+    g_assert_true(rclib_db_init(db_file));
+    g_assert_true(rclib_core_init(NULL));
+    g_assert_true(rclib_player_init());
+    for(i=0;i<G_N_ELEMENTS(names);i++)
+    {
+        uri = test_make_wav(names[i]);
+        item = test_make_item(uri, names[i], NULL, NULL, 0);
+        rclib_db_library_add_item(item);
+        rclib_db_item_unref(item);
+        g_free(uri);
+    }
+    /* The items in the order of the music library */
+    library = rclib_db_library_get_items();
+    g_assert_cmpuint(library->len, ==, G_N_ELEMENTS(names));
+    for(i=0;i<G_N_ELEMENTS(names);i++)
+    {
+        for(j=0;j<library->len;j++)
+        {
+            item = g_ptr_array_index(library, j);
+            if(g_strcmp0(item->title, names[i])==0) items[i] = item;
+        }
+    }
+    for(i=1;i<G_N_ELEMENTS(names);i++)
+    {
+        g_assert_cmpint(rclib_db_item_get_index(items[i-1]), <,
+            rclib_db_item_get_index(items[i]));
+    }
+    playlist = rclib_db_playlist_new("P", -1);
+    p1 = test_add_to_playlist(playlist, "pop-p1.wav");
+    p2 = test_add_to_playlist(playlist, "pop-p2.wav");
+    rclib_player_set_random_mode(FALSE);
+    rclib_player_set_library_filter(test_player_filter_func,
+        g_strdup("rock"), g_free);
+
+    /* Only the matched items are played */
+    rclib_player_set_repeat_mode(RCLIB_PLAYER_REPEAT_NONE);
+    rclib_player_play_item(items[0]);
+    g_assert_true(rclib_player_play_next());
+    g_assert_true(rclib_player_get_current_item()==items[2]);
+    g_assert_true(rclib_player_play_next());
+    g_assert_true(rclib_player_get_current_item()==items[4]);
+    g_assert_false(rclib_player_play_next());
+    rclib_player_set_repeat_mode(RCLIB_PLAYER_REPEAT_LIST);
+    g_assert_true(rclib_player_play_next());
+    g_assert_true(rclib_player_get_current_item()==items[0]);
+    rclib_player_set_repeat_mode(RCLIB_PLAYER_REPEAT_ALL);
+    rclib_player_play_item(items[4]);
+    g_signal_emit_by_name(rclib_core_get_instance(), "eos");
+    g_assert_true(rclib_player_get_current_item()==items[0]);
+
+    /* The previous item, before the first one is the last one */
+    g_assert_true(rclib_player_play_prev());
+    g_assert_true(rclib_player_get_current_item()==items[4]);
+    g_assert_true(rclib_player_play_prev());
+    g_assert_true(rclib_player_get_current_item()==items[2]);
+
+    /* The playing item does not match the filter */
+    rclib_player_play_item(items[1]);
+    g_assert_true(rclib_player_play_next());
+    g_assert_true(rclib_player_get_current_item()==items[2]);
+    rclib_player_play_item(items[3]);
+    g_assert_true(rclib_player_play_prev());
+    g_assert_true(rclib_player_get_current_item()==items[2]);
+
+    /* Random mode */
+    rclib_player_set_random_mode(TRUE);
+    rclib_player_play_item(items[0]);
+    for(i=0;i<20;i++)
+    {
+        last = rclib_player_get_current_item();
+        g_assert_true(rclib_player_play_next());
+        item = rclib_player_get_current_item();
+        g_assert_true(item!=last);
+        g_assert_true(item==items[0] || item==items[2] || item==items[4]);
+    }
+    rclib_player_set_random_mode(FALSE);
+
+    /* Playlists are not filtered */
+    rclib_player_set_repeat_mode(RCLIB_PLAYER_REPEAT_LIST);
+    rclib_player_play_item(p1);
+    g_assert_true(rclib_player_play_next());
+    g_assert_true(rclib_player_get_current_item()==p2);
+
+    /* Without the filter */
+    rclib_player_set_library_filter(NULL, NULL, NULL);
+    rclib_player_play_item(items[0]);
+    g_assert_true(rclib_player_play_next());
+    g_assert_true(rclib_player_get_current_item()==items[1]);
+
+    rclib_core_stop();
+    rclib_player_exit();
+    rclib_core_exit();
+    rclib_db_exit();
+    g_free(db_file);
+}
+
+static GPtrArray *test_player_reverse_func(gpointer data)
+{
+    const GPtrArray *library = rclib_db_library_get_items();
+    GPtrArray *list;
+    guint i;
+    list = g_ptr_array_sized_new(library->len);
+    for(i=library->len;i>0;i--)
+        g_ptr_array_add(list, g_ptr_array_index(library, i-1));
+    return list;
+}
+
+static void test_player_order()
+{
+    static const gchar *names[] = {"o-rock1.wav", "o-pop1.wav",
+        "o-rock2.wav", "o-pop2.wav", "o-rock3.wav"};
+    const GPtrArray *library;
+    RCLibDbItem *item, *items[5];
+    gchar *db_file, *uri;
+    guint i, j;
+    db_file = g_build_filename(test_dir, "order.json.gz", NULL);
+    g_assert_true(rclib_db_init(db_file));
+    g_assert_true(rclib_core_init(NULL));
+    g_assert_true(rclib_player_init());
+    for(i=0;i<G_N_ELEMENTS(names);i++)
+    {
+        uri = test_make_wav(names[i]);
+        item = test_make_item(uri, names[i], NULL, NULL, 0);
+        rclib_db_library_add_item(item);
+        rclib_db_item_unref(item);
+        g_free(uri);
+    }
+    library = rclib_db_library_get_items();
+    for(i=0;i<G_N_ELEMENTS(names);i++)
+    {
+        for(j=0;j<library->len;j++)
+        {
+            item = g_ptr_array_index(library, j);
+            if(g_strcmp0(item->title, names[i])==0) items[i] = item;
+        }
+    }
+    rclib_player_set_random_mode(FALSE);
+    rclib_player_set_repeat_mode(RCLIB_PLAYER_REPEAT_NONE);
+    rclib_player_set_library_order(test_player_reverse_func, NULL, NULL);
+
+    /* The items are played in the reversed order */
+    rclib_player_play_item(items[4]);
+    for(i=4;i>0;i--)
+    {
+        g_assert_true(rclib_player_play_next());
+        g_assert_true(rclib_player_get_current_item()==items[i-1]);
+    }
+    g_assert_false(rclib_player_play_next());
+    g_assert_true(rclib_player_play_prev());
+    g_assert_true(rclib_player_get_current_item()==items[1]);
+    rclib_player_set_repeat_mode(RCLIB_PLAYER_REPEAT_ALL);
+    rclib_player_play_item(items[0]);
+    g_signal_emit_by_name(rclib_core_get_instance(), "eos");
+    g_assert_true(rclib_player_get_current_item()==items[4]);
+
+    /* With the filter */
+    rclib_player_set_library_filter(test_player_filter_func,
+        g_strdup("rock"), g_free);
+    rclib_player_play_item(items[4]);
+    g_assert_true(rclib_player_play_next());
+    g_assert_true(rclib_player_get_current_item()==items[2]);
+    g_assert_true(rclib_player_play_next());
+    g_assert_true(rclib_player_get_current_item()==items[0]);
+    g_assert_true(rclib_player_play_next());
+    g_assert_true(rclib_player_get_current_item()==items[4]);
+    g_assert_true(rclib_player_play_prev());
+    g_assert_true(rclib_player_get_current_item()==items[0]);
+    /* The playing item does not match the filter, its neighbors in the
+     * playing order are chosen */
+    rclib_player_play_item(items[3]);
+    g_assert_true(rclib_player_play_next());
+    g_assert_true(rclib_player_get_current_item()==items[2]);
+    rclib_player_play_item(items[3]);
+    g_assert_true(rclib_player_play_prev());
+    g_assert_true(rclib_player_get_current_item()==items[4]);
+
+    /* Back to the order of the library */
+    rclib_player_set_library_filter(NULL, NULL, NULL);
+    rclib_player_set_library_order(NULL, NULL, NULL);
+    rclib_player_set_repeat_mode(RCLIB_PLAYER_REPEAT_NONE);
+    rclib_player_play_item(items[0]);
+    g_assert_true(rclib_player_play_next());
+    g_assert_true(rclib_player_get_current_item()==items[1]);
+
+    rclib_core_stop();
+    rclib_player_exit();
+    rclib_core_exit();
+    rclib_db_exit();
+    g_free(db_file);
+}
+
 static const RCLibPlistEntry *test_entry(const GPtrArray *entries,
     guint index)
 {
@@ -1040,6 +1247,8 @@ int main(int argc, char *argv[])
     g_test_add_func("/instance/lock", test_instance);
     g_test_add_func("/core/equalizer", test_eq);
     g_test_add_func("/player/next", test_player_next);
+    g_test_add_func("/player/filter", test_player_filter);
+    g_test_add_func("/player/order", test_player_order);
     ret = g_test_run();
     rclib_settings_exit();
     g_free(settings_file);

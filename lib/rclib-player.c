@@ -36,6 +36,11 @@
  * item is playing, its metadata will be updated by the metadata found
  * in the stream (if it is enabled in the settings).
  *
+ * A filter and a playing order can be set for the music library: when an
+ * item in the music library is playing, the next and the previous items
+ * (also in random mode) are chosen in the playing order, from the items
+ * which match the filter only.
+ *
  * The equalizer settings (enabled or not, the preset and the user
  * customized band gains) are stored in the settings, and they are
  * applied to the core automatically when they are changed.
@@ -49,23 +54,77 @@ static gulong player_tag_id = 0;
 static gulong player_volume_id = 0;
 static gulong player_settings_id = 0;
 static GQueue player_history = G_QUEUE_INIT;
+static RCLibPlayerFilterFunc player_filter_func = NULL;
+static gpointer player_filter_data = NULL;
+static GDestroyNotify player_filter_notify = NULL;
+static RCLibPlayerOrderFunc player_order_func = NULL;
+static gpointer player_order_data = NULL;
+static GDestroyNotify player_order_notify = NULL;
 
-static RCLibDbItem *rclib_player_get_item_at(const RCLibDbItem *item,
-    gint index)
+/* The list which the item is played in: its playlist, or the music
+ * library in the playing order (see rclib_player_set_library_order()).
+ * Unref it after use. */
+static GPtrArray *rclib_player_get_list(const RCLibDbItem *item)
 {
-    const GPtrArray *array;
-    if(item->playlist!=NULL) array = item->playlist->items;
-    else array = rclib_db_library_get_items();
-    if(array==NULL || index<0 || (guint)index>=array->len) return NULL;
-    return g_ptr_array_index(array, index);
+    const GPtrArray *library;
+    GPtrArray *list;
+    if(item->playlist!=NULL) return g_ptr_array_ref(item->playlist->items);
+    if(player_order_func!=NULL)
+    {
+        list = player_order_func(player_order_data);
+        if(list!=NULL) return list;
+    }
+    library = rclib_db_library_get_items();
+    if(library==NULL) return NULL;
+    return g_ptr_array_ref((GPtrArray *)library);
 }
 
-static guint rclib_player_get_list_length(const RCLibDbItem *item)
+/* Whether the item can be chosen as the next or the previous item: all
+ * items in playlists, and the items in the music library which match the
+ * library filter */
+static gboolean rclib_player_is_included(const RCLibDbItem *item)
 {
-    const GPtrArray *array;
-    if(item->playlist!=NULL) array = item->playlist->items;
-    else array = rclib_db_library_get_items();
-    return array!=NULL ? array->len : 0;
+    if(item==NULL) return FALSE;
+    if(item->playlist!=NULL || player_filter_func==NULL) return TRUE;
+    return player_filter_func(item, player_filter_data);
+}
+
+/* Find the first included item in the range [from, to) of the list
+ * (backward if @from is greater than @to, in the range (to, from]) */
+static RCLibDbItem *rclib_player_find_included(const GPtrArray *list,
+    gint from, gint to)
+{
+    RCLibDbItem *found;
+    gint i, step = from<=to ? 1 : -1;
+    for(i=from;i!=to;i+=step)
+    {
+        if(i<0 || (guint)i>=list->len) continue;
+        found = g_ptr_array_index(list, i);
+        if(rclib_player_is_included(found)) return found;
+    }
+    return NULL;
+}
+
+/* A random included item in the list, except the item at @index */
+static RCLibDbItem *rclib_player_find_random(const GPtrArray *list,
+    guint index)
+{
+    RCLibDbItem *found = NULL;
+    GArray *candidates;
+    guint i;
+    candidates = g_array_new(FALSE, FALSE, sizeof(guint));
+    for(i=0;i<list->len;i++)
+    {
+        if(i!=index && rclib_player_is_included(g_ptr_array_index(list, i)))
+            g_array_append_val(candidates, i);
+    }
+    if(candidates->len>0)
+    {
+        found = g_ptr_array_index(list, g_array_index(candidates, guint,
+            g_random_int_range(0, candidates->len)));
+    }
+    g_array_free(candidates, TRUE);
+    return found;
 }
 
 static void rclib_player_history_push(RCLibDbItem *item)
@@ -94,31 +153,30 @@ static RCLibDbItem *rclib_player_find_playlist_start(guint from, guint to)
 /* Find the next item of the current item by the repeat mode and the
  * random mode. In random mode, a random item in the same list is chosen.
  * After the last item of a playlist, the first item of the next playlist
- * is chosen, unless the repeat mode is #RCLIB_PLAYER_REPEAT_LIST. */
-static RCLibDbItem *rclib_player_find_next(RCLibDbItem *current,
-    RCLibPlayerRepeatMode mode)
+ * is chosen, unless the repeat mode is #RCLIB_PLAYER_REPEAT_LIST. In the
+ * music library, the items are in the playing order, and only the items
+ * which match the library filter are chosen. */
+static RCLibDbItem *rclib_player_find_next_in_list(RCLibDbItem *current,
+    GPtrArray *list, RCLibPlayerRepeatMode mode)
 {
     RCLibDbItem *next;
-    gint index, length, playlist_index;
-    length = rclib_player_get_list_length(current);
-    if(length<=0) return NULL;
-    index = rclib_db_item_get_index(current);
-    if(index<0) return NULL;
-    if(rclib_player_get_random_mode() && length>1)
+    guint index;
+    gint playlist_index;
+    if(!g_ptr_array_find(list, current, &index)) return NULL;
+    if(rclib_player_get_random_mode())
     {
-        gint random = g_random_int_range(0, length-1);
-        if(random>=index) random++;
-        return rclib_player_get_item_at(current, random);
+        next = rclib_player_find_random(list, index);
+        if(next!=NULL) return next;
     }
-    if(index+1<length)
-        return rclib_player_get_item_at(current, index+1);
+    next = rclib_player_find_included(list, index+1, list->len);
+    if(next!=NULL) return next;
     if(mode==RCLIB_PLAYER_REPEAT_LIST)
-        return rclib_player_get_item_at(current, 0);
+        return rclib_player_find_included(list, 0, index+1);
     if(current->playlist==NULL)
     {
         /* The music library is the only list */
         if(mode==RCLIB_PLAYER_REPEAT_ALL)
-            return rclib_player_get_item_at(current, 0);
+            return rclib_player_find_included(list, 0, index+1);
         return NULL;
     }
     playlist_index = rclib_db_playlist_get_index(current->playlist);
@@ -126,6 +184,18 @@ static RCLibDbItem *rclib_player_find_next(RCLibDbItem *current,
     next = rclib_player_find_playlist_start(playlist_index+1, G_MAXUINT);
     if(next==NULL && mode==RCLIB_PLAYER_REPEAT_ALL)
         next = rclib_player_find_playlist_start(0, playlist_index+1);
+    return next;
+}
+
+static RCLibDbItem *rclib_player_find_next(RCLibDbItem *current,
+    RCLibPlayerRepeatMode mode)
+{
+    RCLibDbItem *next;
+    GPtrArray *list;
+    list = rclib_player_get_list(current);
+    if(list==NULL) return NULL;
+    next = rclib_player_find_next_in_list(current, list, mode);
+    g_ptr_array_unref(list);
     return next;
 }
 
@@ -231,6 +301,8 @@ void rclib_player_exit()
     rclib_settings_signal_disconnect(player_settings_id);
     g_queue_clear_full(&player_history,
         (GDestroyNotify)rclib_db_item_unref);
+    rclib_player_set_library_filter(NULL, NULL, NULL);
+    rclib_player_set_library_order(NULL, NULL, NULL);
     player_initialized = FALSE;
 }
 
@@ -318,7 +390,8 @@ gboolean rclib_player_play_next()
  * rclib_player_play_prev:
  *
  * Play the previous item. In random mode, the previous played item will
- * be played.
+ * be played. In the music library, only the items which match the library
+ * filter are played.
  *
  * Returns: Whether the operation succeeded.
  */
@@ -326,14 +399,16 @@ gboolean rclib_player_play_next()
 gboolean rclib_player_play_prev()
 {
     RCLibDbItem *current, *prev = NULL;
-    gint index, length;
+    GPtrArray *list;
+    guint index;
     current = rclib_player_get_current_item();
     if(rclib_player_get_random_mode())
     {
         while(!g_queue_is_empty(&player_history))
         {
             prev = g_queue_pop_tail(&player_history);
-            if(rclib_db_item_is_valid(prev))
+            if(rclib_db_item_is_valid(prev) &&
+                rclib_player_is_included(prev))
             {
                 rclib_player_play_item(prev);
                 rclib_db_item_unref(prev);
@@ -343,10 +418,20 @@ gboolean rclib_player_play_prev()
         }
     }
     if(current==NULL || !rclib_db_item_is_valid(current)) return FALSE;
-    index = rclib_db_item_get_index(current);
-    length = rclib_player_get_list_length(current);
-    if(index<0 || length<=0) return FALSE;
-    prev = rclib_player_get_item_at(current, index>0 ? index-1 : length-1);
+    list = rclib_player_get_list(current);
+    if(list==NULL) return FALSE;
+    if(g_ptr_array_find(list, current, &index))
+    {
+        /* Go to the end of the list before the first item */
+        prev = rclib_player_find_included(list, (gint)index-1, -1);
+        if(prev==NULL)
+        {
+            prev = rclib_player_find_included(list, (gint)list->len-1,
+                (gint)index-1);
+        }
+    }
+    else prev = NULL;
+    g_ptr_array_unref(list);
     if(prev==NULL) return FALSE;
     return rclib_player_play_item(prev);
 }
@@ -432,6 +517,53 @@ gboolean rclib_player_get_random_mode()
 {
     return rclib_settings_get_boolean(RCLIB_SETTINGS_GROUP_PLAYER,
         RCLIB_SETTINGS_KEY_RANDOM_MODE);
+}
+
+/**
+ * rclib_player_set_library_filter:
+ * @func: (nullable): the filter function, %NULL to remove the filter
+ * @data: (closure): the user data for @func
+ * @notify: (nullable): the function to free @data
+ *
+ * Set the filter of the music library. When an item in the music library
+ * is playing, the next and the previous items (also in random mode and
+ * at the end of the stream) are chosen from the items which match the
+ * filter only. Playlists are not filtered. The filter is called whenever
+ * an item is chosen, so the frontend only needs to set it again when its
+ * function or data changes.
+ */
+
+void rclib_player_set_library_filter(RCLibPlayerFilterFunc func,
+    gpointer data, GDestroyNotify notify)
+{
+    if(player_filter_notify!=NULL) player_filter_notify(player_filter_data);
+    player_filter_func = func;
+    player_filter_data = data;
+    player_filter_notify = notify;
+}
+
+/**
+ * rclib_player_set_library_order:
+ * @func: (nullable): the function which returns the items of the music
+ *     library in the playing order, %NULL to play them in the order of the
+ *     music library
+ * @data: (closure): the user data for @func
+ * @notify: (nullable): the function to free @data
+ *
+ * Set the playing order of the music library (for example, the order of
+ * the sorted library list in the frontend). When an item in the music
+ * library is playing, the next and the previous items are chosen in this
+ * order (the library filter is applied to it). The function is called
+ * whenever an item is chosen.
+ */
+
+void rclib_player_set_library_order(RCLibPlayerOrderFunc func,
+    gpointer data, GDestroyNotify notify)
+{
+    if(player_order_notify!=NULL) player_order_notify(player_order_data);
+    player_order_func = func;
+    player_order_data = data;
+    player_order_notify = notify;
 }
 
 /**

@@ -102,6 +102,12 @@ static void rclib_settings_set_defaults(GKeyFile *keyfile)
         RCLIB_SETTINGS_KEY_GROUP_MODE, 0);
     g_key_file_set_boolean(keyfile, RCLIB_SETTINGS_GROUP_LIBRARY,
         RCLIB_SETTINGS_KEY_UPDATE_ON_PLAY, TRUE);
+    /* The column which the library is sorted by, empty if the library is
+     * shown in its own order */
+    g_key_file_set_string(keyfile, RCLIB_SETTINGS_GROUP_LIBRARY,
+        RCLIB_SETTINGS_KEY_SORT_COLUMN, "");
+    g_key_file_set_boolean(keyfile, RCLIB_SETTINGS_GROUP_LIBRARY,
+        RCLIB_SETTINGS_KEY_SORT_DESCENDING, FALSE);
     g_key_file_set_integer(keyfile, RCLIB_SETTINGS_GROUP_UI,
         RCLIB_SETTINGS_KEY_COLOR_SCHEME, 0);
     g_key_file_set_boolean(keyfile, RCLIB_SETTINGS_GROUP_UI,

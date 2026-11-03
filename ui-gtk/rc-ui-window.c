@@ -151,6 +151,14 @@ typedef struct RCUiWindowPrivate
     gchar **filter_words;
     guint group_refresh_id;
     GtkColumnViewColumn *columns[RC_UI_COLUMN_COUNT];
+    /* The column which the library is sorted by, -1 if the library is
+     * shown in its own order */
+    gint sort_column;
+    gboolean sort_descending;
+    gboolean sort_updating;
+    /* Whether the columns can be sorted now (in the library), -1 if it
+     * is not set yet */
+    gint sort_enabled;
     gdouble column_ratios[RC_UI_COLUMN_FLEXIBLE_COUNT];
     gint column_view_width;
     gboolean column_updating;
@@ -415,8 +423,10 @@ static gchar *rc_ui_window_filter_fold(const gchar *text)
 }
 
 /* Whether the title (the file name if there is no title), the artist or
- * the album of the item contains each word of the library filter */
-static gboolean rc_ui_window_filter_match(const RCLibDbItem *item)
+ * the album of the item contains each word of the library filter, it is
+ * also the library filter of the player */
+static gboolean rc_ui_window_filter_match(const RCLibDbItem *item,
+    gpointer data)
 {
     RCUiWindowPrivate *priv = &window_priv;
     gchar *title, *text, *folded;
@@ -434,6 +444,146 @@ static gboolean rc_ui_window_filter_match(const RCLibDbItem *item)
     g_free(text);
     g_free(title);
     return match;
+}
+
+/* The names of the columns in the settings, %NULL if the column can not
+ * be sorted */
+static const gchar *rc_ui_window_sort_names[RC_UI_COLUMN_COUNT] = {
+    NULL, "track", "title", "artist", "album", "duration"};
+
+typedef struct {
+    RCLibDbItem *item;
+    gchar *key;
+    gint64 number;
+    gboolean missing;
+    guint index;
+}RCUiWindowSortEntry;
+
+/* Items without the value are placed at the end in both orders, items with
+ * the same value keep their order in the library */
+static gint rc_ui_window_sort_compare(gconstpointer a, gconstpointer b,
+    gpointer data)
+{
+    const RCUiWindowSortEntry *entry_a = a, *entry_b = b;
+    gint result = 0;
+    if(entry_a->missing!=entry_b->missing)
+        return entry_a->missing ? 1 : -1;
+    if(!entry_a->missing)
+    {
+        if(entry_a->key!=NULL)
+            result = strcmp(entry_a->key, entry_b->key);
+        else
+            result = (entry_a->number>entry_b->number) -
+                (entry_a->number<entry_b->number);
+        if(window_priv.sort_descending) result = -result;
+    }
+    if(result!=0) return result;
+    return (entry_a->index>entry_b->index) - (entry_a->index<entry_b->index);
+}
+
+/* Sort the items in the library by the sort column */
+static void rc_ui_window_sort_items(GPtrArray *items)
+{
+    RCUiWindowPrivate *priv = &window_priv;
+    RCUiWindowSortEntry *entry;
+    GArray *entries;
+    const gchar *text;
+    gchar *title;
+    guint i;
+    if(priv->sort_column<0 || items->len<2) return;
+    entries = g_array_sized_new(FALSE, TRUE, sizeof(RCUiWindowSortEntry),
+        items->len);
+    g_array_set_size(entries, items->len);
+    for(i=0;i<items->len;i++)
+    {
+        entry = &g_array_index(entries, RCUiWindowSortEntry, i);
+        entry->item = g_ptr_array_index(items, i);
+        entry->index = i;
+        switch(priv->sort_column)
+        {
+            case RC_UI_COLUMN_TRACK:
+                entry->number = entry->item->track;
+                entry->missing = entry->number<=0;
+                break;
+            case RC_UI_COLUMN_DURATION:
+                entry->number = entry->item->duration;
+                entry->missing = entry->number<=0;
+                break;
+            case RC_UI_COLUMN_TITLE:
+                title = rclib_db_item_get_display_title(entry->item);
+                entry->missing = title==NULL || title[0]=='\0';
+                if(!entry->missing)
+                    entry->key = g_utf8_collate_key(title, -1);
+                g_free(title);
+                break;
+            default:
+                text = priv->sort_column==RC_UI_COLUMN_ARTIST ?
+                    entry->item->artist : entry->item->album;
+                entry->missing = text==NULL || text[0]=='\0';
+                if(!entry->missing)
+                    entry->key = g_utf8_collate_key(text, -1);
+                break;
+        }
+    }
+    g_array_sort_with_data(entries, rc_ui_window_sort_compare, NULL);
+    for(i=0;i<items->len;i++)
+    {
+        entry = &g_array_index(entries, RCUiWindowSortEntry, i);
+        items->pdata[i] = entry->item;
+        g_free(entry->key);
+    }
+    g_array_free(entries, TRUE);
+}
+
+/* The library in the sorted order, it is also the playing order of the
+ * library */
+static GPtrArray *rc_ui_window_library_order(gpointer data)
+{
+    const GPtrArray *library;
+    GPtrArray *list;
+    guint i;
+    library = rclib_db_library_get_items();
+    if(library==NULL) return NULL;
+    list = g_ptr_array_sized_new(library->len);
+    for(i=0;i<library->len;i++)
+        g_ptr_array_add(list, g_ptr_array_index(library, i));
+    rc_ui_window_sort_items(list);
+    return list;
+}
+
+static void rc_ui_window_update_play_order()
+{
+    rclib_player_set_library_order(window_priv.sort_column>=0 ?
+        rc_ui_window_library_order : NULL, NULL, NULL);
+}
+
+/* Columns can be sorted in the library only, the order of a playlist is
+ * kept */
+static void rc_ui_window_update_sorters()
+{
+    RCUiWindowPrivate *priv = &window_priv;
+    GtkSorter *sorter;
+    gboolean enabled;
+    gint i;
+    enabled = priv->view_type==RC_UI_VIEW_LIBRARY;
+    if(priv->sort_enabled==enabled) return;
+    priv->sort_enabled = enabled;
+    priv->sort_updating = TRUE;
+    for(i=0;i<RC_UI_COLUMN_COUNT;i++)
+    {
+        if(rc_ui_window_sort_names[i]==NULL) continue;
+        /* The sorter makes the header clickable, the items are sorted by
+         * rc_ui_window_sort_items() */
+        sorter = enabled ? GTK_SORTER(gtk_custom_sorter_new(NULL, NULL,
+            NULL)) : NULL;
+        gtk_column_view_column_set_sorter(priv->columns[i], sorter);
+        if(sorter!=NULL) g_object_unref(sorter);
+    }
+    gtk_column_view_sort_by_column(GTK_COLUMN_VIEW(priv->track_view),
+        enabled && priv->sort_column>=0 ? priv->columns[priv->sort_column] :
+        NULL, priv->sort_descending ? GTK_SORT_DESCENDING :
+        GTK_SORT_ASCENDING);
+    priv->sort_updating = FALSE;
 }
 
 static void rc_ui_window_reload_tracks(gboolean update)
@@ -455,19 +605,21 @@ static void rc_ui_window_reload_tracks(gboolean update)
         else
             items = rclib_db_library_get_group_items(priv->group_mode,
                 priv->group);
-        /* The filter is applied to the library only */
+        /* The filter and the sorting are applied to the library only */
         if(priv->filter_words!=NULL)
         {
             for(i=items->len;i>0;i--)
             {
                 if(!rc_ui_window_filter_match(g_ptr_array_index(items,
-                    i-1)))
+                    i-1), NULL))
                     g_ptr_array_remove_index(items, i-1);
             }
         }
+        rc_ui_window_sort_items(items);
         rc_ui_window_set_tracks(items, update);
         g_ptr_array_unref(items);
     }
+    rc_ui_window_update_sorters();
     rc_ui_window_update_source_label();
 }
 
@@ -1392,6 +1544,10 @@ static void rc_ui_window_filter_changed_cb(GtkSearchEntry *entry,
         g_ptr_array_free(array, TRUE);
     g_strfreev(words);
     g_free(folded);
+    /* The next and the previous items in the library are chosen from the
+     * shown items too */
+    rclib_player_set_library_filter(priv->filter_words!=NULL ?
+        rc_ui_window_filter_match : NULL, NULL, NULL);
     if(priv->view_type==RC_UI_VIEW_LIBRARY)
         rc_ui_window_reload_tracks(TRUE);
 }
@@ -1401,6 +1557,46 @@ static void rc_ui_window_filter_stop_cb(GtkSearchEntry *entry,
     gpointer data)
 {
     gtk_editable_set_text(GTK_EDITABLE(entry), "");
+}
+
+/* The sorting of the library is changed by clicking a column header */
+static void rc_ui_window_sort_changed_cb(GtkSorter *sorter,
+    GtkSorterChange change, gpointer data)
+{
+    RCUiWindowPrivate *priv = &window_priv;
+    GtkColumnViewColumn *column;
+    GtkSortType order;
+    gint i, sort_column = -1;
+    if(priv->sort_updating) return;
+    column = gtk_column_view_sorter_get_primary_sort_column(
+        GTK_COLUMN_VIEW_SORTER(sorter));
+    order = gtk_column_view_sorter_get_primary_sort_order(
+        GTK_COLUMN_VIEW_SORTER(sorter));
+    for(i=0;i<RC_UI_COLUMN_COUNT;i++)
+    {
+        if(column!=NULL && priv->columns[i]==column) sort_column = i;
+    }
+    /* Clicking the column sorted in descending order again shows the
+     * library in its own order */
+    if(sort_column>=0 && sort_column==priv->sort_column &&
+        priv->sort_descending && order==GTK_SORT_ASCENDING)
+    {
+        sort_column = -1;
+        priv->sort_updating = TRUE;
+        gtk_column_view_sort_by_column(GTK_COLUMN_VIEW(priv->track_view),
+            NULL, GTK_SORT_ASCENDING);
+        priv->sort_updating = FALSE;
+    }
+    priv->sort_column = sort_column;
+    priv->sort_descending = sort_column>=0 && order==GTK_SORT_DESCENDING;
+    rclib_settings_set_string(RCLIB_SETTINGS_GROUP_LIBRARY,
+        RCLIB_SETTINGS_KEY_SORT_COLUMN, sort_column>=0 ?
+        rc_ui_window_sort_names[sort_column] : "");
+    rclib_settings_set_boolean(RCLIB_SETTINGS_GROUP_LIBRARY,
+        RCLIB_SETTINGS_KEY_SORT_DESCENDING, priv->sort_descending);
+    rc_ui_window_update_play_order();
+    if(priv->view_type==RC_UI_VIEW_LIBRARY)
+        rc_ui_window_reload_tracks(TRUE);
 }
 
 /* ----- Name dialog ----- */
@@ -3005,8 +3201,10 @@ GtkWidget *rc_ui_window_init(GtkApplication *app)
     RCUiWindowPrivate *priv = &window_priv;
     GtkDropTarget *drop_target;
     GtkEventController *key_controller, *scroll_controller;
+    gchar *sort_name;
     gulong id;
     guint mode;
+    gint i;
     if(priv->window!=NULL) return priv->window;
     priv->builder = gtk_builder_new_from_resource(
         "/org/supercat/RhythmCat3/ui/rc-ui-window.ui");
@@ -3096,6 +3294,24 @@ GtkWidget *rc_ui_window_init(GtkApplication *app)
     rc_ui_window_add_column(_("Artist"), RC_UI_COLUMN_ARTIST, 150);
     rc_ui_window_add_column(_("Album"), RC_UI_COLUMN_ALBUM, 150);
     rc_ui_window_add_column(_("Length"), RC_UI_COLUMN_DURATION, 80);
+    sort_name = rclib_settings_get_string(RCLIB_SETTINGS_GROUP_LIBRARY,
+        RCLIB_SETTINGS_KEY_SORT_COLUMN);
+    priv->sort_column = -1;
+    for(i=0;i<RC_UI_COLUMN_COUNT;i++)
+    {
+        if(rc_ui_window_sort_names[i]!=NULL && sort_name!=NULL &&
+            g_strcmp0(rc_ui_window_sort_names[i], sort_name)==0)
+            priv->sort_column = i;
+    }
+    g_free(sort_name);
+    priv->sort_descending = priv->sort_column>=0 &&
+        rclib_settings_get_boolean(RCLIB_SETTINGS_GROUP_LIBRARY,
+        RCLIB_SETTINGS_KEY_SORT_DESCENDING);
+    priv->sort_enabled = -1;
+    rc_ui_window_update_play_order();
+    g_signal_connect(gtk_column_view_get_sorter(GTK_COLUMN_VIEW(
+        priv->track_view)), "changed",
+        G_CALLBACK(rc_ui_window_sort_changed_cb), NULL);
     priv->column_ratios[0] = 0.4;
     priv->column_ratios[1] = 0.3;
     priv->column_ratios[2] = 0.3;
@@ -3324,6 +3540,8 @@ void rc_ui_window_cleanup()
     if(priv->playing_item!=NULL) rclib_db_item_unref(priv->playing_item);
     if(priv->lyric!=NULL) rclib_lyric_data_free(priv->lyric);
     g_clear_pointer(&priv->lyric_info, g_free);
+    rclib_player_set_library_filter(NULL, NULL, NULL);
+    rclib_player_set_library_order(NULL, NULL, NULL);
     g_clear_pointer(&priv->filter_words, g_strfreev);
     rc_ui_osd_exit();
     g_clear_pointer(&priv->groups, g_ptr_array_unref);

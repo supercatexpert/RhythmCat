@@ -49,6 +49,34 @@ typedef enum {
     RCLIB_PLAYER_REPEAT_ALL = 3
 }RCLibPlayerRepeatMode;
 
+/**
+ * RCLibPlayerFilterFunc:
+ * @item: an item in the music library
+ * @data: the user data
+ *
+ * Check whether an item in the music library should be played, see
+ * rclib_player_set_library_filter().
+ *
+ * Returns: Whether the item matches the filter.
+ */
+
+typedef gboolean (*RCLibPlayerFilterFunc)(const RCLibDbItem *item,
+    gpointer data);
+
+/**
+ * RCLibPlayerOrderFunc:
+ * @data: the user data
+ *
+ * Get the items of the music library in the playing order, see
+ * rclib_player_set_library_order().
+ *
+ * Returns: (transfer container) (element-type RCLibDbItem) (nullable): All
+ *     items of the music library in the playing order, %NULL to use the
+ *     order of the music library.
+ */
+
+typedef GPtrArray *(*RCLibPlayerOrderFunc)(gpointer data);
+
 gboolean rclib_player_init();
 void rclib_player_exit();
 gboolean rclib_player_play_item(RCLibDbItem *item);
@@ -62,6 +90,10 @@ RCLibPlayerRepeatMode rclib_player_get_next_repeat_mode(
     RCLibPlayerRepeatMode mode);
 void rclib_player_set_random_mode(gboolean random);
 gboolean rclib_player_get_random_mode();
+void rclib_player_set_library_filter(RCLibPlayerFilterFunc func,
+    gpointer data, GDestroyNotify notify);
+void rclib_player_set_library_order(RCLibPlayerOrderFunc func,
+    gpointer data, GDestroyNotify notify);
 void rclib_player_set_eq_enabled(gboolean enabled);
 gboolean rclib_player_get_eq_enabled();
 void rclib_player_set_eq_preset(const gchar *id);

@@ -158,7 +158,10 @@ from the template (for example with `msginit`).
     like Off.
 
   Empty playlists are skipped. In random mode, the next item is a random
-  item of the current playlist.
+  item of the current playlist. A frontend can set a filter and a playing
+  order for the music library (`rclib_player_set_library_filter()` and
+  `rclib_player_set_library_order()`); then the next or previous library
+  item is chosen in that order, from the matching items only.
 * Settings are stored in `~/.config/RhythmCat3/settings.conf`.
 
 ### GTK4 frontend
@@ -208,11 +211,21 @@ from the template (for example with `msginit`).
   even if the lyric in the main window is turned off.
 * Library sidebar with grouping, and a playlist sidebar with new, rename,
   delete and move up/down.
+* The library can be sorted by title, artist, album, track number or
+  length: click a column header to sort in ascending order, again for
+  descending order, and a third time to show the library in its own
+  order. Tracks without the value are placed at the end, tracks with the
+  same value keep their library order. The choice is remembered.
+  Playlists are not sorted (their headers can not be clicked). Tracks in
+  the library are played in the sorted order (previous/next, and when a
+  track ends).
 * Library filter (the entry in the library sidebar, or Ctrl+F): only the
   tracks whose title (or file name), artist or album contains every word
   of the filter are shown. Case is ignored, and so are the differences of
   full width and half width forms. The filter is applied to the library
-  only, not to playlists; Escape clears it.
+  only, not to playlists; Escape clears it. While the filter is set, the
+  next and previous tracks in the library (also in random mode and when
+  a track ends) are chosen from the filtered tracks only.
   The playlist of the playing track is shown in bold (in the ncurses
   frontend, also marked with `>`).
 * A button next to the random button shows or hides the library and
