@@ -2791,25 +2791,27 @@ static void rc_ui_window_connect_db(const gchar *name, GCallback callback)
     g_array_append_val(window_priv.db_handlers, id);
 }
 
-/* The height of the box which contains a label of the music information,
- * it is the height of one line of Latin text in the font of the label,
- * so it scales with the font, but does not change with the fallback fonts
- * used for the text (a line mixed with CJK text is a little taller) */
-static void rc_ui_window_info_measure(GtkWidget *widget,
+/* The height of a box which contains one line of text (the music
+ * information or a lyric line), it is the height of one line of Latin
+ * text in the font of the label, so it scales with the font, but does not
+ * change with the fallback fonts used for the text (a line mixed with CJK
+ * text is a little taller) */
+static void rc_ui_window_line_measure(GtkWidget *widget,
     GtkOrientation orientation, gint for_size, gint *minimum,
     gint *natural, gint *minimum_baseline, gint *natural_baseline)
 {
-    GtkWidget *label;
+    GtkWidget *child, *label;
     PangoLayout *layout;
     gint height;
-    label = gtk_widget_get_first_child(widget);
-    if(label==NULL) return;
+    child = gtk_widget_get_first_child(widget);
+    if(child==NULL) return;
     if(orientation==GTK_ORIENTATION_HORIZONTAL)
     {
-        gtk_widget_measure(label, orientation, for_size, minimum, natural,
+        gtk_widget_measure(child, orientation, for_size, minimum, natural,
             NULL, NULL);
         return;
     }
+    label = g_object_get_data(G_OBJECT(widget), "rc-label");
     layout = gtk_widget_create_pango_layout(label, "RhythmCat");
     pango_layout_get_pixel_size(layout, NULL, &height);
     g_object_unref(layout);
@@ -2817,31 +2819,32 @@ static void rc_ui_window_info_measure(GtkWidget *widget,
     *natural = height;
 }
 
-/* Place the label in the middle of the box, it may be taller than the
+/* Place the child in the middle of the box, it may be taller than the
  * box */
-static void rc_ui_window_info_allocate(GtkWidget *widget, gint width,
+static void rc_ui_window_line_allocate(GtkWidget *widget, gint width,
     gint height, gint baseline)
 {
-    GtkWidget *label;
+    GtkWidget *child;
     GtkAllocation allocation;
-    gint label_height;
-    label = gtk_widget_get_first_child(widget);
-    if(label==NULL) return;
-    gtk_widget_measure(label, GTK_ORIENTATION_VERTICAL, width, NULL,
-        &label_height, NULL, NULL);
+    gint child_height;
+    child = gtk_widget_get_first_child(widget);
+    if(child==NULL) return;
+    gtk_widget_measure(child, GTK_ORIENTATION_VERTICAL, width, NULL,
+        &child_height, NULL, NULL);
     allocation.x = 0;
-    allocation.y = (height - label_height) / 2;
+    allocation.y = (height - child_height) / 2;
     allocation.width = width;
-    allocation.height = label_height;
-    gtk_widget_size_allocate(label, &allocation, -1);
+    allocation.height = child_height;
+    gtk_widget_size_allocate(child, &allocation, -1);
 }
 
-/* Keep the height of the label of the music information fixed */
-static void rc_ui_window_fix_info_height(GtkWidget *label)
+/* Keep the height of the box which contains the label (directly or in
+ * another widget) fixed */
+static void rc_ui_window_fix_line_height(GtkWidget *box, GtkWidget *label)
 {
-    gtk_widget_set_layout_manager(gtk_widget_get_parent(label),
-        gtk_custom_layout_new(NULL, rc_ui_window_info_measure,
-        rc_ui_window_info_allocate));
+    g_object_set_data(G_OBJECT(box), "rc-label", label);
+    gtk_widget_set_layout_manager(box, gtk_custom_layout_new(NULL,
+        rc_ui_window_line_measure, rc_ui_window_line_allocate));
 }
 
 /**
@@ -2868,9 +2871,12 @@ GtkWidget *rc_ui_window_init(GtkApplication *app)
     priv->title_label = rc_ui_window_get_object("title_label");
     priv->artist_label = rc_ui_window_get_object("artist_label");
     priv->album_label = rc_ui_window_get_object("album_label");
-    rc_ui_window_fix_info_height(priv->title_label);
-    rc_ui_window_fix_info_height(priv->artist_label);
-    rc_ui_window_fix_info_height(priv->album_label);
+    rc_ui_window_fix_line_height(gtk_widget_get_parent(priv->title_label),
+        priv->title_label);
+    rc_ui_window_fix_line_height(gtk_widget_get_parent(
+        priv->artist_label), priv->artist_label);
+    rc_ui_window_fix_line_height(gtk_widget_get_parent(priv->album_label),
+        priv->album_label);
     priv->time_label = rc_ui_window_get_object("time_label");
     priv->progress_scale = rc_ui_window_get_object("progress_scale");
     priv->play_button = rc_ui_window_get_object("play_button");
@@ -2887,6 +2893,12 @@ GtkWidget *rc_ui_window_init(GtkApplication *app)
     priv->lyric_label = rc_ui_window_get_object("lyric_label");
     priv->lyric_next_label = rc_ui_window_get_object("lyric_next_label");
     priv->lyric_scrolled = rc_ui_window_get_object("lyric_scrolled");
+    rc_ui_window_fix_line_height(gtk_widget_get_parent(
+        priv->lyric_prev_label), priv->lyric_prev_label);
+    rc_ui_window_fix_line_height(gtk_widget_get_parent(
+        priv->lyric_scrolled), priv->lyric_label);
+    rc_ui_window_fix_line_height(gtk_widget_get_parent(
+        priv->lyric_next_label), priv->lyric_next_label);
     priv->lyric_info_time = -1;
     priv->lyric_line_start = -1;
     priv->lyric_line_end = -1;
