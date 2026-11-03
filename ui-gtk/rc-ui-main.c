@@ -71,6 +71,7 @@ static void rc_ui_main_startup_cb(GApplication *app, gpointer data)
     static const gchar *accels_open[] = {"<Control>o", NULL};
     static const gchar *accels_settings[] = {"<Control>comma", NULL};
     static const gchar *accels_equalizer[] = {"<Control>e", NULL};
+    static const gchar *accels_filter[] = {"<Control>f", NULL};
     g_action_map_add_action_entries(G_ACTION_MAP(app), app_actions,
         G_N_ELEMENTS(app_actions), app);
     gtk_application_set_accels_for_action(GTK_APPLICATION(app),
@@ -87,6 +88,8 @@ static void rc_ui_main_startup_cb(GApplication *app, gpointer data)
         "win.settings", accels_settings);
     gtk_application_set_accels_for_action(GTK_APPLICATION(app),
         "win.equalizer", accels_equalizer);
+    gtk_application_set_accels_for_action(GTK_APPLICATION(app),
+        "win.filter", accels_filter);
     gtk_window_set_default_icon_name(APPLICATION_ID);
     rc_ui_style_init();
 }

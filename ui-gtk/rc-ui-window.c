@@ -105,6 +105,7 @@ typedef struct RCUiWindowPrivate
     gchar *lyric_info;
     GtkWidget *sidebar_stack;
     GtkWidget *group_dropdown;
+    GtkWidget *filter_entry;
     GtkWidget *group_listbox;
     GtkWidget *playlist_listbox;
     GtkWidget *source_label;
@@ -145,6 +146,9 @@ typedef struct RCUiWindowPrivate
     RCLibDbPlaylist *drag_playlist;
     guint progress_timer_id;
     guint library_refresh_id;
+    /* The words of the library filter (normalized and case folded), %NULL
+     * if there is no filter */
+    gchar **filter_words;
     guint group_refresh_id;
     GtkColumnViewColumn *columns[RC_UI_COLUMN_COUNT];
     gdouble column_ratios[RC_UI_COLUMN_FLEXIBLE_COUNT];
@@ -398,10 +402,45 @@ static void rc_ui_window_set_tracks(const GPtrArray *items, gboolean update)
     g_hash_table_destroy(table);
 }
 
+/* Normalize the text and fold its case, so it can be compared without
+ * case (and full width or half width forms) */
+static gchar *rc_ui_window_filter_fold(const gchar *text)
+{
+    gchar *normalized, *folded;
+    normalized = g_utf8_normalize(text, -1, G_NORMALIZE_ALL);
+    if(normalized==NULL) return g_strdup("");
+    folded = g_utf8_casefold(normalized, -1);
+    g_free(normalized);
+    return folded;
+}
+
+/* Whether the title (the file name if there is no title), the artist or
+ * the album of the item contains each word of the library filter */
+static gboolean rc_ui_window_filter_match(const RCLibDbItem *item)
+{
+    RCUiWindowPrivate *priv = &window_priv;
+    gchar *title, *text, *folded;
+    gboolean match = TRUE;
+    guint i;
+    if(priv->filter_words==NULL) return TRUE;
+    title = rclib_db_item_get_display_title(item);
+    text = g_strjoin("\n", title!=NULL ? title : "",
+        item->artist!=NULL ? item->artist : "",
+        item->album!=NULL ? item->album : "", NULL);
+    folded = rc_ui_window_filter_fold(text);
+    for(i=0;priv->filter_words[i]!=NULL && match;i++)
+        match = strstr(folded, priv->filter_words[i])!=NULL;
+    g_free(folded);
+    g_free(text);
+    g_free(title);
+    return match;
+}
+
 static void rc_ui_window_reload_tracks(gboolean update)
 {
     RCUiWindowPrivate *priv = &window_priv;
     GPtrArray *items;
+    guint i;
     if(priv->view_type==RC_UI_VIEW_PLAYLIST && priv->view_playlist!=NULL &&
         !priv->view_playlist->removed)
     {
@@ -416,6 +455,16 @@ static void rc_ui_window_reload_tracks(gboolean update)
         else
             items = rclib_db_library_get_group_items(priv->group_mode,
                 priv->group);
+        /* The filter is applied to the library only */
+        if(priv->filter_words!=NULL)
+        {
+            for(i=items->len;i>0;i--)
+            {
+                if(!rc_ui_window_filter_match(g_ptr_array_index(items,
+                    i-1)))
+                    g_ptr_array_remove_index(items, i-1);
+            }
+        }
         rc_ui_window_set_tracks(items, update);
         g_ptr_array_unref(items);
     }
@@ -1317,6 +1366,43 @@ static void rc_ui_window_schedule_library_refresh()
         rc_ui_window_library_refresh_cb, NULL);
 }
 
+static void rc_ui_window_filter_changed_cb(GtkSearchEntry *entry,
+    gpointer data)
+{
+    RCUiWindowPrivate *priv = &window_priv;
+    gchar **words;
+    gchar *folded;
+    GPtrArray *array;
+    guint i;
+    g_clear_pointer(&priv->filter_words, g_strfreev);
+    folded = rc_ui_window_filter_fold(gtk_editable_get_text(GTK_EDITABLE(
+        entry)));
+    words = g_strsplit_set(folded, " \t\n", -1);
+    array = g_ptr_array_new();
+    for(i=0;words[i]!=NULL;i++)
+    {
+        if(words[i][0]!='\0') g_ptr_array_add(array, g_strdup(words[i]));
+    }
+    if(array->len>0)
+    {
+        g_ptr_array_add(array, NULL);
+        priv->filter_words = (gchar **)g_ptr_array_free(array, FALSE);
+    }
+    else
+        g_ptr_array_free(array, TRUE);
+    g_strfreev(words);
+    g_free(folded);
+    if(priv->view_type==RC_UI_VIEW_LIBRARY)
+        rc_ui_window_reload_tracks(TRUE);
+}
+
+/* Escape clears the filter */
+static void rc_ui_window_filter_stop_cb(GtkSearchEntry *entry,
+    gpointer data)
+{
+    gtk_editable_set_text(GTK_EDITABLE(entry), "");
+}
+
 /* ----- Name dialog ----- */
 
 static void rc_ui_window_name_data_free(gpointer data)
@@ -2196,7 +2282,12 @@ static void rc_ui_window_db_library_changed_cb(GObject *db,
 {
     RCUiWindowPrivate *priv = &window_priv;
     if(priv->view_type==RC_UI_VIEW_LIBRARY)
+    {
         rc_ui_window_refresh_item(item);
+        /* The item may match the filter now, or not match it any more */
+        if(priv->filter_words!=NULL)
+            rc_ui_window_schedule_library_refresh();
+    }
     if(priv->group_mode!=RCLIB_DB_GROUP_NONE && priv->group_refresh_id==0)
     {
         priv->group_refresh_id = g_timeout_add(500,
@@ -2575,6 +2666,18 @@ static void rc_ui_window_equalizer_action(GSimpleAction *action,
     rc_ui_equalizer_show(GTK_WINDOW(window_priv.window));
 }
 
+/* Show the library and focus the filter */
+static void rc_ui_window_filter_action(GSimpleAction *action,
+    GVariant *parameter, gpointer data)
+{
+    RCUiWindowPrivate *priv = &window_priv;
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(priv->library_button),
+        TRUE);
+    gtk_stack_set_visible_child_name(GTK_STACK(priv->sidebar_stack),
+        "library");
+    gtk_widget_grab_focus(priv->filter_entry);
+}
+
 static void rc_ui_window_about_action(GSimpleAction *action,
     GVariant *parameter, gpointer data)
 {
@@ -2794,6 +2897,7 @@ static const GActionEntry window_actions[] = {
     {"save-playlist", rc_ui_window_save_playlist_action, NULL, NULL, NULL},
     {"settings", rc_ui_window_settings_action, NULL, NULL, NULL},
     {"equalizer", rc_ui_window_equalizer_action, NULL, NULL, NULL},
+    {"filter", rc_ui_window_filter_action, NULL, NULL, NULL},
     {"lyric", NULL, NULL, "false", rc_ui_window_lyric_action},
     {"osd-lyric", NULL, NULL, "false", rc_ui_window_osd_lyric_action},
     {"about", rc_ui_window_about_action, NULL, NULL, NULL},
@@ -2954,6 +3058,7 @@ GtkWidget *rc_ui_window_init(GtkApplication *app)
     gtk_widget_add_controller(priv->lyric_scrolled, scroll_controller);
     priv->sidebar_stack = rc_ui_window_get_object("sidebar_stack");
     priv->group_dropdown = rc_ui_window_get_object("group_dropdown");
+    priv->filter_entry = rc_ui_window_get_object("filter_entry");
     priv->group_listbox = rc_ui_window_get_object("group_listbox");
     priv->playlist_listbox = rc_ui_window_get_object("playlist_listbox");
     priv->source_label = rc_ui_window_get_object("source_label");
@@ -3055,6 +3160,10 @@ GtkWidget *rc_ui_window_init(GtkApplication *app)
         GTK_EVENT_CONTROLLER(drop_target));
     g_signal_connect(priv->sidebar_stack, "notify::visible-child-name",
         G_CALLBACK(rc_ui_window_stack_changed_cb), NULL);
+    g_signal_connect(priv->filter_entry, "search-changed",
+        G_CALLBACK(rc_ui_window_filter_changed_cb), NULL);
+    g_signal_connect(priv->filter_entry, "stop-search",
+        G_CALLBACK(rc_ui_window_filter_stop_cb), NULL);
     g_signal_connect(rc_ui_window_get_object("playlist_new_button"),
         "clicked", G_CALLBACK(rc_ui_window_playlist_new_clicked_cb), NULL);
     g_signal_connect(rc_ui_window_get_object("playlist_rename_button"),
@@ -3215,6 +3324,7 @@ void rc_ui_window_cleanup()
     if(priv->playing_item!=NULL) rclib_db_item_unref(priv->playing_item);
     if(priv->lyric!=NULL) rclib_lyric_data_free(priv->lyric);
     g_clear_pointer(&priv->lyric_info, g_free);
+    g_clear_pointer(&priv->filter_words, g_strfreev);
     rc_ui_osd_exit();
     g_clear_pointer(&priv->groups, g_ptr_array_unref);
     g_clear_object(&priv->track_selection);

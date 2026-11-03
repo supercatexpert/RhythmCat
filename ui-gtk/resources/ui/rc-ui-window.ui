@@ -361,6 +361,14 @@
                               </object>
                             </child>
                             <child>
+                              <object class="GtkSearchEntry" id="filter_entry">
+                                <property name="margin-start">6</property>
+                                <property name="margin-end">6</property>
+                                <property name="placeholder-text" translatable="yes">Filter Library</property>
+                                <property name="tooltip-text" translatable="yes">Show the tracks whose title, artist or album contains all the words</property>
+                              </object>
+                            </child>
+                            <child>
                               <object class="GtkScrolledWindow">
                                 <property name="vexpand">True</property>
                                 <property name="hscrollbar-policy">never</property>

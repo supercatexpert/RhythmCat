@@ -208,6 +208,11 @@ from the template (for example with `msginit`).
   even if the lyric in the main window is turned off.
 * Library sidebar with grouping, and a playlist sidebar with new, rename,
   delete and move up/down.
+* Library filter (the entry in the library sidebar, or Ctrl+F): only the
+  tracks whose title (or file name), artist or album contains every word
+  of the filter are shown. Case is ignored, and so are the differences of
+  full width and half width forms. The filter is applied to the library
+  only, not to playlists; Escape clears it.
   The playlist of the playing track is shown in bold (in the ncurses
   frontend, also marked with `>`).
 * A button next to the random button shows or hides the library and
@@ -243,8 +248,8 @@ from the template (for example with `msginit`).
   custom preset, starting from the gains of the current preset. "Reset
   Custom" sets all custom bands to 0 dB.
 * Shortcuts: Space or Ctrl+Space play/pause (Space types a space in text
-  fields), Ctrl+←/→ previous/next, Ctrl+O import, Ctrl+, settings, Ctrl+E
-  equalizer, Ctrl+Q quit.
+  fields), Ctrl+←/→ previous/next, Ctrl+O import, Ctrl+F filter the library,
+  Ctrl+, settings, Ctrl+E equalizer, Ctrl+Q quit.
 
 ### ncurses frontend
 
