@@ -65,6 +65,8 @@ static void rclib_settings_set_defaults(GKeyFile *keyfile)
         RCLIB_SETTINGS_KEY_REPEAT_MODE, 1);
     g_key_file_set_boolean(keyfile, RCLIB_SETTINGS_GROUP_PLAYER,
         RCLIB_SETTINGS_KEY_RANDOM_MODE, FALSE);
+    g_key_file_set_boolean(keyfile, RCLIB_SETTINGS_GROUP_PLAYER,
+        RCLIB_SETTINGS_KEY_MPRIS_ENABLED, TRUE);
     g_key_file_set_string_list(keyfile, RCLIB_SETTINGS_GROUP_ENCODING,
         RCLIB_SETTINGS_KEY_ID3_ENCODINGS, (const gchar * const *)encodings,
         g_strv_length(encodings));

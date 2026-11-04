@@ -77,6 +77,7 @@ enum
     SIGNAL_NEW_DURATION,
     SIGNAL_URI_CHANGED,
     SIGNAL_VOLUME_CHANGED,
+    SIGNAL_SEEKED,
     SIGNAL_ERROR,
     SIGNAL_LAST
 };
@@ -449,6 +450,19 @@ static void rclib_core_class_init(RCLibCoreClass *klass)
     core_signals[SIGNAL_VOLUME_CHANGED] = g_signal_new("volume-changed",
         RCLIB_TYPE_CORE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibCoreClass,
         volume_changed), NULL, NULL, NULL, G_TYPE_NONE, 1, G_TYPE_DOUBLE);
+
+    /**
+     * RCLibCore::seeked:
+     * @core: the #RCLibCore that received the signal
+     * @position: the new position (unit: nanosecond), relative to the
+     *     start of the play range
+     *
+     * The ::seeked signal is emitted when the player seeks to a new
+     * position by rclib_core_set_position().
+     */
+    core_signals[SIGNAL_SEEKED] = g_signal_new("seeked",
+        RCLIB_TYPE_CORE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibCoreClass,
+        seeked), NULL, NULL, NULL, G_TYPE_NONE, 1, G_TYPE_INT64);
 
     /**
      * RCLibCore::error:
@@ -856,11 +870,14 @@ gboolean rclib_core_set_position(gint64 pos)
     if(pos<0) pos = 0;
     if(rclib_core_get_state()<GST_STATE_PAUSED) return FALSE;
     priv->range_seek_pending = FALSE;
-    return gst_element_seek(priv->playbin, 1.0, GST_FORMAT_TIME,
+    if(!gst_element_seek(priv->playbin, 1.0, GST_FORMAT_TIME,
         GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_KEY_UNIT, GST_SEEK_TYPE_SET,
         priv->start_time+pos, priv->end_time>0 ? GST_SEEK_TYPE_SET :
         GST_SEEK_TYPE_NONE, priv->end_time>0 ? priv->end_time :
-        (gint64)GST_CLOCK_TIME_NONE);
+        (gint64)GST_CLOCK_TIME_NONE))
+        return FALSE;
+    g_signal_emit(core_instance, core_signals[SIGNAL_SEEKED], 0, pos);
+    return TRUE;
 }
 
 /**

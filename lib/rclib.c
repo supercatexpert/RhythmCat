@@ -83,6 +83,7 @@ gboolean rclib_init(gint *argc, gchar **argv[], GError **error)
 void rclib_exit()
 {
     if(!rclib_initialized) return;
+    rclib_mpris_exit();
     rclib_core_stop();
     rclib_player_exit();
     rclib_tag_exit();

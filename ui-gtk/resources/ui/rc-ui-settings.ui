@@ -269,6 +269,42 @@
                 </child>
                 <child>
                   <object class="GtkLabel">
+                    <property name="label" translatable="yes">Desktop</property>
+                    <property name="xalign">0</property>
+                    <style>
+                      <class name="heading"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkGrid">
+                    <property name="row-spacing">10</property>
+                    <property name="column-spacing">12</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label" translatable="yes">Media controls of the desktop (MPRIS)</property>
+                        <property name="xalign">0</property>
+                        <property name="hexpand">True</property>
+                        <layout>
+                          <property name="column">0</property>
+                          <property name="row">0</property>
+                        </layout>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSwitch" id="mpris_switch">
+                        <property name="halign">end</property>
+                        <property name="valign">center</property>
+                        <layout>
+                          <property name="column">1</property>
+                          <property name="row">0</property>
+                        </layout>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
                     <property name="label" translatable="yes">Metadata</property>
                     <property name="xalign">0</property>
                     <style>

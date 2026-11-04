@@ -100,7 +100,7 @@ from the template (for example with `msginit`).
 
 * Audio playback with GStreamer `playbin`: play, pause, stop, seek, volume,
   and play ranges (used for CUE tracks). Signals for state, metadata,
-  duration, volume, end of stream and errors.
+  duration, volume, seeking, end of stream and errors.
 * 10-band equalizer (29 Hz – 15 kHz, ±12 dB, using `equalizer-10bands`
   from gst-plugins-good). It can be turned on or off, and has presets
   (Flat, Pop, Rock, Jazz, Classical, Dance, Electronic, Hip-Hop, Vocal,
@@ -164,6 +164,16 @@ from the template (for example with `msginit`).
   item is chosen in that order, from the matching items only. The order
   may have only a part of the library (like the shown group), then a
   library item is played in that part only, and List and All repeat it.
+* MPRIS 2 D-Bus interface (`org.mpris.MediaPlayer2.RhythmCat3`, on by
+  default, can be turned off in the settings): the media controls of the
+  desktop (like GNOME Shell and KDE Plasma) and tools like `playerctl`
+  show the playing track (title, artist, album, length and the embedded
+  cover image) and control the player: play/pause, stop, previous/next,
+  seek, volume, repeat (Loop) and random (Shuffle) modes. Both frontends
+  can be quit through it, and the GTK4 window can be raised. The track
+  list interface and opening URIs are not supported. The cover image is
+  written to a temporary file in the user runtime directory, which is
+  removed when the track changes or the program exits.
 * Settings are stored in `~/.config/RhythmCat3/settings.conf`.
 
 ### GTK4 frontend
@@ -261,8 +271,8 @@ from the template (for example with `msginit`).
   streams are kept.
 * Load a playlist file as a new playlist, or save the shown track list
   to a playlist file (buttons below the playlist sidebar, or the menu).
-* Settings: style, lyric display, OSD lyric, update metadata when
-  playing, and the fallback encodings for ID3, CUE, lyrics and playlist
+* Settings: style, lyric display, OSD lyric, media controls of the
+  desktop (MPRIS), update metadata when playing, and the fallback encodings for ID3, CUE, lyrics and playlist
   files.
 * Equalizer window (header bar button, menu, or Ctrl+E): an on/off switch,
   a preset list and a slider for each band. Moving a slider changes the
@@ -279,7 +289,8 @@ pause, `r` repeat mode, `n`/`p` next/previous, ←/→ seek, `+`/`-` volume,
 `g` grouping, `a` add a file/folder/playlist file, `c` cancel import,
 `L`/`W` load/save a playlist file, `M` remove missing files, `A` add to
 playlist, `N`/`R`/`D` new/rename/delete playlist, `J`/`K` reorder, `e`
-equalizer on/off, `E` next equalizer preset, `q` quit. The header shows
+equalizer on/off, `E` next equalizer preset, `m` MPRIS on/off, `q`
+quit. The header shows
 the current equalizer preset. Text too wide for the playlist and track
 lists is cut with an ellipsis (`…`). A lyric line too wide for the
 terminal moves horizontally with the progress of the line. Log output goes

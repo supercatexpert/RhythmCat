@@ -28,6 +28,7 @@
 #include "rclib-db.h"
 #include "rclib-instance.h"
 #include "rclib-lyric.h"
+#include "rclib-mpris.h"
 #include "rclib-player.h"
 #include "rclib-plist.h"
 #include "rclib-settings.h"

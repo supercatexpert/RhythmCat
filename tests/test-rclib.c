@@ -25,6 +25,7 @@
 #include <string.h>
 
 static gchar *test_dir = NULL;
+static GTestDBus *test_bus = NULL;
 
 static void test_util_encoding()
 {
@@ -1253,12 +1254,250 @@ static void test_instance()
     g_assert_false(rclib_instance_is_locked());
 }
 
+typedef struct TestMprisCall
+{
+    gboolean done;
+    GVariant *result;
+    GError *error;
+}TestMprisCall;
+
+static void test_mpris_call_cb(GObject *source, GAsyncResult *result,
+    gpointer data)
+{
+    TestMprisCall *call = data;
+    call->result = g_dbus_connection_call_finish(G_DBUS_CONNECTION(source),
+        result, &call->error);
+    call->done = TRUE;
+}
+
+/* The player is in the same thread, so the main context should be run
+ * while waiting for the reply */
+static GVariant *test_mpris_call(GDBusConnection *connection,
+    const gchar *interface, const gchar *method, GVariant *parameters,
+    GError **error)
+{
+    TestMprisCall call = {0};
+    g_dbus_connection_call(connection, RCLIB_MPRIS_BUS_NAME,
+        "/org/mpris/MediaPlayer2", interface, method, parameters, NULL,
+        G_DBUS_CALL_FLAGS_NONE, 5000, NULL, test_mpris_call_cb, &call);
+    while(!call.done) g_main_context_iteration(NULL, TRUE);
+    if(call.error!=NULL)
+    {
+        g_propagate_error(error, call.error);
+        return NULL;
+    }
+    return call.result;
+}
+
+static GVariant *test_mpris_get(GDBusConnection *connection,
+    const gchar *interface, const gchar *name)
+{
+    GVariant *reply, *value;
+    GError *error = NULL;
+    reply = test_mpris_call(connection, "org.freedesktop.DBus.Properties",
+        "Get", g_variant_new("(ss)", interface, name), &error);
+    g_assert_no_error(error);
+    g_variant_get(reply, "(v)", &value);
+    g_variant_unref(reply);
+    return value;
+}
+
+static void test_mpris_set(GDBusConnection *connection, const gchar *name,
+    GVariant *value)
+{
+    GVariant *reply;
+    GError *error = NULL;
+    reply = test_mpris_call(connection, "org.freedesktop.DBus.Properties",
+        "Set", g_variant_new("(ssv)", "org.mpris.MediaPlayer2.Player", name,
+        value), &error);
+    g_assert_no_error(error);
+    g_variant_unref(reply);
+}
+
+static void test_mpris_player(GDBusConnection *connection,
+    const gchar *method, GVariant *parameters)
+{
+    GVariant *reply;
+    GError *error = NULL;
+    reply = test_mpris_call(connection, "org.mpris.MediaPlayer2.Player",
+        method, parameters, &error);
+    g_assert_no_error(error);
+    g_variant_unref(reply);
+}
+
+static gchar *test_mpris_get_title(GDBusConnection *connection)
+{
+    GVariant *metadata;
+    gchar *title = NULL;
+    metadata = test_mpris_get(connection, "org.mpris.MediaPlayer2.Player",
+        "Metadata");
+    g_variant_lookup(metadata, "xesam:title", "s", &title);
+    g_variant_unref(metadata);
+    return title;
+}
+
+static void test_mpris_changed_cb(GDBusConnection *connection,
+    const gchar *sender, const gchar *path, const gchar *interface,
+    const gchar *signal, GVariant *parameters, gpointer data)
+{
+    GVariant *changed;
+    gdouble *volume = data;
+    g_variant_get(parameters, "(s@a{sv}@as)", NULL, &changed, NULL);
+    g_variant_lookup(changed, "Volume", "d", volume);
+    g_variant_unref(changed);
+}
+
+static void test_mpris_quit_cb(gpointer data)
+{
+    *(gboolean *)data = TRUE;
+}
+
+static void test_mpris_wait(gboolean running)
+{
+    gint64 end = g_get_monotonic_time() + 5 * G_USEC_PER_SEC;
+    while(rclib_mpris_is_running()!=running &&
+        g_get_monotonic_time()<end)
+        g_main_context_iteration(NULL, FALSE);
+    g_assert_true(rclib_mpris_is_running()==running);
+}
+
+static void test_mpris()
+{
+    GDBusConnection *connection;
+    RCLibDbPlaylist *playlist;
+    RCLibDbItem *m1, *m2;
+    GVariant *value, *metadata;
+    GError *error = NULL;
+    gchar *db_file, *title, *track_id = NULL;
+    gdouble volume = -1.0;
+    gboolean quit = FALSE;
+    guint signal_id;
+    db_file = g_build_filename(test_dir, "mpris.json.gz", NULL);
+    g_assert_true(rclib_db_init(db_file));
+    g_assert_true(rclib_core_init(NULL));
+    g_assert_true(rclib_player_init());
+    playlist = rclib_db_playlist_new("MPRIS", -1);
+    m1 = test_add_to_playlist(playlist, "m1.wav");
+    m2 = test_add_to_playlist(playlist, "m2.wav");
+    rclib_player_set_random_mode(FALSE);
+    rclib_player_set_repeat_mode(RCLIB_PLAYER_REPEAT_ALL);
+    rclib_settings_set_boolean(RCLIB_SETTINGS_GROUP_PLAYER,
+        RCLIB_SETTINGS_KEY_MPRIS_ENABLED, TRUE);
+    g_assert_true(rclib_mpris_init(NULL, test_mpris_quit_cb, &quit));
+    test_mpris_wait(TRUE);
+    connection = g_dbus_connection_new_for_address_sync(
+        g_test_dbus_get_bus_address(test_bus),
+        G_DBUS_CONNECTION_FLAGS_AUTHENTICATION_CLIENT |
+        G_DBUS_CONNECTION_FLAGS_MESSAGE_BUS_CONNECTION, NULL, NULL,
+        &error);
+    g_assert_no_error(error);
+    signal_id = g_dbus_connection_signal_subscribe(connection,
+        RCLIB_MPRIS_BUS_NAME, "org.freedesktop.DBus.Properties",
+        "PropertiesChanged", "/org/mpris/MediaPlayer2", NULL,
+        G_DBUS_SIGNAL_FLAGS_NONE, test_mpris_changed_cb, &volume, NULL);
+
+    /* The root interface */
+    value = test_mpris_get(connection, "org.mpris.MediaPlayer2",
+        "Identity");
+    g_assert_cmpstr(g_variant_get_string(value, NULL), ==, "RhythmCat");
+    g_variant_unref(value);
+    value = test_mpris_get(connection, "org.mpris.MediaPlayer2",
+        "CanRaise");
+    g_assert_false(g_variant_get_boolean(value));
+    g_variant_unref(value);
+
+    /* Nothing is playing */
+    metadata = test_mpris_get(connection, "org.mpris.MediaPlayer2.Player",
+        "Metadata");
+    g_assert_true(g_variant_lookup(metadata, "mpris:trackid", "o",
+        &track_id));
+    g_assert_cmpstr(track_id, ==,
+        "/org/mpris/MediaPlayer2/TrackList/NoTrack");
+    g_free(track_id);
+    g_variant_unref(metadata);
+
+    /* The playing track and the playing control */
+    rclib_player_play_item(m1);
+    title = test_mpris_get_title(connection);
+    g_assert_cmpstr(title, ==, "m1.wav");
+    g_free(title);
+    test_mpris_player(connection, "Next", NULL);
+    g_assert_true(rclib_player_get_current_item()==m2);
+    title = test_mpris_get_title(connection);
+    g_assert_cmpstr(title, ==, "m2.wav");
+    g_free(title);
+    metadata = test_mpris_get(connection, "org.mpris.MediaPlayer2.Player",
+        "Metadata");
+    g_assert_true(g_variant_lookup(metadata, "mpris:length", "x", NULL));
+    g_variant_unref(metadata);
+    test_mpris_player(connection, "Previous", NULL);
+    g_assert_true(rclib_player_get_current_item()==m1);
+
+    /* The repeat mode, the random mode and the volume */
+    value = test_mpris_get(connection, "org.mpris.MediaPlayer2.Player",
+        "LoopStatus");
+    g_assert_cmpstr(g_variant_get_string(value, NULL), ==, "Playlist");
+    g_variant_unref(value);
+    test_mpris_set(connection, "LoopStatus", g_variant_new_string(
+        "Playlist"));
+    g_assert_cmpint(rclib_player_get_repeat_mode(), ==,
+        RCLIB_PLAYER_REPEAT_ALL);
+    test_mpris_set(connection, "LoopStatus", g_variant_new_string("Track"));
+    g_assert_cmpint(rclib_player_get_repeat_mode(), ==,
+        RCLIB_PLAYER_REPEAT_SINGLE);
+    test_mpris_set(connection, "LoopStatus", g_variant_new_string("None"));
+    g_assert_cmpint(rclib_player_get_repeat_mode(), ==,
+        RCLIB_PLAYER_REPEAT_NONE);
+    test_mpris_set(connection, "Shuffle", g_variant_new_boolean(TRUE));
+    g_assert_true(rclib_player_get_random_mode());
+    rclib_player_set_random_mode(FALSE);
+    test_mpris_set(connection, "Volume", g_variant_new_double(0.5));
+    g_assert_cmpfloat(rclib_core_get_volume(), ==, 0.5);
+    rclib_core_set_volume(0.25);
+    while(volume!=0.25) g_main_context_iteration(NULL, TRUE);
+
+    /* Unsupported methods */
+    value = test_mpris_call(connection, "org.mpris.MediaPlayer2.Player",
+        "OpenUri", g_variant_new("(s)", "file:///nothing.wav"), &error);
+    g_assert_null(value);
+    g_assert_error(error, G_DBUS_ERROR, G_DBUS_ERROR_NOT_SUPPORTED);
+    g_clear_error(&error);
+
+    value = test_mpris_call(connection, "org.mpris.MediaPlayer2", "Quit",
+        NULL, &error);
+    g_assert_no_error(error);
+    g_variant_unref(value);
+    g_assert_true(quit);
+
+    /* Follow the setting */
+    rclib_settings_set_boolean(RCLIB_SETTINGS_GROUP_PLAYER,
+        RCLIB_SETTINGS_KEY_MPRIS_ENABLED, FALSE);
+    test_mpris_wait(FALSE);
+    rclib_settings_set_boolean(RCLIB_SETTINGS_GROUP_PLAYER,
+        RCLIB_SETTINGS_KEY_MPRIS_ENABLED, TRUE);
+    test_mpris_wait(TRUE);
+
+    g_dbus_connection_signal_unsubscribe(connection, signal_id);
+    g_object_unref(connection);
+    rclib_mpris_exit();
+    g_assert_false(rclib_mpris_is_running());
+    rclib_core_stop();
+    rclib_player_exit();
+    rclib_core_exit();
+    rclib_db_exit();
+    g_free(db_file);
+}
+
 int main(int argc, char *argv[])
 {
     gchar *settings_file;
     gint ret;
     test_dir = g_dir_make_tmp("rhythmcat3-test-XXXXXX", NULL);
     g_setenv("XDG_RUNTIME_DIR", test_dir, TRUE);
+    /* All tests use a private session bus, the MPRIS test exports the
+     * player on it */
+    test_bus = g_test_dbus_new(G_TEST_DBUS_NONE);
+    g_test_dbus_up(test_bus);
     settings_file = g_build_filename(test_dir, "settings.conf", NULL);
     rclib_settings_init(settings_file);
     gst_init(&argc, &argv);
@@ -1281,8 +1520,11 @@ int main(int argc, char *argv[])
     g_test_add_func("/player/next", test_player_next);
     g_test_add_func("/player/filter", test_player_filter);
     g_test_add_func("/player/order", test_player_order);
+    g_test_add_func("/mpris/dbus", test_mpris);
     ret = g_test_run();
     rclib_settings_exit();
+    g_test_dbus_down(test_bus);
+    g_object_unref(test_bus);
     g_free(settings_file);
     return ret;
 }

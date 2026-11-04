@@ -59,6 +59,17 @@ static void rc_ui_main_quit_action(GSimpleAction *action,
     g_application_quit(G_APPLICATION(data));
 }
 
+static void rc_ui_main_mpris_raise_cb(gpointer data)
+{
+    gtk_window_present(GTK_WINDOW(rc_ui_window_init(
+        GTK_APPLICATION(data))));
+}
+
+static void rc_ui_main_mpris_quit_cb(gpointer data)
+{
+    g_action_group_activate_action(G_ACTION_GROUP(data), "quit", NULL);
+}
+
 static void rc_ui_main_startup_cb(GApplication *app, gpointer data)
 {
     static const GActionEntry app_actions[] = {
@@ -92,6 +103,8 @@ static void rc_ui_main_startup_cb(GApplication *app, gpointer data)
         "win.filter", accels_filter);
     gtk_window_set_default_icon_name(APPLICATION_ID);
     rc_ui_style_init();
+    rclib_mpris_init(rc_ui_main_mpris_raise_cb, rc_ui_main_mpris_quit_cb,
+        app);
 }
 
 static void rc_ui_main_activate_cb(GApplication *app, gpointer data)
@@ -108,6 +121,7 @@ static void rc_ui_main_open_cb(GApplication *app, GFile **files,
 
 static void rc_ui_main_shutdown_cb(GApplication *app, gpointer data)
 {
+    rclib_mpris_exit();
     rc_ui_window_cleanup();
 }
 

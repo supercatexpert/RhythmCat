@@ -164,6 +164,7 @@ struct _RCLibCoreClass {
     void (*new_duration)(RCLibCore *core, gint64 duration);
     void (*uri_changed)(RCLibCore *core, const gchar *uri);
     void (*volume_changed)(RCLibCore *core, gdouble volume);
+    void (*seeked)(RCLibCore *core, gint64 position);
     void (*error)(RCLibCore *core, const gchar *message);
 };
 

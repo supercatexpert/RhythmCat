@@ -38,6 +38,7 @@ typedef struct RCUiSettingsPrivate
     GtkWidget *osd_width_spin;
     GtkWidget *osd_progress_switch;
     GtkWidget *osd_progress_color_button;
+    GtkWidget *mpris_switch;
     GtkWidget *update_switch;
     GtkWidget *id3_entry;
     GtkWidget *cue_entry;
@@ -265,6 +266,14 @@ static void rc_ui_settings_osd_width_cb(GtkSpinButton *spin, gpointer data)
         spin));
 }
 
+static void rc_ui_settings_mpris_switch_cb(GObject *object,
+    GParamSpec *pspec, gpointer data)
+{
+    rclib_settings_set_boolean(RCLIB_SETTINGS_GROUP_PLAYER,
+        RCLIB_SETTINGS_KEY_MPRIS_ENABLED, gtk_switch_get_active(
+        GTK_SWITCH(object)));
+}
+
 static void rc_ui_settings_update_switch_cb(GObject *object,
     GParamSpec *pspec, gpointer data)
 {
@@ -329,6 +338,8 @@ void rc_ui_settings_show(GtkWindow *parent)
         priv->builder, "osd_progress_switch"));
     priv->osd_progress_color_button = GTK_WIDGET(gtk_builder_get_object(
         priv->builder, "osd_progress_color_button"));
+    priv->mpris_switch = GTK_WIDGET(gtk_builder_get_object(priv->builder,
+        "mpris_switch"));
     priv->update_switch = GTK_WIDGET(gtk_builder_get_object(priv->builder,
         "update_switch"));
     priv->id3_entry = GTK_WIDGET(gtk_builder_get_object(priv->builder,
@@ -372,6 +383,9 @@ void rc_ui_settings_show(GtkWindow *parent)
     gtk_spin_button_set_value(GTK_SPIN_BUTTON(priv->osd_width_spin),
         rclib_settings_get_integer(RCLIB_SETTINGS_GROUP_LYRIC,
         RCLIB_SETTINGS_KEY_OSD_MAX_WIDTH));
+    gtk_switch_set_active(GTK_SWITCH(priv->mpris_switch),
+        rclib_settings_get_boolean(RCLIB_SETTINGS_GROUP_PLAYER,
+        RCLIB_SETTINGS_KEY_MPRIS_ENABLED));
     gtk_switch_set_active(GTK_SWITCH(priv->update_switch),
         rclib_settings_get_boolean(RCLIB_SETTINGS_GROUP_LIBRARY,
         RCLIB_SETTINGS_KEY_UPDATE_ON_PLAY));
@@ -403,6 +417,8 @@ void rc_ui_settings_show(GtkWindow *parent)
         RCLIB_SETTINGS_KEY_OSD_PROGRESS_COLOR);
     g_signal_connect(priv->osd_width_spin, "value-changed",
         G_CALLBACK(rc_ui_settings_osd_width_cb), NULL);
+    g_signal_connect(priv->mpris_switch, "notify::active",
+        G_CALLBACK(rc_ui_settings_mpris_switch_cb), NULL);
     g_signal_connect(priv->update_switch, "notify::active",
         G_CALLBACK(rc_ui_settings_update_switch_cb), NULL);
     g_signal_connect(priv->id3_entry, "activate",

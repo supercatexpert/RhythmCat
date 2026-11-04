@@ -748,6 +748,7 @@ static void rc_tui_draw_help(gint top, gint height)
         N_("  u / U      Refresh metadata of the track / all tracks"),
         N_("  M          Remove items whose files are missing"),
         N_("  l          Toggle lyric display"),
+        N_("  m          Toggle MPRIS (control by the desktop)"),
         N_("  q          Quit                    ?   Close this help"),
         NULL
     };
@@ -1153,6 +1154,7 @@ static void rc_tui_handle_key(gint ret, wint_t key)
     RCLibDbPlaylist *playlist;
     gint page = MAX(LINES-8, 1);
     gchar *label;
+    gboolean enabled;
     if(priv->prompt_active)
     {
         rc_tui_prompt_key(ret, key);
@@ -1288,6 +1290,15 @@ static void rc_tui_handle_key(gint ret, wint_t key)
                 RCLIB_SETTINGS_GROUP_LYRIC, RCLIB_SETTINGS_KEY_LYRIC_ENABLED));
             rc_tui_load_lyric();
             break;
+        case 'm':
+            enabled = !rclib_settings_get_boolean(
+                RCLIB_SETTINGS_GROUP_PLAYER,
+                RCLIB_SETTINGS_KEY_MPRIS_ENABLED);
+            rclib_settings_set_boolean(RCLIB_SETTINGS_GROUP_PLAYER,
+                RCLIB_SETTINGS_KEY_MPRIS_ENABLED, enabled);
+            rc_tui_set_message(enabled ? _("MPRIS is enabled.") :
+                _("MPRIS is disabled."));
+            break;
         case 'g':
             priv->group_mode = (priv->group_mode+1) % 3;
             rclib_settings_set_integer(RCLIB_SETTINGS_GROUP_LIBRARY,
@@ -1414,6 +1425,11 @@ static gboolean rc_tui_resize_cb(gpointer data)
     clear();
     rc_tui_redraw();
     return G_SOURCE_CONTINUE;
+}
+
+static void rc_tui_mpris_quit_cb(gpointer data)
+{
+    g_main_loop_quit(tui_priv.loop);
 }
 
 static gboolean rc_tui_quit_cb(gpointer data)
@@ -1604,7 +1620,10 @@ gint rc_tui_run(gint argc, gchar *argv[])
     g_unix_signal_add(SIGINT, rc_tui_quit_cb, NULL);
     g_unix_signal_add(SIGTERM, rc_tui_quit_cb, NULL);
     g_unix_signal_add(SIGHUP, rc_tui_quit_cb, NULL);
+    /* The terminal cannot be raised */
+    rclib_mpris_init(NULL, rc_tui_mpris_quit_cb, NULL);
     g_main_loop_run(priv->loop);
+    rclib_mpris_exit();
     endwin();
 
     for(i=0;i<priv->core_handlers->len;i++)

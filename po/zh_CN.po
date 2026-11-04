@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: rhythmcat3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-03 19:43+0900\n"
+"POT-Creation-Date: 2026-11-04 15:14+0900\n"
 "PO-Revision-Date: 2026-11-03\n"
 "Last-Translator: SuperCat\n"
 "Language-Team: Chinese (simplified)\n"
@@ -33,65 +33,65 @@ msgstr "播放和管理您的音乐"
 msgid "music;audio;player;playlist;"
 msgstr "music;audio;player;playlist;音乐;音频;播放器;播放列表;"
 
-#: lib/rclib-core.c:95
+#: lib/rclib-core.c:96
 msgid "Flat"
 msgstr "平直"
 
-#: lib/rclib-core.c:96
+#: lib/rclib-core.c:97
 msgid "Pop"
 msgstr "流行"
 
-#: lib/rclib-core.c:97
+#: lib/rclib-core.c:98
 msgid "Rock"
 msgstr "摇滚"
 
-#: lib/rclib-core.c:98
+#: lib/rclib-core.c:99
 msgid "Jazz"
 msgstr "爵士"
 
-#: lib/rclib-core.c:99
+#: lib/rclib-core.c:100
 msgid "Classical"
 msgstr "古典"
 
-#: lib/rclib-core.c:100
+#: lib/rclib-core.c:101
 msgid "Dance"
 msgstr "舞曲"
 
-#: lib/rclib-core.c:101
+#: lib/rclib-core.c:102
 msgid "Electronic"
 msgstr "电子"
 
-#: lib/rclib-core.c:102
+#: lib/rclib-core.c:103
 msgid "Hip-Hop"
 msgstr "嘻哈"
 
-#: lib/rclib-core.c:103
+#: lib/rclib-core.c:104
 msgid "Vocal"
 msgstr "人声"
 
-#: lib/rclib-core.c:104
+#: lib/rclib-core.c:105
 msgid "Bass Boost"
 msgstr "低音增强"
 
-#: lib/rclib-core.c:105
+#: lib/rclib-core.c:106
 msgid "Treble Boost"
 msgstr "高音增强"
 
-#: lib/rclib-core.c:106
+#: lib/rclib-core.c:107
 msgid "Custom"
 msgstr "自定义"
 
-#: lib/rclib-core.c:302 ui-gtk/rc-ui-main.c:155 ui-tui/rc-tui.c:1517
+#: lib/rclib-core.c:303 ui-gtk/rc-ui-main.c:169 ui-tui/rc-tui.c:1566
 msgid "Unknown error"
 msgstr "未知错误"
 
-#: lib/rclib-core.c:526
+#: lib/rclib-core.c:540
 #, c-format
 msgid ""
 "Cannot create the playbin element! Please check your GStreamer installation."
 msgstr "无法创建 playbin 元件！请检查 GStreamer 的安装。"
 
-#: lib/rclib-core.c:585
+#: lib/rclib-core.c:599
 #, c-format
 msgid "The core is already initialized!"
 msgstr "核心已经初始化！"
@@ -219,7 +219,7 @@ msgid "The equalizer plug-in of GStreamer (gst-plugins-good) is not installed."
 msgstr "未安装 GStreamer 的均衡器插件（gst-plugins-good）。"
 
 #: ui-gtk/rc-ui-main.c:43 ui-gtk/resources/ui/rc-ui-equalizer.ui:577
-#: ui-gtk/resources/ui/rc-ui-settings.ui:439
+#: ui-gtk/resources/ui/rc-ui-settings.ui:475
 msgid "_Close"
 msgstr "关闭(_C)"
 
@@ -227,191 +227,191 @@ msgstr "关闭(_C)"
 msgid "RhythmCat is already running"
 msgstr "RhythmCat 已在运行"
 
-#: ui-gtk/rc-ui-main.c:135
+#: ui-gtk/rc-ui-main.c:149
 msgid "GTK4 frontend"
 msgstr "GTK4 前端"
 
-#: ui-gtk/rc-ui-main.c:154 ui-tui/rc-tui.c:1516
+#: ui-gtk/rc-ui-main.c:168 ui-tui/rc-tui.c:1565
 #, c-format
 msgid "Cannot initialize the player: %s\n"
 msgstr "无法初始化播放器：%s\n"
 
-#: ui-gtk/rc-ui-osd.c:799
+#: ui-gtk/rc-ui-osd.c:801
 msgid "RhythmCat Lyric"
 msgstr "RhythmCat 歌词"
 
-#: ui-gtk/rc-ui-osd.c:817
+#: ui-gtk/rc-ui-osd.c:821
 msgid "_Hide OSD Lyric"
 msgstr "隐藏桌面歌词(_H)"
 
-#: ui-gtk/rc-ui-osd.c:818
+#: ui-gtk/rc-ui-osd.c:825
 msgid "_Reset Position"
 msgstr "重置位置(_R)"
 
-#: ui-gtk/rc-ui-settings.c:143
+#: ui-gtk/rc-ui-settings.c:144
 #, c-format
 msgid "Unsupported encodings are ignored: %s"
 msgstr "已忽略不支持的编码：%s"
 
-#: ui-gtk/rc-ui-settings.c:152
+#: ui-gtk/rc-ui-settings.c:153
 msgid ""
 "Encodings are saved. New settings will be used when files are read next time."
 msgstr "编码已保存，下次读取文件时将使用新的设置。"
 
-#: ui-gtk/rc-ui-window.c:253 ui-gtk/rc-ui-window.c:1199 ui-tui/rc-tui.c:304
+#: ui-gtk/rc-ui-window.c:267 ui-gtk/rc-ui-window.c:1372 ui-tui/rc-tui.c:308
 msgid "All Tracks"
 msgstr "全部曲目"
 
-#: ui-gtk/rc-ui-window.c:257 ui-gtk/rc-ui-window.c:1213
-#: ui-gtk/rc-ui-window.c:1809 ui-tui/rc-tui.c:313 ui-tui/rc-tui.c:607
+#: ui-gtk/rc-ui-window.c:271 ui-gtk/rc-ui-window.c:1386
+#: ui-gtk/rc-ui-window.c:2025 ui-tui/rc-tui.c:317 ui-tui/rc-tui.c:640
 msgid "Unknown Artist"
 msgstr "未知艺术家"
 
-#: ui-gtk/rc-ui-window.c:259 ui-gtk/rc-ui-window.c:1214
-#: ui-gtk/rc-ui-window.c:1811 ui-tui/rc-tui.c:313 ui-tui/rc-tui.c:608
+#: ui-gtk/rc-ui-window.c:273 ui-gtk/rc-ui-window.c:1387
+#: ui-gtk/rc-ui-window.c:2027 ui-tui/rc-tui.c:317 ui-tui/rc-tui.c:641
 msgid "Unknown Album"
 msgstr "未知专辑"
 
-#: ui-gtk/rc-ui-window.c:260
+#: ui-gtk/rc-ui-window.c:274
 #, c-format
 msgid "%s (%u track)"
 msgid_plural "%s (%u tracks)"
 msgstr[0] "%s（%u 首）"
 
-#: ui-gtk/rc-ui-window.c:1461 ui-gtk/rc-ui-window.c:1544
-#: ui-gtk/rc-ui-window.c:2637
+#: ui-gtk/rc-ui-window.c:1677 ui-gtk/rc-ui-window.c:1760
+#: ui-gtk/rc-ui-window.c:2853
 msgid "_Cancel"
 msgstr "取消(_C)"
 
-#: ui-gtk/rc-ui-window.c:1462
+#: ui-gtk/rc-ui-window.c:1678
 msgid "_OK"
 msgstr "确定(_O)"
 
-#: ui-gtk/rc-ui-window.c:1505
+#: ui-gtk/rc-ui-window.c:1721
 #, c-format
 msgid "Playlist %u"
 msgstr "播放列表 %u"
 
-#: ui-gtk/rc-ui-window.c:1507 ui-gtk/resources/ui/rc-ui-window.ui:419
+#: ui-gtk/rc-ui-window.c:1723 ui-gtk/resources/ui/rc-ui-window.ui:419
 msgid "New Playlist"
 msgstr "新建播放列表"
 
-#: ui-gtk/rc-ui-window.c:1523 ui-gtk/resources/ui/rc-ui-window.ui:425
+#: ui-gtk/rc-ui-window.c:1739 ui-gtk/resources/ui/rc-ui-window.ui:425
 msgid "Rename Playlist"
 msgstr "重命名播放列表"
 
-#: ui-gtk/rc-ui-window.c:1544
+#: ui-gtk/rc-ui-window.c:1760
 msgid "_Delete"
 msgstr "删除(_D)"
 
-#: ui-gtk/rc-ui-window.c:1546
+#: ui-gtk/rc-ui-window.c:1762
 #, c-format
 msgid "Delete playlist “%s”?"
 msgstr "要删除播放列表“%s”吗？"
 
-#: ui-gtk/rc-ui-window.c:1548
+#: ui-gtk/rc-ui-window.c:1764
 msgid "The audio files will not be deleted."
 msgstr "音频文件不会被删除。"
 
-#: ui-gtk/rc-ui-window.c:1787
+#: ui-gtk/rc-ui-window.c:2003
 msgid "Ready to play"
 msgstr "准备播放"
 
-#: ui-gtk/rc-ui-window.c:1979
+#: ui-gtk/rc-ui-window.c:2195
 msgid "Repeat: Off (continue with the next playlist, stop after the last one)"
 msgstr "重复：关闭（继续播放下一个播放列表，最后一个播放完后停止）"
 
-#: ui-gtk/rc-ui-window.c:1984
+#: ui-gtk/rc-ui-window.c:2200
 msgid "Repeat: Current Track"
 msgstr "重复：当前曲目"
 
-#: ui-gtk/rc-ui-window.c:1988 ui-tui/rc-tui.c:440
+#: ui-gtk/rc-ui-window.c:2204 ui-tui/rc-tui.c:473
 msgid "All"
 msgstr "全部"
 
-#: ui-gtk/rc-ui-window.c:1989
+#: ui-gtk/rc-ui-window.c:2205
 msgid "Repeat: All Playlists"
 msgstr "重复：全部播放列表"
 
-#: ui-gtk/rc-ui-window.c:1993 ui-tui/rc-tui.c:439
+#: ui-gtk/rc-ui-window.c:2209 ui-tui/rc-tui.c:472
 msgid "List"
 msgstr "列表"
 
-#: ui-gtk/rc-ui-window.c:1994
+#: ui-gtk/rc-ui-window.c:2210
 msgid "Repeat: Current Playlist"
 msgstr "重复：当前播放列表"
 
-#: ui-gtk/rc-ui-window.c:2036 ui-gtk/rc-ui-window.c:3207
+#: ui-gtk/rc-ui-window.c:2252 ui-gtk/rc-ui-window.c:3443
 msgid "Hide Library and Playlists"
 msgstr "隐藏音乐库和播放列表"
 
-#: ui-gtk/rc-ui-window.c:2036 ui-gtk/resources/ui/rc-ui-window.ui:277
+#: ui-gtk/rc-ui-window.c:2252 ui-gtk/resources/ui/rc-ui-window.ui:277
 msgid "Show Library and Playlists"
 msgstr "显示音乐库和播放列表"
 
-#: ui-gtk/rc-ui-window.c:2101
+#: ui-gtk/rc-ui-window.c:2317
 #, c-format
 msgid "%u tracks in library, %u playlists"
 msgstr "音乐库中有 %u 首曲目，%u 个播放列表"
 
-#: ui-gtk/rc-ui-window.c:2106
+#: ui-gtk/rc-ui-window.c:2322
 #, c-format
 msgid "Importing (%u pending)… %s"
 msgstr "正在导入（剩余 %u 个）… %s"
 
-#: ui-gtk/rc-ui-window.c:2179
+#: ui-gtk/rc-ui-window.c:2395
 #, c-format
 msgid "%u kbps"
 msgstr "%u kbps"
 
-#: ui-gtk/rc-ui-window.c:2263 ui-tui/rc-tui.c:1425
+#: ui-gtk/rc-ui-window.c:2479 ui-tui/rc-tui.c:1474
 #, c-format
 msgid "Error: %s"
 msgstr "错误：%s"
 
-#: ui-gtk/rc-ui-window.c:2524
+#: ui-gtk/rc-ui-window.c:2740
 msgid "Import Files"
 msgstr "导入文件"
 
-#: ui-gtk/rc-ui-window.c:2527
+#: ui-gtk/rc-ui-window.c:2743
 msgid "Audio Files, CUE Sheets and Playlists"
 msgstr "音频文件、CUE 表和播放列表"
 
-#: ui-gtk/rc-ui-window.c:2535 ui-gtk/rc-ui-window.c:2742
+#: ui-gtk/rc-ui-window.c:2751 ui-gtk/rc-ui-window.c:2958
 msgid "All Files"
 msgstr "所有文件"
 
-#: ui-gtk/rc-ui-window.c:2562
+#: ui-gtk/rc-ui-window.c:2778
 msgid "Import Folder"
 msgstr "导入文件夹"
 
-#: ui-gtk/rc-ui-window.c:2597
+#: ui-gtk/rc-ui-window.c:2813
 msgid "Cannot check the files."
 msgstr "无法检查文件。"
 
-#: ui-gtk/rc-ui-window.c:2602 ui-tui/rc-tui.c:988
+#: ui-gtk/rc-ui-window.c:2818 ui-tui/rc-tui.c:1022
 msgid "No missing files are found."
 msgstr "没有找到丢失的文件。"
 
-#: ui-gtk/rc-ui-window.c:2605 ui-tui/rc-tui.c:991
+#: ui-gtk/rc-ui-window.c:2821 ui-tui/rc-tui.c:1025
 #, c-format
 msgid "Removed %d item whose file is missing."
 msgid_plural "Removed %d items whose files are missing."
 msgstr[0] "已移除 %d 个文件丢失的项目。"
 
-#: ui-gtk/rc-ui-window.c:2628 ui-tui/rc-tui.c:1004 ui-tui/rc-tui.c:1333
+#: ui-gtk/rc-ui-window.c:2844 ui-tui/rc-tui.c:1038 ui-tui/rc-tui.c:1377
 msgid "Checking files…"
 msgstr "正在检查文件…"
 
-#: ui-gtk/rc-ui-window.c:2637
+#: ui-gtk/rc-ui-window.c:2853
 msgid "_Remove"
 msgstr "移除(_R)"
 
-#: ui-gtk/rc-ui-window.c:2638
+#: ui-gtk/rc-ui-window.c:2854
 msgid "Remove missing files?"
 msgstr "要移除丢失的文件吗？"
 
-#: ui-gtk/rc-ui-window.c:2639
+#: ui-gtk/rc-ui-window.c:2855
 msgid ""
 "Items in the music library and the playlists whose audio files do not exist "
 "any more will be removed. Files on removable drives or network shares which "
@@ -420,57 +420,57 @@ msgstr ""
 "音乐库和播放列表中音频文件已不存在的项目将被移除。未挂载的可移动驱动器或网络"
 "共享上的文件也会被视为丢失。"
 
-#: ui-gtk/rc-ui-window.c:2688
+#: ui-gtk/rc-ui-window.c:2904
 msgid "A music player based on GStreamer"
 msgstr "基于 GStreamer 的音乐播放器"
 
-#: ui-gtk/rc-ui-window.c:2733
+#: ui-gtk/rc-ui-window.c:2949
 msgid "Playlists (M3U, M3U8, PLS, XSPF)"
 msgstr "播放列表（M3U、M3U8、PLS、XSPF）"
 
-#: ui-gtk/rc-ui-window.c:2769
+#: ui-gtk/rc-ui-window.c:2985
 msgid "Cannot load the playlist."
 msgstr "无法载入播放列表。"
 
-#: ui-gtk/rc-ui-window.c:2781
+#: ui-gtk/rc-ui-window.c:2997
 msgid "Load Playlist"
 msgstr "载入播放列表"
 
-#: ui-gtk/rc-ui-window.c:2799 ui-tui/rc-tui.c:933
+#: ui-gtk/rc-ui-window.c:3015 ui-tui/rc-tui.c:967
 msgid "Music Library"
 msgstr "音乐库"
 
-#: ui-gtk/rc-ui-window.c:2838 ui-tui/rc-tui.c:937
+#: ui-gtk/rc-ui-window.c:3054 ui-tui/rc-tui.c:971
 #, c-format
 msgid "Saved %u track to %s."
 msgid_plural "Saved %u tracks to %s."
 msgstr[0] "已将 %u 首曲目保存到 %s。"
 
-#: ui-gtk/rc-ui-window.c:2845
+#: ui-gtk/rc-ui-window.c:3061
 msgid "Cannot save the playlist."
 msgstr "无法保存播放列表。"
 
-#: ui-gtk/rc-ui-window.c:2858
+#: ui-gtk/rc-ui-window.c:3074
 msgid "Save Playlist"
 msgstr "保存播放列表"
 
-#: ui-gtk/rc-ui-window.c:3094
+#: ui-gtk/rc-ui-window.c:3312
 msgid "#"
 msgstr "#"
 
-#: ui-gtk/rc-ui-window.c:3095 ui-tui/rc-tui.c:521
+#: ui-gtk/rc-ui-window.c:3313 ui-tui/rc-tui.c:554
 msgid "Title"
 msgstr "标题"
 
-#: ui-gtk/rc-ui-window.c:3096 ui-tui/rc-tui.c:525
+#: ui-gtk/rc-ui-window.c:3314 ui-tui/rc-tui.c:558
 msgid "Artist"
 msgstr "艺术家"
 
-#: ui-gtk/rc-ui-window.c:3097
+#: ui-gtk/rc-ui-window.c:3315
 msgid "Album"
 msgstr "专辑"
 
-#: ui-gtk/rc-ui-window.c:3098 ui-tui/rc-tui.c:527
+#: ui-gtk/rc-ui-window.c:3316 ui-tui/rc-tui.c:560
 msgid "Length"
 msgstr "时长"
 
@@ -580,18 +580,26 @@ msgid "OSD Lyric Progress Color"
 msgstr "桌面歌词进度颜色"
 
 #: ui-gtk/resources/ui/rc-ui-settings.ui:272
+msgid "Desktop"
+msgstr "桌面"
+
+#: ui-gtk/resources/ui/rc-ui-settings.ui:285
+msgid "Media controls of the desktop (MPRIS)"
+msgstr "桌面媒体控制 (MPRIS)"
+
+#: ui-gtk/resources/ui/rc-ui-settings.ui:308
 msgid "Metadata"
 msgstr "元数据"
 
-#: ui-gtk/resources/ui/rc-ui-settings.ui:285
+#: ui-gtk/resources/ui/rc-ui-settings.ui:321
 msgid "Update metadata when playing"
 msgstr "播放时更新元数据"
 
-#: ui-gtk/resources/ui/rc-ui-settings.ui:307
+#: ui-gtk/resources/ui/rc-ui-settings.ui:343
 msgid "Fallback Encodings"
 msgstr "备用编码"
 
-#: ui-gtk/resources/ui/rc-ui-settings.ui:316
+#: ui-gtk/resources/ui/rc-ui-settings.ui:352
 msgid ""
 "Text which is not valid UTF-8 will be decoded with these encodings in order. "
 "Separate encodings with commas or semicolons, for example: GB18030, BIG5, "
@@ -600,23 +608,23 @@ msgstr ""
 "不是有效 UTF-8 的文本将依次使用这些编码解码。编码之间用逗号或分号分隔，例如："
 "GB18030, BIG5, SHIFT_JIS。"
 
-#: ui-gtk/resources/ui/rc-ui-settings.ui:331
+#: ui-gtk/resources/ui/rc-ui-settings.ui:367
 msgid "Legacy ID3 tags"
 msgstr "旧式 ID3 标签"
 
-#: ui-gtk/resources/ui/rc-ui-settings.ui:350
+#: ui-gtk/resources/ui/rc-ui-settings.ui:386
 msgid "CUE sheets"
 msgstr "CUE 表"
 
-#: ui-gtk/resources/ui/rc-ui-settings.ui:369
+#: ui-gtk/resources/ui/rc-ui-settings.ui:405
 msgid "Lyric files"
 msgstr "歌词文件"
 
-#: ui-gtk/resources/ui/rc-ui-settings.ui:388
+#: ui-gtk/resources/ui/rc-ui-settings.ui:424
 msgid "Playlist files"
 msgstr "播放列表文件"
 
-#: ui-gtk/resources/ui/rc-ui-settings.ui:434
+#: ui-gtk/resources/ui/rc-ui-settings.ui:470
 msgid "Reset Encodings"
 msgstr "重置编码"
 
@@ -696,19 +704,19 @@ msgstr "停止"
 msgid "Next"
 msgstr "下一首"
 
-#: ui-gtk/resources/ui/rc-ui-window.ui:268 ui-tui/rc-tui.c:449
+#: ui-gtk/resources/ui/rc-ui-window.ui:268 ui-tui/rc-tui.c:482
 msgid "Random"
 msgstr "随机"
 
-#: ui-gtk/resources/ui/rc-ui-window.ui:298 ui-tui/rc-tui.c:450
+#: ui-gtk/resources/ui/rc-ui-window.ui:298 ui-tui/rc-tui.c:483
 msgid "Volume"
 msgstr "音量"
 
-#: ui-gtk/resources/ui/rc-ui-window.ui:343 ui-tui/rc-tui.c:303
+#: ui-gtk/resources/ui/rc-ui-window.ui:343 ui-tui/rc-tui.c:307
 msgid "Library"
 msgstr "音乐库"
 
-#: ui-gtk/resources/ui/rc-ui-window.ui:355 ui-tui/rc-tui.c:437
+#: ui-gtk/resources/ui/rc-ui-window.ui:355 ui-tui/rc-tui.c:470
 msgid "No Grouping"
 msgstr "不分组"
 
@@ -728,7 +736,7 @@ msgstr "筛选音乐库"
 msgid "Show the tracks whose title, artist or album contains all the words"
 msgstr "显示标题、艺术家或专辑包含所有词语的曲目"
 
-#: ui-gtk/resources/ui/rc-ui-window.ui:391 ui-tui/rc-tui.c:318
+#: ui-gtk/resources/ui/rc-ui-window.ui:391 ui-tui/rc-tui.c:322
 msgid "Playlists"
 msgstr "播放列表"
 
@@ -778,51 +786,51 @@ msgstr "取消导入"
 msgid "Cancel the pending imports"
 msgstr "取消等待中的导入"
 
-#: ui-tui/rc-tui.c:438
+#: ui-tui/rc-tui.c:471
 msgid "By Artist"
 msgstr "按艺术家"
 
-#: ui-tui/rc-tui.c:438
+#: ui-tui/rc-tui.c:471
 msgid "By Album"
 msgstr "按专辑"
 
-#: ui-tui/rc-tui.c:439 ui-tui/rc-tui.c:445 ui-tui/rc-tui.c:450
+#: ui-tui/rc-tui.c:472 ui-tui/rc-tui.c:478 ui-tui/rc-tui.c:483
 msgid "Off"
 msgstr "关"
 
-#: ui-tui/rc-tui.c:440
+#: ui-tui/rc-tui.c:473
 msgid "Track"
 msgstr "单曲"
 
-#: ui-tui/rc-tui.c:448
+#: ui-tui/rc-tui.c:481
 msgid "Repeat"
 msgstr "重复"
 
-#: ui-tui/rc-tui.c:450
+#: ui-tui/rc-tui.c:483
 msgid "On"
 msgstr "开"
 
-#: ui-tui/rc-tui.c:451
+#: ui-tui/rc-tui.c:484
 msgid "Help"
 msgstr "帮助"
 
-#: ui-tui/rc-tui.c:581
+#: ui-tui/rc-tui.c:614
 msgid "Playing"
 msgstr "正在播放"
 
-#: ui-tui/rc-tui.c:584
+#: ui-tui/rc-tui.c:617
 msgid "Paused"
 msgstr "已暂停"
 
-#: ui-tui/rc-tui.c:587
+#: ui-tui/rc-tui.c:620
 msgid "Stopped"
 msgstr "已停止"
 
-#: ui-tui/rc-tui.c:617
+#: ui-tui/rc-tui.c:650
 msgid "Select a track and press Enter to play"
 msgstr "选择曲目并按 Enter 播放"
 
-#: ui-tui/rc-tui.c:687
+#: ui-tui/rc-tui.c:720
 msgid ""
 "Enter:Play  Space:Pause  n/p:Next/Prev  </>:Seek  +/-:Volume  a:Add  "
 "g:Group  Tab:Switch  ?:Help  q:Quit"
@@ -830,236 +838,248 @@ msgstr ""
 "Enter:播放  Space:暂停  n/p:下一首/上一首  </>:快进/快退  +/-:音量  a:添加  "
 "g:分组  Tab:切换  ?:帮助  q:退出"
 
-#: ui-tui/rc-tui.c:696
+#: ui-tui/rc-tui.c:729
 msgid "Playback"
 msgstr "播放"
 
-#: ui-tui/rc-tui.c:697
+#: ui-tui/rc-tui.c:730
 msgid "  Enter      Play the selected track (or open the source)"
 msgstr "  Enter      播放选中的曲目（或打开来源）"
 
-#: ui-tui/rc-tui.c:698
+#: ui-tui/rc-tui.c:731
 msgid "  Space      Play / pause            s   Stop"
 msgstr "  Space      播放 / 暂停             s   停止"
 
-#: ui-tui/rc-tui.c:699
+#: ui-tui/rc-tui.c:732
 msgid "  n / p      Next / previous track"
 msgstr "  n / p      下一首 / 上一首"
 
-#: ui-tui/rc-tui.c:700
+#: ui-tui/rc-tui.c:733
 msgid "  Left/Right Seek backward / forward (5 seconds)"
 msgstr "  Left/Right 快退 / 快进（5 秒）"
 
-#: ui-tui/rc-tui.c:701
+#: ui-tui/rc-tui.c:734
 msgid "  + / -      Volume up / down"
 msgstr "  + / -      增大 / 减小音量"
 
-#: ui-tui/rc-tui.c:702
+#: ui-tui/rc-tui.c:735
 msgid "  r          Cycle repeat mode (off, list, all, track)"
 msgstr "  r          切换重复模式（关、列表、全部、单曲）"
 
-#: ui-tui/rc-tui.c:703
+#: ui-tui/rc-tui.c:736
 msgid "  z          Toggle random mode"
 msgstr "  z          开关随机模式"
 
-#: ui-tui/rc-tui.c:704
+#: ui-tui/rc-tui.c:737
 msgid "  e          Toggle equalizer        E   Next equalizer preset"
 msgstr "  e          开关均衡器              E   下一个均衡器预设"
 
-#: ui-tui/rc-tui.c:705
+#: ui-tui/rc-tui.c:738
 msgid "Library and playlists"
 msgstr "音乐库和播放列表"
 
-#: ui-tui/rc-tui.c:706
+#: ui-tui/rc-tui.c:739
 msgid "  Tab        Switch between sources and tracks"
 msgstr "  Tab        在来源和曲目之间切换"
 
-#: ui-tui/rc-tui.c:707
+#: ui-tui/rc-tui.c:740
 msgid "  g          Cycle library grouping (none, artist, album)"
 msgstr "  g          切换音乐库分组（不分组、艺术家、专辑）"
 
-#: ui-tui/rc-tui.c:708
+#: ui-tui/rc-tui.c:741
 msgid "  a          Add a file, CUE sheet, playlist file or folder"
 msgstr "  a          添加文件、CUE 表、播放列表文件或文件夹"
 
-#: ui-tui/rc-tui.c:709
+#: ui-tui/rc-tui.c:742
 msgid "  c          Cancel the pending imports"
 msgstr "  c          取消等待中的导入"
 
-#: ui-tui/rc-tui.c:710
+#: ui-tui/rc-tui.c:743
 msgid "  A          Add the selected track to a playlist"
 msgstr "  A          将选中的曲目添加到播放列表"
 
-#: ui-tui/rc-tui.c:711
+#: ui-tui/rc-tui.c:744
 msgid "  d / Del    Remove the selected track"
 msgstr "  d / Del    移除选中的曲目"
 
-#: ui-tui/rc-tui.c:712
+#: ui-tui/rc-tui.c:745
 msgid "  J / K      Move the selected track or playlist down / up"
 msgstr "  J / K      下移 / 上移选中的曲目或播放列表"
 
-#: ui-tui/rc-tui.c:713
+#: ui-tui/rc-tui.c:746
 msgid "  N / R / D  New / rename / delete playlist"
 msgstr "  N / R / D  新建 / 重命名 / 删除播放列表"
 
-#: ui-tui/rc-tui.c:714
+#: ui-tui/rc-tui.c:747
 msgid "  L / W      Load a playlist file / save the track list to a file"
 msgstr "  L / W      载入播放列表文件 / 将曲目列表保存到文件"
 
-#: ui-tui/rc-tui.c:715
+#: ui-tui/rc-tui.c:748
 msgid "  u / U      Refresh metadata of the track / all tracks"
 msgstr "  u / U      刷新该曲目 / 全部曲目的元数据"
 
-#: ui-tui/rc-tui.c:716
+#: ui-tui/rc-tui.c:749
 msgid "  M          Remove items whose files are missing"
 msgstr "  M          移除文件丢失的项目"
 
-#: ui-tui/rc-tui.c:717
+#: ui-tui/rc-tui.c:750
 msgid "  l          Toggle lyric display"
 msgstr "  l          开关歌词显示"
 
-#: ui-tui/rc-tui.c:718
+#: ui-tui/rc-tui.c:751
+msgid "  m          Toggle MPRIS (control by the desktop)"
+msgstr "  m          开关 MPRIS（由桌面控制）"
+
+#: ui-tui/rc-tui.c:752
 msgid "  q          Quit                    ?   Close this help"
 msgstr "  q          退出                    ?   关闭帮助"
 
-#: ui-tui/rc-tui.c:873
+#: ui-tui/rc-tui.c:907
 #, c-format
 msgid "Importing folder %s…"
 msgstr "正在导入文件夹 %s…"
 
-#: ui-tui/rc-tui.c:876
+#: ui-tui/rc-tui.c:910
 #, c-format
 msgid "File not found: %s"
 msgstr "找不到文件：%s"
 
-#: ui-tui/rc-tui.c:880
+#: ui-tui/rc-tui.c:914
 #, c-format
 msgid "Importing %s…"
 msgstr "正在导入 %s…"
 
-#: ui-tui/rc-tui.c:899
+#: ui-tui/rc-tui.c:933
 #, c-format
 msgid "Playlist “%s” is loaded."
 msgstr "已载入播放列表“%s”。"
 
-#: ui-tui/rc-tui.c:902
+#: ui-tui/rc-tui.c:936
 #, c-format
 msgid "Cannot load the playlist: %s"
 msgstr "无法载入播放列表：%s"
 
-#: ui-tui/rc-tui.c:943
+#: ui-tui/rc-tui.c:977
 #, c-format
 msgid "Cannot save the playlist: %s"
 msgstr "无法保存播放列表：%s"
 
-#: ui-tui/rc-tui.c:956
+#: ui-tui/rc-tui.c:990
 #, c-format
 msgid "Playlist “%s” is created."
 msgstr "已创建播放列表“%s”。"
 
-#: ui-tui/rc-tui.c:970
+#: ui-tui/rc-tui.c:1004
 #, c-format
 msgid "Playlist “%s” is deleted."
 msgstr "已删除播放列表“%s”。"
 
-#: ui-tui/rc-tui.c:983
+#: ui-tui/rc-tui.c:1017
 #, c-format
 msgid "Cannot check the files: %s"
 msgstr "无法检查文件：%s"
 
-#: ui-tui/rc-tui.c:984
+#: ui-tui/rc-tui.c:1018
 msgid "unknown error"
 msgstr "未知错误"
 
-#: ui-tui/rc-tui.c:1030
+#: ui-tui/rc-tui.c:1064
 #, c-format
 msgid "Playlist “%s” is not found."
 msgstr "找不到播放列表“%s”。"
 
-#: ui-tui/rc-tui.c:1034
+#: ui-tui/rc-tui.c:1068
 #, c-format
 msgid "Added to playlist “%s”."
 msgstr "已添加到播放列表“%s”。"
 
-#: ui-tui/rc-tui.c:1084
+#: ui-tui/rc-tui.c:1118
 msgid "Tracks can be reordered in playlists only."
 msgstr "只能在播放列表中调整曲目顺序。"
 
-#: ui-tui/rc-tui.c:1111
+#: ui-tui/rc-tui.c:1145
 #, c-format
 msgid "Equalizer preset: %s"
 msgstr "均衡器预设：%s"
 
-#: ui-tui/rc-tui.c:1244
+#: ui-tui/rc-tui.c:1279
 msgid "The equalizer is not available."
 msgstr "均衡器不可用。"
 
-#: ui-tui/rc-tui.c:1266
+#: ui-tui/rc-tui.c:1299
+msgid "MPRIS is enabled."
+msgstr "已启用 MPRIS。"
+
+#: ui-tui/rc-tui.c:1300
+msgid "MPRIS is disabled."
+msgstr "已禁用 MPRIS。"
+
+#: ui-tui/rc-tui.c:1310
 #, c-format
 msgid "Add to %s (file, CUE or folder): "
 msgstr "添加到%s（文件、CUE 或文件夹）："
 
-#: ui-tui/rc-tui.c:1267
+#: ui-tui/rc-tui.c:1311
 msgid "library"
 msgstr "音乐库"
 
-#: ui-tui/rc-tui.c:1275
+#: ui-tui/rc-tui.c:1319
 msgid "Import cancelled."
 msgstr "已取消导入。"
 
-#: ui-tui/rc-tui.c:1281
+#: ui-tui/rc-tui.c:1325
 msgid "Add to playlist (number or name): "
 msgstr "添加到播放列表（编号或名称）："
 
-#: ui-tui/rc-tui.c:1297
+#: ui-tui/rc-tui.c:1341
 msgid "New playlist name: "
 msgstr "新播放列表名称："
 
-#: ui-tui/rc-tui.c:1301
+#: ui-tui/rc-tui.c:1345
 msgid "Load playlist file (M3U, M3U8, PLS, XSPF): "
 msgstr "载入播放列表文件（M3U、M3U8、PLS、XSPF）："
 
-#: ui-tui/rc-tui.c:1309
+#: ui-tui/rc-tui.c:1353
 msgid "Save the track list to (.m3u, .m3u8, .pls, .xspf): "
 msgstr "将曲目列表保存到（.m3u、.m3u8、.pls、.xspf）："
 
-#: ui-tui/rc-tui.c:1316
+#: ui-tui/rc-tui.c:1360
 msgid "Rename playlist: "
 msgstr "重命名播放列表："
 
-#: ui-tui/rc-tui.c:1323
+#: ui-tui/rc-tui.c:1367
 #, c-format
 msgid "Delete playlist “%s”? (y/N): "
 msgstr "要删除播放列表“%s”吗？(y/N)："
 
-#: ui-tui/rc-tui.c:1336
+#: ui-tui/rc-tui.c:1380
 msgid ""
 "Remove the items whose files are missing from the library and all playlists? "
 "(y/N): "
 msgstr "要从音乐库和所有播放列表中移除文件丢失的项目吗？(y/N)："
 
-#: ui-tui/rc-tui.c:1345
+#: ui-tui/rc-tui.c:1389
 msgid "Refreshing metadata…"
 msgstr "正在刷新元数据…"
 
-#: ui-tui/rc-tui.c:1350
+#: ui-tui/rc-tui.c:1394
 msgid "Refreshing metadata of all tracks…"
 msgstr "正在刷新全部曲目的元数据…"
 
-#: ui-tui/rc-tui.c:1408
+#: ui-tui/rc-tui.c:1457
 #, c-format
 msgid "Importing (%u pending, press c to cancel)…"
 msgstr "正在导入（剩余 %u 个，按 c 取消）…"
 
-#: ui-tui/rc-tui.c:1411
+#: ui-tui/rc-tui.c:1460
 msgid "Import finished."
 msgstr "导入完成。"
 
-#: ui-tui/rc-tui.c:1505
+#: ui-tui/rc-tui.c:1554
 #, c-format
 msgid "RhythmCat terminal UI must be run in a terminal.\n"
 msgstr "RhythmCat 终端界面必须在终端中运行。\n"
 
-#: ui-tui/rc-tui.c:1508
+#: ui-tui/rc-tui.c:1557
 msgid "ncurses frontend"
 msgstr "ncurses 前端"
