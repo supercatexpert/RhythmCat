@@ -244,8 +244,8 @@ from the template (for example with `msginit`).
   only, not to playlists; Escape clears it. While the filter is set, the
   next and previous tracks in the library (also in random mode and when
   a track ends) are chosen from the filtered tracks only.
-  The playlist of the playing track is shown in bold (in the ncurses
-  frontend, also marked with `>`).
+  The playlist of the playing track is shown in bold and marked with
+  the playing icon (in the ncurses frontend, marked with `>`).
 * A button next to the random button shows or hides the library and
   playlist area. When it is hidden, the window shrinks to a compact
   player; the choice is remembered.

@@ -1302,7 +1302,7 @@ static void rc_ui_window_track_activate_cb(GtkColumnView *view,
 static GtkWidget *rc_ui_window_make_row(const gchar *text,
     const gchar *icon)
 {
-    GtkWidget *row, *box, *label;
+    GtkWidget *row, *box, *label, *playing;
     row = gtk_list_box_row_new();
     box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
     if(icon!=NULL)
@@ -1312,18 +1312,24 @@ static GtkWidget *rc_ui_window_make_row(const gchar *text,
     gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
     gtk_widget_set_hexpand(label, TRUE);
     gtk_box_append(GTK_BOX(box), label);
+    /* Shown when the playing item is in the source of the row */
+    playing = gtk_image_new_from_icon_name("media-playback-start-symbolic");
+    gtk_widget_set_visible(playing, FALSE);
+    gtk_box_append(GTK_BOX(box), playing);
     gtk_list_box_row_set_child(GTK_LIST_BOX_ROW(row), box);
     g_object_set_data(G_OBJECT(row), "rc-label", label);
+    g_object_set_data(G_OBJECT(row), "rc-playing-icon", playing);
     return row;
 }
 
-/* Show the playlist of the playing item in bold */
+/* Show the playlist of the playing item in bold with the playing icon */
 static void rc_ui_window_update_playing_playlist()
 {
     RCUiWindowPrivate *priv = &window_priv;
     RCLibDbPlaylist *playing = NULL;
     GtkListBoxRow *row;
     GtkWidget *label;
+    gboolean is_playing;
     gint i;
     if(priv->playing_item!=NULL && !priv->playing_item->removed)
         playing = priv->playing_item->playlist;
@@ -1332,11 +1338,14 @@ static void rc_ui_window_update_playing_playlist()
     {
         label = g_object_get_data(G_OBJECT(row), "rc-label");
         if(label==NULL) continue;
-        if(playing!=NULL && g_object_get_data(G_OBJECT(row),
-            "rc-playlist")==playing)
+        is_playing = playing!=NULL && g_object_get_data(G_OBJECT(row),
+            "rc-playlist")==playing;
+        if(is_playing)
             gtk_widget_add_css_class(label, "rc-playing-source");
         else
             gtk_widget_remove_css_class(label, "rc-playing-source");
+        gtk_widget_set_visible(g_object_get_data(G_OBJECT(row),
+            "rc-playing-icon"), is_playing);
     }
 }
 
