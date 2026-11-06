@@ -16,6 +16,7 @@ Build-Depends: debhelper-compat (= 13),
                libncurses-dev,
                gstreamer1.0-plugins-base <!nocheck>,
                gstreamer1.0-plugins-good <!nocheck>,
+               dbus-daemon <!nocheck>,
 Standards-Version: 4.7.2
 Rules-Requires-Root: no
 

@@ -1,0 +1,100 @@
+# Maintainer: Kyosuke Nekoyashiki <supercatexpert@gmail.com>
+
+pkgbase=rhythmcat
+pkgname=(librhythmcat3 rhythmcat rhythmcat-tui)
+pkgver=3.0.0
+pkgrel=1
+pkgdesc='Music player based on GLib, GStreamer and json-c'
+arch=('x86_64' 'aarch64')
+license=('GPL-3.0-or-later')
+depends=(
+  'glib2'
+  'gstreamer'
+  'gst-plugins-base'
+  'gst-plugins-base-libs'
+  'json-c'
+)
+makedepends=(
+  'gtk4'
+  'libx11'
+  'meson'
+  'ncurses'
+)
+checkdepends=(
+  'dbus'
+  'gst-plugins-good'
+)
+# The tarball is made from the source tree, see README.md
+source=("$pkgbase-$pkgver.tar.gz")
+sha256sums=('SKIP')
+
+# Moves the paths (relative to the current directory) into the staging
+# directory of the package $1, which its package function installs
+_pick() {
+  local pkg=$1 path
+  shift
+  for path; do
+    mkdir -p "$srcdir/$pkg/$(dirname "$path")"
+    mv "$path" "$srcdir/$pkg/$path"
+  done
+}
+
+build() {
+  arch-meson "$pkgbase-$pkgver" build -Dgtk=enabled -Dncurses=enabled
+  meson compile -C build
+}
+
+check() {
+  meson test -C build --print-errorlogs
+}
+
+package_librhythmcat3() {
+  pkgdesc='RhythmCat music player - core library and translations'
+  optdepends=(
+    'gst-plugins-good: more audio formats'
+    'gst-plugins-bad: more audio formats'
+    'gst-plugins-ugly: more audio formats'
+    'gst-libav: more audio formats'
+  )
+  provides=('librhythmcat3.so')
+
+  meson install -C build --destdir "$pkgdir"
+
+  cd "$pkgdir"
+  _pick rhythmcat usr/bin/rhythmcat usr/share/applications usr/share/icons
+  _pick rhythmcat-tui usr/bin/rhythmcat-tui
+  rmdir usr/bin
+}
+
+package_rhythmcat() {
+  pkgdesc='RhythmCat music player - GTK 4 frontend'
+  depends=(
+    "librhythmcat3=$pkgver-$pkgrel"
+    'glib2'
+    'gtk4'
+    'hicolor-icon-theme'
+    'libx11'
+  )
+  optdepends=('rhythmcat-tui: terminal frontend')
+
+  mv "$srcdir/rhythmcat"/* "$pkgdir"
+  # The manual pages are kept with the Debian packaging files
+  install -Dm644 "$srcdir/$pkgbase-$pkgver/debian/rhythmcat.1" \
+    "$pkgdir/usr/share/man/man1/rhythmcat.1"
+  install -Dm644 "$srcdir/$pkgbase-$pkgver/README.md" \
+    "$pkgdir/usr/share/doc/rhythmcat/README.md"
+}
+
+package_rhythmcat-tui() {
+  pkgdesc='RhythmCat music player - terminal frontend'
+  depends=(
+    "librhythmcat3=$pkgver-$pkgrel"
+    'glib2'
+    'ncurses'
+  )
+  optdepends=('rhythmcat: GTK 4 frontend')
+
+  mv "$srcdir/rhythmcat-tui"/* "$pkgdir"
+  install -Dm644 "$srcdir/$pkgbase-$pkgver/debian/rhythmcat-tui.1" \
+    "$pkgdir/usr/share/man/man1/rhythmcat-tui.1"
+}

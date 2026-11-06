@@ -42,6 +42,33 @@ core library), `librhythmcat3-dev` (headers and pkg-config file),
 `rhythmcat` (the GTK4 frontend), `rhythmcat-tui` (the ncurses frontend)
 and `rhythmcat-l10n` (the translations).
 
+RPM packages for Fedora can be built from `rpm/rhythmcat.spec` (needs
+`rpm-build` and the build dependencies listed in the spec file, which
+`sudo dnf builddep rpm/rhythmcat.spec` installs):
+
+```sh
+mkdir -p ~/rpmbuild/SOURCES
+git archive --prefix=rhythmcat-3.0.0/ -o ~/rpmbuild/SOURCES/rhythmcat-3.0.0.tar.gz HEAD
+rpmbuild -ba rpm/rhythmcat.spec
+```
+
+The packages are written to `~/rpmbuild/RPMS`: `rhythmcat-libs` (the core
+library and the translations), `rhythmcat-devel` (headers and pkg-config
+file), `rhythmcat` (the GTK4 frontend) and `rhythmcat-tui` (the ncurses
+frontend).
+
+Arch Linux packages can be built from `arch/PKGBUILD` (needs `base-devel`;
+`-s` installs the build dependencies):
+
+```sh
+git archive --prefix=rhythmcat-3.0.0/ -o arch/rhythmcat-3.0.0.tar.gz HEAD
+cd arch && makepkg -s
+```
+
+The packages are written to `arch/`: `librhythmcat3` (the core library,
+headers, pkg-config file and translations), `rhythmcat` (the GTK4
+frontend) and `rhythmcat-tui` (the ncurses frontend).
+
 Build options (`meson configure build -D<option>=<value>`):
 
 | Option    | Default | Description                                  |
