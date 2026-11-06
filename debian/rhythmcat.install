@@ -1,3 +1,4 @@
 usr/bin/rhythmcat
 usr/share/applications/org.supercat.RhythmCat3.desktop
 usr/share/icons/hicolor/scalable/apps/org.supercat.RhythmCat3.svg
+usr/share/man/man1/rhythmcat.1

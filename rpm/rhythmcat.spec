@@ -92,10 +92,6 @@ manages the music library and playlists in a terminal.
 
 %install
 %meson_install
-# The manual pages are kept with the Debian packaging files
-install -Dpm 0644 debian/rhythmcat.1 %{buildroot}%{_mandir}/man1/rhythmcat.1
-install -Dpm 0644 debian/rhythmcat-tui.1 \
-    %{buildroot}%{_mandir}/man1/rhythmcat-tui.1
 %find_lang rhythmcat3
 
 %check

@@ -76,6 +76,9 @@ Build options (`meson configure build -D<option>=<value>`):
 | `gtk`     | auto    | Build the GTK4 frontend                      |
 | `ncurses` | auto    | Build the ncurses frontend                   |
 
+The manual pages `rhythmcat(1)` and `rhythmcat-tui(1)` (`data/rhythmcat.1`
+and `data/rhythmcat-tui.1`) are installed together with the frontends.
+
 ## Artwork
 
 The application icon (`data/artwork/rhythmcat-icon.svg`) and the default

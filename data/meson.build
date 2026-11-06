@@ -4,6 +4,7 @@ install_data('artwork' / 'rhythmcat-icon.svg',
 )
 
 if gtk_dep.found()
+  install_man('rhythmcat.1')
   i18n.merge_file(
     input: 'org.supercat.RhythmCat3.desktop.in',
     output: 'org.supercat.RhythmCat3.desktop',
@@ -12,6 +13,10 @@ if gtk_dep.found()
     install: true,
     install_dir: get_option('datadir') / 'applications',
   )
+endif
+
+if ncurses_dep.found()
+  install_man('rhythmcat-tui.1')
 endif
 
 gnome.post_install(

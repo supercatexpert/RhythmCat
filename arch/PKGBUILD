@@ -61,9 +61,10 @@ package_librhythmcat3() {
   meson install -C build --destdir "$pkgdir"
 
   cd "$pkgdir"
-  _pick rhythmcat usr/bin/rhythmcat usr/share/applications usr/share/icons
-  _pick rhythmcat-tui usr/bin/rhythmcat-tui
-  rmdir usr/bin
+  _pick rhythmcat usr/bin/rhythmcat usr/share/applications usr/share/icons \
+    usr/share/man/man1/rhythmcat.1
+  _pick rhythmcat-tui usr/bin/rhythmcat-tui usr/share/man/man1/rhythmcat-tui.1
+  rmdir usr/bin usr/share/man/man1 usr/share/man
 }
 
 package_rhythmcat() {
@@ -78,9 +79,6 @@ package_rhythmcat() {
   optdepends=('rhythmcat-tui: terminal frontend')
 
   mv "$srcdir/rhythmcat"/* "$pkgdir"
-  # The manual pages are kept with the Debian packaging files
-  install -Dm644 "$srcdir/$pkgbase-$pkgver/debian/rhythmcat.1" \
-    "$pkgdir/usr/share/man/man1/rhythmcat.1"
   install -Dm644 "$srcdir/$pkgbase-$pkgver/README.md" \
     "$pkgdir/usr/share/doc/rhythmcat/README.md"
 }
@@ -95,6 +93,4 @@ package_rhythmcat-tui() {
   optdepends=('rhythmcat: GTK 4 frontend')
 
   mv "$srcdir/rhythmcat-tui"/* "$pkgdir"
-  install -Dm644 "$srcdir/$pkgbase-$pkgver/debian/rhythmcat-tui.1" \
-    "$pkgdir/usr/share/man/man1/rhythmcat-tui.1"
 }
