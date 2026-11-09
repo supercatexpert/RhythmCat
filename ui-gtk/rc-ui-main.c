@@ -83,6 +83,7 @@ static void rc_ui_main_startup_cb(GApplication *app, gpointer data)
     static const gchar *accels_settings[] = {"<Control>comma", NULL};
     static const gchar *accels_equalizer[] = {"<Control>e", NULL};
     static const gchar *accels_filter[] = {"<Control>f", NULL};
+    static const gchar *accels_show_playing[] = {"<Control>j", NULL};
     g_action_map_add_action_entries(G_ACTION_MAP(app), app_actions,
         G_N_ELEMENTS(app_actions), app);
     gtk_application_set_accels_for_action(GTK_APPLICATION(app),
@@ -101,6 +102,8 @@ static void rc_ui_main_startup_cb(GApplication *app, gpointer data)
         "win.equalizer", accels_equalizer);
     gtk_application_set_accels_for_action(GTK_APPLICATION(app),
         "win.filter", accels_filter);
+    gtk_application_set_accels_for_action(GTK_APPLICATION(app),
+        "win.show-playing", accels_show_playing);
     gtk_window_set_default_icon_name(APPLICATION_ID);
     rc_ui_style_init();
     rclib_mpris_init(rc_ui_main_mpris_raise_cb, rc_ui_main_mpris_quit_cb,

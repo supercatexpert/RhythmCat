@@ -1419,6 +1419,18 @@ static GtkWidget *rc_ui_window_make_row(const gchar *text,
     return row;
 }
 
+/* The playing item can be shown if there is one */
+static void rc_ui_window_update_show_playing()
+{
+    RCUiWindowPrivate *priv = &window_priv;
+    GAction *action;
+    action = g_action_map_lookup_action(G_ACTION_MAP(priv->window),
+        "show-playing");
+    if(action==NULL) return;
+    g_simple_action_set_enabled(G_SIMPLE_ACTION(action),
+        priv->playing_item!=NULL && !priv->playing_item->removed);
+}
+
 /* Show the playlist of the playing item in bold with the playing icon */
 static void rc_ui_window_update_playing_playlist()
 {
@@ -2534,6 +2546,7 @@ static void rc_ui_window_core_uri_changed_cb(GObject *core,
     }
     if(item!=NULL) rc_ui_window_refresh_item(item);
     rc_ui_window_update_playing_playlist();
+    rc_ui_window_update_show_playing();
     rc_ui_window_set_cover(NULL);
     rc_ui_window_update_info();
     priv->average_bitrate = 0;
@@ -2679,7 +2692,11 @@ static void rc_ui_window_db_playlist_item_removed_cb(GObject *db,
     RCLibDbPlaylist *playlist, RCLibDbItem *item, gint index, gpointer data)
 {
     RCUiWindowPrivate *priv = &window_priv;
-    if(item==priv->playing_item) rc_ui_window_update_playing_playlist();
+    if(item==priv->playing_item)
+    {
+        rc_ui_window_update_playing_playlist();
+        rc_ui_window_update_show_playing();
+    }
     if(priv->view_type!=RC_UI_VIEW_PLAYLIST ||
         playlist!=priv->view_playlist)
         return;
@@ -3011,6 +3028,120 @@ static void rc_ui_window_filter_action(GSimpleAction *action,
     gtk_widget_grab_focus(priv->filter_entry);
 }
 
+/* Get the position of the item in the shown track list, -1 if it is not
+ * shown */
+static gint rc_ui_window_find_track(const RCLibDbItem *item)
+{
+    RCUiWindowPrivate *priv = &window_priv;
+    RCUiTrack *track;
+    guint pos;
+    track = g_hash_table_lookup(priv->track_table, item);
+    if(track==NULL || !g_list_store_find(priv->track_store, track, &pos))
+        return -1;
+    return pos;
+}
+
+/* Scroll the sidebar list to show the row */
+static void rc_ui_window_scroll_to_row(GtkWidget *listbox,
+    GtkListBoxRow *row)
+{
+    GtkWidget *viewport;
+    viewport = gtk_widget_get_parent(listbox);
+    if(row==NULL || !GTK_IS_VIEWPORT(viewport)) return;
+    gtk_viewport_scroll_to(GTK_VIEWPORT(viewport), GTK_WIDGET(row), NULL);
+}
+
+/* Select the row of the group in the library sidebar (the row of all
+ * tracks if @all is %TRUE, or if the group is not found) */
+static void rc_ui_window_select_group(gboolean all, const gchar *group)
+{
+    RCUiWindowPrivate *priv = &window_priv;
+    GtkListBoxRow *row, *selected = NULL;
+    gint i;
+    for(i=0;(row=gtk_list_box_get_row_at_index(GTK_LIST_BOX(
+        priv->group_listbox), i))!=NULL;i++)
+    {
+        if(all ? g_object_get_data(G_OBJECT(row), "rc-all")!=NULL :
+            (g_object_get_data(G_OBJECT(row), "rc-all")==NULL &&
+            g_object_get_data(G_OBJECT(row), "rc-group")==group))
+        {
+            selected = row;
+            break;
+        }
+    }
+    if(selected==NULL)
+        selected = gtk_list_box_get_row_at_index(GTK_LIST_BOX(
+            priv->group_listbox), 0);
+    if(selected==NULL) return;
+    gtk_list_box_select_row(GTK_LIST_BOX(priv->group_listbox), selected);
+    rc_ui_window_scroll_to_row(priv->group_listbox, selected);
+}
+
+/* Show the playing item: the playlist or the library group which it is
+ * played in is selected in the sidebar, then the item is selected in the
+ * track list and scrolled to */
+static void rc_ui_window_show_playing_action(GSimpleAction *action,
+    GVariant *parameter, gpointer data)
+{
+    RCUiWindowPrivate *priv = &window_priv;
+    RCLibDbItem *item = priv->playing_item;
+    GtkListBoxRow *row;
+    gint index, pos;
+    if(item==NULL || item->removed) return;
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(priv->library_button),
+        TRUE);
+    if(item->playlist!=NULL)
+    {
+        index = rclib_db_playlist_get_index(item->playlist);
+        if(index<0) return;
+        gtk_stack_set_visible_child_name(GTK_STACK(priv->sidebar_stack),
+            "playlists");
+        row = gtk_list_box_get_row_at_index(GTK_LIST_BOX(
+            priv->playlist_listbox), index);
+        if(row!=NULL)
+        {
+            gtk_list_box_select_row(GTK_LIST_BOX(priv->playlist_listbox),
+                row);
+            rc_ui_window_scroll_to_row(priv->playlist_listbox, row);
+        }
+        if(priv->view_type!=RC_UI_VIEW_PLAYLIST ||
+            priv->view_playlist!=item->playlist)
+            rc_ui_window_set_view_playlist(item->playlist);
+        pos = rc_ui_window_find_track(item);
+    }
+    else
+    {
+        gtk_stack_set_visible_child_name(GTK_STACK(priv->sidebar_stack),
+            "library");
+        /* The grouping is changed if the item is played in a group of
+         * the other grouping */
+        if(priv->play_group_mode!=RCLIB_DB_GROUP_NONE &&
+            priv->play_group_mode!=priv->group_mode)
+            gtk_drop_down_set_selected(GTK_DROP_DOWN(priv->group_dropdown),
+                priv->play_group_mode);
+        rc_ui_window_select_group(priv->play_group_mode==RCLIB_DB_GROUP_NONE,
+            priv->play_group);
+        pos = rc_ui_window_find_track(item);
+        if(pos<0 && priv->filter_words!=NULL)
+        {
+            /* The item is hidden by the filter */
+            gtk_editable_set_text(GTK_EDITABLE(priv->filter_entry), "");
+            rc_ui_window_filter_changed_cb(GTK_SEARCH_ENTRY(
+                priv->filter_entry), NULL);
+            pos = rc_ui_window_find_track(item);
+        }
+        if(pos<0 && !priv->group_all)
+        {
+            /* The item is not in the group any more */
+            rc_ui_window_select_group(TRUE, NULL);
+            pos = rc_ui_window_find_track(item);
+        }
+    }
+    if(pos<0) return;
+    gtk_column_view_scroll_to(GTK_COLUMN_VIEW(priv->track_view), pos, NULL,
+        GTK_LIST_SCROLL_SELECT | GTK_LIST_SCROLL_FOCUS, NULL);
+}
+
 static void rc_ui_window_about_action(GSimpleAction *action,
     GVariant *parameter, gpointer data)
 {
@@ -3231,6 +3362,7 @@ static const GActionEntry window_actions[] = {
     {"settings", rc_ui_window_settings_action, NULL, NULL, NULL},
     {"equalizer", rc_ui_window_equalizer_action, NULL, NULL, NULL},
     {"filter", rc_ui_window_filter_action, NULL, NULL, NULL},
+    {"show-playing", rc_ui_window_show_playing_action, NULL, NULL, NULL},
     {"lyric", NULL, NULL, "false", rc_ui_window_lyric_action},
     {"osd-lyric", NULL, NULL, "false", rc_ui_window_osd_lyric_action},
     {"about", rc_ui_window_about_action, NULL, NULL, NULL},
@@ -3411,6 +3543,7 @@ GtkWidget *rc_ui_window_init(GtkApplication *app)
     gtk_window_set_application(GTK_WINDOW(priv->window), app);
     g_action_map_add_action_entries(G_ACTION_MAP(priv->window),
         window_actions, G_N_ELEMENTS(window_actions), NULL);
+    rc_ui_window_update_show_playing();
     priv->default_cover = gdk_texture_new_from_resource(
         "/org/supercat/RhythmCat3/images/default-cover.svg");
     priv->core_handlers = g_array_new(FALSE, FALSE, sizeof(gulong));

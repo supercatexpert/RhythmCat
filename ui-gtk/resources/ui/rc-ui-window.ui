@@ -35,6 +35,12 @@
     </section>
     <section>
       <item>
+        <attribute name="label" translatable="yes">Show _Playing Track</attribute>
+        <attribute name="action">win.show-playing</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
         <attribute name="label" translatable="yes">_Equalizer</attribute>
         <attribute name="action">win.equalizer</attribute>
       </item>
@@ -484,6 +490,16 @@
                         <property name="ellipsize">end</property>
                         <style>
                           <class name="heading"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkButton">
+                        <property name="icon-name">go-jump-symbolic</property>
+                        <property name="tooltip-text" translatable="yes">Show Playing Track</property>
+                        <property name="action-name">win.show-playing</property>
+                        <style>
+                          <class name="flat"/>
                         </style>
                       </object>
                     </child>
