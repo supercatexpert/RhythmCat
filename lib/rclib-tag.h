@@ -43,6 +43,7 @@ typedef struct _RCLibTagMetadata RCLibTagMetadata;
  * @samplerate: the sample rate
  * @channels: the channel number
  * @embedded_cue: the embedded CUE sheet text, %NULL if not found
+ * @image: the cover image data, %NULL if not found
  *
  * The metadata read from the file.
  */
@@ -61,6 +62,7 @@ struct _RCLibTagMetadata {
     guint samplerate;
     guint channels;
     gchar *embedded_cue;
+    GBytes *image;
 };
 
 /**

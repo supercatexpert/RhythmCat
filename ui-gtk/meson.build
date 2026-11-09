@@ -17,6 +17,7 @@ endif
 executable('rhythmcat',
   'main.c',
   'rc-ui-equalizer.c',
+  'rc-ui-info.c',
   'rc-ui-main.c',
   'rc-ui-osd.c',
   'rc-ui-settings.c',

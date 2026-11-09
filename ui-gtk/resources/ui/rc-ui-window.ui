@@ -38,6 +38,10 @@
         <attribute name="label" translatable="yes">Show _Playing Track</attribute>
         <attribute name="action">win.show-playing</attribute>
       </item>
+      <item>
+        <attribute name="label" translatable="yes">Track _Details</attribute>
+        <attribute name="action">win.track-info</attribute>
+      </item>
     </section>
     <section>
       <item>
@@ -525,6 +529,16 @@
                       <object class="GtkButton" id="item_down_button">
                         <property name="icon-name">go-down-symbolic</property>
                         <property name="tooltip-text" translatable="yes">Move Down</property>
+                        <style>
+                          <class name="flat"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkButton">
+                        <property name="icon-name">document-properties-symbolic</property>
+                        <property name="tooltip-text" translatable="yes">Show Details of Selected Track</property>
+                        <property name="action-name">win.track-info</property>
                         <style>
                           <class name="flat"/>
                         </style>

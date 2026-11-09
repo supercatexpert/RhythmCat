@@ -304,6 +304,14 @@ from the template (for example with `msginit`).
   is played in is selected and scrolled to in the sidebar (the grouping
   is changed if needed, and the library filter is cleared if it hides the
   track), and the track is selected and scrolled to in the track list.
+* "Track Details" (the button above the track list, the menu, or Ctrl+I)
+  shows the details of the selected track (the first one if several are
+  selected): the cover image embedded in the file on the left (the default
+  cover if there is none), the metadata, the format, bitrate, sample rate
+  and channels, the full path of the file, its size and modification time,
+  the CUE sheet of a CUE track, and whether it is in the library or a
+  playlist. Showing another track while the window is open replaces its
+  contents.
 * "Remove Missing Files…" in the menu removes the items in the library and
   all playlists whose audio files do not exist any more (after a
   confirmation). The files are checked in a background thread; remote
@@ -319,8 +327,8 @@ from the template (for example with `msginit`).
   Custom" sets all custom bands to 0 dB.
 * Shortcuts: Space or Ctrl+Space play/pause (Space types a space in text
   fields), Ctrl+←/→ previous/next, Ctrl+O import, Ctrl+F filter the library,
-  Ctrl+J show the playing track, Ctrl+, settings, Ctrl+E equalizer,
-  Ctrl+Q quit.
+  Ctrl+J show the playing track, Ctrl+I track details, Ctrl+, settings,
+  Ctrl+E equalizer, Ctrl+Q quit.
 
 ### ncurses frontend
 

@@ -7,11 +7,13 @@ lib/rclib-lyric.c
 lib/rclib-plist.c
 lib/rclib-tag.c
 ui-gtk/rc-ui-equalizer.c
+ui-gtk/rc-ui-info.c
 ui-gtk/rc-ui-main.c
 ui-gtk/rc-ui-osd.c
 ui-gtk/rc-ui-settings.c
 ui-gtk/rc-ui-window.c
 ui-gtk/resources/ui/rc-ui-equalizer.ui
+ui-gtk/resources/ui/rc-ui-info.ui
 ui-gtk/resources/ui/rc-ui-settings.ui
 ui-gtk/resources/ui/rc-ui-window.ui
 ui-tui/rc-tui.c

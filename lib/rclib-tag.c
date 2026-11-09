@@ -80,6 +80,9 @@ static void rclib_tag_parse_tags(const GstTagList *tags,
     guint uintv = 0, i, size;
     GstDateTime *datetime = NULL;
     GDate *date = NULL;
+    GstSample *sample = NULL;
+    GstBuffer *buffer;
+    GstMapInfo map_info;
     const gchar *comment;
     if(tags==NULL) return;
     rclib_tag_parse_string(tags, GST_TAG_TITLE, &metadata->title);
@@ -127,6 +130,21 @@ static void rclib_tag_parse_tags(const GstTagList *tags,
                 break;
             }
         }
+    }
+    if(metadata->image==NULL)
+    {
+        if(!gst_tag_list_get_sample(tags, GST_TAG_IMAGE, &sample))
+            gst_tag_list_get_sample(tags, GST_TAG_PREVIEW_IMAGE, &sample);
+    }
+    if(sample!=NULL)
+    {
+        buffer = gst_sample_get_buffer(sample);
+        if(buffer!=NULL && gst_buffer_map(buffer, &map_info, GST_MAP_READ))
+        {
+            metadata->image = g_bytes_new(map_info.data, map_info.size);
+            gst_buffer_unmap(buffer, &map_info);
+        }
+        gst_sample_unref(sample);
     }
 }
 
@@ -438,6 +456,7 @@ void rclib_tag_metadata_free(RCLibTagMetadata *metadata)
     g_free(metadata->title);
     g_free(metadata->ftype);
     g_free(metadata->embedded_cue);
+    if(metadata->image!=NULL) g_bytes_unref(metadata->image);
     g_free(metadata);
 }
 

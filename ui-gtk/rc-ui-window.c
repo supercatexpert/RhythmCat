@@ -22,6 +22,7 @@
  */
 #include "rc-ui-window.h"
 #include "rc-ui-equalizer.h"
+#include "rc-ui-info.h"
 #include "rc-ui-osd.h"
 #include "rc-ui-settings.h"
 #include "rc-ui-style.h"
@@ -3142,6 +3143,18 @@ static void rc_ui_window_show_playing_action(GSimpleAction *action,
         GTK_LIST_SCROLL_SELECT | GTK_LIST_SCROLL_FOCUS, NULL);
 }
 
+/* Show the details of the first selected item */
+static void rc_ui_window_track_info_action(GSimpleAction *action,
+    GVariant *parameter, gpointer data)
+{
+    GPtrArray *items;
+    items = rc_ui_window_get_selected_items();
+    if(items->len>0)
+        rc_ui_info_show(GTK_WINDOW(window_priv.window),
+            g_ptr_array_index(items, 0));
+    g_ptr_array_unref(items);
+}
+
 static void rc_ui_window_about_action(GSimpleAction *action,
     GVariant *parameter, gpointer data)
 {
@@ -3363,6 +3376,7 @@ static const GActionEntry window_actions[] = {
     {"equalizer", rc_ui_window_equalizer_action, NULL, NULL, NULL},
     {"filter", rc_ui_window_filter_action, NULL, NULL, NULL},
     {"show-playing", rc_ui_window_show_playing_action, NULL, NULL, NULL},
+    {"track-info", rc_ui_window_track_info_action, NULL, NULL, NULL},
     {"lyric", NULL, NULL, "false", rc_ui_window_lyric_action},
     {"osd-lyric", NULL, NULL, "false", rc_ui_window_osd_lyric_action},
     {"about", rc_ui_window_about_action, NULL, NULL, NULL},

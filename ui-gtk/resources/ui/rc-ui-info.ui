@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- RhythmCat 3 track details window, this file is part of RhythmCat Music Player (GTK4 Version), license: GPL v3 -->
+<interface>
+  <requires lib="gtk" version="4.12"/>
+  <object class="GtkWindow" id="info_window">
+    <property name="title" translatable="yes">Track Details</property>
+    <property name="resizable">False</property>
+    <child>
+      <object class="GtkShortcutController">
+        <child>
+          <object class="GtkShortcut">
+            <property name="trigger">Escape</property>
+            <property name="action">action(window.close)</property>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox">
+        <property name="orientation">vertical</property>
+        <property name="spacing">18</property>
+        <property name="margin-start">18</property>
+        <property name="margin-end">18</property>
+        <property name="margin-top">18</property>
+        <property name="margin-bottom">18</property>
+        <child>
+          <object class="GtkBox">
+            <property name="spacing">18</property>
+            <child>
+              <!-- The default cover is shown until the cover of the track
+                   is read, and if the track has none, so the width of the
+                   window does not change -->
+              <object class="GtkImage" id="cover_picture">
+                <property name="pixel-size">192</property>
+                <property name="valign">start</property>
+                <style>
+                  <class name="cover"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkGrid" id="info_grid">
+                <property name="hexpand">True</property>
+                <property name="valign">start</property>
+                <property name="row-spacing">6</property>
+                <property name="column-spacing">12</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton" id="close_button">
+            <property name="label" translatable="yes">_Close</property>
+            <property name="use-underline">True</property>
+            <property name="halign">end</property>
+            <style>
+              <class name="suggested-action"/>
+            </style>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>
