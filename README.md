@@ -295,6 +295,10 @@ from the template (for example with `msginit`).
     the end of it (the playlist under the pointer is highlighted); they
     are removed from the playlist they are dragged from. Tracks dragged
     from the library are copied to the playlist and kept in the library.
+* Drag a playlist in the playlist sidebar to reorder the playlists: a line
+  shows where it will be placed, and dropping below the last playlist
+  moves it to the end. The up/down buttons below the sidebar also move
+  the selected playlist.
 * "Remove Missing Files…" in the menu removes the items in the library and
   all playlists whose audio files do not exist any more (after a
   confirmation). The files are checked in a background thread; remote

@@ -44,6 +44,15 @@ columnview row.rc-drop-below {
     box-shadow: inset 0 -2px 0 0 currentColor;
 }
 
+/* Drop position indicator when reordering playlists in the sidebar */
+list row.rc-drop-above {
+    box-shadow: inset 0 2px 0 0 currentColor;
+}
+
+list row.rc-drop-below {
+    box-shadow: inset 0 -2px 0 0 currentColor;
+}
+
 /* Small button in the status bar */
 button.rc-status-button {
     min-height: 0;
