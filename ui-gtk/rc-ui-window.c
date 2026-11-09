@@ -111,8 +111,6 @@ typedef struct RCUiWindowPrivate
     GtkWidget *playlist_listbox;
     GtkWidget *source_label;
     GtkWidget *add_to_playlist_button;
-    GtkWidget *item_up_button;
-    GtkWidget *item_down_button;
     GtkWidget *track_view;
     GtkWidget *status_label;
     /* Whether the status bar shows a playback error */
@@ -127,6 +125,9 @@ typedef struct RCUiWindowPrivate
     GHashTable *track_table;
     GtkMultiSelection *track_selection;
     GMenu *playlist_menu;
+    /* The context menus of the track list and the playlist sidebar */
+    GtkWidget *track_popover;
+    GtkWidget *playlist_popover;
     GdkTexture *default_cover;
     RCUiViewType view_type;
     RCLibDbGroupMode group_mode;
@@ -257,6 +258,17 @@ static void rc_ui_window_refresh_item(const RCLibDbItem *item)
     if(track!=NULL) rc_ui_track_changed(track);
 }
 
+static void rc_ui_window_set_action_enabled(const gchar *name,
+    gboolean enabled)
+{
+    GAction *action;
+    if(window_priv.window==NULL) return;
+    action = g_action_map_lookup_action(G_ACTION_MAP(window_priv.window),
+        name);
+    if(action!=NULL)
+        g_simple_action_set_enabled(G_SIMPLE_ACTION(action), enabled);
+}
+
 static void rc_ui_window_update_source_label()
 {
     RCUiWindowPrivate *priv = &window_priv;
@@ -278,9 +290,10 @@ static void rc_ui_window_update_source_label()
         "%s (%u tracks)", n), name, n);
     gtk_label_set_text(GTK_LABEL(priv->source_label), text);
     g_free(text);
-    gtk_widget_set_sensitive(priv->item_up_button,
+    /* The items can be moved in a playlist only */
+    rc_ui_window_set_action_enabled("move-up",
         priv->view_type==RC_UI_VIEW_PLAYLIST);
-    gtk_widget_set_sensitive(priv->item_down_button,
+    rc_ui_window_set_action_enabled("move-down",
         priv->view_type==RC_UI_VIEW_PLAYLIST);
 }
 
@@ -1104,11 +1117,145 @@ static void rc_ui_window_setup_cell_dnd(GtkWidget *widget,
     gtk_widget_add_controller(widget, GTK_EVENT_CONTROLLER(target));
 }
 
+/* ----- Context menus ----- */
+
+static void rc_ui_window_append_section(GMenu *menu, GMenu *section)
+{
+    if(g_menu_model_get_n_items(G_MENU_MODEL(section))>0)
+        g_menu_append_section(menu, NULL, G_MENU_MODEL(section));
+    g_object_unref(section);
+}
+
+/* The menu of the selected tracks, the items which cannot be used in the
+ * shown track list are not added */
+static GMenuModel *rc_ui_window_build_track_menu()
+{
+    RCUiWindowPrivate *priv = &window_priv;
+    const GPtrArray *playlists = rclib_db_get_playlists();
+    gboolean in_playlist;
+    GMenu *menu, *section;
+    in_playlist = priv->view_type==RC_UI_VIEW_PLAYLIST;
+    menu = g_menu_new();
+    section = g_menu_new();
+    g_menu_append(section, _("_Play"), "win.play-selected");
+    g_menu_append(section, _("Track _Details"), "win.track-info");
+    rc_ui_window_append_section(menu, section);
+    section = g_menu_new();
+    if(playlists!=NULL && playlists->len>0)
+    {
+        g_menu_append_submenu(section, _("_Add to Playlist"),
+            G_MENU_MODEL(priv->playlist_menu));
+    }
+    if(in_playlist)
+    {
+        g_menu_append(section, _("Move _Up"), "win.move-up");
+        g_menu_append(section, _("Move _Down"), "win.move-down");
+    }
+    rc_ui_window_append_section(menu, section);
+    section = g_menu_new();
+    g_menu_append(section, _("Re_fresh Metadata"), "win.refresh-selected");
+    g_menu_append(section, in_playlist ? _("_Remove from Playlist") :
+        _("_Remove from Library"), "win.remove-selected");
+    rc_ui_window_append_section(menu, section);
+    return G_MENU_MODEL(menu);
+}
+
+/* The menu of the playlist sidebar, the items for the selected playlist
+ * are added if @on_playlist is %TRUE */
+static GMenuModel *rc_ui_window_build_playlist_menu(gboolean on_playlist)
+{
+    GMenu *menu, *section;
+    menu = g_menu_new();
+    section = g_menu_new();
+    g_menu_append(section, _("_New Playlist…"), "win.playlist-new");
+    g_menu_append(section, _("_Load Playlist…"), "win.load-playlist");
+    rc_ui_window_append_section(menu, section);
+    if(on_playlist)
+    {
+        section = g_menu_new();
+        g_menu_append(section, _("Re_name…"), "win.playlist-rename");
+        g_menu_append(section, _("_Save Playlist…"), "win.save-playlist");
+        g_menu_append(section, _("_Delete…"), "win.playlist-delete");
+        rc_ui_window_append_section(menu, section);
+        section = g_menu_new();
+        g_menu_append(section, _("Move _Up"), "win.playlist-up");
+        g_menu_append(section, _("Move _Down"), "win.playlist-down");
+        rc_ui_window_append_section(menu, section);
+    }
+    return G_MENU_MODEL(menu);
+}
+
+/* Show the menu at the position (x, y) of @widget */
+static void rc_ui_window_popup_menu(GtkWidget *popover, GMenuModel *menu,
+    GtkWidget *widget, gdouble x, gdouble y)
+{
+    GdkRectangle rect = {0, 0, 1, 1};
+    graphene_point_t point;
+    gtk_popover_menu_set_menu_model(GTK_POPOVER_MENU(popover), menu);
+    g_object_unref(menu);
+    if(!gtk_widget_compute_point(widget, gtk_widget_get_parent(popover),
+        &GRAPHENE_POINT_INIT((gfloat)x, (gfloat)y), &point))
+        return;
+    rect.x = (gint)point.x;
+    rect.y = (gint)point.y;
+    gtk_popover_set_pointing_to(GTK_POPOVER(popover), &rect);
+    gtk_popover_popup(GTK_POPOVER(popover));
+}
+
+/* The popover is a child of the box which contains the scrolled window of
+ * the list: a list box removes all its children when it is reloaded, the
+ * layout manager of the box shows the popover, and the box removes all
+ * its children (with the popover) when it is destroyed */
+static GtkWidget *rc_ui_window_new_popover(GtkWidget *list)
+{
+    GtkWidget *popover, *parent;
+    parent = gtk_widget_get_parent(gtk_widget_get_ancestor(list,
+        GTK_TYPE_SCROLLED_WINDOW));
+    popover = gtk_popover_menu_new_from_model(NULL);
+    gtk_popover_set_has_arrow(GTK_POPOVER(popover), FALSE);
+    gtk_widget_set_halign(popover, GTK_ALIGN_START);
+    gtk_widget_set_parent(popover, parent);
+    return popover;
+}
+
+/* Right click on a track selects it (the selection is kept if it is one
+ * of the selected tracks, so the menu is for all of them) */
+static void rc_ui_window_cell_menu_pressed_cb(GtkGestureClick *gesture,
+    gint n_press, gdouble x, gdouble y, gpointer data)
+{
+    guint position;
+    position = gtk_list_item_get_position(GTK_LIST_ITEM(data));
+    if(position==GTK_INVALID_LIST_POSITION) return;
+    gtk_gesture_set_state(GTK_GESTURE(gesture), GTK_EVENT_SEQUENCE_CLAIMED);
+    rc_ui_window_select_for_drag(position);
+    rc_ui_window_popup_menu(window_priv.track_popover,
+        rc_ui_window_build_track_menu(), gtk_event_controller_get_widget(
+        GTK_EVENT_CONTROLLER(gesture)), x, y);
+}
+
+/* Right click on a playlist selects it (and shows it), the menu for the
+ * empty area has the items to add playlists only */
+static void rc_ui_window_playlist_menu_pressed_cb(GtkGestureClick *gesture,
+    gint n_press, gdouble x, gdouble y, gpointer data)
+{
+    RCUiWindowPrivate *priv = &window_priv;
+    GtkListBoxRow *row;
+    gtk_gesture_set_state(GTK_GESTURE(gesture), GTK_EVENT_SEQUENCE_CLAIMED);
+    row = gtk_list_box_get_row_at_y(GTK_LIST_BOX(priv->playlist_listbox),
+        y);
+    if(row!=NULL)
+        gtk_list_box_select_row(GTK_LIST_BOX(priv->playlist_listbox), row);
+    rc_ui_window_popup_menu(priv->playlist_popover,
+        rc_ui_window_build_playlist_menu(row!=NULL), priv->playlist_listbox,
+        x, y);
+}
+
 static void rc_ui_window_column_setup_cb(GtkSignalListItemFactory *factory,
     GtkListItem *list_item, gpointer data)
 {
     gint column = GPOINTER_TO_INT(data);
     GtkWidget *widget;
+    GtkGesture *gesture;
     if(column==RC_UI_COLUMN_PLAYING)
     {
         widget = gtk_image_new_from_icon_name(
@@ -1124,6 +1271,12 @@ static void rc_ui_window_column_setup_cb(GtkSignalListItemFactory *factory,
             gtk_widget_add_css_class(widget, "numeric");
     }
     rc_ui_window_setup_cell_dnd(widget, list_item);
+    gesture = gtk_gesture_click_new();
+    gtk_gesture_single_set_button(GTK_GESTURE_SINGLE(gesture),
+        GDK_BUTTON_SECONDARY);
+    g_signal_connect(gesture, "pressed",
+        G_CALLBACK(rc_ui_window_cell_menu_pressed_cb), list_item);
+    gtk_widget_add_controller(widget, GTK_EVENT_CONTROLLER(gesture));
     gtk_list_item_set_child(list_item, widget);
 }
 
@@ -1424,11 +1577,7 @@ static GtkWidget *rc_ui_window_make_row(const gchar *text,
 static void rc_ui_window_update_show_playing()
 {
     RCUiWindowPrivate *priv = &window_priv;
-    GAction *action;
-    action = g_action_map_lookup_action(G_ACTION_MAP(priv->window),
-        "show-playing");
-    if(action==NULL) return;
-    g_simple_action_set_enabled(G_SIMPLE_ACTION(action),
+    rc_ui_window_set_action_enabled("show-playing",
         priv->playing_item!=NULL && !priv->playing_item->removed);
 }
 
@@ -1457,6 +1606,30 @@ static void rc_ui_window_update_playing_playlist()
         gtk_widget_set_visible(g_object_get_data(G_OBJECT(row),
             "rc-playing-icon"), is_playing);
     }
+}
+
+static RCLibDbPlaylist *rc_ui_window_get_selected_playlist()
+{
+    GtkListBoxRow *row;
+    row = gtk_list_box_get_selected_row(GTK_LIST_BOX(
+        window_priv.playlist_listbox));
+    if(row==NULL) return NULL;
+    return g_object_get_data(G_OBJECT(row), "rc-playlist");
+}
+
+/* The selected playlist can be renamed, deleted and moved */
+static void rc_ui_window_update_playlist_actions()
+{
+    RCLibDbPlaylist *playlist = rc_ui_window_get_selected_playlist();
+    const GPtrArray *playlists = rclib_db_get_playlists();
+    gint index = -1;
+    if(playlist!=NULL && !playlist->removed)
+        index = rclib_db_playlist_get_index(playlist);
+    rc_ui_window_set_action_enabled("playlist-rename", index>=0);
+    rc_ui_window_set_action_enabled("playlist-delete", index>=0);
+    rc_ui_window_set_action_enabled("playlist-up", index>0);
+    rc_ui_window_set_action_enabled("playlist-down", index>=0 &&
+        playlists!=NULL && (guint)index+1<playlists->len);
 }
 
 static void rc_ui_window_reload_groups()
@@ -1571,6 +1744,7 @@ static void rc_ui_window_reload_playlists()
         playlists!=NULL && playlists->len>0);
     rc_ui_window_update_playing_playlist();
     priv->updating_lists = FALSE;
+    rc_ui_window_update_playlist_actions();
 }
 
 static void rc_ui_window_set_view_playlist(RCLibDbPlaylist *playlist)
@@ -1599,6 +1773,7 @@ static void rc_ui_window_playlist_selected_cb(GtkListBox *listbox,
     GtkListBoxRow *row, gpointer data)
 {
     RCUiWindowPrivate *priv = &window_priv;
+    rc_ui_window_update_playlist_actions();
     if(priv->updating_lists || row==NULL) return;
     rc_ui_window_set_view_playlist(g_object_get_data(G_OBJECT(row),
         "rc-playlist"));
@@ -1825,15 +2000,6 @@ static void rc_ui_window_ask_name(const gchar *title, const gchar *initial,
 
 /* ----- Playlist management ----- */
 
-static RCLibDbPlaylist *rc_ui_window_get_selected_playlist()
-{
-    GtkListBoxRow *row;
-    row = gtk_list_box_get_selected_row(GTK_LIST_BOX(
-        window_priv.playlist_listbox));
-    if(row==NULL) return NULL;
-    return g_object_get_data(G_OBJECT(row), "rc-playlist");
-}
-
 static void rc_ui_window_new_playlist_cb(const gchar *name, gpointer data)
 {
     RCLibDbPlaylist *playlist;
@@ -1843,8 +2009,8 @@ static void rc_ui_window_new_playlist_cb(const gchar *name, gpointer data)
     rc_ui_window_reload_playlists();
 }
 
-static void rc_ui_window_playlist_new_clicked_cb(GtkButton *button,
-    gpointer data)
+static void rc_ui_window_playlist_new_action(GSimpleAction *action,
+    GVariant *parameter, gpointer data)
 {
     const GPtrArray *playlists = rclib_db_get_playlists();
     gchar *name;
@@ -1861,8 +2027,8 @@ static void rc_ui_window_rename_playlist_cb(const gchar *name,
     rclib_db_playlist_rename(data, name);
 }
 
-static void rc_ui_window_playlist_rename_clicked_cb(GtkButton *button,
-    gpointer data)
+static void rc_ui_window_playlist_rename_action(GSimpleAction *action,
+    GVariant *parameter, gpointer data)
 {
     RCLibDbPlaylist *playlist = rc_ui_window_get_selected_playlist();
     if(playlist==NULL) return;
@@ -1882,8 +2048,8 @@ static void rc_ui_window_delete_playlist_cb(GObject *source,
     rclib_db_playlist_unref(playlist);
 }
 
-static void rc_ui_window_playlist_delete_clicked_cb(GtkButton *button,
-    gpointer data)
+static void rc_ui_window_playlist_delete_action(GSimpleAction *action,
+    GVariant *parameter, gpointer data)
 {
     RCLibDbPlaylist *playlist = rc_ui_window_get_selected_playlist();
     GtkAlertDialog *dialog;
@@ -1911,14 +2077,14 @@ static void rc_ui_window_playlist_move(gint offset)
     rclib_db_playlist_move(index, index+offset);
 }
 
-static void rc_ui_window_playlist_up_clicked_cb(GtkButton *button,
-    gpointer data)
+static void rc_ui_window_playlist_up_action(GSimpleAction *action,
+    GVariant *parameter, gpointer data)
 {
     rc_ui_window_playlist_move(-1);
 }
 
-static void rc_ui_window_playlist_down_clicked_cb(GtkButton *button,
-    gpointer data)
+static void rc_ui_window_playlist_down_action(GSimpleAction *action,
+    GVariant *parameter, gpointer data)
 {
     rc_ui_window_playlist_move(1);
 }
@@ -1940,20 +2106,20 @@ static void rc_ui_window_item_move(gint offset)
     }
 }
 
-static void rc_ui_window_item_up_clicked_cb(GtkButton *button,
-    gpointer data)
+static void rc_ui_window_item_up_action(GSimpleAction *action,
+    GVariant *parameter, gpointer data)
 {
     rc_ui_window_item_move(-1);
 }
 
-static void rc_ui_window_item_down_clicked_cb(GtkButton *button,
-    gpointer data)
+static void rc_ui_window_item_down_action(GSimpleAction *action,
+    GVariant *parameter, gpointer data)
 {
     rc_ui_window_item_move(1);
 }
 
-static void rc_ui_window_remove_clicked_cb(GtkButton *button,
-    gpointer data)
+static void rc_ui_window_remove_action(GSimpleAction *action,
+    GVariant *parameter, gpointer data)
 {
     GPtrArray *items;
     guint i;
@@ -1963,8 +2129,8 @@ static void rc_ui_window_remove_clicked_cb(GtkButton *button,
     g_ptr_array_unref(items);
 }
 
-static void rc_ui_window_refresh_clicked_cb(GtkButton *button,
-    gpointer data)
+static void rc_ui_window_refresh_action(GSimpleAction *action,
+    GVariant *parameter, gpointer data)
 {
     GPtrArray *items;
     guint i;
@@ -3143,6 +3309,21 @@ static void rc_ui_window_show_playing_action(GSimpleAction *action,
         GTK_LIST_SCROLL_SELECT | GTK_LIST_SCROLL_FOCUS, NULL);
 }
 
+/* Play the first selected item */
+static void rc_ui_window_play_selected_action(GSimpleAction *action,
+    GVariant *parameter, gpointer data)
+{
+    RCUiWindowPrivate *priv = &window_priv;
+    RCUiTrack *track;
+    gint pos;
+    pos = rc_ui_window_get_first_selected();
+    if(pos<0) return;
+    track = g_list_model_get_item(G_LIST_MODEL(priv->track_store), pos);
+    if(track==NULL) return;
+    rc_ui_window_play_track(track);
+    g_object_unref(track);
+}
+
 /* Show the details of the first selected item */
 static void rc_ui_window_track_info_action(GSimpleAction *action,
     GVariant *parameter, gpointer data)
@@ -3377,6 +3558,18 @@ static const GActionEntry window_actions[] = {
     {"filter", rc_ui_window_filter_action, NULL, NULL, NULL},
     {"show-playing", rc_ui_window_show_playing_action, NULL, NULL, NULL},
     {"track-info", rc_ui_window_track_info_action, NULL, NULL, NULL},
+    {"play-selected", rc_ui_window_play_selected_action, NULL, NULL, NULL},
+    {"move-up", rc_ui_window_item_up_action, NULL, NULL, NULL},
+    {"move-down", rc_ui_window_item_down_action, NULL, NULL, NULL},
+    {"refresh-selected", rc_ui_window_refresh_action, NULL, NULL, NULL},
+    {"remove-selected", rc_ui_window_remove_action, NULL, NULL, NULL},
+    {"playlist-new", rc_ui_window_playlist_new_action, NULL, NULL, NULL},
+    {"playlist-rename", rc_ui_window_playlist_rename_action, NULL, NULL,
+        NULL},
+    {"playlist-delete", rc_ui_window_playlist_delete_action, NULL, NULL,
+        NULL},
+    {"playlist-up", rc_ui_window_playlist_up_action, NULL, NULL, NULL},
+    {"playlist-down", rc_ui_window_playlist_down_action, NULL, NULL, NULL},
     {"lyric", NULL, NULL, "false", rc_ui_window_lyric_action},
     {"osd-lyric", NULL, NULL, "false", rc_ui_window_osd_lyric_action},
     {"about", rc_ui_window_about_action, NULL, NULL, NULL},
@@ -3484,6 +3677,7 @@ GtkWidget *rc_ui_window_init(GtkApplication *app)
     RCUiWindowPrivate *priv = &window_priv;
     GtkDropTarget *drop_target;
     GtkEventController *key_controller, *scroll_controller;
+    GtkGesture *gesture;
     GType drop_types[2];
     gchar *sort_name;
     gulong id;
@@ -3546,8 +3740,6 @@ GtkWidget *rc_ui_window_init(GtkApplication *app)
     priv->source_label = rc_ui_window_get_object("source_label");
     priv->add_to_playlist_button = rc_ui_window_get_object(
         "add_to_playlist_button");
-    priv->item_up_button = rc_ui_window_get_object("item_up_button");
-    priv->item_down_button = rc_ui_window_get_object("item_down_button");
     priv->track_view = rc_ui_window_get_object("track_view");
     priv->status_label = rc_ui_window_get_object("status_label");
     priv->format_label = rc_ui_window_get_object("format_label");
@@ -3665,32 +3857,22 @@ GtkWidget *rc_ui_window_init(GtkApplication *app)
         G_CALLBACK(rc_ui_window_playlist_drop_cb), NULL);
     gtk_widget_add_controller(priv->playlist_listbox,
         GTK_EVENT_CONTROLLER(drop_target));
+    gesture = gtk_gesture_click_new();
+    gtk_gesture_single_set_button(GTK_GESTURE_SINGLE(gesture),
+        GDK_BUTTON_SECONDARY);
+    g_signal_connect(gesture, "pressed",
+        G_CALLBACK(rc_ui_window_playlist_menu_pressed_cb), NULL);
+    gtk_widget_add_controller(priv->playlist_listbox,
+        GTK_EVENT_CONTROLLER(gesture));
+    priv->track_popover = rc_ui_window_new_popover(priv->track_view);
+    priv->playlist_popover = rc_ui_window_new_popover(
+        priv->playlist_listbox);
     g_signal_connect(priv->sidebar_stack, "notify::visible-child-name",
         G_CALLBACK(rc_ui_window_stack_changed_cb), NULL);
     g_signal_connect(priv->filter_entry, "search-changed",
         G_CALLBACK(rc_ui_window_filter_changed_cb), NULL);
     g_signal_connect(priv->filter_entry, "stop-search",
         G_CALLBACK(rc_ui_window_filter_stop_cb), NULL);
-    g_signal_connect(rc_ui_window_get_object("playlist_new_button"),
-        "clicked", G_CALLBACK(rc_ui_window_playlist_new_clicked_cb), NULL);
-    g_signal_connect(rc_ui_window_get_object("playlist_rename_button"),
-        "clicked", G_CALLBACK(rc_ui_window_playlist_rename_clicked_cb),
-        NULL);
-    g_signal_connect(rc_ui_window_get_object("playlist_delete_button"),
-        "clicked", G_CALLBACK(rc_ui_window_playlist_delete_clicked_cb),
-        NULL);
-    g_signal_connect(rc_ui_window_get_object("playlist_up_button"),
-        "clicked", G_CALLBACK(rc_ui_window_playlist_up_clicked_cb), NULL);
-    g_signal_connect(rc_ui_window_get_object("playlist_down_button"),
-        "clicked", G_CALLBACK(rc_ui_window_playlist_down_clicked_cb), NULL);
-    g_signal_connect(priv->item_up_button, "clicked",
-        G_CALLBACK(rc_ui_window_item_up_clicked_cb), NULL);
-    g_signal_connect(priv->item_down_button, "clicked",
-        G_CALLBACK(rc_ui_window_item_down_clicked_cb), NULL);
-    g_signal_connect(rc_ui_window_get_object("remove_button"), "clicked",
-        G_CALLBACK(rc_ui_window_remove_clicked_cb), NULL);
-    g_signal_connect(rc_ui_window_get_object("refresh_button"), "clicked",
-        G_CALLBACK(rc_ui_window_refresh_clicked_cb), NULL);
 
     /* Player controls */
     g_signal_connect(priv->progress_scale, "change-value",
@@ -3808,6 +3990,10 @@ void rc_ui_window_cleanup()
     RCUiWindowPrivate *priv = &window_priv;
     guint i;
     if(priv->builder==NULL) return;
+    /* The window may be destroyed already, and the signals of the widgets
+     * (like the selection of the list boxes) are emitted when the builder
+     * is freed, so the window is not used any more */
+    priv->window = NULL;
     /* The columns are removed when the column view is finalized (after
      * the track list is freed), the sorting is not changed by it */
     g_signal_handler_disconnect(gtk_column_view_get_sorter(GTK_COLUMN_VIEW(

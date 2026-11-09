@@ -427,18 +427,21 @@
                                   <object class="GtkButton" id="playlist_new_button">
                                     <property name="icon-name">list-add-symbolic</property>
                                     <property name="tooltip-text" translatable="yes">New Playlist</property>
+                                    <property name="action-name">win.playlist-new</property>
                                   </object>
                                 </child>
                                 <child>
                                   <object class="GtkButton" id="playlist_rename_button">
                                     <property name="icon-name">document-edit-symbolic</property>
                                     <property name="tooltip-text" translatable="yes">Rename Playlist</property>
+                                    <property name="action-name">win.playlist-rename</property>
                                   </object>
                                 </child>
                                 <child>
                                   <object class="GtkButton" id="playlist_delete_button">
                                     <property name="icon-name">list-remove-symbolic</property>
                                     <property name="tooltip-text" translatable="yes">Delete Playlist</property>
+                                    <property name="action-name">win.playlist-delete</property>
                                   </object>
                                 </child>
                                 <child>
@@ -459,12 +462,14 @@
                                   <object class="GtkButton" id="playlist_up_button">
                                     <property name="icon-name">go-up-symbolic</property>
                                     <property name="tooltip-text" translatable="yes">Move Up</property>
+                                    <property name="action-name">win.playlist-up</property>
                                   </object>
                                 </child>
                                 <child>
                                   <object class="GtkButton" id="playlist_down_button">
                                     <property name="icon-name">go-down-symbolic</property>
                                     <property name="tooltip-text" translatable="yes">Move Down</property>
+                                    <property name="action-name">win.playlist-down</property>
                                   </object>
                                 </child>
                               </object>
@@ -520,6 +525,7 @@
                       <object class="GtkButton" id="item_up_button">
                         <property name="icon-name">go-up-symbolic</property>
                         <property name="tooltip-text" translatable="yes">Move Up</property>
+                        <property name="action-name">win.move-up</property>
                         <style>
                           <class name="flat"/>
                         </style>
@@ -529,6 +535,7 @@
                       <object class="GtkButton" id="item_down_button">
                         <property name="icon-name">go-down-symbolic</property>
                         <property name="tooltip-text" translatable="yes">Move Down</property>
+                        <property name="action-name">win.move-down</property>
                         <style>
                           <class name="flat"/>
                         </style>
@@ -548,6 +555,7 @@
                       <object class="GtkButton" id="refresh_button">
                         <property name="icon-name">view-refresh-symbolic</property>
                         <property name="tooltip-text" translatable="yes">Refresh Metadata of Selected Items</property>
+                        <property name="action-name">win.refresh-selected</property>
                         <style>
                           <class name="flat"/>
                         </style>
@@ -557,6 +565,7 @@
                       <object class="GtkButton" id="remove_button">
                         <property name="icon-name">edit-delete-symbolic</property>
                         <property name="tooltip-text" translatable="yes">Remove Selected Items</property>
+                        <property name="action-name">win.remove-selected</property>
                         <style>
                           <class name="flat"/>
                         </style>

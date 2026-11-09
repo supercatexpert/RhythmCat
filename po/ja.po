@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: rhythmcat3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 18:22+0900\n"
+"POT-Creation-Date: 2026-11-09 18:46+0900\n"
 "PO-Revision-Date: 2026-11-03\n"
 "Last-Translator: SuperCat\n"
 "Language-Team: Japanese\n"
@@ -225,39 +225,39 @@ msgstr ""
 "GStreamer のイコライザープラグイン（gst-plugins-good）がインストールされてい"
 "ません。"
 
-#: ui-gtk/rc-ui-info.c:139 ui-gtk/rc-ui-window.c:2525
+#: ui-gtk/rc-ui-info.c:140 ui-gtk/rc-ui-window.c:2694
 #, c-format
 msgid "%u kbps"
 msgstr "%u kbps"
 
-#: ui-gtk/rc-ui-info.c:143
+#: ui-gtk/rc-ui-info.c:144
 #, c-format
 msgid "%u Hz"
 msgstr "%u Hz"
 
-#: ui-gtk/rc-ui-info.c:147
+#: ui-gtk/rc-ui-info.c:148
 msgid "Mono"
 msgstr "モノラル"
 
-#: ui-gtk/rc-ui-info.c:148
+#: ui-gtk/rc-ui-info.c:149
 msgid "Stereo"
 msgstr "ステレオ"
 
-#: ui-gtk/rc-ui-info.c:151
+#: ui-gtk/rc-ui-info.c:152
 #, c-format
 msgid "%u channel"
 msgid_plural "%u channels"
 msgstr[0] "%u チャンネル"
 
-#: ui-gtk/rc-ui-info.c:233 ui-gtk/rc-ui-window.c:3578 ui-tui/rc-tui.c:554
+#: ui-gtk/rc-ui-info.c:233 ui-gtk/rc-ui-window.c:3773 ui-tui/rc-tui.c:554
 msgid "Title"
 msgstr "タイトル"
 
-#: ui-gtk/rc-ui-info.c:235 ui-gtk/rc-ui-window.c:3579 ui-tui/rc-tui.c:558
+#: ui-gtk/rc-ui-info.c:235 ui-gtk/rc-ui-window.c:3774 ui-tui/rc-tui.c:558
 msgid "Artist"
 msgstr "アーティスト"
 
-#: ui-gtk/rc-ui-info.c:236 ui-gtk/rc-ui-window.c:3580
+#: ui-gtk/rc-ui-info.c:236 ui-gtk/rc-ui-window.c:3775
 msgid "Album"
 msgstr "アルバム"
 
@@ -326,12 +326,12 @@ msgstr "プレイリスト「%s」"
 msgid "Source"
 msgstr "所属"
 
-#: ui-gtk/rc-ui-info.c:285 ui-gtk/rc-ui-window.c:3276 ui-tui/rc-tui.c:967
+#: ui-gtk/rc-ui-info.c:285 ui-gtk/rc-ui-window.c:3460 ui-tui/rc-tui.c:967
 msgid "Music Library"
 msgstr "ミュージックライブラリ"
 
 #: ui-gtk/rc-ui-main.c:43 ui-gtk/resources/ui/rc-ui-equalizer.ui:577
-#: ui-gtk/resources/ui/rc-ui-info.ui:47
+#: ui-gtk/resources/ui/rc-ui-info.ui:53
 #: ui-gtk/resources/ui/rc-ui-settings.ui:475
 msgid "_Close"
 msgstr "閉じる(_C)"
@@ -373,155 +373,207 @@ msgstr ""
 "エンコーディングを保存しました。次にファイルを読み込むときから新しい設定が使"
 "われます。"
 
-#: ui-gtk/rc-ui-window.c:270 ui-gtk/rc-ui-window.c:1491 ui-tui/rc-tui.c:308
+#: ui-gtk/rc-ui-window.c:282 ui-gtk/rc-ui-window.c:1667 ui-tui/rc-tui.c:308
 msgid "All Tracks"
 msgstr "すべてのトラック"
 
-#: ui-gtk/rc-ui-window.c:274 ui-gtk/rc-ui-window.c:1505
-#: ui-gtk/rc-ui-window.c:2155 ui-tui/rc-tui.c:317 ui-tui/rc-tui.c:640
+#: ui-gtk/rc-ui-window.c:286 ui-gtk/rc-ui-window.c:1681
+#: ui-gtk/rc-ui-window.c:2324 ui-tui/rc-tui.c:317 ui-tui/rc-tui.c:640
 msgid "Unknown Artist"
 msgstr "不明なアーティスト"
 
-#: ui-gtk/rc-ui-window.c:276 ui-gtk/rc-ui-window.c:1506
-#: ui-gtk/rc-ui-window.c:2157 ui-tui/rc-tui.c:317 ui-tui/rc-tui.c:641
+#: ui-gtk/rc-ui-window.c:288 ui-gtk/rc-ui-window.c:1682
+#: ui-gtk/rc-ui-window.c:2326 ui-tui/rc-tui.c:317 ui-tui/rc-tui.c:641
 msgid "Unknown Album"
 msgstr "不明なアルバム"
 
-#: ui-gtk/rc-ui-window.c:277
+#: ui-gtk/rc-ui-window.c:289
 #, c-format
 msgid "%s (%u track)"
 msgid_plural "%s (%u tracks)"
 msgstr[0] "%s（%u 曲）"
 
-#: ui-gtk/rc-ui-window.c:1807 ui-gtk/rc-ui-window.c:1890
-#: ui-gtk/rc-ui-window.c:2988
+#: ui-gtk/rc-ui-window.c:1140
+msgid "_Play"
+msgstr "再生(_P)"
+
+#: ui-gtk/rc-ui-window.c:1141 ui-gtk/resources/ui/rc-ui-window.ui:42
+msgid "Track _Details"
+msgstr "トラックの詳細(_D)"
+
+#: ui-gtk/rc-ui-window.c:1146
+msgid "_Add to Playlist"
+msgstr "プレイリストに追加(_A)"
+
+#: ui-gtk/rc-ui-window.c:1151 ui-gtk/rc-ui-window.c:1181
+msgid "Move _Up"
+msgstr "上へ移動(_U)"
+
+#: ui-gtk/rc-ui-window.c:1152 ui-gtk/rc-ui-window.c:1182
+msgid "Move _Down"
+msgstr "下へ移動(_D)"
+
+#: ui-gtk/rc-ui-window.c:1156
+msgid "Re_fresh Metadata"
+msgstr "メタデータを更新(_F)"
+
+#: ui-gtk/rc-ui-window.c:1157
+msgid "_Remove from Playlist"
+msgstr "プレイリストから削除(_R)"
+
+#: ui-gtk/rc-ui-window.c:1158
+msgid "_Remove from Library"
+msgstr "ライブラリから削除(_R)"
+
+#: ui-gtk/rc-ui-window.c:1170
+msgid "_New Playlist…"
+msgstr "新しいプレイリスト(_N)…"
+
+#: ui-gtk/rc-ui-window.c:1171 ui-gtk/resources/ui/rc-ui-window.ui:16
+msgid "_Load Playlist…"
+msgstr "プレイリストを読み込む(_L)…"
+
+#: ui-gtk/rc-ui-window.c:1176
+msgid "Re_name…"
+msgstr "名前を変更(_N)…"
+
+#: ui-gtk/rc-ui-window.c:1177 ui-gtk/resources/ui/rc-ui-window.ui:20
+msgid "_Save Playlist…"
+msgstr "プレイリストを保存(_S)…"
+
+#: ui-gtk/rc-ui-window.c:1178
+msgid "_Delete…"
+msgstr "削除(_D)…"
+
+#: ui-gtk/rc-ui-window.c:1985 ui-gtk/rc-ui-window.c:2059
+#: ui-gtk/rc-ui-window.c:3157
 msgid "_Cancel"
 msgstr "キャンセル(_C)"
 
-#: ui-gtk/rc-ui-window.c:1808
+#: ui-gtk/rc-ui-window.c:1986
 msgid "_OK"
 msgstr "OK(_O)"
 
-#: ui-gtk/rc-ui-window.c:1851
+#: ui-gtk/rc-ui-window.c:2020
 #, c-format
 msgid "Playlist %u"
 msgstr "プレイリスト %u"
 
-#: ui-gtk/rc-ui-window.c:1853 ui-gtk/resources/ui/rc-ui-window.ui:429
+#: ui-gtk/rc-ui-window.c:2022 ui-gtk/resources/ui/rc-ui-window.ui:429
 msgid "New Playlist"
 msgstr "新しいプレイリスト"
 
-#: ui-gtk/rc-ui-window.c:1869 ui-gtk/resources/ui/rc-ui-window.ui:435
+#: ui-gtk/rc-ui-window.c:2038 ui-gtk/resources/ui/rc-ui-window.ui:436
 msgid "Rename Playlist"
 msgstr "プレイリストの名前を変更"
 
-#: ui-gtk/rc-ui-window.c:1890
+#: ui-gtk/rc-ui-window.c:2059
 msgid "_Delete"
 msgstr "削除(_D)"
 
-#: ui-gtk/rc-ui-window.c:1892
+#: ui-gtk/rc-ui-window.c:2061
 #, c-format
 msgid "Delete playlist “%s”?"
 msgstr "プレイリスト「%s」を削除しますか？"
 
-#: ui-gtk/rc-ui-window.c:1894
+#: ui-gtk/rc-ui-window.c:2063
 msgid "The audio files will not be deleted."
 msgstr "オーディオファイルは削除されません。"
 
-#: ui-gtk/rc-ui-window.c:2133
+#: ui-gtk/rc-ui-window.c:2302
 msgid "Ready to play"
 msgstr "再生の準備ができました"
 
-#: ui-gtk/rc-ui-window.c:2325
+#: ui-gtk/rc-ui-window.c:2494
 msgid "Repeat: Off (continue with the next playlist, stop after the last one)"
 msgstr "リピート: オフ（次のプレイリストに進み、最後のプレイリストの後で停止）"
 
-#: ui-gtk/rc-ui-window.c:2330
+#: ui-gtk/rc-ui-window.c:2499
 msgid "Repeat: Current Track"
 msgstr "リピート: 現在のトラック"
 
-#: ui-gtk/rc-ui-window.c:2334 ui-tui/rc-tui.c:473
+#: ui-gtk/rc-ui-window.c:2503 ui-tui/rc-tui.c:473
 msgid "All"
 msgstr "すべて"
 
-#: ui-gtk/rc-ui-window.c:2335
+#: ui-gtk/rc-ui-window.c:2504
 msgid "Repeat: All Playlists"
 msgstr "リピート: すべてのプレイリスト"
 
-#: ui-gtk/rc-ui-window.c:2339 ui-tui/rc-tui.c:472
+#: ui-gtk/rc-ui-window.c:2508 ui-tui/rc-tui.c:472
 msgid "List"
 msgstr "リスト"
 
-#: ui-gtk/rc-ui-window.c:2340
+#: ui-gtk/rc-ui-window.c:2509
 msgid "Repeat: Current Playlist"
 msgstr "リピート: 現在のプレイリスト"
 
-#: ui-gtk/rc-ui-window.c:2382 ui-gtk/rc-ui-window.c:3714
+#: ui-gtk/rc-ui-window.c:2551 ui-gtk/rc-ui-window.c:3899
 msgid "Hide Library and Playlists"
 msgstr "ライブラリとプレイリストを隠す"
 
-#: ui-gtk/rc-ui-window.c:2382 ui-gtk/resources/ui/rc-ui-window.ui:287
+#: ui-gtk/rc-ui-window.c:2551 ui-gtk/resources/ui/rc-ui-window.ui:287
 msgid "Show Library and Playlists"
 msgstr "ライブラリとプレイリストを表示"
 
-#: ui-gtk/rc-ui-window.c:2447
+#: ui-gtk/rc-ui-window.c:2616
 #, c-format
 msgid "%u tracks in library, %u playlists"
 msgstr "ライブラリに %u 曲、プレイリスト %u 個"
 
-#: ui-gtk/rc-ui-window.c:2452
+#: ui-gtk/rc-ui-window.c:2621
 #, c-format
 msgid "Importing (%u pending)… %s"
 msgstr "インポート中（残り %u 件）… %s"
 
-#: ui-gtk/rc-ui-window.c:2610 ui-tui/rc-tui.c:1474
+#: ui-gtk/rc-ui-window.c:2779 ui-tui/rc-tui.c:1474
 #, c-format
 msgid "Error: %s"
 msgstr "エラー: %s"
 
-#: ui-gtk/rc-ui-window.c:2875
+#: ui-gtk/rc-ui-window.c:3044
 msgid "Import Files"
 msgstr "ファイルをインポート"
 
-#: ui-gtk/rc-ui-window.c:2878
+#: ui-gtk/rc-ui-window.c:3047
 msgid "Audio Files, CUE Sheets and Playlists"
 msgstr "オーディオファイル、CUE シート、プレイリスト"
 
-#: ui-gtk/rc-ui-window.c:2886 ui-gtk/rc-ui-window.c:3219
+#: ui-gtk/rc-ui-window.c:3055 ui-gtk/rc-ui-window.c:3403
 msgid "All Files"
 msgstr "すべてのファイル"
 
-#: ui-gtk/rc-ui-window.c:2913
+#: ui-gtk/rc-ui-window.c:3082
 msgid "Import Folder"
 msgstr "フォルダーをインポート"
 
-#: ui-gtk/rc-ui-window.c:2948
+#: ui-gtk/rc-ui-window.c:3117
 msgid "Cannot check the files."
 msgstr "ファイルを確認できません。"
 
-#: ui-gtk/rc-ui-window.c:2953 ui-tui/rc-tui.c:1022
+#: ui-gtk/rc-ui-window.c:3122 ui-tui/rc-tui.c:1022
 msgid "No missing files are found."
 msgstr "見つからないファイルはありません。"
 
-#: ui-gtk/rc-ui-window.c:2956 ui-tui/rc-tui.c:1025
+#: ui-gtk/rc-ui-window.c:3125 ui-tui/rc-tui.c:1025
 #, c-format
 msgid "Removed %d item whose file is missing."
 msgid_plural "Removed %d items whose files are missing."
 msgstr[0] "ファイルが見つからない %d 件の項目を削除しました。"
 
-#: ui-gtk/rc-ui-window.c:2979 ui-tui/rc-tui.c:1038 ui-tui/rc-tui.c:1377
+#: ui-gtk/rc-ui-window.c:3148 ui-tui/rc-tui.c:1038 ui-tui/rc-tui.c:1377
 msgid "Checking files…"
 msgstr "ファイルを確認中…"
 
-#: ui-gtk/rc-ui-window.c:2988
+#: ui-gtk/rc-ui-window.c:3157
 msgid "_Remove"
 msgstr "削除(_R)"
 
-#: ui-gtk/rc-ui-window.c:2989
+#: ui-gtk/rc-ui-window.c:3158
 msgid "Remove missing files?"
 msgstr "見つからないファイルを削除しますか？"
 
-#: ui-gtk/rc-ui-window.c:2990
+#: ui-gtk/rc-ui-window.c:3159
 msgid ""
 "Items in the music library and the playlists whose audio files do not exist "
 "any more will be removed. Files on removable drives or network shares which "
@@ -531,41 +583,41 @@ msgstr ""
 "す。マウントされていないリムーバブルドライブやネットワーク共有上のファイルも"
 "見つからないものとして扱われます。"
 
-#: ui-gtk/rc-ui-window.c:3165
+#: ui-gtk/rc-ui-window.c:3349
 msgid "A music player based on GStreamer"
 msgstr "GStreamer ベースの音楽プレーヤー"
 
-#: ui-gtk/rc-ui-window.c:3210
+#: ui-gtk/rc-ui-window.c:3394
 msgid "Playlists (M3U, M3U8, PLS, XSPF)"
 msgstr "プレイリスト（M3U、M3U8、PLS、XSPF）"
 
-#: ui-gtk/rc-ui-window.c:3246
+#: ui-gtk/rc-ui-window.c:3430
 msgid "Cannot load the playlist."
 msgstr "プレイリストを読み込めません。"
 
-#: ui-gtk/rc-ui-window.c:3258
+#: ui-gtk/rc-ui-window.c:3442
 msgid "Load Playlist"
 msgstr "プレイリストを読み込む"
 
-#: ui-gtk/rc-ui-window.c:3315 ui-tui/rc-tui.c:971
+#: ui-gtk/rc-ui-window.c:3499 ui-tui/rc-tui.c:971
 #, c-format
 msgid "Saved %u track to %s."
 msgid_plural "Saved %u tracks to %s."
 msgstr[0] "%u 曲を %s に保存しました。"
 
-#: ui-gtk/rc-ui-window.c:3322
+#: ui-gtk/rc-ui-window.c:3506
 msgid "Cannot save the playlist."
 msgstr "プレイリストを保存できません。"
 
-#: ui-gtk/rc-ui-window.c:3335
+#: ui-gtk/rc-ui-window.c:3519
 msgid "Save Playlist"
 msgstr "プレイリストを保存"
 
-#: ui-gtk/rc-ui-window.c:3577
+#: ui-gtk/rc-ui-window.c:3772
 msgid "#"
 msgstr "#"
 
-#: ui-gtk/rc-ui-window.c:3581 ui-tui/rc-tui.c:560
+#: ui-gtk/rc-ui-window.c:3776 ui-tui/rc-tui.c:560
 msgid "Length"
 msgstr "長さ"
 
@@ -736,14 +788,6 @@ msgstr "ファイルをインポート(_I)…"
 msgid "Import _Folder…"
 msgstr "フォルダーをインポート(_F)…"
 
-#: ui-gtk/resources/ui/rc-ui-window.ui:16
-msgid "_Load Playlist…"
-msgstr "プレイリストを読み込む(_L)…"
-
-#: ui-gtk/resources/ui/rc-ui-window.ui:20
-msgid "_Save Playlist…"
-msgstr "プレイリストを保存(_S)…"
-
 #: ui-gtk/resources/ui/rc-ui-window.ui:24
 msgid "_Refresh All Metadata"
 msgstr "すべてのメタデータを更新(_R)"
@@ -759,10 +803,6 @@ msgstr "インポートをキャンセル(_C)"
 #: ui-gtk/resources/ui/rc-ui-window.ui:38
 msgid "Show _Playing Track"
 msgstr "再生中の曲を表示(_P)"
-
-#: ui-gtk/resources/ui/rc-ui-window.ui:42
-msgid "Track _Details"
-msgstr "トラックの詳細(_D)"
 
 #: ui-gtk/resources/ui/rc-ui-window.ui:48
 msgid "_Equalizer"
@@ -848,57 +888,57 @@ msgstr "タイトル、アーティスト、アルバムにすべての語を含
 msgid "Playlists"
 msgstr "プレイリスト"
 
-#: ui-gtk/resources/ui/rc-ui-window.ui:441
+#: ui-gtk/resources/ui/rc-ui-window.ui:443
 msgid "Delete Playlist"
 msgstr "プレイリストを削除"
 
-#: ui-gtk/resources/ui/rc-ui-window.ui:447
+#: ui-gtk/resources/ui/rc-ui-window.ui:450
 msgid "Load Playlist from File"
 msgstr "ファイルからプレイリストを読み込む"
 
-#: ui-gtk/resources/ui/rc-ui-window.ui:454
+#: ui-gtk/resources/ui/rc-ui-window.ui:457
 msgid "Save Playlist to File"
 msgstr "プレイリストをファイルに保存"
 
-#: ui-gtk/resources/ui/rc-ui-window.ui:461
-#: ui-gtk/resources/ui/rc-ui-window.ui:522
+#: ui-gtk/resources/ui/rc-ui-window.ui:464
+#: ui-gtk/resources/ui/rc-ui-window.ui:527
 msgid "Move Up"
 msgstr "上へ移動"
 
-#: ui-gtk/resources/ui/rc-ui-window.ui:467
-#: ui-gtk/resources/ui/rc-ui-window.ui:531
+#: ui-gtk/resources/ui/rc-ui-window.ui:471
+#: ui-gtk/resources/ui/rc-ui-window.ui:537
 msgid "Move Down"
 msgstr "下へ移動"
 
-#: ui-gtk/resources/ui/rc-ui-window.ui:503
+#: ui-gtk/resources/ui/rc-ui-window.ui:508
 msgid "Show Playing Track"
 msgstr "再生中の曲を表示"
 
-#: ui-gtk/resources/ui/rc-ui-window.ui:513
+#: ui-gtk/resources/ui/rc-ui-window.ui:518
 msgid "Add Selected to Playlist"
 msgstr "選択した項目をプレイリストに追加"
 
-#: ui-gtk/resources/ui/rc-ui-window.ui:540
+#: ui-gtk/resources/ui/rc-ui-window.ui:547
 msgid "Show Details of Selected Track"
 msgstr "選択したトラックの詳細を表示"
 
-#: ui-gtk/resources/ui/rc-ui-window.ui:550
+#: ui-gtk/resources/ui/rc-ui-window.ui:557
 msgid "Refresh Metadata of Selected Items"
 msgstr "選択した項目のメタデータを更新"
 
-#: ui-gtk/resources/ui/rc-ui-window.ui:559
+#: ui-gtk/resources/ui/rc-ui-window.ui:567
 msgid "Remove Selected Items"
 msgstr "選択した項目を削除"
 
-#: ui-gtk/resources/ui/rc-ui-window.ui:689
+#: ui-gtk/resources/ui/rc-ui-window.ui:698
 msgid "Format and bitrate of the playing music"
 msgstr "再生中の音楽の形式とビットレート"
 
-#: ui-gtk/resources/ui/rc-ui-window.ui:701
+#: ui-gtk/resources/ui/rc-ui-window.ui:710
 msgid "Cancel Import"
 msgstr "インポートをキャンセル"
 
-#: ui-gtk/resources/ui/rc-ui-window.ui:702
+#: ui-gtk/resources/ui/rc-ui-window.ui:711
 msgid "Cancel the pending imports"
 msgstr "保留中のインポートをキャンセル"
 

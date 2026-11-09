@@ -304,6 +304,12 @@ from the template (for example with `msginit`).
   is played in is selected and scrolled to in the sidebar (the grouping
   is changed if needed, and the library filter is cleared if it hides the
   track), and the track is selected and scrolled to in the track list.
+* Right-click menus. On a track: play, track details, add to a playlist,
+  move up/down (in a playlist), refresh metadata and remove from the
+  playlist or the library; a track which is not selected is selected first,
+  otherwise the menu is for all selected tracks. On a playlist in the
+  sidebar: new, load, rename, save, delete and move up/down (the playlist is
+  selected first); on the empty area below the playlists: new and load.
 * "Track Details" (the button above the track list, the menu, or Ctrl+I)
   shows the details of the selected track (the first one if several are
   selected): the cover image embedded in the file on the left (the default
