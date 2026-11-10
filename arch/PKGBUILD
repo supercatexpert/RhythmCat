@@ -24,7 +24,7 @@ checkdepends=(
   'dbus'
   'gst-plugins-good'
 )
-# The tarball is made from the source tree, see README.md
+# The tarball is made from the source tree, see docs/building.md
 source=("$pkgbase-$pkgver.tar.gz")
 sha256sums=('SKIP')
 
